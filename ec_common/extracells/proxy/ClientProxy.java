@@ -2,7 +2,6 @@ package extracells.proxy;
 
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.extracells;
 import extracells.model.render.ItemSolderingStationRenderer;
 import extracells.model.render.TileEntitySolderingStationRenderer;
