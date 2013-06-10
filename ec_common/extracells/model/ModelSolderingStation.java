@@ -4,12 +4,6 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-import org.lwjgl.opengl.GL11;
-
-import extracells.tile.TileEntitySolderingStation;
-
-import cpw.mods.fml.client.FMLClientHandler;
-
 public class ModelSolderingStation extends ModelBase {
 	  //fields
     ModelRenderer Stand1;
