@@ -1,0 +1,14 @@
+{
+  "modinfoversion": 2,
+  "modlist": [{
+    "modid": "extracells",
+    "name": "ExtraCells",
+    "description": "A Mod that adds 4 new ME Storage Cells and some other cool stuff to AE.",
+    "version": "1.2.0",
+    "mcversion": "1.5.2",
+	"url": "http://www.minecraftforum.net/topic/1801643-",
+    "authors": [ "M3gaFr3ak" ],
+    "credits": "Authored By M3gaFr3ak, textures by PaleoCrafter",
+    "requiredMods": [ "AppliedEnergistics" ]
+  }]
+}

@@ -6,7 +6,7 @@
 
 	<target name="clean">
 		<delete file="${build.dir.development}\mcp\src\minecraft\mcmod.info" />
-		<delete dir="${build.dir.development}\mcp\src\minecraft\de\paleocrafter" />
+		<delete dir="${build.dir.development}\mcp\src\minecraft\de\extracells" />
 		<delete dir="${build.dir.development}\mcp\reobf\minecraft" />
 	</target>
 
@@ -18,7 +18,7 @@
 
 	<target name="prep">
 		<copy todir="${build.dir.development}\mcp\src\minecraft">
-			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modsrc}\" excludes="appeng/**" />
+			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modsrc}\"/>
 		</copy>
 	</target>
 
@@ -62,7 +62,7 @@
 		<mkdir dir="${build.dir.development}\${build.dir.build}\${build.release.minecraft.version}\${build.release.mod.version}" />
 		<jar destfile="${build.dir.development}\${build.dir.build}\${build.release.minecraft.version}\${build.release.mod.version}\${build.release.mod.name}-universal-${build.release.mod.version}-${build_number.build_number}.jar">
 			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
-			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" />
+			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" excludes="appeng/**" />
 			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
 		</jar>
 
@@ -83,8 +83,8 @@
 		<mkdir dir="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\${build.release.mod.version}" />
 		<jar destfile="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\${build.release.mod.version}\${build.release.mod.name}-universal-${build.release.mod.version}-${build_number.build_number}.jar">
 			<fileset dir="${build.dir.development}\mcp\src\minecraft\" includes="mcmod.info" />
-			<fileset dir="${build.dir.development}\mcp\reobf\minecraft" />
-			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
+			<fileset dir="${build.dir.development}\mcp\reobf\minecraft\" excludes="appeng/**" />
+			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}\" excludes="**/xcf/**" />
 		</jar>
 
 		<!-- Sign the finished jar -->
