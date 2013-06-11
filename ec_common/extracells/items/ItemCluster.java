@@ -2,6 +2,8 @@ package extracells.items;
 
 import java.util.List;
 
+import appeng.api.me.items.IStorageComponent;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -13,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 
-public class ItemCluster extends Item
+public class ItemCluster extends Item implements IStorageComponent
 {
 
 	// Item Names
@@ -21,6 +23,11 @@ public class ItemCluster extends Item
 	{ "Kilo Storage Cluster", "Mega Storage Cluster", "Giga Storage Cluster", "Tera Storage Cluster" };
 	public static final String[] meta_names = new String[]
 	{ "itemKiloCluster", "itemMegaCluster", "itemGigaCluster", "itemTeraCluster" };
+	
+	// Sizes
+	public static final int[] size = new int[]
+	{ 262144, 1048576, 4194304, 16777216 };
+	
 	// Icons
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;
@@ -68,5 +75,17 @@ public class ItemCluster extends Item
 		{
 			par3List.add(new ItemStack(par1, 1, j));
 		}
+	}
+
+	@Override
+	public int getBytes(ItemStack is)
+	{
+		return size[is.getItemDamage()];
+	}
+
+	@Override
+	public boolean isStorageComponent(ItemStack is)
+	{
+		return true;
 	}
 }

@@ -34,7 +34,7 @@ public class ItemCell extends Item implements IStorageCell
 	public static final int[] bytes_cell = new int[]
 	{ 262144, 1048576, 4194304, 16777216, 65536 };
 	public static final int[] types_cell = new int[]
-	{ 63, 63, 63, 63, 1, 12 };
+	{ 63, 63, 63, 63, 1 };
 	// Icons
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;
