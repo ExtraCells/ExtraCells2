@@ -213,3 +213,9 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#buildscript
+build.properties
+build.xml
+build_number.properties
+version.xml
