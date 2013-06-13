@@ -6,7 +6,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.extracells;
 import extracells.blocks.BlockSolderingStation;
-import extracells.gui.GUISolderingStation;
 import extracells.items.ItemCell;
 import extracells.items.ItemCluster;
 import extracells.tile.TileEntitySolderingStation;
@@ -49,7 +48,7 @@ public class CommonProxy implements IGuiHandler
 		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(extracells.Cluster, 1, 3) });
 
 		// Cell Container
-		GameRegistry.addShapelessRecipe(new ItemStack(extracells.Cell, 1, 4), new Object[]
+		GameRegistry.addShapelessRecipe(containerCell, new Object[]
 		{ appeng.api.Items.itemCell1k, Block.chest });
 
 		// Clusters
@@ -68,7 +67,7 @@ public class CommonProxy implements IGuiHandler
 
 		// Customizable Cell
 		GameRegistry.addShapedRecipe(customCell, new Object[]
-		{ "", "", "", 'P', appeng.api.Materials.matProcessorAdvanced });
+		{ " P ", "SSS", " P ", 'P', appeng.api.Materials.matProcessorBasic, 'S', appeng.api.Items.itemCell1k });
 	}
 
 	public void RegisterTileEntities()

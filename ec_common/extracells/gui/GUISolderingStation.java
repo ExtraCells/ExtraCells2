@@ -92,6 +92,8 @@ public class GUISolderingStation extends GuiScreen
 			textfield_types.setFocused(false);
 			textfield_types.setMaxStringLength(2);
 			ItemStack itemstack = this.mc.thePlayer.getHeldItem();
+
+			// If the storage doesn't have a size, it gets one :D
 			if (!itemstack.hasTagCompound())
 			{
 				itemstack.setTagCompound(new NBTTagCompound());
@@ -152,7 +154,14 @@ public class GUISolderingStation extends GuiScreen
 			{
 				if (!((int_size - 2048) < 4096))
 				{
-					int_size = int_size - 2048;
+					if (isSpaceInInventory(appeng.api.Materials.matStorageCell.copy()))
+					{
+						this.mc.thePlayer.inventory.addItemStackToInventory(new ItemStack(appeng.api.Materials.matStorageCell.copy().getItem(), 1, appeng.api.Materials.matStorageCell.getItemDamage()));
+						int_size = int_size - 2048;
+					} else
+					{
+						this.mc.thePlayer.sendChatToPlayer("Make place in your inventory to regain the ME Storage Cell!");
+					}
 				}
 			} else
 			{
@@ -164,7 +173,14 @@ public class GUISolderingStation extends GuiScreen
 			// +64
 			if (Util.getCellRegistry().getHandlerForCell(this.mc.thePlayer.getCurrentEquippedItem()).storedItemCount() == 0)
 			{
-				int_size = int_size + 2048;
+				if (doesInvContain(appeng.api.Materials.matStorageCell.copy()))
+				{
+					decreaseStackInInv(appeng.api.Materials.matStorageCell.copy(), 1);
+					int_size = int_size + 2048;
+				} else
+				{
+					this.mc.thePlayer.sendChatToPlayer("To upgrade the size of your storage, you need one ME Storage Cell for each 2048 KBytes! Thats double the size per cell you'd get with 1K Storages :D");
+				}
 			} else
 			{
 				this.mc.thePlayer.sendChatToPlayer("This Cell is not Empty!");
@@ -177,7 +193,14 @@ public class GUISolderingStation extends GuiScreen
 			{
 				if (!((int_types - 1) < 27))
 				{
-					int_types = int_types - 1;
+					if (isSpaceInInventory(appeng.api.Materials.matConversionMatrix.copy()))
+					{
+						this.mc.thePlayer.inventory.addItemStackToInventory(new ItemStack(appeng.api.Materials.matConversionMatrix.copy().getItem(), 1, appeng.api.Materials.matConversionMatrix.getItemDamage()));
+						int_types = int_types - 1;
+					} else
+					{
+						this.mc.thePlayer.sendChatToPlayer("To upgrade the number of types of your storage, you need one ME Conversion Matrices for each type!");
+					}
 				}
 			} else
 			{
@@ -191,7 +214,14 @@ public class GUISolderingStation extends GuiScreen
 			{
 				if (!((int_types + 1) > 63))
 				{
-					int_types = int_types + 1;
+					if (doesInvContain(appeng.api.Materials.matConversionMatrix))
+					{
+						decreaseStackInInv(appeng.api.Materials.matConversionMatrix.copy(), 1);
+						int_types = int_types + 1;
+					} else
+					{
+						this.mc.thePlayer.sendChatToPlayer("To upgrade the number of types of your Storage, you need one ME Conversion Matrices for each type!");
+					}
 				}
 			} else
 			{
@@ -204,15 +234,59 @@ public class GUISolderingStation extends GuiScreen
 		}
 	}
 
-	public boolean isSpaceInInv()
+	// Returns if inventory contains ItemStack itemstack
+	public boolean doesInvContain(ItemStack itemstack)
 	{
 		for (int i = 0; i < this.mc.thePlayer.inventory.mainInventory.length; i++)
 		{
-			if (this.mc.thePlayer.inventory.mainInventory[i] == null)
+			if (this.mc.thePlayer.inventory.mainInventory[i] != null)
+			{
+				if (this.mc.thePlayer.inventory.mainInventory[i].getItem() == itemstack.getItem() && this.mc.thePlayer.inventory.mainInventory[i].getItemDamage() == itemstack.getItemDamage())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	// Returns if there is space for ItemStack itemstack in inventory
+	public boolean isSpaceInInventory(ItemStack itemstack)
+	{
+		for (int i = 0; i < this.mc.thePlayer.inventory.mainInventory.length; i++)
+		{
+			if (this.mc.thePlayer.inventory.mainInventory[i] != null)
+			{
+				if (this.mc.thePlayer.inventory.mainInventory[i].getItem() == itemstack.getItem() && this.mc.thePlayer.inventory.mainInventory[i].getItemDamage() == itemstack.getItemDamage() && this.mc.thePlayer.inventory.mainInventory[i].stackSize <= 63)
+				{
+					return true;
+				}
+			} else
 			{
 				return true;
 			}
 		}
 		return false;
+	}
+
+	// Find ItemStack in inventory are remove int number items from it
+	public void decreaseStackInInv(ItemStack itemstack, int number)
+	{
+		for (int i = 0; i < this.mc.thePlayer.inventory.mainInventory.length; i++)
+		{
+			if (this.mc.thePlayer.inventory.mainInventory[i] != null)
+			{
+				if (this.mc.thePlayer.inventory.mainInventory[i].getItem() == itemstack.getItem() && this.mc.thePlayer.inventory.mainInventory[i].getItemDamage() == itemstack.getItemDamage())
+				{
+					if (this.mc.thePlayer.inventory.mainInventory[i].stackSize == 1)
+					{
+						this.mc.thePlayer.inventory.mainInventory[i] = null;
+					} else
+					{
+						this.mc.thePlayer.inventory.mainInventory[i] = new ItemStack(this.mc.thePlayer.inventory.mainInventory[i].getItem(), this.mc.thePlayer.inventory.mainInventory[i].stackSize - 1, this.mc.thePlayer.inventory.mainInventory[i].getItemDamage());
+					}
+				}
+			}
+		}
 	}
 }
