@@ -39,4 +39,10 @@ public interface IStorageCell
 	 * @return preventAdditionOfItem
 	 */
 	boolean isBlackListed( ItemStack cellItem, IAEItemStack requsetedAddition );
+	
+	/**
+	 * rv11 - allows you to specify if this storage cell can be stored inside other storage cells, only set this for special items like the matter cannon that are not general purpose storage.
+	 * @return
+	 */
+	boolean storableInStorageCell();
 }

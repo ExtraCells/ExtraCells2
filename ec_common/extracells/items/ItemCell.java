@@ -263,4 +263,10 @@ public class ItemCell extends Item implements IStorageCell
 			return false;
 		}
 	}
+
+	@Override
+	public boolean storableInStorageCell()
+	{
+		return false;
+	}
 }

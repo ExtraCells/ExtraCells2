@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import extracells.extracells;
+import extracells.*;
 import extracells.blocks.BlockSolderingStation;
 import extracells.items.ItemCell;
 import extracells.items.ItemCluster;
@@ -21,6 +21,8 @@ public class CommonProxy implements IGuiHandler
 {
 	public void addRecipes()
 	{
+		GameRegistry.registerCraftingHandler(new ecCraftingHandler());
+		
 		ItemStack cell256k = new ItemStack(extracells.Cell, 1, 0);
 		ItemStack cell1m = new ItemStack(extracells.Cell, 1, 1);
 		ItemStack cell4m = new ItemStack(extracells.Cell, 1, 2);
