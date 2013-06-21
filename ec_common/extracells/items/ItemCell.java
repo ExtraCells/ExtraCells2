@@ -18,6 +18,7 @@ import appeng.api.IAEItemStack;
 import appeng.api.Materials;
 import appeng.api.Util;
 import appeng.api.me.items.IStorageCell;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.extracells;
@@ -28,13 +29,17 @@ public class ItemCell extends Item implements IStorageCell
 	// Item Names
 	public static final String[] localized_names = new String[]
 	{ "ME 256K Storage", "ME 1M Storage", "ME 4M Storage", "ME 16M Storage", "ME Block Container", "Adjustable ME Storage" };
+
 	public static final String[] meta_names = new String[]
 	{ "item256kCell", "item1024kCell", "item4096kCell", "item16348kCell", "itemBlockContainer", "itemAdjustableCell" };
+
 	// Bytes
 	public static final int[] bytes_cell = new int[]
 	{ 262144, 1048576, 4194304, 16777216, 65536 };
+
 	public static final int[] types_cell = new int[]
 	{ 63, 63, 63, 63, 1 };
+
 	// Icons
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;
@@ -76,19 +81,28 @@ public class ItemCell extends Item implements IStorageCell
 	@Override
 	public String getItemDisplayName(ItemStack stack)
 	{
+		Boolean hasName = !Util.getCellRegistry().getHandlerForCell(stack).getName().isEmpty();
+		String partitionName = Util.getCellRegistry().getHandlerForCell(stack).getName();
 		long used_bytes = Util.getCellRegistry().getHandlerForCell(stack).usedBytes();
 		if (stack.getItemDamage() == 4)
 		{
 			if (used_bytes != 0)
 			{
-				return "ME Block Container - " + Util.getCellRegistry().getHandlerForCell(stack).getAvailableItems().getItems().get(0).getDisplayName();
+				return "ME Block Container" + " - " + Util.getCellRegistry().getHandlerForCell(stack).getAvailableItems().getItems().get(0).getDisplayName();
 			} else
 			{
 				return "Empty ME Block Container";
 			}
 		} else
 		{
-			return ItemCell.localized_names[stack.getItemDamage()];
+
+			if (hasName)
+			{
+				return ItemCell.localized_names[stack.getItemDamage()] + " - " + partitionName;
+			} else
+			{
+				return ItemCell.localized_names[stack.getItemDamage()];
+			}
 		}
 
 	}
@@ -96,11 +110,11 @@ public class ItemCell extends Item implements IStorageCell
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	public void getSubItems(int i, CreativeTabs creativeTab, List listSubItems)
 	{
 		for (int j = 0; j < 6; ++j)
 		{
-			par3List.add(new ItemStack(par1, 1, j));
+			listSubItems.add(new ItemStack(i, 1, j));
 		}
 	}
 
@@ -110,6 +124,8 @@ public class ItemCell extends Item implements IStorageCell
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
 	{
+		Boolean preformatted = Util.getCellRegistry().getHandlerForCell(stack).isPreformatted();
+		Boolean fuzzy = Util.getCellRegistry().getHandlerForCell(stack).isFuzzyPreformatted();
 		long used_bytes = Util.getCellRegistry().getHandlerForCell(stack).usedBytes();
 		long total_bytes = Util.getCellRegistry().getHandlerForCell(stack).totalBytes();
 		long used_types = Util.getCellRegistry().getHandlerForCell(stack).storedItemTypes();
@@ -128,6 +144,16 @@ public class ItemCell extends Item implements IStorageCell
 				list.add("Block: -");
 			}
 			list.add(used_bytes + " of " + total_bytes + " Bytes Used");
+		}
+		if (preformatted)
+		{
+			if (fuzzy)
+			{
+				list.add("Preformatted - Fuzzy");
+			} else
+			{
+				list.add("Preformatted - Precise");
+			}
 		}
 	}
 
@@ -214,6 +240,29 @@ public class ItemCell extends Item implements IStorageCell
 					p.inventory.addItemStackToInventory(new ItemStack(extracells.Cluster, 1, i.getItemDamage()));
 					p.inventory.addItemStackToInventory(Materials.matStorageCellHouseing.copy());
 				}
+			} else if (i.getItemDamage() == 4)
+			{
+				if (FMLCommonHandler.instance().getEffectiveSide().isServer())
+				{
+					switch (i.getTagCompound().getInteger("mode"))
+					{
+					case 0:
+						System.out.println(i.getTagCompound().getInteger("mode"));
+						i.getTagCompound().setInteger("mode", 1);
+						p.sendChatToPlayer("Mode: Equal Trade Mode (1*1)");
+						break;
+					case 1:
+						System.out.println(i.getTagCompound().getInteger("mode"));
+						i.getTagCompound().setInteger("mode", 2);
+						p.sendChatToPlayer("Mode: Equal Trade Mode (3*3)");
+						break;
+					case 2:
+						System.out.println(i.getTagCompound().getInteger("mode"));
+						i.getTagCompound().setInteger("mode", 0);
+						p.sendChatToPlayer("Mode: Placement Mode");
+						break;
+					}
+				}
 			}
 		}
 		return i;
@@ -230,28 +279,123 @@ public class ItemCell extends Item implements IStorageCell
 			ForgeDirection face = ForgeDirection.getOrientation(side);
 			if (world.getBlockId(x + face.offsetX, y + face.offsetY, z + face.offsetZ) == 0 && Util.getCellRegistry().getHandlerForCell(itemstack).storedItemTypes() != 0)
 			{
-				IAEItemStack request = Util.createItemStack(Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).copy());
-				request.setStackSize(1);
-				ItemStack block = request.getItemStack();
-				if (block.getItem() instanceof ItemBlock)
+				if (FMLCommonHandler.instance().getEffectiveSide().isServer())
 				{
-					player.worldObj.setBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0)
-							.getItemDamage(), 3);
-					Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-					return true;
-				} else
-				{
-					if (sleep == 0)
+					IAEItemStack request = Util.createItemStack(Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).copy());
+					ItemStack block = request.getItemStack();
+					if (block.getItem() instanceof ItemBlock)
 					{
-						player.sendChatToPlayer("You can't place Items! Put a Block into the BLOCK-Container");
-						sleep++;
-					} else if (sleep == 10)
-					{
-						sleep = 0;
+						switch (itemstack.getTagCompound().getInteger("mode"))
+						{
+						case 0:
+							request.setStackSize(1);
+							player.worldObj.setBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+							Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+							break;
+						case 1:
+							request.setStackSize(1);
+							world.destroyBlock(x, y, z, true);
+							player.worldObj.setBlock(x, y, z, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+							Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+							break;
+						case 2:
+
+							request.setStackSize(9);
+							if (Util.getCellRegistry().getHandlerForCell(itemstack).storedItemCount() > 9)
+							{
+								switch (ForgeDirection.getOrientation(side))
+								{
+								case DOWN:
+									for (int posX = x - 1; posX < x + 2; posX++)
+									{
+										for (int posZ = z - 1; posZ < z + 2; posZ++)
+										{
+											world.destroyBlock(posX, y, posZ, true);
+											player.worldObj.setBlock(posX, y, posZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+										}
+									}
+									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+									break;
+								case EAST:
+									for (int posZ = z - 1; posZ < z + 2; posZ++)
+									{
+										for (int posY = y - 1; posY < y + 2; posY++)
+										{
+											world.destroyBlock(x, posY, posZ, true);
+											player.worldObj.setBlock(x, posY, posZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+										}
+									}
+									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+									break;
+								case NORTH:
+									for (int posX = x - 1; posX < x + 2; posX++)
+									{
+										for (int posY = y - 1; posY < y + 2; posY++)
+										{
+											world.destroyBlock(posX, posY, z, true);
+											player.worldObj.setBlock(posX, posY, z, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+										}
+									}
+									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+									break;
+								case SOUTH:
+									for (int posX = x - 1; posX < x + 2; posX++)
+									{
+										for (int posY = y - 1; posY < y + 2; posY++)
+										{
+											world.destroyBlock(posX, posY, z, true);
+											player.worldObj.setBlock(posX, posY, z, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+										}
+									}
+									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+									break;
+								case UNKNOWN:
+									break;
+								case UP:
+									for (int posX = x - 1; posX < x + 2; posX++)
+									{
+										for (int posZ = z - 1; posZ < z + 2; posZ++)
+										{
+											world.destroyBlock(posX, y, posZ, true);
+											player.worldObj.setBlock(posX, y, posZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+										}
+									}
+									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+									break;
+								case WEST:
+									for (int posZ = z - 1; posZ < z + 2; posZ++)
+									{
+										for (int posY = y - 1; posY < y + 2; posY++)
+										{
+											world.destroyBlock(x, posY, posZ, true);
+											player.worldObj.setBlock(x, posY, posZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+										}
+									}
+									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+									break;
+								default:
+									break;
+								}
+							}
+						}
+						return true;
 					} else
 					{
-						sleep++;
+						if (sleep == 0)
+						{
+							player.sendChatToPlayer("You can't place Items! Put a Block into the BLOCK-Container");
+							sleep++;
+						} else if (sleep == 10)
+						{
+							sleep = 0;
+						} else
+						{
+							sleep++;
+						}
+						return false;
 					}
+				} else
+				{
 					return false;
 				}
 			} else

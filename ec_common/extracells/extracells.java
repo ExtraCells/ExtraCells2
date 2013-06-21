@@ -17,7 +17,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.2.1d", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.2.2b", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { PacketHandler.CHANNEL_NAME }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class extracells
@@ -48,7 +48,7 @@ public class extracells
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		instance = this;
 
-		// config
+		// Config
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		int cellTemp = config.getItem("Cell_ID", 4140, "ID for the storage cells").getInt();

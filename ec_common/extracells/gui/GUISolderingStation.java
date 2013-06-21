@@ -7,7 +7,6 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import appeng.api.Util;
 
 import extracells.extracells;
-import extracells.items.ItemCell;
 import extracells.network.packet.SolderingPacket;
 
 import net.minecraft.client.gui.GuiButton;
@@ -88,9 +87,11 @@ public class GUISolderingStation extends GuiScreen
 			textfield_size = new GuiTextField(fontRenderer, posX + 40, posY + 20, 90, 15);
 			textfield_size.setFocused(false);
 			textfield_size.setMaxStringLength(12);
+			
 			textfield_types = new GuiTextField(fontRenderer, posX + 40, posY + 50, 90, 15);
 			textfield_types.setFocused(false);
 			textfield_types.setMaxStringLength(2);
+			
 			ItemStack itemstack = this.mc.thePlayer.getHeldItem();
 
 			textfield_size.setText(Integer.toString(itemstack.getTagCompound().getInteger("costum_size")));

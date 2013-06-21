@@ -12,6 +12,8 @@ public class ecCraftingHandler implements ICraftingHandler
 	@Override
 	public void onCrafting(EntityPlayer player, ItemStack item, IInventory craftMatrix)
 	{
+		// set size of Adjustable Cell on crafting
+
 		if (item.getItem() == extracells.Cell && item.getItemDamage() == 5)
 		{
 			if (!item.hasTagCompound())
@@ -26,7 +28,7 @@ public class ecCraftingHandler implements ICraftingHandler
 	@Override
 	public void onSmelting(EntityPlayer player, ItemStack item)
 	{
-		// TODO Auto-generated method stub
+		// Not used due nonexisting smelting recipes...
 
 	}
 
