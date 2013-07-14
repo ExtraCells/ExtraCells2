@@ -59,7 +59,7 @@ public class ItemCell extends Item implements IStorageCell
 		int j = MathHelper.clamp_int(par1, 0, 5);
 		return this.icons[j];
 	}
-
+	
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{

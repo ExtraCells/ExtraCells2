@@ -26,7 +26,7 @@ public abstract class ECPacket
 		idMap = builder.build();
 	}
 
-	public static ECPacket constructPacket(int packetId) throws ProtocolException, ReflectiveOperationException
+	public static ECPacket constructPacket(int packetId) throws ProtocolException, InstantiationException, IllegalAccessException
 	{
 		Class<? extends ECPacket> clazz = idMap.get(Integer.valueOf(packetId));
 		if (clazz == null)

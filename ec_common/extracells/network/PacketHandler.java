@@ -38,7 +38,7 @@ public class PacketHandler implements IPacketHandler
 				((EntityPlayerMP) player).playerNetServerHandler.kickPlayerFromServer("Protocol Exception!");
 				Logger.getLogger("ExtraCells").warning("Player " + ((EntityPlayer) player).username + " caused a Protocol Exception!");
 			}
-		} catch (ReflectiveOperationException e)
+		} catch (Throwable e)
 		{
 			throw new RuntimeException("Unexpected Reflection exception during Packet construction!", e);
 		}
