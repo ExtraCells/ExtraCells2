@@ -28,9 +28,9 @@ public class PacketHandler implements IPacketHandler
 			EntityPlayer entityPlayer = (EntityPlayer) player;
 			ByteArrayDataInput in = ByteStreams.newDataInput(packet.data);
 			int packetId = in.readUnsignedByte();
-			ECPacket paleoPacket = ECPacket.constructPacket(packetId);
-			paleoPacket.read(in);
-			paleoPacket.execute(entityPlayer, entityPlayer.worldObj.isRemote ? Side.CLIENT : Side.SERVER);
+			ECPacket p = ECPacket.constructPacket(packetId);
+			p.read(in);
+			p.execute(entityPlayer, entityPlayer.worldObj.isRemote ? Side.CLIENT : Side.SERVER);
 		} catch (ProtocolException e)
 		{
 			if (player instanceof EntityPlayerMP)

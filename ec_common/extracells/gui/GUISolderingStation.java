@@ -87,11 +87,11 @@ public class GUISolderingStation extends GuiScreen
 			textfield_size = new GuiTextField(fontRenderer, posX + 40, posY + 20, 90, 15);
 			textfield_size.setFocused(false);
 			textfield_size.setMaxStringLength(12);
-			
+
 			textfield_types = new GuiTextField(fontRenderer, posX + 40, posY + 50, 90, 15);
 			textfield_types.setFocused(false);
 			textfield_types.setMaxStringLength(2);
-			
+
 			ItemStack itemstack = this.mc.thePlayer.getHeldItem();
 
 			textfield_size.setText(Integer.toString(itemstack.getTagCompound().getInteger("costum_size")));
@@ -111,14 +111,14 @@ public class GUISolderingStation extends GuiScreen
 			{
 				if (this.mc.thePlayer.getHeldItem().hasTagCompound())
 				{
-					PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false).makePacket());
+					PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0').makePacket());
 					ItemStack itemstack = this.mc.thePlayer.getHeldItem();
 					itemstack.getTagCompound().setInteger("costum_size", int_size);
 					itemstack.getTagCompound().setInteger("costum_types", int_types);
 
 					if (textfield_size.getText() != Integer.toString(itemstack.getTagCompound().getInteger("costum_size")) || textfield_types.getText() != Integer.toString(itemstack.getTagCompound().getInteger("costum_types")))
 					{
-						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false).makePacket());
+						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0').makePacket());
 						textfield_size.setText(Integer.toString(int_size));
 						textfield_types.setText(Integer.toString(int_types));
 					}
@@ -127,11 +127,11 @@ public class GUISolderingStation extends GuiScreen
 		}
 	}
 
-	public void keyTyped(char par1, int par2)
+	public void keyTyped(char key, int par2)
 	{
-		if (par1 == 'e' || par1 == '')
+		if (key == 'e' || key == '')
 		{
-			PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, true).makePacket());
+			PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, true, '\0', '\0').makePacket());
 			this.mc.displayGuiScreen((GuiScreen) null);
 			this.mc.setIngameFocus();
 		}
@@ -149,9 +149,12 @@ public class GUISolderingStation extends GuiScreen
 				{
 					if (isSpaceInInventory(appeng.api.Materials.matStorageCell.copy()))
 					{
-						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false).makePacket());
-						this.mc.thePlayer.inventory.addItemStackToInventory(new ItemStack(appeng.api.Materials.matStorageCell.copy().getItem(), 1, appeng.api.Materials.matStorageCell.getItemDamage()));
 						int_size = int_size - 2048;
+						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 's').makePacket());
+						// this.mc.thePlayer.inventory.addItemStackToInventory(new
+						// ItemStack(appeng.api.Materials.matStorageCell.copy().getItem(),
+						// 1,
+						// appeng.api.Materials.matStorageCell.getItemDamage()));
 					} else
 					{
 						this.mc.thePlayer.sendChatToPlayer("Make place in your inventory to regain the ME Storage Cell!");
@@ -169,9 +172,10 @@ public class GUISolderingStation extends GuiScreen
 			{
 				if (doesInvContain(appeng.api.Materials.matStorageCell.copy()))
 				{
-					PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false).makePacket());
-					decreaseStackInInv(appeng.api.Materials.matStorageCell.copy(), 1);
 					int_size = int_size + 2048;
+					PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 's', '\0').makePacket());
+					// decreaseStackInInv(appeng.api.Materials.matStorageCell.copy(),
+					// 1);
 				} else
 				{
 					this.mc.thePlayer.sendChatToPlayer("To upgrade the size of your storage, you need one ME Storage Cell for each 2048 KBytes! Thats double the size per cell you'd get with 1K Storages :D");
@@ -190,9 +194,12 @@ public class GUISolderingStation extends GuiScreen
 				{
 					if (isSpaceInInventory(appeng.api.Materials.matConversionMatrix.copy()))
 					{
-						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false).makePacket());
-						this.mc.thePlayer.inventory.addItemStackToInventory(new ItemStack(appeng.api.Materials.matConversionMatrix.copy().getItem(), 1, appeng.api.Materials.matConversionMatrix.getItemDamage()));
 						int_types = int_types - 1;
+						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 't').makePacket());
+						// this.mc.thePlayer.inventory.addItemStackToInventory(new
+						// ItemStack(appeng.api.Materials.matConversionMatrix.copy().getItem(),
+						// 1,
+						// appeng.api.Materials.matConversionMatrix.getItemDamage()));
 					} else
 					{
 						this.mc.thePlayer.sendChatToPlayer("To upgrade the number of types of your storage, you need one ME Conversion Matrices for each type!");
@@ -212,9 +219,10 @@ public class GUISolderingStation extends GuiScreen
 				{
 					if (doesInvContain(appeng.api.Materials.matConversionMatrix))
 					{
-						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false).makePacket());
-						decreaseStackInInv(appeng.api.Materials.matConversionMatrix.copy(), 1);
 						int_types = int_types + 1;
+						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 't', '\0').makePacket());
+						// decreaseStackInInv(appeng.api.Materials.matConversionMatrix.copy(),
+						// 1);
 					} else
 					{
 						this.mc.thePlayer.sendChatToPlayer("To upgrade the number of types of your Storage, you need one ME Conversion Matrices for each type!");
@@ -264,32 +272,5 @@ public class GUISolderingStation extends GuiScreen
 			}
 		}
 		return false;
-	}
-
-	// Find ItemStack in inventory are remove int number items from it
-	public void decreaseStackInInv(ItemStack itemstack, int number)
-	{
-		int left = number;
-		for (int i = 0; i < this.mc.thePlayer.inventory.mainInventory.length; i++)
-		{
-			if (this.mc.thePlayer.inventory.mainInventory[i] != null)
-			{
-				if (this.mc.thePlayer.inventory.mainInventory[i].getItem() == itemstack.getItem() && this.mc.thePlayer.inventory.mainInventory[i].getItemDamage() == itemstack.getItemDamage())
-				{
-					if (left != 0)
-					{
-						if (this.mc.thePlayer.inventory.mainInventory[i].stackSize == 1)
-						{
-							this.mc.thePlayer.inventory.mainInventory[i] = null;
-							left = left - 1;
-						} else
-						{
-							this.mc.thePlayer.inventory.mainInventory[i] = new ItemStack(this.mc.thePlayer.inventory.mainInventory[i].getItem(), this.mc.thePlayer.inventory.mainInventory[i].stackSize - 1, this.mc.thePlayer.inventory.mainInventory[i].getItemDamage());
-							left = left - 1;
-						}
-					}
-				}
-			}
-		}
 	}
 }

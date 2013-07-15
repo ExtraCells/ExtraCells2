@@ -28,7 +28,7 @@ public class ecCraftingHandler implements ICraftingHandler
 	@Override
 	public void onSmelting(EntityPlayer player, ItemStack item)
 	{
-		// Not used due nonexisting smelting recipes...
+		// Not used due nonexistent smelting recipes...
 
 	}
 

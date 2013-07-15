@@ -15,8 +15,9 @@ public class SolderingPacket extends ECPacket
 	private int x, y, z;
 	private int size, types;
 	private boolean remove;
+	public char upgrade, downgrade;
 
-	public SolderingPacket(String playerName, int x, int y, int z, int size, int types, boolean remove)
+	public SolderingPacket(String playerName, int x, int y, int z, int size, int types, boolean remove, char upgrade, char downgrade)
 	{
 		this.playerName = playerName;
 		this.x = x;
@@ -25,6 +26,8 @@ public class SolderingPacket extends ECPacket
 		this.size = size;
 		this.types = types;
 		this.remove = remove;
+		this.upgrade = upgrade;
+		this.downgrade = downgrade;
 	}
 
 	public SolderingPacket()
@@ -41,6 +44,8 @@ public class SolderingPacket extends ECPacket
 		out.writeInt(size);
 		out.writeInt(types);
 		out.writeBoolean(remove);
+		out.writeChar(upgrade);
+		out.writeChar(downgrade);
 	}
 
 	@Override
@@ -53,6 +58,8 @@ public class SolderingPacket extends ECPacket
 		size = in.readInt();
 		types = in.readInt();
 		remove = in.readBoolean();
+		upgrade = in.readChar();
+		downgrade = in.readChar();
 	}
 
 	@Override
@@ -66,7 +73,7 @@ public class SolderingPacket extends ECPacket
 				tile.remUser(playerName);
 			} else
 			{
-				tile.updateData(playerName, size, types);
+				tile.updateData(playerName, size, types, upgrade, downgrade);
 			}
 		}
 	}
