@@ -63,7 +63,7 @@
 		<jar destfile="${build.dir.development}\${build.dir.build}\${build.release.mod.name}-universal-${build.release.mod.version} (${build.release.minecraft.version}).jar">
 			<fileset dir="${build.dir.development}\forge\mcp\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${build.dir.development}\forge\mcp\reobf\minecraft" excludes="appeng/**" />
-			<fileset dir="${build.dir.development}\source\${build.dir.modproject}" includes="${build.dir.modresources}/**" excludes="**/xcf/**" />
+			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
 		</jar>
 
 		<!-- Clean up the MCP source now that we are done -->
@@ -84,7 +84,7 @@
 		<jar destfile="${build.dir.development}\${build.dir.release}\${build.release.mod.name}-universal-${build.release.mod.version} (${build.release.minecraft.version}).jar">
 			<fileset dir="${build.dir.development}\forge\mcp\src\minecraft\" includes="mcmod.info" />
 			<fileset dir="${build.dir.development}\forge\mcp\reobf\minecraft\" excludes="appeng/**" />
-			<fileset dir="${build.dir.development}\source\${build.dir.modproject}" includes="${build.dir.modresources}/**" excludes="**/xcf/**" />
+			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
 		</jar>
 
 		<!-- Sign the finished jar -->
