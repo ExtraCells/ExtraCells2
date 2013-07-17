@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
  * Blocks, all of the Blocks in AE.
  * DO NOT USE THESE WITHOUT COPYING THEM : ItemStack.copy() - is your friend.
  */
+
 public class Blocks
 {
 	// World Gen

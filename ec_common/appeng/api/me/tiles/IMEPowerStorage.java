@@ -10,4 +10,21 @@ public interface IMEPowerStorage {
 	 */
 	boolean useMEEnergy( float use, String for_what );
 	
+	/**
+	 * Add energy to an ME Power storage.
+	 * @param amt
+	 * @return
+	 */
+	public double addMEPower( double amt );
+	
+	/**
+	 * returns the current maximum power ( this can change :P )
+	 */
+	public double getMEMaxPower();
+	
+	/**
+	 * returns the current AE Power Level
+	 */
+	public double getMECurrentPower();
+	
 }

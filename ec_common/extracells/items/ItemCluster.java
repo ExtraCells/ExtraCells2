@@ -2,18 +2,16 @@ package extracells.items;
 
 import java.util.List;
 
-import appeng.api.me.items.IStorageComponent;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import extracells.*;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import appeng.api.me.items.IStorageComponent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.extracells;
 
 public class ItemCluster extends Item implements IStorageComponent
 {

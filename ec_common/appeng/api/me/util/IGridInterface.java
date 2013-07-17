@@ -58,9 +58,6 @@ public interface IGridInterface
     // returns a single IMEInventory that represents the entire network, and all crafting available.
     public IMEInventoryHandler getFullCellArray();
     
-    // informs the network that the networks inventory changed.
-	public void onInventoryChange();
-
 	// add/remove which users should be notified of terminal updates.
 	void addViewingPlayer(EntityPlayer p);
 	void rmvViewingPlayer(EntityPlayer p);
@@ -73,7 +70,7 @@ public interface IGridInterface
 	
 	ICraftRequest waitingRequest(ItemStack what);
 	
-	ICraftRequest pushRequest(ItemStack willAdd, IPushable out, boolean allowCrafting );
+	ICraftRequest pushRequest( ItemStack willAdd, IPushable out, boolean allowCrafting );
 	
 	public boolean isValid();
 	
@@ -91,5 +88,7 @@ public interface IGridInterface
 	
 	@Override
 	public boolean equals(Object obj);
+
+	public String getName();
 	
 }

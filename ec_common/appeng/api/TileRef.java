@@ -21,8 +21,8 @@ public class TileRef<T> extends WorldCoord {
 	@SuppressWarnings("unchecked")
 	public T getTile() throws AppEngTileMissingException
 	{
-		//World w = DimensionManager.getWorld( dimension );
-		if (w.getChunkFromBlockCoords( x, z ).isChunkLoaded )
+		// there might be a possible tick where we have TileRefs for unloaded tiles?
+		if ( w.getChunkProvider().chunkExists(x >> 4, z >> 4) )
 		{
 			TileEntity te = w.getBlockTileEntity( x, y, z );
 			if ( te != null )

@@ -21,12 +21,12 @@ public interface IAppEngGrinderRecipe {
 	
 	/**
 	 * gets the current output
-	 * @return output that the griner will produce
+	 * @return output that the grinder will produce
 	 */
 	public ItemStack getOutput();
 	
 	/**
-	 * allows you to change th output.
+	 * allows you to change the output.
 	 * @param output
 	 */
 	public void setOutput( ItemStack output );

@@ -2,17 +2,16 @@ package extracells.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
-import appeng.api.Util;
-
-import extracells.extracells;
-import extracells.network.packet.SolderingPacket;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import appeng.api.Util;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.extracells;
+import extracells.network.packet.SolderingPacket;
 
 public class GUISolderingStation extends GuiScreen
 {
@@ -41,7 +40,7 @@ public class GUISolderingStation extends GuiScreen
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture("/mods/extracells/textures/gui/guiSolderingStation.png");
+		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","/textures/gui/guiSolderingStation.png"));
 		int posX = (this.width - xSizeOfTexture) / 2;
 		int posY = (this.height - ySizeOfTexture) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSizeOfTexture, ySizeOfTexture);
@@ -157,12 +156,12 @@ public class GUISolderingStation extends GuiScreen
 						// appeng.api.Materials.matStorageCell.getItemDamage()));
 					} else
 					{
-						this.mc.thePlayer.sendChatToPlayer("Make place in your inventory to regain the ME Storage Cell!");
+						this.mc.thePlayer.addChatMessage("Make place in your inventory to regain the ME Storage Cell!");
 					}
 				}
 			} else
 			{
-				this.mc.thePlayer.sendChatToPlayer("This Cell is not Empty!");
+				this.mc.thePlayer.addChatMessage("This Cell is not Empty!");
 			}
 			break;
 
@@ -178,11 +177,11 @@ public class GUISolderingStation extends GuiScreen
 					// 1);
 				} else
 				{
-					this.mc.thePlayer.sendChatToPlayer("To upgrade the size of your storage, you need one ME Storage Cell for each 2048 KBytes! Thats double the size per cell you'd get with 1K Storages :D");
+					this.mc.thePlayer.addChatMessage("To upgrade the size of your storage, you need one ME Storage Cell for each 2048 KBytes! Thats double the size per cell you'd get with 1K Storages :D");
 				}
 			} else
 			{
-				this.mc.thePlayer.sendChatToPlayer("This Cell is not Empty!");
+				this.mc.thePlayer.addChatMessage("This Cell is not Empty!");
 			}
 			break;
 
@@ -202,12 +201,12 @@ public class GUISolderingStation extends GuiScreen
 						// appeng.api.Materials.matConversionMatrix.getItemDamage()));
 					} else
 					{
-						this.mc.thePlayer.sendChatToPlayer("To upgrade the number of types of your storage, you need one ME Conversion Matrices for each type!");
+						this.mc.thePlayer.addChatMessage("To upgrade the number of types of your storage, you need one ME Conversion Matrices for each type!");
 					}
 				}
 			} else
 			{
-				this.mc.thePlayer.sendChatToPlayer("This Cell is not Empty!");
+				this.mc.thePlayer.addChatMessage("This Cell is not Empty!");
 			}
 			break;
 
@@ -225,12 +224,12 @@ public class GUISolderingStation extends GuiScreen
 						// 1);
 					} else
 					{
-						this.mc.thePlayer.sendChatToPlayer("To upgrade the number of types of your Storage, you need one ME Conversion Matrices for each type!");
+						this.mc.thePlayer.addChatMessage("To upgrade the number of types of your Storage, you need one ME Conversion Matrices for each type!");
 					}
 				}
 			} else
 			{
-				this.mc.thePlayer.sendChatToPlayer("This Cell is not Empty!");
+				this.mc.thePlayer.addChatMessage("This Cell is not Empty!");
 			}
 			break;
 

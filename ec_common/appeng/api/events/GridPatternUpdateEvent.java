@@ -8,7 +8,7 @@ import appeng.api.me.util.IGridInterface;
 /**
  * Posted when crafting options in a AE Network update, you can watch for them if you want to.
  */
-public class GridPatternUpdateEvent extends WorldEvent {
+public class GridPatternUpdateEvent extends AEWorldEvent {
 	
 	final public WorldCoord coord;
 	final public IGridInterface grid;

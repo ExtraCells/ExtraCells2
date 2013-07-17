@@ -154,5 +154,12 @@ public interface IAEItemStack
 	 */
 	@Override
 	public boolean equals(Object obj);
+
+	/**
+	 * Compare the Ore Dictionary ID for this to another item.
+	 * @param oreID 
+	 * @return
+	 */
+	public boolean sameOre( Object oreID );
 	
 }

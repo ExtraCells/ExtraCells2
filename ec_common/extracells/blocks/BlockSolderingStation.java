@@ -2,8 +2,6 @@ package extracells.blocks;
 
 import java.util.Random;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -12,9 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.FMLCommonHandler;
+import extracells.extracells;
 import extracells.gui.GUISolderingStation;
 import extracells.tile.TileEntitySolderingStation;
-import extracells.extracells;
 
 public class BlockSolderingStation extends BlockContainer
 {

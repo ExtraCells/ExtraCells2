@@ -28,4 +28,5 @@ public interface IItemList extends Iterable<IAEItemStack>
 	
 	@Override
 	public Iterator<IAEItemStack> iterator();
+	public void setCurrentPriority(int priority);
 }

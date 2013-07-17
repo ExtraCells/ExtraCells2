@@ -1,10 +1,9 @@
 package extracells.network.packet;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
+import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 import extracells.tile.TileEntitySolderingStation;
 

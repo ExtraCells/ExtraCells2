@@ -1,21 +1,22 @@
 package extracells.proxy;
 
-import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import extracells.*;
-import extracells.blocks.BlockSolderingStation;
-import extracells.items.ItemCell;
-import extracells.items.ItemCluster;
-import extracells.tile.TileEntitySolderingStation;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import extracells.ecCraftingHandler;
+import extracells.extracells;
+import extracells.blocks.BlockSolderingStation;
 import extracells.container.ContainerSolderingStation;
+import extracells.items.ItemCell;
+import extracells.items.ItemCluster;
+import extracells.tile.TileEntitySolderingStation;
 
 public class CommonProxy implements IGuiHandler
 {

@@ -1,6 +1,7 @@
 package appeng.api;
 
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Don't cast this... either compare with it, or copy it.
@@ -13,7 +14,7 @@ public interface IAETagCompound {
 	 * Create a copy ( the copy will not be a IAETagCompount, it will be a NBTTagCompound. )
 	 * @return
 	 */
-	NBTBase copy();
+	NBTTagCompound clone();
 	
 	/**
 	 * compare to other NBTTagCompounds or IAETagCompounds

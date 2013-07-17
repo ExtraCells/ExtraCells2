@@ -2,8 +2,11 @@ package appeng.api.me.util;
 
 import java.util.List;
 
+import appeng.api.IItemList;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -23,7 +26,7 @@ public interface IAssemblerPattern
      * 
      * Item pool is optional, null will work, but it won't be able to edit items... 
      */
-    InventoryCrafting getCraftingInv( World w, IMEInventory itemPool, List<ItemStack> missing, List<ItemStack> used );
+    InventoryCrafting getCraftingInv( World w, IMEInventory itemPool, List<ItemStack> missing, List<ItemStack> used, IItemList all );
     
     /** Returns a ItemStack, if the pattern is encoded, this will ALWAYS have a value. */
     ItemStack getOutput();
@@ -56,5 +59,11 @@ public interface IAssemblerPattern
 	
 	/** Sets the Tile Entity for the interface... */
 	void setInterface(TileEntity a);
+	
+	/** returns the output of the pattern */
+	ItemStack getRecipeOutput( InventoryCrafting ic, World w );
+	
+	/** returns the recipe for the patterns */
+	IRecipe getMatchingRecipe( InventoryCrafting ic, World w );
 }
 

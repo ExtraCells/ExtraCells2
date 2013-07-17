@@ -1,14 +1,13 @@
 package extracells.network.packet;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.packet.Packet;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.PacketHandler;

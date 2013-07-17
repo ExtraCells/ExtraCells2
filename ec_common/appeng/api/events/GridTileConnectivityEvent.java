@@ -8,7 +8,7 @@ import appeng.api.me.tiles.IGridTileEntity;
 /**
  * The network has changed, and must be updated.
  */
-public class GridTileConnectivityEvent extends WorldEvent {
+public class GridTileConnectivityEvent extends AEWorldEvent {
 	
 	public WorldCoord coord;
 	public IGridTileEntity te;

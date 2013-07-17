@@ -30,4 +30,8 @@ public interface IAssemblerCluster {
 	 * @return TileEntity for that Assembler or Null
 	 */
 	TileEntity getAssembler( int assemblerOffset );
+
+	public int getLastOffset();
+	
+	public void setLastOffset( int x );
 }

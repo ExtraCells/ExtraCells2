@@ -23,6 +23,7 @@ public class Util
     static private IExternalStorageRegistry externalStorageReg;
     static private IGrinderRecipeManager grinderRecipeManager;
     static private ISpecialComparisonRegistry specialComparisonRegistry;
+    static private IWirelessTermRegistery WirelessRegistery;
     
     static private Method isCell = null;
     static private Method GetCell = null;
@@ -73,15 +74,27 @@ public class Util
     	if ( getGrinderRecipeManage == null ) throw new AppEngException("api.getGrinderRecipeManage");
     	Method getSpecialComparsonRegistry = ReflectionHelper.getClass(Util.class.getClassLoader(), "appeng.common.AppEngApi").getMethod("getSpecialComparsonRegistry" );
     	if ( getSpecialComparsonRegistry == null ) throw new AppEngException("api.getSpecialComparsonRegistry");
+    	Method getWirelessRegistry = ReflectionHelper.getClass(Util.class.getClassLoader(), "appeng.common.AppEngApi").getMethod("getWirelessRegistry" );
+    	if ( getWirelessRegistry == null ) throw new AppEngException("api.getWirelessRegistry");
     	
     	try {
 			externalStorageReg = (IExternalStorageRegistry)getExternalStorageRegistry.invoke(null);
 	    	cellReg = (ICellRegistry)getCellRegistry.invoke(null);
 	        grinderRecipeManager = (IGrinderRecipeManager)getGrinderRecipeManage.invoke(null);
 	        specialComparisonRegistry = (ISpecialComparisonRegistry)getSpecialComparsonRegistry.invoke(null);
+	        WirelessRegistery = (IWirelessTermRegistery)getWirelessRegistry.invoke(null);
 		} catch (Exception e) {
 			 throw new AppEngException("api.establish.registiries");
 		}
+    }
+    
+    /**
+     * returns the wireless terminal registry.
+     * @return
+     */
+    public static IWirelessTermRegistery getWirelessTermRegistery()
+    {
+    	return WirelessRegistery;
     }
     
     /**
