@@ -38,7 +38,7 @@ public class ItemSecureCellEncrypted extends Item
 	@Override
 	public void registerIcons(IconRegister IconRegister)
 	{
-		this.icon = IconRegister.registerIcon("extracells:itemLockClosed");
+		this.icon = IconRegister.registerIcon("extracells:itemMEEncryptableStorageEncrypted");
 	}
 
 	@Override

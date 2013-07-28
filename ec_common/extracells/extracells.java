@@ -20,7 +20,7 @@ import extracells.blocks.BlockMEDropper;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.2.5", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.2.6", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { PacketHandler.CHANNEL_NAME }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class extracells

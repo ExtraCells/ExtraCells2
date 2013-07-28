@@ -48,6 +48,7 @@ public class CommonProxy implements IGuiHandler
 
 		ItemStack advancedStorageCasing = new ItemStack(extracells.Casing, 1, 0);
 
+		ItemStack meItemDropper = new ItemStack(extracells.MEDropper, 1);
 		ItemStack solderingStation = new ItemStack(extracells.SolderingStation, 1);
 
 		// Advanced Casing
@@ -80,6 +81,10 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.addShapedRecipe(encryptableCell, new Object[]
 		{ "_II", "ICI", "III", 'I', Item.ingotIron, 'C', Items.itemCell1k });
 
+		// Customizable Cell
+		GameRegistry.addShapedRecipe(customCell, new Object[]
+		{ " P ", "SSS", " P ", 'P', appeng.api.Materials.matProcessorBasic, 'S', appeng.api.Items.itemCell1k });
+
 		// Clusters
 		GameRegistry.addShapedRecipe(cluster256k, new Object[]
 		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', appeng.api.Materials.matStorageCluster });
@@ -94,9 +99,9 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.addShapedRecipe(solderingStation, new Object[]
 		{ "III", "IDI", "I_I", 'I', Item.ingotIron, 'D', Item.diamond });
 
-		// Customizable Cell
-		GameRegistry.addShapedRecipe(customCell, new Object[]
-		{ " P ", "SSS", " P ", 'P', appeng.api.Materials.matProcessorBasic, 'S', appeng.api.Items.itemCell1k });
+		// ME Item Dropper
+		GameRegistry.addShapedRecipe(meItemDropper, new Object[]
+		{ "CMC", "I_I", "IRI", 'C', Block.cobblestone, 'R',Item.redstone, 'M', appeng.api.Materials.matConversionMatrix, 'I', Item.ingotIron });
 	}
 
 	public void RegisterTileEntities()

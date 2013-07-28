@@ -58,8 +58,7 @@ public class BlockMEDropper extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
-		int k = metadata & 7;
-		return side == k ? (k != 1 && k != 0 ? this.frontHorizontalIcon : this.frontVerticalIcon) : (k != 1 && k != 0 ? (side != 1 && side != 0 ? this.sideIcon : this.topIcon) : this.topIcon);
+		return side == metadata ? (metadata != 1 && metadata != 0 ? this.frontHorizontalIcon : this.frontVerticalIcon) : (metadata != 1 && metadata != 0 ? (side != 1 && side != 0 ? this.sideIcon : this.topIcon) : this.topIcon);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -168,7 +167,7 @@ public class BlockMEDropper extends BlockContainer
 
 	public static EnumFacing getFacing(int metadata)
 	{
-		return EnumFacing.getFront(metadata & 7);
+		return EnumFacing.getFront(metadata);
 	}
 
 	@Override

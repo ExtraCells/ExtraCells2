@@ -73,13 +73,15 @@ public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDi
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (todispense.itemID != 0)
-			nbt.setInteger("ID", todispense.itemID);
-		if (todispense.getItemDamage() != 0)
-			nbt.setInteger("DMG", todispense.getItemDamage());
-		if (todispense.stackTagCompound != null)
-			nbt.setCompoundTag("NBT", todispense.stackTagCompound);
-
+		if (todispense != null)
+		{
+			if (todispense.itemID != 0)
+				nbt.setInteger("ID", todispense.itemID);
+			if (todispense.getItemDamage() != 0)
+				nbt.setInteger("DMG", todispense.getItemDamage());
+			if (todispense.stackTagCompound != null)
+				nbt.setCompoundTag("NBT", todispense.stackTagCompound);
+		}
 		nbt.setBoolean("LOCKED", locked);
 	}
 
@@ -93,7 +95,7 @@ public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDi
 			temp.setTagCompound(nbt.getCompoundTag("NBT"));
 			setItem(temp);
 		}
-		
+
 		setLocked(nbt.getBoolean("LOCKED"));
 	}
 
@@ -178,7 +180,7 @@ public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDi
 	@Override
 	public boolean canConnect(ForgeDirection dir)
 	{
-		return true;
+		return dir.ordinal()!=this.blockMetadata;
 	}
 
 	@Override

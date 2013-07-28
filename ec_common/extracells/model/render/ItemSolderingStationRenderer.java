@@ -36,7 +36,7 @@ public class ItemSolderingStationRenderer implements IItemRenderer
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
 
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","/textures/blocks/SolderingStation.png")); // texture
+		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","textures/blocks/SolderingStation.png")); // texture
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) 0.0D + 0.5F, (float) 0.0D + 1.5F, (float) 0.0D + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
