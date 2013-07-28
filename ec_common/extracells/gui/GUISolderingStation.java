@@ -40,7 +40,7 @@ public class GUISolderingStation extends GuiScreen
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","/textures/gui/guiSolderingStation.png"));
+		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","textures/gui/guiSolderingStation.png"));
 		int posX = (this.width - xSizeOfTexture) / 2;
 		int posY = (this.height - ySizeOfTexture) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSizeOfTexture, ySizeOfTexture);
