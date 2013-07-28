@@ -19,6 +19,7 @@ import appeng.api.Materials;
 import appeng.api.Util;
 import appeng.api.me.items.IStorageCell;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.extracells;
@@ -238,7 +239,7 @@ public class ItemCell extends Item implements IStorageCell
 				{
 					p.inventory.decrStackSize(p.inventory.currentItem, 1);
 					p.inventory.addItemStackToInventory(new ItemStack(extracells.Cluster, 1, i.getItemDamage()));
-					p.inventory.addItemStackToInventory(Materials.matStorageCellHouseing.copy());
+					p.inventory.addItemStackToInventory(new ItemStack(extracells.Casing, 1));
 				}
 			} else if (i.getItemDamage() == 4)
 			{
@@ -269,8 +270,6 @@ public class ItemCell extends Item implements IStorageCell
 
 	}
 
-	int sleep = 0;
-
 	@Override
 	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
 	{
@@ -285,18 +284,20 @@ public class ItemCell extends Item implements IStorageCell
 					ItemStack block = request.getItemStack();
 					if (block.getItem() instanceof ItemBlock)
 					{
+						ItemBlock itemblock = (ItemBlock) request.getItem();
+						
 						switch (itemstack.getTagCompound().getInteger("mode"))
 						{
 						case 0:
 							request.setStackSize(1);
-							player.worldObj.setBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems()
-									.get(0).getItemDamage(), 3);
+							itemblock.onItemUseFirst(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
+							itemblock.onItemUse(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
 							Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
 							break;
 						case 1:
 							request.setStackSize(1);
 							world.destroyBlock(x, y, z, true);
-							player.worldObj.setBlock(x, y, z, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(), 3);
+							placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
 							Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
 							break;
 						case 2:
@@ -312,8 +313,7 @@ public class ItemCell extends Item implements IStorageCell
 										for (int posZ = z - 1; posZ < z + 2; posZ++)
 										{
 											world.destroyBlock(posX, y, posZ, true);
-											player.worldObj.setBlock(posX, y, posZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(),
-													3);
+											placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
 										}
 									}
 									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
@@ -324,8 +324,7 @@ public class ItemCell extends Item implements IStorageCell
 										for (int posY = y - 1; posY < y + 2; posY++)
 										{
 											world.destroyBlock(x, posY, posZ, true);
-											player.worldObj.setBlock(x, posY, posZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(),
-													3);
+											placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
 										}
 									}
 									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
@@ -336,8 +335,7 @@ public class ItemCell extends Item implements IStorageCell
 										for (int posY = y - 1; posY < y + 2; posY++)
 										{
 											world.destroyBlock(posX, posY, z, true);
-											player.worldObj.setBlock(posX, posY, z, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(),
-													3);
+											placeBlock(request.getItemStack(), world, player, posX, posY, z, side, xOffset, yOffset, zOffset);
 										}
 									}
 									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
@@ -348,8 +346,7 @@ public class ItemCell extends Item implements IStorageCell
 										for (int posY = y - 1; posY < y + 2; posY++)
 										{
 											world.destroyBlock(posX, posY, z, true);
-											player.worldObj.setBlock(posX, posY, z, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(),
-													3);
+											placeBlock(request.getItemStack(), world, player, posX, posY, z, side, xOffset, yOffset, zOffset);
 										}
 									}
 									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
@@ -362,8 +359,7 @@ public class ItemCell extends Item implements IStorageCell
 										for (int posZ = z - 1; posZ < z + 2; posZ++)
 										{
 											world.destroyBlock(posX, y, posZ, true);
-											player.worldObj.setBlock(posX, y, posZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(),
-													3);
+											placeBlock(request.getItemStack(), world, player, posX, y, posZ, side, xOffset, yOffset, zOffset);
 										}
 									}
 									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
@@ -374,8 +370,7 @@ public class ItemCell extends Item implements IStorageCell
 										for (int posY = y - 1; posY < y + 2; posY++)
 										{
 											world.destroyBlock(x, posY, posZ, true);
-											player.worldObj.setBlock(x, posY, posZ, Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).itemID, appeng.api.Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getItemDamage(),
-													3);
+											placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
 										}
 									}
 									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
@@ -388,17 +383,7 @@ public class ItemCell extends Item implements IStorageCell
 						return true;
 					} else
 					{
-						if (sleep == 0)
-						{
-							player.addChatMessage("You can't place Items! Put a Block into the BLOCK-Container");
-							sleep++;
-						} else if (sleep == 10)
-						{
-							sleep = 0;
-						} else
-						{
-							sleep++;
-						}
+						player.addChatMessage("You can't place Items! Put a Block into the BLOCK-Container");
 						return false;
 					}
 				} else
@@ -413,6 +398,44 @@ public class ItemCell extends Item implements IStorageCell
 		{
 			return false;
 		}
+	}
+
+	public void placeBlock(ItemStack itemstack, World world, EntityPlayer player, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
+	{
+		ItemBlock itemblock = (ItemBlock) itemstack.getItem();
+		switch (ForgeDirection.getOrientation(side))
+		{
+		case DOWN:
+			itemblock.onItemUseFirst(itemstack, player, world, x, y++, z, side, xOffset, yOffset, zOffset);
+			itemblock.onItemUse(itemstack, player, world, x, y++, z, side, xOffset, yOffset, zOffset);
+			break;
+		case EAST:
+			itemblock.onItemUseFirst(itemstack, player, world, x--, y, z, side, xOffset, yOffset, zOffset);
+			itemblock.onItemUse(itemstack, player, world, x--, y, z, side, xOffset, yOffset, zOffset);
+			break;
+		case NORTH:
+			itemblock.onItemUseFirst(itemstack, player, world, x, y, z++, side, xOffset, yOffset, zOffset);
+			itemblock.onItemUse(itemstack, player, world, x, y, z++, side, xOffset, yOffset, zOffset);
+			break;
+		case SOUTH:
+			itemblock.onItemUseFirst(itemstack, player, world, x, y, z--, side, xOffset, yOffset, zOffset);
+			itemblock.onItemUse(itemstack, player, world, x, y, z--, side, xOffset, yOffset, zOffset);
+			break;
+		case UNKNOWN:
+			break;
+		case UP:
+			itemblock.onItemUseFirst(itemstack, player, world, x, y--, z, side, xOffset, yOffset, zOffset);
+			itemblock.onItemUse(itemstack, player, world, x, y--, z, side, xOffset, yOffset, zOffset);
+			break;
+		case WEST:
+			itemblock.onItemUseFirst(itemstack, player, world, x++, y, z, side, xOffset, yOffset, zOffset);
+			itemblock.onItemUse(itemstack, player, world, x++, y, z, side, xOffset, yOffset, zOffset);
+			break;
+		default:
+			break;
+
+		}
+
 	}
 
 	@Override

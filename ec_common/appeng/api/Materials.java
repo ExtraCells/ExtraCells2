@@ -1,5 +1,6 @@
 package appeng.api;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -49,6 +50,8 @@ public class Materials
     public static ItemStack matWirelessBooster;
 	public static ItemStack matMatterBall;
 	public static ItemStack matSingularity;
+	public static ItemStack matEnderPearlDust;
+	public static ItemStack matQuantumEntangledSingularity;
     
     // TEST ITEMS!
 	public static ItemStack testItem;

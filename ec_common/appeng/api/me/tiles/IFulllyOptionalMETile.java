@@ -6,4 +6,6 @@ package appeng.api.me.tiles;
  */
 public interface IFulllyOptionalMETile extends IOptionalMETile {
 
+	boolean isSeperated();
+	
 }

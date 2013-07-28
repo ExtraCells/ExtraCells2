@@ -40,5 +40,9 @@ public class TileRef<T> extends WorldCoord {
 		}
 		throw new AppEngTileMissingException( w, x,y,z);
 	}
+
+	public DimentionalCoord getCoord() {
+		return new DimentionalCoord( w, x, y, z );
+	}
 			
 };

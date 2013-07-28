@@ -56,12 +56,11 @@ public class Blocks
 	public static ItemStack blkCondenser;
 	public static ItemStack blkEnergyCell;
 	public static ItemStack blkPowerRelay;
+	public static ItemStack blkQuantumRing;
+	public static ItemStack blkQuantumLink;
+	public static ItemStack blkQuartzGlass;
     
     // Used internally, best not to mess with this one...
     public static ItemStack blkPhantom;
-
-
-
-
 
 }

@@ -18,7 +18,7 @@ import extracells.tile.TileEntitySolderingStation;
 public class BlockSolderingStation extends BlockContainer
 {
 
-	public BlockSolderingStation(int id, Material par2Material)
+	public BlockSolderingStation(int id)
 	{
 		super(id, Material.rock);
 		this.setCreativeTab(extracells.ModTab);

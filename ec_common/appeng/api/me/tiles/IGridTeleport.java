@@ -1,11 +1,11 @@
 package appeng.api.me.tiles;
 
-import net.minecraftforge.common.ForgeDirection;
+import appeng.api.DimentionalCoord;
 
 /**
- * Create a connection to a normally not connected tile - not used, possibility of changes...
+ * Create a connection to a normally not connected tile
  */
 public interface IGridTeleport
 {
-	IGridTileEntity findRemoteSide( ForgeDirection dir );
+	DimentionalCoord[] findRemoteSide();
 }
