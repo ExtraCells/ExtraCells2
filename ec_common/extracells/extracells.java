@@ -46,6 +46,7 @@ public class extracells
 	public static Item Casing;
 	public static Block SolderingStation;
 	public static Block MEDropper;
+	public static Block MEBattery;
 	public static int Cell_ID;
 	public static int CellEncrypted_ID;
 	public static int CellDecrypted_ID;
@@ -53,6 +54,7 @@ public class extracells
 	public static int Casing_ID;
 	public static int SolderingStation_ID;
 	public static int MEDropper_ID;
+	public static int MEBattery_ID;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -70,6 +72,7 @@ public class extracells
 		int casingTemp = config.getItem("Advanced Storage Casing ID", 4144, "ID for the advanced storage casing").getInt();
 		int solderingstationTemp = config.getBlock("SolderingStation_ID", 500, "ID for the soldering station").getInt();
 		int medropperTemp = config.getBlock("MEDropper_ID", 501, "ID for the ME Item Dropper").getInt();
+		int mebatteryTemp = config.getBlock("MEBattery_ID", 502, "ID for the ME Backup Battery").getInt();
 		config.save();
 
 		Cluster_ID = clusterTemp;
@@ -79,6 +82,7 @@ public class extracells
 		Casing_ID = casingTemp;
 		SolderingStation_ID = solderingstationTemp;
 		MEDropper_ID = medropperTemp;
+		MEBattery_ID = mebatteryTemp;
 	}
 
 	@EventHandler

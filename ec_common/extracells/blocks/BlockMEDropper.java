@@ -53,6 +53,9 @@ public class BlockMEDropper extends BlockContainer
 	{
 		super(id, Material.rock);
 		this.setCreativeTab(extracells.ModTab);
+		this.setUnlocalizedName("meDropper");
+		this.setHardness(2.0F);
+		this.setResistance(10.0F);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -88,7 +91,7 @@ public class BlockMEDropper extends BlockContainer
 					if (p.inventory.getCurrentItem() != null)
 					{
 						((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).setItem(p.inventory.getCurrentItem().copy());
-						p.addChatMessage("Drop set to Item " + p.inventory.getCurrentItem().getDisplayName());
+						p.addChatMessage("Drop set to " + p.inventory.getCurrentItem().getDisplayName());
 					}
 				} else
 				{
@@ -138,7 +141,6 @@ public class BlockMEDropper extends BlockContainer
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
-		MinecraftForge.EVENT_BUS.post(new GridTileConnectivityEvent(new TileEntityMEDropper(), world, new WorldCoord(x, y, z)));
 		int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
 		world.setBlockMetadataWithNotify(x, y, z, l, 2);
 	}
@@ -168,20 +170,6 @@ public class BlockMEDropper extends BlockContainer
 	public static EnumFacing getFacing(int metadata)
 	{
 		return EnumFacing.getFront(metadata);
-	}
-
-	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
-	{
-		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent((TileEntityMEDropper) world.getBlockTileEntity(x, y, z), world, new WorldCoord(x, y, z)));
-	}
-
-	@Override
-	public void breakBlock(World world, int x, int y, int z, int par5, int par6)
-	{
-		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent((TileEntityMEDropper) world.getBlockTileEntity(x, y, z), world, new WorldCoord(x, y, z)));
-		super.breakBlock(world, x, y, z, par5, par6);
-		world.removeBlockTileEntity(x, y, z);
 	}
 
 	@Override

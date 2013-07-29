@@ -1,26 +1,27 @@
 package extracells.proxy;
 
-import appeng.api.Items;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import appeng.api.Items;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.ecCraftingHandler;
 import extracells.extracells;
-import extracells.blocks.BlockSolderingStation;
+import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
+import extracells.blocks.BlockSolderingStation;
 import extracells.container.ContainerSolderingStation;
 import extracells.items.ItemCasing;
 import extracells.items.ItemCell;
 import extracells.items.ItemCluster;
 import extracells.items.ItemSecureCellDecrypted;
 import extracells.items.ItemSecureCellEncrypted;
+import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
 import extracells.tile.TileEntitySolderingStation;
 
@@ -50,6 +51,7 @@ public class CommonProxy implements IGuiHandler
 
 		ItemStack meItemDropper = new ItemStack(extracells.MEDropper, 1);
 		ItemStack solderingStation = new ItemStack(extracells.SolderingStation, 1);
+		ItemStack meBattery = new ItemStack(extracells.MEBattery, 1);
 
 		// Advanced Casing
 		GameRegistry.addShapedRecipe(advancedStorageCasing, new Object[]
@@ -101,18 +103,19 @@ public class CommonProxy implements IGuiHandler
 
 		// ME Item Dropper
 		GameRegistry.addShapedRecipe(meItemDropper, new Object[]
-		{ "CMC", "I_I", "IRI", 'C', Block.cobblestone, 'R',Item.redstone, 'M', appeng.api.Materials.matConversionMatrix, 'I', Item.ingotIron });
+		{ "CMC", "I_I", "IRI", 'C', Block.cobblestone, 'R', Item.redstone, 'M', appeng.api.Materials.matConversionMatrix, 'I', Item.ingotIron });
 	}
 
 	public void RegisterTileEntities()
 	{
 		GameRegistry.registerTileEntity(TileEntitySolderingStation.class, "tileEntitySolderingStation");
-		GameRegistry.registerTileEntity(TileEntityMEDropper.class, "tileEntityMEDispenser");
+		GameRegistry.registerTileEntity(TileEntityMEDropper.class, "tileEntityMEDropper");
+		GameRegistry.registerTileEntity(TileEntityMEBattery.class, "tileEntityMEBattery");
 	}
 
 	public void RegisterRenderers()
 	{
-
+		// Only Clientside
 	}
 
 	public void RegisterItems()
@@ -130,6 +133,8 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerBlock(extracells.SolderingStation, "SolderingStation");
 		extracells.MEDropper = new BlockMEDropper(extracells.MEDropper_ID);
 		GameRegistry.registerBlock(extracells.MEDropper, "meDispenser");
+		extracells.MEBattery = new BlockMEBattery(extracells.MEBattery_ID);
+		GameRegistry.registerBlock(extracells.MEBattery, "meBattery");
 	}
 
 	public void RegisterNames()
@@ -153,6 +158,7 @@ public class CommonProxy implements IGuiHandler
 		// Blocks
 		LanguageRegistry.addName(extracells.SolderingStation, "Soldering-Station");
 		LanguageRegistry.addName(extracells.MEDropper, "ME Item Dropper");
+		LanguageRegistry.addName(extracells.MEBattery, "ME BackUp Battery");
 	}
 
 	@Override

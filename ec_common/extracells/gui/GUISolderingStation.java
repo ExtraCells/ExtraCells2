@@ -40,7 +40,7 @@ public class GUISolderingStation extends GuiScreen
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","textures/gui/guiSolderingStation.png"));
+		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/gui/guiSolderingStation.png"));
 		int posX = (this.width - xSizeOfTexture) / 2;
 		int posY = (this.height - ySizeOfTexture) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSizeOfTexture, ySizeOfTexture);
@@ -150,10 +150,6 @@ public class GUISolderingStation extends GuiScreen
 					{
 						int_size = int_size - 2048;
 						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 's').makePacket());
-						// this.mc.thePlayer.inventory.addItemStackToInventory(new
-						// ItemStack(appeng.api.Materials.matStorageCell.copy().getItem(),
-						// 1,
-						// appeng.api.Materials.matStorageCell.getItemDamage()));
 					} else
 					{
 						this.mc.thePlayer.addChatMessage("Make place in your inventory to regain the ME Storage Cell!");
@@ -173,11 +169,9 @@ public class GUISolderingStation extends GuiScreen
 				{
 					int_size = int_size + 2048;
 					PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 's', '\0').makePacket());
-					// decreaseStackInInv(appeng.api.Materials.matStorageCell.copy(),
-					// 1);
 				} else
 				{
-					this.mc.thePlayer.addChatMessage("To upgrade the size of your storage, you need one ME Storage Cell for each 2048 KBytes! Thats double the size per cell you'd get with 1K Storages :D");
+					this.mc.thePlayer.addChatMessage("To upgrade the size of your storage, you need one ME Storage Cell for each 2048 Bytes! Thats double the size per cell you'd get with 1K Storages :D");
 				}
 			} else
 			{
@@ -195,10 +189,6 @@ public class GUISolderingStation extends GuiScreen
 					{
 						int_types = int_types - 1;
 						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 't').makePacket());
-						// this.mc.thePlayer.inventory.addItemStackToInventory(new
-						// ItemStack(appeng.api.Materials.matConversionMatrix.copy().getItem(),
-						// 1,
-						// appeng.api.Materials.matConversionMatrix.getItemDamage()));
 					} else
 					{
 						this.mc.thePlayer.addChatMessage("To upgrade the number of types of your storage, you need one ME Conversion Matrices for each type!");
@@ -220,8 +210,6 @@ public class GUISolderingStation extends GuiScreen
 					{
 						int_types = int_types + 1;
 						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 't', '\0').makePacket());
-						// decreaseStackInInv(appeng.api.Materials.matConversionMatrix.copy(),
-						// 1);
 					} else
 					{
 						this.mc.thePlayer.addChatMessage("To upgrade the number of types of your Storage, you need one ME Conversion Matrices for each type!");

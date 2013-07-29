@@ -6,7 +6,7 @@
     "description": "A Mod that adds 4 new ME Storage Cells and some other cool stuff to AE.",
     "version": "1.2.6",
     "mcversion": "1.6.2",
-	"url": "http://www.minecraftforum.net/topic/1801643-",
+	"url": "http://m3gafr3ak.github.io/ExtraCells/",
     "authors": [ "M3gaFr3ak" ],
     "credits": "Textures by PaleoCrafter and Cyntain",
     "requiredMods": [ "AppliedEnergistics" ]
