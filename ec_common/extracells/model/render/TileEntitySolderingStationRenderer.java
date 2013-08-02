@@ -28,13 +28,13 @@ public class TileEntitySolderingStationRenderer extends TileEntitySpecialRendere
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		int orientation = tile.worldObj.getBlockMetadata(tile.xCoord, tile.yCoord, tile.zCoord);
-		if (orientation == 0)
+		if (orientation == 4)
 		{
 			GL11.glRotatef(0, 0, 1, 0);
-		} else if (orientation == 1)
+		} else if (orientation == 2)
 		{
 			GL11.glRotatef(90, 0, 1, 0);
-		} else if (orientation == 2)
+		} else if (orientation == 5)
 		{
 			GL11.glRotatef(180, 0, 1, 0);
 		} else if (orientation == 3)

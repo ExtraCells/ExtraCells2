@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -35,12 +36,30 @@ public class BlockSolderingStation extends BlockContainer
 		return 1;
 	}
 
-	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving, ItemStack par6ItemStack)
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
-		int l = MathHelper.floor_double((double) (par5EntityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-		++l;
-		l %= 4;
-		par1World.setBlockMetadataWithNotify(par2, par3, par4, l, 2);
+		int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+
+		if (l == 0)
+		{
+			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+		}
+
+		if (l == 1)
+		{
+			world.setBlockMetadataWithNotify(x, y, z, 5, 2);
+		}
+
+		if (l == 2)
+		{
+			world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+		}
+
+		if (l == 3)
+		{
+			world.setBlockMetadataWithNotify(x, y, z, 4, 2);
+		}
 	}
 
 	@Override
@@ -78,7 +97,7 @@ public class BlockSolderingStation extends BlockContainer
 			return true;
 		} else
 		{
-			return false;
+			return true;
 		}
 	}
 }

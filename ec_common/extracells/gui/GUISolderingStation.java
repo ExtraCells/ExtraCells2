@@ -1,18 +1,22 @@
 package extracells.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.Util;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.extracells;
 import extracells.network.packet.SolderingPacket;
 
+@SideOnly(Side.CLIENT)
 public class GUISolderingStation extends GuiScreen
 {
 

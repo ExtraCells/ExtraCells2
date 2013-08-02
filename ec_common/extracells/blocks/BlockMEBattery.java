@@ -1,5 +1,7 @@
 package extracells.blocks;
 
+import java.text.DecimalFormat;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -15,6 +17,13 @@ import extracells.tile.TileEntityMEBattery;
 public class BlockMEBattery extends BlockContainer
 {
 
+	@SideOnly(Side.CLIENT)
+	public Icon iconLow;
+	@SideOnly(Side.CLIENT)
+	public Icon iconMed;
+	@SideOnly(Side.CLIENT)
+	public Icon iconHi;
+
 	public BlockMEBattery(int id)
 	{
 		super(id, Material.rock);
@@ -27,13 +36,15 @@ public class BlockMEBattery extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
-		return blockIcon;
+		return iconHi;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.blockIcon = iconregister.registerIcon("extracells:me_battery");
+		iconLow = iconregister.registerIcon("extracells:me_battery_low");
+		iconMed = iconregister.registerIcon("extracells:me_battery_medium");
+		iconHi = iconregister.registerIcon("extracells:me_battery_high");
 	}
 
 	@Override
@@ -53,8 +64,16 @@ public class BlockMEBattery extends BlockContainer
 	{
 		if (!world.isRemote)
 		{
-			p.addChatMessage("Current Energy: " + Float.toString(((TileEntityMEBattery) world.getBlockTileEntity(x, y, z)).energy));
-			p.addChatMessage("Max Energy: " + Float.toString(((TileEntityMEBattery) world.getBlockTileEntity(x, y, z)).maxEnergy));
+			Double energy = ((TileEntityMEBattery) world.getBlockTileEntity(x, y, z)).energy;
+			Double maxEnergy = ((TileEntityMEBattery) world.getBlockTileEntity(x, y, z)).maxEnergy;
+			if (energy > maxEnergy)
+			{
+				p.addChatMessage("Current Energy: " + new DecimalFormat("#").format(maxEnergy));
+			} else
+			{
+				p.addChatMessage("Current Energy: " + new DecimalFormat("#").format(energy));
+			}
+			p.addChatMessage("Max Energy: " + new DecimalFormat("#").format(maxEnergy));
 		}
 		return true;
 	}

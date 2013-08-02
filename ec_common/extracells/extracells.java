@@ -7,9 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -20,7 +18,7 @@ import extracells.blocks.BlockMEDropper;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.2.6", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.2.8", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { PacketHandler.CHANNEL_NAME }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class extracells
@@ -47,6 +45,7 @@ public class extracells
 	public static Block SolderingStation;
 	public static Block MEDropper;
 	public static Block MEBattery;
+	public static Block HardMEDrive;
 	public static int Cell_ID;
 	public static int CellEncrypted_ID;
 	public static int CellDecrypted_ID;
@@ -55,6 +54,7 @@ public class extracells
 	public static int SolderingStation_ID;
 	public static int MEDropper_ID;
 	public static int MEBattery_ID;
+	public static int HardMEDrive_ID;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -73,6 +73,7 @@ public class extracells
 		int solderingstationTemp = config.getBlock("SolderingStation_ID", 500, "ID for the soldering station").getInt();
 		int medropperTemp = config.getBlock("MEDropper_ID", 501, "ID for the ME Item Dropper").getInt();
 		int mebatteryTemp = config.getBlock("MEBattery_ID", 502, "ID for the ME Backup Battery").getInt();
+		int hardmedriveTemp = config.getBlock("HardMEDrive_ID", 503, "ID for the Blast Resistant ME Drive").getInt();
 		config.save();
 
 		Cluster_ID = clusterTemp;
@@ -83,6 +84,7 @@ public class extracells
 		SolderingStation_ID = solderingstationTemp;
 		MEDropper_ID = medropperTemp;
 		MEBattery_ID = mebatteryTemp;
+		HardMEDrive_ID = hardmedriveTemp;
 	}
 
 	@EventHandler

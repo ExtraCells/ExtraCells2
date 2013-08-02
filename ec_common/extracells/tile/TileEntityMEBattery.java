@@ -11,24 +11,39 @@ import appeng.api.me.tiles.IGridTileEntity;
 import appeng.api.me.tiles.IMEPowerStorage;
 import appeng.api.me.util.IGridInterface;
 
-public class TileEntityMEBattery extends TileEntity implements IMEPowerStorage, IGridTileEntity
+public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 {
 
-	public float energy = 0.0F;
-	public final float maxEnergy = 10000.0F;
+	public double energy = 0.0D;
+	public final double maxEnergy = 2000000.0D;
+	public final float takeEnergy = 10.0F;
 	public Boolean hasPower = false;
 	public IGridInterface grid;
+	public Boolean storingPower = true;
 
 	@Override
-	public boolean useMEEnergy(float use, String for_what)
+	public void updateEntity()
 	{
-		if (energy - use >= 0.0F)
+		storingPower = this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
+		if (getGrid() != null)
 		{
-			energy -= use;
-			return true;
-		} else
-		{
-			return false;
+			IMEPowerStorage controller = (IMEPowerStorage) getGrid().getController();
+			if (storingPower)
+			{
+				energy = controller.addMEPower(energy);
+			} else
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					if (energy + takeEnergy < maxEnergy && controller.useMEEnergy(takeEnergy, "ME Backup Battery"))
+					{
+						energy += takeEnergy;
+					} else
+					{
+						break;
+					}
+				}
+			}
 		}
 	}
 
@@ -45,43 +60,17 @@ public class TileEntityMEBattery extends TileEntity implements IMEPowerStorage, 
 	}
 
 	@Override
-	public double addMEPower(double amt)
-	{
-		if (((double) energy + amt) <= (double) maxEnergy)
-		{
-			return amt;
-		} else
-		{
-			double left = amt - ((double) maxEnergy - (double) energy);
-			energy = maxEnergy;
-			return left;
-		}
-	}
-
-	@Override
-	public double getMEMaxPower()
-	{
-		return (double) maxEnergy;
-	}
-
-	@Override
-	public double getMECurrentPower()
-	{
-		return (double) energy;
-	}
-
-	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		energy = nbt.getFloat("storedEnergy");
+		energy = nbt.getDouble("storedEnergy");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setFloat("storedEnergy", energy);
+		nbt.setDouble("storedEnergy", energy);
 	}
 
 	@Override
@@ -127,5 +116,4 @@ public class TileEntityMEBattery extends TileEntity implements IMEPowerStorage, 
 	{
 		return this.worldObj;
 	}
-
 }

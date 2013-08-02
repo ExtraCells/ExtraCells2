@@ -2,6 +2,7 @@ package extracells.proxy;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -12,15 +13,19 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.ecCraftingHandler;
 import extracells.extracells;
+import extracells.blocks.BlockHardMEDrive;
 import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
 import extracells.blocks.BlockSolderingStation;
+import extracells.container.ContainerHardMEDrive;
 import extracells.container.ContainerSolderingStation;
+import extracells.gui.GUIHardMEDrive;
 import extracells.items.ItemCasing;
 import extracells.items.ItemCell;
 import extracells.items.ItemCluster;
 import extracells.items.ItemSecureCellDecrypted;
 import extracells.items.ItemSecureCellEncrypted;
+import extracells.tile.TileEntityHardMEDrive;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
 import extracells.tile.TileEntitySolderingStation;
@@ -52,6 +57,7 @@ public class CommonProxy implements IGuiHandler
 		ItemStack meItemDropper = new ItemStack(extracells.MEDropper, 1);
 		ItemStack solderingStation = new ItemStack(extracells.SolderingStation, 1);
 		ItemStack meBattery = new ItemStack(extracells.MEBattery, 1);
+		ItemStack hardMEDrive = new ItemStack(extracells.HardMEDrive, 1);
 
 		// Advanced Casing
 		GameRegistry.addShapedRecipe(advancedStorageCasing, new Object[]
@@ -104,6 +110,14 @@ public class CommonProxy implements IGuiHandler
 		// ME Item Dropper
 		GameRegistry.addShapedRecipe(meItemDropper, new Object[]
 		{ "CMC", "I_I", "IRI", 'C', Block.cobblestone, 'R', Item.redstone, 'M', appeng.api.Materials.matConversionMatrix, 'I', Item.ingotIron });
+
+		// ME Backup Battery
+		GameRegistry.addShapedRecipe(meBattery, new Object[]
+		{ "EFE", "FPF", "EFE", 'E', appeng.api.Blocks.blkEnergyCell, 'F', appeng.api.Materials.matFluxCrystal, 'P', appeng.api.Materials.matProcessorBasic });
+
+		// Blast resistant ME Drive
+		GameRegistry.addShapedRecipe(hardMEDrive, new Object[]
+		{ "OOO", "ODO", "OCO", 'O', Block.obsidian, 'D', appeng.api.Blocks.blkDrive, 'C', appeng.api.Blocks.blkColorlessCableCovered });
 	}
 
 	public void RegisterTileEntities()
@@ -111,6 +125,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntitySolderingStation.class, "tileEntitySolderingStation");
 		GameRegistry.registerTileEntity(TileEntityMEDropper.class, "tileEntityMEDropper");
 		GameRegistry.registerTileEntity(TileEntityMEBattery.class, "tileEntityMEBattery");
+		GameRegistry.registerTileEntity(TileEntityHardMEDrive.class, "tileEntityHardMEDrive");
 	}
 
 	public void RegisterRenderers()
@@ -135,6 +150,8 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerBlock(extracells.MEDropper, "meDispenser");
 		extracells.MEBattery = new BlockMEBattery(extracells.MEBattery_ID);
 		GameRegistry.registerBlock(extracells.MEBattery, "meBattery");
+		extracells.HardMEDrive = new BlockHardMEDrive(extracells.HardMEDrive_ID);
+		GameRegistry.registerBlock(extracells.HardMEDrive, "hardMEDrive");
 	}
 
 	public void RegisterNames()
@@ -159,6 +176,7 @@ public class CommonProxy implements IGuiHandler
 		LanguageRegistry.addName(extracells.SolderingStation, "Soldering-Station");
 		LanguageRegistry.addName(extracells.MEDropper, "ME Item Dropper");
 		LanguageRegistry.addName(extracells.MEBattery, "ME BackUp Battery");
+		LanguageRegistry.addName(extracells.HardMEDrive, "Blast resistant ME Drive");
 	}
 
 	@Override
@@ -169,8 +187,8 @@ public class CommonProxy implements IGuiHandler
 		{
 			switch (ID)
 			{
-			case 0: // GUI Soldering Station
-				return null;
+			case 0: // GUI Hard ME Drive
+				return new GUIHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			default:
 				return false;
 			}
@@ -189,8 +207,8 @@ public class CommonProxy implements IGuiHandler
 		{
 			switch (ID)
 			{
-			case 0: // GUI Soldering Station
-				return new ContainerSolderingStation();
+			case 0: // GUI Hard ME Drive
+				return new ContainerHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			default:
 				return false;
 			}
