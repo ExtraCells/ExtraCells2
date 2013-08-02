@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"><properties version="1.0">
+  <comment>English (EN) Localization File</comment>
+  <entry key="item.cell.256k">ME 256K Storage</entry>
+  <entry key="item.cell.1024k">ME 1M Storage</entry>
+  <entry key="item.cell.4096k">ME 4M Storage</entry>
+  <entry key="item.cell.16348k">ME 16M Storage</entry>
+  <entry key="item.cell.container">ME Block Container</entry>
+  <entry key="item.cell.adjustable">Adjustable ME Storage</entry>
+  <entry key="item.cluster.kilo">Kilo Storage Cluster </entry>
+  <entry key="item.cluster.mega">Mega Storage Cluster</entry>
+  <entry key="item.cluster.giga">Giga Storage Cluster</entry>
+  <entry key="item.cluster.tera">Tera Storage Cluster</entry>
+  <entry key="item.cell_secure.encrypted">Encryptable Cell - Encrypted</entry>
+  <entry key="item.cell_secure.decrypted">Encryptable Cell - Decrypted</entry>
+  <entry key="item.casing.advanced">Advanced Storage Cell Housing</entry>
+  <entry key="tile.block.solderingstation">Soldering Station</entry>
+  <entry key="tile.block.mebattery">ME BackUp Battery</entry>
+  <entry key="tile.block.medropper">ME Item Dropper</entry>
+  <entry key="tile.block.hardmedrive">Blast resistant ME Drive</entry>
+  <entry key="tooltip.belongsto">This storage belongs to:</entry>
+  <entry key="tooltip.notyours">You are not the owner of this storage drive!</entry>
+  <entry key="tooltip.accessgranted">Access granted!</entry>
+  <entry key="tooltip.storageencrypted">Storage encrypted!</entry>
+  <entry key="tooltip.empty">Empty</entry>
+  <entry key="tooltip.block">Block</entry>
+  <entry key="tooltip.equaltrade1">Equal Trade Mode (1*1)</entry>
+  <entry key="tooltip.equaltrade3">Equal Trade Mode (3*3)</entry>
+  <entry key="tooltip.placement">Placement Mode</entry>
+  <entry key="tooltip.mode">Mode</entry>
+  <entry key="tooltip.onlyblocks">You can't place Items! Put a Block into the BLOCK-Container</entry>
+  <entry key="tooltip.solderingwarning.tutorial">Put a ME Adjustable Storage into your hotbar and hold it while using the SolderingStation!</entry>
+  <entry key="tooltip.solderingwarning.nospacestoragecell">Make place in your inventory to regain the ME Storage Cell!</entry>
+  <entry key="tooltip.solderingwarning.nospaceconversionmatrix">Make place in your inventory to regain the ME Conversion Matrix!</entry>
+  <entry key="tooltip.solderingwarning.needstoragecell">To upgrade the size of your storage, you need one ME Storage Cell for each 2048 Bytes!</entry>
+  <entry key="tooltip.solderingwarning.needconversionmatrix">To upgrade the number of types of your Storage, you need one ME Conversion Matrix for each type!</entry>
+  <entry key="tooltip.solderingwarning.cellnotempty">This Cell is not Empty!</entry>
+  </properties>

@@ -33,7 +33,7 @@ import appeng.api.WorldCoord;
 import appeng.api.events.GridTileConnectivityEvent;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
-import extracells.extracells;
+import extracells.Extracells;
 import extracells.tile.TileEntityMEDropper;
 
 public class BlockMEDropper extends BlockContainer
@@ -52,8 +52,8 @@ public class BlockMEDropper extends BlockContainer
 	public BlockMEDropper(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.ModTab);
-		this.setUnlocalizedName("meDropper");
+		this.setCreativeTab(Extracells.ModTab);
+		this.setUnlocalizedName("block.medropper");
 		this.setHardness(2.0F);
 		this.setResistance(10.0F);
 	}
@@ -67,10 +67,10 @@ public class BlockMEDropper extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.sideIcon = iconregister.registerIcon("extracells:me_dropper_side");
-		this.topIcon = iconregister.registerIcon("extracells:me_dropper_top");
-		this.frontHorizontalIcon = iconregister.registerIcon("extracells:me_dropper_front_horizontal");
-		this.frontVerticalIcon = iconregister.registerIcon("extracells:me_dropper_front_vertical");
+		this.sideIcon = iconregister.registerIcon("extracells:medropper.side");
+		this.topIcon = iconregister.registerIcon("extracells:medropper.top");
+		this.frontHorizontalIcon = iconregister.registerIcon("extracells:medropper.front_horizontal");
+		this.frontVerticalIcon = iconregister.registerIcon("extracells:medropper.front_vertical");
 	}
 
 	@Override

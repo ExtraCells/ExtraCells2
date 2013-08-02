@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -13,7 +14,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.extracells;
+import extracells.Extracells;
 import extracells.network.packet.SolderingPacket;
 
 @SideOnly(Side.CLIENT)
@@ -44,7 +45,7 @@ public class GUISolderingStation extends GuiScreen
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/gui/guiSolderingStation.png"));
+		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/gui/solderingstation.png"));
 		int posX = (this.width - xSizeOfTexture) / 2;
 		int posY = (this.height - ySizeOfTexture) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSizeOfTexture, ySizeOfTexture);
@@ -55,10 +56,7 @@ public class GUISolderingStation extends GuiScreen
 			textfield_types.drawTextBox();
 		} else
 		{
-			this.drawCenteredString(fontRenderer, "Put a ME Adjustable Storage", posX + 90, posY + 25, 0xFF00FF);
-			this.drawCenteredString(fontRenderer, "into your hotbar and", posX + 90, posY + 35, 0xFF00FF);
-			this.drawCenteredString(fontRenderer, "hold it while", posX + 90, posY + 45, 0xFF00FF);
-			this.drawCenteredString(fontRenderer, "using the SolderingStation!", posX + 90, posY + 55, 0xFF00FF);
+			this.fontRenderer.drawSplitString(StatCollector.translateToLocal("tooltip.solderingwarning.tutorial"), posX + 3, posY + 25, 170, 0x000064);
 		}
 		super.drawScreen(x, y, f);
 	}
@@ -110,7 +108,7 @@ public class GUISolderingStation extends GuiScreen
 	{
 		if (this.mc.thePlayer.getHeldItem() != null)
 		{
-			if (this.mc.thePlayer.getHeldItem().getItem() == extracells.Cell && this.mc.thePlayer.getHeldItem().getItemDamage() == 5)
+			if (this.mc.thePlayer.getHeldItem().getItem() == Extracells.Cell && this.mc.thePlayer.getHeldItem().getItemDamage() == 5)
 			{
 				if (this.mc.thePlayer.getHeldItem().hasTagCompound())
 				{
@@ -156,12 +154,12 @@ public class GUISolderingStation extends GuiScreen
 						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 's').makePacket());
 					} else
 					{
-						this.mc.thePlayer.addChatMessage("Make place in your inventory to regain the ME Storage Cell!");
+						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.nospacestoragecell"));
 					}
 				}
 			} else
 			{
-				this.mc.thePlayer.addChatMessage("This Cell is not Empty!");
+				this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.cellnotempty"));
 			}
 			break;
 
@@ -175,11 +173,11 @@ public class GUISolderingStation extends GuiScreen
 					PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 's', '\0').makePacket());
 				} else
 				{
-					this.mc.thePlayer.addChatMessage("To upgrade the size of your storage, you need one ME Storage Cell for each 2048 Bytes! Thats double the size per cell you'd get with 1K Storages :D");
+					this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.needstoragecell"));
 				}
 			} else
 			{
-				this.mc.thePlayer.addChatMessage("This Cell is not Empty!");
+				this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.cellnotempty"));
 			}
 			break;
 
@@ -195,12 +193,12 @@ public class GUISolderingStation extends GuiScreen
 						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 't').makePacket());
 					} else
 					{
-						this.mc.thePlayer.addChatMessage("To upgrade the number of types of your storage, you need one ME Conversion Matrices for each type!");
+						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.nospaceconversionmatrix"));
 					}
 				}
 			} else
 			{
-				this.mc.thePlayer.addChatMessage("This Cell is not Empty!");
+				this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.cellnotempty"));
 			}
 			break;
 
@@ -216,12 +214,12 @@ public class GUISolderingStation extends GuiScreen
 						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 't', '\0').makePacket());
 					} else
 					{
-						this.mc.thePlayer.addChatMessage("To upgrade the number of types of your Storage, you need one ME Conversion Matrices for each type!");
+						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.needconversionmatrix"));
 					}
 				}
 			} else
 			{
-				this.mc.thePlayer.addChatMessage("This Cell is not Empty!");
+				this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.cellnotempty"));
 			}
 			break;
 

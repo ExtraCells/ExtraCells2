@@ -4,7 +4,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.extracells;
+import extracells.Extracells;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
 
@@ -38,13 +39,13 @@ public class ItemSecureCellEncrypted extends Item
 	@Override
 	public void registerIcons(IconRegister IconRegister)
 	{
-		this.icon = IconRegister.registerIcon("extracells:itemMEEncryptableStorageEncrypted");
+		this.icon = IconRegister.registerIcon("extracells:cell_secure.encrypted");
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return "itemSecureCellEncrypted";
+		return "item.cell_secure.encrypted";
 	}
 
 	@SuppressWarnings(
@@ -58,7 +59,7 @@ public class ItemSecureCellEncrypted extends Item
 			stack.setTagCompound(new NBTTagCompound());
 		}
 
-		list.add("This Storage belongs to " + stack.getTagCompound().getString("owner") + "!");
+		list.add(StatCollector.translateToLocal("tooltip.belongsto") + " " + stack.getTagCompound().getString("owner") + "!");
 	}
 
 	@ForgeSubscribe
@@ -66,7 +67,7 @@ public class ItemSecureCellEncrypted extends Item
 	public ItemStack onItemRightClick(ItemStack stack, World w, EntityPlayer p)
 	{
 		ItemStack itemStackEncrypted = p.inventory.getCurrentItem();
-		ItemStack itemStackDecrypted = new ItemStack(extracells.CellDecrypted, 1);
+		ItemStack itemStackDecrypted = new ItemStack(Extracells.CellDecrypted, 1);
 
 		if (!itemStackEncrypted.hasTagCompound())
 		{
@@ -90,13 +91,13 @@ public class ItemSecureCellEncrypted extends Item
 
 				if (!w.isRemote)
 				{
-					p.addChatMessage("Access granted!");
+					p.addChatMessage(StatCollector.translateToLocal("tooltip.accessgranted"));
 				}
 			} else
 			{
 				if (!w.isRemote)
 				{
-					p.addChatMessage("You are not the owner of this storage drive!!!");
+					p.addChatMessage(StatCollector.translateToLocal("tooltip.notyours"));
 				}
 			}
 		}

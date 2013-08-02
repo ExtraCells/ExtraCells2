@@ -4,7 +4,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.extracells;
+import extracells.Extracells;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
 import appeng.api.IAEItemStack;
@@ -30,7 +31,7 @@ public class ItemSecureCellDecrypted extends Item implements IStorageCell
 		this.setMaxStackSize(1);
 		this.setMaxDamage(0);
 		this.setHasSubtypes(false);
-		this.setCreativeTab(extracells.ModTab);
+		this.setCreativeTab(Extracells.ModTab);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -42,13 +43,13 @@ public class ItemSecureCellDecrypted extends Item implements IStorageCell
 	@Override
 	public void registerIcons(IconRegister IconRegister)
 	{
-		this.icon = IconRegister.registerIcon("extracells:itemMEEncryptableStorageDecrypted");
+		this.icon = IconRegister.registerIcon("extracells:cell_secure.decrypted");
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return "itemSecureCellDecrypted";
+		return "item.cell_secure.decrypted";
 	}
 
 	@Override
@@ -59,10 +60,10 @@ public class ItemSecureCellDecrypted extends Item implements IStorageCell
 		long used_bytes = Util.getCellRegistry().getHandlerForCell(stack).usedBytes();
 		if (hasName)
 		{
-			return "Encryptable Cell - Decrypted" + " - " + partitionName;
+			return this.getLocalizedName(stack) + " - " + partitionName;
 		} else
 		{
-			return "Encryptable Cell - Decrypted";
+			return this.getLocalizedName(stack);
 		}
 	}
 
@@ -70,24 +71,24 @@ public class ItemSecureCellDecrypted extends Item implements IStorageCell
 	{ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+	public void addInformation(ItemStack itemstack, EntityPlayer player, List list, boolean par4)
 	{
-		Boolean preformatted = Util.getCellRegistry().getHandlerForCell(stack).isPreformatted();
-		Boolean fuzzy = Util.getCellRegistry().getHandlerForCell(stack).isFuzzyPreformatted();
-		long used_bytes = Util.getCellRegistry().getHandlerForCell(stack).usedBytes();
-		long total_bytes = Util.getCellRegistry().getHandlerForCell(stack).totalBytes();
-		long used_types = Util.getCellRegistry().getHandlerForCell(stack).storedItemTypes();
-		long total_types = Util.getCellRegistry().getHandlerForCell(stack).getTotalItemTypes();
-		list.add(used_bytes + " of " + total_bytes + " Bytes Used");
-		list.add(used_types + " of " + total_types + " Types");
-		if (preformatted)
+		Boolean partitioned = Util.getCellRegistry().getHandlerForCell(itemstack).isPreformatted();
+		Boolean fuzzy = Util.getCellRegistry().getHandlerForCell(itemstack).isFuzzyPreformatted();
+		long used_bytes = Util.getCellRegistry().getHandlerForCell(itemstack).usedBytes();
+		long total_bytes = Util.getCellRegistry().getHandlerForCell(itemstack).totalBytes();
+		long used_types = Util.getCellRegistry().getHandlerForCell(itemstack).storedItemTypes();
+		long total_types = Util.getCellRegistry().getHandlerForCell(itemstack).getTotalItemTypes();
+		list.add(used_bytes + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.Of") + " " + total_bytes + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.BytesUsed"));
+		list.add(used_types + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.Of") + " " + total_types + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.Types"));
+		if (partitioned)
 		{
 			if (fuzzy)
 			{
-				list.add("Preformatted - Fuzzy");
+				list.add(StatCollector.translateToLocal("Appeng.GuiITooltip.Partitioned") + " - " + StatCollector.translateToLocal("Appeng.GuiITooltip.Fuzzy"));
 			} else
 			{
-				list.add("Preformatted - Precise");
+				list.add(StatCollector.translateToLocal("Appeng.GuiITooltip.Partitioned") + " - " + StatCollector.translateToLocal("Appeng.GuiITooltip.Precise"));
 			}
 		}
 	}
@@ -99,7 +100,7 @@ public class ItemSecureCellDecrypted extends Item implements IStorageCell
 		if (p.isSneaking())
 		{
 			ItemStack itemStackDecrypted = p.inventory.getCurrentItem();
-			ItemStack itemStackEncrypted = new ItemStack(extracells.CellEncrypted, 1);// p.inventory.getCurrentItem();
+			ItemStack itemStackEncrypted = new ItemStack(Extracells.CellEncrypted, 1);
 			if (!itemStackEncrypted.hasTagCompound())
 			{
 				itemStackEncrypted.setTagCompound(new NBTTagCompound());
@@ -113,16 +114,16 @@ public class ItemSecureCellDecrypted extends Item implements IStorageCell
 			NBTTagCompound tagEncrypted = itemStackEncrypted.getTagCompound();
 			NBTTagCompound tagDecrypted = itemStackDecrypted.getTagCompound();
 
-			//copy over content
+			// copy over content
 			itemStackEncrypted.setTagCompound(tagDecrypted);
-			
-			//set owner
+
+			// set owner
 			itemStackEncrypted.getTagCompound().setString("owner", p.username);
 
 			p.inventory.setInventorySlotContents(p.inventory.currentItem, itemStackEncrypted);
 			if (!w.isRemote)
 			{
-				p.addChatMessage("Storage encrypted!");
+				p.addChatMessage(StatCollector.translateToLocal("tooltip.storageencrypted"));
 			}
 		}
 		return i;

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.extracells;
+import extracells.Extracells;
 
 public class ItemCasing extends Item
 {
@@ -18,7 +18,7 @@ public class ItemCasing extends Item
 	public ItemCasing(int id)
 	{
 		super(id);
-		this.setCreativeTab(extracells.ModTab);
+		this.setCreativeTab(Extracells.ModTab);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -30,13 +30,19 @@ public class ItemCasing extends Item
 	@Override
 	public void registerIcons(IconRegister IconRegister)
 	{
-		this.icon = IconRegister.registerIcon("extracells:itemAdvancedCasing");
+		this.icon = IconRegister.registerIcon("extracells:casing.advanced");
+	}
+
+	@Override
+	public String getItemDisplayName(ItemStack itemstack)
+	{
+		return this.getLocalizedName(itemstack);
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack par1ItemStack)
 	{
-		return "storageCasingAdvanced";
+		return "item.casing.advanced";
 	}
 
 	public EnumRarity getRarity(ItemStack par1)

@@ -12,7 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
-import extracells.extracells;
+import extracells.Extracells;
 import extracells.gui.GUISolderingStation;
 import extracells.tile.TileEntitySolderingStation;
 
@@ -22,8 +22,8 @@ public class BlockSolderingStation extends BlockContainer
 	public BlockSolderingStation(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.ModTab);
-		this.setUnlocalizedName("SolderingStation");
+		this.setCreativeTab(Extracells.ModTab);
+		this.setUnlocalizedName("block.solderingstation");
 		this.setHardness(2.0F);
 		this.setResistance(6000F);
 		this.setLightValue(0.02f);
@@ -93,7 +93,7 @@ public class BlockSolderingStation extends BlockContainer
 			((TileEntitySolderingStation) world.getBlockTileEntity(x, y, z)).addUser(player.username);
 		if (world.isRemote)
 		{
-			FMLCommonHandler.instance().showGuiScreen(new GUISolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == extracells.Cell && player.getHeldItem().getItemDamage() == 5)));
+			FMLCommonHandler.instance().showGuiScreen(new GUISolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == Extracells.Cell && player.getHeldItem().getItemDamage() == 5)));
 			return true;
 		} else
 		{

@@ -22,7 +22,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import extracells.extracells;
+import extracells.Extracells;
 import extracells.tile.TileEntityHardMEDrive;
 
 public class BlockHardMEDrive extends BlockContainer
@@ -35,8 +35,8 @@ public class BlockHardMEDrive extends BlockContainer
 	public BlockHardMEDrive(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.ModTab);
-		this.setUnlocalizedName("hardMEDrive");
+		this.setCreativeTab(Extracells.ModTab);
+		this.setUnlocalizedName("block.hardmedrive");
 		this.setHardness(2.0F);
 		this.setResistance(1000000.0F);
 	}
@@ -50,8 +50,8 @@ public class BlockHardMEDrive extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.sideIcon = iconregister.registerIcon("extracells:hard_me_drive_sides");
-		this.frontIcon = iconregister.registerIcon("extracells:hard_me_drive_face");
+		this.sideIcon = iconregister.registerIcon("extracells:hardmedrive.sides");
+		this.frontIcon = iconregister.registerIcon("extracells:hardmedrive.face");
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class BlockHardMEDrive extends BlockContainer
 		{
 			return false;
 		}
-		player.openGui(extracells.instance, 0, world, x, y, z);
+		player.openGui(Extracells.instance, 0, world, x, y, z);
 		return true;
 	}
 

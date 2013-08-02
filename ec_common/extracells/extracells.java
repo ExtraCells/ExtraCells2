@@ -15,17 +15,18 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import extracells.blocks.BlockMEDropper;
+import extracells.localization.LocalizationHandler;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.2.8", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.2.9", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { PacketHandler.CHANNEL_NAME }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
-public class extracells
+public class Extracells
 {
 
 	@Instance("extracells")
-	public static extracells instance;
+	public static Extracells instance;
 	public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells")
 	{
 		public ItemStack getIconItemStack()
@@ -61,6 +62,7 @@ public class extracells
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		instance = this;
+		LocalizationHandler.loadLanguages();
 
 		// Config
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());

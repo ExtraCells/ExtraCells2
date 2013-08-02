@@ -27,8 +27,8 @@ public class BlockMEBattery extends BlockContainer
 	public BlockMEBattery(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.extracells.ModTab);
-		this.setUnlocalizedName("meBattery");
+		this.setCreativeTab(extracells.Extracells.ModTab);
+		this.setUnlocalizedName("block.mebattery");
 		this.setHardness(2.0F);
 		this.setResistance(10.0F);
 	}
@@ -42,9 +42,9 @@ public class BlockMEBattery extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		iconLow = iconregister.registerIcon("extracells:me_battery_low");
-		iconMed = iconregister.registerIcon("extracells:me_battery_medium");
-		iconHi = iconregister.registerIcon("extracells:me_battery_high");
+		iconLow = iconregister.registerIcon("extracells:mebattery.low");
+		iconMed = iconregister.registerIcon("extracells:mebattery.medium");
+		iconHi = iconregister.registerIcon("extracells:mebattery.high");
 	}
 
 	@Override

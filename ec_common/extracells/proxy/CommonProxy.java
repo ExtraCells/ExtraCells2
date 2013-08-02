@@ -11,8 +11,8 @@ import appeng.api.Items;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import extracells.ecCraftingHandler;
-import extracells.extracells;
+import extracells.CraftingHandler;
+import extracells.Extracells;
 import extracells.blocks.BlockHardMEDrive;
 import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
@@ -20,6 +20,7 @@ import extracells.blocks.BlockSolderingStation;
 import extracells.container.ContainerHardMEDrive;
 import extracells.container.ContainerSolderingStation;
 import extracells.gui.GUIHardMEDrive;
+import extracells.items.ItemBlockSpecial;
 import extracells.items.ItemCasing;
 import extracells.items.ItemCell;
 import extracells.items.ItemCluster;
@@ -34,30 +35,30 @@ public class CommonProxy implements IGuiHandler
 {
 	public void addRecipes()
 	{
-		GameRegistry.registerCraftingHandler(new ecCraftingHandler());
+		GameRegistry.registerCraftingHandler(new CraftingHandler());
 
-		ItemStack cell256k = new ItemStack(extracells.Cell, 1, 0);
-		ItemStack cell1m = new ItemStack(extracells.Cell, 1, 1);
-		ItemStack cell4m = new ItemStack(extracells.Cell, 1, 2);
-		ItemStack cell16m = new ItemStack(extracells.Cell, 1, 3);
+		ItemStack cell256k = new ItemStack(Extracells.Cell, 1, 0);
+		ItemStack cell1m = new ItemStack(Extracells.Cell, 1, 1);
+		ItemStack cell4m = new ItemStack(Extracells.Cell, 1, 2);
+		ItemStack cell16m = new ItemStack(Extracells.Cell, 1, 3);
 
-		ItemStack cluster256k = new ItemStack(extracells.Cluster, 1, 0);
-		ItemStack cluster1m = new ItemStack(extracells.Cluster, 1, 1);
-		ItemStack cluster4m = new ItemStack(extracells.Cluster, 1, 2);
-		ItemStack cluster16m = new ItemStack(extracells.Cluster, 1, 3);
+		ItemStack cluster256k = new ItemStack(Extracells.Cluster, 1, 0);
+		ItemStack cluster1m = new ItemStack(Extracells.Cluster, 1, 1);
+		ItemStack cluster4m = new ItemStack(Extracells.Cluster, 1, 2);
+		ItemStack cluster16m = new ItemStack(Extracells.Cluster, 1, 3);
 
-		ItemStack containerCell = new ItemStack(extracells.Cell, 1, 4);
+		ItemStack containerCell = new ItemStack(Extracells.Cell, 1, 4);
 
-		ItemStack encryptableCell = new ItemStack(extracells.CellDecrypted, 1, 0);
+		ItemStack encryptableCell = new ItemStack(Extracells.CellDecrypted, 1, 0);
 
-		ItemStack customCell = new ItemStack(extracells.Cell, 1, 5);
+		ItemStack customCell = new ItemStack(Extracells.Cell, 1, 5);
 
-		ItemStack advancedStorageCasing = new ItemStack(extracells.Casing, 1, 0);
+		ItemStack advancedStorageCasing = new ItemStack(Extracells.Casing, 1, 0);
 
-		ItemStack meItemDropper = new ItemStack(extracells.MEDropper, 1);
-		ItemStack solderingStation = new ItemStack(extracells.SolderingStation, 1);
-		ItemStack meBattery = new ItemStack(extracells.MEBattery, 1);
-		ItemStack hardMEDrive = new ItemStack(extracells.HardMEDrive, 1);
+		ItemStack meItemDropper = new ItemStack(Extracells.MEDropper, 1);
+		ItemStack solderingStation = new ItemStack(Extracells.SolderingStation, 1);
+		ItemStack meBattery = new ItemStack(Extracells.MEBattery, 1);
+		ItemStack hardMEDrive = new ItemStack(Extracells.HardMEDrive, 1);
 
 		// Advanced Casing
 		GameRegistry.addShapedRecipe(advancedStorageCasing, new Object[]
@@ -65,21 +66,21 @@ public class CommonProxy implements IGuiHandler
 
 		// Normal Cells
 		GameRegistry.addShapedRecipe(cell256k, new Object[]
-		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(extracells.Cluster, 1, 0) });
+		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 0) });
 		GameRegistry.addShapelessRecipe(cell256k, new Object[]
-		{ extracells.Casing, cluster256k });
+		{ Extracells.Casing, cluster256k });
 		GameRegistry.addShapedRecipe(cell1m, new Object[]
-		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(extracells.Cluster, 1, 1) });
+		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 1) });
 		GameRegistry.addShapelessRecipe(cell1m, new Object[]
-		{ extracells.Casing, cluster1m });
+		{ Extracells.Casing, cluster1m });
 		GameRegistry.addShapedRecipe(cell4m, new Object[]
-		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(extracells.Cluster, 1, 2) });
+		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 2) });
 		GameRegistry.addShapelessRecipe(cell4m, new Object[]
-		{ extracells.Casing, cluster4m });
+		{ Extracells.Casing, cluster4m });
 		GameRegistry.addShapedRecipe(cell16m, new Object[]
-		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(extracells.Cluster, 1, 3) });
+		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 3) });
 		GameRegistry.addShapelessRecipe(cell16m, new Object[]
-		{ extracells.Casing, cluster16m });
+		{ Extracells.Casing, cluster16m });
 
 		// Cell Container
 		GameRegistry.addShapelessRecipe(containerCell, new Object[]
@@ -97,11 +98,11 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.addShapedRecipe(cluster256k, new Object[]
 		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', appeng.api.Materials.matStorageCluster });
 		GameRegistry.addShapedRecipe(cluster1m, new Object[]
-		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(extracells.Cluster, 1, 0) });
+		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 0) });
 		GameRegistry.addShapedRecipe(cluster4m, new Object[]
-		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(extracells.Cluster, 1, 1) });
+		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 1) });
 		GameRegistry.addShapedRecipe(cluster16m, new Object[]
-		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(extracells.Cluster, 1, 2) });
+		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 2) });
 
 		// SolderingStation
 		GameRegistry.addShapedRecipe(solderingStation, new Object[]
@@ -135,48 +136,29 @@ public class CommonProxy implements IGuiHandler
 
 	public void RegisterItems()
 	{
-		extracells.Cluster = new ItemCluster(extracells.Cluster_ID).setUnlocalizedName("cluster");
-		extracells.Cell = new ItemCell(extracells.Cell_ID).setUnlocalizedName("cell");
-		extracells.CellDecrypted = new ItemSecureCellDecrypted(extracells.CellDecrypted_ID).setUnlocalizedName("itemSecureCellEncrypted");
-		extracells.CellEncrypted = new ItemSecureCellEncrypted(extracells.CellEncrypted_ID).setUnlocalizedName("itemSecureCellDecrypted");
-		extracells.Casing = new ItemCasing(extracells.Casing_ID).setUnlocalizedName("storageCasingAdvanced");
+		Extracells.Cluster = new ItemCluster(Extracells.Cluster_ID);
+		Extracells.Cell = new ItemCell(Extracells.Cell_ID);
+		Extracells.CellDecrypted = new ItemSecureCellDecrypted(Extracells.CellDecrypted_ID);
+		Extracells.CellEncrypted = new ItemSecureCellEncrypted(Extracells.CellEncrypted_ID);
+		Extracells.Casing = new ItemCasing(Extracells.Casing_ID);
 	}
 
 	public void RegisterBlocks()
 	{
-		extracells.SolderingStation = new BlockSolderingStation(extracells.SolderingStation_ID);
-		GameRegistry.registerBlock(extracells.SolderingStation, "SolderingStation");
-		extracells.MEDropper = new BlockMEDropper(extracells.MEDropper_ID);
-		GameRegistry.registerBlock(extracells.MEDropper, "meDispenser");
-		extracells.MEBattery = new BlockMEBattery(extracells.MEBattery_ID);
-		GameRegistry.registerBlock(extracells.MEBattery, "meBattery");
-		extracells.HardMEDrive = new BlockHardMEDrive(extracells.HardMEDrive_ID);
-		GameRegistry.registerBlock(extracells.HardMEDrive, "hardMEDrive");
+		Extracells.SolderingStation = new BlockSolderingStation(Extracells.SolderingStation_ID);
+		GameRegistry.registerBlock(Extracells.SolderingStation, ItemBlockSpecial.class, "solderingStation");
+		Extracells.MEDropper = new BlockMEDropper(Extracells.MEDropper_ID);
+		GameRegistry.registerBlock(Extracells.MEDropper, ItemBlockSpecial.class, "meDispenser");
+		Extracells.MEBattery = new BlockMEBattery(Extracells.MEBattery_ID);
+		GameRegistry.registerBlock(Extracells.MEBattery, ItemBlockSpecial.class, "meBattery");
+		Extracells.HardMEDrive = new BlockHardMEDrive(Extracells.HardMEDrive_ID);
+		GameRegistry.registerBlock(Extracells.HardMEDrive, ItemBlockSpecial.class, "hardMEDrive");
 	}
 
 	public void RegisterNames()
 	{
 		LanguageRegistry.instance();
-		// Items
-		LanguageRegistry.addName(new ItemStack(extracells.Cell, 1, 0), ItemCell.localized_names[0]);
-		LanguageRegistry.addName(new ItemStack(extracells.Cell, 1, 1), ItemCell.localized_names[1]);
-		LanguageRegistry.addName(new ItemStack(extracells.Cell, 1, 2), ItemCell.localized_names[2]);
-		LanguageRegistry.addName(new ItemStack(extracells.Cell, 1, 3), ItemCell.localized_names[3]);
-		LanguageRegistry.addName(new ItemStack(extracells.Cell, 1, 4), ItemCell.localized_names[4]);
-		LanguageRegistry.addName(new ItemStack(extracells.CellDecrypted, 1), "Encryptable Cell - Decrypted");
-		LanguageRegistry.addName(new ItemStack(extracells.CellEncrypted, 1), "Encryptable Cell - Encrypted");
-		LanguageRegistry.addName(new ItemStack(extracells.Cluster, 1, 0), ItemCluster.localized_names[0]);
-		LanguageRegistry.addName(new ItemStack(extracells.Cluster, 1, 1), ItemCluster.localized_names[1]);
-		LanguageRegistry.addName(new ItemStack(extracells.Cluster, 1, 2), ItemCluster.localized_names[2]);
-		LanguageRegistry.addName(new ItemStack(extracells.Cluster, 1, 3), ItemCluster.localized_names[3]);
-		LanguageRegistry.addName(new ItemStack(extracells.Casing, 1, 0), "Advanced Storage Cell Housing");
 		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
-
-		// Blocks
-		LanguageRegistry.addName(extracells.SolderingStation, "Soldering-Station");
-		LanguageRegistry.addName(extracells.MEDropper, "ME Item Dropper");
-		LanguageRegistry.addName(extracells.MEBattery, "ME BackUp Battery");
-		LanguageRegistry.addName(extracells.HardMEDrive, "Blast resistant ME Drive");
 	}
 
 	@Override
@@ -216,5 +198,15 @@ public class CommonProxy implements IGuiHandler
 		{
 			return false;
 		}
+	}
+
+	public String getStringLocalization(String key)
+	{
+		return LanguageRegistry.instance().getStringLocalization(key);
+	}
+
+	public void loadLocalization(String filename, String locale)
+	{
+		LanguageRegistry.instance().loadLocalization(filename, locale, true);
 	}
 }

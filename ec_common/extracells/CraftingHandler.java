@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.ICraftingHandler;
 
-public class ecCraftingHandler implements ICraftingHandler
+public class CraftingHandler implements ICraftingHandler
 {
 
 	@Override
@@ -14,7 +14,7 @@ public class ecCraftingHandler implements ICraftingHandler
 	{
 		// set size of Adjustable Cell on crafting
 
-		if (item.getItem() == extracells.Cell && item.getItemDamage() == 5)
+		if (item.getItem() == Extracells.Cell && item.getItemDamage() == 5)
 		{
 			if (!item.hasTagCompound())
 			{
@@ -29,7 +29,6 @@ public class ecCraftingHandler implements ICraftingHandler
 	public void onSmelting(EntityPlayer player, ItemStack item)
 	{
 		// Not used due nonexistent smelting recipes...
-
 	}
 
 }

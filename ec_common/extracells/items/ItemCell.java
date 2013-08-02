@@ -11,6 +11,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -22,17 +23,14 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.extracells;
+import extracells.Extracells;
 
 public class ItemCell extends Item implements IStorageCell
 {
 
-	// Item Names
-	public static final String[] localized_names = new String[]
-	{ "ME 256K Storage", "ME 1M Storage", "ME 4M Storage", "ME 16M Storage", "ME Block Container", "Adjustable ME Storage" };
-
-	public static final String[] meta_names = new String[]
-	{ "item256kCell", "item1024kCell", "item4096kCell", "item16348kCell", "itemBlockContainer", "itemAdjustableCell" };
+	// Localization suffixes
+	public static final String[] suffixes = new String[]
+	{ "256k", "1024k", "4096k", "16348k", "container", "adjustable" };
 
 	// Bytes
 	public static final int[] bytes_cell = new int[]
@@ -51,7 +49,7 @@ public class ItemCell extends Item implements IStorageCell
 		this.setMaxStackSize(1);
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
-		this.setCreativeTab(extracells.ModTab);
+		this.setCreativeTab(Extracells.ModTab);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -64,19 +62,19 @@ public class ItemCell extends Item implements IStorageCell
 	@Override
 	public void registerIcons(IconRegister par1IconRegister)
 	{
-		this.icons = new Icon[meta_names.length];
+		this.icons = new Icon[suffixes.length];
 
-		for (int i = 0; i < meta_names.length; ++i)
+		for (int i = 0; i < suffixes.length; ++i)
 		{
-			this.icons[i] = par1IconRegister.registerIcon("extracells:" + meta_names[i]);
+			this.icons[i] = par1IconRegister.registerIcon("extracells:" + "cell." + suffixes[i]);
 		}
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack)
+	public String getUnlocalizedName(ItemStack itemstack)
 	{
-		int i = MathHelper.clamp_int(par1ItemStack.getItemDamage(), 0, 5);
-		return super.getUnlocalizedName() + "." + meta_names[i];
+		int i = itemstack.getItemDamage();
+		return "item.cell." + suffixes[i];
 	}
 
 	@Override
@@ -89,20 +87,20 @@ public class ItemCell extends Item implements IStorageCell
 		{
 			if (used_bytes != 0)
 			{
-				return "ME Block Container" + " - " + Util.getCellRegistry().getHandlerForCell(stack).getAvailableItems().getItems().get(0).getDisplayName();
+				return this.getLocalizedName(stack) + " - " + Util.getCellRegistry().getHandlerForCell(stack).getAvailableItems().getItems().get(0).getDisplayName();
 			} else
 			{
-				return "Empty ME Block Container";
+				return StatCollector.translateToLocal("tooltip.empty") + " " + this.getLocalizedName(stack);
 			}
 		} else
 		{
 
 			if (hasName)
 			{
-				return ItemCell.localized_names[stack.getItemDamage()] + " - " + partitionName;
+				return this.getLocalizedName(stack) + " - " + partitionName;
 			} else
 			{
-				return ItemCell.localized_names[stack.getItemDamage()];
+				return this.getLocalizedName(stack);
 			}
 		}
 
@@ -125,7 +123,7 @@ public class ItemCell extends Item implements IStorageCell
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
 	{
-		Boolean preformatted = Util.getCellRegistry().getHandlerForCell(stack).isPreformatted();
+		Boolean partitioned = Util.getCellRegistry().getHandlerForCell(stack).isPreformatted();
 		Boolean fuzzy = Util.getCellRegistry().getHandlerForCell(stack).isFuzzyPreformatted();
 		long used_bytes = Util.getCellRegistry().getHandlerForCell(stack).usedBytes();
 		long total_bytes = Util.getCellRegistry().getHandlerForCell(stack).totalBytes();
@@ -133,27 +131,27 @@ public class ItemCell extends Item implements IStorageCell
 		long total_types = Util.getCellRegistry().getHandlerForCell(stack).getTotalItemTypes();
 		if (stack.getItemDamage() != 4)
 		{
-			list.add(used_bytes + " of " + total_bytes + " Bytes Used");
-			list.add(used_types + " of " + total_types + " Types");
+			list.add(used_bytes + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.Of") + " " + total_bytes + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.BytesUsed"));
+			list.add(used_types + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.Of") + " " + total_types + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.Types"));
 		} else if (stack.getItemDamage() == 4)
 		{
 			if (used_bytes != 0)
 			{
-				list.add("Block: " + Util.getCellRegistry().getHandlerForCell(stack).getAvailableItems().getItems().get(0).getDisplayName());
+				list.add(StatCollector.translateToLocal("tooltip.block") + ": " + Util.getCellRegistry().getHandlerForCell(stack).getAvailableItems().getItems().get(0).getDisplayName());
 			} else
 			{
-				list.add("Block: -");
+				list.add(StatCollector.translateToLocal("tooltip.block") + ": -");
 			}
 			list.add(used_bytes + " of " + total_bytes + " Bytes Used");
 		}
-		if (preformatted)
+		if (partitioned)
 		{
 			if (fuzzy)
 			{
-				list.add("Preformatted - Fuzzy");
+				list.add(StatCollector.translateToLocal("Appeng.GuiITooltip.Partitioned") + " - " + StatCollector.translateToLocal("Appeng.GuiITooltip.Fuzzy"));
 			} else
 			{
-				list.add("Preformatted - Precise");
+				list.add(StatCollector.translateToLocal("Appeng.GuiITooltip.Partitioned") + " - " + StatCollector.translateToLocal("Appeng.GuiITooltip.Precise"));
 			}
 		}
 	}
@@ -238,8 +236,8 @@ public class ItemCell extends Item implements IStorageCell
 				if (Util.getCellRegistry().getHandlerForCell(i).storedItemCount() == 0)
 				{
 					p.inventory.decrStackSize(p.inventory.currentItem, 1);
-					p.inventory.addItemStackToInventory(new ItemStack(extracells.Cluster, 1, i.getItemDamage()));
-					p.inventory.addItemStackToInventory(new ItemStack(extracells.Casing, 1));
+					p.inventory.addItemStackToInventory(new ItemStack(Extracells.Cluster, 1, i.getItemDamage()));
+					p.inventory.addItemStackToInventory(new ItemStack(Extracells.Casing, 1));
 				}
 			} else if (i.getItemDamage() == 4)
 			{
@@ -250,17 +248,17 @@ public class ItemCell extends Item implements IStorageCell
 					case 0:
 						System.out.println(i.getTagCompound().getInteger("mode"));
 						i.getTagCompound().setInteger("mode", 1);
-						p.addChatMessage("Mode: Equal Trade Mode (1*1)");
+						p.addChatMessage(StatCollector.translateToLocal("tooltip.mode") + ": " + StatCollector.translateToLocal("tooltip.equaltrade1"));
 						break;
 					case 1:
 						System.out.println(i.getTagCompound().getInteger("mode"));
 						i.getTagCompound().setInteger("mode", 2);
-						p.addChatMessage("Mode: Equal Trade Mode (3*3)");
+						p.addChatMessage(StatCollector.translateToLocal("tooltip.mode") + ": " + StatCollector.translateToLocal("tooltip.equaltrade3"));
 						break;
 					case 2:
 						System.out.println(i.getTagCompound().getInteger("mode"));
 						i.getTagCompound().setInteger("mode", 0);
-						p.addChatMessage("Mode: Placement Mode");
+						p.addChatMessage(StatCollector.translateToLocal("tooltip.mode") + ": " + StatCollector.translateToLocal("tooltip.placement"));
 						break;
 					}
 				}
@@ -285,7 +283,7 @@ public class ItemCell extends Item implements IStorageCell
 					if (block.getItem() instanceof ItemBlock)
 					{
 						ItemBlock itemblock = (ItemBlock) request.getItem();
-						
+
 						switch (itemstack.getTagCompound().getInteger("mode"))
 						{
 						case 0:
@@ -383,7 +381,7 @@ public class ItemCell extends Item implements IStorageCell
 						return true;
 					} else
 					{
-						player.addChatMessage("You can't place Items! Put a Block into the BLOCK-Container");
+						player.addChatMessage(StatCollector.translateToLocal("tooltip.onlyblocks"));
 						return false;
 					}
 				} else
