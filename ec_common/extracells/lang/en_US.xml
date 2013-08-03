@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"><properties version="1.0">
   <comment>English (EN) Localization File</comment>
-  <entry key="item.cell.256k">ME 256K Storage</entry>
+  <entry key="item.cell.256k">ME 256k Storage</entry>
   <entry key="item.cell.1024k">ME 1M Storage</entry>
   <entry key="item.cell.4096k">ME 4M Storage</entry>
   <entry key="item.cell.16348k">ME 16M Storage</entry>
