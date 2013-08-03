@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"><properties version="1.0">
+  <comment>German (de_DE) Localization File</comment>
+  <entry key="item.cell.256k">256k ME-Speicher</entry>
+  <entry key="item.cell.1024k">1M ME-Speicher</entry>
+  <entry key="item.cell.4096k">4M ME-Speicher</entry>
+  <entry key="item.cell.16348k">16M ME-Speicher</entry>
+  <entry key="item.cell.container">ME-Block-Container</entry>
+  <entry key="item.cell.adjustable">Regulierbarer ME-Speicher</entry>
+  <entry key="item.cluster.kilo">Kilo-Speichercluster</entry>
+  <entry key="item.cluster.mega">Mega-Speichercluster</entry>
+  <entry key="item.cluster.giga">Giga-Speichercluster</entry>
+  <entry key="item.cluster.tera">Tera-Speichercluster</entry>
+  <entry key="item.cell_secure.encrypted">Verschlüsselbare Zelle - Verschlüsselt</entry>
+  <entry key="item.cell_secure.decrypted">Verschlüsselbare Zelle - Entschlüsselt</entry>
+  <entry key="item.casing.advanced">Erweitertes Speichergehäuse</entry>
+  <entry key="tile.block.solderingstation">Lötstation</entry>
+  <entry key="tile.block.mebattery">ME-Reservebatterie</entry>
+  <entry key="tile.block.medropper">ME-Item-Dropper</entry>
+  <entry key="tile.block.hardmedrive">Explosionssicheres ME-Laufwerk</entry>
+  <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
+  <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
+  <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>
+  <entry key="tooltip.storageencrypted">Speicher verschlüsselt!</entry>
+  <entry key="tooltip.empty">Leer</entry>
+  <entry key="tooltip.block">Block</entry>
+  <entry key="tooltip.equaltrade1">Gleicher-Handel-Modus (1*1)</entry>
+  <entry key="tooltip.equaltrade3">Gleicher-Handel-Modus (3*3)</entry>
+  <entry key="tooltip.placement">Placement Mode</entry>
+  <entry key="tooltip.mode">Modus</entry>
+  <entry key="tooltip.onlyblocks">Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container</entry>
+  <entry key="tooltip.solderingwarning.tutorial">Packe einen Regulierbaren ME-Speicher in deine Hotbar und halte ihn beim Benutzen der Lötstation!</entry>
+  <entry key="tooltip.solderingwarning.nospacestoragecell">Sorge für Platz in deinem Inventar, um den ME-Speicher wiederzubekommen!</entry>
+  <entry key="tooltip.solderingwarning.nospaceconversionmatrix">Sorge für Platz in deinem Inventar, um die Umrechnungs-Matrix wiederzubekommen!</entry>
+  <entry key="tooltip.solderingwarning.needstoragecell">Um die Größe deines Speichers zu upgraden, brauchst du einen ME-Speicher je 2048 Bytes!</entry>
+  <entry key="tooltip.solderingwarning.needconversionmatrix">Um die Zahl der Typen deines Speichers zu upgraden, brauchst du eine Umrechnungs-Matrix pro Typ!</entry>
+  <entry key="tooltip.solderingwarning.cellnotempty">Diese Zelle ist nicht leer!</entry>
+  </properties>
