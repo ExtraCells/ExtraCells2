@@ -22,7 +22,7 @@
   <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
   <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>
   <entry key="tooltip.storageencrypted">Speicher verschlüsselt!</entry>
-  <entry key="tooltip.empty">Leer</entry>
+  <entry key="tooltip.empty">Leerer</entry>
   <entry key="tooltip.block">Block</entry>
   <entry key="tooltip.equaltrade1">Gleicher-Handel-Modus (1*1)</entry>
   <entry key="tooltip.equaltrade3">Gleicher-Handel-Modus (3*3)</entry>
