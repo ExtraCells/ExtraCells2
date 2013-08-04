@@ -47,6 +47,8 @@ public class Extracells
 	public static Block MEDropper;
 	public static Block MEBattery;
 	public static Block HardMEDrive;
+	public static Block BusFluidImport;
+	public static Block BusFluidStorage;
 	public static int Cell_ID;
 	public static int CellEncrypted_ID;
 	public static int CellDecrypted_ID;
@@ -56,6 +58,8 @@ public class Extracells
 	public static int MEDropper_ID;
 	public static int MEBattery_ID;
 	public static int HardMEDrive_ID;
+	public static int BusFluidImport_ID;
+	public static int BusFluidStorage_ID;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -76,6 +80,8 @@ public class Extracells
 		int medropperTemp = config.getBlock("MEDropper_ID", 501, "ID for the ME Item Dropper").getInt();
 		int mebatteryTemp = config.getBlock("MEBattery_ID", 502, "ID for the ME Backup Battery").getInt();
 		int hardmedriveTemp = config.getBlock("HardMEDrive_ID", 503, "ID for the Blast Resistant ME Drive").getInt();
+		int busfluidimportTemp = config.getBlock("BusFluidImport_ID", 504, "ID for the Fluid Import Bus").getInt();
+		int busfluidstorageTemp = config.getBlock("BusFluidStorage_ID", 505, "ID for the Fluid Storage Bus").getInt();
 		config.save();
 
 		Cluster_ID = clusterTemp;
@@ -87,6 +93,8 @@ public class Extracells
 		MEDropper_ID = medropperTemp;
 		MEBattery_ID = mebatteryTemp;
 		HardMEDrive_ID = hardmedriveTemp;
+		BusFluidImport_ID = busfluidimportTemp;
+		BusFluidStorage_ID = busfluidstorageTemp;
 	}
 
 	@EventHandler

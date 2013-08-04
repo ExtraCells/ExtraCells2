@@ -31,8 +31,7 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 
 	public TileEntityHardMEDrive()
 	{
-		driveSlots = new ItemStack[3];
-		oldSlots = new ItemStack[3];
+		super();
 	}
 
 	@Override

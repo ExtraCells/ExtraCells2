@@ -13,6 +13,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.CraftingHandler;
 import extracells.Extracells;
+import extracells.blocks.BlockBusFluidImport;
+import extracells.blocks.BlockBusFluidStorage;
 import extracells.blocks.BlockHardMEDrive;
 import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
@@ -26,6 +28,8 @@ import extracells.items.ItemCell;
 import extracells.items.ItemCluster;
 import extracells.items.ItemSecureCellDecrypted;
 import extracells.items.ItemSecureCellEncrypted;
+import extracells.tile.TileEntityBusFluidImport;
+import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityHardMEDrive;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
@@ -127,6 +131,8 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityMEDropper.class, "tileEntityMEDropper");
 		GameRegistry.registerTileEntity(TileEntityMEBattery.class, "tileEntityMEBattery");
 		GameRegistry.registerTileEntity(TileEntityHardMEDrive.class, "tileEntityHardMEDrive");
+		GameRegistry.registerTileEntity(TileEntityBusFluidImport.class, "tileEntityBusFluidImport");
+		GameRegistry.registerTileEntity(TileEntityBusFluidStorage.class, "tileEntityBusFluidStorage");
 	}
 
 	public void RegisterRenderers()
@@ -146,18 +152,21 @@ public class CommonProxy implements IGuiHandler
 	public void RegisterBlocks()
 	{
 		Extracells.SolderingStation = new BlockSolderingStation(Extracells.SolderingStation_ID);
-		GameRegistry.registerBlock(Extracells.SolderingStation, ItemBlockSpecial.class, "solderingStation");
+		GameRegistry.registerBlock(Extracells.SolderingStation, ItemBlockSpecial.class, Extracells.SolderingStation.getUnlocalizedName());
 		Extracells.MEDropper = new BlockMEDropper(Extracells.MEDropper_ID);
-		GameRegistry.registerBlock(Extracells.MEDropper, ItemBlockSpecial.class, "meDispenser");
+		GameRegistry.registerBlock(Extracells.MEDropper, ItemBlockSpecial.class, Extracells.MEDropper.getUnlocalizedName());
 		Extracells.MEBattery = new BlockMEBattery(Extracells.MEBattery_ID);
-		GameRegistry.registerBlock(Extracells.MEBattery, ItemBlockSpecial.class, "meBattery");
+		GameRegistry.registerBlock(Extracells.MEBattery, ItemBlockSpecial.class, Extracells.MEBattery.getUnlocalizedName());
 		Extracells.HardMEDrive = new BlockHardMEDrive(Extracells.HardMEDrive_ID);
-		GameRegistry.registerBlock(Extracells.HardMEDrive, ItemBlockSpecial.class, "hardMEDrive");
+		GameRegistry.registerBlock(Extracells.HardMEDrive, ItemBlockSpecial.class, Extracells.HardMEDrive.getUnlocalizedName());
+		Extracells.BusFluidImport = new BlockBusFluidImport(Extracells.BusFluidImport_ID);
+		GameRegistry.registerBlock(Extracells.BusFluidImport, ItemBlockSpecial.class, Extracells.BusFluidImport.getUnlocalizedName());
+		Extracells.BusFluidStorage = new BlockBusFluidStorage(Extracells.BusFluidStorage_ID);
+		GameRegistry.registerBlock(Extracells.BusFluidStorage, ItemBlockSpecial.class, Extracells.BusFluidStorage.getUnlocalizedName());
 	}
 
 	public void RegisterNames()
 	{
-		LanguageRegistry.instance();
 		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
 	}
 

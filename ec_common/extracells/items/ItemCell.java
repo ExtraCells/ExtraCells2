@@ -2,6 +2,7 @@ package extracells.items;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -283,102 +284,107 @@ public class ItemCell extends Item implements IStorageCell
 					if (block.getItem() instanceof ItemBlock)
 					{
 						ItemBlock itemblock = (ItemBlock) request.getItem();
-
-						switch (itemstack.getTagCompound().getInteger("mode"))
+						if (world.getBlockId(x, y, z) != 7)
 						{
-						case 0:
-							request.setStackSize(1);
-							itemblock.onItemUseFirst(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
-							itemblock.onItemUse(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
-							Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-							break;
-						case 1:
-							request.setStackSize(1);
-							world.destroyBlock(x, y, z, true);
-							placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
-							Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-							break;
-						case 2:
-
-							request.setStackSize(9);
-							if (Util.getCellRegistry().getHandlerForCell(itemstack).storedItemCount() > 9)
+							switch (itemstack.getTagCompound().getInteger("mode"))
 							{
-								switch (ForgeDirection.getOrientation(side))
+							case 0:
+								request.setStackSize(1);
+								itemblock.onItemUseFirst(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
+								itemblock.onItemUse(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
+								Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+								break;
+							case 1:
+								request.setStackSize(1);
+								world.destroyBlock(x, y, z, true);
+								placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
+								Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+								break;
+							case 2:
+
+								request.setStackSize(9);
+								if (Util.getCellRegistry().getHandlerForCell(itemstack).storedItemCount() > 9)
 								{
-								case DOWN:
-									for (int posX = x - 1; posX < x + 2; posX++)
+									switch (ForgeDirection.getOrientation(side))
 									{
+									case DOWN:
+										for (int posX = x - 1; posX < x + 2; posX++)
+										{
+											for (int posZ = z - 1; posZ < z + 2; posZ++)
+											{
+												world.destroyBlock(posX, y, posZ, true);
+												placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
+											}
+										}
+										Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+										break;
+									case EAST:
 										for (int posZ = z - 1; posZ < z + 2; posZ++)
 										{
-											world.destroyBlock(posX, y, posZ, true);
-											placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
+											for (int posY = y - 1; posY < y + 2; posY++)
+											{
+												world.destroyBlock(x, posY, posZ, true);
+												placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
+											}
 										}
-									}
-									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-									break;
-								case EAST:
-									for (int posZ = z - 1; posZ < z + 2; posZ++)
-									{
-										for (int posY = y - 1; posY < y + 2; posY++)
+										Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+										break;
+									case NORTH:
+										for (int posX = x - 1; posX < x + 2; posX++)
 										{
-											world.destroyBlock(x, posY, posZ, true);
-											placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
+											for (int posY = y - 1; posY < y + 2; posY++)
+											{
+												world.destroyBlock(posX, posY, z, true);
+												placeBlock(request.getItemStack(), world, player, posX, posY, z, side, xOffset, yOffset, zOffset);
+											}
 										}
-									}
-									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-									break;
-								case NORTH:
-									for (int posX = x - 1; posX < x + 2; posX++)
-									{
-										for (int posY = y - 1; posY < y + 2; posY++)
+										Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+										break;
+									case SOUTH:
+										for (int posX = x - 1; posX < x + 2; posX++)
 										{
-											world.destroyBlock(posX, posY, z, true);
-											placeBlock(request.getItemStack(), world, player, posX, posY, z, side, xOffset, yOffset, zOffset);
+											for (int posY = y - 1; posY < y + 2; posY++)
+											{
+												world.destroyBlock(posX, posY, z, true);
+												placeBlock(request.getItemStack(), world, player, posX, posY, z, side, xOffset, yOffset, zOffset);
+											}
 										}
-									}
-									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-									break;
-								case SOUTH:
-									for (int posX = x - 1; posX < x + 2; posX++)
-									{
-										for (int posY = y - 1; posY < y + 2; posY++)
+										Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+										break;
+									case UNKNOWN:
+										break;
+									case UP:
+										for (int posX = x - 1; posX < x + 2; posX++)
 										{
-											world.destroyBlock(posX, posY, z, true);
-											placeBlock(request.getItemStack(), world, player, posX, posY, z, side, xOffset, yOffset, zOffset);
+											for (int posZ = z - 1; posZ < z + 2; posZ++)
+											{
+												world.destroyBlock(posX, y, posZ, true);
+												placeBlock(request.getItemStack(), world, player, posX, y, posZ, side, xOffset, yOffset, zOffset);
+											}
 										}
-									}
-									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-									break;
-								case UNKNOWN:
-									break;
-								case UP:
-									for (int posX = x - 1; posX < x + 2; posX++)
-									{
+										Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+										break;
+									case WEST:
 										for (int posZ = z - 1; posZ < z + 2; posZ++)
 										{
-											world.destroyBlock(posX, y, posZ, true);
-											placeBlock(request.getItemStack(), world, player, posX, y, posZ, side, xOffset, yOffset, zOffset);
+											for (int posY = y - 1; posY < y + 2; posY++)
+											{
+												world.destroyBlock(x, posY, posZ, true);
+												placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
+											}
 										}
+										Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
+										break;
+									default:
+										break;
 									}
-									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-									break;
-								case WEST:
-									for (int posZ = z - 1; posZ < z + 2; posZ++)
-									{
-										for (int posY = y - 1; posY < y + 2; posY++)
-										{
-											world.destroyBlock(x, posY, posZ, true);
-											placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
-										}
-									}
-									Util.getCellRegistry().getHandlerForCell(itemstack).extractItems(request);
-									break;
-								default:
-									break;
 								}
 							}
+							return true;
+						} else
+						{
+							return false;
 						}
-						return true;
 					} else
 					{
 						player.addChatMessage(StatCollector.translateToLocal("tooltip.onlyblocks"));
