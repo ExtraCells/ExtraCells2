@@ -49,7 +49,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	{
 		if (getTank() != null)
 		{
-			FluidTankInfo info = getTank().getTankInfo(ForgeDirection.getOrientation(blockMetadata).getOpposite())[0];
+			FluidTankInfo info = getTank().getTankInfo(ForgeDirection.getOrientation(getBlockMetadata()).getOpposite())[0];
 			return info.fluid.getFluid();
 		} else
 		{
@@ -61,7 +61,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	{
 		if (getTank() != null)
 		{
-			FluidTankInfo info = getTank().getTankInfo(ForgeDirection.getOrientation(blockMetadata).getOpposite())[0];
+			FluidTankInfo info = getTank().getTankInfo(ForgeDirection.getOrientation(getBlockMetadata()).getOpposite())[0];
 			return info.capacity;
 		} else
 		{
@@ -87,12 +87,12 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 
 	public ForgeDirection getFacing()
 	{
-		return ForgeDirection.getOrientation(blockMetadata);
+		return ForgeDirection.getOrientation(getBlockMetadata());
 	}
 
 	public IFluidHandler getTank()
 	{
-		ForgeDirection facing = ForgeDirection.getOrientation(blockMetadata);
+		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
 		TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
 		if (facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
 		{

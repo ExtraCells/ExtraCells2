@@ -34,8 +34,9 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	{
 		if (!worldObj.isRemote)
 		{
-			ForgeDirection facing = ForgeDirection.getOrientation(blockMetadata);
+			ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
 			TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
+
 			if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
 			{
 				List<TileRef<IGridMachine>> tilelist = grid.getMachines();
