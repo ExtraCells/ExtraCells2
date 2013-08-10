@@ -18,8 +18,8 @@
   <entry key="tile.block.mebattery">ME-Reservebatterie</entry>
   <entry key="tile.block.medropper">ME-Item-Dropper</entry>
   <entry key="tile.block.hardmedrive">Explosionssicheres ME-Laufwerk</entry>
-  <entry key="tile.block.fluid.bus.import">Flüssigkeiten Importbus</entry>
-  <entry key="tile.block.fluid.bus.storage">Flüssigkeiten Speicherbus</entry>
+  <entry key="tile.block.fluid.bus.import">Flüssigkeits-Importbus</entry>
+  <entry key="tile.block.fluid.bus.storage">Flüssigkeits-Speicherbus</entry>
   <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
   <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
   <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>
