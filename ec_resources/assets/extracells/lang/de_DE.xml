@@ -32,6 +32,12 @@
   <entry key="tooltip.placement">Placement Mode</entry>
   <entry key="tooltip.mode">Modus</entry>
   <entry key="tooltip.onlyblocks">Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container</entry>
+  <entry key="tooltip.item">Item</entry> 
+  <entry key="tooltip.dropperlocked">Dropper Gesperrt</entry>
+  <entry key="tooltip.dropperunlocked">Dropper Entsperrt</entry> 
+  <entry key="tooltip.dropset">Drop verstellt zu</entry> 
+  <entry key="tooltip.amount">Menge</entry> 
+  <entry key="tooltip.fluid">Flüssigkeit</entry> 
   <entry key="tooltip.solderingwarning.tutorial">Packe einen Regulierbaren ME-Speicher in deine Hotbar und halte ihn beim Benutzen der Lötstation!</entry>
   <entry key="tooltip.solderingwarning.nospacestoragecell">Sorge für Platz in deinem Inventar, um den ME-Speicher wiederzubekommen!</entry>
   <entry key="tooltip.solderingwarning.nospaceconversionmatrix">Sorge für Platz in deinem Inventar, um die Umrechnungs-Matrix wiederzubekommen!</entry>
