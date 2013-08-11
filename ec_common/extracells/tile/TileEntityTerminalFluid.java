@@ -232,31 +232,37 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 
 			for (TileRef<IGridMachine> entry : tilelist)
 			{
-				try
+				if (grid != null)
 				{
-					if (entry.getTile() instanceof TileEntityBusFluidStorage)
+					try
 					{
-						TileEntityBusFluidStorage storageBus = (TileEntityBusFluidStorage) entry.getTile();
-						if (storageBus.getTank() != null && storageBus.getTank().getTankInfo(storageBus.getFacing().getOpposite())[0].fluid != null)
+						if (entry.getTile() instanceof TileEntityBusFluidStorage)
 						{
-							FluidStack fluidInTank = storageBus.getTank().getTankInfo(storageBus.getFacing().getOpposite())[0].fluid;
-							ArrayList<Fluid> fluidsInNetwork = new ArrayList<Fluid>();
-							for (FluidStack fluidStack : fluidStacksInNetwork)
+							TileEntityBusFluidStorage storageBus = (TileEntityBusFluidStorage) entry.getTile();
+							if (storageBus.getTank() != null && storageBus.getTank().getTankInfo(storageBus.getFacing().getOpposite())[0].fluid != null)
 							{
-								fluidsInNetwork.add(fluidStack.getFluid());
-							}
-							if (fluidsInNetwork.contains(fluidInTank.getFluid()))
-							{
-								fluidStacksInNetwork.set(fluidsInNetwork.indexOf(fluidInTank.getFluid()), new FluidStack(fluidInTank.getFluid(), fluidStacksInNetwork.get(fluidsInNetwork.indexOf(fluidInTank.getFluid())).amount + fluidInTank.amount));
-							} else
-							{
-								fluidStacksInNetwork.add(fluidInTank);
+								FluidStack fluidInTank = storageBus.getTank().getTankInfo(storageBus.getFacing().getOpposite())[0].fluid;
+								ArrayList<Fluid> fluidsInNetwork = new ArrayList<Fluid>();
+								for (FluidStack fluidStack : fluidStacksInNetwork)
+								{
+									fluidsInNetwork.add(fluidStack.getFluid());
+								}
+								if (fluidsInNetwork.contains(fluidInTank.getFluid()))
+								{
+									fluidStacksInNetwork.set(fluidsInNetwork.indexOf(fluidInTank.getFluid()), new FluidStack(fluidInTank.getFluid(), fluidStacksInNetwork.get(fluidsInNetwork.indexOf(fluidInTank.getFluid())).amount + fluidInTank.amount));
+								} else
+								{
+									fluidStacksInNetwork.add(fluidInTank);
+								}
 							}
 						}
+					} catch (AppEngTileMissingException e)
+					{
+						e.printStackTrace();
 					}
-				} catch (AppEngTileMissingException e)
+				} else
 				{
-					e.printStackTrace();
+					fluidStacksInNetwork = new ArrayList<FluidStack>();
 				}
 			}
 		} else

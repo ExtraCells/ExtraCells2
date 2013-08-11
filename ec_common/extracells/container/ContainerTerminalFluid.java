@@ -37,7 +37,7 @@ public class ContainerTerminalFluid extends Container
 			}
 		});
 		// Preview Slot
-		addSlotToContainer(new SpecialSlot(this.tileentity, 2, 140, 12)
+		addSlotToContainer(new SpecialSlot(this.tileentity, 2, 130, 12)
 		{
 			public boolean canTakeStack(EntityPlayer par1EntityPlayer)
 			{

@@ -89,7 +89,7 @@ public class GUITerminalFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tile.block.terminal.fluid"), 0, 0, 0x000000);
+		this.fontRenderer.drawString(StatCollector.translateToLocal("tile.block.fluid.terminal"), 0, 0, 0x000000);
 
 		PacketHandler.sendMonitorFluidPacket(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0);
 
@@ -99,7 +99,7 @@ public class GUITerminalFluid extends GuiContainer
 		int amount;
 		String fluidname;
 
-		if (container.getSlot(2).getStack() != null)
+		if (container.getSlot(2).getStack() != null && container.getSlot(2).getStack().getTagCompound() != null)
 		{
 			amount = container.getSlot(2).getStack().getTagCompound().getInteger("amount");
 			fluidname = container.getSlot(2).getStack().getTagCompound().getString("fluidname");
@@ -109,7 +109,19 @@ public class GUITerminalFluid extends GuiContainer
 			fluidname = "---";
 		}
 
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amount + "mB", 15, 15, 0xFFFFFF);
+		String suffix = "mB";
+
+		if (amount > 100000000)
+		{
+			amount = amount / 1000000;
+			suffix = "K mB";
+		} else if (amount > 100000)
+		{
+			amount = amount / 1000;
+			suffix = "M mB";
+		}
+
+		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amount + suffix, 15, 15, 0xFFFFFF);
 		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + fluidname, 15, 25, 0xFFFFFF);
 	}
 
