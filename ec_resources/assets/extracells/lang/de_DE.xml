@@ -18,14 +18,9 @@
   <entry key="tile.block.mebattery">ME-Reservebatterie</entry>
   <entry key="tile.block.medropper">ME-Item-Dropper</entry>
   <entry key="tile.block.hardmedrive">Explosionssicheres ME-Laufwerk</entry>
-<<<<<<< HEAD:ec_resources/assets/extracells/lang/de_DE.xml
-  <entry key="tile.block.fluid.bus.import">Flüssigkeiten Importbus</entry>
-  <entry key="tile.block.fluid.bus.storage">Flüssigkeiten Speicherbus</entry>
-  <entry key="tile.block.fluid.terminal">Flüssigkeiten Zugriss Terminal</entry>
-=======
   <entry key="tile.block.fluid.bus.import">Flüssigkeits-Importbus</entry>
   <entry key="tile.block.fluid.bus.storage">Flüssigkeits-Speicherbus</entry>
->>>>>>> 6742a38c069591a5e072edaa8a03f99164eb06e4:ec_common/extracells/lang/de_DE.xml
+  <entry key="tile.block.fluid.terminal">Flüssigkeits-Zugriffs-Terminal</entry>
   <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
   <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
   <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>
