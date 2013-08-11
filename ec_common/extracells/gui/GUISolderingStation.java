@@ -15,7 +15,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
-import extracells.network.packet.SolderingPacket;
+import extracells.network.PacketHandler;
 
 @SideOnly(Side.CLIENT)
 public class GUISolderingStation extends GuiScreen
@@ -23,8 +23,8 @@ public class GUISolderingStation extends GuiScreen
 
 	private int tileX, tileY, tileZ;
 
-	public final int xSizeOfTexture = 176;
-	public final int ySizeOfTexture = 88;
+	public final int xSize = 176;
+	public final int ySize = 88;
 	private GuiTextField textfield_size;
 	private GuiTextField textfield_types;
 	private int int_size;
@@ -46,9 +46,9 @@ public class GUISolderingStation extends GuiScreen
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/gui/solderingstation.png"));
-		int posX = (this.width - xSizeOfTexture) / 2;
-		int posY = (this.height - ySizeOfTexture) / 2;
-		drawTexturedModalRect(posX, posY, 0, 0, xSizeOfTexture, ySizeOfTexture);
+		int posX = (this.width - xSize) / 2;
+		int posY = (this.height - ySize) / 2;
+		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 
 		if (rightItem)
 		{
@@ -71,8 +71,8 @@ public class GUISolderingStation extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		int posX = (this.width - xSizeOfTexture) / 2;
-		int posY = (this.height - ySizeOfTexture) / 2;
+		int posX = (this.width - xSize) / 2;
+		int posY = (this.height - ySize) / 2;
 
 		if (rightItem)
 		{
@@ -112,14 +112,14 @@ public class GUISolderingStation extends GuiScreen
 			{
 				if (this.mc.thePlayer.getHeldItem().hasTagCompound())
 				{
-					PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0').makePacket());
+					PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0');
 					ItemStack itemstack = this.mc.thePlayer.getHeldItem();
 					itemstack.getTagCompound().setInteger("costum_size", int_size);
 					itemstack.getTagCompound().setInteger("costum_types", int_types);
 
 					if (textfield_size.getText() != Integer.toString(itemstack.getTagCompound().getInteger("costum_size")) || textfield_types.getText() != Integer.toString(itemstack.getTagCompound().getInteger("costum_types")))
 					{
-						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0').makePacket());
+						PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0');
 						textfield_size.setText(Integer.toString(int_size));
 						textfield_types.setText(Integer.toString(int_types));
 					}
@@ -132,7 +132,7 @@ public class GUISolderingStation extends GuiScreen
 	{
 		if (key == 'e' || key == '')
 		{
-			PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, true, '\0', '\0').makePacket());
+			PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, true, '\0', '\0');
 			this.mc.displayGuiScreen((GuiScreen) null);
 			this.mc.setIngameFocus();
 		}
@@ -151,7 +151,7 @@ public class GUISolderingStation extends GuiScreen
 					if (isSpaceInInventory(appeng.api.Materials.matStorageCell.copy()))
 					{
 						int_size = int_size - 2048;
-						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 's').makePacket());
+						PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 's');
 					} else
 					{
 						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.nospacestoragecell"));
@@ -170,7 +170,7 @@ public class GUISolderingStation extends GuiScreen
 				if (doesInvContain(appeng.api.Materials.matStorageCell.copy()))
 				{
 					int_size = int_size + 2048;
-					PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 's', '\0').makePacket());
+					PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 's', '\0');
 				} else
 				{
 					this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.needstoragecell"));
@@ -190,7 +190,7 @@ public class GUISolderingStation extends GuiScreen
 					if (isSpaceInInventory(appeng.api.Materials.matConversionMatrix.copy()))
 					{
 						int_types = int_types - 1;
-						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 't').makePacket());
+						PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 't');
 					} else
 					{
 						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.nospaceconversionmatrix"));
@@ -211,7 +211,7 @@ public class GUISolderingStation extends GuiScreen
 					if (doesInvContain(appeng.api.Materials.matConversionMatrix))
 					{
 						int_types = int_types + 1;
-						PacketDispatcher.sendPacketToServer(new SolderingPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 't', '\0').makePacket());
+						PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 't', '\0');
 					} else
 					{
 						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.needconversionmatrix"));

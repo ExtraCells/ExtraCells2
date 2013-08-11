@@ -26,8 +26,7 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	private Boolean hasPower;
 	private IGridInterface grid;
 	private String costumName = "Blastresistant ME Drive";
-	private ItemStack[] oldSlots;
-	private ItemStack[] driveSlots;
+	private ItemStack[] slots = new ItemStack[3];
 
 	public TileEntityHardMEDrive()
 	{
@@ -52,13 +51,13 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 		super.writeToNBT(nbt);
 		NBTTagList nbttaglist = new NBTTagList();
 
-		for (int i = 0; i < this.driveSlots.length; ++i)
+		for (int i = 0; i < this.slots.length; ++i)
 		{
-			if (this.driveSlots[i] != null)
+			if (this.slots[i] != null)
 			{
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				nbttagcompound1.setByte("Slot", (byte) i);
-				this.driveSlots[i].writeToNBT(nbttagcompound1);
+				this.slots[i].writeToNBT(nbttagcompound1);
 				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}
@@ -74,7 +73,7 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.driveSlots = new ItemStack[this.getSizeInventory()];
+		this.slots = new ItemStack[this.getSizeInventory()];
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
@@ -84,9 +83,9 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
 			int j = nbttagcompound1.getByte("Slot") & 255;
 
-			if (j >= 0 && j < this.driveSlots.length)
+			if (j >= 0 && j < this.slots.length)
 			{
-				this.driveSlots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+				this.slots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
 	}
@@ -100,27 +99,33 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	@Override
 	public ItemStack getStackInSlot(int i)
 	{
-		return driveSlots[i];
+		if (slots[i] != null)
+		{
+			return slots[i];
+		} else
+		{
+			return null;
+		}
 	}
 
 	@Override
 	public ItemStack decrStackSize(int i, int j)
 	{
-		if (this.driveSlots[i] != null)
+		if (this.slots[i] != null)
 		{
 			ItemStack itemstack;
-			if (this.driveSlots[i].stackSize <= j)
+			if (this.slots[i].stackSize <= j)
 			{
-				itemstack = this.driveSlots[i];
-				this.driveSlots[i] = null;
+				itemstack = this.slots[i];
+				this.slots[i] = null;
 				this.onInventoryChanged();
 				return itemstack;
 			} else
 			{
-				itemstack = this.driveSlots[i].splitStack(j);
-				if (this.driveSlots[i].stackSize == 0)
+				itemstack = this.slots[i].splitStack(j);
+				if (this.slots[i].stackSize == 0)
 				{
-					this.driveSlots[i] = null;
+					this.slots[i] = null;
 				}
 				this.onInventoryChanged();
 				return itemstack;
@@ -134,10 +139,10 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i)
 	{
-		if (this.driveSlots[i] != null)
+		if (this.slots[i] != null)
 		{
-			ItemStack itemstack = this.driveSlots[i];
-			this.driveSlots[i] = null;
+			ItemStack itemstack = this.slots[i];
+			this.slots[i] = null;
 			return itemstack;
 		} else
 		{
@@ -148,7 +153,7 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack)
 	{
-		this.driveSlots[i] = itemstack;
+		this.slots[i] = itemstack;
 
 		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
 		{
@@ -256,7 +261,7 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 			IMEInventoryHandler[] cellArray = new IMEInventoryHandler[3];
 			for (int i = 0; i < 3; i++)
 			{
-				cellArray[i] = appeng.api.Util.getCellRegistry().getHandlerForCell(this.driveSlots[i]);
+				cellArray[i] = appeng.api.Util.getCellRegistry().getHandlerForCell(this.slots[i]);
 			}
 			return Arrays.asList(cellArray);
 		} else

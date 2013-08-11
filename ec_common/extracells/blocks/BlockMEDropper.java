@@ -67,8 +67,8 @@ public class BlockMEDropper extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.sideIcon = iconregister.registerIcon("extracells:medropper.side");
-		this.topIcon = iconregister.registerIcon("extracells:medropper.top");
+		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
+		this.topIcon = iconregister.registerIcon("extracells:machine.top");
 		this.frontHorizontalIcon = iconregister.registerIcon("extracells:medropper.front_horizontal");
 		this.frontVerticalIcon = iconregister.registerIcon("extracells:medropper.front_vertical");
 	}

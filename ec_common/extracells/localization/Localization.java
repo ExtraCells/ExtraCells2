@@ -13,7 +13,7 @@ public enum Localization
 
 	public String filename()
 	{
-		return String.format("/extracells/lang/%s.xml", locale);
+		return String.format("/assets/extracells/lang/%s.xml", locale);
 	}
 
 	public String locale()

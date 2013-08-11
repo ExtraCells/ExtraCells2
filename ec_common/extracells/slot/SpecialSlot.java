@@ -8,9 +8,9 @@ public class SpecialSlot extends Slot
 {
 	IInventory inventory;
 
-	public SpecialSlot(IInventory inventory, int x, int y, int z)
+	public SpecialSlot(IInventory inventory, int index, int x, int y)
 	{
-		super(inventory, x, y, z);
+		super(inventory, index, x, y);
 		this.inventory = inventory;
 	}
 

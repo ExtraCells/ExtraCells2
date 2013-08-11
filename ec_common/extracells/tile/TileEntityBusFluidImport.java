@@ -21,13 +21,8 @@ import appeng.api.me.util.IGridInterface;
 
 public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile
 {
-	Boolean powerStatus;
+	Boolean powerStatus = false;
 	IGridInterface grid;
-
-	public TileEntityBusFluidImport()
-	{
-		powerStatus = false;
-	}
 
 	@Override
 	public void updateEntity()
@@ -50,6 +45,7 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 						{
 							if (entry.getTile() instanceof TileEntityBusFluidStorage)
 							{
+								TileEntityBusFluidStorage storageBus = (TileEntityBusFluidStorage) entry.getTile();
 
 								if (source.getTankInfo(facing.getOpposite())[0].fluid != null)
 								{
@@ -60,7 +56,7 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 										if (entity.fillTank(todrain, false) == 50)
 										{
 											((IFluidHandler) worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ)).drain(facing.getOpposite(), todrain, true);
-											((TileEntityBusFluidStorage) worldObj.getBlockTileEntity(entry.getTile().getLocation().x, entry.getTile().getLocation().y, entry.getTile().getLocation().z)).fillTank(todrain, true);
+											storageBus.fillTank(todrain, true);
 											break;
 										}
 									}

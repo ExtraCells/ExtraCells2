@@ -56,7 +56,7 @@ public class ContainerHardMEDrive extends Container
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			if (tileentity.isItemValidForSlot(i, itemstack))
+			if (slot.isItemValid(itemstack))
 			{
 				if (i < 1)
 				{

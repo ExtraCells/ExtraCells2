@@ -5,6 +5,8 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
@@ -19,10 +21,11 @@ public class ItemCasing extends Item
 	{
 		super(id);
 		this.setCreativeTab(Extracells.ModTab);
+		this.setHasSubtypes(true);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public Icon getIconFromDamage(int par1)
+	public Icon getIconFromDamage(int dmg)
 	{
 		return icon;
 	}

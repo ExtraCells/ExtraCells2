@@ -2,6 +2,8 @@ package extracells.items;
 
 import java.util.List;
 
+import appeng.api.Util;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
@@ -60,6 +62,12 @@ public class ItemSecureCellEncrypted extends Item
 		}
 
 		list.add(StatCollector.translateToLocal("tooltip.belongsto") + " " + stack.getTagCompound().getString("owner") + "!");
+	}
+
+	@Override
+	public String getItemDisplayName(ItemStack stack)
+	{
+		return this.getLocalizedName(stack);
 	}
 
 	@ForgeSubscribe

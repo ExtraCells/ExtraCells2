@@ -46,7 +46,7 @@ public class BlockBusFluidStorage extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.sideIcon = iconregister.registerIcon("extracells:fluid.bus.storage.side");
+		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
 		this.frontIcon = iconregister.registerIcon("extracells:fluid.bus.storage.front");
 	}
 
