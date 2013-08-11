@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import appeng.api.WorldCoord;
@@ -25,7 +26,7 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 
 	private Boolean hasPower;
 	private IGridInterface grid;
-	private String costumName = "Blastresistant ME Drive";
+	private String costumName = StatCollector.translateToLocal("tile.block.hardmedrive");
 	private ItemStack[] slots = new ItemStack[3];
 
 	public TileEntityHardMEDrive()

@@ -32,6 +32,12 @@
   <entry key="tooltip.placement">Placement Mode</entry>
   <entry key="tooltip.mode">Mode</entry>
   <entry key="tooltip.onlyblocks">You can't place Items! Put a Block into the BLOCK-Container</entry>
+  <entry key="tooltip.item">Item</entry> 
+  <entry key="tooltip.dropperlocked">Dropper Locked</entry>
+  <entry key="tooltip.dropperunlocked">Dropper Unlocked</entry> 
+  <entry key="tooltip.dropset">Drop set to</entry> 
+  <entry key="tooltip.amount">Amount</entry> 
+  <entry key="tooltip.fluid">Fluid</entry> 
   <entry key="tooltip.solderingwarning.tutorial">Put a ME Adjustable Storage into your hotbar and hold it while using the SolderingStation!</entry>
   <entry key="tooltip.solderingwarning.nospacestoragecell">Make place in your inventory to regain the ME Storage Cell!</entry>
   <entry key="tooltip.solderingwarning.nospaceconversionmatrix">Make place in your inventory to regain the ME Conversion Matrix!</entry>

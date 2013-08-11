@@ -2,6 +2,7 @@ package extracells.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import appeng.api.WorldCoord;
@@ -35,7 +36,7 @@ public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					if (energy + takeEnergy < maxEnergy && controller.useMEEnergy(takeEnergy, "ME Backup Battery"))
+					if (energy + takeEnergy < maxEnergy && controller.useMEEnergy(takeEnergy, StatCollector.translateToLocal("tile.block.mebattery")))
 					{
 						energy += takeEnergy;
 					} else

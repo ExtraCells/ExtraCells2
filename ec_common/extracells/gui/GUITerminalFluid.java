@@ -109,8 +109,8 @@ public class GUITerminalFluid extends GuiContainer
 			fluidname = "---";
 		}
 
-		this.fontRenderer.drawString("Amount: " + amount + "mB", 15, 15, 0xFFFFFF);
-		this.fontRenderer.drawString("Fluid: " + fluidname, 15, 25, 0xFFFFFF);
+		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amount + "mB", 15, 15, 0xFFFFFF);
+		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + fluidname, 15, 25, 0xFFFFFF);
 	}
 
 	public int getRowLength()

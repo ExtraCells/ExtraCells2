@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Icon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -91,21 +92,21 @@ public class BlockMEDropper extends BlockContainer
 					if (p.inventory.getCurrentItem() != null)
 					{
 						((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).setItem(p.inventory.getCurrentItem().copy());
-						p.addChatMessage("Drop set to " + p.inventory.getCurrentItem().getDisplayName());
+						p.addChatMessage(StatCollector.translateToLocal("tooltip.dropset") + " " + p.inventory.getCurrentItem().getDisplayName());
 					}
 				} else
 				{
-					p.addChatMessage("Item: " + ((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getItem().getDisplayName());
+					p.addChatMessage(StatCollector.translateToLocal("tooltip.item") + ": " + ((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getItem().getDisplayName());
 				}
 			} else
 			{
 				((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).setLocked(!((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getLocked());
 				if (((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getLocked())
 				{
-					p.addChatMessage("Dropper Locked!");
+					p.addChatMessage(StatCollector.translateToLocal("tooltip.dropperlocked") + "!");
 				} else
 				{
-					p.addChatMessage("Dropper Unlocked!");
+					p.addChatMessage(StatCollector.translateToLocal("tooltip.dropperunlocked") + "!");
 				}
 			}
 		}

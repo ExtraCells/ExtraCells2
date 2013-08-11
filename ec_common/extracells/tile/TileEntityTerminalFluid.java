@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,7 +38,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 {
 	Boolean powerStatus = false;
 	IGridInterface grid;
-	private String costumName = "ME Fluid Access Terminal";
+	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
 	private ItemStack[] slots = new ItemStack[3];
 	private int fluidIndex = 0;
 	ArrayList<FluidStack> fluidStacksInNetwork = new ArrayList<FluidStack>();
