@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"><properties version="1.0">
+  <comment>Simplified Chinese (zh_CN) Localization File</comment>
+  <entry key="item.cell.256k">ME 256k存储器</entry>
+  <entry key="item.cell.1024k">ME 1M存储器</entry>
+  <entry key="item.cell.4096k">ME 4M存储器</entry>
+  <entry key="item.cell.16348k">ME 16M存储器</entry>
+  <entry key="item.cell.container">ME 方块容器</entry>
+  <entry key="item.cell.adjustable"可调式ME存储器</entry>
+  <entry key="item.cluster.kilo">Kilo存储簇</entry>
+  <entry key="item.cluster.mega">Mega存储簇</entry>
+  <entry key="item.cluster.giga">Giga存储簇</entry>
+  <entry key="item.cluster.tera">Tera存储簇</entry>
+  <entry key="item.cell_secure.encrypted">加密单元-已加密</entry>
+  <entry key="item.cell_secure.decrypted">加密单元-已破译</entry>
+  <entry key="item.casing.advanced">高级存储单元仓</entry>
+  <entry key="tile.block.solderingstation">焊接台</entry>
+  <entry key="tile.block.mebattery">ME备份电池</entry>
+  <entry key="tile.block.medropper">ME物品投掷器</entry>
+  <entry key="tile.block.hardmedrive">防爆ME驱动器</entry>
+  <entry key="tile.block.fluid.bus.import">流体导入总线</entry>
+  <entry key="tile.block.fluid.bus.storage">流体存储总线</entry>
+  <entry key="tile.block.fluid.terminal">ME流体访问终端</entry>
+  <entry key="tooltip.belongsto">该存储器属于:</entry>
+  <entry key="tooltip.notyours">你是这台存储驱动器的拥有者!</entry>
+  <entry key="tooltip.accessgranted">授权访问!</entry>
+  <entry key="tooltip.storageencrypted">存储器已加密!</entry>
+  <entry key="tooltip.empty">空</entry>
+  <entry key="tooltip.block">方块</entry>
+  <entry key="tooltip.equaltrade1">平等交易模式(1*1)</entry>
+  <entry key="tooltip.equaltrade3">平等交易模式(3*3)</entry>
+  <entry key="tooltip.placement">放置模式</entry>
+  <entry key="tooltip.mode">模式</entry>
+  <entry key="tooltip.onlyblocks">你不能放置非方块物品,请在方块容器里放置方块!</entry>
+  <entry key="tooltip.item">物品</entry> 
+  <entry key="tooltip.dropperlocked">投掷器已锁定</entry>
+  <entry key="tooltip.dropperunlocked">投掷器已解锁</entry> 
+  <entry key="tooltip.dropset">投掷设置为</entry> 
+  <entry key="tooltip.amount">数量</entry> 
+  <entry key="tooltip.fluid">流体</entry> 
+  <entry key="tooltip.solderingwarning.tutorial">将可调式存储单元放入快捷栏，然后拿着它使用焊接台!</entry>
+  <entry key="tooltip.solderingwarning.nospacestoragecell">在物品栏腾出空间来取出ME存储单元!</entry>
+  <entry key="tooltip.solderingwarning.nospaceconversionmatrix">在物品栏腾出空间来取出ME转换矩阵!</entry>
+  <entry key="tooltip.solderingwarning.needstoragecell">为提升存储器容量，每增加2048字节你需要一个ME存储单元!</entry>
+  <entry key="tooltip.solderingwarning.needconversionmatrix">为提升存储器存储物品类型数量，每增加一个类型你需要一个ME转换矩阵!</entry>
+  <entry key="tooltip.solderingwarning.cellnotempty">该单元不是空单元!</entry>
+  </properties>
