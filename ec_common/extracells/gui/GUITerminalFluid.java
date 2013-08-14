@@ -114,11 +114,11 @@ public class GUITerminalFluid extends GuiContainer
 		if (amount > 100000000)
 		{
 			amount = amount / 1000000;
-			suffix = "K mB";
+			suffix = "M mB";
 		} else if (amount > 100000)
 		{
 			amount = amount / 1000;
-			suffix = "M mB";
+			suffix = "K mB";
 		}
 
 		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amount + suffix, 15, 15, 0xFFFFFF);

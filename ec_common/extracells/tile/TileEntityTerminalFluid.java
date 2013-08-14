@@ -159,9 +159,19 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 									FluidStack tankFluid = storageBus.getTank().getTankInfo(busFacing)[0].fluid;
 									int capacity = storageBus.getTank().getTankInfo(busFacing)[0].capacity;
 
-									if (storageBus.getTank().fill(busFacing, toFill, false) == toFill.amount)
+									int fillableAmount = 0;
+
+									for (int i = 0; i < 1000; i++)
 									{
-										storageBus.getTank().fill(busFacing, toFill, true);
+										fillableAmount += storageBus.getTank().fill(busFacing, new FluidStack(toFill.fluidID, toFill.amount / 1000), false);
+									}
+
+									if (fillableAmount == toFill.amount)
+									{
+										for (int i = 0; i < 1000; i++)
+										{
+											storageBus.getTank().fill(busFacing, new FluidStack(toFill.fluidID, toFill.amount / 1000), true);
+										}
 										return true;
 									}
 								}
@@ -205,9 +215,28 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 									FluidStack tankFluid = tankInfo.fluid;
 									int capacity = tankInfo.capacity;
 
-									if (tank.drain(busFacing, toDrain, false) != null && storageBus.getTank().drain(busFacing, toDrain, false).amount == toDrain.amount)
+									int drainableAmount = 0;
+
+									for (int i = 0; i < 100; i++)
 									{
-										tank.drain(busFacing, toDrain, true);
+										FluidStack drained = storageBus.getTank().drain(busFacing, new FluidStack(toDrain.fluidID, toDrain.amount / 100), false);
+										if (drained != null)
+										{
+											drainableAmount = drainableAmount + drained.amount;
+										} else
+										{
+											drainableAmount = 0;
+											break;
+										}
+									}
+
+									if (drainableAmount != 0 && drainableAmount == toDrain.amount)
+									{
+										for (int i = 0; i < 100; i++)
+										{
+											tank.drain(busFacing, new FluidStack(toDrain.fluidID, toDrain.amount / 100), true);
+										}
+
 										return true;
 									}
 								}
@@ -225,46 +254,70 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 
 	public void updateFluids()
 	{
-		if (grid != null)
+		if (grid != null && !worldObj.isRemote)
 		{
 			fluidStacksInNetwork = new ArrayList<FluidStack>();
 			List<TileRef<IGridMachine>> tilelist = grid.getMachines();
+			ArrayList<Integer> tankInfos = new ArrayList<Integer>();
 
-			for (TileRef<IGridMachine> entry : tilelist)
+			try
 			{
-				if (grid != null)
+				for (TileRef<IGridMachine> entry : tilelist)
 				{
-					try
+					if (grid != null)
 					{
-						if (entry.getTile() instanceof TileEntityBusFluidStorage)
+						try
 						{
-							TileEntityBusFluidStorage storageBus = (TileEntityBusFluidStorage) entry.getTile();
-							if (storageBus.getTank() != null && storageBus.getTank().getTankInfo(storageBus.getFacing().getOpposite())[0].fluid != null)
+							if (entry.getTile() instanceof TileEntityBusFluidStorage)
 							{
-								FluidStack fluidInTank = storageBus.getTank().getTankInfo(storageBus.getFacing().getOpposite())[0].fluid;
-								ArrayList<Fluid> fluidsInNetwork = new ArrayList<Fluid>();
-								for (FluidStack fluidStack : fluidStacksInNetwork)
+								TileEntityBusFluidStorage storageBus = (TileEntityBusFluidStorage) entry.getTile();
+								if (storageBus.getTank() != null && storageBus.getTank().getTankInfo(storageBus.getFacing().getOpposite())[0].fluid != null)
 								{
-									fluidsInNetwork.add(fluidStack.getFluid());
-								}
-								if (fluidsInNetwork.contains(fluidInTank.getFluid()))
-								{
-									fluidStacksInNetwork.set(fluidsInNetwork.indexOf(fluidInTank.getFluid()), new FluidStack(fluidInTank.getFluid(), fluidStacksInNetwork.get(fluidsInNetwork.indexOf(fluidInTank.getFluid())).amount + fluidInTank.amount));
-								} else
-								{
-									fluidStacksInNetwork.add(fluidInTank);
+									FluidStack fluidInTank = storageBus.getTank().getTankInfo(storageBus.getFacing().getOpposite())[0].fluid;
+									ArrayList<Fluid> fluidsInNetwork = new ArrayList<Fluid>();
+									/*
+									 * I still have to figure out how to
+									 * distinguish between different tanks
+									 * (multiblock structures, multiple sides
+									 * with storage bus, so they dont get added
+									 * multiple times to the fluid list... Atm
+									 * it just distinguishes between the same
+									 * block :D
+									 */
+									
+									if (tankInfos.isEmpty() || !tankInfos.contains(storageBus.getTank().hashCode()))
+									{
+										for (FluidStack fluidStack : fluidStacksInNetwork)
+										{
+											fluidsInNetwork.add(fluidStack.getFluid());
+										}
+										if (fluidsInNetwork.contains(fluidInTank.getFluid()))
+										{
+											fluidStacksInNetwork.set(fluidsInNetwork.indexOf(fluidInTank.getFluid()), new FluidStack(fluidInTank.getFluid(), fluidStacksInNetwork.get(fluidsInNetwork.indexOf(fluidInTank.getFluid())).amount + fluidInTank.amount));
+										} else
+										{
+											fluidStacksInNetwork.add(fluidInTank);
+										}
+
+										tankInfos.add(storageBus.getTank().hashCode());
+									}
 								}
 							}
+						} catch (Throwable e)
+						{
+							// Shush
 						}
-					} catch (AppEngTileMissingException e)
+					} else
 					{
-						e.printStackTrace();
+						fluidStacksInNetwork = new ArrayList<FluidStack>();
 					}
-				} else
-				{
-					fluidStacksInNetwork = new ArrayList<FluidStack>();
 				}
+
+			} catch (Throwable e)
+			{
+				// Shush
 			}
+
 		} else
 		{
 			fluidStacksInNetwork = new ArrayList<FluidStack>();

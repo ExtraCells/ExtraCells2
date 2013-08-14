@@ -20,7 +20,7 @@ import extracells.localization.LocalizationHandler;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.3.0", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.3.1", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { PacketHandler.channel }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Extracells
@@ -80,8 +80,8 @@ public class Extracells
 		int cellTemp = config.getItem("Cell_ID", 4140, "ID for the storage cells").getInt();
 		int cellEncryptedTemp = config.getItem("Cell_Encrypted_ID", 4142, "ID for the encrypted storage cell").getInt();
 		int cellDecryptedTemp = config.getItem("Cell_Decrypted_ID", 4143, "ID for the decrypted storage cell").getInt();
-		int casingTemp = config.getItem("Advanced Storage Casing ID", 4144, "ID for the advanced storage casing").getInt();
-		int fluiddisplayTemp = config.getItem("Fluid Display Item ID", 4145, "ID item used for displaying fluids in the terminal").getInt();
+		int casingTemp = config.getItem("Advanced_Storage_Casing ID", 4144, "ID for the advanced storage casing").getInt();
+		int fluiddisplayTemp = config.getItem("Fluid_Display_Item_ID", 4145, "ID item used for displaying fluids in the terminal").getInt();
 		int solderingstationTemp = config.getBlock("SolderingStation_ID", 500, "ID for the soldering station").getInt();
 		int medropperTemp = config.getBlock("MEDropper_ID", 501, "ID for the ME Item Dropper").getInt();
 		int mebatteryTemp = config.getBlock("MEBattery_ID", 502, "ID for the ME Backup Battery").getInt();
@@ -96,7 +96,7 @@ public class Extracells
 		CellEncrypted_ID = cellEncryptedTemp;
 		CellDecrypted_ID = cellDecryptedTemp;
 		Casing_ID = casingTemp;
-		FluidDisplay_ID=fluiddisplayTemp;
+		FluidDisplay_ID = fluiddisplayTemp;
 		SolderingStation_ID = solderingstationTemp;
 		MEDropper_ID = medropperTemp;
 		MEBattery_ID = mebatteryTemp;

@@ -30,7 +30,7 @@ public class ItemFluidDisplay extends Item
 	public Icon getIconFromDamage(int dmg)
 	{
 		Fluid tFluid = FluidRegistry.getFluid(dmg);
-		return tFluid.getStillIcon();
+		return tFluid != null ? tFluid.getStillIcon() : null;
 	}
 
 	public int func_94901_k()
