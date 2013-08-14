@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"><properties version="1.0">
   <comment>English (EN) Localization File</comment>
-  <entry key="item.cell.256k">ME 256k Storage</entry>
-  <entry key="item.cell.1024k">ME 1M Storage</entry>
-  <entry key="item.cell.4096k">ME 4M Storage</entry>
-  <entry key="item.cell.16348k">ME 16M Storage</entry>
-  <entry key="item.cell.container">ME Block Container</entry>
-  <entry key="item.cell.adjustable">Adjustable ME Storage</entry>
+  <entry key="item.storage.physical.256k">ME 256k Storage</entry>
+  <entry key="item.storage.physical.1024k">ME 1M Storage</entry>
+  <entry key="item.storage.physical.4096k">ME 4M Storage</entry>
+  <entry key="item.storage.physical.16348k">ME 16M Storage</entry>
+  <entry key="item.storage.physical.container">ME Block Container</entry>
+  <entry key="item.storage.physical.adjustable">Adjustable ME Storage</entry>
+  <entry key="item.storage.fluid.1k">ME 1k Fluid Storage</entry>
+  <entry key="item.storage.fluid.4k">ME 4k Fluid Storage</entry>
+  <entry key="item.storage.fluid.16k">ME 16k Fluid Storage</entry>
+  <entry key="item.storage.fluid.64k">ME 64k Fluid Storage</entry>
+  <entry key="item.storage.fluid.256k">ME 256k Fluid Storage</entry>
+  <entry key="item.storage.fluid.1m">ME 1M Fluid Storage</entry>
+  <entry key="item.storage.fluid.4m">ME 4M Fluid Storage</entry>
+  <entry key="item.storage.fluid.16m">ME 16M Fluid Storage</entry>
   <entry key="item.cluster.kilo">Kilo Storage Cluster </entry>
   <entry key="item.cluster.mega">Mega Storage Cluster</entry>
   <entry key="item.cluster.giga">Giga Storage Cluster</entry>
   <entry key="item.cluster.tera">Tera Storage Cluster</entry>
-  <entry key="item.cell_secure.encrypted">Encryptable Cell - Encrypted</entry>
-  <entry key="item.cell_secure.decrypted">Encryptable Cell - Decrypted</entry>
+  <entry key="item.storage.physical_secure.encrypted">Encryptable Cell - Encrypted</entry>
+  <entry key="item.storage.physical_secure.decrypted">Encryptable Cell - Decrypted</entry>
   <entry key="item.casing.advanced">Advanced Storage Cell Housing</entry>
   <entry key="tile.block.solderingstation">Soldering Station</entry>
   <entry key="tile.block.mebattery">ME BackUp Battery</entry>

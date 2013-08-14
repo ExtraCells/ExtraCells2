@@ -26,11 +26,12 @@ import extracells.gui.GUIHardMEDrive;
 import extracells.gui.GUITerminalFluid;
 import extracells.items.ItemBlockSpecial;
 import extracells.items.ItemCasing;
-import extracells.items.ItemCell;
 import extracells.items.ItemCluster;
 import extracells.items.ItemFluidDisplay;
-import extracells.items.ItemSecureCellDecrypted;
-import extracells.items.ItemSecureCellEncrypted;
+import extracells.items.ItemSecureStoragePhysicalDecrypted;
+import extracells.items.ItemSecureStoragePhysicalEncrypted;
+import extracells.items.ItemStorageFluid;
+import extracells.items.ItemStoragePhysical;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityHardMEDrive;
@@ -45,21 +46,21 @@ public class CommonProxy implements IGuiHandler
 	{
 		GameRegistry.registerCraftingHandler(new CraftingHandler());
 
-		ItemStack cell256k = new ItemStack(Extracells.Cell, 1, 0);
-		ItemStack cell1m = new ItemStack(Extracells.Cell, 1, 1);
-		ItemStack cell4m = new ItemStack(Extracells.Cell, 1, 2);
-		ItemStack cell16m = new ItemStack(Extracells.Cell, 1, 3);
+		ItemStack storagePhysical256k = new ItemStack(Extracells.StoragePhysical, 1, 0);
+		ItemStack storagePhysical1m = new ItemStack(Extracells.StoragePhysical, 1, 1);
+		ItemStack storagePhysical4m = new ItemStack(Extracells.StoragePhysical, 1, 2);
+		ItemStack storagePhysical16m = new ItemStack(Extracells.StoragePhysical, 1, 3);
+
+		ItemStack containerCell = new ItemStack(Extracells.StoragePhysical, 1, 4);
+
+		ItemStack encryptableCell = new ItemStack(Extracells.StoragePhysicalDecrypted, 1, 0);
+
+		ItemStack customCell = new ItemStack(Extracells.StoragePhysical, 1, 5);
 
 		ItemStack cluster256k = new ItemStack(Extracells.Cluster, 1, 0);
 		ItemStack cluster1m = new ItemStack(Extracells.Cluster, 1, 1);
 		ItemStack cluster4m = new ItemStack(Extracells.Cluster, 1, 2);
 		ItemStack cluster16m = new ItemStack(Extracells.Cluster, 1, 3);
-
-		ItemStack containerCell = new ItemStack(Extracells.Cell, 1, 4);
-
-		ItemStack encryptableCell = new ItemStack(Extracells.CellDecrypted, 1, 0);
-
-		ItemStack customCell = new ItemStack(Extracells.Cell, 1, 5);
 
 		ItemStack advancedStorageCasing = new ItemStack(Extracells.Casing, 1, 0);
 
@@ -76,21 +77,21 @@ public class CommonProxy implements IGuiHandler
 		{ "GFG", "F_F", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond });
 
 		// Normal Cells
-		GameRegistry.addShapedRecipe(cell256k, new Object[]
+		GameRegistry.addShapedRecipe(storagePhysical256k, new Object[]
 		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 0) });
-		GameRegistry.addShapelessRecipe(cell256k, new Object[]
+		GameRegistry.addShapelessRecipe(storagePhysical256k, new Object[]
 		{ Extracells.Casing, cluster256k });
-		GameRegistry.addShapedRecipe(cell1m, new Object[]
+		GameRegistry.addShapedRecipe(storagePhysical1m, new Object[]
 		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 1) });
-		GameRegistry.addShapelessRecipe(cell1m, new Object[]
+		GameRegistry.addShapelessRecipe(storagePhysical1m, new Object[]
 		{ Extracells.Casing, cluster1m });
-		GameRegistry.addShapedRecipe(cell4m, new Object[]
+		GameRegistry.addShapedRecipe(storagePhysical4m, new Object[]
 		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 2) });
-		GameRegistry.addShapelessRecipe(cell4m, new Object[]
+		GameRegistry.addShapelessRecipe(storagePhysical4m, new Object[]
 		{ Extracells.Casing, cluster4m });
-		GameRegistry.addShapedRecipe(cell16m, new Object[]
+		GameRegistry.addShapedRecipe(storagePhysical16m, new Object[]
 		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 3) });
-		GameRegistry.addShapelessRecipe(cell16m, new Object[]
+		GameRegistry.addShapelessRecipe(storagePhysical16m, new Object[]
 		{ Extracells.Casing, cluster16m });
 
 		// Cell Container
@@ -163,9 +164,10 @@ public class CommonProxy implements IGuiHandler
 	public void RegisterItems()
 	{
 		Extracells.Cluster = new ItemCluster(Extracells.Cluster_ID);
-		Extracells.Cell = new ItemCell(Extracells.Cell_ID);
-		Extracells.CellDecrypted = new ItemSecureCellDecrypted(Extracells.CellDecrypted_ID);
-		Extracells.CellEncrypted = new ItemSecureCellEncrypted(Extracells.CellEncrypted_ID);
+		Extracells.StoragePhysical = new ItemStoragePhysical(Extracells.StoragePhysical_ID);
+		Extracells.StoragePhysicalDecrypted = new ItemSecureStoragePhysicalDecrypted(Extracells.StoragePhysicalDecrypted_ID);
+		Extracells.StoragePhysicalEncrypted = new ItemSecureStoragePhysicalEncrypted(Extracells.StoragePhysicalEncrypted_ID);
+		Extracells.StorageFluid = new ItemStorageFluid(Extracells.StorageFluid_ID);
 		Extracells.Casing = new ItemCasing(Extracells.Casing_ID);
 		Extracells.FluidDisplay = new ItemFluidDisplay(Extracells.FluidDisplay_ID);
 	}

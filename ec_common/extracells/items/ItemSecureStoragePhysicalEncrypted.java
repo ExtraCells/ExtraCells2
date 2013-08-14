@@ -19,12 +19,12 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
 
-public class ItemSecureCellEncrypted extends Item
+public class ItemSecureStoragePhysicalEncrypted extends Item
 {
 
 	private Icon icon;
 
-	public ItemSecureCellEncrypted(int id)
+	public ItemSecureStoragePhysicalEncrypted(int id)
 	{
 		super(id);
 		this.setMaxStackSize(1);
@@ -41,13 +41,13 @@ public class ItemSecureCellEncrypted extends Item
 	@Override
 	public void registerIcons(IconRegister IconRegister)
 	{
-		this.icon = IconRegister.registerIcon("extracells:cell_secure.encrypted");
+		this.icon = IconRegister.registerIcon("extracells:storage.physical_secure.encrypted");
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return "item.cell_secure.encrypted";
+		return "item.storage.physical_secure.encrypted";
 	}
 
 	@SuppressWarnings(
@@ -75,7 +75,7 @@ public class ItemSecureCellEncrypted extends Item
 	public ItemStack onItemRightClick(ItemStack stack, World w, EntityPlayer p)
 	{
 		ItemStack itemStackEncrypted = p.inventory.getCurrentItem();
-		ItemStack itemStackDecrypted = new ItemStack(Extracells.CellDecrypted, 1);
+		ItemStack itemStackDecrypted = new ItemStack(Extracells.StoragePhysicalDecrypted, 1);
 
 		if (!itemStackEncrypted.hasTagCompound())
 		{

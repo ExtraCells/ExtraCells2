@@ -20,12 +20,12 @@ import appeng.api.IAEItemStack;
 import appeng.api.Util;
 import appeng.api.me.items.IStorageCell;
 
-public class ItemSecureCellDecrypted extends Item implements IStorageCell
+public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorageCell
 {
 
 	private Icon icon;
 
-	public ItemSecureCellDecrypted(int id)
+	public ItemSecureStoragePhysicalDecrypted(int id)
 	{
 		super(id);
 		this.setMaxStackSize(1);
@@ -43,13 +43,13 @@ public class ItemSecureCellDecrypted extends Item implements IStorageCell
 	@Override
 	public void registerIcons(IconRegister IconRegister)
 	{
-		this.icon = IconRegister.registerIcon("extracells:cell_secure.decrypted");
+		this.icon = IconRegister.registerIcon("extracells:storage.physical_secure.decrypted");
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return "item.cell_secure.decrypted";
+		return "item.storage.physical_secure.decrypted";
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class ItemSecureCellDecrypted extends Item implements IStorageCell
 		if (p.isSneaking())
 		{
 			ItemStack itemStackDecrypted = p.inventory.getCurrentItem();
-			ItemStack itemStackEncrypted = new ItemStack(Extracells.CellEncrypted, 1);
+			ItemStack itemStackEncrypted = new ItemStack(Extracells.StoragePhysicalEncrypted, 1);
 			if (!itemStackEncrypted.hasTagCompound())
 			{
 				itemStackEncrypted.setTagCompound(new NBTTagCompound());

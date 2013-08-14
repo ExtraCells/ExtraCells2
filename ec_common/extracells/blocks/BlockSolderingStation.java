@@ -93,7 +93,7 @@ public class BlockSolderingStation extends BlockContainer
 			((TileEntitySolderingStation) world.getBlockTileEntity(x, y, z)).addUser(player.username);
 		if (world.isRemote)
 		{
-			FMLCommonHandler.instance().showGuiScreen(new GUISolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == Extracells.Cell && player.getHeldItem().getItemDamage() == 5)));
+			FMLCommonHandler.instance().showGuiScreen(new GUISolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == Extracells.StoragePhysical && player.getHeldItem().getItemDamage() == 5)));
 			return true;
 		} else
 		{

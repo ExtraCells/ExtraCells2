@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"><properties version="1.0">
   <comment>Simplified Chinese (zh_CN) Localization File</comment>
-  <entry key="item.cell.256k">ME 256k存储器</entry>
-  <entry key="item.cell.1024k">ME 1M存储器</entry>
-  <entry key="item.cell.4096k">ME 4M存储器</entry>
-  <entry key="item.cell.16348k">ME 16M存储器</entry>
-  <entry key="item.cell.container">ME 方块容器</entry>
-  <entry key="item.cell.adjustable"可调式ME存储器</entry>
+  <entry key="item.storage.physical.256k">ME 256k存储器</entry>
+  <entry key="item.storage.physical.1024k">ME 1M存储器</entry>
+  <entry key="item.storage.physical.4096k">ME 4M存储器</entry>
+  <entry key="item.storage.physical.16348k">ME 16M存储器</entry>
+  <entry key="item.storage.physical.container">ME 方块容器</entry>
+  <entry key="item.storage.physical.adjustable"可调式ME存储器</entry>
   <entry key="item.cluster.kilo">Kilo存储簇</entry>
   <entry key="item.cluster.mega">Mega存储簇</entry>
   <entry key="item.cluster.giga">Giga存储簇</entry>
   <entry key="item.cluster.tera">Tera存储簇</entry>
-  <entry key="item.cell_secure.encrypted">加密单元-已加密</entry>
-  <entry key="item.cell_secure.decrypted">加密单元-已破译</entry>
+  <entry key="item.storage.physical_secure.encrypted">加密单元-已加密</entry>
+  <entry key="item.storage.physical_secure.decrypted">加密单元-已破译</entry>
   <entry key="item.casing.advanced">高级存储单元仓</entry>
   <entry key="tile.block.solderingstation">焊接台</entry>
   <entry key="tile.block.mebattery">ME备份电池</entry>

@@ -32,7 +32,7 @@ public class Extracells
 	{
 		public ItemStack getIconItemStack()
 		{
-			return new ItemStack(Cell, 1, 4);
+			return new ItemStack(StoragePhysical, 1, 4);
 		}
 	};
 
@@ -40,9 +40,10 @@ public class Extracells
 	public static CommonProxy proxy;
 
 	public static Item Cluster;
-	public static Item Cell;
-	public static Item CellEncrypted;
-	public static Item CellDecrypted;
+	public static Item StoragePhysical;
+	public static Item StoragePhysicalEncrypted;
+	public static Item StoragePhysicalDecrypted;
+	public static Item StorageFluid;
 	public static Item Casing;
 	public static Item FluidDisplay;
 	public static Block SolderingStation;
@@ -52,9 +53,10 @@ public class Extracells
 	public static Block BusFluidImport;
 	public static Block BusFluidStorage;
 	public static Block TerminalFluid;
-	public static int Cell_ID;
-	public static int CellEncrypted_ID;
-	public static int CellDecrypted_ID;
+	public static int StoragePhysical_ID;
+	public static int StoragePhysicalEncrypted_ID;
+	public static int StoragePhysicalDecrypted_ID;
+	public static int StorageFluid_ID;
 	public static int Cluster_ID;
 	public static int Casing_ID;
 	public static int FluidDisplay_ID;
@@ -77,33 +79,35 @@ public class Extracells
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		int clusterTemp = config.getItem("Cluster_ID", 4141, "ID for the storage clusters (crafting)").getInt();
-		int cellTemp = config.getItem("Cell_ID", 4140, "ID for the storage cells").getInt();
-		int cellEncryptedTemp = config.getItem("Cell_Encrypted_ID", 4142, "ID for the encrypted storage cell").getInt();
-		int cellDecryptedTemp = config.getItem("Cell_Decrypted_ID", 4143, "ID for the decrypted storage cell").getInt();
+		int storagePhysicalTemp = config.getItem("Cell_ID", 4140, "ID for the storage cells").getInt();
+		int storagePhysicalEncryptedTemp = config.getItem("Cell_Encrypted_ID", 4142, "ID for the encrypted storage cell").getInt();
+		int storagePhysicalDecryptedTemp = config.getItem("Cell_Decrypted_ID", 4143, "ID for the decrypted storage cell").getInt();
 		int casingTemp = config.getItem("Advanced_Storage_Casing ID", 4144, "ID for the advanced storage casing").getInt();
-		int fluiddisplayTemp = config.getItem("Fluid_Display_Item_ID", 4145, "ID item used for displaying fluids in the terminal").getInt();
-		int solderingstationTemp = config.getBlock("SolderingStation_ID", 500, "ID for the soldering station").getInt();
-		int medropperTemp = config.getBlock("MEDropper_ID", 501, "ID for the ME Item Dropper").getInt();
-		int mebatteryTemp = config.getBlock("MEBattery_ID", 502, "ID for the ME Backup Battery").getInt();
-		int hardmedriveTemp = config.getBlock("HardMEDrive_ID", 503, "ID for the Blast Resistant ME Drive").getInt();
-		int busfluidimportTemp = config.getBlock("BusFluidImport_ID", 504, "ID for the Fluid Import Bus").getInt();
-		int busfluidstorageTemp = config.getBlock("BusFluidStorage_ID", 505, "ID for the Fluid Storage Bus").getInt();
-		int monitorfluidTemp = config.getBlock("MonitorFluid_ID", 506, "ID for the Fluid Storage Monitor").getInt();
+		int fluidDisplayTemp = config.getItem("Fluid_Display_Item_ID", 4145, "ID item used for displaying fluids in the terminal").getInt();
+		int storageFluidTemp = config.getItem("StorageFluid_ID", 4146, "ID for the ME Fluid Storages").getInt();
+		int solderingStationTemp = config.getBlock("SolderingStation_ID", 500, "ID for the soldering station").getInt();
+		int meDropperTemp = config.getBlock("MEDropper_ID", 501, "ID for the ME Item Dropper").getInt();
+		int meBatteryTemp = config.getBlock("MEBattery_ID", 502, "ID for the ME Backup Battery").getInt();
+		int hardMEDriveTemp = config.getBlock("HardMEDrive_ID", 503, "ID for the Blast Resistant ME Drive").getInt();
+		int busFluidImportTemp = config.getBlock("BusFluidImport_ID", 504, "ID for the Fluid Import Bus").getInt();
+		int busFluidStorageTemp = config.getBlock("BusFluidStorage_ID", 505, "ID for the Fluid Storage Bus").getInt();
+		int monitorFluidTemp = config.getBlock("MonitorFluid_ID", 506, "ID for the Fluid Storage Monitor").getInt();
 		config.save();
 
 		Cluster_ID = clusterTemp;
-		Cell_ID = cellTemp;
-		CellEncrypted_ID = cellEncryptedTemp;
-		CellDecrypted_ID = cellDecryptedTemp;
+		StoragePhysical_ID = storagePhysicalTemp;
+		StoragePhysicalEncrypted_ID = storagePhysicalEncryptedTemp;
+		StoragePhysicalDecrypted_ID = storagePhysicalDecryptedTemp;
+		StorageFluid_ID = storageFluidTemp;
 		Casing_ID = casingTemp;
-		FluidDisplay_ID = fluiddisplayTemp;
-		SolderingStation_ID = solderingstationTemp;
-		MEDropper_ID = medropperTemp;
-		MEBattery_ID = mebatteryTemp;
-		HardMEDrive_ID = hardmedriveTemp;
-		BusFluidImport_ID = busfluidimportTemp;
-		BusFluidStorage_ID = busfluidstorageTemp;
-		TerminalFluid_ID = monitorfluidTemp;
+		FluidDisplay_ID = fluidDisplayTemp;
+		SolderingStation_ID = solderingStationTemp;
+		MEDropper_ID = meDropperTemp;
+		MEBattery_ID = meBatteryTemp;
+		HardMEDrive_ID = hardMEDriveTemp;
+		BusFluidImport_ID = busFluidImportTemp;
+		BusFluidStorage_ID = busFluidStorageTemp;
+		TerminalFluid_ID = monitorFluidTemp;
 	}
 
 	@EventHandler

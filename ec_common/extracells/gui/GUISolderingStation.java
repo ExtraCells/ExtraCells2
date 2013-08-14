@@ -108,7 +108,7 @@ public class GUISolderingStation extends GuiScreen
 	{
 		if (this.mc.thePlayer.getHeldItem() != null)
 		{
-			if (this.mc.thePlayer.getHeldItem().getItem() == Extracells.Cell && this.mc.thePlayer.getHeldItem().getItemDamage() == 5)
+			if (this.mc.thePlayer.getHeldItem().getItem() == Extracells.StoragePhysical && this.mc.thePlayer.getHeldItem().getItemDamage() == 5)
 			{
 				if (this.mc.thePlayer.getHeldItem().hasTagCompound())
 				{

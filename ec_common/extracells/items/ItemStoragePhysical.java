@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 
-public class ItemCell extends Item implements IStorageCell
+public class ItemStoragePhysical extends Item implements IStorageCell
 {
 
 	// Localization suffixes
@@ -44,7 +44,7 @@ public class ItemCell extends Item implements IStorageCell
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;
 
-	public ItemCell(int id)
+	public ItemStoragePhysical(int id)
 	{
 		super(id);
 		this.setMaxStackSize(1);
@@ -61,13 +61,13 @@ public class ItemCell extends Item implements IStorageCell
 	}
 
 	@Override
-	public void registerIcons(IconRegister par1IconRegister)
+	public void registerIcons(IconRegister iconRegister)
 	{
 		this.icons = new Icon[suffixes.length];
 
 		for (int i = 0; i < suffixes.length; ++i)
 		{
-			this.icons[i] = par1IconRegister.registerIcon("extracells:" + "cell." + suffixes[i]);
+			this.icons[i] = iconRegister.registerIcon("extracells:" + "storage.physical." + suffixes[i]);
 		}
 	}
 
@@ -75,7 +75,7 @@ public class ItemCell extends Item implements IStorageCell
 	public String getUnlocalizedName(ItemStack itemstack)
 	{
 		int i = itemstack.getItemDamage();
-		return "item.cell." + suffixes[i];
+		return "item.storage.physical." + suffixes[i];
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class ItemCell extends Item implements IStorageCell
 			{
 				list.add(StatCollector.translateToLocal("tooltip.block") + ": -");
 			}
-			list.add(used_bytes + " of " + total_bytes + " Bytes Used");
+			list.add(used_bytes + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.Of") + " " + total_bytes + " " + StatCollector.translateToLocal("Appeng.GuiITooltip.BytesUsed"));
 		}
 		if (partitioned)
 		{
@@ -216,7 +216,7 @@ public class ItemCell extends Item implements IStorageCell
 		}
 	}
 
-	public boolean isBlackListed(ItemStack cellItem, IAEItemStack requsetedAddition)
+	public boolean isBlackListed(ItemStack cellItem, IAEItemStack requesetedAddition)
 	{
 		return false;
 	}

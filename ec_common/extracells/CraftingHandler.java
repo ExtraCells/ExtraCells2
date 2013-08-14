@@ -14,7 +14,7 @@ public class CraftingHandler implements ICraftingHandler
 	{
 		// set size of Adjustable Cell on crafting
 
-		if (item.getItem() == Extracells.Cell && item.getItemDamage() == 5)
+		if (item.getItem() == Extracells.StoragePhysical && item.getItemDamage() == 5)
 		{
 			if (!item.hasTagCompound())
 			{

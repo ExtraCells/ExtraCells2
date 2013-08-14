@@ -38,6 +38,12 @@ public class ItemFluidDisplay extends Item
 		return 0;
 	}
 
+	@Override
+	public String getUnlocalizedName()
+	{
+		return "FluidDisplay";		
+	}
+	
 	public String getUnlocalizedName(ItemStack aStack)
 	{
 		if (aStack != null)
@@ -49,7 +55,7 @@ public class ItemFluidDisplay extends Item
 			}
 		}
 
-		return "";
+		return "FluidDisplay";
 	}
 
 	public String getItemStackDisplayName(ItemStack aStack)
