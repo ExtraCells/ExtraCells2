@@ -11,7 +11,6 @@ import appeng.api.Items;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import extracells.CraftingHandler;
 import extracells.Extracells;
 import extracells.blocks.BlockBusFluidImport;
 import extracells.blocks.BlockBusFluidStorage;
@@ -24,6 +23,7 @@ import extracells.container.ContainerHardMEDrive;
 import extracells.container.ContainerTerminalFluid;
 import extracells.gui.GUIHardMEDrive;
 import extracells.gui.GUITerminalFluid;
+import extracells.handler.CraftingHandler;
 import extracells.items.ItemBlockSpecial;
 import extracells.items.ItemCasing;
 import extracells.items.ItemCluster;
@@ -201,12 +201,6 @@ public class CommonProxy implements IGuiHandler
 			case 0: // GUI Hard ME Drive
 				return new GUIHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			case 1: // GUI Fluid Terminal
-				((TileEntityTerminalFluid) tileEntity).updateFluids();
-				for (FluidStack stack : ((TileEntityTerminalFluid) tileEntity).getFluidsInNetwork())
-				{
-					if (stack != null)
-						System.out.println(stack.getFluid().getUnlocalizedName());
-				}
 				return new GUITerminalFluid(x, y, z, player.inventory, tileEntity);
 			default:
 				return false;

@@ -3,7 +3,7 @@ package appeng.api.me.util;
 import java.util.List;
 
 import appeng.api.IItemList;
-
+import appeng.api.me.tiles.IPushable;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -55,15 +55,24 @@ public interface IAssemblerPattern
     public List<ItemStack> condensedRequirements();
     
     /** Returns the Tile Entity for the interface... */
-	TileEntity getInterface();
+	List<IPushable> getInterface();
 	
 	/** Sets the Tile Entity for the interface... */
-	void setInterface(TileEntity a);
+	void setInterface(IPushable a);
 	
 	/** returns the output of the pattern */
 	ItemStack getRecipeOutput( InventoryCrafting ic, World w );
 	
 	/** returns the recipe for the patterns */
 	IRecipe getMatchingRecipe( InventoryCrafting ic, World w );
+	
+	/**
+	 * Compare to Patterns
+	 * @param obj
+	 * @return
+	 */
+	@Override
+	public boolean equals(Object obj);
+	
 }
 

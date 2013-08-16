@@ -53,12 +53,14 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 									TileEntityBusFluidStorage entity = ((TileEntityBusFluidStorage) worldObj.getBlockTileEntity(entry.getTile().getLocation().x, entry.getTile().getLocation().y, entry.getTile().getLocation().z));
 									if (source.drain(entity.getFacing().getOpposite(), todrain, false).amount == 50)
 									{
+										/*/
 										if (entity.fillTank(todrain, false) == 50)
 										{
 											((IFluidHandler) worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ)).drain(facing.getOpposite(), todrain, true);
 											storageBus.fillTank(todrain, true);
 											break;
 										}
+										//*/
 									}
 								}
 							}

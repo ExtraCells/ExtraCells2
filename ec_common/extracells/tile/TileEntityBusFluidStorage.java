@@ -1,36 +1,44 @@
 package extracells.tile;
 
-import net.minecraft.nbt.NBTTagCompound;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
+import appeng.api.me.tiles.ICellContainer;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IGridTileEntity;
 import appeng.api.me.util.IGridInterface;
+import appeng.api.me.util.IMEInventoryHandler;
+import extracells.handler.FluidBusInventoryHandler;
 
-public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile
+public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer
 {
 	Boolean powerStatus = false;
 	IGridInterface grid = null;
+	int priority = 1;
+	List<ItemStack> filter = new ArrayList<ItemStack>();
 
 	public TileEntityBusFluidStorage()
 	{
 		powerStatus = false;
 	}
 
-	@Override
-	public void updateEntity()
+	public void setPriority(int priority)
 	{
+		this.priority = priority;
+	}
 
+	@Override
+	public boolean canUpdate()
+	{
+		return false;
 	}
 
 	@Override
@@ -45,68 +53,9 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 
-	public Fluid getFluid()
-	{
-		if (getTank() != null)
-		{
-			FluidTankInfo info = getTank().getTankInfo(ForgeDirection.getOrientation(getBlockMetadata()).getOpposite())[0];
-			return info.fluid.getFluid();
-		} else
-		{
-			return null;
-		}
-	}
-
-	public int getCapacity()
-	{
-		if (getTank() != null)
-		{
-			FluidTankInfo info = getTank().getTankInfo(ForgeDirection.getOrientation(getBlockMetadata()).getOpposite())[0];
-			return info.capacity;
-		} else
-		{
-			return 0;
-		}
-	}
-
-	public int fillTank(FluidStack resource, Boolean doFill)
-	{
-		if (getTank() != null)
-		{
-			return getTank().fill(getFacing().getOpposite(), resource, doFill);
-		} else
-		{
-			return 0;
-		}
-	}
-
-	public FluidStack drainTank(FluidStack resource, Boolean doDrain)
-	{
-		return getTank().drain(getFacing().getOpposite(), resource, doDrain);
-	}
-
 	public ForgeDirection getFacing()
 	{
 		return ForgeDirection.getOrientation(getBlockMetadata());
-	}
-
-	public IFluidHandler getTank()
-	{
-		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
-		TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
-		if (facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
-		{
-			return ((IFluidHandler) worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ));
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public WorldCoord getLocation()
-	{
-		return new WorldCoord(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -155,5 +104,25 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	public float getPowerDrainPerTick()
 	{
 		return 0;
+	}
+
+	@Override
+	public WorldCoord getLocation()
+	{
+		return new WorldCoord(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public List<IMEInventoryHandler> getCellArray()
+	{
+		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
+		list.add(new FluidBusInventoryHandler(worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ), getFacing(), getPriority(), filter));
+		return list;
+	}
+
+	@Override
+	public int getPriority()
+	{
+		return priority;
 	}
 }

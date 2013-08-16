@@ -9,6 +9,12 @@ import net.minecraft.item.ItemStack;
 public interface IPushable
 {
 	/**
+	 * is this pushable busy?
+	 * @return
+	 */
+	boolean isBusy();
+	
+	/**
 	 * Attempt to send an item.
 	 * @param out
 	 * @return

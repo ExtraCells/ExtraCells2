@@ -68,5 +68,11 @@ public interface ITileInterfaceApi {
 	 * @return
 	 */
 	InterfaceCraftingResponse requestCrafting( ItemStack req, boolean enableRecursive );
+
+	/**
+	 * if there is anything at all available it returns true.
+	 * @return
+	 */
+	boolean containsItems();
 	
 }

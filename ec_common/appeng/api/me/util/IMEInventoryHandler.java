@@ -6,8 +6,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
+import appeng.api.config.FuzzyMode;
+import appeng.api.config.IConfigEnum;
+import appeng.api.config.ItemFlow;
 
 public interface IMEInventoryHandler extends IMEInventory {
+	
+	public ItemFlow getFlow();
+    public void setFlow( ItemFlow p );
 	
     public int getPriority();
     public void setPriority( int p );
@@ -43,9 +49,12 @@ public interface IMEInventoryHandler extends IMEInventory {
     void setUpdateTarget(TileEntity e);
     
     List<ItemStack> getPreformattedItems();	
-	void setPreformattedItems( IItemList in);	
+	void setPreformattedItems( IItemList in, FuzzyMode fuzzyMode);	
+	
 	boolean isPreformatted();
 	boolean isFuzzyPreformatted();
+	FuzzyMode getFuzzyModePreformatted();
+	
 	void setFuzzyPreformatted( boolean nf );
 	
 	public void setName(String name);

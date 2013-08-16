@@ -1,5 +1,5 @@
 <?xml version="1.0" ?> 
-<project name="GeneralBuildFile" default="build">
+<project name="Build ExtraCells deobfuscated" default="build">
 
 	<property file="build.properties" prefix="build"/>
 	<property file="build_number.properties" prefix="build_number"/>
@@ -8,7 +8,7 @@
 		<delete file="${build.dir.development}\forge\mcp\src\minecraft\mcmod.info" />
 		<delete dir="${build.dir.development}\forge\mcp\src\minecraft\de\extracells" />
 		<delete dir="${build.dir.development}\forge\mcp\src\minecraft\extracells" />
-		<delete dir="${build.dir.development}\forge\mcp\reobf\minecraft" />
+		<delete dir="${build.dir.development}\forge\mcp\bin\minecraft" />
 	</target>
 
 	<target name="increment_build_number">
@@ -38,15 +38,6 @@
 		</exec>
 	</target>
 
-	<target name="reobfuscate">
-		<exec dir="${build.dir.development}\forge\mcp" executable="cmd" osfamily="windows">
-			<arg line="/c reobfuscate_srg.bat" />
-		</exec>
-		<exec dir="${build.dir.development}\forge\mcp" executable="bash" osfamily="unix">
-			<arg line="reobfuscate_srg.sh" />
-		</exec>
-	</target>
-
 	<target name="sign_jar">
 		<signjar jar="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\${build.release.mod.version}\${build.release.mod.name}-universal-${build.release.mod.version}-${build_number.build_number}.jar" keystore="${build.keystore.location}" alias="${build.keystore.alias}" storepass="${build.keystore.password}" />
 	</target>
@@ -56,14 +47,13 @@
 		<antcall target="clean" />
 		<antcall target="increment_build_number" />
 		<antcall target="prep" />
-		<antcall target="recompile" />		
-		<antcall target="reobfuscate" />
+		<antcall target="recompile" />
 
 		<!-- Build the jar -->
 		<mkdir dir="${build.dir.development}\${build.dir.build}" />
 		<jar destfile="${build.dir.development}\${build.dir.build}\${build.release.mod.name}-universal-${build.release.mod.version} (${build.release.minecraft.version}).jar">
 			<fileset dir="${build.dir.development}\forge\mcp\src\minecraft\" includes="mcmod.info" />
-			<fileset dir="${build.dir.development}\forge\mcp\reobf\minecraft" excludes="appeng/**" />
+			<fileset dir="${build.dir.development}\forge\mcp\bin\minecraft" excludes="appeng/**" />
 			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
 		</jar>
 
@@ -77,14 +67,13 @@
 		<antcall target="increment_build_number" />
 		<antcall target="prep" />
 		<antcall target="replace_tokens" />
-		<antcall target="recompile" />		
-		<antcall target="reobfuscate" />
+		<antcall target="recompile" />
 
 		<!-- Build the jar -->
 		<mkdir dir="${build.dir.development}\${build.dir.release}" />
 		<jar destfile="${build.dir.development}\${build.dir.release}\${build.release.mod.name}-universal-${build.release.mod.version} (${build.release.minecraft.version}).jar">
 			<fileset dir="${build.dir.development}\forge\mcp\src\minecraft\" includes="mcmod.info" />
-			<fileset dir="${build.dir.development}\forge\mcp\reobf\minecraft\" excludes="appeng/**" />
+			<fileset dir="${build.dir.development}\forge\mcp\bin\minecraft\" excludes="appeng/**" />
 			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
 		</jar>
 

@@ -20,6 +20,8 @@ public class Items
 	public static ItemStack toolMassCannon;
     
 	public static ItemStack toolQuartzKnife;
+
+	public static ItemStack itemMemoryCard;
 	
     public static ItemStack itemCell1k;
     public static ItemStack itemCell4k;

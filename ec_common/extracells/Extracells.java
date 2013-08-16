@@ -1,10 +1,12 @@
 package extracells;
 
+import appeng.api.Util;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -16,6 +18,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.blocks.BlockMEDropper;
+import extracells.handler.FluidCellHandler;
 import extracells.localization.LocalizationHandler;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
@@ -115,10 +118,13 @@ public class Extracells
 	{
 		proxy.RegisterItems();
 		proxy.RegisterBlocks();
-		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
 		proxy.RegisterRenderers();
 		proxy.RegisterTileEntities();
 		proxy.addRecipes();
+		//Util.addBasicBlackList(extracells.Extracells.FluidDisplay.itemID, OreDictionary.WILDCARD_VALUE);
+		Util.getCellRegistry().addCellHandler(new FluidCellHandler());
+		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
+
 	}
 
 	@EventHandler

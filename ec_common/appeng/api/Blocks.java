@@ -59,6 +59,7 @@ public class Blocks
 	public static ItemStack blkQuantumRing;
 	public static ItemStack blkQuantumLink;
 	public static ItemStack blkQuartzGlass;
+	public static ItemStack blkQuartzLamp;
     
     // Used internally, best not to mess with this one...
     public static ItemStack blkPhantom;

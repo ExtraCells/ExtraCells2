@@ -1,0 +1,97 @@
+<?xml version="1.0" ?> 
+<project name="Build ExtraCells obfuscated" default="build">
+
+	<property file="build.properties" prefix="build"/>
+	<property file="build_number.properties" prefix="build_number"/>
+
+	<target name="clean">
+		<delete file="${build.dir.development}\forge\mcp\src\minecraft\mcmod.info" />
+		<delete dir="${build.dir.development}\forge\mcp\src\minecraft\de\extracells" />
+		<delete dir="${build.dir.development}\forge\mcp\src\minecraft\extracells" />
+		<delete dir="${build.dir.development}\forge\mcp\reobf\minecraft" />
+	</target>
+
+	<target name="increment_build_number">
+		<propertyfile file="build_number.properties">
+			<entry key="build_number" type="int" operation="+" default="1"/>
+		</propertyfile>
+	</target>
+
+	<target name="prep">
+		<copy todir="${build.dir.development}\forge\mcp\src\minecraft">
+			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modsrc}\"/>
+		</copy>
+	</target>
+
+	<target name="replace_tokens">
+		<replace dir="${build.dir.development}\forge\mcp\src\minecraft" token="@VERSION@" value="${build.release.mod.version}" />
+		<replace dir="${build.dir.development}\forge\mcp\src\minecraft" token="@FINGERPRINT@" value="${build.release.mod.fingerprint}" />
+		<replace dir="${build.dir.development}\forge\mcp\src\minecraft" token="@BUILD_NUMBER@" value="${build_number.build_number}" />
+	</target>
+
+	<target name="recompile">
+		<exec dir="${build.dir.development}\forge\mcp" executable="cmd" osfamily="windows">
+			<arg line="/c recompile.bat" />
+		</exec>
+		<exec dir="${build.dir.development}\forge\mcp" executable="bash" osfamily="unix">
+			<arg line="recompile.sh" />
+		</exec>
+	</target>
+
+	<target name="reobfuscate">
+		<exec dir="${build.dir.development}\forge\mcp" executable="cmd" osfamily="windows">
+			<arg line="/c reobfuscate_srg.bat" />
+		</exec>
+		<exec dir="${build.dir.development}\forge\mcp" executable="bash" osfamily="unix">
+			<arg line="reobfuscate_srg.sh" />
+		</exec>
+	</target>
+
+	<target name="sign_jar">
+		<signjar jar="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\${build.release.mod.version}\${build.release.mod.name}-universal-${build.release.mod.version}-${build_number.build_number}.jar" keystore="${build.keystore.location}" alias="${build.keystore.alias}" storepass="${build.keystore.password}" />
+	</target>
+
+	<target name="build">
+		<!-- Prep for the build -->
+		<antcall target="clean" />
+		<antcall target="increment_build_number" />
+		<antcall target="prep" />
+		<antcall target="recompile" />		
+		<antcall target="reobfuscate" />
+
+		<!-- Build the jar -->
+		<mkdir dir="${build.dir.development}\${build.dir.build}" />
+		<jar destfile="${build.dir.development}\${build.dir.build}\${build.release.mod.name}-universal-${build.release.mod.version} (${build.release.minecraft.version}).jar">
+			<fileset dir="${build.dir.development}\forge\mcp\src\minecraft\" includes="mcmod.info" />
+			<fileset dir="${build.dir.development}\forge\mcp\reobf\minecraft" excludes="appeng/**" />
+			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
+		</jar>
+
+		<!-- Clean up the MCP source now that we are done -->
+		<antcall target="clean" />
+	</target>
+
+	<target name="release">
+		<!-- Prep for the build -->
+		<antcall target="clean" />
+		<antcall target="increment_build_number" />
+		<antcall target="prep" />
+		<antcall target="replace_tokens" />
+		<antcall target="recompile" />		
+		<antcall target="reobfuscate" />
+
+		<!-- Build the jar -->
+		<mkdir dir="${build.dir.development}\${build.dir.release}" />
+		<jar destfile="${build.dir.development}\${build.dir.release}\${build.release.mod.name}-universal-${build.release.mod.version} (${build.release.minecraft.version}).jar">
+			<fileset dir="${build.dir.development}\forge\mcp\src\minecraft\" includes="mcmod.info" />
+			<fileset dir="${build.dir.development}\forge\mcp\reobf\minecraft\" excludes="appeng/**" />
+			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
+		</jar>
+
+		<!-- Sign the finished jar -->
+		<antcall target="sign_jar" />
+
+		<!-- Clean up the MCP source now that we are done -->
+		<antcall target="clean" />
+	</target>
+</project>

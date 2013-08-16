@@ -12,7 +12,7 @@ import appeng.api.me.util.IMEInventoryHandler;
 public interface ICellContainer {
 	
 	/**
-	 * Inventory of the tile for use with ME
+	 * Inventory of the tile for use with ME, should always return an valid list, never NULL.
 	 */
 	List<IMEInventoryHandler> getCellArray();
 	

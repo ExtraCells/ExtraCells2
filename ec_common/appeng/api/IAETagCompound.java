@@ -24,4 +24,10 @@ public interface IAETagCompound {
 	@Override
 	boolean equals( Object a );
 	
+	/**
+	 * returns the special comparison for this tag.
+	 * @return
+	 */
+	IItemComparison getSpecialComparison();
+	
 }
