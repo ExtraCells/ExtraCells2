@@ -2,6 +2,7 @@ package extracells.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
 import net.minecraft.block.BlockContainer;
@@ -9,6 +10,7 @@ import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
@@ -48,6 +50,17 @@ public class BlockBusFluidStorage extends BlockContainer
 	{
 		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
 		this.frontIcon = iconregister.registerIcon("extracells:fluid.bus.storage.front");
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
+	{
+		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
+		{
+			return false;
+		}
+		player.openGui(Extracells.instance, 2, world, x, y, z);
+		return true;
 	}
 
 	@Override

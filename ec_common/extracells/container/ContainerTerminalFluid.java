@@ -15,7 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import extracells.slot.SpecialSlot;
+import extracells.slot.SlotRespective;
 import extracells.tile.TileEntityTerminalFluid;
 
 public class ContainerTerminalFluid extends Container
@@ -27,9 +27,9 @@ public class ContainerTerminalFluid extends Container
 	{
 		this.tileentity = (IInventory) tileentity;
 		// Input Slot accepts all FluidContainers
-		addSlotToContainer(new SpecialSlot(this.tileentity, 0, 7, 62));
+		addSlotToContainer(new SlotRespective(this.tileentity, 0, 7, 62));
 		// Input Slot accepts nothing
-		addSlotToContainer(new SpecialSlot(this.tileentity, 1, 36, 62)
+		addSlotToContainer(new SlotRespective(this.tileentity, 1, 36, 62)
 		{
 			public boolean isItemValid(ItemStack itemstack)
 			{
@@ -37,7 +37,7 @@ public class ContainerTerminalFluid extends Container
 			}
 		});
 		// Preview Slot
-		addSlotToContainer(new SpecialSlot(this.tileentity, 2, 130, 12)
+		addSlotToContainer(new SlotRespective(this.tileentity, 2, 130, 12)
 		{
 			public boolean canTakeStack(EntityPlayer par1EntityPlayer)
 			{

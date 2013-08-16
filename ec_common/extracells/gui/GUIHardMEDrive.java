@@ -16,13 +16,13 @@ import extracells.container.ContainerHardMEDrive;
 import extracells.tile.TileEntityHardMEDrive;
 
 @SideOnly(Side.CLIENT)
-public class GUIHardMEDrive extends GuiContainer
+public class GuiHardMEDrive extends GuiContainer
 {
 
 	public static final int xSize = 176;
 	public static final int ySize = 166;
 
-	public GUIHardMEDrive(InventoryPlayer inventory, TileEntityHardMEDrive tileentity)
+	public GuiHardMEDrive(InventoryPlayer inventory, TileEntityHardMEDrive tileentity)
 	{
 		super(new ContainerHardMEDrive(inventory, tileentity));
 	}

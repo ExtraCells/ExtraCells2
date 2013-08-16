@@ -20,9 +20,11 @@ import extracells.blocks.BlockMEDropper;
 import extracells.blocks.BlockSolderingStation;
 import extracells.blocks.BlockTerminalFluid;
 import extracells.container.ContainerHardMEDrive;
+import extracells.container.ContainerStorageBusFluid;
 import extracells.container.ContainerTerminalFluid;
-import extracells.gui.GUIHardMEDrive;
-import extracells.gui.GUITerminalFluid;
+import extracells.gui.GuiHardMEDrive;
+import extracells.gui.GuiStorageBusFluid;
+import extracells.gui.GuiTerminalFluid;
 import extracells.handler.CraftingHandler;
 import extracells.items.ItemBlockSpecial;
 import extracells.items.ItemCasing;
@@ -199,9 +201,11 @@ public class CommonProxy implements IGuiHandler
 			switch (ID)
 			{
 			case 0: // GUI Hard ME Drive
-				return new GUIHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
+				return new GuiHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			case 1: // GUI Fluid Terminal
-				return new GUITerminalFluid(x, y, z, player.inventory, tileEntity);
+				return new GuiTerminalFluid(x, y, z, player.inventory, tileEntity);
+			case 2: // GUI Storage Bus Fluid
+				return new GuiStorageBusFluid(player.inventory, (TileEntityBusFluidStorage) tileEntity);
 			default:
 				return false;
 			}
@@ -224,6 +228,8 @@ public class CommonProxy implements IGuiHandler
 				return new ContainerHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			case 1: // GUI Fluid Terminal
 				return new ContainerTerminalFluid(player.inventory, tileEntity);
+			case 2: // GUI Storage Bus Fluid
+				return new ContainerStorageBusFluid(player.inventory, (TileEntityBusFluidStorage) tileEntity);
 			default:
 				return false;
 			}

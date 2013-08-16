@@ -102,7 +102,9 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public IAEItemStack addItems(IAEItemStack input)
 	{
-		if (input.getItem() == extracells.Extracells.FluidDisplay && tank != null)
+		IAEItemStack addedStack = input.copy();
+
+		if (input.getItem() == extracells.Extracells.FluidDisplay && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
 			if (tank instanceof IFluidHandler)
 			{
@@ -110,29 +112,45 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 				{
 					if (input.getStackSize() <= freeBytes())
 					{
+						addedStack = null;
 						((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), true);
-						tank.onInventoryChanged();
-						return null;
+					} else
+					{
+						addedStack.setStackSize(input.getStackSize() - freeBytes());
+						((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) (totalBytes() - freeBytes())), true);
 					}
+
+					tank.onInventoryChanged();
+
+					return addedStack;
 				}
 			}
 		}
-		return input;
+		return addedStack;
 	}
 
 	@Override
 	public IAEItemStack extractItems(IAEItemStack request)
 	{
+		IAEItemStack removedStack = request.copy();
+
 		if (request.getItem() == extracells.Extracells.FluidDisplay && tank != null && tank instanceof IFluidHandler)
 		{
 			if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
 			{
 				if (request.getStackSize() <= usedBytes())
 				{
+					removedStack.setStackSize(request.getStackSize());
 					((IFluidHandler) tank).drain(facing, new FluidStack(request.getItemDamage(), (int) request.getStackSize()), true);
-					tank.onInventoryChanged();
-					return request;
+				} else
+				{
+					removedStack.setStackSize(usedBytes());
+					((IFluidHandler) tank).drain(facing, new FluidStack(request.getItemDamage(), (int) usedBytes()), true);
 				}
+
+				tank.onInventoryChanged();
+
+				return removedStack;
 			}
 		}
 		return null;
@@ -154,6 +172,16 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		return out;
 	}
 
+	public boolean isItemInPreformattedItems(ItemStack request)
+	{
+		for (ItemStack itemstack : getPreformattedItems())
+		{
+			if (itemstack.getItem() == request.getItem() && itemstack.getItemDamage() == request.getItemDamage())
+				return true;
+		}
+		return false;
+	}
+
 	@Override
 	public IItemList getAvailableItems()
 	{
@@ -164,19 +192,31 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public IAEItemStack calculateItemAddition(IAEItemStack input)
 	{
-		if (input.getItem() == extracells.Extracells.FluidDisplay && tank != null && tank instanceof IFluidHandler)
+		IAEItemStack addedStack = input.copy();
+
+		if (input.getItem() == extracells.Extracells.FluidDisplay && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
-			if (input.hasTagCompound() && FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
+			if (tank instanceof IFluidHandler)
 			{
-				if (input.getStackSize() <= freeBytes())
+				if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
 				{
-					((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), false);
+					if (input.getStackSize() <= freeBytes())
+					{
+						addedStack = null;
+						((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), false);
+					} else
+					{
+						addedStack.setStackSize(input.getStackSize() - freeBytes());
+						((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) (totalBytes() - freeBytes())), false);
+					}
+
 					tank.onInventoryChanged();
-					return Util.createItemStack(new ItemStack(input.getItem(), (int) input.getStackSize() - 1));
+
+					return addedStack;
 				}
 			}
 		}
-		return null;
+		return addedStack;
 	}
 
 	@Override

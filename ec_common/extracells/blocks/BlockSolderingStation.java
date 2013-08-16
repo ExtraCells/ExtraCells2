@@ -13,7 +13,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.Extracells;
-import extracells.gui.GUISolderingStation;
+import extracells.gui.GuiSolderingStation;
 import extracells.tile.TileEntitySolderingStation;
 
 public class BlockSolderingStation extends BlockContainer
@@ -93,7 +93,7 @@ public class BlockSolderingStation extends BlockContainer
 			((TileEntitySolderingStation) world.getBlockTileEntity(x, y, z)).addUser(player.username);
 		if (world.isRemote)
 		{
-			FMLCommonHandler.instance().showGuiScreen(new GUISolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == Extracells.StoragePhysical && player.getHeldItem().getItemDamage() == 5)));
+			FMLCommonHandler.instance().showGuiScreen(new GuiSolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == Extracells.StoragePhysical && player.getHeldItem().getItemDamage() == 5)));
 			return true;
 		} else
 		{

@@ -7,7 +7,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import extracells.slot.SpecialSlot;
+import extracells.slot.SlotRespective;
 import extracells.tile.TileEntityHardMEDrive;
 
 public class ContainerHardMEDrive extends Container
@@ -20,7 +20,7 @@ public class ContainerHardMEDrive extends Container
 		this.tileentity = tileentity;
 		for (int i = 0; i < 3; i++)
 		{
-			addSlotToContainer(new SpecialSlot(tileentity, i, 62 + 18, 17 + i * 18));
+			addSlotToContainer(new SlotRespective(tileentity, i, 62 + 18, 17 + i * 18));
 		}
 		bindPlayerInventory(inventory);
 	}

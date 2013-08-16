@@ -19,6 +19,7 @@ public class ItemFluidDisplay extends Item
 	public ItemFluidDisplay(int id)
 	{
 		super(id);
+		this.setMaxStackSize(Integer.MAX_VALUE);
 	}
 
 	@SideOnly(Side.CLIENT)

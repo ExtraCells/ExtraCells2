@@ -73,19 +73,10 @@ public class PacketHandler implements IPacketHandler
 				switch (action)
 				{
 				case 0:
-					//tile.updateFluids();
+					tile.setCurrentFluid(-1);
 					break;
 				case 1:
-					if (currentFluid >= 1 && tile.getFluidsInNetwork().get(currentFluid - 1) != null)
-					{
-						tile.setCurrentFluid(currentFluid - 1);
-					}
-					break;
-				case 2:
-					if (currentFluid + 1 < tile.getFluidsInNetwork().size())
-					{
-						tile.setCurrentFluid(currentFluid + 1);
-					}
+					tile.setCurrentFluid(1);
 					break;
 				}
 			}

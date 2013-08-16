@@ -1,22 +1,20 @@
 package extracells.tile;
 
-import java.util.List;
-
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
-import appeng.api.TileRef;
+import appeng.api.IAEItemStack;
+import appeng.api.Util;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
-import appeng.api.exceptions.AppEngTileMissingException;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IGridTileEntity;
 import appeng.api.me.util.IGridInterface;
 
 public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile
@@ -27,48 +25,30 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	@Override
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote)
+		if (!worldObj.isRemote && isPowered())
 		{
 			ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
 			TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
 
 			if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
 			{
-				List<TileRef<IGridMachine>> tilelist = grid.getMachines();
-				IFluidHandler source = (IFluidHandler) facingTileEntity;
+				IFluidHandler tank = (IFluidHandler) facingTileEntity;
+				FluidStack fluidStack = tank.getTankInfo(facing)[0].fluid;
 
-				for (TileRef<IGridMachine> entry : tilelist)
+				if (fluidStack != null)
 				{
-					try
-					{
-						if (grid != null)
-						{
-							if (entry.getTile() instanceof TileEntityBusFluidStorage)
-							{
-								TileEntityBusFluidStorage storageBus = (TileEntityBusFluidStorage) entry.getTile();
+					Fluid fluid = tank.getTankInfo(facing)[0].fluid.getFluid();
 
-								if (source.getTankInfo(facing.getOpposite())[0].fluid != null)
-								{
-									FluidStack todrain = new FluidStack(source.getTankInfo(facing.getOpposite())[0].fluid, 50);
-									TileEntityBusFluidStorage entity = ((TileEntityBusFluidStorage) worldObj.getBlockTileEntity(entry.getTile().getLocation().x, entry.getTile().getLocation().y, entry.getTile().getLocation().z));
-									if (source.drain(entity.getFacing().getOpposite(), todrain, false).amount == 50)
-									{
-										/*/
-										if (entity.fillTank(todrain, false) == 50)
-										{
-											((IFluidHandler) worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ)).drain(facing.getOpposite(), todrain, true);
-											storageBus.fillTank(todrain, true);
-											break;
-										}
-										//*/
-									}
-								}
-							}
-						}
-					} catch (AppEngTileMissingException e)
-					{
-						e.printStackTrace();
-					}
+					IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluid.getID()));
+					toImport.setStackSize(tank.drain(facing, new FluidStack(fluid, 20), false).amount);
+					IAEItemStack notImported = grid.getCellArray().addItems(toImport.copy());
+					IAEItemStack imported = toImport.copy();
+
+					if (notImported != null)
+						imported.setStackSize(toImport.getStackSize() - notImported.getStackSize());
+
+					if (imported != null && grid.useMEEnergy(12.0F, "Import Fluid"))
+						tank.drain(facing, new FluidStack(fluid, (int) imported.getStackSize()), true);
 				}
 			}
 		}

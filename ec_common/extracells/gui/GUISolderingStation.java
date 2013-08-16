@@ -18,7 +18,7 @@ import extracells.Extracells;
 import extracells.network.PacketHandler;
 
 @SideOnly(Side.CLIENT)
-public class GUISolderingStation extends GuiScreen
+public class GuiSolderingStation extends GuiScreen
 {
 
 	private int tileX, tileY, tileZ;
@@ -31,7 +31,7 @@ public class GUISolderingStation extends GuiScreen
 	private int int_types;
 	private boolean rightItem;
 
-	public GUISolderingStation(int x, int y, int z, boolean rightItem)
+	public GuiSolderingStation(int x, int y, int z, boolean rightItem)
 	{
 		super();
 		this.tileX = x;

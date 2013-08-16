@@ -3,8 +3,13 @@ package extracells.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,12 +23,14 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.handler.FluidBusInventoryHandler;
 
-public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer
+public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer, IInventory
 {
 	Boolean powerStatus = false;
 	IGridInterface grid = null;
 	int priority = 1;
 	List<ItemStack> filter = new ArrayList<ItemStack>();
+	ItemStack[] slots = new ItemStack[54];
+	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
 
 	public TileEntityBusFluidStorage()
 	{
@@ -56,6 +63,51 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	public ForgeDirection getFacing()
 	{
 		return ForgeDirection.getOrientation(getBlockMetadata());
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		NBTTagList nbttaglist = new NBTTagList();
+
+		for (int i = 0; i < this.slots.length; ++i)
+		{
+			if (this.slots[i] != null)
+			{
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte) i);
+				this.slots[i].writeToNBT(nbttagcompound1);
+				nbttaglist.appendTag(nbttagcompound1);
+			}
+		}
+		nbt.setTag("Items", nbttaglist);
+		if (this.isInvNameLocalized())
+		{
+			nbt.setString("CustomName", this.costumName);
+		}
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		NBTTagList nbttaglist = nbt.getTagList("Items");
+		this.slots = new ItemStack[this.getSizeInventory()];
+		if (nbt.hasKey("CustomName"))
+		{
+			this.costumName = nbt.getString("CustomName");
+		}
+		for (int i = 0; i < nbttaglist.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
+			int j = nbttagcompound1.getByte("Slot") & 255;
+
+			if (j >= 0 && j < this.slots.length)
+			{
+				this.slots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+			}
+		}
 	}
 
 	@Override
@@ -124,5 +176,115 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	public int getPriority()
 	{
 		return priority;
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return slots.length;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i)
+	{
+		return slots[i];
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int j)
+	{
+		if (this.slots[i] != null)
+		{
+			ItemStack itemstack;
+			if (this.slots[i].stackSize <= j)
+			{
+				itemstack = this.slots[i];
+				this.slots[i] = null;
+				this.onInventoryChanged();
+				return itemstack;
+			} else
+			{
+				itemstack = this.slots[i].splitStack(j);
+				if (this.slots[i].stackSize == 0)
+				{
+					this.slots[i] = null;
+				}
+				this.onInventoryChanged();
+				return itemstack;
+			}
+		} else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i)
+	{
+		if (this.slots[i] != null)
+		{
+			ItemStack itemstack = this.slots[i];
+			this.slots[i] = null;
+			return itemstack;
+		} else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemstack)
+	{
+		this.slots[i] = itemstack;
+
+		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
+		{
+			itemstack.stackSize = this.getInventoryStackLimit();
+		}
+		this.onInventoryChanged();
+	}
+
+	@Override
+	public String getInvName()
+	{
+		return costumName;
+	}
+
+	@Override
+	public boolean isInvNameLocalized()
+	{
+		return true;
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 1;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer)
+	{
+		return true;
+	}
+
+	@Override
+	public void openChest()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void closeChest()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return true;
 	}
 }

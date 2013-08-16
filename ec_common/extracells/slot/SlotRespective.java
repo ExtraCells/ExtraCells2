@@ -4,11 +4,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SpecialSlot extends Slot
+public class SlotRespective extends Slot
 {
 	IInventory inventory;
 
-	public SpecialSlot(IInventory inventory, int index, int x, int y)
+	public SlotRespective(IInventory inventory, int index, int x, int y)
 	{
 		super(inventory, index, x, y);
 		this.inventory = inventory;
