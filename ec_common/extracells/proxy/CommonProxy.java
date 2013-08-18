@@ -6,12 +6,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 import appeng.api.Items;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.Extracells;
+import extracells.blocks.BlockBusFluidExport;
 import extracells.blocks.BlockBusFluidImport;
 import extracells.blocks.BlockBusFluidStorage;
 import extracells.blocks.BlockHardMEDrive;
@@ -19,11 +19,15 @@ import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
 import extracells.blocks.BlockSolderingStation;
 import extracells.blocks.BlockTerminalFluid;
+import extracells.container.ContainerBusFluidExport;
+import extracells.container.ContainerBusFluidImport;
+import extracells.container.ContainerBusFluidStorage;
 import extracells.container.ContainerHardMEDrive;
-import extracells.container.ContainerStorageBusFluid;
 import extracells.container.ContainerTerminalFluid;
+import extracells.gui.GuiBusFluidExport;
+import extracells.gui.GuiBusFluidImport;
+import extracells.gui.GuiBusFluidStorage;
 import extracells.gui.GuiHardMEDrive;
-import extracells.gui.GuiStorageBusFluid;
 import extracells.gui.GuiTerminalFluid;
 import extracells.handler.CraftingHandler;
 import extracells.items.ItemBlockSpecial;
@@ -34,6 +38,7 @@ import extracells.items.ItemSecureStoragePhysicalDecrypted;
 import extracells.items.ItemSecureStoragePhysicalEncrypted;
 import extracells.items.ItemStorageFluid;
 import extracells.items.ItemStoragePhysical;
+import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityHardMEDrive;
@@ -53,6 +58,8 @@ public class CommonProxy implements IGuiHandler
 		ItemStack storagePhysical4m = new ItemStack(Extracells.StoragePhysical, 1, 2);
 		ItemStack storagePhysical16m = new ItemStack(Extracells.StoragePhysical, 1, 3);
 
+		ItemStack storageFluid1k = new ItemStack(Extracells.StorageFluid, 1, 0);
+
 		ItemStack containerCell = new ItemStack(Extracells.StoragePhysical, 1, 4);
 
 		ItemStack encryptableCell = new ItemStack(Extracells.StoragePhysicalDecrypted, 1, 0);
@@ -71,6 +78,7 @@ public class CommonProxy implements IGuiHandler
 		ItemStack meBattery = new ItemStack(Extracells.MEBattery, 1);
 		ItemStack hardMEDrive = new ItemStack(Extracells.HardMEDrive, 1);
 		ItemStack fluidImportBus = new ItemStack(Extracells.BusFluidImport, 1);
+		ItemStack fluidExportBus = new ItemStack(Extracells.BusFluidExport, 1);
 		ItemStack fluidStorageBus = new ItemStack(Extracells.BusFluidStorage, 1);
 		ItemStack fluidTerminal = new ItemStack(Extracells.TerminalFluid, 1);
 
@@ -95,6 +103,10 @@ public class CommonProxy implements IGuiHandler
 		{ "GFG", "FCF", "DDD", 'G', Block.glass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', new ItemStack(Extracells.Cluster, 1, 3) });
 		GameRegistry.addShapelessRecipe(storagePhysical16m, new Object[]
 		{ Extracells.Casing, cluster16m });
+
+		// Fluid Cells
+		GameRegistry.addShapedRecipe(storageFluid1k, new Object[]
+		{ "CSC", "SBS", "CSC", 'C', appeng.api.Items.itemCell1k, 'S', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 
 		// Cell Container
 		GameRegistry.addShapelessRecipe(containerCell, new Object[]
@@ -138,11 +150,15 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.addShapedRecipe(fluidImportBus, new Object[]
 		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkInputCablePrecision, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 
+		// ME Fluid Export Bus
+		GameRegistry.addShapedRecipe(fluidExportBus, new Object[]
+		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkOutputCablePrecision, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+
 		// ME Fluid Storage Bus
 		GameRegistry.addShapedRecipe(fluidStorageBus, new Object[]
 		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkStorageBus, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 
-		// ME Fluid Storage Bus
+		// ME Fluid Terminal
 		GameRegistry.addShapedRecipe(fluidTerminal, new Object[]
 		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkTerminal, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 	}
@@ -154,6 +170,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityMEBattery.class, "tileEntityMEBattery");
 		GameRegistry.registerTileEntity(TileEntityHardMEDrive.class, "tileEntityHardMEDrive");
 		GameRegistry.registerTileEntity(TileEntityBusFluidImport.class, "tileEntityBusFluidImport");
+		GameRegistry.registerTileEntity(TileEntityBusFluidExport.class, "tileEntityBusFluidExport");
 		GameRegistry.registerTileEntity(TileEntityBusFluidStorage.class, "tileEntityBusFluidStorage");
 		GameRegistry.registerTileEntity(TileEntityTerminalFluid.class, "tileEntityTerminalFluid");
 	}
@@ -186,6 +203,8 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerBlock(Extracells.HardMEDrive, ItemBlockSpecial.class, Extracells.HardMEDrive.getUnlocalizedName());
 		Extracells.BusFluidImport = new BlockBusFluidImport(Extracells.BusFluidImport_ID);
 		GameRegistry.registerBlock(Extracells.BusFluidImport, ItemBlockSpecial.class, Extracells.BusFluidImport.getUnlocalizedName());
+		Extracells.BusFluidExport = new BlockBusFluidExport(Extracells.BusFluidExport_ID);
+		GameRegistry.registerBlock(Extracells.BusFluidExport, ItemBlockSpecial.class, Extracells.BusFluidExport.getUnlocalizedName());
 		Extracells.BusFluidStorage = new BlockBusFluidStorage(Extracells.BusFluidStorage_ID);
 		GameRegistry.registerBlock(Extracells.BusFluidStorage, ItemBlockSpecial.class, Extracells.BusFluidStorage.getUnlocalizedName());
 		Extracells.TerminalFluid = new BlockTerminalFluid(Extracells.TerminalFluid_ID);
@@ -205,7 +224,11 @@ public class CommonProxy implements IGuiHandler
 			case 1: // GUI Fluid Terminal
 				return new GuiTerminalFluid(x, y, z, player.inventory, tileEntity);
 			case 2: // GUI Storage Bus Fluid
-				return new GuiStorageBusFluid(player.inventory, (TileEntityBusFluidStorage) tileEntity);
+				return new GuiBusFluidStorage(player.inventory, (TileEntityBusFluidStorage) tileEntity);
+			case 3: // GUI Import Bus Fluid
+				return new GuiBusFluidImport(player.inventory, (TileEntityBusFluidImport) tileEntity);
+			case 4: // GUI Export Bus Fluid
+				return new GuiBusFluidExport(player.inventory, (TileEntityBusFluidExport) tileEntity);
 			default:
 				return false;
 			}
@@ -229,7 +252,11 @@ public class CommonProxy implements IGuiHandler
 			case 1: // GUI Fluid Terminal
 				return new ContainerTerminalFluid(player.inventory, tileEntity);
 			case 2: // GUI Storage Bus Fluid
-				return new ContainerStorageBusFluid(player.inventory, (TileEntityBusFluidStorage) tileEntity);
+				return new ContainerBusFluidStorage(player.inventory, (TileEntityBusFluidStorage) tileEntity);
+			case 3: // GUI Import Bus Fluid
+				return new ContainerBusFluidImport(player.inventory, (TileEntityBusFluidImport) tileEntity);
+			case 4: // GUI Export Bus Fluid
+				return new ContainerBusFluidExport(player.inventory, (TileEntityBusFluidExport) tileEntity);
 			default:
 				return false;
 			}

@@ -1,6 +1,9 @@
 package extracells.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -15,12 +18,12 @@ import appeng.api.me.util.IGridInterface;
 public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 {
 
-	public double energy = 0.0D;
-	public final double maxEnergy = 2000000.0D;
-	public final float takeEnergy = 10.0F;
-	public Boolean hasPower = false;
-	public IGridInterface grid;
-	public Boolean storingPower = true;
+	private double energy;
+	private final double maxEnergy = 2000000.0D;
+	private final float takeEnergy = 10.0F;
+	private Boolean hasPower = false;
+	private IGridInterface grid;
+	private Boolean storingPower = true;
 
 	@Override
 	public void updateEntity()
@@ -36,7 +39,7 @@ public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					if (energy + takeEnergy < maxEnergy && controller.useMEEnergy(takeEnergy, StatCollector.translateToLocal("tile.block.mebattery")))
+					if (energy + takeEnergy <= maxEnergy && controller.useMEEnergy(takeEnergy, StatCollector.translateToLocal("tile.block.mebattery")))
 					{
 						energy += takeEnergy;
 					} else
@@ -46,6 +49,29 @@ public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 				}
 			}
 		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
+
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+	{
+		readFromNBT(packet.customParam1);
+	}
+
+	public double getMaxEnergy()
+	{
+		return maxEnergy;
+	}
+
+	public double getEnergy()
+	{
+		return energy;
 	}
 
 	@Override

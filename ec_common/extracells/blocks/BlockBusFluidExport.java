@@ -3,8 +3,9 @@ package extracells.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
+import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
-import extracells.tile.TileEntityBusFluidStorage;
+import extracells.tile.TileEntityMEBattery;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
@@ -16,8 +17,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
-public class BlockBusFluidStorage extends BlockContainer
+public class BlockBusFluidExport extends BlockContainer
 {
 
 	@SideOnly(Side.CLIENT)
@@ -29,11 +31,11 @@ public class BlockBusFluidStorage extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	Icon topIcon;
 
-	public BlockBusFluidStorage(int id)
+	public BlockBusFluidExport(int id)
 	{
 		super(id, Material.rock);
 		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.bus.storage");
+		this.setUnlocalizedName("block.fluid.bus.export");
 		this.setHardness(2.0F);
 		this.setResistance(10.0F);
 	}
@@ -41,7 +43,7 @@ public class BlockBusFluidStorage extends BlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityBusFluidStorage();
+		return new TileEntityBusFluidExport();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -70,16 +72,6 @@ public class BlockBusFluidStorage extends BlockContainer
 		return null;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconregister)
-	{
-
-		this.frontIcon = iconregister.registerIcon("extracells:fluid.bus.storage.front");
-		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
-		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
-	}
-
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
@@ -87,14 +79,17 @@ public class BlockBusFluidStorage extends BlockContainer
 		{
 			return false;
 		}
-		player.openGui(Extracells.instance, 2, world, x, y, z);
+		player.openGui(Extracells.instance, 4, world, x, y, z);
 		return true;
 	}
 
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconregister)
 	{
-		((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z)).validate();
+		this.frontIcon = iconregister.registerIcon("extracells:fluid.bus.export.front");
+		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
+		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
+		this.topIcon = iconregister.registerIcon("extracells:machine.top");
 	}
 
 	@Override

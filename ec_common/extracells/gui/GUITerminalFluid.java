@@ -27,7 +27,7 @@ public class GuiTerminalFluid extends GuiContainer
 {
 
 	public static final int xSize = 176;
-	public static final int ySize = 166;
+	public static final int ySize = 175;
 	public String fluidName;
 	public WorldCoord tilePos;
 	TileEntityTerminalFluid tileEntity;
@@ -57,9 +57,9 @@ public class GuiTerminalFluid extends GuiContainer
 		this.buttonList.clear();
 
 		// Up
-		this.buttonList.add(new GuiButton(0, posX + 155, posY + 10, 10, 10, "\u25B2"));
+		this.buttonList.add(new GuiButton(0, posX + 155, posY + 18, 10, 10, "\u25B2"));
 		// Down
-		this.buttonList.add(new GuiButton(1, posX + 155, posY + 20, 10, 10, "\u25BC"));
+		this.buttonList.add(new GuiButton(1, posX + 155, posY + 29, 10, 10, "\u25BC"));
 	}
 
 	public void actionPerformed(GuiButton button)
@@ -89,7 +89,7 @@ public class GuiTerminalFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tile.block.fluid.terminal"), 0, 0, 0x000000);
+		this.fontRenderer.drawString(StatCollector.translateToLocal("tile.block.fluid.terminal"), 5, 0, 0x000000);
 
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
@@ -119,8 +119,8 @@ public class GuiTerminalFluid extends GuiContainer
 			suffix = "K mB";
 		}
 
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amount + suffix, 15, 15, 0xFFFFFF);
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + fluidname, 15, 25, 0xFFFFFF);
+		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amount + suffix, 13, 15, 0xFFFFFF);
+		this.fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + fluidname, 13, 25, 0xFFFFFF);
 	}
 
 	public int getRowLength()

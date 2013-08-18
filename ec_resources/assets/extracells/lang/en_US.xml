@@ -27,6 +27,7 @@
   <entry key="tile.block.medropper">ME Item Dropper</entry>
   <entry key="tile.block.hardmedrive">Blast resistant ME Drive</entry>
   <entry key="tile.block.fluid.bus.import">Fluid Import Bus</entry>
+  <entry key="tile.block.fluid.bus.export">Fluid Export Bus</entry>
   <entry key="tile.block.fluid.bus.storage">Fluid Storage Bus</entry>
   <entry key="tile.block.fluid.terminal">ME Fluid Access Terminal</entry>
   <entry key="tooltip.belongsto">This storage belongs to:</entry>

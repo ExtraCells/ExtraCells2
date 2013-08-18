@@ -62,7 +62,27 @@ public class BlockMEDropper extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
+		return giveIcon(side, 3);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public Icon giveIcon(int side, int metadata)
+	{
 		return side == metadata ? (metadata != 1 && metadata != 0 ? this.frontHorizontalIcon : this.frontVerticalIcon) : (metadata != 1 && metadata != 0 ? (side != 1 && side != 0 ? this.sideIcon : this.topIcon) : this.topIcon);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+	{
+		TileEntity tileentity = blockAccess.getBlockTileEntity(x, y, z);
+		int metadata = blockAccess.getBlockMetadata(x, y, z);
+
+		if (tileentity != null)
+		{
+			return giveIcon(side, metadata);
+		}
+		return null;
 	}
 
 	@SideOnly(Side.CLIENT)

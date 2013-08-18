@@ -30,7 +30,7 @@ import appeng.api.me.util.IGridInterface;
 
 public class TileEntityTerminalFluid extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory, IStorageAware
 {
-	Boolean powerStatus = false;
+	Boolean powerStatus;
 	IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
 	private ItemStack[] slots = new ItemStack[3];
@@ -44,7 +44,10 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote)
+		if (powerStatus == null)
+			powerStatus = true;
+		
+		if (!worldObj.isRemote && powerStatus)
 		{
 			ItemStack input = this.getStackInSlot(0);
 			ItemStack output = this.getStackInSlot(1);
@@ -104,7 +107,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 				ItemStack drainedContainer = input.getItem().getContainerItemStack(input);
 				FluidStack containedFluid = FluidContainerRegistry.getFluidForFilledItem(input);
 
-				if (fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
+				if (FluidContainerRegistry.getFluidForFilledItem(input) != null && fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
 				{
 					if (output == null)
 					{
@@ -175,10 +178,6 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 					fluidsInNetwork.add(new SpecialFluidStack(itemstack.getItemDamage(), itemstack.getStackSize()));
 				}
 			}
-			
-			for(SpecialFluidStack stack : fluidsInNetwork){
-				System.out.println(stack.getFluid().getName());
-			}
 		}
 	}
 
@@ -187,9 +186,12 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 		IAEItemStack toFill = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, toImport.amount, toImport.fluidID));
 		if (grid != null)
 		{
-			if (grid.getCellArray().canAccept(toFill))
+			if (grid.getCellArray().calculateItemAddition(toFill) == null)
 			{
-				grid.getCellArray().addItems(toFill);
+				for (int i = 0; i < toFill.getStackSize() / 10; i++)
+				{
+					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toFill.getItem(), 10, toFill.getItemDamage())));
+				}
 				return true;
 			}
 		}
@@ -205,7 +207,11 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 			{
 				if (fluidstack.getFluid() == toExport.getFluid() && fluidstack.amount >= toExport.amount)
 				{
-					grid.getCellArray().extractItems(toDrain);
+					for (int i = 0; i < toDrain.getStackSize() / 10; i++)
+					{
+						grid.getCellArray().extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), 10, toDrain.getItemDamage())));
+					}
+
 					return true;
 				}
 			}

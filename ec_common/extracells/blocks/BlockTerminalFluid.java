@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockTerminalFluid extends BlockContainer
@@ -61,7 +62,27 @@ public class BlockTerminalFluid extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
+		return giveIcon(side, 4);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public Icon giveIcon(int side, int metadata)
+	{
 		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+	{
+		TileEntity tileentity = blockAccess.getBlockTileEntity(x, y, z);
+		int metadata = blockAccess.getBlockMetadata(x, y, z);
+
+		if (tileentity != null)
+		{
+			return giveIcon(side, metadata);
+		}
+		return null;
 	}
 
 	@SideOnly(Side.CLIENT)

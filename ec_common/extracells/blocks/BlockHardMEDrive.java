@@ -4,7 +4,6 @@ import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
@@ -20,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import extracells.Extracells;
@@ -28,9 +28,13 @@ import extracells.tile.TileEntityHardMEDrive;
 public class BlockHardMEDrive extends BlockContainer
 {
 	@SideOnly(Side.CLIENT)
-	public Icon sideIcon;
+	Icon frontIcon;
 	@SideOnly(Side.CLIENT)
-	public Icon frontIcon;
+	Icon sideIcon;
+	@SideOnly(Side.CLIENT)
+	Icon bottomIcon;
+	@SideOnly(Side.CLIENT)
+	Icon topIcon;
 
 	public BlockHardMEDrive(int id)
 	{
@@ -44,14 +48,36 @@ public class BlockHardMEDrive extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
-		return side == metadata ? frontIcon : sideIcon;
+		return giveIcon(side, 3);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public Icon giveIcon(int side, int metadata)
+	{
+		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+	{
+		TileEntity tileentity = blockAccess.getBlockTileEntity(x, y, z);
+		int metadata = blockAccess.getBlockMetadata(x, y, z);
+
+		if (tileentity != null)
+		{
+			return giveIcon(side, metadata);
+		}
+		return null;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.sideIcon = iconregister.registerIcon("extracells:hardmedrive.sides");
 		this.frontIcon = iconregister.registerIcon("extracells:hardmedrive.face");
+		this.sideIcon = iconregister.registerIcon("extracells:hardmedrive.side");
+		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
+		this.topIcon = iconregister.registerIcon("extracells:machine.top");
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,10 +34,39 @@ public class BlockMEBattery extends BlockContainer
 		this.setResistance(10.0F);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int metadata)
+	public Icon getIcon(int i, int b)
 	{
-		return iconHi;
+		return iconLow;
+
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+	{
+		TileEntity tileentity = blockAccess.getBlockTileEntity(x, y, z);
+
+		if (tileentity != null)
+		{
+			TileEntityMEBattery meBattery = (TileEntityMEBattery) tileentity;
+
+			Double energy = meBattery.getEnergy();
+			Double maxEnergy = meBattery.getMaxEnergy();
+
+			if (energy < (maxEnergy * 0.25))
+			{
+				return iconLow;
+			} else if (energy >= (maxEnergy * 0.25) && energy <= (maxEnergy * 0.75))
+			{
+				return iconMed;
+			} else
+			{
+				return iconHi;
+			}
+		}
+		return iconLow;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -62,10 +92,15 @@ public class BlockMEBattery extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int side, float offsetX, float offsetY, float offsetZ)
 	{
-		if (!world.isRemote)
+		TileEntity tileentity = world.getBlockTileEntity(x, y, z);
+
+		if (!world.isRemote && tileentity != null)
 		{
-			Double energy = ((TileEntityMEBattery) world.getBlockTileEntity(x, y, z)).energy;
-			Double maxEnergy = ((TileEntityMEBattery) world.getBlockTileEntity(x, y, z)).maxEnergy;
+			TileEntityMEBattery meBattery = (TileEntityMEBattery) tileentity;
+
+			Double energy = meBattery.getEnergy();
+			Double maxEnergy = meBattery.getMaxEnergy();
+
 			if (energy > maxEnergy)
 			{
 				p.addChatMessage("Current Energy: " + new DecimalFormat("#").format(maxEnergy));

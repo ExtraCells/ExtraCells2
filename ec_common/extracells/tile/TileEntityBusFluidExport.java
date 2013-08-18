@@ -1,5 +1,8 @@
 package extracells.tile;
 
+import java.util.ArrayList;
+
+import extracells.tile.TileEntityTerminalFluid.SpecialFluidStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -12,23 +15,32 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
+import appeng.api.IItemList;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
+import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
 
-public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory
+public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory, IStorageAware
 {
 	Boolean powerStatus = false;
 	IGridInterface grid;
 	ItemStack[] filterSlots = new ItemStack[8];
-	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
+	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
+	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
+
+	public TileEntityBusFluidExport()
+	{
+		updateFluids();
+	}
 
 	@Override
 	public void updateEntity()
@@ -42,27 +54,51 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 			{
 				IFluidHandler tank = (IFluidHandler) facingTileEntity;
 				FluidStack fluidStack = tank.getTankInfo(facing)[0].fluid;
+				IAEItemStack toExport = null;
 
-				if (fluidStack != null)
+				updateFluids();
+
+				if (fluidStack == null)
 				{
-					Fluid fluid = tank.getTankInfo(facing)[0].fluid.getFluid();
-					
-					if (arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, fluid.getID())))
+					outerloop: for (SpecialFluidStack fluidstack : fluidsInNetwork)
 					{
-						IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluid.getID()));
-						toImport.setStackSize(tank.drain(facing, new FluidStack(fluid, 20), false).amount);
-						IAEItemStack notImported = grid.getCellArray().addItems(toImport.copy());
-						IAEItemStack imported = toImport.copy();
-
-						if (notImported != null)
-							imported.setStackSize(toImport.getStackSize() - notImported.getStackSize());
-
-						if (imported != null && grid.useMEEnergy(12.0F, "Import Fluid"))
-							for (int i = 0; i < (int) imported.getStackSize() / 10; i++)
+						for (ItemStack itemstack : filterSlots)
+						{
+							if (itemstack != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid() && fluidstack.amount >= 1000)
 							{
-								tank.drain(facing, new FluidStack(fluid, 10), true);
+								int fluidID = FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid().getID();
+								ItemStack temp = new ItemStack(extracells.Extracells.FluidDisplay, 1000, fluidID);
+								toExport = Util.createItemStack(temp);
+								break outerloop;
 							}
+						}
 					}
+				} else
+				{
+					outerloop: for (SpecialFluidStack fluidstack : fluidsInNetwork)
+					{
+						for (ItemStack itemstack : filterSlots)
+						{
+							if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid() && fluidstack.amount >= 1000)
+							{
+								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1000, fluidStack.getFluid().getID()));
+								break outerloop;
+							}
+						}
+					}
+				}
+
+				if (toExport != null && tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 1000), false) == 1000)
+				{
+					IAEItemStack exportSplit = toExport.copy();
+					exportSplit.setStackSize(10);
+
+					if (grid.useMEEnergy(12.0F, "Export Fluid"))
+						for (int i = 0; i < 100; i++)
+						{
+							tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 10), true);
+							grid.getCellArray().extractItems(exportSplit);
+						}
 				}
 			}
 		}
@@ -76,6 +112,58 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 				return true;
 		}
 		return false;
+	}
+
+	// FluidStack with long amount :D
+	class SpecialFluidStack
+	{
+		long amount;
+		Fluid fluid;
+
+		public SpecialFluidStack(Fluid fluid, long amount)
+		{
+			this.fluid = fluid;
+			this.amount = amount;
+		}
+
+		public SpecialFluidStack(int id, long amount)
+		{
+			this.fluid = FluidRegistry.getFluid(id);
+			this.amount = amount;
+		}
+
+		public long getAmount()
+		{
+			return amount;
+		}
+
+		public Fluid getFluid()
+		{
+			return fluid;
+		}
+
+		public int getID()
+		{
+			return fluid.getID();
+		}
+	}
+
+	public void updateFluids()
+	{
+		fluidsInNetwork = new ArrayList<SpecialFluidStack>();
+
+		if (grid != null)
+		{
+			IItemList itemsInNetwork = grid.getCellArray().getAvailableItems();
+
+			for (IAEItemStack itemstack : itemsInNetwork)
+			{
+				if (itemstack.getItem() == extracells.Extracells.FluidDisplay)
+				{
+					fluidsInNetwork.add(new SpecialFluidStack(itemstack.getItemDamage(), itemstack.getStackSize()));
+				}
+			}
+		}
 	}
 
 	@Override
@@ -295,5 +383,11 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
 		return FluidContainerRegistry.isContainer(itemstack);
+	}
+
+	@Override
+	public void onNetworkInventoryChange(IItemList iss)
+	{
+		updateFluids();
 	}
 }

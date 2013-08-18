@@ -3,8 +3,10 @@ package extracells.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -13,6 +15,8 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
@@ -25,17 +29,11 @@ import extracells.handler.FluidBusInventoryHandler;
 
 public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer, IInventory
 {
-	Boolean powerStatus = false;
+	Boolean powerStatus;
 	IGridInterface grid = null;
 	int priority = 1;
-	List<ItemStack> filter = new ArrayList<ItemStack>();
-	ItemStack[] slots = new ItemStack[54];
+	ItemStack[] filterSlots = new ItemStack[54];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
-
-	public TileEntityBusFluidStorage()
-	{
-		powerStatus = false;
-	}
 
 	public void setPriority(int priority)
 	{
@@ -71,13 +69,13 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 		super.writeToNBT(nbt);
 		NBTTagList nbttaglist = new NBTTagList();
 
-		for (int i = 0; i < this.slots.length; ++i)
+		for (int i = 0; i < this.filterSlots.length; ++i)
 		{
-			if (this.slots[i] != null)
+			if (this.filterSlots[i] != null)
 			{
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				nbttagcompound1.setByte("Slot", (byte) i);
-				this.slots[i].writeToNBT(nbttagcompound1);
+				this.filterSlots[i].writeToNBT(nbttagcompound1);
 				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}
@@ -93,7 +91,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.slots = new ItemStack[this.getSizeInventory()];
+		this.filterSlots = new ItemStack[this.getSizeInventory()];
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
@@ -103,9 +101,9 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
 			int j = nbttagcompound1.getByte("Slot") & 255;
 
-			if (j >= 0 && j < this.slots.length)
+			if (j >= 0 && j < this.filterSlots.length)
 			{
-				this.slots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+				this.filterSlots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
 	}
@@ -119,12 +117,14 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public void setPowerStatus(boolean hasPower)
 	{
+		System.out.println(hasPower ? "hasPower" : "hasNoPower");
 		powerStatus = hasPower;
 	}
 
 	@Override
 	public boolean isPowered()
 	{
+		System.out.println(powerStatus ? "isPowered" : "isNotPowered");
 		return powerStatus;
 	}
 
@@ -167,6 +167,18 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public List<IMEInventoryHandler> getCellArray()
 	{
+		List<ItemStack> filter = new ArrayList<ItemStack>();
+
+		if (filterSlots.length != 0)
+			for (ItemStack itemStack : filterSlots)
+			{
+				if (FluidContainerRegistry.isFilledContainer(itemStack))
+				{
+					ItemStack fluidContainer = new ItemStack(extracells.Extracells.FluidDisplay, 1, FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid().getID());
+					filter.add(fluidContainer);
+				}
+			}
+
 		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
 		list.add(new FluidBusInventoryHandler(worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ), getFacing(), getPriority(), filter));
 		return list;
@@ -181,33 +193,33 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public int getSizeInventory()
 	{
-		return slots.length;
+		return filterSlots.length;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int i)
 	{
-		return slots[i];
+		return filterSlots[i];
 	}
 
 	@Override
 	public ItemStack decrStackSize(int i, int j)
 	{
-		if (this.slots[i] != null)
+		if (this.filterSlots[i] != null)
 		{
 			ItemStack itemstack;
-			if (this.slots[i].stackSize <= j)
+			if (this.filterSlots[i].stackSize <= j)
 			{
-				itemstack = this.slots[i];
-				this.slots[i] = null;
+				itemstack = this.filterSlots[i];
+				this.filterSlots[i] = null;
 				this.onInventoryChanged();
 				return itemstack;
 			} else
 			{
-				itemstack = this.slots[i].splitStack(j);
-				if (this.slots[i].stackSize == 0)
+				itemstack = this.filterSlots[i].splitStack(j);
+				if (this.filterSlots[i].stackSize == 0)
 				{
-					this.slots[i] = null;
+					this.filterSlots[i] = null;
 				}
 				this.onInventoryChanged();
 				return itemstack;
@@ -221,10 +233,10 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i)
 	{
-		if (this.slots[i] != null)
+		if (this.filterSlots[i] != null)
 		{
-			ItemStack itemstack = this.slots[i];
-			this.slots[i] = null;
+			ItemStack itemstack = this.filterSlots[i];
+			this.filterSlots[i] = null;
 			return itemstack;
 		} else
 		{
@@ -235,7 +247,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack)
 	{
-		this.slots[i] = itemstack;
+		this.filterSlots[i] = itemstack;
 
 		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
 		{
@@ -259,7 +271,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public int getInventoryStackLimit()
 	{
-		return 1;
+		return 64;
 	}
 
 	@Override
@@ -271,20 +283,18 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public void openChest()
 	{
-		// TODO Auto-generated method stub
-
+		// NOBODY needs this!
 	}
 
 	@Override
 	public void closeChest()
 	{
-		// TODO Auto-generated method stub
-
+		// NOBODY needs this!
 	}
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return true;
+		return FluidContainerRegistry.isContainer(itemstack);
 	}
 }
