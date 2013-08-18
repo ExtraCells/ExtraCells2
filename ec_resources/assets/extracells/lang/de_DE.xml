@@ -7,6 +7,14 @@
   <entry key="item.storage.physical.16348k">16M ME-Speicher</entry>
   <entry key="item.storage.physical.container">ME-Block-Container</entry>
   <entry key="item.storage.physical.adjustable">Regulierbarer ME-Speicher</entry>
+  <entry key="item.storage.fluid.1k">1k ME-Flüssigkeitsspeicher</entry>
+  <entry key="item.storage.fluid.4k">4k  ME-Flüssigkeitsspeicher</entry>
+  <entry key="item.storage.fluid.16k">16k ME-Flüssigkeitsspeicher</entry>
+  <entry key="item.storage.fluid.64k">64k ME-Flüssigkeitsspeicher</entry>
+  <entry key="item.storage.fluid.256k">256k ME-Flüssigkeitsspeicher</entry>
+  <entry key="item.storage.fluid.1m">1M ME-Flüssigkeitsspeicher</entry>
+  <entry key="item.storage.fluid.4m">4M ME-Flüssigkeitsspeicher</entry>
+  <entry key="item.storage.fluid.16m">16M ME-Flüssigkeitsspeicher</entry>
   <entry key="item.cluster.kilo">Kilo-Speichercluster</entry>
   <entry key="item.cluster.mega">Mega-Speichercluster</entry>
   <entry key="item.cluster.giga">Giga-Speichercluster</entry>
