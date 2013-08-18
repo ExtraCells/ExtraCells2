@@ -19,6 +19,7 @@
   <entry key="tile.block.medropper">ME-Item-Dropper</entry>
   <entry key="tile.block.hardmedrive">Explosionssicheres ME-Laufwerk</entry>
   <entry key="tile.block.fluid.bus.import">Flüssigkeits-Importbus</entry>
+  <entry key="tile.block.fluid.bus.export">Flüssigkeits-Exportbus</entry>
   <entry key="tile.block.fluid.bus.storage">Flüssigkeits-Speicherbus</entry>
   <entry key="tile.block.fluid.terminal">Flüssigkeits-Zugriffs-Terminal</entry>
   <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
