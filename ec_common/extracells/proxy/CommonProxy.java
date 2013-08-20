@@ -224,11 +224,11 @@ public class CommonProxy implements IGuiHandler
 			case 1: // GUI Fluid Terminal
 				return new GuiTerminalFluid(x, y, z, player.inventory, tileEntity);
 			case 2: // GUI Storage Bus Fluid
-				return new GuiBusFluidStorage(player.inventory, (TileEntityBusFluidStorage) tileEntity);
+				return new GuiBusFluidStorage(player.inventory, ((TileEntityBusFluidStorage) tileEntity).getInventory());
 			case 3: // GUI Import Bus Fluid
-				return new GuiBusFluidImport(player.inventory, (TileEntityBusFluidImport) tileEntity);
+				return new GuiBusFluidImport(player.inventory, ((TileEntityBusFluidImport) tileEntity).getInventory());
 			case 4: // GUI Export Bus Fluid
-				return new GuiBusFluidExport(player.inventory, (TileEntityBusFluidExport) tileEntity);
+				return new GuiBusFluidExport(player.inventory, ((TileEntityBusFluidExport) tileEntity).getInventory());
 			default:
 				return false;
 			}
@@ -252,11 +252,11 @@ public class CommonProxy implements IGuiHandler
 			case 1: // GUI Fluid Terminal
 				return new ContainerTerminalFluid(player.inventory, tileEntity);
 			case 2: // GUI Storage Bus Fluid
-				return new ContainerBusFluidStorage(player.inventory, (TileEntityBusFluidStorage) tileEntity);
+				return new ContainerBusFluidStorage(player.inventory, ((TileEntityBusFluidStorage) tileEntity).getInventory());
 			case 3: // GUI Import Bus Fluid
-				return new ContainerBusFluidImport(player.inventory, (TileEntityBusFluidImport) tileEntity);
+				return new ContainerBusFluidImport(player.inventory, ((TileEntityBusFluidImport) tileEntity).getInventory());
 			case 4: // GUI Export Bus Fluid
-				return new ContainerBusFluidExport(player.inventory, (TileEntityBusFluidExport) tileEntity);
+				return new ContainerBusFluidExport(player.inventory, ((TileEntityBusFluidExport) tileEntity).getInventory());
 			default:
 				return false;
 			}

@@ -27,13 +27,14 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.handler.FluidBusInventoryHandler;
 
-public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer, IInventory
+public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer
 {
 	Boolean powerStatus;
 	IGridInterface grid = null;
 	int priority = 1;
 	ItemStack[] filterSlots = new ItemStack[54];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
+	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 
 	public void setPriority(int priority)
 	{
@@ -80,7 +81,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 			}
 		}
 		nbt.setTag("Items", nbttaglist);
-		if (this.isInvNameLocalized())
+		if (getInventory().isInvNameLocalized())
 		{
 			nbt.setString("CustomName", this.costumName);
 		}
@@ -91,7 +92,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.filterSlots = new ItemStack[this.getSizeInventory()];
+		this.filterSlots = new ItemStack[getInventory().getSizeInventory()];
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
@@ -106,6 +107,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 				this.filterSlots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
+		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 	}
 
 	@Override
@@ -190,111 +192,8 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 		return priority;
 	}
 
-	@Override
-	public int getSizeInventory()
+	public ECPrivateInventory getInventory()
 	{
-		return filterSlots.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i)
-	{
-		return filterSlots[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j)
-	{
-		if (this.filterSlots[i] != null)
-		{
-			ItemStack itemstack;
-			if (this.filterSlots[i].stackSize <= j)
-			{
-				itemstack = this.filterSlots[i];
-				this.filterSlots[i] = null;
-				this.onInventoryChanged();
-				return itemstack;
-			} else
-			{
-				itemstack = this.filterSlots[i].splitStack(j);
-				if (this.filterSlots[i].stackSize == 0)
-				{
-					this.filterSlots[i] = null;
-				}
-				this.onInventoryChanged();
-				return itemstack;
-			}
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
-	{
-		if (this.filterSlots[i] != null)
-		{
-			ItemStack itemstack = this.filterSlots[i];
-			this.filterSlots[i] = null;
-			return itemstack;
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
-		this.filterSlots[i] = itemstack;
-
-		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
-		{
-			itemstack.stackSize = this.getInventoryStackLimit();
-		}
-		this.onInventoryChanged();
-	}
-
-	@Override
-	public String getInvName()
-	{
-		return costumName;
-	}
-
-	@Override
-	public boolean isInvNameLocalized()
-	{
-		return true;
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer)
-	{
-		return true;
-	}
-
-	@Override
-	public void openChest()
-	{
-		// NOBODY needs this!
-	}
-
-	@Override
-	public void closeChest()
-	{
-		// NOBODY needs this!
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		return FluidContainerRegistry.isContainer(itemstack);
+		return inventory;
 	}
 }

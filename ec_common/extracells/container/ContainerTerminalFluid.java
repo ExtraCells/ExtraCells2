@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -15,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import extracells.slot.SlotRespective;
+import extracells.container.slot.SlotRespective;
 import extracells.tile.TileEntityTerminalFluid;
 
 public class ContainerTerminalFluid extends Container
@@ -83,7 +82,7 @@ public class ContainerTerminalFluid extends Container
 			{
 				if (slotnumber == 1 || slotnumber == 0)
 				{
-					if (!mergeItemStack(itemstack1, 2, 38, false))
+					if (!mergeItemStack(itemstack1, 3, 38, false))
 						return null;
 				} else if (slotnumber != 1 && slotnumber != 0)
 				{

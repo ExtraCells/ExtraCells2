@@ -2,9 +2,6 @@ package extracells.tile;
 
 import java.util.ArrayList;
 
-import extracells.tile.TileEntityTerminalFluid.SpecialFluidStack;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -29,13 +26,14 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
 
-public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory, IStorageAware
+public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware
 {
 	Boolean powerStatus = false;
 	IGridInterface grid;
 	ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
+	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 
 	public TileEntityBusFluidExport()
 	{
@@ -249,7 +247,7 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 			}
 		}
 		nbt.setTag("Items", nbttaglist);
-		if (this.isInvNameLocalized())
+		if (getInventory().isInvNameLocalized())
 		{
 			nbt.setString("CustomName", this.costumName);
 		}
@@ -260,7 +258,7 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.filterSlots = new ItemStack[this.getSizeInventory()];
+		this.filterSlots = new ItemStack[getInventory().getSizeInventory()];
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
@@ -275,119 +273,17 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 				this.filterSlots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
-	}
-
-	@Override
-	public int getSizeInventory()
-	{
-		return filterSlots.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i)
-	{
-		return filterSlots[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j)
-	{
-		if (this.filterSlots[i] != null)
-		{
-			ItemStack itemstack;
-			if (this.filterSlots[i].stackSize <= j)
-			{
-				itemstack = this.filterSlots[i];
-				this.filterSlots[i] = null;
-				this.onInventoryChanged();
-				return itemstack;
-			} else
-			{
-				itemstack = this.filterSlots[i].splitStack(j);
-				if (this.filterSlots[i].stackSize == 0)
-				{
-					this.filterSlots[i] = null;
-				}
-				this.onInventoryChanged();
-				return itemstack;
-			}
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
-	{
-		if (this.filterSlots[i] != null)
-		{
-			ItemStack itemstack = this.filterSlots[i];
-			this.filterSlots[i] = null;
-			return itemstack;
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
-		this.filterSlots[i] = itemstack;
-
-		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
-		{
-			itemstack.stackSize = this.getInventoryStackLimit();
-		}
-		this.onInventoryChanged();
-	}
-
-	@Override
-	public String getInvName()
-	{
-		return costumName;
-	}
-
-	@Override
-	public boolean isInvNameLocalized()
-	{
-		return true;
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer)
-	{
-		return true;
-	}
-
-	@Override
-	public void openChest()
-	{
-		// NOBODY needs this!
-	}
-
-	@Override
-	public void closeChest()
-	{
-		// NOBODY needs this!
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		return FluidContainerRegistry.isContainer(itemstack);
+		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 	}
 
 	@Override
 	public void onNetworkInventoryChange(IItemList iss)
 	{
 		updateFluids();
+	}
+
+	public ECPrivateInventory getInventory()
+	{
+		return inventory;
 	}
 }

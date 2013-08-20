@@ -1,12 +1,11 @@
-package extracells.slot;
+package extracells.container.slot;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 
-public class SlotFake extends Slot
+public class SlotFake extends Slot implements IPhantomSlot
 {
 	public SlotFake(IInventory inv, int index, int x, int y)
 	{
@@ -14,14 +13,20 @@ public class SlotFake extends Slot
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack stack)
+	public boolean canTakeStack(EntityPlayer player)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canAdjust()
 	{
 		return true;
 	}
 
 	@Override
-	public boolean canTakeStack(EntityPlayer player)
+	public int getSlotStackLimit()
 	{
-		return false;
+		return 1;
 	}
 }

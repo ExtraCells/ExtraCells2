@@ -1,4 +1,4 @@
-package extracells.slot;
+package extracells.container.slot;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

@@ -1,7 +1,7 @@
 package extracells.container;
 
-import extracells.slot.SlotFake;
-import extracells.slot.SlotRespective;
+import extracells.container.slot.SlotFake;
+import extracells.container.slot.SlotRespective;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -58,15 +58,16 @@ public class ContainerBusFluidImport extends Container
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
+			itemstack.stackSize = 1;
 			if (FluidContainerRegistry.isFilledContainer(itemstack))
 			{
 				if (slotnumber >= 0 && slotnumber <= 7)
 				{
-					if (!mergeItemStack(itemstack1, 8, 43, false))
+					if (!mergeItemStack(itemstack, 8, 43, false))
 						return null;
 				} else if (slotnumber >= 8 && slotnumber <= 43)
 				{
-					if (!mergeItemStack(itemstack1, 0, 7, false))
+					if (!mergeItemStack(itemstack, 0, 7, false))
 						return null;
 				}
 				if (itemstack1.stackSize == 0)
