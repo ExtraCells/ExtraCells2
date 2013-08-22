@@ -58,13 +58,13 @@ public class ContainerHardMEDrive extends Container
 			itemstack = itemstack1.copy();
 			if (slot.isItemValid(itemstack))
 			{
-				if (i < 1)
+				if (i < 3)
 				{
-					if (!mergeItemStack(itemstack1, 1, inventorySlots.size(), true))
+					if (!mergeItemStack(itemstack1, 3, 38, false))
 					{
 						return null;
 					}
-				} else if (!mergeItemStack(itemstack1, 0, 1, false))
+				} else if (!mergeItemStack(itemstack1, 0, 3, false))
 				{
 					return null;
 				}

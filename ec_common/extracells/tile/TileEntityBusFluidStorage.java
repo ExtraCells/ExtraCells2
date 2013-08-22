@@ -3,10 +3,6 @@ package extracells.tile;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -16,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
@@ -35,6 +31,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	ItemStack[] filterSlots = new ItemStack[54];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+	IFluidHandler lastTank;
 
 	public void setPriority(int priority)
 	{
@@ -42,9 +39,12 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	}
 
 	@Override
-	public boolean canUpdate()
+	public void updateEntity()
 	{
-		return false;
+		if (lastTank == null || (lastTank instanceof TileEntity && (TileEntity) lastTank != worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ)))
+		{
+			validate();
+		}
 	}
 
 	@Override
@@ -119,14 +119,12 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public void setPowerStatus(boolean hasPower)
 	{
-		System.out.println(hasPower ? "hasPower" : "hasNoPower");
 		powerStatus = hasPower;
 	}
 
 	@Override
 	public boolean isPowered()
 	{
-		System.out.println(powerStatus ? "isPowered" : "isNotPowered");
 		return powerStatus;
 	}
 

@@ -13,6 +13,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
 import extracells.tile.TileEntityMEBattery;
 
 public class BlockMEBattery extends BlockContainer
@@ -90,8 +91,16 @@ public class BlockMEBattery extends BlockContainer
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int side, float offsetX, float offsetY, float offsetZ)
-	{
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
+	{/*/
+		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
+		{
+			return false;
+		}
+		player.openGui(Extracells.instance, 5, world, x, y, z);
+		return true;
+		
+		//*/
 		TileEntity tileentity = world.getBlockTileEntity(x, y, z);
 
 		if (!world.isRemote && tileentity != null)
@@ -103,13 +112,14 @@ public class BlockMEBattery extends BlockContainer
 
 			if (energy > maxEnergy)
 			{
-				p.addChatMessage("Current Energy: " + new DecimalFormat("#").format(maxEnergy));
+				player.addChatMessage("Current Energy: " + new DecimalFormat("#").format(maxEnergy));
 			} else
 			{
-				p.addChatMessage("Current Energy: " + new DecimalFormat("#").format(energy));
+				player.addChatMessage("Current Energy: " + new DecimalFormat("#").format(energy));
 			}
-			p.addChatMessage("Max Energy: " + new DecimalFormat("#").format(maxEnergy));
+			player.addChatMessage("Max Energy: " + new DecimalFormat("#").format(maxEnergy));
 		}
 		return true;
+		
 	}
 }

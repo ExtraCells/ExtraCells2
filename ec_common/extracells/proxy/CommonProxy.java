@@ -23,11 +23,13 @@ import extracells.container.ContainerBusFluidExport;
 import extracells.container.ContainerBusFluidImport;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.container.ContainerHardMEDrive;
+import extracells.container.ContainerMEBattery;
 import extracells.container.ContainerTerminalFluid;
 import extracells.gui.GuiBusFluidExport;
 import extracells.gui.GuiBusFluidImport;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.gui.GuiHardMEDrive;
+import extracells.gui.GuiMEBattery;
 import extracells.gui.GuiTerminalFluid;
 import extracells.handler.CraftingHandler;
 import extracells.items.ItemBlockSpecial;
@@ -229,6 +231,8 @@ public class CommonProxy implements IGuiHandler
 				return new GuiBusFluidImport(player.inventory, ((TileEntityBusFluidImport) tileEntity).getInventory());
 			case 4: // GUI Export Bus Fluid
 				return new GuiBusFluidExport(player.inventory, ((TileEntityBusFluidExport) tileEntity).getInventory());
+			case 5: // GUI ME Battery
+				return new GuiMEBattery((TileEntityMEBattery) tileEntity);
 			default:
 				return false;
 			}
@@ -257,6 +261,8 @@ public class CommonProxy implements IGuiHandler
 				return new ContainerBusFluidImport(player.inventory, ((TileEntityBusFluidImport) tileEntity).getInventory());
 			case 4: // GUI Export Bus Fluid
 				return new ContainerBusFluidExport(player.inventory, ((TileEntityBusFluidExport) tileEntity).getInventory());
+			case 5: // GUI ME Battery
+				return new ContainerMEBattery();
 			default:
 				return false;
 			}

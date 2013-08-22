@@ -12,15 +12,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 
-public class ContainerBusFluidStorage extends Container
+public class ContainerBusFluidStorage extends ECContainer
 {
 	public ContainerBusFluidStorage(IInventory inventoryPlayer, IInventory inventoryTileEntity)
 	{
+		super(inventoryTileEntity.getSizeInventory());
+
 		for (int i = 0; i < 6; i++)
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryTileEntity, j + i * 9, 8 + j * 18, i * 18 - 10)
+				addSlotToContainer(new SlotFake(inventoryTileEntity, j + i * 9, 8 + j * 18, i * 18 - 10)
 				{
 					public boolean isItemValid(ItemStack itemstack)
 					{
@@ -63,12 +65,12 @@ public class ContainerBusFluidStorage extends Container
 			{
 				if (slotnumber >= 0 && slotnumber <= 53)
 				{
-					if (!mergeItemStack(itemstack, 54, 90, false))
-						return null;
+					shiftItemStack(itemstack, 54, 90);
+					return null;
 				} else if (slotnumber >= 54 && slotnumber <= 90)
 				{
-					if (!mergeItemStack(itemstack, 0, 53, false))
-						return null;
+					shiftItemStack(itemstack, 0, 53);
+					return null;
 				}
 				if (itemstack1.stackSize == 0)
 				{
