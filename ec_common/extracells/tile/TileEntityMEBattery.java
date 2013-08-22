@@ -59,6 +59,7 @@ public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
 
+	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
 		readFromNBT(packet.customParam1);
