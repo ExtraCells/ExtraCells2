@@ -133,7 +133,7 @@ public class ItemStorageFluid extends Item
 
 		Util.getCellRegistry().getHandlerForCell(stack).getPreformattedItems();
 
-		list.add(used_bytes / (FluidContainerRegistry.BUCKET_VOLUME * 8) + " of " + total_bytes / (FluidContainerRegistry.BUCKET_VOLUME * 8) + " bytes used");
+		list.add((used_bytes / 250) + " of " + total_bytes / 250 + " bytes used");
 		list.add(used_types + " of " + total_types + " fluid types used");
 		if (used_bytes != 0)
 			list.add("contains " + used_bytes + "mB of fluid");
@@ -146,8 +146,8 @@ public class ItemStorageFluid extends Item
 
 	public int getBytes(ItemStack itemstack)
 	{
-		// 1 bytes equals 8 buckets, because 1 byte equals 8 items in normal storages
-		return spaces[itemstack.getItemDamage()] * FluidContainerRegistry.BUCKET_VOLUME * 8;
+		// 1 bytes equals half a bucket now. nerf weas needed :D
+		return spaces[itemstack.getItemDamage()] * 250;
 	}
 
 	public int getTotalTypes(ItemStack i)

@@ -92,15 +92,15 @@ public class BlockMEBattery extends BlockContainer
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
-	{
+	{/*/
 		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
 		{
 			return false;
 		}
 		player.openGui(Extracells.instance, 5, world, x, y, z);
 		return true;
-		
-		/*/		
+		//*/
+				
 		TileEntity tileentity = world.getBlockTileEntity(x, y, z);
 
 		if (!world.isRemote && tileentity != null)
@@ -120,6 +120,6 @@ public class BlockMEBattery extends BlockContainer
 			player.addChatMessage("Max Energy: " + new DecimalFormat("#").format(maxEnergy));
 		}
 		return true;
-		//*/
+		
 	}
 }

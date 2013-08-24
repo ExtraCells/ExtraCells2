@@ -13,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
 import appeng.api.Util;
@@ -41,39 +42,74 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 
 			if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
 			{
-				IFluidHandler tank = (IFluidHandler) facingTileEntity;
-				FluidStack fluidStack = tank.getTankInfo(facing)[0].fluid;
-
-				if (fluidStack != null)
+				FluidTankInfo[] info = getTankInfo(facingTileEntity);
+				if (info != null)
 				{
-					Fluid fluid = tank.getTankInfo(facing)[0].fluid.getFluid();
+					Fluid fluid = null;
+					if (info[0].fluid != null)
+						fluid = info[0].fluid.getFluid();
 
-					if (arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, fluid.getID())))
+					if (fluid != null && (isArrayEmpty(filterSlots) || arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, fluid.getID()))))
 					{
 						IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluid.getID()));
-						toImport.setStackSize(tank.drain(facing, new FluidStack(fluid, 20), false).amount);
-						IAEItemStack notImported = grid.getCellArray().addItems(toImport.copy());
-						IAEItemStack imported = toImport.copy();
+						FluidStack drainedStack = ((IFluidHandler) facingTileEntity).drain(facing, new FluidStack(fluid, 20), false);
+						if (drainedStack != null)
+						{
+							toImport.setStackSize(drainedStack.amount);
+							IAEItemStack notImported = grid.getCellArray().addItems(toImport.copy());
+							IAEItemStack imported = toImport.copy();
 
-						if (notImported != null)
-							imported.setStackSize(toImport.getStackSize() - notImported.getStackSize());
+							if (notImported != null)
+								imported.setStackSize(toImport.getStackSize() - notImported.getStackSize());
 
-						if (imported != null && grid.useMEEnergy(12.0F, "Import Fluid"))
-							for (int i = 0; i < (int) imported.getStackSize() / 10; i++)
-							{
-								tank.drain(facing, new FluidStack(fluid, 10), true);
-							}
+							if (imported != null && grid.useMEEnergy(12.0F, "Import Fluid"))
+								for (int i = 0; i < (int) imported.getStackSize() / 10; i++)
+								{
+									((IFluidHandler) facingTileEntity).drain(facing, new FluidStack(fluid, 10), true);
+								}
+						}
 					}
 				}
 			}
 		}
 	}
 
+	public boolean isArrayEmpty(Object[] array)
+	{
+		for (Object cake : array)
+		{
+			if (cake != null)
+				return false;
+		}
+		return true;
+	}
+
+	public FluidTankInfo[] getTankInfo(TileEntity tileEntity)
+	{
+
+		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
+		FluidTankInfo[] tankArray;
+		IFluidHandler tankTile = (IFluidHandler) tileEntity;
+
+		if (((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
+		{
+			return tankTile.getTankInfo(facing);
+		} else if (tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+		{
+			return tankTile.getTankInfo(ForgeDirection.UNKNOWN);
+		} else
+		{
+			return null;
+		}
+	}
+
 	private Boolean arrayContains(ItemStack[] array, ItemStack itemstack)
 	{
+
 		for (ItemStack entry : array)
 		{
-			if (entry != null && entry.getItem() == itemstack.getItem() && entry.getItemDamage() == itemstack.getItemDamage())
+			// if (entry != null && entry.getItem() == itemstack.getItem() && entry.getItemDamage() == itemstack.getItemDamage())
+			if (entry != null && itemstack.getItemDamage() == FluidContainerRegistry.getFluidForFilledItem(entry).fluidID)
 				return true;
 		}
 		return false;

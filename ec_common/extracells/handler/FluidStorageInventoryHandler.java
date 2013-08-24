@@ -359,40 +359,6 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	}
 
 	@Override
-	public void setPreformattedItems(IItemList in, FuzzyMode fuzzyMode)
-	{
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
-		if (!in.getItems().isEmpty())
-		{
-			for (int i = 0; i < in.getItems().size(); i++)
-			{
-				if (in.getItems().get(i) != null)
-				{
-					if (in.getItems().get(i) != null)
-					{
-						if (FluidContainerRegistry.isFilledContainer(in.getItems().get(i)))
-						{
-							nbt.setInteger("PreformattedFluidID#" + i, FluidContainerRegistry.getFluidForFilledItem(in.getItems().get(i)).fluidID);
-						} else if (in.getItems().get(i).getItem() == extracells.Extracells.FluidDisplay)
-						{
-							nbt.setInteger("PreformattedFluidID#" + i, in.getItems().get(i).getItemDamage());
-						}
-					}
-				}
-			}
-		} else
-		{
-			for (int i = 0; i < 63; i++)
-			{
-				nbt.setInteger("PreformattedFluidID#" + i, 0);
-			}
-		}
-	}
-
-	@Override
 	public boolean isPreformatted()
 	{
 		if (storage.stackTagCompound == null)
@@ -502,4 +468,45 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		return FuzzyMode.Percent_99;
 	}
 
+	@Override
+	public void setPreformattedItems(IItemList in, FuzzyMode mode)//, ListMode m)
+	{
+		if (storage.stackTagCompound == null)
+			storage.stackTagCompound = new NBTTagCompound();
+		NBTTagCompound nbt = storage.stackTagCompound;
+
+		if (!in.getItems().isEmpty())
+		{
+			for (int i = 0; i < in.getItems().size(); i++)
+			{
+				if (in.getItems().get(i) != null)
+				{
+					if (in.getItems().get(i) != null)
+					{
+						if (FluidContainerRegistry.isFilledContainer(in.getItems().get(i)))
+						{
+							nbt.setInteger("PreformattedFluidID#" + i, FluidContainerRegistry.getFluidForFilledItem(in.getItems().get(i)).fluidID);
+						} else if (in.getItems().get(i).getItem() == extracells.Extracells.FluidDisplay)
+						{
+							nbt.setInteger("PreformattedFluidID#" + i, in.getItems().get(i).getItemDamage());
+						}
+					}
+				}
+			}
+		} else
+		{
+			for (int i = 0; i < 63; i++)
+			{
+				nbt.setInteger("PreformattedFluidID#" + i, 0);
+			}
+		}
+	}
+
+	/*/
+	@Override
+	public ListMode getListMode()
+	{
+		return ListMode.BLACKLIST;
+	}
+    //*/
 }

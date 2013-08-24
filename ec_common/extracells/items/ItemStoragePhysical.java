@@ -2,7 +2,6 @@ package extracells.items;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +9,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
@@ -17,11 +17,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.event.ForgeSubscribe;
 import appeng.api.IAEItemStack;
-import appeng.api.Materials;
 import appeng.api.Util;
 import appeng.api.me.items.IStorageCell;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
@@ -114,7 +112,17 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 	{
 		for (int j = 0; j < 6; ++j)
 		{
-			listSubItems.add(new ItemStack(i, 1, j));
+			ItemStack toAdd = new ItemStack(i, 1, j);
+			
+			if (j == 5)
+			{
+				if (toAdd.stackTagCompound == null)
+					toAdd.stackTagCompound = new NBTTagCompound();
+				toAdd.stackTagCompound.setInteger("costum_size", 4096);
+				toAdd.stackTagCompound.setInteger("costum_types", 27);
+			}
+			
+			listSubItems.add(toAdd);
 		}
 	}
 

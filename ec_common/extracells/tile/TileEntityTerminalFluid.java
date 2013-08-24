@@ -46,7 +46,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	{
 		if (powerStatus == null)
 			powerStatus = true;
-		
+
 		if (!worldObj.isRemote && powerStatus)
 		{
 			ItemStack input = this.getStackInSlot(0);
@@ -77,7 +77,9 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 				{
 					if (FluidContainerRegistry.isEmptyContainer(input))
 					{
-						if (FluidContainerRegistry.fillFluidContainer(request, input) != null)
+						ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(request, input);
+
+						if (filledContainer != null)
 						{
 							if (output == null)
 							{
@@ -86,7 +88,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 									this.setInventorySlotContents(1, FluidContainerRegistry.fillFluidContainer(request, input));
 									this.decrStackSize(0, 1);
 								}
-							} else if (output.isStackable() && output.stackSize < output.getMaxStackSize() && output.getItem() == FluidContainerRegistry.fillFluidContainer(request, input).getItem())
+							} else if (output.isStackable() && output.stackSize < output.getMaxStackSize() && output.getItem() == filledContainer.getItem() && output.getItemDamage() == filledContainer.getItemDamage() && output.getTagCompound() == filledContainer.getTagCompound())
 							{
 								if (drainFluid(request))
 								{
@@ -118,7 +120,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 						if (drainedContainer == null)
 						{
 							this.decrStackSize(0, 1);
-						} else if (output.getItem() == drainedContainer.getItem())
+						} else if (output.getItem() == drainedContainer.getItem() && output.getTagCompound() == drainedContainer.getTagCompound() && output.getItemDamage() == drainedContainer.getItemDamage())
 						{
 							output.stackSize = output.stackSize + 1;
 							this.decrStackSize(0, 1);

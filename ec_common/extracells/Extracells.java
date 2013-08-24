@@ -23,7 +23,7 @@ import extracells.localization.LocalizationHandler;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.3.4", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.3.5", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { PacketHandler.channel }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Extracells
@@ -72,6 +72,7 @@ public class Extracells
 	public static int BusFluidExport_ID;
 	public static int BusFluidStorage_ID;
 	public static int TerminalFluid_ID;
+	public static boolean debug;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -98,6 +99,7 @@ public class Extracells
 		int busFluidExportTemp = config.getBlock("BusFluidExport_ID", 505, "ID for the Fluid Export Bus").getInt();
 		int busFluidStorageTemp = config.getBlock("BusFluidStorage_ID", 506, "ID for the Fluid Storage Bus").getInt();
 		int monitorFluidTemp = config.getBlock("MonitorFluid_ID", 507, "ID for the Fluid Storage Monitor").getInt();
+		debug = config.get("Dev Options", "showFluidsInMETerminal", false, "Dont't activate if you dont want to debug stuff ;)").getBoolean(false);
 		config.save();
 
 		Cluster_ID = clusterTemp;
@@ -125,7 +127,8 @@ public class Extracells
 		proxy.RegisterRenderers();
 		proxy.RegisterTileEntities();
 		proxy.addRecipes();
-		//Util.addBasicBlackList(extracells.Extracells.FluidDisplay.itemID, OreDictionary.WILDCARD_VALUE);
+		if (!debug)
+			Util.addBasicBlackList(extracells.Extracells.FluidDisplay.itemID, OreDictionary.WILDCARD_VALUE);
 		Util.getCellRegistry().addCellHandler(new FluidCellHandler());
 		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
 	}

@@ -25,6 +25,7 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
+import appeng.api.me.util.IMEInventoryHandler;
 
 public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware
 {
@@ -51,7 +52,19 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 			if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
 			{
 				IFluidHandler tank = (IFluidHandler) facingTileEntity;
-				FluidStack fluidStack = tank.getTankInfo(facing)[0].fluid;
+
+				FluidStack fluidStack;
+
+				if (tank.getTankInfo(facing).length != 0)
+				{
+					fluidStack = tank.getTankInfo(facing)[0].fluid;
+				} else if (tank.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+				{
+					fluidStack = tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
+				} else
+				{
+					fluidStack = null;
+				}
 				IAEItemStack toExport = null;
 
 				updateFluids();
@@ -62,10 +75,10 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 					{
 						for (ItemStack itemstack : filterSlots)
 						{
-							if (itemstack != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid() && fluidstack.amount >= 1000)
+							if (itemstack != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid() && fluidstack.amount >= 20)
 							{
 								int fluidID = FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid().getID();
-								ItemStack temp = new ItemStack(extracells.Extracells.FluidDisplay, 1000, fluidID);
+								ItemStack temp = new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID);
 								toExport = Util.createItemStack(temp);
 								break outerloop;
 							}
@@ -77,26 +90,22 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 					{
 						for (ItemStack itemstack : filterSlots)
 						{
-							if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid() && fluidstack.amount >= 1000)
+							if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid() && fluidstack.amount >= 20)
 							{
-								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1000, fluidStack.getFluid().getID()));
+								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
 								break outerloop;
 							}
 						}
 					}
 				}
 
-				if (toExport != null && tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 1000), false) == 1000)
+				if (toExport != null && tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), false) == 20)
 				{
-					IAEItemStack exportSplit = toExport.copy();
-					exportSplit.setStackSize(10);
-
 					if (grid.useMEEnergy(12.0F, "Export Fluid"))
-						for (int i = 0; i < 100; i++)
-						{
-							tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 10), true);
-							grid.getCellArray().extractItems(exportSplit);
-						}
+					{
+						tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), true);
+						grid.getCellArray().extractItems(toExport);
+					}
 				}
 			}
 		}
@@ -152,13 +161,19 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 
 		if (grid != null)
 		{
-			IItemList itemsInNetwork = grid.getCellArray().getAvailableItems();
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			IItemList itemsInNetwork = null;
+			if (cellArray != null)
+				itemsInNetwork = grid.getCellArray().getAvailableItems();
 
-			for (IAEItemStack itemstack : itemsInNetwork)
+			if (itemsInNetwork != null)
 			{
-				if (itemstack.getItem() == extracells.Extracells.FluidDisplay)
+				for (IAEItemStack itemstack : itemsInNetwork)
 				{
-					fluidsInNetwork.add(new SpecialFluidStack(itemstack.getItemDamage(), itemstack.getStackSize()));
+					if (itemstack.getItem() == extracells.Extracells.FluidDisplay)
+					{
+						fluidsInNetwork.add(new SpecialFluidStack(itemstack.getItemDamage(), itemstack.getStackSize()));
+					}
 				}
 			}
 		}

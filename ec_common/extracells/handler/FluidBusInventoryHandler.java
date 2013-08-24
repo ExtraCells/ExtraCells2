@@ -10,6 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
@@ -42,7 +43,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			return ((IFluidHandler) tank).getTankInfo(facing)[0].fluid != null ? 1 : 0;
+			return getTankInfo(tank)[0].fluid != null ? 1 : 0;
 		}
 		return 0;
 	}
@@ -52,7 +53,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			return ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.amount;
+			return getTankInfo(tank)[0].fluid.amount;
 		}
 		return 0;
 	}
@@ -62,7 +63,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler && ((IFluidHandler) tank).getTankInfo(facing)[0].fluid != null)
 		{
-			return ((IFluidHandler) tank).getTankInfo(facing)[0].capacity - ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.amount;
+			return getTankInfo(tank)[0].capacity - getTankInfo(tank)[0].fluid.amount;
 		}
 		return 0;
 	}
@@ -70,7 +71,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long remainingItemTypes()
 	{
-		if (tank != null && tank instanceof IFluidHandler && ((IFluidHandler) tank).getTankInfo(facing)[0].fluid != null)
+		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0].fluid != null)
 		{
 			return 1;
 		}
@@ -94,7 +95,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			return aeitemstack.getItem() == extracells.Extracells.FluidDisplay ? ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.amount : 0;
+			return aeitemstack.getItem() == extracells.Extracells.FluidDisplay ? getTankInfo(tank)[0].fluid.amount : 0;
 		}
 		return 0;
 	}
@@ -108,6 +109,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		{
 			if (tank instanceof IFluidHandler)
 			{
+
 				if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
 				{
 					if (input.getStackSize() <= freeBytes())
@@ -136,7 +138,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 		if (request.getItem() == extracells.Extracells.FluidDisplay && tank != null && tank instanceof IFluidHandler)
 		{
-			if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
+			if (getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
 			{
 				if (request.getStackSize() <= usedBytes())
 				{
@@ -148,7 +150,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 					((IFluidHandler) tank).drain(facing, new FluidStack(request.getItemDamage(), (int) usedBytes()), true);
 				}
 
-				tank.onInventoryChanged();
+				((TileEntity) tank).onInventoryChanged();
 
 				return removedStack;
 			}
@@ -161,10 +163,10 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid != null)
+			if (getTankInfo(tank)[0].fluid != null)
 			{
-				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 0, ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid().getID()));
-				currentItemStack.setStackSize(((IFluidHandler) tank).getTankInfo(facing)[0].fluid.amount);
+				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 0, getTankInfo(tank)[0].fluid.getFluid().getID()));
+				currentItemStack.setStackSize(getTankInfo(tank)[0].fluid.amount);
 				out.add(currentItemStack);
 			}
 
@@ -198,7 +200,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		{
 			if (tank instanceof IFluidHandler)
 			{
-				if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
+				if (getTankInfo(tank) != null && getTankInfo(tank)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
 				{
 					if (input.getStackSize() <= freeBytes())
 					{
@@ -242,7 +244,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			return ((IFluidHandler) tank).getTankInfo(facing)[0].capacity;
+			return getTankInfo(tank) != null ? getTankInfo(tank)[0].capacity : 0;
 		}
 		return 0;
 	}
@@ -252,7 +254,8 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			return ((IFluidHandler) tank).getTankInfo(facing)[0].fluid != null ? ((IFluidHandler) tank).getTankInfo(facing)[0].capacity - ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.amount : ((IFluidHandler) tank).getTankInfo(facing)[0].capacity;
+
+			return getTankInfo(tank)[0].fluid != null ? getTankInfo(tank)[0].capacity - getTankInfo(tank)[0].fluid.amount : getTankInfo(tank)[0].capacity;
 		}
 		return 0;
 	}
@@ -262,9 +265,27 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			return ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.amount;
+
+			return getTankInfo(tank) != null ? getTankInfo(tank)[0].fluid.amount : 0;
 		}
 		return 0;
+	}
+
+	public FluidTankInfo[] getTankInfo(TileEntity tileEntity)
+	{
+		FluidTankInfo[] tankArray;
+		IFluidHandler tankTile = (IFluidHandler) tileEntity;
+
+		if (((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
+		{
+			return tankTile.getTankInfo(facing);
+		} else if (tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+		{
+			return tankTile.getTankInfo(ForgeDirection.UNKNOWN);
+		} else
+		{
+			return null;
+		}
 	}
 
 	@Override
@@ -289,12 +310,6 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	public List<ItemStack> getPreformattedItems()
 	{
 		return filter;
-	}
-
-	@Override
-	public void setPreformattedItems(IItemList in, FuzzyMode fuzzyMode)
-	{
-		// I set it in the GUI
 	}
 
 	@Override
@@ -389,4 +404,17 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		return FuzzyMode.Percent_99;
 	}
 
+	@Override
+	public void setPreformattedItems(IItemList in, FuzzyMode mode)//, ListMode m)
+	{
+		// Setting it in the Inventory
+	}
+
+	/*/
+	@Override
+	public ListMode getListMode()
+	{
+		return ListMode.BLACKLIST;
+	}
+	//*/
 }
