@@ -41,7 +41,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public void updateEntity()
 	{
-		if (lastTank == null || (lastTank instanceof TileEntity && (TileEntity) lastTank != worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ)))
+		if ((lastTank instanceof TileEntity && (TileEntity) lastTank != worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ)))
 		{
 			validate();
 		}
@@ -50,12 +50,14 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public void validate()
 	{
+		super.validate();
 		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
 	public void invalidate()
 	{
+		super.invalidate();
 		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 

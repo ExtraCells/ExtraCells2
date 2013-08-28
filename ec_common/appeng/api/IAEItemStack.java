@@ -1,5 +1,8 @@
 package appeng.api;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -161,5 +164,12 @@ public interface IAEItemStack
 	 * @return
 	 */
 	public boolean sameOre( Object oreID );
+	
+	/**
+	 * Slower for disk saving, but smaller/more efficient for packets.
+	 * @param data
+	 * @throws IOException 
+	 */
+	public void writeToPacket(DataOutputStream data) throws IOException;
 	
 }

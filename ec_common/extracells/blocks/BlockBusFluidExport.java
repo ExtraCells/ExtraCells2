@@ -96,6 +96,12 @@ public class BlockBusFluidExport extends BlockContainer
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
 		int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
-		world.setBlockMetadataWithNotify(x, y, z, l, 2);
+		if (!player.isSneaking())
+		{
+			world.setBlockMetadataWithNotify(x, y, z, l, 2);
+		} else
+		{
+			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(l).getOpposite().ordinal(), 2);
+		}
 	}
 }

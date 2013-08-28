@@ -287,12 +287,14 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	@Override
 	public void validate()
 	{
+		super.validate();
 		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
 	public void invalidate()
 	{
+		super.invalidate();
 		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 

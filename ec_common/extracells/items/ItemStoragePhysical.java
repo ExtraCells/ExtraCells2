@@ -255,17 +255,14 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 					switch (i.getTagCompound().getInteger("mode"))
 					{
 					case 0:
-						System.out.println(i.getTagCompound().getInteger("mode"));
 						i.getTagCompound().setInteger("mode", 1);
 						p.addChatMessage(StatCollector.translateToLocal("tooltip.mode") + ": " + StatCollector.translateToLocal("tooltip.equaltrade1"));
 						break;
 					case 1:
-						System.out.println(i.getTagCompound().getInteger("mode"));
 						i.getTagCompound().setInteger("mode", 2);
 						p.addChatMessage(StatCollector.translateToLocal("tooltip.mode") + ": " + StatCollector.translateToLocal("tooltip.equaltrade3"));
 						break;
 					case 2:
-						System.out.println(i.getTagCompound().getInteger("mode"));
 						i.getTagCompound().setInteger("mode", 0);
 						p.addChatMessage(StatCollector.translateToLocal("tooltip.mode") + ": " + StatCollector.translateToLocal("tooltip.placement"));
 						break;

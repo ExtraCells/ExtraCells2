@@ -1,21 +1,26 @@
 package appeng.api;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.exceptions.AppEngTileMissingException;
+import appeng.api.me.tiles.IGridTileEntity;
 
 public class TileRef<T> extends WorldCoord {
 	
 	//private int dimension;
 	private World w;
+	boolean wasGrid;
 	
 	public TileRef( TileEntity gte ) {
 		super( gte.xCoord, gte.yCoord, gte.zCoord );
 		TileEntity te = gte;
+		wasGrid = te instanceof IGridTileEntity;
 		w = te.worldObj;
 		if ( te.worldObj == null )
 			throw new RuntimeException("Tile has no world.");
-		//dimension = te.worldObj.provider.dimensionId;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -38,6 +43,13 @@ public class TileRef<T> extends WorldCoord {
 				}
 			}
 		}
+		
+		/**
+		 * was this a grid tile? if so inform the grid enum that something has derped.
+		 */
+		if ( wasGrid )
+			MinecraftForge.EVENT_BUS.post( new GridTileUnloadEvent( null, w, this ) );
+		
 		throw new AppEngTileMissingException( w, x,y,z);
 	}
 

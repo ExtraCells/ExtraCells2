@@ -91,10 +91,10 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 		FluidTankInfo[] tankArray;
 		IFluidHandler tankTile = (IFluidHandler) tileEntity;
 
-		if (((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
+		if (((IFluidHandler) tileEntity).getTankInfo(facing) != null && ((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
 		{
 			return tankTile.getTankInfo(facing);
-		} else if (tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+		} else if (((IFluidHandler) tileEntity).getTankInfo(facing) != null && tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
 		{
 			return tankTile.getTankInfo(ForgeDirection.UNKNOWN);
 		} else
@@ -118,12 +118,14 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	@Override
 	public void validate()
 	{
+		super.validate();
 		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
 	public void invalidate()
 	{
+		super.invalidate();
 		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 

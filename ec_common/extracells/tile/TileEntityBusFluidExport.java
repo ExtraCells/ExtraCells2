@@ -55,10 +55,10 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 
 				FluidStack fluidStack;
 
-				if (tank.getTankInfo(facing).length != 0)
+				if (((IFluidHandler) tank).getTankInfo(facing) != null && tank.getTankInfo(facing).length != 0)
 				{
 					fluidStack = tank.getTankInfo(facing)[0].fluid;
-				} else if (tank.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+				} else if (((IFluidHandler) tank).getTankInfo(facing) != null && tank.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
 				{
 					fluidStack = tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
 				} else
@@ -182,12 +182,14 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	@Override
 	public void validate()
 	{
+		super.validate();
 		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
 	public void invalidate()
 	{
+		super.invalidate();
 		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 

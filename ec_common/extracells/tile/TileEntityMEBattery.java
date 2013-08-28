@@ -78,13 +78,15 @@ public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 	@Override
 	public void validate()
 	{
-		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent((TileEntityMEBattery) this, this.worldObj, new WorldCoord(this.xCoord, this.yCoord, this.zCoord)));
+		super.validate();
+		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
 	public void invalidate()
 	{
-		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent((TileEntityMEBattery) this, this.worldObj, new WorldCoord(this.xCoord, this.yCoord, this.zCoord)));
+		super.invalidate();
+		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override

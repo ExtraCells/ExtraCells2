@@ -120,13 +120,15 @@ public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDi
 	@Override
 	public void validate()
 	{
-		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent((IGridTileEntity) this, this.worldObj, this.getLocation()));
+		super.validate();
+		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
 	public void invalidate()
 	{
-		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent((IGridTileEntity) this, this.worldObj, this.getLocation()));
+		super.invalidate();
+		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override

@@ -37,13 +37,15 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	@Override
 	public void validate()
 	{
-		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent((TileEntityHardMEDrive) this, this.worldObj, new WorldCoord(this.xCoord, this.yCoord, this.zCoord)));
+		super.validate();
+		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
 	public void invalidate()
 	{
-		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent((TileEntityHardMEDrive) this, this.worldObj, new WorldCoord(this.xCoord, this.yCoord, this.zCoord)));
+		super.invalidate();
+		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override

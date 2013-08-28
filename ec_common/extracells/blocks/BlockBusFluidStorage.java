@@ -1,5 +1,6 @@
 package extracells.blocks;
 
+import appeng.api.events.GridTileLoadEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
@@ -16,6 +17,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
 
 public class BlockBusFluidStorage extends BlockContainer
 {
@@ -94,13 +97,19 @@ public class BlockBusFluidStorage extends BlockContainer
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
 	{
-		((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z)).validate();
+		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z), world, ((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z)).getLocation()));
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
 		int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
-		world.setBlockMetadataWithNotify(x, y, z, l, 2);
+		if (!player.isSneaking())
+		{
+			world.setBlockMetadataWithNotify(x, y, z, l, 2);
+		} else
+		{
+			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(l).getOpposite().ordinal(), 2);
+		}
 	}
 }

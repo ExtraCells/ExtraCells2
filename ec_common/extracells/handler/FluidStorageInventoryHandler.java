@@ -12,6 +12,7 @@ import appeng.api.IItemList;
 import appeng.api.Util;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.ItemFlow;
+import appeng.api.config.ListMode;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 
@@ -196,8 +197,6 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 					if (updateTarget != null)
 						updateTarget.onInventoryChanged();
-
-					System.out.println(removedStack.getStackSize());
 
 					return removedStack;
 				}
@@ -392,7 +391,6 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 			storage.stackTagCompound = new NBTTagCompound();
 		NBTTagCompound nbt = storage.stackTagCompound;
 
-		System.out.println(name);
 		nbt.setString("PreformattedName", name);
 
 	}
@@ -469,7 +467,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	}
 
 	@Override
-	public void setPreformattedItems(IItemList in, FuzzyMode mode)//, ListMode m)
+	public void setPreformattedItems(IItemList in, FuzzyMode mode, ListMode m)
 	{
 		if (storage.stackTagCompound == null)
 			storage.stackTagCompound = new NBTTagCompound();
@@ -502,11 +500,9 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		}
 	}
 
-	/*/
 	@Override
 	public ListMode getListMode()
 	{
 		return ListMode.BLACKLIST;
 	}
-    //*/
 }

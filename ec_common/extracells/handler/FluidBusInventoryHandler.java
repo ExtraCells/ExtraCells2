@@ -16,6 +16,7 @@ import appeng.api.IItemList;
 import appeng.api.Util;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.ItemFlow;
+import appeng.api.config.ListMode;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -405,16 +406,14 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	}
 
 	@Override
-	public void setPreformattedItems(IItemList in, FuzzyMode mode)//, ListMode m)
+	public void setPreformattedItems(IItemList in, FuzzyMode mode, ListMode m)
 	{
 		// Setting it in the Inventory
 	}
 
-	/*/
 	@Override
 	public ListMode getListMode()
 	{
 		return ListMode.BLACKLIST;
 	}
-	//*/
 }

@@ -53,7 +53,7 @@
 		<mkdir dir="${build.dir.development}\${build.dir.build}" />
 		<jar destfile="${build.dir.development}\${build.dir.build}\${build.release.mod.name}-universal-${build.release.mod.version} (${build.release.minecraft.version}).jar">
 			<fileset dir="${build.dir.development}\forge\mcp\src\minecraft\" includes="mcmod.info" />
-			<fileset dir="${build.dir.development}\forge\mcp\bin\minecraft" excludes="appeng/**" />
+			<fileset dir="${build.dir.development}\forge\mcp\bin\minecraft" includes="extracells/**" />
 			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
 		</jar>
 
