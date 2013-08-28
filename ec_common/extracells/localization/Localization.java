@@ -2,7 +2,7 @@ package extracells.localization;
 
 public enum Localization
 {
-	US("en_US"), GERMAN("de_DE"), CHINESE("zn_CH");
+	US("en_US"), GERMAN("de_DE"), CHINESE("zn_CH"), RUSSIAN("ru_RU");
 
 	private final String locale;
 
