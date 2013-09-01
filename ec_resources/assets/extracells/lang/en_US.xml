@@ -26,10 +26,11 @@
   <entry key="tile.block.mebattery">ME BackUp Battery</entry>
   <entry key="tile.block.medropper">ME Item Dropper</entry>
   <entry key="tile.block.hardmedrive">Blast resistant ME Drive</entry>
-  <entry key="tile.block.fluid.bus.import">Fluid Import Bus</entry>
-  <entry key="tile.block.fluid.bus.export">Fluid Export Bus</entry>
-  <entry key="tile.block.fluid.bus.storage">Fluid Storage Bus</entry>
+  <entry key="tile.block.fluid.bus.import">ME Fluid Import Bus</entry>
+  <entry key="tile.block.fluid.bus.export">ME Fluid Export Bus</entry>
+  <entry key="tile.block.fluid.bus.storage">ME Fluid Storage Bus</entry>
   <entry key="tile.block.fluid.terminal">ME Fluid Access Terminal</entry>
+  <entry key="tile.block.fluid.transitionplane">ME Fluid Transition Plane</entry>
   <entry key="tooltip.belongsto">This storage belongs to:</entry>
   <entry key="tooltip.notyours">You are not the owner of this storage drive!</entry>
   <entry key="tooltip.accessgranted">Access granted!</entry>

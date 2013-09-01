@@ -1,7 +1,8 @@
 package extracells.tile;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -12,6 +13,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -24,7 +26,7 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.util.IGridInterface;
 
-public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile
+public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile, IFluidHandler
 {
 	Boolean powerStatus = false;
 	IGridInterface grid;
@@ -232,5 +234,84 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	public ECPrivateInventory getInventory()
 	{
 		return inventory;
+	}
+
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		if (resource != null && getGrid() != null && isPowered() && from.ordinal() == this.blockMetadata)
+		{
+			IAEItemStack added;
+
+			int amount = resource.amount;
+			int fluidID = resource.fluidID;
+
+			if (doFill)
+			{
+				added = grid.getCellArray().addItems(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, amount, fluidID)));
+			} else
+			{
+				added = grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, amount, fluidID)));
+			}
+			if (added == null)
+			{
+				if (doFill)
+					grid.useMEEnergy(amount / 20, "Import Fluid");
+				return resource.amount;
+			} else
+			{
+				if (doFill)
+					grid.useMEEnergy(amount - added.getStackSize() / 20, "Import Fluid");
+				return (int) (resource.amount - added.getStackSize());
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		return null;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return grid.getCellArray().canAccept(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1, fluid.getID())));
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		if (getGrid() != null && from.ordinal() == this.blockMetadata)
+		{
+			List<FluidTankInfo> tankInfo = new ArrayList<FluidTankInfo>();
+			FluidTankInfo[] tankArray = new FluidTankInfo[1];
+
+			for (IAEItemStack item : getGrid().getCellArray().getAvailableItems())
+			{
+				if (item.getItem() == extracells.Extracells.FluidDisplay)
+					tankInfo.add(new FluidTankInfo(new FluidStack(FluidRegistry.getFluid(item.getItemDamage()), (int) item.getStackSize()), (int) getGrid().getCellArray().freeBytes()));
+			}
+
+			if (tankInfo.isEmpty())
+				tankInfo.add(new FluidTankInfo(null, (int) getGrid().getCellArray().freeBytes()));
+
+			tankArray = tankInfo.toArray(tankArray);
+			return tankArray;
+		}
+		return null;
 	}
 }

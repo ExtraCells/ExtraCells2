@@ -14,6 +14,7 @@ import extracells.Extracells;
 import extracells.blocks.BlockBusFluidExport;
 import extracells.blocks.BlockBusFluidImport;
 import extracells.blocks.BlockBusFluidStorage;
+import extracells.blocks.BlockFluidTransitionPlane;
 import extracells.blocks.BlockHardMEDrive;
 import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
@@ -43,6 +44,7 @@ import extracells.items.ItemStoragePhysical;
 import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
+import extracells.tile.TileEntityTransitionPlaneFluid;
 import extracells.tile.TileEntityHardMEDrive;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
@@ -83,6 +85,7 @@ public class CommonProxy implements IGuiHandler
 		ItemStack fluidExportBus = new ItemStack(Extracells.BusFluidExport, 1);
 		ItemStack fluidStorageBus = new ItemStack(Extracells.BusFluidStorage, 1);
 		ItemStack fluidTerminal = new ItemStack(Extracells.TerminalFluid, 1);
+		ItemStack transitionPlaneFluid = new ItemStack(Extracells.TransitionPlaneFluid, 1);
 
 		// Advanced Casing
 		GameRegistry.addShapedRecipe(advancedStorageCasing, new Object[]
@@ -163,6 +166,11 @@ public class CommonProxy implements IGuiHandler
 		// ME Fluid Terminal
 		GameRegistry.addShapedRecipe(fluidTerminal, new Object[]
 		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkTerminal, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+
+		// ME Fluid Transition Plane
+		GameRegistry.addShapedRecipe(transitionPlaneFluid, new Object[]
+		{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkTransitionPlane, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+
 	}
 
 	public void RegisterTileEntities()
@@ -175,6 +183,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityBusFluidExport.class, "tileEntityBusFluidExport");
 		GameRegistry.registerTileEntity(TileEntityBusFluidStorage.class, "tileEntityBusFluidStorage");
 		GameRegistry.registerTileEntity(TileEntityTerminalFluid.class, "tileEntityTerminalFluid");
+		GameRegistry.registerTileEntity(TileEntityTransitionPlaneFluid.class, "tileEntityTransitionPlaneFluid");
 	}
 
 	public void RegisterRenderers()
@@ -211,6 +220,8 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerBlock(Extracells.BusFluidStorage, ItemBlockSpecial.class, Extracells.BusFluidStorage.getUnlocalizedName());
 		Extracells.TerminalFluid = new BlockTerminalFluid(Extracells.TerminalFluid_ID);
 		GameRegistry.registerBlock(Extracells.TerminalFluid, ItemBlockSpecial.class, Extracells.TerminalFluid.getUnlocalizedName());
+		Extracells.TransitionPlaneFluid = new BlockFluidTransitionPlane(Extracells.FluidTransitionPlane_ID);
+		GameRegistry.registerBlock(Extracells.TransitionPlaneFluid, ItemBlockSpecial.class, Extracells.TransitionPlaneFluid.getUnlocalizedName());
 	}
 
 	@Override

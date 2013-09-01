@@ -77,7 +77,7 @@ public class ItemStorageFluid extends Item
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(int i, CreativeTabs creativeTab, List listSubItems)
 	{
-		for (int j = 0; j < suffixes.length; ++j)
+		for (int j = 0; j < 4; ++j)
 		{
 			listSubItems.add(new ItemStack(i, 1, j));
 		}

@@ -62,38 +62,41 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 					fluidIndex = 0;
 				}
 
-				FluidStack request = new FluidStack((fluidsInNetwork.get(fluidIndex).getFluid()), 1000);
-				ItemStack preview = new ItemStack(extracells.Extracells.FluidDisplay, 1, fluidsInNetwork.get(fluidIndex).getID());
-
-				if (preview.getTagCompound() == null)
-					preview.setTagCompound(new NBTTagCompound());
-				NBTTagCompound nbt = preview.getTagCompound();
-				nbt.setLong("amount", fluidsInNetwork.get(fluidIndex).amount);
-				nbt.setString("fluidname", capitalizeFirstLetter(fluidsInNetwork.get(fluidIndex).fluid.getName()));
-
-				this.setInventorySlotContents(2, preview);
-
-				if (input != null)
+				if (fluidsInNetwork.get(fluidIndex) != null)
 				{
-					if (FluidContainerRegistry.isEmptyContainer(input))
-					{
-						ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(request, input);
+					FluidStack request = new FluidStack((fluidsInNetwork.get(fluidIndex).getFluid()), 1000);
+					ItemStack preview = new ItemStack(extracells.Extracells.FluidDisplay, 1, fluidsInNetwork.get(fluidIndex).getID());
 
-						if (filledContainer != null)
+					if (preview.getTagCompound() == null)
+						preview.setTagCompound(new NBTTagCompound());
+					NBTTagCompound nbt = preview.getTagCompound();
+					nbt.setLong("amount", fluidsInNetwork.get(fluidIndex).amount);
+					nbt.setString("fluidname", StatCollector.translateToLocal((FluidRegistry.getFluidName(new FluidStack(fluidsInNetwork.get(fluidIndex).getFluid(), 1)))));// (capitalizeFirstLetter(fluidsInNetwork.get(fluidIndex).fluid.getName()));
+
+					this.setInventorySlotContents(2, preview);
+
+					if (input != null)
+					{
+						if (FluidContainerRegistry.isEmptyContainer(input))
 						{
-							if (output == null)
+							ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(request, input);
+
+							if (filledContainer != null)
 							{
-								if (drainFluid(request))
+								if (output == null)
 								{
-									this.setInventorySlotContents(1, FluidContainerRegistry.fillFluidContainer(request, input));
-									this.decrStackSize(0, 1);
-								}
-							} else if (output.isStackable() && output.stackSize < output.getMaxStackSize() && output.getItem() == filledContainer.getItem() && output.getItemDamage() == filledContainer.getItemDamage() && output.getTagCompound() == filledContainer.getTagCompound())
-							{
-								if (drainFluid(request))
+									if (drainFluid(request))
+									{
+										this.setInventorySlotContents(1, FluidContainerRegistry.fillFluidContainer(request, input));
+										this.decrStackSize(0, 1);
+									}
+								} else if (output.isStackable() && output.stackSize < output.getMaxStackSize() && output.getItem() == filledContainer.getItem() && output.getItemDamage() == filledContainer.getItemDamage() && output.getTagCompound() == filledContainer.getTagCompound())
 								{
-									output.stackSize = output.stackSize + 1;
-									this.decrStackSize(0, 1);
+									if (drainFluid(request))
+									{
+										output.stackSize = output.stackSize + 1;
+										this.decrStackSize(0, 1);
+									}
 								}
 							}
 						}
@@ -161,7 +164,9 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 
 		public int getID()
 		{
-			return fluid.getID();
+			if (fluid != null)
+				return fluid.getID();
+			return 0;
 		}
 	}
 
@@ -224,7 +229,12 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	public void setCurrentFluid(int modifier)
 	{
 		if (fluidIndex + modifier >= 0)
+		{
 			this.fluidIndex = fluidIndex + modifier;
+		} else
+		{
+			this.fluidIndex = this.fluidsInNetwork.size() - 1;
+		}
 	}
 
 	public int getCurrentFluid()
