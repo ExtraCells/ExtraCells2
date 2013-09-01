@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import appeng.api.Items;
+import appeng.api.WorldCoord;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -44,12 +45,12 @@ import extracells.items.ItemStoragePhysical;
 import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
-import extracells.tile.TileEntityTransitionPlaneFluid;
 import extracells.tile.TileEntityHardMEDrive;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
 import extracells.tile.TileEntitySolderingStation;
 import extracells.tile.TileEntityTerminalFluid;
+import extracells.tile.TileEntityTransitionPlaneFluid;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -243,7 +244,7 @@ public class CommonProxy implements IGuiHandler
 			case 4: // GUI Export Bus Fluid
 				return new GuiBusFluidExport(player.inventory, ((TileEntityBusFluidExport) tileEntity).getInventory());
 			case 5: // GUI ME Battery
-				return new GuiMEBattery((TileEntityMEBattery) tileEntity);
+				return new GuiMEBattery(world, new WorldCoord(x, y, z), player);
 			default:
 				return false;
 			}

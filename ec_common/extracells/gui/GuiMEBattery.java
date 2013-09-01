@@ -1,28 +1,35 @@
 package extracells.gui;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import appeng.api.WorldCoord;
 import cpw.mods.fml.client.FMLClientHandler;
 import extracells.network.PacketHandler;
 import extracells.tile.TileEntityMEBattery;
 
 public class GuiMEBattery extends GuiScreen
 {
-	TileEntity tileEntity;
+	WorldCoord coord;
+	World world;
+	EntityPlayer player;
 	private final int xSize = 176;
 	private final int ySize = 88;
 	private double currentEnergy;
 	private double maxEnergy;
 
-	public GuiMEBattery(TileEntity tileEntity)
+	public GuiMEBattery(World world, WorldCoord coord, EntityPlayer player)
 	{
 		super();
-		this.tileEntity = tileEntity;
+		this.world = world;
+		this.coord = coord;
+		this.player = player;
+
 	}
 
 	@Override
@@ -52,9 +59,11 @@ public class GuiMEBattery extends GuiScreen
 
 	public void updateScreen()
 	{
-		if (tileEntity instanceof TileEntityMEBattery)
+		PacketHandler.sendBatteryPacket(coord.x, coord.y, coord.z, player.username);
+
+		if (world.getBlockTileEntity(coord.x, coord.y, coord.z) instanceof TileEntityMEBattery)
 		{
-			TileEntityMEBattery battery = (TileEntityMEBattery) tileEntity;
+			TileEntityMEBattery battery = (TileEntityMEBattery) world.getBlockTileEntity(coord.x, coord.y, coord.z);
 			currentEnergy = battery.getEnergy();
 			maxEnergy = battery.getMaxEnergy();
 		}
@@ -72,6 +81,5 @@ public class GuiMEBattery extends GuiScreen
 	{
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
-
 	}
 }

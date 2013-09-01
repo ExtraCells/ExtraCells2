@@ -4,9 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
@@ -16,7 +14,7 @@ import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import cpw.mods.fml.relauncher.Side;
+import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntitySolderingStation;
 import extracells.tile.TileEntityTerminalFluid;
 
@@ -31,13 +29,13 @@ public class PacketHandler implements IPacketHandler
 		EntityPlayer entityPlayer = (EntityPlayer) player;
 
 		int x, y, z;
-
+		String playerName;
 		byte packetId = in.readByte();
 
 		switch (packetId)
 		{
 		case 0:
-			String playerName = in.readUTF();
+			playerName = in.readUTF();
 			x = in.readInt();
 			y = in.readInt();
 			z = in.readInt();
@@ -79,6 +77,19 @@ public class PacketHandler implements IPacketHandler
 					tile.setCurrentFluid(1);
 					break;
 				}
+			}
+			break;
+
+		case 2:
+			x = in.readInt();
+			y = in.readInt();
+			z = in.readInt();
+			playerName = in.readUTF();
+
+			if (!entityPlayer.worldObj.isRemote)
+			{
+				TileEntityMEBattery tile = (TileEntityMEBattery) entityPlayer.worldObj.getBlockTileEntity(x, y, z);
+				tile.updateGuiTile(playerName);
 			}
 			break;
 		}
@@ -130,4 +141,23 @@ public class PacketHandler implements IPacketHandler
 		}
 	}
 
+	public static void sendBatteryPacket(int x, int y, int z, String playername)
+	{
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+		try
+		{
+			dataStream.writeByte((byte) 2);
+			dataStream.writeInt(x);
+			dataStream.writeInt(y);
+			dataStream.writeInt(z);
+			dataStream.writeUTF(playername);
+
+			PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(channel, byteStream.toByteArray()));
+		} catch (IOException ex)
+		{
+			System.err.append("Failed to send packet");
+		}
+	}
 }

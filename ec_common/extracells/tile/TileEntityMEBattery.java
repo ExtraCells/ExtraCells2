@@ -14,6 +14,10 @@ import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IGridTileEntity;
 import appeng.api.me.tiles.IMEPowerStorage;
 import appeng.api.me.util.IGridInterface;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.server.FMLServerHandler;
 
 public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 {
@@ -49,6 +53,14 @@ public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 				}
 			}
 		}
+	}
+
+	public void updateGuiTile(String playername)
+	{
+		Player player = (Player) worldObj.getPlayerEntityByName(playername);
+
+		if (!worldObj.isRemote)
+			PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), player);
 	}
 
 	@Override

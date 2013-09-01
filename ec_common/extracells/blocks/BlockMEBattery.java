@@ -11,6 +11,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
@@ -92,34 +94,17 @@ public class BlockMEBattery extends BlockContainer
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
-	{/*/
+	{
 		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
 		{
 			return false;
 		}
 		player.openGui(Extracells.instance, 5, world, x, y, z);
 		return true;
-		//*/
-				
-		TileEntity tileentity = world.getBlockTileEntity(x, y, z);
 
-		if (!world.isRemote && tileentity != null)
-		{
-			TileEntityMEBattery meBattery = (TileEntityMEBattery) tileentity;
-
-			Double energy = meBattery.getEnergy();
-			Double maxEnergy = meBattery.getMaxEnergy();
-
-			if (energy > maxEnergy)
-			{
-				player.addChatMessage("Current Energy: " + new DecimalFormat("#").format(maxEnergy));
-			} else
-			{
-				player.addChatMessage("Current Energy: " + new DecimalFormat("#").format(energy));
-			}
-			player.addChatMessage("Max Energy: " + new DecimalFormat("#").format(maxEnergy));
-		}
-		return true;
-		
+		/*
+		 * / TileEntity tileentity = world.getBlockTileEntity(x, y, z); if (!world.isRemote && tileentity != null) { TileEntityMEBattery meBattery = (TileEntityMEBattery) tileentity; Double energy = meBattery.getEnergy(); Double maxEnergy = meBattery.getMaxEnergy(); if (energy > maxEnergy) { player.addChatMessage("Current Energy: " + new DecimalFormat("#").format(maxEnergy)); }
+		 * else { player.addChatMessage("Current Energy: " + new DecimalFormat("#").format(energy)); } player.addChatMessage("Max Energy: " + new DecimalFormat("#").format(maxEnergy)); } return true; //
+		 */
 	}
 }
