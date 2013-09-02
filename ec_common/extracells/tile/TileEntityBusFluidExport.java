@@ -2,9 +2,14 @@ package extracells.tile;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -35,6 +40,7 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+	Boolean redstoneAction = false;
 
 	public TileEntityBusFluidExport()
 	{
@@ -109,6 +115,39 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 				}
 			}
 		}
+	}
+
+	public boolean getRedstoneAction()
+	{
+		return redstoneAction;
+	}
+
+	public void toggleRedstoneAction(String playerName)
+	{
+		redstoneAction = !redstoneAction;
+		updateGuiTile(playerName);
+	}
+
+	public void updateGuiTile(String playername)
+	{
+		Player player = (Player) worldObj.getPlayerEntityByName(playername);
+
+		if (!worldObj.isRemote)
+			PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), player);
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
+
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+	{
+		readFromNBT(packet.customParam1);
 	}
 
 	private Boolean arrayContains(ItemStack[] array, ItemStack itemstack)

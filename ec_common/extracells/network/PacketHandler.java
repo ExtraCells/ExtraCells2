@@ -14,6 +14,8 @@ import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import extracells.tile.TileEntityBusFluidExport;
+import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntitySolderingStation;
 import extracells.tile.TileEntityTerminalFluid;
@@ -28,7 +30,7 @@ public class PacketHandler implements IPacketHandler
 		ByteArrayDataInput in = ByteStreams.newDataInput(packet.data);
 		EntityPlayer entityPlayer = (EntityPlayer) player;
 
-		int x, y, z;
+		int x, y, z, action;
 		String playerName;
 		byte packetId = in.readByte();
 
@@ -62,7 +64,7 @@ public class PacketHandler implements IPacketHandler
 			x = in.readInt();
 			y = in.readInt();
 			z = in.readInt();
-			int action = in.readInt();
+			action = in.readInt();
 
 			if (!entityPlayer.worldObj.isRemote)
 			{
@@ -92,8 +94,51 @@ public class PacketHandler implements IPacketHandler
 				tile.updateGuiTile(playerName);
 			}
 			break;
-		}
 
+		case 3:
+			x = in.readInt();
+			y = in.readInt();
+			z = in.readInt();
+			action = in.readInt();
+			playerName = in.readUTF();
+
+			if (!entityPlayer.worldObj.isRemote)
+			{
+				TileEntityBusFluidImport tile = (TileEntityBusFluidImport) entityPlayer.worldObj.getBlockTileEntity(x, y, z);
+				switch (action)
+				{
+				case 0:
+					tile.updateGuiTile(playerName);
+					break;
+				case 1:
+					tile.toggleRedstoneAction(playerName);
+					break;
+				}
+			}
+			break;
+
+		case 4:
+			x = in.readInt();
+			y = in.readInt();
+			z = in.readInt();
+			action = in.readInt();
+			playerName = in.readUTF();
+
+			if (!entityPlayer.worldObj.isRemote)
+			{
+				TileEntityBusFluidExport tile = (TileEntityBusFluidExport) entityPlayer.worldObj.getBlockTileEntity(x, y, z);
+				switch (action)
+				{
+				case 0:
+					tile.updateGuiTile(playerName);
+					break;
+				case 1:
+					tile.toggleRedstoneAction(playerName);
+					break;
+				}
+			}
+			break;
+		}
 	}
 
 	public static void sendSolderingStationPacket(String playerName, int x, int y, int z, int size, int types, boolean remove, char upgrade, char downgrade)
@@ -152,6 +197,48 @@ public class PacketHandler implements IPacketHandler
 			dataStream.writeInt(x);
 			dataStream.writeInt(y);
 			dataStream.writeInt(z);
+			dataStream.writeUTF(playername);
+
+			PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(channel, byteStream.toByteArray()));
+		} catch (IOException ex)
+		{
+			System.err.append("Failed to send packet");
+		}
+	}
+
+	public static void sendFluidImportBusPacket(int x, int y, int z, int action, String playername)
+	{
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+		try
+		{
+			dataStream.writeByte((byte) 3);
+			dataStream.writeInt(x);
+			dataStream.writeInt(y);
+			dataStream.writeInt(z);
+			dataStream.writeInt(action);
+			dataStream.writeUTF(playername);
+
+			PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(channel, byteStream.toByteArray()));
+		} catch (IOException ex)
+		{
+			System.err.append("Failed to send packet");
+		}
+	}
+
+	public static void sendFluidExportBusPacket(int x, int y, int z, int action, String playername)
+	{
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		DataOutputStream dataStream = new DataOutputStream(byteStream);
+
+		try
+		{
+			dataStream.writeByte((byte) 4);
+			dataStream.writeInt(x);
+			dataStream.writeInt(y);
+			dataStream.writeInt(z);
+			dataStream.writeInt(action);
 			dataStream.writeUTF(playername);
 
 			PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(channel, byteStream.toByteArray()));
