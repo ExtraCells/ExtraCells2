@@ -164,7 +164,7 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 			IMEInventoryHandler cellArray = grid.getCellArray();
 			IItemList itemsInNetwork = null;
 			if (cellArray != null)
-				itemsInNetwork = grid.getCellArray().getAvailableItems();
+				itemsInNetwork = cellArray.getAvailableItems();
 
 			if (itemsInNetwork != null)
 			{
