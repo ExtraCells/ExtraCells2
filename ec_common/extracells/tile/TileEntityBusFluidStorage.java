@@ -182,7 +182,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 			}
 
 		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
-		list.add(new FluidBusInventoryHandler(worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ), getFacing(), getPriority(), filter));
+		list.add(new FluidBusInventoryHandler(worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ), getFacing().getOpposite(), getPriority(), filter));
 		return list;
 	}
 

@@ -193,14 +193,21 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 		IAEItemStack toFill = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, toImport.amount, toImport.fluidID));
 		if (grid != null)
 		{
-			if (grid.getCellArray().calculateItemAddition(toFill) == null)
+			IAEItemStack sim;
+
+			for (int i = 0; i < toFill.getStackSize() / 10; i++)
 			{
-				for (int i = 0; i < toFill.getStackSize() / 10; i++)
-				{
-					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toFill.getItem(), 10, toFill.getItemDamage())));
-				}
-				return true;
+				sim = grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(toFill.getItem(), (int) (toFill.getStackSize() / (toFill.getStackSize() / 10)), toFill.getItemDamage())));
+
+				if (sim != null)
+					return false;
 			}
+
+			for (int i = 0; i < toFill.getStackSize() / 10; i++)
+			{
+				grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toFill.getItem(), (int) (toFill.getStackSize() / (toFill.getStackSize() / 10)), toFill.getItemDamage())));
+			}
+			return true;
 		}
 		return false;
 	}
@@ -214,12 +221,34 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 			{
 				if (fluidstack.getFluid() == toExport.getFluid() && fluidstack.amount >= toExport.amount)
 				{
+					IAEItemStack[] takenStacks = new IAEItemStack[(int) (toDrain.getStackSize() / 10)];
+
 					for (int i = 0; i < toDrain.getStackSize() / 10; i++)
 					{
-						grid.getCellArray().extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), 10, toDrain.getItemDamage())));
+						takenStacks[i] = grid.getCellArray().extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)), toDrain.getItemDamage())));
 					}
 
-					return true;
+					for (IAEItemStack takenStack : takenStacks)
+					{
+						if (takenStack == null || takenStack.getStackSize() != (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)))
+						{
+							for (IAEItemStack takeBackStack : takenStacks)
+							{
+								if (takeBackStack != null && takeBackStack.getStackSize() == (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)))
+								{
+									grid.getCellArray().addItems((Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)), toDrain.getItemDamage()))));
+									return false;
+								} else if (takeBackStack != null && takeBackStack.getStackSize() != (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)))
+								{
+									grid.getCellArray().addItems((Util.createItemStack(new ItemStack(toDrain.getItem(), (int) takeBackStack.getStackSize(), toDrain.getItemDamage()))));
+									return false;
+								}
+							}
+							return false;
+						}
+
+						return true;
+					}
 				}
 			}
 		}

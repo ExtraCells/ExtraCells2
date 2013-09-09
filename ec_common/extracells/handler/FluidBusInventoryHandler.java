@@ -113,17 +113,12 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 				if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
 				{
-					if (input.getStackSize() <= freeBytes())
-					{
-						addedStack = null;
-						((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), true);
-					} else
-					{
-						addedStack.setStackSize(input.getStackSize() - freeBytes());
-						((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) (totalBytes() - freeBytes())), true);
-					}
+					addedStack.setStackSize(input.getStackSize() - ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), true));
 
 					tank.onInventoryChanged();
+
+					if (addedStack != null && addedStack.getStackSize() == 0)
+						addedStack = null;
 
 					return addedStack;
 				}
@@ -141,19 +136,19 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		{
 			if (getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
 			{
-				if (request.getStackSize() <= usedBytes())
+
+				FluidStack drained = ((IFluidHandler) tank).drain(facing, new FluidStack(request.getItemDamage(), (int) request.getStackSize()), true);
+
+				tank.onInventoryChanged();
+				
+				if (drained != null)
 				{
-					removedStack.setStackSize(request.getStackSize());
-					((IFluidHandler) tank).drain(facing, new FluidStack(request.getItemDamage(), (int) request.getStackSize()), true);
+					removedStack.setStackSize(drained.amount);
+					return removedStack;
 				} else
 				{
-					removedStack.setStackSize(usedBytes());
-					((IFluidHandler) tank).drain(facing, new FluidStack(request.getItemDamage(), (int) usedBytes()), true);
+					return null;
 				}
-
-				((TileEntity) tank).onInventoryChanged();
-
-				return removedStack;
 			}
 		}
 		return null;
@@ -203,17 +198,12 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 			{
 				if (getTankInfo(tank) != null && getTankInfo(tank)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
 				{
-					if (input.getStackSize() <= freeBytes())
-					{
-						addedStack = null;
-						((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), false);
-					} else
-					{
-						addedStack.setStackSize(input.getStackSize() - freeBytes());
-						((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) (totalBytes() - freeBytes())), false);
-					}
+					addedStack.setStackSize(input.getStackSize() - ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), false));
 
 					tank.onInventoryChanged();
+
+					if (addedStack != null && addedStack.getStackSize() == 0)
+						addedStack = null;
 
 					return addedStack;
 				}
