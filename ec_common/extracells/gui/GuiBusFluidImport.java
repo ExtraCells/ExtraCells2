@@ -56,8 +56,6 @@ public class GuiBusFluidImport extends GuiContainer
 		{
 			TileEntityBusFluidImport importbus = (TileEntityBusFluidImport) world.getBlockTileEntity(coord.x, coord.y, coord.z);
 
-			System.out.println(importbus.getRedstoneAction());
-
 			if (importbus.getRedstoneAction())
 			{
 				this.drawTexturedModalRect(153, 2, 176, 16, 16, 16);

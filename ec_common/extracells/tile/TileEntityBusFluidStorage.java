@@ -6,6 +6,9 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -19,11 +22,12 @@ import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.ICellContainer;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
+import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.handler.FluidBusInventoryHandler;
 
-public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer
+public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {
 	Boolean powerStatus;
 	IGridInterface grid = null;
@@ -45,6 +49,20 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 		{
 			validate();
 		}
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
+
+	@Override
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+	{
+		readFromNBT(packet.customParam1);
 	}
 
 	@Override
@@ -195,5 +213,11 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	public ECPrivateInventory getInventory()
 	{
 		return inventory;
+	}
+
+	@Override
+	public boolean coveredConnections()
+	{
+		return false;
 	}
 }

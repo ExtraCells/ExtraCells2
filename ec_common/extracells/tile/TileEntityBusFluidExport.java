@@ -2,8 +2,6 @@ package extracells.tile;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -29,10 +27,13 @@ import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
+import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
-public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware
+public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware,ITileCable
 {
 	Boolean powerStatus = false;
 	IGridInterface grid;
@@ -341,5 +342,11 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	public ECPrivateInventory getInventory()
 	{
 		return inventory;
+	}
+
+	@Override
+	public boolean coveredConnections()
+	{
+		return false;
 	}
 }

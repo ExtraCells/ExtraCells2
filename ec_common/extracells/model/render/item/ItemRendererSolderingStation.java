@@ -1,4 +1,4 @@
-package extracells.model.render;
+package extracells.model.render.item;
 
 import org.lwjgl.opengl.GL11;
 
@@ -10,12 +10,12 @@ import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import extracells.model.ModelSolderingStation;
 
-public class ItemSolderingStationRenderer implements IItemRenderer
+public class ItemRendererSolderingStation implements IItemRenderer
 {
 
 	private ModelSolderingStation model;
 
-	public ItemSolderingStationRenderer()
+	public ItemRendererSolderingStation()
 	{
 		model = new ModelSolderingStation();
 	}
@@ -35,10 +35,9 @@ public class ItemSolderingStationRenderer implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","textures/blocks/solderingstation.png")); // texture
+		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","textures/blocks/texmap_solderingstation.png")); // texture
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) 0.0D + 0.5F, (float) 0.0D + 1.5F, (float) 0.0D + 0.5F);
+		GL11.glTranslatef(0.5F, 1.5F, 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		model.renderAll(0.0625f);
 		GL11.glPopMatrix(); // end

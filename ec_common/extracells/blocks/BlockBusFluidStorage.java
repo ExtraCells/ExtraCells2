@@ -1,6 +1,7 @@
 package extracells.blocks;
 
 import appeng.api.events.GridTileLoadEvent;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
@@ -39,6 +40,24 @@ public class BlockBusFluidStorage extends BlockContainer
 		this.setUnlocalizedName("block.fluid.bus.storage");
 		this.setHardness(2.0F);
 		this.setResistance(10.0F);
+	}
+
+	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public int getRenderType()
+	{
+		return -1;
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
 	}
 
 	@Override
@@ -98,6 +117,7 @@ public class BlockBusFluidStorage extends BlockContainer
 	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
 	{
 		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z), world, ((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z)).getLocation()));
+		PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
 	}
 
 	@Override

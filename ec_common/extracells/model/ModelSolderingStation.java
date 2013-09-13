@@ -77,23 +77,7 @@ public class ModelSolderingStation extends ModelBase
 		Solder.mirror = true;
 		setRotation(Solder, 0F, 0F, 0.5205006F);
 	}
-
-	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
-	{
-		super.render(entity, f, f1, f2, f3, f4, f5);
-		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		Stand1.render(f5);
-		Stand2.render(f5);
-		Stand3.render(f5);
-		Stand4.render(f5);
-		Surface.render(f5);
-		SolderingStand.render(f5);
-		SolderingHolder.render(f5);
-		Base.render(f5);
-		Solder.render(f5);
-	}
-
+	
 	private void setRotation(ModelRenderer model, float x, float y, float z)
 	{
 		model.rotateAngleX = x;

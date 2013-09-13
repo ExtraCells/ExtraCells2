@@ -1,4 +1,4 @@
-package extracells.model.render;
+package extracells.model.render.tileentity;
 
 import org.lwjgl.opengl.GL11;
 
@@ -10,12 +10,12 @@ import net.minecraft.util.ResourceLocation;
 import extracells.model.ModelSolderingStation;
 import extracells.tile.TileEntitySolderingStation;
 
-public class TileEntitySolderingStationRenderer extends TileEntitySpecialRenderer
+public class TileEntityRendererSolderingStation extends TileEntitySpecialRenderer
 {
 
 	private ModelSolderingStation model;
 
-	public TileEntitySolderingStationRenderer()
+	public TileEntityRendererSolderingStation()
 	{
 		model = new ModelSolderingStation();
 	}
@@ -23,7 +23,7 @@ public class TileEntitySolderingStationRenderer extends TileEntitySpecialRendere
 	public void renderAModelAt(TileEntity tile, double d, double d1, double d2, float f)
 	{
 
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","textures/blocks/solderingstation.png")); // texture
+		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","textures/blocks/texmap_solderingstation.png")); // texture
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) d + 0.5F, (float) d1 + 1.5F, (float) d2 + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
@@ -48,7 +48,7 @@ public class TileEntitySolderingStationRenderer extends TileEntitySpecialRendere
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float tick)
 	{
-		this.renderAModelAt((TileEntitySolderingStation) tileentity, x, y, z, tick);
+		renderAModelAt((TileEntitySolderingStation) tileentity, x, y, z, tick);
 
 	}
 

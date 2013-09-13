@@ -1,9 +1,12 @@
 package extracells.blocks;
 
+import appeng.api.events.GridTileLoadEvent;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityBusFluidImport;
+import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityMEBattery;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
@@ -17,6 +20,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
 
 public class BlockBusFluidImport extends BlockContainer
 {
@@ -40,6 +44,24 @@ public class BlockBusFluidImport extends BlockContainer
 	}
 
 	@Override
+	public boolean renderAsNormalBlock()
+	{
+		return false;
+	}
+
+	@Override
+	public int getRenderType()
+	{
+		return -1;
+	}
+
+	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileEntityBusFluidImport();
@@ -55,6 +77,12 @@ public class BlockBusFluidImport extends BlockContainer
 	public Icon giveIcon(int side, int metadata)
 	{
 		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
+	{
+		PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
 	}
 
 	@Override

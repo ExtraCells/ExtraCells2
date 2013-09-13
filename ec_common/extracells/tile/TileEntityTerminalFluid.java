@@ -111,22 +111,32 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 			{
 				ItemStack drainedContainer = input.getItem().getContainerItemStack(input);
 				FluidStack containedFluid = FluidContainerRegistry.getFluidForFilledItem(input);
-
-				if (FluidContainerRegistry.getFluidForFilledItem(input) != null && fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
+				
+				if (FluidContainerRegistry.getFluidForFilledItem(input) != null)
 				{
 					if (output == null)
 					{
-						this.setInventorySlotContents(1, drainedContainer);
-						this.decrStackSize(0, 1);
+						if (fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
+						{
+							this.setInventorySlotContents(1, drainedContainer);
+							this.decrStackSize(0, 1);
+						}
 					} else if (output.isStackable() && output.stackSize < output.getMaxStackSize())
 					{
 						if (drainedContainer == null)
 						{
-							this.decrStackSize(0, 1);
-						} else if (output.getItem() == drainedContainer.getItem() && output.getTagCompound() == drainedContainer.getTagCompound() && output.getItemDamage() == drainedContainer.getItemDamage())
+							if (fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
+							{
+
+								this.decrStackSize(0, 1);
+							}
+						} else if (output.isStackable() && output.stackSize < output.getMaxStackSize() && output.getItem() == drainedContainer.getItem() && output.getItemDamage() == drainedContainer.getItemDamage() && output.getTagCompound() == drainedContainer.getTagCompound())
 						{
-							output.stackSize = output.stackSize + 1;
-							this.decrStackSize(0, 1);
+							if (fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
+							{
+								output.stackSize = output.stackSize + 1;
+								this.decrStackSize(0, 1);
+							}
 						}
 					}
 				}

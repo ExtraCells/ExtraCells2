@@ -29,9 +29,10 @@ import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
+import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 
-public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile, IFluidHandler
+public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
 	Boolean powerStatus;
 	IGridInterface grid;
@@ -154,7 +155,6 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 
 		for (ItemStack entry : array)
 		{
-			// if (entry != null && entry.getItem() == itemstack.getItem() && entry.getItemDamage() == itemstack.getItemDamage())
 			if (entry != null && itemstack.getItemDamage() == FluidContainerRegistry.getFluidForFilledItem(entry).fluidID)
 				return true;
 		}
@@ -357,5 +357,11 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 			return tankArray;
 		}
 		return null;
+	}
+
+	@Override
+	public boolean coveredConnections()
+	{
+		return false;
 	}
 }

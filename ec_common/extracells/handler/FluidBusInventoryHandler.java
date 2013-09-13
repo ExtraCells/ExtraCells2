@@ -140,7 +140,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 				FluidStack drained = ((IFluidHandler) tank).drain(facing, new FluidStack(request.getItemDamage(), (int) request.getStackSize()), true);
 
 				tank.onInventoryChanged();
-				
+
 				if (drained != null)
 				{
 					removedStack.setStackSize(drained.amount);
@@ -159,9 +159,9 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			if (getTankInfo(tank)[0].fluid != null)
+			if (getTankInfo(tank)[0].fluid != null && getTankInfo(tank)[0].fluid.getFluid() != null)
 			{
-				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 0, getTankInfo(tank)[0].fluid.getFluid().getID()));
+				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1, getTankInfo(tank)[0].fluid.getFluid().getID()));
 				currentItemStack.setStackSize(getTankInfo(tank)[0].fluid.amount);
 				out.add(currentItemStack);
 			}
