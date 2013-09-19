@@ -147,7 +147,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 			for (int i = 0; i < totalTypes; i++)
 			{
-				if (nbt.getInteger("FluidID#" + i) == 0 || input.getItemDamage() == nbt.getInteger("FluidID#" + i))
+				if (input.getItemDamage() == nbt.getInteger("FluidID#" + i))
 				{
 					if (input.getStackSize() <= freeBytes())
 					{
@@ -157,7 +157,26 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 					} else
 					{
 						nbt.setInteger("FluidID#" + i, input.getItemDamage());
-						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) + (totalBytes() - freeBytes()));
+						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) + freeBytes());
+						addedStack.setStackSize(input.getStackSize() - freeBytes());
+					}
+					return addedStack;
+				}
+			}
+
+			for (int i = 0; i < totalTypes; i++)
+			{
+				if (nbt.getInteger("FluidID#" + i) == 0)
+				{
+					if (input.getStackSize() <= freeBytes())
+					{
+						nbt.setInteger("FluidID#" + i, input.getItemDamage());
+						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) + input.getStackSize());
+						addedStack = null;
+					} else
+					{
+						nbt.setInteger("FluidID#" + i, input.getItemDamage());
+						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) + freeBytes());
 						addedStack.setStackSize(input.getStackSize() - freeBytes());
 					}
 					return addedStack;

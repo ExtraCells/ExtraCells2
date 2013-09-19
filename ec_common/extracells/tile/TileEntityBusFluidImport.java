@@ -59,14 +59,12 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 				FluidTankInfo[] info = getTankInfo(facingTileEntity);
 				if (info != null)
 				{
-					Fluid fluid = null;
-					if (info[0].fluid != null)
-						fluid = info[0].fluid.getFluid();
+					FluidStack tankFluidStack = info[0].fluid;
 
-					if (fluid != null && (isArrayEmpty(filterSlots) || arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, fluid.getID()))))
+					if (tankFluidStack != null && info[0].fluid.amount >= 20 && (isArrayEmpty(filterSlots) || arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, tankFluidStack.fluidID))))
 					{
-						IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluid.getID()));
-						FluidStack drainedStack = ((IFluidHandler) facingTileEntity).drain(facing, new FluidStack(fluid, 20), false);
+						IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, tankFluidStack.fluidID));
+						FluidStack drainedStack = ((IFluidHandler) facingTileEntity).drain(facing, new FluidStack(tankFluidStack.getFluid(), 20), false);
 						if (drainedStack != null)
 						{
 							toImport.setStackSize(drainedStack.amount);
@@ -76,11 +74,8 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 							if (notImported != null)
 								imported.setStackSize(toImport.getStackSize() - notImported.getStackSize());
 
-							if (imported != null && grid.useMEEnergy(12.0F, "Import Fluid"))
-								for (int i = 0; i < (int) imported.getStackSize() / 10; i++)
-								{
-									((IFluidHandler) facingTileEntity).drain(facing, new FluidStack(fluid, 10), true);
-								}
+							if (grid.useMEEnergy(12.0F, "Import Fluid") && imported != null)
+								((IFluidHandler) facingTileEntity).drain(facing, 20, true);
 						}
 					}
 				}

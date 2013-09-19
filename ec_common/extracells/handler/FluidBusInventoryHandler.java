@@ -137,7 +137,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 			if (getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
 			{
 
-				FluidStack drained = ((IFluidHandler) tank).drain(facing, new FluidStack(request.getItemDamage(), (int) request.getStackSize()), true);
+				FluidStack drained = ((IFluidHandler) tank).drain(facing, (int) request.getStackSize(), true);
 
 				tank.onInventoryChanged();
 
@@ -157,16 +157,24 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public IItemList getAvailableItems(IItemList out)
 	{
-		if (tank != null && tank instanceof IFluidHandler)
+		try
 		{
-			if (getTankInfo(tank)[0].fluid != null && getTankInfo(tank)[0].fluid.getFluid() != null)
+			if (tank != null && tank instanceof IFluidHandler)
 			{
-				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1, getTankInfo(tank)[0].fluid.getFluid().getID()));
-				currentItemStack.setStackSize(getTankInfo(tank)[0].fluid.amount);
-				out.add(currentItemStack);
-			}
+				if (getTankInfo(tank)[0].fluid != null && getTankInfo(tank)[0].fluid.getFluid() != null)
+				{
+					IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1, getTankInfo(tank)[0].fluid.getFluid().getID()));
+					currentItemStack.setStackSize(getTankInfo(tank)[0].fluid.amount);
+					out.add(currentItemStack);
+				}
 
+			}
+		} catch (Throwable e)
+		{
+			System.out.println("I prevented a crash (I HOPE SO). Please send me the following error! ~M3gaF3ak/Leomnelf");
+			e.printStackTrace();
 		}
+
 		return out;
 	}
 

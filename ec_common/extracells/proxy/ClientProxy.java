@@ -28,7 +28,7 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidImport.class, new TileEntityRendererBusFluidImport());
 		MinecraftForgeClient.registerItemRenderer(Extracells.BusFluidImport.blockID, new ItemRendererBusFluidImport());
-		
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidExport.class, new TileEntityRendererBusFluidExport());
 		MinecraftForgeClient.registerItemRenderer(Extracells.BusFluidExport.blockID, new ItemRendererBusFluidExport());
 	}
