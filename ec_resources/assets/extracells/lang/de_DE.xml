@@ -31,6 +31,7 @@
   <entry key="tile.block.fluid.bus.storage">ME-Flüssigkeits-Speicherbus</entry>
   <entry key="tile.block.fluid.terminal">Flüssigkeits-Zugriffs-Terminal</entry>
   <entry key="tile.block.fluid.transitionplane">ME-Flüssigkeits-Übergangsmembran</entry>
+  <entry key="tile.block.certustank">ME-Certus-Tank</entry>
   <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
   <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
   <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>
