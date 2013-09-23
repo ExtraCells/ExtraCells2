@@ -1,20 +1,27 @@
 package extracells.model;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import extracells.tile.TileEntityCertusTank;
 
 public class ModelCertusTank extends ModelBase
 {
 	ModelRenderer Shape1;
-	ModelRenderer Shape2;
 
 	public ModelCertusTank()
 	{
@@ -27,19 +34,11 @@ public class ModelCertusTank extends ModelBase
 		Shape1.setTextureSize(textureWidth, textureHeight);
 		Shape1.mirror = true;
 		setRotation(Shape1, 0F, 0F, 0F);
-
-		Shape2 = new ModelRenderer(this, 0, 30);
-		Shape2.addBox(0F, 0F, 0F, 12, 14, 12);
-		Shape2.setRotationPoint(-6F, -7F, -6F);
-		Shape2.setTextureSize(textureWidth, textureHeight);
-		Shape2.mirror = true;
-		setRotation(Shape2, 0F, 0F, 0F);
 	}
 
 	public void render(float f)
 	{
 		Shape1.render(f);
-		Shape2.render(f);
 	}
 
 	public void render(TileEntity tileEntity, double x, double y, double z)
@@ -49,7 +48,63 @@ public class ModelCertusTank extends ModelBase
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		Shape1.render(0.0625F);
-		Shape2.render(0.0625F);
+
+		// render same cube again, but inside out, so it has inner textures :D
+		GL11.glScalef(1.0F, 1F, -1F);
+		Shape1.render(0.0625F);
+
+		if (tileEntity != null && ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null)
+		{
+			FluidStack storedFluid = ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
+			int tankCapacity = ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].capacity;
+
+			if (storedFluid != null && storedFluid.getFluid() != null)
+			{
+				Icon fluidIcon = storedFluid.getFluid().getIcon();
+
+				Tessellator tessellator = Tessellator.instance;
+				RenderBlocks renderer = new RenderBlocks();
+
+				GL11.glScalef(1.0F, -1.0F, 1.0F);
+				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, (float) ((float) storedFluid.amount / (float) tankCapacity) * 0.999F, 0.92F);
+				FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(TextureMap.field_110575_b);
+				GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+				
+				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+				GL11.glEnable(GL11.GL_CULL_FACE);
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				
+				tessellator.startDrawingQuads();
+				tessellator.setNormal(0.0F, -1F, 0.0F);
+				renderer.renderFaceYNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				tessellator.draw();
+				tessellator.startDrawingQuads();
+				tessellator.setNormal(0.0F, 1.0F, 0.0F);
+				renderer.renderFaceYPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				tessellator.draw();
+				tessellator.startDrawingQuads();
+				tessellator.setNormal(0.0F, 0.0F, -1F);
+				renderer.renderFaceZNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				tessellator.draw();
+				tessellator.startDrawingQuads();
+				tessellator.setNormal(0.0F, 0.0F, 1.0F);
+				renderer.renderFaceZPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				tessellator.draw();
+				tessellator.startDrawingQuads();
+				tessellator.setNormal(-1F, 0.0F, 0.0F);
+				renderer.renderFaceXNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				tessellator.draw();
+				tessellator.startDrawingQuads();
+				tessellator.setNormal(1.0F, 0.0F, 0.0F);
+				renderer.renderFaceXPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				tessellator.draw();
+
+				GL11.glPopAttrib();
+			}
+		}
+
 		GL11.glPopMatrix();
 	}
 
