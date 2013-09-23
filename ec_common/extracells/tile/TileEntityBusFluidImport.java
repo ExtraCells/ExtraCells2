@@ -3,8 +3,6 @@ package extracells.tile;
 import java.util.ArrayList;
 import java.util.List;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -21,6 +19,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
 import appeng.api.Util;
@@ -31,6 +30,8 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
 public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
@@ -57,7 +58,7 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 			if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
 			{
 				FluidTankInfo[] info = getTankInfo(facingTileEntity);
-				if (info != null)
+				if (info != null && info.length > 0)
 				{
 					FluidStack tankFluidStack = info[0].fluid;
 
@@ -68,14 +69,13 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 						if (drainedStack != null)
 						{
 							toImport.setStackSize(drainedStack.amount);
-							IAEItemStack notImported = grid.getCellArray().addItems(toImport.copy());
-							IAEItemStack imported = toImport.copy();
+							IAEItemStack notImported = grid.getCellArray().calculateItemAddition(toImport.copy());
 
-							if (notImported != null)
-								imported.setStackSize(toImport.getStackSize() - notImported.getStackSize());
-
-							if (grid.useMEEnergy(12.0F, "Import Fluid") && imported != null)
-								((IFluidHandler) facingTileEntity).drain(facing, 20, true);
+							if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
+							{
+								((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
+								grid.getCellArray().addItems(toImport.copy());
+							}
 						}
 					}
 				}
@@ -150,6 +150,8 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 
 		for (ItemStack entry : array)
 		{
+			if (entry != null && entry.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) entry.getItem()).getFluid(entry) != null && itemstack.getItemDamage() == ((IFluidContainerItem) entry.getItem()).getFluid(entry).fluidID)
+				return true;
 			if (entry != null && itemstack.getItemDamage() == FluidContainerRegistry.getFluidForFilledItem(entry).fluidID)
 				return true;
 		}

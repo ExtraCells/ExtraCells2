@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 
-public class BlockBusFluidStorage extends BlockContainer
+public class BlockBusFluidStorage extends BlockRotatable
 {
 
 	@SideOnly(Side.CLIENT)

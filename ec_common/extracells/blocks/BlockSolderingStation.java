@@ -11,12 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.Extracells;
 import extracells.gui.GuiSolderingStation;
 import extracells.tile.TileEntitySolderingStation;
 
-public class BlockSolderingStation extends BlockContainer
+public class BlockSolderingStation extends BlockRotatable
 {
 
 	public BlockSolderingStation(int id)
@@ -78,6 +79,13 @@ public class BlockSolderingStation extends BlockContainer
 	public int getRenderType()
 	{
 		return -1;
+	}
+
+	@Override
+	public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
+	{
+		return new ForgeDirection[]
+		{ ForgeDirection.WEST, ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.SOUTH };
 	}
 
 	@Override

@@ -20,7 +20,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class BlockFluidTransitionPlane extends BlockContainer
+public class BlockFluidTransitionPlane extends BlockRotatable
 {
 
 	@SideOnly(Side.CLIENT)

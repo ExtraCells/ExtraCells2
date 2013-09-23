@@ -6,14 +6,17 @@ import extracells.Extracells;
 import extracells.model.render.item.ItemRendererBusFluidExport;
 import extracells.model.render.item.ItemRendererBusFluidImport;
 import extracells.model.render.item.ItemRendererBusFluidStorage;
+import extracells.model.render.item.ItemRendererCertusTank;
 import extracells.model.render.item.ItemRendererSolderingStation;
 import extracells.model.render.tileentity.TileEntityRendererBusFluidExport;
 import extracells.model.render.tileentity.TileEntityRendererBusFluidImport;
 import extracells.model.render.tileentity.TileEntityRendererBusFluidStorage;
+import extracells.model.render.tileentity.TileEntityRendererCertusTank;
 import extracells.model.render.tileentity.TileEntityRendererSolderingStation;
 import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
+import extracells.tile.TileEntityCertusTank;
 import extracells.tile.TileEntitySolderingStation;
 
 public class ClientProxy extends CommonProxy
@@ -31,5 +34,8 @@ public class ClientProxy extends CommonProxy
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidExport.class, new TileEntityRendererBusFluidExport());
 		MinecraftForgeClient.registerItemRenderer(Extracells.BusFluidExport.blockID, new ItemRendererBusFluidExport());
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCertusTank.class, new TileEntityRendererCertusTank());
+		MinecraftForgeClient.registerItemRenderer(Extracells.CertusTank.blockID, new ItemRendererCertusTank());
 	}
 }

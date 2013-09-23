@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
@@ -192,9 +193,15 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 		if (filterSlots.length != 0)
 			for (ItemStack itemStack : filterSlots)
 			{
+				ItemStack fluidContainer;
+
 				if (FluidContainerRegistry.isFilledContainer(itemStack))
 				{
-					ItemStack fluidContainer = new ItemStack(extracells.Extracells.FluidDisplay, 1, FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid().getID());
+					fluidContainer = new ItemStack(extracells.Extracells.FluidDisplay, 1, FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid().getID());
+					filter.add(fluidContainer);
+				} else if (itemStack != null && itemStack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemStack.getItem()).getFluid(itemStack) != null)
+				{
+					fluidContainer = new ItemStack(extracells.Extracells.FluidDisplay, 1, ((IFluidContainerItem) itemStack.getItem()).getFluid(itemStack).fluidID);
 					filter.add(fluidContainer);
 				}
 			}

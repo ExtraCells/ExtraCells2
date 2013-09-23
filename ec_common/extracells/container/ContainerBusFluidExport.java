@@ -9,9 +9,13 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 
 public class ContainerBusFluidExport extends ECContainer
 {
+	IInventory tileentity;
+
 	public ContainerBusFluidExport(IInventory inventoryPlayer, IInventory inventoryTileEntity)
 	{
 		super(inventoryTileEntity.getSizeInventory());
+
+		tileentity = inventoryTileEntity;
 
 		for (int i = 0; i < 2; i++)
 		{
@@ -21,7 +25,7 @@ public class ContainerBusFluidExport extends ECContainer
 				{
 					public boolean isItemValid(ItemStack itemstack)
 					{
-						return FluidContainerRegistry.isFilledContainer(itemstack);
+						return tileentity.isItemValidForSlot(0, itemstack);
 					}
 				});
 			}
@@ -56,7 +60,7 @@ public class ContainerBusFluidExport extends ECContainer
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 			itemstack.stackSize = 1;
-			if (FluidContainerRegistry.isFilledContainer(itemstack))
+			if (tileentity.isItemValidForSlot(0, itemstack1))
 			{
 				if (slotnumber >= 0 && slotnumber <= 7)
 				{

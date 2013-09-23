@@ -31,6 +31,7 @@
   <entry key="tile.block.fluid.bus.storage">ME Fluid Storage Bus</entry>
   <entry key="tile.block.fluid.terminal">ME Fluid Access Terminal</entry>
   <entry key="tile.block.fluid.transitionplane">ME Fluid Transition Plane</entry>
+  <entry key="tile.block.certustank">ME Certus Tank</entry>
   <entry key="tooltip.belongsto">This storage belongs to:</entry>
   <entry key="tooltip.notyours">You are not the owner of this storage drive!</entry>
   <entry key="tooltip.accessgranted">Access granted!</entry>

@@ -15,6 +15,7 @@ import extracells.Extracells;
 import extracells.blocks.BlockBusFluidExport;
 import extracells.blocks.BlockBusFluidImport;
 import extracells.blocks.BlockBusFluidStorage;
+import extracells.blocks.BlockCertusTank;
 import extracells.blocks.BlockFluidTransitionPlane;
 import extracells.blocks.BlockHardMEDrive;
 import extracells.blocks.BlockMEBattery;
@@ -45,6 +46,7 @@ import extracells.items.ItemStoragePhysical;
 import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
+import extracells.tile.TileEntityCertusTank;
 import extracells.tile.TileEntityHardMEDrive;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
@@ -185,6 +187,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityBusFluidStorage.class, "tileEntityBusFluidStorage");
 		GameRegistry.registerTileEntity(TileEntityTerminalFluid.class, "tileEntityTerminalFluid");
 		GameRegistry.registerTileEntity(TileEntityTransitionPlaneFluid.class, "tileEntityTransitionPlaneFluid");
+		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
 	}
 
 	public void RegisterRenderers()
@@ -223,6 +226,8 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerBlock(Extracells.TerminalFluid, ItemBlockSpecial.class, Extracells.TerminalFluid.getUnlocalizedName());
 		Extracells.TransitionPlaneFluid = new BlockFluidTransitionPlane(Extracells.FluidTransitionPlane_ID);
 		GameRegistry.registerBlock(Extracells.TransitionPlaneFluid, ItemBlockSpecial.class, Extracells.TransitionPlaneFluid.getUnlocalizedName());
+		Extracells.CertusTank = new BlockCertusTank(Extracells.CertusTank_ID);
+		GameRegistry.registerBlock(Extracells.CertusTank, ItemBlockSpecial.class, Extracells.CertusTank.getUnlocalizedName());
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.IFluidContainerItem;
 
 public class ECPrivateInventory implements IInventory
 {
@@ -123,7 +124,7 @@ public class ECPrivateInventory implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return FluidContainerRegistry.isContainer(itemstack);
+		return FluidContainerRegistry.isContainer(itemstack) || (itemstack != null && itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null);
 	}
 
 	@Override

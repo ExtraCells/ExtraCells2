@@ -22,7 +22,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class BlockTerminalFluid extends BlockContainer
+public class BlockTerminalFluid extends BlockRotatable
 {
 
 	@SideOnly(Side.CLIENT)
@@ -93,6 +93,13 @@ public class BlockTerminalFluid extends BlockContainer
 		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
 		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
 		this.topIcon = iconregister.registerIcon("extracells:machine.top");
+	}
+
+	@Override
+	public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
+	{
+		return new ForgeDirection[]
+		{ ForgeDirection.WEST, ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.SOUTH };
 	}
 
 	@Override

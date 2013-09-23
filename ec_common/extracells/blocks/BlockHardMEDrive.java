@@ -25,7 +25,7 @@ import net.minecraftforge.common.ForgeDirection;
 import extracells.Extracells;
 import extracells.tile.TileEntityHardMEDrive;
 
-public class BlockHardMEDrive extends BlockContainer
+public class BlockHardMEDrive extends BlockRotatable
 {
 	@SideOnly(Side.CLIENT)
 	Icon frontIcon;
@@ -55,6 +55,13 @@ public class BlockHardMEDrive extends BlockContainer
 	public Icon giveIcon(int side, int metadata)
 	{
 		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
+	}
+
+	@Override
+	public ForgeDirection[] getValidRotations(World worldObj, int x, int y, int z)
+	{
+		return new ForgeDirection[]
+		{ ForgeDirection.WEST, ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.SOUTH };
 	}
 
 	@Override

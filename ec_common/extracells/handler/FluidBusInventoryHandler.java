@@ -113,7 +113,15 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 				if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
 				{
-					addedStack.setStackSize(input.getStackSize() - ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), true));
+
+					int filled = 0;
+
+					for (long i = 0; i < input.getStackSize(); i++)
+					{
+						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), 1), true);
+					}
+
+					addedStack.setStackSize(input.getStackSize() - filled);
 
 					tank.onInventoryChanged();
 
@@ -131,26 +139,33 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	public IAEItemStack extractItems(IAEItemStack request)
 	{
 		IAEItemStack removedStack = request.copy();
-
+		
 		if (request.getItem() == extracells.Extracells.FluidDisplay && tank != null && tank instanceof IFluidHandler)
 		{
 			if (getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
-			{
+			{				
+				long drainedAmount = 0;
 
-				FluidStack drained = ((IFluidHandler) tank).drain(facing, (int) request.getStackSize(), true);
+				for (long i = 0; i < request.getStackSize(); i++)
+				{
+					FluidStack drainedStack = ((IFluidHandler) tank).drain(facing, 1, true);
+					if (drainedStack != null && drainedStack.amount != 0)
+						drainedAmount += drainedStack.amount;
+				}
 
 				tank.onInventoryChanged();
 
-				if (drained != null)
-				{
-					removedStack.setStackSize(drained.amount);
-					return removedStack;
-				} else
+				if (drainedAmount == 0)
 				{
 					return null;
+				} else
+				{
+					removedStack.setStackSize(drainedAmount);
 				}
+				return removedStack;
 			}
 		}
+		
 		return null;
 	}
 
@@ -204,9 +219,18 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		{
 			if (tank instanceof IFluidHandler)
 			{
-				if (getTankInfo(tank) != null && getTankInfo(tank)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
+
+				if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
 				{
-					addedStack.setStackSize(input.getStackSize() - ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), (int) input.getStackSize()), false));
+
+					int filled = 0;
+
+					for (long i = 0; i < input.getStackSize(); i++)
+					{
+						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), 1), false);
+					}
+
+					addedStack.setStackSize(input.getStackSize() - filled);
 
 					tank.onInventoryChanged();
 

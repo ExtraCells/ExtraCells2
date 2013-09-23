@@ -12,11 +12,11 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
@@ -27,6 +27,8 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
+import extracells.Extracells;
+import extracells.SpecialFluidStack;
 
 public class TileEntityTerminalFluid extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory, IStorageAware
 {
@@ -64,7 +66,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 
 				if (fluidsInNetwork.get(fluidIndex) != null)
 				{
-					FluidStack request = new FluidStack((fluidsInNetwork.get(fluidIndex).getFluid()), 1000);
+					Fluid requestedFluid = fluidsInNetwork.get(fluidIndex).getFluid();
 					ItemStack preview = new ItemStack(extracells.Extracells.FluidDisplay, 1, fluidsInNetwork.get(fluidIndex).getID());
 
 					if (preview.getTagCompound() == null)
@@ -79,6 +81,8 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 					{
 						if (FluidContainerRegistry.isEmptyContainer(input))
 						{
+							FluidStack request = new FluidStack(requestedFluid, 1000);
+
 							ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(request, input);
 
 							if (filledContainer != null)
@@ -99,6 +103,41 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 									}
 								}
 							}
+						} else if (input.getItem() instanceof IFluidContainerItem)
+						{
+							ItemStack inputTemp = input.copy();
+							inputTemp.stackSize = 1;
+
+							IFluidContainerItem fluidContainerItem = (IFluidContainerItem) inputTemp.getItem();
+
+							if (fluidContainerItem.getFluid(inputTemp) == null || fluidContainerItem.getFluid(inputTemp).amount == 0)
+							{
+
+								FluidStack request = new FluidStack(requestedFluid, fluidContainerItem.getCapacity(inputTemp));
+
+								ItemStack inputToBeFilled = inputTemp.copy();
+								inputToBeFilled.stackSize = 1;
+								int filledAmount = fluidContainerItem.fill(inputToBeFilled, request, true);
+
+								if (output == null)
+								{
+									if (drainFluid(request))
+									{
+										this.setInventorySlotContents(1, inputToBeFilled);
+										this.decrStackSize(0, 1);
+									}
+								} else if (output != null && output.itemID == inputToBeFilled.itemID && (!inputToBeFilled.getHasSubtypes() || inputToBeFilled.getItemDamage() == output.getItemDamage()) && ItemStack.areItemStackTagsEqual(inputToBeFilled, output))
+								{
+									if (output.stackSize + inputToBeFilled.stackSize <= inputToBeFilled.getMaxStackSize())
+									{
+										if (drainFluid(request))
+										{
+											output.stackSize = output.stackSize + 1;
+											this.decrStackSize(0, 1);
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -111,7 +150,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 			{
 				ItemStack drainedContainer = input.getItem().getContainerItemStack(input);
 				FluidStack containedFluid = FluidContainerRegistry.getFluidForFilledItem(input);
-				
+
 				if (FluidContainerRegistry.getFluidForFilledItem(input) != null)
 				{
 					if (output == null)
@@ -140,43 +179,44 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 						}
 					}
 				}
+			} else if (input != null && input.getItem() instanceof IFluidContainerItem)
+			{
+				ItemStack inputTemp = input.copy();
+				inputTemp.stackSize = 1;
+
+				IFluidContainerItem fluidContainerItem = (IFluidContainerItem) inputTemp.getItem();
+				FluidStack containedFluid = fluidContainerItem.getFluid(inputTemp);
+
+				if (containedFluid != null && containedFluid.amount > 0)
+				{
+					ItemStack inputToBeDrained = inputTemp.copy();
+					inputToBeDrained.stackSize = 1;
+
+					int drainedAmount = fluidContainerItem.drain(inputToBeDrained, containedFluid.amount, true).amount;
+
+					if (output == null)
+					{
+						if (fillFluid(containedFluid))
+						{
+							this.setInventorySlotContents(1, inputToBeDrained);
+							this.decrStackSize(0, 1);
+						}
+					} else if (output.isStackable() && output.stackSize < output.getMaxStackSize())
+					{
+						if (output != null && output.itemID == inputToBeDrained.itemID && (!inputToBeDrained.getHasSubtypes() || inputToBeDrained.getItemDamage() == output.getItemDamage()) && ItemStack.areItemStackTagsEqual(inputToBeDrained, output))
+						{
+							if (output.stackSize + inputToBeDrained.stackSize <= inputToBeDrained.getMaxStackSize())
+							{
+								if (fillFluid(containedFluid))
+								{
+									output.stackSize = output.stackSize + 1;
+									this.decrStackSize(0, 1);
+								}
+							}
+						}
+					}
+				}
 			}
-		}
-	}
-
-	// FluidStack with long amount :D
-	class SpecialFluidStack
-	{
-		long amount;
-		Fluid fluid;
-
-		public SpecialFluidStack(Fluid fluid, long amount)
-		{
-			this.fluid = fluid;
-			this.amount = amount;
-		}
-
-		public SpecialFluidStack(int id, long amount)
-		{
-			this.fluid = FluidRegistry.getFluid(id);
-			this.amount = amount;
-		}
-
-		public long getAmount()
-		{
-			return amount;
-		}
-
-		public Fluid getFluid()
-		{
-			return fluid;
-		}
-
-		public int getID()
-		{
-			if (fluid != null)
-				return fluid.getID();
-			return 0;
 		}
 	}
 
@@ -203,20 +243,14 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 		IAEItemStack toFill = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, toImport.amount, toImport.fluidID));
 		if (grid != null)
 		{
-			IAEItemStack sim;
+			IAEItemStack sim = grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(Extracells.FluidDisplay, (int) (toFill.getStackSize()), toFill.getItemDamage())));
 
-			for (int i = 0; i < toFill.getStackSize() / 10; i++)
+			if (sim != null)
 			{
-				sim = grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(toFill.getItem(), (int) (toFill.getStackSize() / (toFill.getStackSize() / 10)), toFill.getItemDamage())));
-
-				if (sim != null)
-					return false;
+				return false;
 			}
 
-			for (int i = 0; i < toFill.getStackSize() / 10; i++)
-			{
-				grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toFill.getItem(), (int) (toFill.getStackSize() / (toFill.getStackSize() / 10)), toFill.getItemDamage())));
-			}
+			grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toFill.getItem(), (int) (toFill.getStackSize()), toFill.getItemDamage())));
 			return true;
 		}
 		return false;
@@ -231,32 +265,18 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 			{
 				if (fluidstack.getFluid() == toExport.getFluid() && fluidstack.amount >= toExport.amount)
 				{
-					IAEItemStack[] takenStacks = new IAEItemStack[(int) (toDrain.getStackSize() / 10)];
+					IAEItemStack takenStack = grid.getCellArray().extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize()), toDrain.getItemDamage())));
 
-					for (int i = 0; i < toDrain.getStackSize() / 10; i++)
+					if (takenStack == null)
 					{
-						takenStacks[i] = grid.getCellArray().extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)), toDrain.getItemDamage())));
-					}
-
-					for (IAEItemStack takenStack : takenStacks)
+						grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize()), toDrain.getItemDamage())));
+						return false;
+					} else if (takenStack.getStackSize() != (int) toDrain.getStackSize())
 					{
-						if (takenStack == null || takenStack.getStackSize() != (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)))
-						{
-							for (IAEItemStack takeBackStack : takenStacks)
-							{
-								if (takeBackStack != null && takeBackStack.getStackSize() == (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)))
-								{
-									grid.getCellArray().addItems((Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)), toDrain.getItemDamage()))));
-									return false;
-								} else if (takeBackStack != null && takeBackStack.getStackSize() != (int) (toDrain.getStackSize() / (toDrain.getStackSize() / 10)))
-								{
-									grid.getCellArray().addItems((Util.createItemStack(new ItemStack(toDrain.getItem(), (int) takeBackStack.getStackSize(), toDrain.getItemDamage()))));
-									return false;
-								}
-							}
-							return false;
-						}
-
+						grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (takenStack.getStackSize()), toDrain.getItemDamage())));
+						return false;
+					} else
+					{
 						return true;
 					}
 				}
@@ -506,7 +526,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return FluidContainerRegistry.isContainer(itemstack);
+		return FluidContainerRegistry.isContainer(itemstack) || itemstack.getItem() instanceof IFluidContainerItem;
 	}
 
 	@Override

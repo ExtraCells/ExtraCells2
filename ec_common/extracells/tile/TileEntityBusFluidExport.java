@@ -13,10 +13,10 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
@@ -32,8 +32,9 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import extracells.SpecialFluidStack;
 
-public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware,ITileCable
+public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware, ITileCable
 {
 	Boolean powerStatus = false;
 	IGridInterface grid;
@@ -82,12 +83,20 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 					{
 						for (ItemStack itemstack : filterSlots)
 						{
-							if (itemstack != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid() && fluidstack.amount >= 20)
+							if (itemstack != null && fluidstack.amount >= 20)
 							{
-								int fluidID = FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid().getID();
-								ItemStack temp = new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID);
-								toExport = Util.createItemStack(temp);
-								break outerloop;
+								if (fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
+								{
+									int fluidID = FluidContainerRegistry.getFluidForFilledItem(itemstack).fluidID;
+									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
+									break outerloop;
+								}
+								if (itemstack.getItem() instanceof IFluidContainerItem && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
+								{
+									int fluidID = ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).fluidID;
+									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
+									break outerloop;
+								}
 							}
 						}
 					}
@@ -97,21 +106,37 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 					{
 						for (ItemStack itemstack : filterSlots)
 						{
-							if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid() && fluidstack.amount >= 20)
+							if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.amount >= 20)
 							{
-								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
-								break outerloop;
+								if (fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
+								{
+									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
+									break outerloop;
+								}
+								if (fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
+								{
+									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
+									break outerloop;
+								}
 							}
 						}
 					}
 				}
 
-				if (toExport != null && tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), false) == 20)
+				if (toExport != null)
 				{
-					if (grid.useMEEnergy(12.0F, "Export Fluid"))
+					int filledAmount = tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), false);
+
+					if (filledAmount == 20)
 					{
-						tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), true);
-						grid.getCellArray().extractItems(toExport);
+						if (grid.useMEEnergy(12.0F, "Export Fluid"))
+						{
+							tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), true);
+							grid.getCellArray().extractItems(toExport);
+						}
+					} else
+					{
+						tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), filledAmount), false);
 					}
 				}
 			}
@@ -149,50 +174,6 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
 		readFromNBT(packet.customParam1);
-	}
-
-	private Boolean arrayContains(ItemStack[] array, ItemStack itemstack)
-	{
-		for (ItemStack entry : array)
-		{
-			if (entry != null && entry.getItem() == itemstack.getItem() && entry.getItemDamage() == itemstack.getItemDamage())
-				return true;
-		}
-		return false;
-	}
-
-	// FluidStack with long amount :D
-	class SpecialFluidStack
-	{
-		long amount;
-		Fluid fluid;
-
-		public SpecialFluidStack(Fluid fluid, long amount)
-		{
-			this.fluid = fluid;
-			this.amount = amount;
-		}
-
-		public SpecialFluidStack(int id, long amount)
-		{
-			this.fluid = FluidRegistry.getFluid(id);
-			this.amount = amount;
-		}
-
-		public long getAmount()
-		{
-			return amount;
-		}
-
-		public Fluid getFluid()
-		{
-			return fluid;
-		}
-
-		public int getID()
-		{
-			return fluid.getID();
-		}
 	}
 
 	public void updateFluids()

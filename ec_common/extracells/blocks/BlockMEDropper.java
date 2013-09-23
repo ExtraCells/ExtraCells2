@@ -37,7 +37,7 @@ import appeng.api.events.GridTileUnloadEvent;
 import extracells.Extracells;
 import extracells.tile.TileEntityMEDropper;
 
-public class BlockMEDropper extends BlockContainer
+public class BlockMEDropper extends BlockRotatable
 {
 	public static final IRegistry dispenseBehaviorRegistry = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
 	@SideOnly(Side.CLIENT)

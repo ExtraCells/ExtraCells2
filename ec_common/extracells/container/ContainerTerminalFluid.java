@@ -78,7 +78,7 @@ public class ContainerTerminalFluid extends Container
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			if (FluidContainerRegistry.isContainer(itemstack))
+			if (tileentity.isItemValidForSlot(0, itemstack1))
 			{
 				if (slotnumber == 1 || slotnumber == 0)
 				{

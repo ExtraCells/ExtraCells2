@@ -23,7 +23,7 @@ import extracells.localization.LocalizationHandler;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.4.3b", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.4.4b", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { PacketHandler.channel }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Extracells
@@ -58,6 +58,7 @@ public class Extracells
 	public static Block BusFluidStorage;
 	public static Block TerminalFluid;
 	public static Block TransitionPlaneFluid;
+	public static Block CertusTank;
 	public static int StoragePhysical_ID;
 	public static int StoragePhysicalEncrypted_ID;
 	public static int StoragePhysicalDecrypted_ID;
@@ -74,6 +75,7 @@ public class Extracells
 	public static int BusFluidStorage_ID;
 	public static int TerminalFluid_ID;
 	public static int FluidTransitionPlane_ID;
+	public static int CertusTank_ID;
 	public static boolean debug;
 
 	@EventHandler
@@ -102,6 +104,7 @@ public class Extracells
 		int busFluidStorageTemp = config.getBlock("BusFluidStorage_ID", 506, "ID for the Fluid Storage Bus").getInt();
 		int monitorFluidTemp = config.getBlock("MonitorFluid_ID", 507, "ID for the Fluid Storage Monitor").getInt();
 		int fluidTransitionPlaneTemp = config.getBlock("FluidTransitionPlane_ID", 508, "ID for the Fluid Transition Plance").getInt();
+		int certusTankTemp = config.getBlock("CertusTank_ID", 509, "ID for the ME Certus Tank").getInt();
 		debug = config.get("Dev Options", "showFluidsInMETerminal", false, "Dont't activate if you dont want to debug stuff ;)").getBoolean(false);
 		config.save();
 
@@ -121,6 +124,7 @@ public class Extracells
 		BusFluidStorage_ID = busFluidStorageTemp;
 		TerminalFluid_ID = monitorFluidTemp;
 		FluidTransitionPlane_ID = fluidTransitionPlaneTemp;
+		CertusTank_ID = certusTankTemp;
 	}
 
 	@EventHandler

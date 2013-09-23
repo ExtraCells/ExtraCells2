@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
@@ -496,17 +497,18 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			for (int i = 0; i < in.getItems().size(); i++)
 			{
-				if (in.getItems().get(i) != null)
+				ItemStack currentItemStack = in.getItems().get(i);
+				if (currentItemStack != null)
 				{
-					if (in.getItems().get(i) != null)
+					if (FluidContainerRegistry.isFilledContainer(currentItemStack))
 					{
-						if (FluidContainerRegistry.isFilledContainer(in.getItems().get(i)))
-						{
-							nbt.setInteger("PreformattedFluidID#" + i, FluidContainerRegistry.getFluidForFilledItem(in.getItems().get(i)).fluidID);
-						} else if (in.getItems().get(i).getItem() == extracells.Extracells.FluidDisplay)
-						{
-							nbt.setInteger("PreformattedFluidID#" + i, in.getItems().get(i).getItemDamage());
-						}
+						nbt.setInteger("PreformattedFluidID#" + i, FluidContainerRegistry.getFluidForFilledItem(currentItemStack).fluidID);
+					} else if (currentItemStack.getItem() == extracells.Extracells.FluidDisplay)
+					{
+						nbt.setInteger("PreformattedFluidID#" + i, currentItemStack.getItemDamage());
+					} else if (currentItemStack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) currentItemStack.getItem()).getFluid(currentItemStack) != null)
+					{
+						nbt.setInteger("PreformattedFluidID#" + i, ((IFluidContainerItem) currentItemStack.getItem()).getFluid(currentItemStack).fluidID);
 					}
 				}
 			}
