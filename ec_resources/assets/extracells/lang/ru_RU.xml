@@ -26,10 +26,11 @@
   <entry key="tile.block.mebattery">МЭ резервный аккумулятор</entry>
   <entry key="tile.block.medropper">МЭ выбрасыватель предметов</entry>
   <entry key="tile.block.hardmedrive">Взрывоустойчивый МЭ привод</entry>
-  <entry key="tile.block.fluid.bus.import">Жидкостная импортирующая шина</entry>
-  <entry key="tile.block.fluid.bus.export">Жидкостная экспортирующая шина</entry>
-  <entry key="tile.block.fluid.bus.storage">Жидкостная адаптирующая шина</entry>
+  <entry key="tile.block.fluid.bus.import">МЭ жидкостная импортирующая шина</entry>
+  <entry key="tile.block.fluid.bus.export">МЭ жидкостная экспортирующая шина</entry>
+  <entry key="tile.block.fluid.bus.storage">МЭ жидкостная адаптирующая шина</entry>
   <entry key="tile.block.fluid.terminal">МЭ жидкостный терминал доступа</entry>
+  <entry key="tile.block.fluid.transitionplane">МЭ жидкостная поверхность перехода</entry>
   <entry key="tooltip.belongsto">Это хранилище принадлежит:</entry>
   <entry key="tooltip.notyours">Вы не владелец этого накопителя!</entry>
   <entry key="tooltip.accessgranted">Доступ разрешён!</entry>
