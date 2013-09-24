@@ -85,13 +85,13 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 						{
 							if (itemstack != null && fluidstack.amount >= 20)
 							{
-								if (fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
+								if (FluidContainerRegistry.getFluidForFilledItem(itemstack) != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
 								{
 									int fluidID = FluidContainerRegistry.getFluidForFilledItem(itemstack).fluidID;
 									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
 									break outerloop;
 								}
-								if (itemstack.getItem() instanceof IFluidContainerItem && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
+								if (itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
 								{
 									int fluidID = ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).fluidID;
 									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
@@ -108,12 +108,12 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 						{
 							if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.amount >= 20)
 							{
-								if (fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
+								if (FluidContainerRegistry.getFluidForFilledItem(itemstack) != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
 								{
 									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
 									break outerloop;
 								}
-								if (fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
+								if (itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
 								{
 									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
 									break outerloop;

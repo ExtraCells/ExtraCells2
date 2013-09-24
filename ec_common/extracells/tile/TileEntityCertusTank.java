@@ -63,10 +63,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 		{
 			return null;
 		}
-		FluidStack drained = tank.drain(resource.amount, doDrain);
-		if (drained != null)
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
-		return drained;
+		return tank.drain(resource.amount, doDrain);
 	}
 
 	@Override
