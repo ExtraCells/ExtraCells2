@@ -2,6 +2,7 @@ package extracells.model.render.item;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -35,7 +36,7 @@ public class ItemRendererSolderingStation implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells","textures/blocks/texmap_solderingstation.png")); // texture
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_solderingstation.png"));
 		GL11.glPushMatrix();
 		GL11.glTranslatef(0.5F, 1.5F, 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);

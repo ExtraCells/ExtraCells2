@@ -1,6 +1,7 @@
 package extracells.model;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -43,7 +44,7 @@ public class ModelCertusTank extends ModelBase
 
 	public void render(TileEntity tileEntity, double x, double y, double z)
 	{
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/blocks/texmap_tank.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_tank.png"));
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
@@ -67,7 +68,7 @@ public class ModelCertusTank extends ModelBase
 
 				GL11.glScalef(1.0F, -1.0F, 1.0F);
 				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, (float) ((float) storedFluid.amount / (float) tankCapacity) * 0.999F, 0.92F);
-				FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(TextureMap.field_110575_b);
+				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 				GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 				
 				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);

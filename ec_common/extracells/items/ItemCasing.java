@@ -5,6 +5,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -39,7 +40,7 @@ public class ItemCasing extends Item
 	@Override
 	public String getItemDisplayName(ItemStack itemstack)
 	{
-		return this.getLocalizedName(itemstack);
+		return StatCollector.translateToLocal(this.getUnlocalizedName(itemstack));
 	}
 
 	@Override

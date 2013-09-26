@@ -113,7 +113,7 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
-		readFromNBT(packet.customParam1);
+		readFromNBT(packet.data);
 	}
 
 	public boolean isArrayEmpty(Object[] array)

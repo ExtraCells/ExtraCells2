@@ -67,7 +67,7 @@ public class ItemSecureStoragePhysicalEncrypted extends Item
 	@Override
 	public String getItemDisplayName(ItemStack stack)
 	{
-		return this.getLocalizedName(stack);
+		return StatCollector.translateToLocal(getUnlocalizedName(stack));
 	}
 
 	@ForgeSubscribe

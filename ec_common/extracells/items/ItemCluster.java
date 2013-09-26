@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import appeng.api.me.items.IStorageComponent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -41,7 +42,7 @@ public class ItemCluster extends Item implements IStorageComponent
 	@Override
 	public String getItemDisplayName(ItemStack itemstack)
 	{
-		return this.getLocalizedName(itemstack);
+		return StatCollector.translateToLocal(this.getUnlocalizedName(itemstack));
 	}
 
 	@SideOnly(Side.CLIENT)

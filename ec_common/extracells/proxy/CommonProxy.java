@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import appeng.api.Blocks;
 import appeng.api.Items;
 import appeng.api.WorldCoord;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -89,6 +90,7 @@ public class CommonProxy implements IGuiHandler
 		ItemStack fluidStorageBus = new ItemStack(Extracells.BusFluidStorage, 1);
 		ItemStack fluidTerminal = new ItemStack(Extracells.TerminalFluid, 1);
 		ItemStack transitionPlaneFluid = new ItemStack(Extracells.TransitionPlaneFluid, 1);
+		ItemStack certusTank = new ItemStack(Extracells.CertusTank, 1);
 
 		// Advanced Casing
 		GameRegistry.addShapedRecipe(advancedStorageCasing, new Object[]
@@ -173,6 +175,10 @@ public class CommonProxy implements IGuiHandler
 		// ME Fluid Transition Plane
 		GameRegistry.addShapedRecipe(transitionPlaneFluid, new Object[]
 		{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkTransitionPlane, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+
+		// Certus Tank
+		GameRegistry.addShapedRecipe(certusTank, new Object[]
+		{ "GGG", "G_G", "GCG", 'G', Blocks.blkQuartzGlass, 'C', Blocks.blkColorlessCable, });
 
 	}
 

@@ -60,10 +60,10 @@ public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorage
 		long used_bytes = Util.getCellRegistry().getHandlerForCell(stack).usedBytes();
 		if (hasName)
 		{
-			return this.getLocalizedName(stack) + " - " + partitionName;
+			return StatCollector.translateToLocal(getUnlocalizedName(stack)) + " - " + partitionName;
 		} else
 		{
-			return this.getLocalizedName(stack);
+			return StatCollector.translateToLocal(getUnlocalizedName(stack));
 		}
 	}
 

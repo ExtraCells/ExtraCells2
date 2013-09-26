@@ -1,5 +1,6 @@
 package extracells.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -39,7 +40,7 @@ public class GuiBusFluidImport extends GuiContainer
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/gui/importbusfluid.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/importbusfluid.png"));
 		int posX = (width - xSize) / 2;
 		int posY = (height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
@@ -50,7 +51,7 @@ public class GuiBusFluidImport extends GuiContainer
 	{
 		PacketHandler.sendFluidImportBusPacket(coord.x, coord.y, coord.z, 0, player.username);
 
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/gui/importbusfluid.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/importbusfluid.png"));
 
 		if (world.getBlockTileEntity(coord.x, coord.y, coord.z) instanceof TileEntityBusFluidImport)
 		{

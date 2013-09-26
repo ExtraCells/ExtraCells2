@@ -100,20 +100,20 @@ public class ItemStorageFluid extends Item
 		{
 			if (used_bytes != 0 && !Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().isEmpty())
 			{
-				return this.getLocalizedName(itemstack) + " - " + Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getDisplayName();
+				return StatCollector.translateToLocal(getUnlocalizedName(itemstack)) + " - " + Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getDisplayName();
 			} else
 			{
-				return StatCollector.translateToLocal("tooltip.empty") + " " + this.getLocalizedName(itemstack);
+				return StatCollector.translateToLocal("tooltip.empty") + " " + StatCollector.translateToLocal(getUnlocalizedName(itemstack));
 			}
 		} else
 		{
 
 			if (hasName)
 			{
-				return this.getLocalizedName(itemstack) + " - " + partitionName;
+				return StatCollector.translateToLocal(getUnlocalizedName(itemstack)) + " - " + partitionName;
 			} else
 			{
-				return this.getLocalizedName(itemstack);
+				return StatCollector.translateToLocal(getUnlocalizedName(itemstack));
 			}
 		}
 	}

@@ -3,6 +3,7 @@ package extracells.model;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -28,7 +29,7 @@ public class ModelCable extends ModelBase
 
 	public void render(double x, double y, double z, ForgeDirection orientation)
 	{
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/blocks/texmap_cable.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_cable.png"));
 		GL11.glPushMatrix();
 		
 		switch (orientation)

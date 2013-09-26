@@ -1,5 +1,6 @@
 package extracells.model.render.item;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -27,7 +28,7 @@ public class ItemRendererBusFluidImport implements IItemRenderer
 
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/blocks/texmap_import_bus.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_import_bus.png"));
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-1.0F, 0.5F, 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);

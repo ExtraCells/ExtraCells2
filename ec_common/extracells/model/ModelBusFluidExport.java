@@ -1,5 +1,6 @@
 package extracells.model;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -67,7 +68,7 @@ public class ModelBusFluidExport extends ModelBase
 
 	public void render(TileEntity tileEntity, double x, double y, double z)
 	{
-		FMLClientHandler.instance().getClient().func_110434_K().func_110577_a(new ResourceLocation("extracells", "textures/blocks/texmap_export_bus.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_export_bus.png"));
 		GL11.glPushMatrix();
 
 		switch (ForgeDirection.getOrientation(tileEntity.getBlockMetadata()))
