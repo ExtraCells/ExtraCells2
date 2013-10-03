@@ -20,13 +20,13 @@ import appeng.api.me.util.IGridInterface;
 
 public class TileEntityTransitionPlaneFluid extends TileEntity implements IGridMachine, IDirectionalMETile
 {
-	Boolean powerStatus = true;
+	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
 
 	@Override
 	public void updateEntity()
 	{
-		if (isPowered() && getGrid() != null)
+		if (isMachineActive() && getGrid() != null)
 		{
 			ForgeDirection orientation = ForgeDirection.getOrientation(getBlockMetadata());
 
@@ -126,5 +126,16 @@ public class TileEntityTransitionPlaneFluid extends TileEntity implements IGridM
 	public float getPowerDrainPerTick()
 	{
 		return 0;
+	}
+	@Override
+	public void setNetworkReady(boolean isReady)
+	{
+		networkReady = isReady;
+	}
+
+	@Override
+	public boolean isMachineActive()
+	{
+		return powerStatus && networkReady;
 	}
 }

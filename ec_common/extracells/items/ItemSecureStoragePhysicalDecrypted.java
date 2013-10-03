@@ -164,4 +164,10 @@ public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorage
 		return false;
 	}
 
+	@Override
+	public boolean isStorageCell(ItemStack i)
+	{
+		return i != null && i.getItem() == this;
+	}
+
 }

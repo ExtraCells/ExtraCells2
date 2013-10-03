@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
+import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IGridTileEntity;
 import appeng.api.me.tiles.IMEPowerStorage;
 import appeng.api.me.util.IGridInterface;
@@ -19,13 +20,13 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.server.FMLServerHandler;
 
-public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
+public class TileEntityMEBattery extends TileEntity implements IGridMachine
 {
 
 	private double energy;
 	private final double maxEnergy = 2000000.0D;
 	private final float takeEnergy = 10.0F;
-	private Boolean hasPower = false;
+	Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	private Boolean storingPower = true;
 
@@ -130,14 +131,14 @@ public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 	@Override
 	public void setPowerStatus(boolean hasPower)
 	{
-		this.hasPower = hasPower;
+		this.powerStatus = hasPower;
 
 	}
 
 	@Override
 	public boolean isPowered()
 	{
-		return hasPower;
+		return powerStatus;
 	}
 
 	@Override
@@ -157,5 +158,23 @@ public class TileEntityMEBattery extends TileEntity implements IGridTileEntity
 	public World getWorld()
 	{
 		return this.worldObj;
+	}
+
+	@Override
+	public float getPowerDrainPerTick()
+	{
+		return 0.0F;
+	}
+
+	@Override
+	public void setNetworkReady(boolean isReady)
+	{
+		networkReady = isReady;
+	}
+
+	@Override
+	public boolean isMachineActive()
+	{
+		return powerStatus && networkReady;
 	}
 }

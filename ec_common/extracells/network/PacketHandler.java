@@ -7,6 +7,7 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import appeng.api.config.RedstoneModeInput;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
@@ -130,10 +131,18 @@ public class PacketHandler implements IPacketHandler
 				switch (action)
 				{
 				case 0:
-					tile.updateGuiTile(playerName);
+					PacketDispatcher.sendPacketToPlayer(tile.getDescriptionPacket(), player);
 					break;
 				case 1:
-					tile.toggleRedstoneAction(playerName);
+					if (tile.getRedstoneAction().ordinal() >= 3)
+					{
+
+						tile.setRedstoneAction(RedstoneModeInput.values()[0]);
+					} else
+					{
+						tile.setRedstoneAction(RedstoneModeInput.values()[tile.getRedstoneAction().ordinal() + 1]);
+					}
+					PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());
 					break;
 				}
 			}

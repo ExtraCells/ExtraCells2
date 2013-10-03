@@ -24,7 +24,7 @@ import appeng.api.me.util.IMEInventoryHandler;
 public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGridMachine, ICellContainer
 {
 
-	private Boolean hasPower;
+	Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.hardmedrive");
 	private ItemStack[] slots = new ItemStack[3];
@@ -229,13 +229,13 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	@Override
 	public void setPowerStatus(boolean hasPower)
 	{
-		this.hasPower = hasPower;
+		this.powerStatus = hasPower;
 	}
 
 	@Override
 	public boolean isPowered()
 	{
-		return hasPower;
+		return powerStatus;
 	}
 
 	@Override
@@ -259,7 +259,7 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	@Override
 	public List<IMEInventoryHandler> getCellArray()
 	{
-		if (hasPower)
+		if (powerStatus)
 		{
 			IMEInventoryHandler[] cellArray = new IMEInventoryHandler[3];
 			for (int i = 0; i < 3; i++)
@@ -283,5 +283,17 @@ public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGr
 	public float getPowerDrainPerTick()
 	{
 		return 2.0F;
+	}
+
+	@Override
+	public void setNetworkReady(boolean isReady)
+	{
+		networkReady = isReady;
+	}
+
+	@Override
+	public boolean isMachineActive()
+	{
+		return powerStatus && networkReady;
 	}
 }

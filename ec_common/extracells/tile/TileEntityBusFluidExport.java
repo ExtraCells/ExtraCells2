@@ -22,6 +22,7 @@ import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
+import appeng.api.config.RedstoneModeInput;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
@@ -36,13 +37,13 @@ import extracells.SpecialFluidStack;
 
 public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware, ITileCable
 {
-	Boolean powerStatus = false;
+	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
 	ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
-	Boolean redstoneAction = false;
+	RedstoneModeInput redstoneAction = RedstoneModeInput.WhenOff;
 
 	public TileEntityBusFluidExport()
 	{
@@ -52,7 +53,7 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	@Override
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote && isPowered())
+		if (!worldObj.isRemote && isMachineActive())
 		{
 			ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
 			TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
@@ -143,23 +144,14 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 		}
 	}
 
-	public boolean getRedstoneAction()
+	public RedstoneModeInput getRedstoneAction()
 	{
 		return redstoneAction;
 	}
 
-	public void toggleRedstoneAction(String playerName)
+	public void setRedstoneAction(RedstoneModeInput mode)
 	{
-		redstoneAction = !redstoneAction;
-		updateGuiTile(playerName);
-	}
-
-	public void updateGuiTile(String playername)
-	{
-		Player player = (Player) worldObj.getPlayerEntityByName(playername);
-
-		if (!worldObj.isRemote)
-			PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), player);
+		redstoneAction = mode;
 	}
 
 	@Override
@@ -289,6 +281,8 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 		{
 			nbt.setString("CustomName", this.costumName);
 		}
+
+		nbt.setInteger("RedstoneMode", getRedstoneAction().ordinal());
 	}
 
 	@Override
@@ -312,6 +306,8 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 			}
 		}
 		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+
+		setRedstoneAction(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
 	}
 
 	@Override
@@ -329,5 +325,17 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	public boolean coveredConnections()
 	{
 		return false;
+	}
+
+	@Override
+	public void setNetworkReady(boolean isReady)
+	{
+		networkReady = isReady;
+	}
+
+	@Override
+	public boolean isMachineActive()
+	{
+		return powerStatus && networkReady;
 	}
 }

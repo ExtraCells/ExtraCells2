@@ -23,13 +23,13 @@ public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDi
 	private IGridInterface grid = null;
 	protected boolean isLoaded = false;
 	private Chunk cachedChunk = null;
-	public boolean hasPower = false;
+	Boolean powerStatus = true, networkReady = true;
 	public int gridIndex = 0;
 	private boolean isValidFlag = true;
 
 	public TileEntityMEDropper()
 	{
-		this.hasPower = false;
+		this.powerStatus = false;
 	}
 
 	public void setItem(ItemStack itemstack)
@@ -98,9 +98,9 @@ public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDi
 	@Override
 	public void setPowerStatus(boolean _hasPower)
 	{
-		if (this.hasPower != _hasPower)
+		if (this.powerStatus != _hasPower)
 		{
-			this.hasPower = _hasPower;
+			this.powerStatus = _hasPower;
 		}
 
 	}
@@ -108,7 +108,7 @@ public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDi
 	@Override
 	public boolean isPowered()
 	{
-		return this.hasPower;
+		return this.powerStatus;
 	}
 
 	@Override
@@ -155,4 +155,15 @@ public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDi
 		return 0.5F;
 	}
 
+	@Override
+	public void setNetworkReady(boolean isReady)
+	{
+		networkReady = isReady;
+	}
+
+	@Override
+	public boolean isMachineActive()
+	{
+		return powerStatus && networkReady;
+	}
 }

@@ -35,7 +35,7 @@ import cpw.mods.fml.common.network.Player;
 
 public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
-	Boolean powerStatus;
+	Boolean powerStatus = true, networkReady = true;	
 	IGridInterface grid;
 	ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
@@ -50,7 +50,7 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	@Override
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote && isPowered())
+		if (!worldObj.isRemote && isMachineActive())
 		{
 			ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
 			TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
@@ -280,7 +280,7 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource != null && getGrid() != null && isPowered() && from.ordinal() == this.blockMetadata)
+		if (resource != null && getGrid() != null && isMachineActive() && from.ordinal() == this.blockMetadata)
 		{
 			IAEItemStack added;
 
@@ -360,5 +360,17 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	public boolean coveredConnections()
 	{
 		return false;
+	}
+
+	@Override
+	public void setNetworkReady(boolean isReady)
+	{
+		networkReady = isReady;
+	}
+
+	@Override
+	public boolean isMachineActive()
+	{
+		return powerStatus && networkReady;
 	}
 }

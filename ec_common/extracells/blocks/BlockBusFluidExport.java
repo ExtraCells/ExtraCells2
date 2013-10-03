@@ -95,6 +95,7 @@ public class BlockBusFluidExport extends BlockRotatable
 	{
 		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
 		{
+			System.out.println(((TileEntityBusFluidExport)world.getBlockTileEntity(x, y, z)).getRedstoneAction());
 			return false;
 		}
 		player.openGui(Extracells.instance, 4, world, x, y, z);

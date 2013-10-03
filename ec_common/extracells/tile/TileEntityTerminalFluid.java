@@ -32,7 +32,7 @@ import extracells.SpecialFluidStack;
 
 public class TileEntityTerminalFluid extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory, IStorageAware
 {
-	Boolean powerStatus;
+	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
 	private ItemStack[] slots = new ItemStack[3];
@@ -46,10 +46,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 
 	public void updateEntity()
 	{
-		if (powerStatus == null)
-			powerStatus = true;
-
-		if (!worldObj.isRemote && powerStatus)
+		if (!worldObj.isRemote && isMachineActive())
 		{
 			ItemStack input = this.getStackInSlot(0);
 			ItemStack output = this.getStackInSlot(1);
@@ -533,5 +530,17 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	public void onNetworkInventoryChange(IItemList iss)
 	{
 		updateFluids();
+	}
+
+	@Override
+	public void setNetworkReady(boolean isReady)
+	{
+		networkReady = isReady;
+	}
+
+	@Override
+	public boolean isMachineActive()
+	{
+		return powerStatus && networkReady;
 	}
 }

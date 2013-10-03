@@ -30,7 +30,7 @@ import extracells.handler.FluidBusInventoryHandler;
 
 public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {
-	Boolean powerStatus;
+	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid = null;
 	int priority = 1;
 	ItemStack[] filterSlots = new ItemStack[54];
@@ -226,5 +226,17 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	public boolean coveredConnections()
 	{
 		return false;
+	}
+
+	@Override
+	public void setNetworkReady(boolean isReady)
+	{
+		networkReady = isReady;
+	}
+
+	@Override
+	public boolean isMachineActive()
+	{
+		return powerStatus && networkReady;
 	}
 }

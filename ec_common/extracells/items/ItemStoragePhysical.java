@@ -452,4 +452,10 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 	{
 		return false;
 	}
+
+	@Override
+	public boolean isStorageCell(ItemStack i)
+	{
+		return i != null && i.getItem() == this;
+	}
 }
