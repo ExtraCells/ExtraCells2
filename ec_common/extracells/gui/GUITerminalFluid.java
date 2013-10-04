@@ -64,10 +64,10 @@ public class GuiTerminalFluid extends GuiContainer
 		switch (button.id)
 		{
 		case 0:
-			PacketDispatcher.sendPacketToAllPlayers(new PacketMonitorFluid(tilePos.x, tilePos.y, tilePos.z, 0).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(tilePos.x, tilePos.y, tilePos.z, 0).makePacket());
 			break;
 		case 1:
-			PacketDispatcher.sendPacketToAllPlayers(new PacketMonitorFluid(tilePos.x, tilePos.y, tilePos.z, 1).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(tilePos.x, tilePos.y, tilePos.z, 1).makePacket());
 			break;
 		}
 	}

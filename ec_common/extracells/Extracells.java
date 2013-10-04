@@ -4,7 +4,10 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.Property;
+import net.minecraftforge.common.Property.Type;
 import net.minecraftforge.oredict.OreDictionary;
 import appeng.api.Util;
 import cpw.mods.fml.common.Mod;
@@ -106,6 +109,10 @@ public class Extracells
 		int fluidTransitionPlaneTemp = config.getBlock("FluidTransitionPlane_ID", 508, "ID for the Fluid Transition Plance").getInt();
 		int certusTankTemp = config.getBlock("CertusTank_ID", 509, "ID for the ME Certus Tank").getInt();
 		debug = config.get("Dev Options", "showFluidsInMETerminal", false, "Dont't activate if you dont want to debug stuff ;)").getBoolean(false);
+
+		String[] spatialTEs = config.get("Utility", "registerSpatialTileEntity", new String[]
+		{ "" }, "Register all TileEntities you want to be movable with the Spatial IO port. use the full packet+class path examplemod.tile.superTileEntity").getStringList();
+
 		config.save();
 
 		Cluster_ID = clusterTemp;
@@ -125,6 +132,19 @@ public class Extracells
 		TerminalFluid_ID = monitorFluidTemp;
 		FluidTransitionPlane_ID = fluidTransitionPlaneTemp;
 		CertusTank_ID = certusTankTemp;
+
+		for (String classname : spatialTEs)
+		{
+			try
+			{
+				Class<? extends TileEntity> currentClass = (Class<? extends TileEntity>) Class.forName(classname);
+				Util.getAppEngApi().getMovableRegistry().whiteListTileEntity(currentClass);
+			} catch (Throwable e)
+			{
+				System.out.println("Tried to register non-existant TileEntity to the SpatialIOPort! " + classname);
+			}
+		}
+
 	}
 
 	@EventHandler

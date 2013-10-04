@@ -53,7 +53,7 @@ public class PacketBusFluidExport extends AbstractPacket
 	@Override
 	public void execute(EntityPlayer player, Side side) throws ProtocolException
 	{
-		if (!side.isClient())
+		if (side.isServer())
 		{
 			TileEntityBusFluidExport tile = (TileEntityBusFluidExport) player.worldObj.getBlockTileEntity(x, y, z);
 			switch (action)

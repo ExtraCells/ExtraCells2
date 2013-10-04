@@ -61,7 +61,7 @@ public class GuiMEBattery extends GuiScreen
 
 	public void updateScreen()
 	{
-		PacketDispatcher.sendPacketToAllPlayers(new PacketMEBattery(coord.x, coord.y, coord.z, player.username).makePacket());
+		PacketDispatcher.sendPacketToServer(new PacketMEBattery(coord.x, coord.y, coord.z, player.username).makePacket());
 
 		if (world.getBlockTileEntity(coord.x, coord.y, coord.z) instanceof TileEntityMEBattery)
 		{

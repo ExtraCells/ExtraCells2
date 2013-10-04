@@ -50,7 +50,7 @@ public class GuiBusFluidExport extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		PacketDispatcher.sendPacketToAllPlayers(new PacketBusFluidExport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
+		PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/exportbusfluid.png"));
 
@@ -76,7 +76,7 @@ public class GuiBusFluidExport extends GuiContainer
 		switch (button.id)
 		{
 		case 0:
-			PacketDispatcher.sendPacketToAllPlayers(new PacketBusFluidExport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
 			break;
 		default:
 		}
