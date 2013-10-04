@@ -4,23 +4,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.WorldCoord;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerTerminalFluid;
 import extracells.network.PacketHandler;
+import extracells.network.packet.PacketMonitorFluid;
 import extracells.tile.TileEntityTerminalFluid;
 
 @SideOnly(Side.CLIENT)
@@ -68,10 +64,10 @@ public class GuiTerminalFluid extends GuiContainer
 		switch (button.id)
 		{
 		case 0:
-			PacketHandler.sendMonitorFluidPacket(tilePos.x, tilePos.y, tilePos.z, 0);
+			PacketDispatcher.sendPacketToAllPlayers(new PacketMonitorFluid(tilePos.x, tilePos.y, tilePos.z, 0).makePacket());
 			break;
 		case 1:
-			PacketHandler.sendMonitorFluidPacket(tilePos.x, tilePos.y, tilePos.z, 1);
+			PacketDispatcher.sendPacketToAllPlayers(new PacketMonitorFluid(tilePos.x, tilePos.y, tilePos.z, 1).makePacket());
 			break;
 		}
 	}

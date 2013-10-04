@@ -37,13 +37,13 @@ import extracells.SpecialFluidStack;
 
 public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware, ITileCable
 {
-	Boolean powerStatus = true, networkReady = true;
+	Boolean powerStatus = true, networkReady = true, redstoneFlag = false;
 	IGridInterface grid;
 	ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
-	RedstoneModeInput redstoneAction = RedstoneModeInput.WhenOff;
+	RedstoneModeInput redstoneAction = RedstoneModeInput.Ignore;
 
 	public TileEntityBusFluidExport()
 	{
@@ -55,90 +55,130 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	{
 		if (!worldObj.isRemote && isMachineActive())
 		{
-			ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
-			TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
-
-			if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
+			switch (getRedstoneAction())
 			{
-				IFluidHandler tank = (IFluidHandler) facingTileEntity;
-
-				FluidStack fluidStack;
-
-				if (((IFluidHandler) tank).getTankInfo(facing) != null && tank.getTankInfo(facing).length != 0)
+			case WhenOn:
+				if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord))
 				{
-					fluidStack = tank.getTankInfo(facing)[0].fluid;
-				} else if (((IFluidHandler) tank).getTankInfo(facing) != null && tank.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+					exportFluid();
+				}
+				break;
+			case WhenOff:
+				if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord))
 				{
-					fluidStack = tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
+					exportFluid();
+				}
+				break;
+			case OnPulse:
+				if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord))
+				{
+					redstoneFlag = false;
 				} else
 				{
-					fluidStack = null;
-				}
-				IAEItemStack toExport = null;
-
-				updateFluids();
-
-				if (fluidStack == null)
-				{
-					outerloop: for (SpecialFluidStack fluidstack : fluidsInNetwork)
+					if (!redstoneFlag)
 					{
-						for (ItemStack itemstack : filterSlots)
-						{
-							if (itemstack != null && fluidstack.amount >= 20)
-							{
-								if (FluidContainerRegistry.getFluidForFilledItem(itemstack) != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
-								{
-									int fluidID = FluidContainerRegistry.getFluidForFilledItem(itemstack).fluidID;
-									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
-									break outerloop;
-								}
-								if (itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
-								{
-									int fluidID = ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).fluidID;
-									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
-									break outerloop;
-								}
-							}
-						}
-					}
-				} else
-				{
-					outerloop: for (SpecialFluidStack fluidstack : fluidsInNetwork)
-					{
-						for (ItemStack itemstack : filterSlots)
-						{
-							if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.amount >= 20)
-							{
-								if (FluidContainerRegistry.getFluidForFilledItem(itemstack) != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
-								{
-									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
-									break outerloop;
-								}
-								if (itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
-								{
-									toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
-									break outerloop;
-								}
-							}
-						}
-					}
-				}
-
-				if (toExport != null)
-				{
-					int filledAmount = tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), false);
-
-					if (filledAmount == 20)
-					{
-						if (grid.useMEEnergy(12.0F, "Export Fluid"))
-						{
-							tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), true);
-							grid.getCellArray().extractItems(toExport);
-						}
+						exportFluid();
 					} else
 					{
-						tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), filledAmount), false);
+						redstoneFlag = true;
+						exportFluid();
 					}
+				}
+				break;
+			case Ignore:
+				exportFluid();
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	private void exportFluid()
+	{
+		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
+		TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
+
+		if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
+		{
+			IFluidHandler tank = (IFluidHandler) facingTileEntity;
+
+			FluidStack fluidStack;
+
+			if (((IFluidHandler) tank).getTankInfo(facing) != null && tank.getTankInfo(facing).length != 0)
+			{
+				fluidStack = tank.getTankInfo(facing)[0].fluid;
+			} else if (((IFluidHandler) tank).getTankInfo(facing) != null && tank.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+			{
+				fluidStack = tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
+			} else
+			{
+				fluidStack = null;
+			}
+			IAEItemStack toExport = null;
+
+			updateFluids();
+
+			if (fluidStack == null)
+			{
+				outerloop: for (SpecialFluidStack fluidstack : fluidsInNetwork)
+				{
+					for (ItemStack itemstack : filterSlots)
+					{
+						if (itemstack != null && fluidstack.amount >= 20)
+						{
+							if (FluidContainerRegistry.getFluidForFilledItem(itemstack) != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
+							{
+								int fluidID = FluidContainerRegistry.getFluidForFilledItem(itemstack).fluidID;
+								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
+								break outerloop;
+							}
+							if (itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
+							{
+								int fluidID = ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).fluidID;
+								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
+								break outerloop;
+							}
+						}
+					}
+				}
+			} else
+			{
+				outerloop: for (SpecialFluidStack fluidstack : fluidsInNetwork)
+				{
+					for (ItemStack itemstack : filterSlots)
+					{
+						if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.amount >= 20)
+						{
+							if (FluidContainerRegistry.getFluidForFilledItem(itemstack) != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
+							{
+								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
+								break outerloop;
+							}
+							if (itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
+							{
+								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
+								break outerloop;
+							}
+						}
+					}
+				}
+			}
+
+			if (toExport != null)
+			{
+				int filledAmount = tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), false);
+
+				if (filledAmount == 20)
+				{
+					if (grid.useMEEnergy(12.0F, "Export Fluid"))
+					{
+						tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), true);
+						grid.getCellArray().extractItems(toExport);
+					}
+				} else
+				{
+					tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), filledAmount), false);
 				}
 			}
 		}

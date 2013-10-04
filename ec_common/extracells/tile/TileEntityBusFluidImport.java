@@ -24,23 +24,22 @@ import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
+import appeng.api.config.RedstoneModeInput;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 
 public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
-	Boolean powerStatus = true, networkReady = true;	
+	Boolean powerStatus = true, networkReady = true, redstoneFlag = false;
 	IGridInterface grid;
 	ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
-	Boolean redstoneAction = false;
+	RedstoneModeInput redstoneAction = RedstoneModeInput.Ignore;
 
 	public TileEntityBusFluidImport()
 	{
@@ -52,30 +51,71 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 	{
 		if (!worldObj.isRemote && isMachineActive())
 		{
-			ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
-			TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
-
-			if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
+			Boolean redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
+			switch (getRedstoneAction())
 			{
-				FluidTankInfo[] info = getTankInfo(facingTileEntity);
-				if (info != null && info.length > 0)
+			case WhenOn:
+				if (redstonePowered)
 				{
-					FluidStack tankFluidStack = info[0].fluid;
-
-					if (tankFluidStack != null && info[0].fluid.amount >= 20 && (isArrayEmpty(filterSlots) || arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, tankFluidStack.fluidID))))
+					importFluid();
+				}
+				break;
+			case WhenOff:
+				if (!redstonePowered)
+				{
+					importFluid();
+				}
+				break;
+			case OnPulse:
+				if (!redstonePowered)
+				{
+					redstoneFlag = false;
+				} else
+				{
+					if (!redstoneFlag)
 					{
-						IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, tankFluidStack.fluidID));
-						FluidStack drainedStack = ((IFluidHandler) facingTileEntity).drain(facing, new FluidStack(tankFluidStack.getFluid(), 20), false);
-						if (drainedStack != null)
-						{
-							toImport.setStackSize(drainedStack.amount);
-							IAEItemStack notImported = grid.getCellArray().calculateItemAddition(toImport.copy());
+						importFluid();
+					} else
+					{
+						redstoneFlag = true;
+						importFluid();
+					}
+				}
+				break;
+			case Ignore:
+				importFluid();
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
-							if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
-							{
-								((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
-								grid.getCellArray().addItems(toImport.copy());
-							}
+	private void importFluid()
+	{
+		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
+		TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
+
+		if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
+		{
+			FluidTankInfo[] info = getTankInfo(facingTileEntity);
+			if (info != null && info.length > 0)
+			{
+				FluidStack tankFluidStack = info[0].fluid;
+
+				if (tankFluidStack != null && info[0].fluid.amount >= 20 && (isArrayEmpty(filterSlots) || arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, tankFluidStack.fluidID))))
+				{
+					IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, tankFluidStack.fluidID));
+					FluidStack drainedStack = ((IFluidHandler) facingTileEntity).drain(facing, new FluidStack(tankFluidStack.getFluid(), 20), false);
+					if (drainedStack != null)
+					{
+						toImport.setStackSize(drainedStack.amount);
+						IAEItemStack notImported = grid.getCellArray().calculateItemAddition(toImport.copy());
+
+						if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
+						{
+							((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
+							grid.getCellArray().addItems(toImport.copy());
 						}
 					}
 				}
@@ -83,23 +123,14 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 		}
 	}
 
-	public boolean getRedstoneAction()
+	public RedstoneModeInput getRedstoneAction()
 	{
 		return redstoneAction;
 	}
 
-	public void toggleRedstoneAction(String playerName)
+	public void setRedstoneAction(RedstoneModeInput mode)
 	{
-		redstoneAction = !redstoneAction;
-		updateGuiTile(playerName);
-	}
-
-	public void updateGuiTile(String playername)
-	{
-		Player player = (Player) worldObj.getPlayerEntityByName(playername);
-
-		if (!worldObj.isRemote)
-			PacketDispatcher.sendPacketToPlayer(getDescriptionPacket(), player);
+		redstoneAction = mode;
 	}
 
 	@Override
@@ -247,6 +278,8 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 		{
 			nbt.setString("CustomName", this.costumName);
 		}
+
+		nbt.setInteger("RedstoneMode", getRedstoneAction().ordinal());
 	}
 
 	@Override
@@ -270,6 +303,8 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 			}
 		}
 		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+
+		setRedstoneAction(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
 	}
 
 	public ECPrivateInventory getInventory()

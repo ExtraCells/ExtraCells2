@@ -17,6 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.network.PacketHandler;
+import extracells.network.packet.PacketSolderingStation;
 
 @SideOnly(Side.CLIENT)
 public class GuiSolderingStation extends GuiScreen
@@ -113,14 +114,14 @@ public class GuiSolderingStation extends GuiScreen
 			{
 				if (this.mc.thePlayer.getHeldItem().hasTagCompound())
 				{
-					PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0');
+					PacketDispatcher.sendPacketToAllPlayers(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0').makePacket());
 					ItemStack itemstack = this.mc.thePlayer.getHeldItem();
 					itemstack.getTagCompound().setInteger("costum_size", int_size);
 					itemstack.getTagCompound().setInteger("costum_types", int_types);
 
 					if (textfield_size.getText() != Integer.toString(itemstack.getTagCompound().getInteger("costum_size")) || textfield_types.getText() != Integer.toString(itemstack.getTagCompound().getInteger("costum_types")))
 					{
-						PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0');
+						PacketDispatcher.sendPacketToAllPlayers(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0').makePacket());
 						textfield_size.setText(Integer.toString(int_size));
 						textfield_types.setText(Integer.toString(int_types));
 					}
@@ -133,7 +134,7 @@ public class GuiSolderingStation extends GuiScreen
 	{
 		if (key == 'e' || key == '')
 		{
-			PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, true, '\0', '\0');
+			PacketDispatcher.sendPacketToAllPlayers(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, true, '\0', '\0').makePacket());
 			this.mc.displayGuiScreen((GuiScreen) null);
 			this.mc.setIngameFocus();
 		}
@@ -152,7 +153,7 @@ public class GuiSolderingStation extends GuiScreen
 					if (isSpaceInInventory(appeng.api.Materials.matStorageCell.copy()))
 					{
 						int_size = int_size - 2048;
-						PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 's');
+						PacketDispatcher.sendPacketToAllPlayers(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 's').makePacket());
 					} else
 					{
 						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.nospacestoragecell"));
@@ -171,7 +172,7 @@ public class GuiSolderingStation extends GuiScreen
 				if (doesInvContain(appeng.api.Materials.matStorageCell.copy()))
 				{
 					int_size = int_size + 2048;
-					PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 's', '\0');
+					PacketDispatcher.sendPacketToAllPlayers(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 's', '\0').makePacket());
 				} else
 				{
 					this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.needstoragecell"));
@@ -191,7 +192,7 @@ public class GuiSolderingStation extends GuiScreen
 					if (isSpaceInInventory(appeng.api.Materials.matConversionMatrix.copy()))
 					{
 						int_types = int_types - 1;
-						PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 't');
+						PacketDispatcher.sendPacketToAllPlayers(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 't').makePacket());
 					} else
 					{
 						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.nospaceconversionmatrix"));
@@ -212,7 +213,7 @@ public class GuiSolderingStation extends GuiScreen
 					if (doesInvContain(appeng.api.Materials.matConversionMatrix))
 					{
 						int_types = int_types + 1;
-						PacketHandler.sendSolderingStationPacket(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 't', '\0');
+						PacketDispatcher.sendPacketToAllPlayers(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 't', '\0').makePacket());
 					} else
 					{
 						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.needconversionmatrix"));

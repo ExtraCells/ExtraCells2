@@ -10,8 +10,9 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.WorldCoord;
-import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.network.PacketHandler;
+import extracells.network.packet.PacketMEBattery;
 import extracells.tile.TileEntityMEBattery;
 
 public class GuiMEBattery extends GuiScreen
@@ -60,7 +61,7 @@ public class GuiMEBattery extends GuiScreen
 
 	public void updateScreen()
 	{
-		PacketHandler.sendBatteryPacket(coord.x, coord.y, coord.z, player.username);
+		PacketDispatcher.sendPacketToAllPlayers(new PacketMEBattery(coord.x, coord.y, coord.z, player.username).makePacket());
 
 		if (world.getBlockTileEntity(coord.x, coord.y, coord.z) instanceof TileEntityMEBattery)
 		{

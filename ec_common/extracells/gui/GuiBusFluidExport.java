@@ -11,20 +11,17 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import appeng.api.WorldCoord;
-import appeng.api.config.RedstoneModeInput;
-import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidExport;
-import extracells.gui.button.ButtonRedstoneSwitch;
-import extracells.network.PacketHandler;
+import extracells.gui.widget.WidgetRedstoneSwitch;
+import extracells.network.packet.PacketBusFluidExport;
 import extracells.tile.TileEntityBusFluidExport;
 
 @SideOnly(Side.CLIENT)
 public class GuiBusFluidExport extends GuiContainer
 {
-
 	World world;
 	EntityPlayer player;
 	TileEntityBusFluidExport tileentity;
@@ -53,12 +50,13 @@ public class GuiBusFluidExport extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		PacketHandler.sendFluidExportBusPacket(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username);
+		PacketDispatcher.sendPacketToAllPlayers(new PacketBusFluidExport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/exportbusfluid.png"));
+
 		if (tileentity instanceof TileEntityBusFluidExport)
 		{
-			ButtonRedstoneSwitch button = (ButtonRedstoneSwitch) buttonList.get(0);
+			WidgetRedstoneSwitch button = (WidgetRedstoneSwitch) buttonList.get(0);
 			button.setRedstoneMode(tileentity.getRedstoneAction());
 		}
 
@@ -69,7 +67,7 @@ public class GuiBusFluidExport extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
-		buttonList.add(new ButtonRedstoneSwitch(0, guiLeft + 153, guiTop + 2, 16, 16, RedstoneModeInput.Ignore));
+		buttonList.add(new WidgetRedstoneSwitch(0, guiLeft + 153, guiTop + 2, 16, 16, tileentity.getRedstoneAction()));
 	}
 
 	public void actionPerformed(GuiButton button)
@@ -78,7 +76,7 @@ public class GuiBusFluidExport extends GuiContainer
 		switch (button.id)
 		{
 		case 0:
-			PacketHandler.sendFluidExportBusPacket(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username);
+			PacketDispatcher.sendPacketToAllPlayers(new PacketBusFluidExport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
 			break;
 		default:
 		}

@@ -46,7 +46,7 @@ public class ModelCertusTank extends ModelBase
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_tank.png"));
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F);
+		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.51F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		Shape1.render(0.0625F);
 
