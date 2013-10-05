@@ -34,6 +34,8 @@ public class ItemRendererCertusTank implements IItemRenderer
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		model.render(0.0625f);
+		GL11.glScalef(1.0F, -1F, 1.0F);
+		model.render(0.0625f);
 		GL11.glPopMatrix();
 	}
 }

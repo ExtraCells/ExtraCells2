@@ -1,13 +1,5 @@
 package extracells.blocks;
 
-import appeng.api.events.GridTileLoadEvent;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
-import extracells.tile.TileEntityBusFluidImport;
-import extracells.tile.TileEntityBusFluidStorage;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -20,6 +12,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import appeng.api.events.GridTileLoadEvent;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
+import extracells.tile.TileEntityBusFluidStorage;
 
 public class BlockBusFluidStorage extends BlockRotatable
 {
@@ -109,6 +108,7 @@ public class BlockBusFluidStorage extends BlockRotatable
 		{
 			return false;
 		}
+		PacketDispatcher.sendPacketToPlayer(world.getBlockTileEntity(x, y, z).getDescriptionPacket(), (Player) player);
 		player.openGui(Extracells.instance, 2, world, x, y, z);
 		return true;
 	}

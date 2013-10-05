@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.Util;
@@ -46,10 +47,12 @@ public class GuiSolderingStation extends GuiScreen
 	public void drawScreen(int x, int y, float f)
 	{
 		drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/solderingstation.png"));
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
+
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/solderingstation.png"));
+
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 
 		if (rightItem)
@@ -78,12 +81,9 @@ public class GuiSolderingStation extends GuiScreen
 
 		if (rightItem)
 		{
-
 			this.buttonList.clear();
-
 			this.buttonList.add(new GuiButton(0, posX + 5, posY + 17, 40, 20, "- 2048"));
 			this.buttonList.add(new GuiButton(1, posX + 130, posY + 17, 40, 20, "+ 2048"));
-
 			this.buttonList.add(new GuiButton(2, posX + 5, posY + 47, 40, 20, "- 1"));
 			this.buttonList.add(new GuiButton(3, posX + 130, posY + 47, 40, 20, "+ 1"));
 
@@ -130,9 +130,10 @@ public class GuiSolderingStation extends GuiScreen
 		}
 	}
 
-	public void keyTyped(char key, int par2)
+	public void keyTyped(char keyChar, int keyID)
 	{
-		if (key == 'e' || key == '')
+		super.keyTyped(keyChar, keyID);
+		if (keyID == Keyboard.KEY_ESCAPE || keyID == mc.gameSettings.keyBindInventory.keyCode)
 		{
 			PacketDispatcher.sendPacketToServer(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, true, '\0', '\0').makePacket());
 			this.mc.displayGuiScreen((GuiScreen) null);

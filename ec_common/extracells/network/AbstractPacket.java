@@ -13,6 +13,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.packet.PacketBusFluidExport;
 import extracells.network.packet.PacketBusFluidImport;
+import extracells.network.packet.PacketBusFluidStorage;
 import extracells.network.packet.PacketMEBattery;
 import extracells.network.packet.PacketMonitorFluid;
 import extracells.network.packet.PacketSolderingStation;
@@ -31,7 +32,8 @@ public abstract class AbstractPacket
 		builder.put(Integer.valueOf(2), PacketMEBattery.class);
 		builder.put(Integer.valueOf(3), PacketBusFluidImport.class);
 		builder.put(Integer.valueOf(4), PacketBusFluidExport.class);
-		
+		builder.put(Integer.valueOf(5), PacketBusFluidStorage.class);
+
 		idMap = builder.build();
 	}
 

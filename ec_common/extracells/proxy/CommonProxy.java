@@ -249,7 +249,7 @@ public class CommonProxy implements IGuiHandler
 			case 1: // GUI Fluid Terminal
 				return new GuiTerminalFluid(x, y, z, player.inventory, tileEntity);
 			case 2: // GUI Storage Bus Fluid
-				return new GuiBusFluidStorage(player.inventory, ((TileEntityBusFluidStorage) tileEntity).getInventory());
+				return new GuiBusFluidStorage(player.inventory, ((TileEntityBusFluidStorage) tileEntity).getInventory(), (TileEntityBusFluidStorage) tileEntity);
 			case 3: // GUI Import Bus Fluid
 				return new GuiBusFluidImport(player.inventory, ((TileEntityBusFluidImport) tileEntity).getInventory(), world, (TileEntityBusFluidImport) tileEntity, player);
 			case 4: // GUI Export Bus Fluid

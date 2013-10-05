@@ -106,7 +106,7 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 				if (tankFluidStack != null && info[0].fluid.amount >= 20 && (isArrayEmpty(filterSlots) || arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, tankFluidStack.fluidID))))
 				{
 					IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, tankFluidStack.fluidID));
-					FluidStack drainedStack = ((IFluidHandler) facingTileEntity).drain(facing, new FluidStack(tankFluidStack.getFluid(), 20), false);
+					FluidStack drainedStack = ((IFluidHandler) facingTileEntity).drain(facing, 20, false);
 					if (drainedStack != null)
 					{
 						toImport.setStackSize(drainedStack.amount);

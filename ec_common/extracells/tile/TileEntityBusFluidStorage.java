@@ -106,6 +106,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 		{
 			nbt.setString("CustomName", this.costumName);
 		}
+		nbt.setInteger("Priority", getPriority());
 	}
 
 	@Override
@@ -129,6 +130,7 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 			}
 		}
 		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+		setPriority(nbt.getInteger("Priority"));
 	}
 
 	@Override
