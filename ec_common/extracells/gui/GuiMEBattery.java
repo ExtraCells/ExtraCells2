@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import appeng.api.WorldCoord;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.BlockNames;
 import extracells.network.PacketHandler;
 import extracells.network.packet.PacketMEBattery;
 import extracells.tile.TileEntityMEBattery;
@@ -44,7 +45,7 @@ public class GuiMEBattery extends GuiScreen
 		int posY = (this.height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 
-		fontRenderer.drawString(StatCollector.translateToLocal("tile.block.mebattery"), posX + 5, posY + 5, 0x000000);
+		fontRenderer.drawString(BlockNames.MEBATTERY.getLocalizedName(), posX + 5, posY + 5, 0x000000);
 		fontRenderer.drawString("Energy: " + currentEnergy + "/" + maxEnergy, posX + 5, posY + 15, 0x000000);
 
 		super.drawScreen(x, y, f);

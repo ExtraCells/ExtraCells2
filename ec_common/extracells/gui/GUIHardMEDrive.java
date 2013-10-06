@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.BlockNames;
 import extracells.container.ContainerHardMEDrive;
 import extracells.tile.TileEntityHardMEDrive;
 
@@ -42,7 +43,7 @@ public class GuiHardMEDrive extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j)
 	{
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tile.block.hardmedrive"), 0, 0, 0x000000);
+		this.fontRenderer.drawString(BlockNames.BRMEDRIVE.getLocalizedName(), 0, 0, 0x000000);
 	}
 
 	public int getRowLength()

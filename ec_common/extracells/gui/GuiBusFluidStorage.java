@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.BlockNames;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.widget.DigitTextField;
 import extracells.network.packet.PacketBusFluidStorage;
@@ -50,7 +51,7 @@ public class GuiBusFluidStorage extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tile.block.fluid.bus.storage"), 5, -23, 0x000000);
+		this.fontRenderer.drawString(BlockNames.FLUIDSTORAGE.getLocalizedName(), 5, -23, 0x000000);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import appeng.api.WorldCoord;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.BlockNames;
 import extracells.container.ContainerTerminalFluid;
 import extracells.network.PacketHandler;
 import extracells.network.packet.PacketMonitorFluid;
@@ -86,7 +87,7 @@ public class GuiTerminalFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tile.block.fluid.terminal"), 5, 0, 0x000000);
+		this.fontRenderer.drawString(BlockNames.FLUIDTERMINAL.getLocalizedName(), 5, 0, 0x000000);
 
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;

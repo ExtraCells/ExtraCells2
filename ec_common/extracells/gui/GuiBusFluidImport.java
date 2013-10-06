@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.BlockNames;
 import extracells.container.ContainerBusFluidImport;
 import extracells.gui.widget.WidgetRedstoneSwitch;
 import extracells.network.PacketHandler;
@@ -60,7 +61,7 @@ public class GuiBusFluidImport extends GuiContainer
 			button.setRedstoneMode(tileentity.getRedstoneAction());
 		}
 
-		this.fontRenderer.drawString(StatCollector.translateToLocal("tile.block.fluid.bus.import"), 5, 0, 0x000000);
+		this.fontRenderer.drawString(BlockNames.FLUIDIMPORT.getLocalizedName(), 5, 0, 0x000000);
 	}
 
 	@Override

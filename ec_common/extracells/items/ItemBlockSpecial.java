@@ -15,8 +15,8 @@ public class ItemBlockSpecial extends ItemBlock
 	}
 
 	@Override
-	public String getItemStackDisplayName(ItemStack itemStack)
+	public String getItemDisplayName(ItemStack itemstack)
 	{
-		return StatCollector.translateToLocal(this.getUnlocalizedName(itemStack));
+		return StatCollector.translateToLocal(this.getUnlocalizedName(itemstack) + ".name");
 	}
 }
