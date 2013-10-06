@@ -96,7 +96,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-			return aeitemstack.getItem() == extracells.Extracells.FluidDisplay ? getTankInfo(tank)[0].fluid.amount : 0;
+			return aeitemstack.getItem() == extracells.Extracells.FluidDisplay ? aeitemstack.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID ? getTankInfo(tank)[0].fluid.amount : 0 : 0;
 		}
 		return 0;
 	}
@@ -139,11 +139,11 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	public IAEItemStack extractItems(IAEItemStack request)
 	{
 		IAEItemStack removedStack = request.copy();
-		
+
 		if (request.getItem() == extracells.Extracells.FluidDisplay && tank != null && tank instanceof IFluidHandler)
 		{
 			if (getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
-			{				
+			{
 				long drainedAmount = 0;
 
 				for (long i = 0; i < request.getStackSize(); i++)
@@ -165,7 +165,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 				return removedStack;
 			}
 		}
-		
+
 		return null;
 	}
 

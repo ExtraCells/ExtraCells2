@@ -126,13 +126,15 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		long countOfFluidType = 0;
 
-		for (int i = 0; i < totalTypes; i++)
+		if (aeitemstack != null && aeitemstack.getItem() == extracells.Extracells.FluidDisplay)
 		{
-			if (nbt.getInteger("FluidID#" + i) == aeitemstack.getItemDamage())
-				countOfFluidType = nbt.getLong("FluidAmount#" + i);
+			for (int i = 0; i < totalTypes; i++)
+			{
+				if (nbt.getInteger("FluidID#" + i) == aeitemstack.getItemDamage())
+					countOfFluidType += nbt.getLong("FluidAmount#" + i);
+			}
 		}
-
-		return aeitemstack.getItem() == extracells.Extracells.FluidDisplay ? countOfFluidType : 0;
+		return countOfFluidType;
 	}
 
 	@Override

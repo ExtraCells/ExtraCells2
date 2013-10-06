@@ -59,7 +59,8 @@ public class PacketBusFluidExport extends AbstractPacket
 			switch (action)
 			{
 			case 0:
-				PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());
+				if (tile != null)
+					PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());
 				break;
 			case 1:
 				if (tile.getRedstoneAction().ordinal() >= 3)
@@ -70,7 +71,8 @@ public class PacketBusFluidExport extends AbstractPacket
 				{
 					tile.setRedstoneAction(RedstoneModeInput.values()[tile.getRedstoneAction().ordinal() + 1]);
 				}
-				PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());
+				if (tile != null)
+					PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());
 				break;
 			}
 		}

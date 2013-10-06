@@ -52,7 +52,6 @@ public class PacketBusFluidStorage extends AbstractPacket
 		{
 			TileEntityBusFluidStorage tile = (TileEntityBusFluidStorage) player.worldObj.getBlockTileEntity(x, y, z);
 			tile.setPriority(priority);
-			PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());
 		}
 	}
 

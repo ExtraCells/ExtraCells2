@@ -1,6 +1,7 @@
 package extracells.tile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,13 +14,14 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
-import appeng.api.IItemList;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
 import appeng.api.config.RedstoneModeInput;
@@ -27,15 +29,12 @@ import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
-import appeng.api.me.util.IMEInventoryHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import extracells.Extracells;
 import extracells.SpecialFluidStack;
 
-public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, IStorageAware, ITileCable
+public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, ITileCable
 {
 	Boolean powerStatus = true, networkReady = true, redstoneFlag = false;
 	IGridInterface grid;
@@ -44,11 +43,6 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 	RedstoneModeInput redstoneAction = RedstoneModeInput.Ignore;
-
-	public TileEntityBusFluidExport()
-	{
-		updateFluids();
-	}
 
 	@Override
 	public void updateEntity()
@@ -60,13 +54,13 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 			case WhenOn:
 				if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord))
 				{
-					exportFluid();
+					doWork();
 				}
 				break;
 			case WhenOff:
 				if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord))
 				{
-					exportFluid();
+					doWork();
 				}
 				break;
 			case OnPulse:
@@ -77,16 +71,16 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 				{
 					if (!redstoneFlag)
 					{
-						exportFluid();
+						doWork();
 					} else
 					{
 						redstoneFlag = true;
-						exportFluid();
+						doWork();
 					}
 				}
 				break;
 			case Ignore:
-				exportFluid();
+				doWork();
 				break;
 			default:
 				break;
@@ -94,94 +88,90 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 		}
 	}
 
-	private void exportFluid()
+	private void doWork()
 	{
 		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
 		TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
 
 		if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
 		{
-			IFluidHandler tank = (IFluidHandler) facingTileEntity;
+			IFluidHandler facingTank = (IFluidHandler) facingTileEntity;
 
-			FluidStack fluidStack;
+			List<Fluid> fluidFilter = getFilterFluids(filterSlots);
 
-			if (((IFluidHandler) tank).getTankInfo(facing) != null && tank.getTankInfo(facing).length != 0)
+			if (fluidFilter != null && fluidFilter.size() > 0)
 			{
-				fluidStack = tank.getTankInfo(facing)[0].fluid;
-			} else if (((IFluidHandler) tank).getTankInfo(facing) != null && tank.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
-			{
-				fluidStack = tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
-			} else
-			{
-				fluidStack = null;
-			}
-			IAEItemStack toExport = null;
-
-			updateFluids();
-
-			if (fluidStack == null)
-			{
-				outerloop: for (SpecialFluidStack fluidstack : fluidsInNetwork)
+				for (Fluid entry : fluidFilter)
 				{
-					for (ItemStack itemstack : filterSlots)
+					if (entry != null)
 					{
-						if (itemstack != null && fluidstack.amount >= 20)
+						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(Extracells.FluidDisplay, 1, entry.getID()));
+
+						long contained = getGrid().getCellArray().countOfItemType(entryToAEIS);
+
+						if (contained > 0)
 						{
-							if (FluidContainerRegistry.getFluidForFilledItem(itemstack) != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
-							{
-								int fluidID = FluidContainerRegistry.getFluidForFilledItem(itemstack).fluidID;
-								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
-								break outerloop;
-							}
-							if (itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
-							{
-								int fluidID = ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).fluidID;
-								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidID));
-								break outerloop;
-							}
+							exportFluid(new FluidStack(entry, contained < 20 ? (int) contained : 20), facingTank, facing.getOpposite());
 						}
 					}
-				}
-			} else
-			{
-				outerloop: for (SpecialFluidStack fluidstack : fluidsInNetwork)
-				{
-					for (ItemStack itemstack : filterSlots)
-					{
-						if (itemstack != null && fluidstack.getFluid() == fluidStack.getFluid() && fluidstack.amount >= 20)
-						{
-							if (FluidContainerRegistry.getFluidForFilledItem(itemstack) != null && fluidstack.getFluid() == FluidContainerRegistry.getFluidForFilledItem(itemstack).getFluid())
-							{
-								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
-								break outerloop;
-							}
-							if (itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null && fluidstack.getFluid() == ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack).getFluid())
-							{
-								toExport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, fluidStack.getFluid().getID()));
-								break outerloop;
-							}
-						}
-					}
-				}
-			}
-
-			if (toExport != null)
-			{
-				int filledAmount = tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), false);
-
-				if (filledAmount == 20)
-				{
-					if (grid.useMEEnergy(12.0F, "Export Fluid"))
-					{
-						tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), 20), true);
-						grid.getCellArray().extractItems(toExport);
-					}
-				} else
-				{
-					tank.fill(facing, new FluidStack(FluidRegistry.getFluid(toExport.getItemDamage()), filledAmount), false);
 				}
 			}
 		}
+	}
+
+	public void exportFluid(FluidStack toExport, IFluidHandler tankToFill, ForgeDirection from)
+	{
+		if (toExport == null)
+			return;
+
+		int fillable = tankToFill.fill(from, toExport, false);
+
+		if (fillable > 0)
+		{
+			int filled = tankToFill.fill(from, toExport, true);
+
+			IAEItemStack toExtract = Util.createItemStack(new ItemStack(Extracells.FluidDisplay, filled, toExport.fluidID));
+
+			IAEItemStack extracted = grid.getCellArray().extractItems(toExtract);
+
+			grid.useMEEnergy(12.0F, "Export Fluid");
+
+			if (extracted == null)
+			{
+				toExport.amount = filled;
+				tankToFill.drain(from, toExport, true);
+			} else if (extracted.getStackSize() < filled)
+			{
+				toExport.amount = (int) (filled - (filled - extracted.getStackSize()));
+				tankToFill.drain(from, toExport, true);
+			}
+		}
+	}
+
+	public List<Fluid> getFilterFluids(ItemStack[] filterItemStacks)
+	{
+		List<Fluid> filterFluids = new ArrayList<Fluid>();
+
+		if (filterItemStacks != null)
+		{
+			for (ItemStack entry : filterItemStacks)
+			{
+				if (entry != null)
+				{
+					if (entry.getItem() instanceof IFluidContainerItem)
+					{
+						FluidStack contained = ((IFluidContainerItem) entry.getItem()).getFluid(entry);
+						if (contained != null)
+							filterFluids.add(contained.getFluid());
+					}
+					if (FluidContainerRegistry.isFilledContainer(entry))
+					{
+						filterFluids.add(FluidContainerRegistry.getFluidForFilledItem(entry).getFluid());
+					}
+				}
+			}
+		}
+		return filterFluids;
 	}
 
 	public RedstoneModeInput getRedstoneAction()
@@ -206,30 +196,6 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
 		readFromNBT(packet.data);
-	}
-
-	public void updateFluids()
-	{
-		fluidsInNetwork = new ArrayList<SpecialFluidStack>();
-
-		if (grid != null)
-		{
-			IMEInventoryHandler cellArray = grid.getCellArray();
-			IItemList itemsInNetwork = null;
-			if (cellArray != null)
-				itemsInNetwork = cellArray.getAvailableItems();
-
-			if (itemsInNetwork != null)
-			{
-				for (IAEItemStack itemstack : itemsInNetwork)
-				{
-					if (itemstack.getItem() == extracells.Extracells.FluidDisplay)
-					{
-						fluidsInNetwork.add(new SpecialFluidStack(itemstack.getItemDamage(), itemstack.getStackSize()));
-					}
-				}
-			}
-		}
 	}
 
 	@Override
@@ -348,12 +314,6 @@ public class TileEntityBusFluidExport extends TileEntity implements IGridMachine
 		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 
 		setRedstoneAction(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
-	}
-
-	@Override
-	public void onNetworkInventoryChange(IItemList iss)
-	{
-		updateFluids();
 	}
 
 	public ECPrivateInventory getInventory()

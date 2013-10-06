@@ -98,29 +98,63 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 
 		if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
 		{
-			FluidTankInfo[] info = getTankInfo(facingTileEntity);
-			if (info != null && info.length > 0)
+			IFluidHandler tank = (IFluidHandler) facingTileEntity;
+
+			FluidStack drainable = tank.drain(facing.getOpposite(), 20, false);
+
+			if (drainable != null)
 			{
-				FluidStack tankFluidStack = info[0].fluid;
+				List<Fluid> fluidFilter = getFilterFluids(filterSlots);
+				IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, drainable.amount, drainable.fluidID));
 
-				if (tankFluidStack != null && info[0].fluid.amount >= 20 && (isArrayEmpty(filterSlots) || arrayContains(filterSlots, new ItemStack(extracells.Extracells.FluidDisplay, 1, tankFluidStack.fluidID))))
+				IAEItemStack notImported = grid.getCellArray().calculateItemAddition(toImport.copy());
+
+				if (fluidFilter != null && !fluidFilter.isEmpty() && fluidFilter.size() > 0)
 				{
-					IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 20, tankFluidStack.fluidID));
-					FluidStack drainedStack = ((IFluidHandler) facingTileEntity).drain(facing, 20, false);
-					if (drainedStack != null)
+					if (fluidFilter.contains(drainable.getFluid()))
 					{
-						toImport.setStackSize(drainedStack.amount);
-						IAEItemStack notImported = grid.getCellArray().calculateItemAddition(toImport.copy());
-
 						if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
 						{
 							((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
 							grid.getCellArray().addItems(toImport.copy());
 						}
 					}
+				} else
+				{
+					if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
+					{
+						((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
+						grid.getCellArray().addItems(toImport.copy());
+					}
 				}
 			}
 		}
+	}
+
+	public List<Fluid> getFilterFluids(ItemStack[] filterItemStacks)
+	{
+		List<Fluid> filterFluids = new ArrayList<Fluid>();
+
+		if (filterItemStacks != null)
+		{
+			for (ItemStack entry : filterItemStacks)
+			{
+				if (entry != null)
+				{
+					if (entry.getItem() instanceof IFluidContainerItem)
+					{
+						FluidStack contained = ((IFluidContainerItem) entry.getItem()).getFluid(entry);
+						if (contained != null)
+							filterFluids.add(contained.getFluid());
+					}
+					if (FluidContainerRegistry.isFilledContainer(entry))
+					{
+						filterFluids.add(FluidContainerRegistry.getFluidForFilledItem(entry).getFluid());
+					}
+				}
+			}
+		}
+		return filterFluids;
 	}
 
 	public RedstoneModeInput getRedstoneAction()
@@ -155,25 +189,6 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 				return false;
 		}
 		return true;
-	}
-
-	public FluidTankInfo[] getTankInfo(TileEntity tileEntity)
-	{
-
-		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
-		FluidTankInfo[] tankArray;
-		IFluidHandler tankTile = (IFluidHandler) tileEntity;
-
-		if (((IFluidHandler) tileEntity).getTankInfo(facing) != null && ((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
-		{
-			return tankTile.getTankInfo(facing);
-		} else if (((IFluidHandler) tileEntity).getTankInfo(facing) != null && tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
-		{
-			return tankTile.getTankInfo(ForgeDirection.UNKNOWN);
-		} else
-		{
-			return null;
-		}
 	}
 
 	private Boolean arrayContains(ItemStack[] array, ItemStack itemstack)
