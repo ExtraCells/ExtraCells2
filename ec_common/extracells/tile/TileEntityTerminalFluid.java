@@ -25,12 +25,13 @@ import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
+import appeng.api.networkevents.MENetworkEventSubscribe;
+import appeng.api.networkevents.MENetworkStorageEvent;
 import extracells.Extracells;
 import extracells.SpecialFluidStack;
 
-public class TileEntityTerminalFluid extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory, IStorageAware
+public class TileEntityTerminalFluid extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory
 {
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
@@ -38,11 +39,6 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	private ItemStack[] slots = new ItemStack[3];
 	private int fluidIndex = 0;
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
-
-	public TileEntityTerminalFluid()
-	{
-		updateFluids();
-	}
 
 	public void updateEntity()
 	{
@@ -217,13 +213,14 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 		}
 	}
 
-	public void updateFluids()
+	@MENetworkEventSubscribe
+	public void updateFluids(MENetworkStorageEvent e)
 	{
 		fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 
 		if (grid != null)
 		{
-			IItemList itemsInNetwork = grid.getCellArray().getAvailableItems();
+			IItemList itemsInNetwork = e.currentItems;
 
 			for (IAEItemStack itemstack : itemsInNetwork)
 			{
@@ -524,12 +521,6 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
 		return FluidContainerRegistry.isContainer(itemstack) || itemstack.getItem() instanceof IFluidContainerItem;
-	}
-
-	@Override
-	public void onNetworkInventoryChange(IItemList iss)
-	{
-		updateFluids();
 	}
 
 	@Override

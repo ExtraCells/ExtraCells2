@@ -108,7 +108,21 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean containsItemType(IAEItemStack aeitemstack)
 	{
-		return aeitemstack.getItem() == extracells.Extracells.FluidDisplay;
+		if (aeitemstack.getItem() != extracells.Extracells.FluidDisplay)
+			return false;
+		if (storage.stackTagCompound == null)
+			storage.stackTagCompound = new NBTTagCompound();
+		NBTTagCompound nbt = storage.stackTagCompound;
+
+		long remainingFluidTypes = totalBytes;
+
+		for (int i = 0; i < totalTypes; i++)
+		{
+			if (nbt.getInteger("FluidID#" + i) == aeitemstack.getItemDamage() && nbt.getLong("FluidAmount#" + i) > 0)
+				return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -285,6 +299,9 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 	public boolean isItemInPreformattedItems(ItemStack request)
 	{
+		if (!isPreformatted())
+			return true;
+
 		for (ItemStack itemstack : getPreformattedItems())
 		{
 			if (itemstack.getItem() == request.getItem() && itemstack.getItemDamage() == request.getItemDamage())

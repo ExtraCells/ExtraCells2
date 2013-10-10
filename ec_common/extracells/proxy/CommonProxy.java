@@ -36,6 +36,7 @@ import extracells.gui.GuiHardMEDrive;
 import extracells.gui.GuiMEBattery;
 import extracells.gui.GuiTerminalFluid;
 import extracells.handler.CraftingHandler;
+import extracells.items.ItemBlockCertusTank;
 import extracells.items.ItemBlockSpecial;
 import extracells.items.ItemCasing;
 import extracells.items.ItemCluster;
@@ -233,7 +234,7 @@ public class CommonProxy implements IGuiHandler
 		Extracells.TransitionPlaneFluid = new BlockFluidTransitionPlane(Extracells.FluidTransitionPlane_ID);
 		GameRegistry.registerBlock(Extracells.TransitionPlaneFluid, ItemBlockSpecial.class, Extracells.TransitionPlaneFluid.getUnlocalizedName());
 		Extracells.CertusTank = new BlockCertusTank(Extracells.CertusTank_ID);
-		GameRegistry.registerBlock(Extracells.CertusTank, ItemBlockSpecial.class, Extracells.CertusTank.getUnlocalizedName());
+		GameRegistry.registerBlock(Extracells.CertusTank, ItemBlockCertusTank.class, Extracells.CertusTank.getUnlocalizedName());
 	}
 
 	@Override

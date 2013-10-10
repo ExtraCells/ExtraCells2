@@ -2,6 +2,7 @@ package extracells.blocks;
 
 import java.text.DecimalFormat;
 
+import appeng.api.me.items.IAEWrench;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -95,6 +96,10 @@ public class BlockMEBattery extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
+		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		{
+			return false;
+		}
 		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
 		{
 			return false;

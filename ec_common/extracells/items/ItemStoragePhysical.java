@@ -113,7 +113,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		for (int j = 0; j < 6; ++j)
 		{
 			ItemStack toAdd = new ItemStack(i, 1, j);
-			
+
 			if (j == 5)
 			{
 				if (toAdd.stackTagCompound == null)
@@ -121,13 +121,11 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 				toAdd.stackTagCompound.setInteger("costum_size", 4096);
 				toAdd.stackTagCompound.setInteger("costum_types", 27);
 			}
-			
+
 			listSubItems.add(toAdd);
 		}
 	}
 
-	@SuppressWarnings(
-	{ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)

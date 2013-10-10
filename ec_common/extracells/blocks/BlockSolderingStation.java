@@ -2,6 +2,7 @@ package extracells.blocks;
 
 import java.util.Random;
 
+import appeng.api.me.items.IAEWrench;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -97,6 +98,10 @@ public class BlockSolderingStation extends BlockRotatable
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float a, float b, float c)
 	{
+		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		{
+			return false;
+		}
 		if (!world.isRemote)
 			((TileEntitySolderingStation) world.getBlockTileEntity(x, y, z)).addUser(player.username);
 		if (world.isRemote)

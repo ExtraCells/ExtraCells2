@@ -2,6 +2,7 @@ package extracells.blocks;
 
 import java.util.Random;
 
+import appeng.api.me.items.IAEWrench;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -140,6 +141,10 @@ public class BlockHardMEDrive extends BlockRotatable
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
+		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		{
+			return false;
+		}
 		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
 		{
 			return false;

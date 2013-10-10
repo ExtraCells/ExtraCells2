@@ -1,14 +1,13 @@
 package extracells.blocks;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -30,9 +29,22 @@ public class BlockCertusTank extends BlockContainer
 	}
 
 	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		return getDropWithNBT(world, x, y, z);
+	}
+
+	@Override
 	public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer entityplayer, int blockID, float offsetX, float offsetY, float offsetZ)
 	{
 		ItemStack current = entityplayer.inventory.getCurrentItem();
+
+		if (entityplayer.isSneaking() && current == null)
+		{
+			dropBlockAsItem_do(worldObj, x, y, z, getDropWithNBT(worldObj, x, y, z));
+			worldObj.destroyBlock(x, y, z, false);
+			return true;
+		}
 		if (current != null)
 		{
 			FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(current);
@@ -94,6 +106,24 @@ public class BlockCertusTank extends BlockContainer
 		}
 
 		return false;
+	}
+
+	public ItemStack getDropWithNBT(World world, int x, int y, int z)
+	{
+		NBTTagCompound tileEntity = new NBTTagCompound();
+		TileEntity worldTE = world.getBlockTileEntity(x, y, z);
+		if (worldTE != null && worldTE instanceof TileEntityCertusTank)
+		{
+			ItemStack dropStack = new ItemStack(Extracells.CertusTank, 1);
+
+			((TileEntityCertusTank) worldTE).writeToNBTWithoutCoords(tileEntity);
+
+			dropStack.setTagCompound(new NBTTagCompound());
+			dropStack.stackTagCompound.setCompoundTag("tileEntity", tileEntity);
+			return dropStack;
+
+		}
+		return null;
 	}
 
 	@Override

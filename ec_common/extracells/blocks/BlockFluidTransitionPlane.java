@@ -85,13 +85,16 @@ public class BlockFluidTransitionPlane extends BlockRotatable
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
-		int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
-		if (!player.isSneaking())
+		if (player.isSneaking())
 		{
-			world.setBlockMetadataWithNotify(x, y, z, l, 2);
-		} else
-		{
-			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(l).getOpposite().ordinal(), 2);
+			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)).getOpposite().ordinal(), 3);
 		}
+	}
+
+	@Override
+	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hiZ, int meta)
+	{
+
+		return side;
 	}
 }

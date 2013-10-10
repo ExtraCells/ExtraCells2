@@ -2,6 +2,7 @@ package extracells.blocks;
 
 import java.text.DecimalFormat;
 
+import appeng.api.me.items.IAEWrench;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
@@ -52,6 +53,10 @@ public class BlockTerminalFluid extends BlockRotatable
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
+		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		{
+			return false;
+		}
 		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
 		{
 			return false;
@@ -107,48 +112,24 @@ public class BlockTerminalFluid extends BlockRotatable
 	{
 		int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
-		if (!player.isSneaking())
+		if (l == 0)
 		{
-			if (l == 0)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-			}
+			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+		}
 
-			if (l == 1)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, 5, 2);
-			}
-
-			if (l == 2)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, 3, 2);
-			}
-
-			if (l == 3)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, 4, 2);
-			}
-		} else
+		if (l == 1)
 		{
-			if (l == 0)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(2).getOpposite().ordinal(), 2);
-			}
+			world.setBlockMetadataWithNotify(x, y, z, 5, 2);
+		}
 
-			if (l == 1)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(5).getOpposite().ordinal(), 2);
-			}
+		if (l == 2)
+		{
+			world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+		}
 
-			if (l == 2)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(3).getOpposite().ordinal(), 2);
-			}
-
-			if (l == 3)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(4).getOpposite().ordinal(), 2);
-			}
+		if (l == 3)
+		{
+			world.setBlockMetadataWithNotify(x, y, z, 4, 2);
 		}
 	}
 }

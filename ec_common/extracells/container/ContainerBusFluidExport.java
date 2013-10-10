@@ -21,7 +21,7 @@ public class ContainerBusFluidExport extends ECContainer
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				addSlotToContainer(new SlotFake(inventoryTileEntity, j + i * 4, 53 + j * 18, i * 18 + 20)
+				addSlotToContainer(new SlotFake(inventoryTileEntity, j + i * 4, 53 + j * 18, i * 18 + 21)
 				{
 					public boolean isItemValid(ItemStack itemstack)
 					{
@@ -40,13 +40,13 @@ public class ContainerBusFluidExport extends ECContainer
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 78));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 79));
 			}
 		}
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 136));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 137));
 		}
 	}
 

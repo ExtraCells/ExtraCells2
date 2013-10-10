@@ -82,7 +82,11 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean containsItemType(IAEItemStack aeitemstack)
 	{
-		return aeitemstack.getItem() == extracells.Extracells.FluidDisplay;
+		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
+		{
+			return aeitemstack.getItem() == extracells.Extracells.FluidDisplay && aeitemstack.getItemDamage() == ((IFluidHandler) tank).getTankInfo(facing.getOpposite())[0].fluid.fluidID;
+		}
+		return false;
 	}
 
 	@Override
@@ -94,7 +98,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long countOfItemType(IAEItemStack aeitemstack)
 	{
-		if (tank != null && tank instanceof IFluidHandler)
+		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
 		{
 			return aeitemstack.getItem() == extracells.Extracells.FluidDisplay ? aeitemstack.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID ? getTankInfo(tank)[0].fluid.amount : 0 : 0;
 		}

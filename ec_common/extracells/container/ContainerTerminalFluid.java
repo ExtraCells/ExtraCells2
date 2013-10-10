@@ -26,9 +26,9 @@ public class ContainerTerminalFluid extends Container
 	{
 		this.tileentity = (IInventory) tileentity;
 		// Input Slot accepts all FluidContainers
-		addSlotToContainer(new SlotRespective(this.tileentity, 0, 7, 66));
+		addSlotToContainer(new SlotRespective(this.tileentity, 0, 7, 67));
 		// Input Slot accepts nothing
-		addSlotToContainer(new SlotRespective(this.tileentity, 1, 36, 66)
+		addSlotToContainer(new SlotRespective(this.tileentity, 1, 36, 67)
 		{
 			public boolean isItemValid(ItemStack itemstack)
 			{
@@ -36,7 +36,7 @@ public class ContainerTerminalFluid extends Container
 			}
 		});
 		// Preview Slot
-		addSlotToContainer(new SlotRespective(this.tileentity, 2, 130, 16)
+		addSlotToContainer(new SlotRespective(this.tileentity, 2, 130, 17)
 		{
 			public boolean canTakeStack(EntityPlayer par1EntityPlayer)
 			{
@@ -53,13 +53,13 @@ public class ContainerTerminalFluid extends Container
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 +88));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 +89));
 			}
 		}
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 146));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 147));
 		}
 	}
 

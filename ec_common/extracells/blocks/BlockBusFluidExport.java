@@ -1,12 +1,5 @@
 package extracells.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
-import extracells.tile.TileEntityBusFluidExport;
-import extracells.tile.TileEntityBusFluidImport;
-import extracells.tile.TileEntityMEBattery;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -18,6 +11,11 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import appeng.api.me.items.IAEWrench;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
+import extracells.tile.TileEntityBusFluidExport;
 
 public class BlockBusFluidExport extends BlockRotatable
 {
@@ -93,9 +91,13 @@ public class BlockBusFluidExport extends BlockRotatable
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
+		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		{
+			return false;
+		}
 		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
 		{
-			System.out.println(((TileEntityBusFluidExport)world.getBlockTileEntity(x, y, z)).getRedstoneAction());
+			System.out.println(((TileEntityBusFluidExport) world.getBlockTileEntity(x, y, z)).getRedstoneAction());
 			return false;
 		}
 		player.openGui(Extracells.instance, 4, world, x, y, z);
@@ -114,13 +116,16 @@ public class BlockBusFluidExport extends BlockRotatable
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
-		int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
-		if (!player.isSneaking())
+		if (player.isSneaking())
 		{
-			world.setBlockMetadataWithNotify(x, y, z, l, 2);
-		} else
-		{
-			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(l).getOpposite().ordinal(), 2);
+			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)).getOpposite().ordinal(), 3);
 		}
+	}
+
+	@Override
+	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hiZ, int meta)
+	{
+
+		return side;
 	}
 }

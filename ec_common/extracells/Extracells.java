@@ -26,7 +26,7 @@ import extracells.network.AbstractPacket;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.4.8b", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.4.9b", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { AbstractPacket.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Extracells
@@ -111,7 +111,7 @@ public class Extracells
 		debug = config.get("Dev Options", "showFluidsInMETerminal", false, "Dont't activate if you dont want to debug stuff ;)").getBoolean(false);
 
 		String[] spatialTEs = config.get("Utility", "registerSpatialTileEntity", new String[]
-		{ "" }, "Register all TileEntities you want to be movable with the Spatial IO port. use the full packet+class path examplemod.tile.superTileEntity").getStringList();
+		{ "" }, "Register all TileEntities you want to be movable with the Spatial IO port. use the full packet+class path examplemod.tile.superTileEntity THIS IS EXPERIMENTAL!").getStringList();
 
 		config.save();
 
@@ -144,7 +144,6 @@ public class Extracells
 				System.out.println("Tried to register non-existant TileEntity to the SpatialIOPort! " + classname);
 			}
 		}
-
 	}
 
 	@EventHandler

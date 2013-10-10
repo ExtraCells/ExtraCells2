@@ -34,6 +34,7 @@ import appeng.api.WorldCoord;
 import appeng.api.events.GridTileConnectivityEvent;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
+import appeng.api.me.items.IAEWrench;
 import extracells.Extracells;
 import extracells.tile.TileEntityMEDropper;
 
@@ -101,32 +102,36 @@ public class BlockMEDropper extends BlockRotatable
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int side, float offsetX, float offsetY, float offsetZ)
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
+		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		{
+			return false;
+		}
 		if (!world.isRemote)
 		{
-			if (!p.isSneaking())
+			if (!player.isSneaking())
 			{
 				if (!((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getLocked())
 				{
-					if (p.inventory.getCurrentItem() != null)
+					if (player.inventory.getCurrentItem() != null)
 					{
-						((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).setItem(p.inventory.getCurrentItem().copy());
-						p.addChatMessage(StatCollector.translateToLocal("tooltip.dropset") + " " + p.inventory.getCurrentItem().getDisplayName());
+						((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).setItem(player.inventory.getCurrentItem().copy());
+						player.addChatMessage(StatCollector.translateToLocal("tooltip.dropset") + " " + player.inventory.getCurrentItem().getDisplayName());
 					}
 				} else
 				{
-					p.addChatMessage(StatCollector.translateToLocal("tooltip.item") + ": " + ((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getItem().getDisplayName());
+					player.addChatMessage(StatCollector.translateToLocal("tooltip.item") + ": " + ((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getItem().getDisplayName());
 				}
 			} else
 			{
 				((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).setLocked(!((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getLocked());
 				if (((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getLocked())
 				{
-					p.addChatMessage(StatCollector.translateToLocal("tooltip.dropperlocked") + "!");
+					player.addChatMessage(StatCollector.translateToLocal("tooltip.dropperlocked") + "!");
 				} else
 				{
-					p.addChatMessage(StatCollector.translateToLocal("tooltip.dropperunlocked") + "!");
+					player.addChatMessage(StatCollector.translateToLocal("tooltip.dropperunlocked") + "!");
 				}
 			}
 		}
@@ -156,19 +161,6 @@ public class BlockMEDropper extends BlockRotatable
 					unpowered = true;
 				}
 			}
-		}
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
-	{
-		int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
-		if (!player.isSneaking())
-		{
-			world.setBlockMetadataWithNotify(x, y, z, l, 2);
-		} else
-		{
-			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(l).getOpposite().ordinal(), 2);
 		}
 	}
 
@@ -209,5 +201,21 @@ public class BlockMEDropper extends BlockRotatable
 	public boolean hasTileEntity()
 	{
 		return true;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
+	{
+		if (player.isSneaking())
+		{
+			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)).getOpposite().ordinal(), 3);
+		}
+	}
+
+	@Override
+	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hiZ, int meta)
+	{
+
+		return side;
 	}
 }

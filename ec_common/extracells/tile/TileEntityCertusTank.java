@@ -36,21 +36,42 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		tank.readFromNBT(tag);
+		readFromNBTWithoutCoords(tag);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
+		writeToNBTWithoutCoords(tag);
+	}
+
+	public void writeToNBTWithoutCoords(NBTTagCompound tag)
+	{
 		tank.writeToNBT(tag);
+	}
+
+	public void readFromNBTWithoutCoords(NBTTagCompound tag)
+	{
+		tank.readFromNBT(tag);
 	}
 
 	/* IFluidHandler */
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		int filled = tank.fill(resource, doFill);
+		if (resource == null || (tank.getFluid() != null && resource.fluidID != tank.getFluid().fluidID))
+			return 0;
+
+		int filled = 0;
+
+		if (worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord) instanceof TileEntityCertusTank)
+		{
+			filled += ((TileEntityCertusTank) worldObj.getBlockTileEntity(xCoord, yCoord - 1, zCoord)).fill(from, resource, doFill);
+			resource.amount -= filled;
+		}
+
+		filled += tank.fill(resource, doFill);
 		if (filled > 0)
 			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
 		return filled;
@@ -63,16 +84,40 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 		{
 			return null;
 		}
-		return tank.drain(resource.amount, doDrain);
+
+		FluidStack drainedUp = null;
+		if (worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord) instanceof TileEntityCertusTank)
+		{
+			drainedUp = ((TileEntityCertusTank) worldObj.getBlockTileEntity(xCoord, yCoord + 1, zCoord)).drain(from, resource, doDrain);
+			if (drainedUp != null)
+			{
+				resource.amount -= drainedUp.amount;
+			}
+		}
+
+		FluidStack drained = resource != null ? tank.drain(resource.amount, doDrain) : null;
+
+		if (drainedUp != null)
+		{
+			if (drained == null)
+			{
+				return drainedUp;
+			} else
+			{
+				drained.amount += drainedUp.amount;
+			}
+		}
+		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+		return drained;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
 	{
-		FluidStack drained = tank.drain(maxDrain, doDrain);
-		if (drained != null)
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
-		return drained;
+		if (tank.getFluid() == null)
+			return null;
+
+		return drain(from, new FluidStack(tank.getFluid(), maxDrain), doDrain);
 	}
 
 	@Override

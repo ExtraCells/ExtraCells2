@@ -52,7 +52,7 @@ public class ItemFluidDisplay extends Item
 			Fluid tFluid = FluidRegistry.getFluid(aStack.getItemDamage());
 			if (tFluid != null)
 			{
-				return tFluid.getName().substring(0, 1).toUpperCase() + tFluid.getName().substring(1);
+				return tFluid.getLocalizedName();
 			}
 		}
 

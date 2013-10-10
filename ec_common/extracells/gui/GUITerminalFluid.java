@@ -98,7 +98,7 @@ public class GuiTerminalFluid extends GuiContainer
 		if (container.getSlot(2).getStack() != null && container.getSlot(2).getStack().getTagCompound() != null)
 		{
 			amount = container.getSlot(2).getStack().getTagCompound().getLong("amount");
-			fluidname = container.getSlot(2).getStack().getTagCompound().getString("fluidname");
+			fluidname = container.getSlot(2).getStack().getDisplayName();
 		} else
 		{
 			amount = 0;

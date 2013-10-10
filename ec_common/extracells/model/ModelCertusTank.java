@@ -46,12 +46,12 @@ public class ModelCertusTank extends ModelBase
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_tank.png"));
 		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.51F, (float) z + 0.5F);
+		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.50001F, (float) z + 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);
 		Shape1.render(0.0625F);
 
 		// render same cube again, but inside out, so it has inner textures :D
-		GL11.glScalef(1.0F, 1F, -1F);
+		GL11.glScalef(1.0F, 0.9999F, -1F);
 		Shape1.render(0.0625F);
 
 		if (tileEntity != null && ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null)
@@ -59,7 +59,7 @@ public class ModelCertusTank extends ModelBase
 			FluidStack storedFluid = ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
 			int tankCapacity = ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].capacity;
 
-			if (storedFluid != null && storedFluid.getFluid() != null)
+			if (storedFluid != null && storedFluid.getFluid() != null && storedFluid.amount > 0)
 			{
 				Icon fluidIcon = storedFluid.getFluid().getIcon();
 
@@ -70,13 +70,13 @@ public class ModelCertusTank extends ModelBase
 				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, (float) ((float) storedFluid.amount / (float) tankCapacity) * 0.999F, 0.92F);
 				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 				GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-				
+
 				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				
+
 				tessellator.startDrawingQuads();
 				tessellator.setNormal(0.0F, -1F, 0.0F);
 				renderer.renderFaceYNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
