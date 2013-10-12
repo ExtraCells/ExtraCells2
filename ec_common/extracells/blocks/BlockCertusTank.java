@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import extracells.BlockEnum;
 import extracells.Extracells;
 import extracells.tile.TileEntityCertusTank;
 
@@ -114,7 +115,7 @@ public class BlockCertusTank extends BlockContainer
 		TileEntity worldTE = world.getBlockTileEntity(x, y, z);
 		if (worldTE != null && worldTE instanceof TileEntityCertusTank)
 		{
-			ItemStack dropStack = new ItemStack(Extracells.CertusTank, 1);
+			ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlockEntry(), 1);
 
 			((TileEntityCertusTank) worldTE).writeToNBTWithoutCoords(tileEntity);
 

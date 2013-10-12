@@ -337,12 +337,15 @@ public class TileEntityBusFluidImport extends TileEntity implements IGridMachine
 			int amount = resource.amount;
 			int fluidID = resource.fluidID;
 
+			IAEItemStack temp = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, amount, fluidID));
+			temp.setStackSize(amount);
+
 			if (doFill)
 			{
-				added = grid.getCellArray().addItems(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, amount, fluidID)));
+				added = grid.getCellArray().addItems(temp);
 			} else
 			{
-				added = grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, amount, fluidID)));
+				added = grid.getCellArray().calculateItemAddition(temp);
 			}
 			if (added == null)
 			{

@@ -1,6 +1,8 @@
 package extracells.network.packet;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import appeng.api.config.RedstoneModeInput;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -13,12 +15,14 @@ import extracells.tile.TileEntityBusFluidExport;
 
 public class PacketBusFluidExport extends AbstractPacket
 {
+	World world;
 	int x, y, z;
 	String playername;
 	int action;
 
-	public PacketBusFluidExport(int x, int y, int z, int action, String playername)
+	public PacketBusFluidExport(World world, int x, int y, int z, int action, String playername)
 	{
+		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -33,6 +37,7 @@ public class PacketBusFluidExport extends AbstractPacket
 	@Override
 	public void write(ByteArrayDataOutput out)
 	{
+		out.writeInt(world.provider.dimensionId);
 		out.writeInt(x);
 		out.writeInt(y);
 		out.writeInt(z);
@@ -43,6 +48,7 @@ public class PacketBusFluidExport extends AbstractPacket
 	@Override
 	public void read(ByteArrayDataInput in) throws ProtocolException
 	{
+		world = DimensionManager.getWorld(in.readInt());
 		x = in.readInt();
 		y = in.readInt();
 		z = in.readInt();
@@ -55,7 +61,7 @@ public class PacketBusFluidExport extends AbstractPacket
 	{
 		if (side.isServer())
 		{
-			TileEntityBusFluidExport tile = (TileEntityBusFluidExport) player.worldObj.getBlockTileEntity(x, y, z);
+			TileEntityBusFluidExport tile = (TileEntityBusFluidExport) world.getBlockTileEntity(x, y, z);
 			switch (action)
 			{
 			case 0:

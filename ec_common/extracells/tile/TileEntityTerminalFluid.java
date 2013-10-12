@@ -31,21 +31,22 @@ import appeng.api.networkevents.MENetworkStorageEvent;
 import extracells.Extracells;
 import extracells.SpecialFluidStack;
 
-public class TileEntityTerminalFluid extends TileEntity implements IGridMachine, IDirectionalMETile, IInventory
+public class TileEntityTerminalFluid extends TileEntity implements IGridMachine, IDirectionalMETile
 {
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
 	private ItemStack[] slots = new ItemStack[3];
 	private int fluidIndex = 0;
+	ECPrivateInventory inventory = new ECPrivateInventory(slots, costumName, 64);
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 
 	public void updateEntity()
 	{
 		if (!worldObj.isRemote && isMachineActive())
 		{
-			ItemStack input = this.getStackInSlot(0);
-			ItemStack output = this.getStackInSlot(1);
+			ItemStack input = getInventory().getStackInSlot(0);
+			ItemStack output = getInventory().getStackInSlot(1);
 
 			if (!fluidsInNetwork.isEmpty())
 			{
@@ -68,7 +69,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 					nbt.setLong("amount", fluidsInNetwork.get(fluidIndex).amount);
 					nbt.setString("fluidname", StatCollector.translateToLocal((FluidRegistry.getFluidName(new FluidStack(fluidsInNetwork.get(fluidIndex).getFluid(), 1)))));// (capitalizeFirstLetter(fluidsInNetwork.get(fluidIndex).fluid.getName()));
 
-					this.setInventorySlotContents(2, preview);
+					getInventory().setInventorySlotContents(2, preview);
 
 					if (input != null)
 					{
@@ -84,15 +85,15 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 								{
 									if (drainFluid(request))
 									{
-										this.setInventorySlotContents(1, FluidContainerRegistry.fillFluidContainer(request, input));
-										this.decrStackSize(0, 1);
+										getInventory().setInventorySlotContents(1, FluidContainerRegistry.fillFluidContainer(request, input));
+										getInventory().decrStackSize(0, 1);
 									}
 								} else if (output.isStackable() && output.stackSize < output.getMaxStackSize() && output.getItem() == filledContainer.getItem() && output.getItemDamage() == filledContainer.getItemDamage() && output.getTagCompound() == filledContainer.getTagCompound())
 								{
 									if (drainFluid(request))
 									{
 										output.stackSize = output.stackSize + 1;
-										this.decrStackSize(0, 1);
+										getInventory().decrStackSize(0, 1);
 									}
 								}
 							}
@@ -116,8 +117,8 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 								{
 									if (drainFluid(request))
 									{
-										this.setInventorySlotContents(1, inputToBeFilled);
-										this.decrStackSize(0, 1);
+										getInventory().setInventorySlotContents(1, inputToBeFilled);
+										getInventory().decrStackSize(0, 1);
 									}
 								} else if (output != null && output.itemID == inputToBeFilled.itemID && (!inputToBeFilled.getHasSubtypes() || inputToBeFilled.getItemDamage() == output.getItemDamage()) && ItemStack.areItemStackTagsEqual(inputToBeFilled, output))
 								{
@@ -126,7 +127,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 										if (drainFluid(request))
 										{
 											output.stackSize = output.stackSize + 1;
-											this.decrStackSize(0, 1);
+											getInventory().decrStackSize(0, 1);
 										}
 									}
 								}
@@ -136,7 +137,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 				}
 			} else
 			{
-				this.setInventorySlotContents(2, null);
+				getInventory().setInventorySlotContents(2, null);
 			}
 
 			if (FluidContainerRegistry.isFilledContainer(input))
@@ -150,8 +151,8 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 					{
 						if (fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
 						{
-							this.setInventorySlotContents(1, drainedContainer);
-							this.decrStackSize(0, 1);
+							getInventory().setInventorySlotContents(1, drainedContainer);
+							getInventory().decrStackSize(0, 1);
 						}
 					} else if (output.isStackable() && output.stackSize < output.getMaxStackSize())
 					{
@@ -160,14 +161,14 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 							if (fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
 							{
 
-								this.decrStackSize(0, 1);
+								getInventory().decrStackSize(0, 1);
 							}
 						} else if (output.isStackable() && output.stackSize < output.getMaxStackSize() && output.getItem() == drainedContainer.getItem() && output.getItemDamage() == drainedContainer.getItemDamage() && output.getTagCompound() == drainedContainer.getTagCompound())
 						{
 							if (fillFluid(FluidContainerRegistry.getFluidForFilledItem(input)))
 							{
 								output.stackSize = output.stackSize + 1;
-								this.decrStackSize(0, 1);
+								getInventory().decrStackSize(0, 1);
 							}
 						}
 					}
@@ -191,8 +192,8 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 					{
 						if (fillFluid(containedFluid))
 						{
-							this.setInventorySlotContents(1, inputToBeDrained);
-							this.decrStackSize(0, 1);
+							getInventory().setInventorySlotContents(1, inputToBeDrained);
+							getInventory().decrStackSize(0, 1);
 						}
 					} else if (output.isStackable() && output.stackSize < output.getMaxStackSize())
 					{
@@ -203,7 +204,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 								if (fillFluid(containedFluid))
 								{
 									output.stackSize = output.stackSize + 1;
-									this.decrStackSize(0, 1);
+									getInventory().decrStackSize(0, 1);
 								}
 							}
 						}
@@ -213,18 +214,26 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 		}
 	}
 
+	public ECPrivateInventory getInventory()
+	{
+		return inventory;
+	}
+
 	@MENetworkEventSubscribe
-	public void updateFluids(MENetworkStorageEvent e)
+	public void networkUpdate(MENetworkStorageEvent e)
+	{
+		updateFluids(e.currentItems);
+	}
+
+	public void updateFluids(IItemList currentItems)
 	{
 		fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 
 		if (grid != null)
 		{
-			IItemList itemsInNetwork = e.currentItems;
-
-			for (IAEItemStack itemstack : itemsInNetwork)
+			for (IAEItemStack itemstack : currentItems)
 			{
-				if (itemstack.getItem() == extracells.Extracells.FluidDisplay)
+				if (itemstack.getItem() == extracells.Extracells.FluidDisplay && itemstack.getStackSize() > 0)
 				{
 					fluidsInNetwork.add(new SpecialFluidStack(itemstack.getItemDamage(), itemstack.getStackSize()));
 				}
@@ -319,7 +328,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 			}
 		}
 		nbt.setTag("Items", nbttaglist);
-		if (this.isInvNameLocalized())
+		if (getInventory().isInvNameLocalized())
 		{
 			nbt.setString("CustomName", this.costumName);
 		}
@@ -330,7 +339,7 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.slots = new ItemStack[this.getSizeInventory()];
+		this.slots = new ItemStack[getInventory().getSizeInventory()];
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
@@ -395,6 +404,8 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	public void setGrid(IGridInterface gi)
 	{
 		grid = gi;
+		if (getGrid() != null)
+			updateFluids(getGrid().getCellArray().getAvailableItems());
 	}
 
 	@Override
@@ -416,117 +427,11 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	}
 
 	@Override
-	public int getSizeInventory()
-	{
-		return slots.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i)
-	{
-		return slots[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j)
-	{
-		if (this.slots[i] != null)
-		{
-			ItemStack itemstack;
-			if (this.slots[i].stackSize <= j)
-			{
-				itemstack = this.slots[i];
-				this.slots[i] = null;
-				this.onInventoryChanged();
-				return itemstack;
-			} else
-			{
-				itemstack = this.slots[i].splitStack(j);
-				if (this.slots[i].stackSize == 0)
-				{
-					this.slots[i] = null;
-				}
-				this.onInventoryChanged();
-				return itemstack;
-			}
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
-	{
-		if (this.slots[i] != null)
-		{
-			ItemStack itemstack = this.slots[i];
-			this.slots[i] = null;
-			return itemstack;
-		} else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
-		this.slots[i] = itemstack;
-
-		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
-		{
-			itemstack.stackSize = this.getInventoryStackLimit();
-		}
-		this.onInventoryChanged();
-	}
-
-	@Override
-	public String getInvName()
-	{
-		return costumName;
-	}
-
-	@Override
-	public boolean isInvNameLocalized()
-	{
-		return true;
-	}
-
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 64;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer)
-	{
-		return true;
-	}
-
-	@Override
-	public void openChest()
-	{
-		// NOBODY needs this!
-	}
-
-	@Override
-	public void closeChest()
-	{
-		// NOBODY needs this!
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		return FluidContainerRegistry.isContainer(itemstack) || itemstack.getItem() instanceof IFluidContainerItem;
-	}
-
-	@Override
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
+		if (getGrid() != null)
+			updateFluids(getGrid().getCellArray().getAvailableItems());
 	}
 
 	@Override

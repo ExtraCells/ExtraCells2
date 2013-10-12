@@ -32,11 +32,13 @@
   <entry key="tile.block.fluid.terminal.name">ME Fluid Access Terminal</entry>
   <entry key="tile.block.fluid.transitionplane.name">ME Fluid Transition Plane</entry>
   <entry key="tile.block.certustank.name">ME Certus Tank</entry>
+  <entry key="tile.block.walrus.name">walrus</entry>
   <entry key="tooltip.belongsto">This storage belongs to:</entry>
   <entry key="tooltip.notyours">You are not the owner of this storage drive!</entry>
   <entry key="tooltip.accessgranted">Access granted!</entry>
   <entry key="tooltip.storageencrypted">Storage encrypted!</entry>
-  <entry key="tooltip.empty">Empty</entry>
+  <entry key="tooltip.empty1">Empty</entry>
+  <entry key="tooltip.empty2">Empty</entry>
   <entry key="tooltip.block">Block</entry>
   <entry key="tooltip.equaltrade1">Equal Trade Mode (1*1)</entry>
   <entry key="tooltip.equaltrade3">Equal Trade Mode (3*3)</entry>

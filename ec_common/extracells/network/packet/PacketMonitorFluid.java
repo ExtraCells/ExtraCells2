@@ -1,6 +1,9 @@
 package extracells.network.packet;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldManager;
+import net.minecraftforge.common.DimensionManager;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
@@ -12,10 +15,12 @@ import extracells.tile.TileEntityTerminalFluid;
 public class PacketMonitorFluid extends AbstractPacket
 {
 	int x, y, z;
+	World world;
 	int action;
 
-	public PacketMonitorFluid(int x, int y, int z, int action)
+	public PacketMonitorFluid(World world, int x, int y, int z, int action)
 	{
+		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -29,6 +34,7 @@ public class PacketMonitorFluid extends AbstractPacket
 	@Override
 	public void write(ByteArrayDataOutput out)
 	{
+		out.writeInt(world.provider.dimensionId);
 		out.writeInt(x);
 		out.writeInt(y);
 		out.writeInt(z);
@@ -38,6 +44,7 @@ public class PacketMonitorFluid extends AbstractPacket
 	@Override
 	public void read(ByteArrayDataInput in) throws ProtocolException
 	{
+		world = DimensionManager.getWorld(in.readInt());
 		x = in.readInt();
 		y = in.readInt();
 		z = in.readInt();
@@ -49,7 +56,7 @@ public class PacketMonitorFluid extends AbstractPacket
 	{
 		if (side.isServer())
 		{
-			TileEntityTerminalFluid tile = (TileEntityTerminalFluid) player.worldObj.getBlockTileEntity(x, y, z);
+			TileEntityTerminalFluid tile = (TileEntityTerminalFluid) world.getBlockTileEntity(x, y, z);
 			int currentFluid = tile.getCurrentFluid();
 			switch (action)
 			{

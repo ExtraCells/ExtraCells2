@@ -4,9 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
@@ -14,9 +15,8 @@ import appeng.api.WorldCoord;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.BlockNames;
+import extracells.BlockEnum;
 import extracells.container.ContainerTerminalFluid;
-import extracells.network.PacketHandler;
 import extracells.network.packet.PacketMonitorFluid;
 import extracells.tile.TileEntityTerminalFluid;
 
@@ -27,16 +27,16 @@ public class GuiTerminalFluid extends GuiContainer
 	public static final int xSize = 176;
 	public static final int ySize = 175;
 	public String fluidName;
-	public WorldCoord tilePos;
+	World world;
 	TileEntityTerminalFluid tileEntity;
 	ContainerTerminalFluid container;
 
-	public GuiTerminalFluid(int x, int y, int z, InventoryPlayer inventory, TileEntity tileEntity)
+	public GuiTerminalFluid(World world, TileEntityTerminalFluid tileEntity, InventoryPlayer inventory)
 	{
-		super(new ContainerTerminalFluid(inventory, tileEntity));
+		super(new ContainerTerminalFluid(inventory, tileEntity.getInventory()));
 		container = (ContainerTerminalFluid) this.inventorySlots;
-		this.tileEntity = (TileEntityTerminalFluid) tileEntity;
-		tilePos = new WorldCoord(x, y, z);
+		this.tileEntity = tileEntity;
+		this.world = world;
 	}
 
 	@Override
@@ -65,10 +65,10 @@ public class GuiTerminalFluid extends GuiContainer
 		switch (button.id)
 		{
 		case 0:
-			PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(tilePos.x, tilePos.y, tilePos.z, 0).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0).makePacket());
 			break;
 		case 1:
-			PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(tilePos.x, tilePos.y, tilePos.z, 1).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 1).makePacket());
 			break;
 		}
 	}
@@ -87,7 +87,7 @@ public class GuiTerminalFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		this.fontRenderer.drawString(BlockNames.FLUIDTERMINAL.getLocalizedName(), 5, 0, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getLocalizedName(), 5, 0, 0x000000);
 
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;

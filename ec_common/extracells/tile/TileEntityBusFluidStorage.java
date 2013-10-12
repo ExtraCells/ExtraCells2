@@ -15,9 +15,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
+import appeng.api.IAEItemStack;
+import appeng.api.Util;
 import appeng.api.WorldCoord;
+import appeng.api.events.GridStorageUpdateEvent;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.ICellContainer;
@@ -26,6 +30,7 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
+import extracells.Extracells;
 import extracells.handler.FluidBusInventoryHandler;
 
 public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
@@ -36,7 +41,8 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	ItemStack[] filterSlots = new ItemStack[54];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
-	IFluidHandler lastTank;
+	FluidStack lastFluid;
+	TileEntity lastTile;
 
 	public void setPriority(int priority)
 	{
@@ -46,9 +52,35 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 	@Override
 	public void updateEntity()
 	{
-		if ((lastTank instanceof TileEntity && (TileEntity) lastTank != worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ)))
+		TileEntity tankTE = worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ);
+
+		if (lastTile != tankTE)
+			MinecraftForge.EVENT_BUS.post(new GridStorageUpdateEvent(worldObj, getLocation(), getGrid()));
+		lastTile = tankTE;
+		
+		if (getGrid() != null && !worldObj.isRemote)
 		{
-			validate();
+			if (lastFluid != null)
+			{
+				IAEItemStack toRemove = Util.createItemStack(new ItemStack(Extracells.FluidDisplay, 1, lastFluid.fluidID));
+				toRemove.setStackSize(lastFluid.amount);
+				getGrid().notifyExtractItems(toRemove);
+			}
+			if (tankTE instanceof IFluidHandler)
+			{
+				IFluidHandler tank = (IFluidHandler) tankTE;
+				FluidStack currentFluid = tank.getTankInfo(getFacing().getOpposite())[0].fluid;
+				lastFluid = currentFluid;
+				if (currentFluid != null)
+				{
+					IAEItemStack toAdd = Util.createItemStack(new ItemStack(Extracells.FluidDisplay, 1, currentFluid.fluidID));
+					toAdd.setStackSize(currentFluid.amount);
+					getGrid().notifyAddItems(toAdd);
+				}
+			} else
+			{
+				lastFluid = null;
+			}
 		}
 	}
 
@@ -208,9 +240,10 @@ public class TileEntityBusFluidStorage extends TileEntity implements IGridMachin
 				}
 			}
 
-		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
-		list.add(new FluidBusInventoryHandler(worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ), getFacing().getOpposite(), getPriority(), filter));
-		return list;
+		List<IMEInventoryHandler> tankHandler = new ArrayList<IMEInventoryHandler>();
+		tankHandler.add(new FluidBusInventoryHandler(worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ), getFacing().getOpposite(), getPriority(), filter));
+
+		return tankHandler;
 	}
 
 	@Override

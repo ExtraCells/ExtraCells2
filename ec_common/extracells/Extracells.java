@@ -26,7 +26,7 @@ import extracells.network.AbstractPacket;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 
-@Mod(modid = "extracells", name = "Extra Cells", version = "1.4.9b", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", version = "1.4.9d", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { AbstractPacket.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Extracells
@@ -52,16 +52,6 @@ public class Extracells
 	public static Item StorageFluid;
 	public static Item Casing;
 	public static Item FluidDisplay;
-	public static Block SolderingStation;
-	public static Block MEDropper;
-	public static Block MEBattery;
-	public static Block HardMEDrive;
-	public static Block BusFluidImport;
-	public static Block BusFluidExport;
-	public static Block BusFluidStorage;
-	public static Block TerminalFluid;
-	public static Block TransitionPlaneFluid;
-	public static Block CertusTank;
 	public static int StoragePhysical_ID;
 	public static int StoragePhysicalEncrypted_ID;
 	public static int StoragePhysicalDecrypted_ID;
@@ -69,16 +59,6 @@ public class Extracells
 	public static int Cluster_ID;
 	public static int Casing_ID;
 	public static int FluidDisplay_ID;
-	public static int SolderingStation_ID;
-	public static int MEDropper_ID;
-	public static int MEBattery_ID;
-	public static int HardMEDrive_ID;
-	public static int BusFluidImport_ID;
-	public static int BusFluidExport_ID;
-	public static int BusFluidStorage_ID;
-	public static int TerminalFluid_ID;
-	public static int FluidTransitionPlane_ID;
-	public static int CertusTank_ID;
 	public static boolean debug;
 
 	@EventHandler
@@ -91,6 +71,7 @@ public class Extracells
 		// Config
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
+		// Items
 		int clusterTemp = config.getItem("Cluster_ID", 4141, "ID for the storage clusters (crafting)").getInt();
 		int storagePhysicalTemp = config.getItem("Cell_ID", 4140, "ID for the storage cells").getInt();
 		int storagePhysicalEncryptedTemp = config.getItem("Cell_Encrypted_ID", 4142, "ID for the encrypted storage cell").getInt();
@@ -98,16 +79,19 @@ public class Extracells
 		int casingTemp = config.getItem("Advanced_Storage_Casing ID", 4144, "ID for the advanced storage casing").getInt();
 		int fluidDisplayTemp = config.getItem("Fluid_Display_Item_ID", 4145, "ID item used for displaying fluids in the terminal").getInt();
 		int storageFluidTemp = config.getItem("StorageFluid_ID", 4146, "ID for the ME Fluid Storages").getInt();
-		int solderingStationTemp = config.getBlock("SolderingStation_ID", 500, "ID for the soldering station").getInt();
-		int meDropperTemp = config.getBlock("MEDropper_ID", 501, "ID for the ME Item Dropper").getInt();
-		int meBatteryTemp = config.getBlock("MEBattery_ID", 502, "ID for the ME Backup Battery").getInt();
-		int hardMEDriveTemp = config.getBlock("HardMEDrive_ID", 503, "ID for the Blast Resistant ME Drive").getInt();
-		int busFluidImportTemp = config.getBlock("BusFluidImport_ID", 504, "ID for the Fluid Import Bus").getInt();
-		int busFluidExportTemp = config.getBlock("BusFluidExport_ID", 505, "ID for the Fluid Export Bus").getInt();
-		int busFluidStorageTemp = config.getBlock("BusFluidStorage_ID", 506, "ID for the Fluid Storage Bus").getInt();
-		int monitorFluidTemp = config.getBlock("MonitorFluid_ID", 507, "ID for the Fluid Storage Monitor").getInt();
-		int fluidTransitionPlaneTemp = config.getBlock("FluidTransitionPlane_ID", 508, "ID for the Fluid Transition Plance").getInt();
-		int certusTankTemp = config.getBlock("CertusTank_ID", 509, "ID for the ME Certus Tank").getInt();
+
+		// Blocks
+		BlockEnum.SOLDERINGSTATION.setID(config.getBlock("SolderingStation_ID", 500, "ID for the soldering station").getInt());
+		BlockEnum.MEDROPPER.setID(config.getBlock("MEDropper_ID", 501, "ID for the ME Item Dropper").getInt());
+		BlockEnum.MEBATTERY.setID(config.getBlock("MEBattery_ID", 502, "ID for the ME Backup Battery").getInt());
+		BlockEnum.BRMEDRIVE.setID(config.getBlock("HardMEDrive_ID", 503, "ID for the Blast Resistant ME Drive").getInt());
+		BlockEnum.FLUIDIMPORT.setID(config.getBlock("BusFluidImport_ID", 504, "ID for the Fluid Import Bus").getInt());
+		BlockEnum.FLUIDEXPORT.setID(config.getBlock("BusFluidExport_ID", 505, "ID for the Fluid Export Bus").getInt());
+		BlockEnum.FLUIDSTORAGE.setID(config.getBlock("BusFluidStorage_ID", 506, "ID for the Fluid Storage Bus").getInt());
+		BlockEnum.FLUIDTERMINAL.setID(config.getBlock("TerminalFluid_ID", 507, "ID for the Fluid Storage Terminal").getInt());
+		BlockEnum.FLUIDTRANSITION.setID(config.getBlock("FluidTransitionPlane_ID", 508, "ID for the Fluid Transition Plance").getInt());
+		BlockEnum.CERTUSTANK.setID(config.getBlock("CertusTank_ID", 509, "ID for the ME Certus Tank").getInt());
+		BlockEnum.CHROMIA.setID(config.getBlock("Walrus_ID", 510, "ID for the Walrus").getInt());
 		debug = config.get("Dev Options", "showFluidsInMETerminal", false, "Dont't activate if you dont want to debug stuff ;)").getBoolean(false);
 
 		String[] spatialTEs = config.get("Utility", "registerSpatialTileEntity", new String[]
@@ -122,16 +106,6 @@ public class Extracells
 		StorageFluid_ID = storageFluidTemp;
 		Casing_ID = casingTemp;
 		FluidDisplay_ID = fluidDisplayTemp;
-		SolderingStation_ID = solderingStationTemp;
-		MEDropper_ID = meDropperTemp;
-		MEBattery_ID = meBatteryTemp;
-		HardMEDrive_ID = hardMEDriveTemp;
-		BusFluidImport_ID = busFluidImportTemp;
-		BusFluidExport_ID = busFluidExportTemp;
-		BusFluidStorage_ID = busFluidStorageTemp;
-		TerminalFluid_ID = monitorFluidTemp;
-		FluidTransitionPlane_ID = fluidTransitionPlaneTemp;
-		CertusTank_ID = certusTankTemp;
 
 		for (String classname : spatialTEs)
 		{

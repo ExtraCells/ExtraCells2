@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.BlockNames;
+import extracells.BlockEnum;
 import extracells.container.ContainerBusFluidImport;
 import extracells.gui.widget.WidgetRedstoneSwitch;
 import extracells.network.PacketHandler;
@@ -30,9 +30,9 @@ public class GuiBusFluidImport extends GuiContainer
 	public static final int xSize = 176;
 	public static final int ySize = 177;
 
-	public GuiBusFluidImport(IInventory inventory, IInventory tileEntity, World world, TileEntityBusFluidImport tileentity, EntityPlayer player)
+	public GuiBusFluidImport(World world, IInventory inventory, TileEntityBusFluidImport tileentity, EntityPlayer player)
 	{
-		super(new ContainerBusFluidImport(inventory, tileEntity));
+		super(new ContainerBusFluidImport(inventory, tileentity.getInventory()));
 		this.world = world;
 		this.tileentity = tileentity;
 		this.player = player;
@@ -52,7 +52,7 @@ public class GuiBusFluidImport extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		PacketDispatcher.sendPacketToServer(new PacketBusFluidImport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
+		PacketDispatcher.sendPacketToServer(new PacketBusFluidImport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/importbusfluid.png"));
 
 		if (tileentity instanceof TileEntityBusFluidImport)
@@ -61,7 +61,7 @@ public class GuiBusFluidImport extends GuiContainer
 			button.setRedstoneMode(tileentity.getRedstoneAction());
 		}
 
-		this.fontRenderer.drawString(BlockNames.FLUIDIMPORT.getLocalizedName(), 5, 0, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDIMPORT.getLocalizedName(), 5, 0, 0x000000);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class GuiBusFluidImport extends GuiContainer
 		switch (button.id)
 		{
 		case 0:
-			PacketDispatcher.sendPacketToServer(new PacketBusFluidImport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketBusFluidImport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
 			break;
 		default:
 		}

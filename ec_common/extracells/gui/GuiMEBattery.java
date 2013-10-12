@@ -4,21 +4,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import appeng.api.WorldCoord;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.BlockNames;
-import extracells.network.PacketHandler;
+import extracells.BlockEnum;
 import extracells.network.packet.PacketMEBattery;
 import extracells.tile.TileEntityMEBattery;
 
 public class GuiMEBattery extends GuiScreen
 {
-	WorldCoord coord;
+	TileEntityMEBattery tileEntity;
 	World world;
 	EntityPlayer player;
 	private final int xSize = 176;
@@ -26,11 +23,11 @@ public class GuiMEBattery extends GuiScreen
 	private double currentEnergy;
 	private double maxEnergy;
 
-	public GuiMEBattery(World world, WorldCoord coord, EntityPlayer player)
+	public GuiMEBattery(World world, TileEntityMEBattery tileEntity, EntityPlayer player)
 	{
 		super();
 		this.world = world;
-		this.coord = coord;
+		this.tileEntity = tileEntity;
 		this.player = player;
 
 	}
@@ -45,7 +42,7 @@ public class GuiMEBattery extends GuiScreen
 		int posY = (this.height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 
-		fontRenderer.drawString(BlockNames.MEBATTERY.getLocalizedName(), posX + 5, posY + 5, 0x000000);
+		fontRenderer.drawString(BlockEnum.MEBATTERY.getLocalizedName(), posX + 5, posY + 5, 0x000000);
 		fontRenderer.drawString("Energy: " + currentEnergy + "/" + maxEnergy, posX + 5, posY + 15, 0x000000);
 
 		super.drawScreen(x, y, f);
@@ -62,11 +59,11 @@ public class GuiMEBattery extends GuiScreen
 
 	public void updateScreen()
 	{
-		PacketDispatcher.sendPacketToServer(new PacketMEBattery(coord.x, coord.y, coord.z, player.username).makePacket());
+		PacketDispatcher.sendPacketToServer(new PacketMEBattery(world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, player.username).makePacket());
 
-		if (world.getBlockTileEntity(coord.x, coord.y, coord.z) instanceof TileEntityMEBattery)
+		if (world.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) instanceof TileEntityMEBattery)
 		{
-			TileEntityMEBattery battery = (TileEntityMEBattery) world.getBlockTileEntity(coord.x, coord.y, coord.z);
+			TileEntityMEBattery battery = (TileEntityMEBattery) world.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 			currentEnergy = battery.getEnergy();
 			maxEnergy = battery.getMaxEnergy();
 		}

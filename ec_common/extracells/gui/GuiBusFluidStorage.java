@@ -4,14 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.BlockNames;
+import extracells.BlockEnum;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.widget.DigitTextField;
 import extracells.network.packet.PacketBusFluidStorage;
@@ -23,14 +23,16 @@ public class GuiBusFluidStorage extends GuiContainer
 
 	public static final int xSize = 176;
 	public static final int ySize = 222;
+	World world;
 	TileEntityBusFluidStorage tileentity;
 	Boolean editMode = false;
 	DigitTextField textFieldPriority;
 
-	public GuiBusFluidStorage(IInventory inventory, IInventory tileInventory, TileEntityBusFluidStorage tileentity)
+	public GuiBusFluidStorage(World world, IInventory inventory, TileEntityBusFluidStorage tileentity)
 	{
-		super(new ContainerBusFluidStorage(inventory, tileInventory));
-		this.tileentity = (TileEntityBusFluidStorage) tileentity;
+		super(new ContainerBusFluidStorage(inventory, tileentity.getInventory()));
+		this.world = world;
+		this.tileentity = tileentity;
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class GuiBusFluidStorage extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		this.fontRenderer.drawString(BlockNames.FLUIDSTORAGE.getLocalizedName(), 5, -23, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDSTORAGE.getLocalizedName(), 5, -23, 0x000000);
 	}
 
 	@Override
@@ -80,7 +82,7 @@ public class GuiBusFluidStorage extends GuiContainer
 				try
 				{
 					int priority = Integer.valueOf(textFieldPriority.getText());
-					PacketDispatcher.sendPacketToServer(new PacketBusFluidStorage(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, priority).makePacket());
+					PacketDispatcher.sendPacketToServer(new PacketBusFluidStorage(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, priority).makePacket());
 				} catch (NumberFormatException e)
 				{
 				}

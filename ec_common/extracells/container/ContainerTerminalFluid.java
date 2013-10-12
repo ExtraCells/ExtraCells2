@@ -1,34 +1,25 @@
 package extracells.container;
 
-import java.util.ArrayList;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import extracells.container.slot.SlotRespective;
-import extracells.tile.TileEntityTerminalFluid;
 
 public class ContainerTerminalFluid extends Container
 {
 
-	IInventory tileentity;
+	IInventory inventoryTileEntity;
 
-	public ContainerTerminalFluid(InventoryPlayer inventory, TileEntity tileentity)
+	public ContainerTerminalFluid(InventoryPlayer inventory, IInventory inventoryTileEntity)
 	{
-		this.tileentity = (IInventory) tileentity;
+		this.inventoryTileEntity = inventoryTileEntity;
 		// Input Slot accepts all FluidContainers
-		addSlotToContainer(new SlotRespective(this.tileentity, 0, 7, 67));
+		addSlotToContainer(new SlotRespective(inventoryTileEntity, 0, 7, 67));
 		// Input Slot accepts nothing
-		addSlotToContainer(new SlotRespective(this.tileentity, 1, 36, 67)
+		addSlotToContainer(new SlotRespective(inventoryTileEntity, 1, 36, 67)
 		{
 			public boolean isItemValid(ItemStack itemstack)
 			{
@@ -36,7 +27,7 @@ public class ContainerTerminalFluid extends Container
 			}
 		});
 		// Preview Slot
-		addSlotToContainer(new SlotRespective(this.tileentity, 2, 130, 17)
+		addSlotToContainer(new SlotRespective(inventoryTileEntity, 2, 130, 17)
 		{
 			public boolean canTakeStack(EntityPlayer par1EntityPlayer)
 			{
@@ -53,7 +44,7 @@ public class ContainerTerminalFluid extends Container
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 +89));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 89));
 			}
 		}
 
@@ -78,7 +69,7 @@ public class ContainerTerminalFluid extends Container
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			if (tileentity.isItemValidForSlot(0, itemstack1))
+			if (inventoryTileEntity.isItemValidForSlot(0, itemstack1))
 			{
 				if (slotnumber == 1 || slotnumber == 0)
 				{

@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.BlockNames;
+import extracells.BlockEnum;
 import extracells.container.ContainerBusFluidExport;
 import extracells.gui.widget.WidgetRedstoneSwitch;
 import extracells.network.packet.PacketBusFluidExport;
@@ -29,9 +29,9 @@ public class GuiBusFluidExport extends GuiContainer
 	public static final int xSize = 176;
 	public static final int ySize = 177;
 
-	public GuiBusFluidExport(IInventory inventory, IInventory tileEntity, World world, TileEntityBusFluidExport tileentity, EntityPlayer player)
+	public GuiBusFluidExport(World world, IInventory inventory, TileEntityBusFluidExport tileentity, EntityPlayer player)
 	{
-		super(new ContainerBusFluidExport(inventory, tileEntity));
+		super(new ContainerBusFluidExport(inventory, tileentity.getInventory()));
 		this.world = world;
 		this.tileentity = tileentity;
 		this.player = player;
@@ -51,7 +51,7 @@ public class GuiBusFluidExport extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
+		PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/exportbusfluid.png"));
 
@@ -61,7 +61,7 @@ public class GuiBusFluidExport extends GuiContainer
 			button.setRedstoneMode(tileentity.getRedstoneAction());
 		}
 
-		this.fontRenderer.drawString(BlockNames.FLUIDEXPORT.getLocalizedName(), 5, 0, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDEXPORT.getLocalizedName(), 5, 0, 0x000000);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class GuiBusFluidExport extends GuiContainer
 		switch (button.id)
 		{
 		case 0:
-			PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
 			break;
 		default:
 		}

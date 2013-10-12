@@ -1,6 +1,5 @@
 package extracells.blocks;
 
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,7 +11,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import appeng.api.events.GridTileLoadEvent;
+import net.minecraftforge.event.ForgeSubscribe;
+import appeng.api.events.GridStorageUpdateEvent;
 import appeng.api.me.items.IAEWrench;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -40,6 +40,7 @@ public class BlockBusFluidStorage extends BlockRotatable
 		this.setUnlocalizedName("block.fluid.bus.storage");
 		this.setHardness(2.0F);
 		this.setResistance(10.0F);
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override
@@ -121,8 +122,10 @@ public class BlockBusFluidStorage extends BlockRotatable
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
 	{
-		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z), world, ((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z)).getLocation()));
-		PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
+		if (!world.isRemote)
+		{
+			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
+		}
 	}
 
 	@Override

@@ -89,7 +89,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 				return StatCollector.translateToLocal(getUnlocalizedName(stack)) + " - " + Util.getCellRegistry().getHandlerForCell(stack).getAvailableItems().getItems().get(0).getDisplayName();
 			} else
 			{
-				return StatCollector.translateToLocal("tooltip.empty") + " " + StatCollector.translateToLocal(getUnlocalizedName(stack));
+				return StatCollector.translateToLocal("tooltip.empty1") + " " + StatCollector.translateToLocal(getUnlocalizedName(stack));
 			}
 		} else
 		{

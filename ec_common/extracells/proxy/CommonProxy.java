@@ -8,10 +8,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import appeng.api.Blocks;
 import appeng.api.Items;
-import appeng.api.WorldCoord;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import extracells.BlockEnum;
 import extracells.Extracells;
 import extracells.blocks.BlockBusFluidExport;
 import extracells.blocks.BlockBusFluidImport;
@@ -23,6 +23,7 @@ import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
 import extracells.blocks.BlockSolderingStation;
 import extracells.blocks.BlockTerminalFluid;
+import extracells.blocks.BlockWalrusLoader;
 import extracells.container.ContainerBusFluidExport;
 import extracells.container.ContainerBusFluidImport;
 import extracells.container.ContainerBusFluidStorage;
@@ -55,6 +56,7 @@ import extracells.tile.TileEntityMEDropper;
 import extracells.tile.TileEntitySolderingStation;
 import extracells.tile.TileEntityTerminalFluid;
 import extracells.tile.TileEntityTransitionPlaneFluid;
+import extracells.tile.TileEntityWalrus;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -82,16 +84,17 @@ public class CommonProxy implements IGuiHandler
 
 		ItemStack advancedStorageCasing = new ItemStack(Extracells.Casing, 1, 0);
 
-		ItemStack meItemDropper = new ItemStack(Extracells.MEDropper, 1);
-		ItemStack solderingStation = new ItemStack(Extracells.SolderingStation, 1);
-		ItemStack meBattery = new ItemStack(Extracells.MEBattery, 1);
-		ItemStack hardMEDrive = new ItemStack(Extracells.HardMEDrive, 1);
-		ItemStack fluidImportBus = new ItemStack(Extracells.BusFluidImport, 1);
-		ItemStack fluidExportBus = new ItemStack(Extracells.BusFluidExport, 1);
-		ItemStack fluidStorageBus = new ItemStack(Extracells.BusFluidStorage, 1);
-		ItemStack fluidTerminal = new ItemStack(Extracells.TerminalFluid, 1);
-		ItemStack transitionPlaneFluid = new ItemStack(Extracells.TransitionPlaneFluid, 1);
-		ItemStack certusTank = new ItemStack(Extracells.CertusTank, 1);
+		ItemStack meItemDropper = new ItemStack(BlockEnum.MEDROPPER.getBlockEntry(), 1);
+		ItemStack solderingStation = new ItemStack(BlockEnum.SOLDERINGSTATION.getBlockEntry(), 1);
+		ItemStack meBattery = new ItemStack(BlockEnum.MEBATTERY.getBlockEntry(), 1);
+		ItemStack hardMEDrive = new ItemStack(BlockEnum.BRMEDRIVE.getBlockEntry(), 1);
+		ItemStack fluidImportBus = new ItemStack(BlockEnum.FLUIDIMPORT.getBlockEntry(), 1);
+		ItemStack fluidExportBus = new ItemStack(BlockEnum.FLUIDEXPORT.getBlockEntry(), 1);
+		ItemStack fluidStorageBus = new ItemStack(BlockEnum.FLUIDSTORAGE.getBlockEntry(), 1);
+		ItemStack fluidTerminal = new ItemStack(BlockEnum.FLUIDTERMINAL.getBlockEntry(), 1);
+		ItemStack transitionPlaneFluid = new ItemStack(BlockEnum.FLUIDTRANSITION.getBlockEntry(), 1);
+		ItemStack certusTank = new ItemStack(BlockEnum.CERTUSTANK.getBlockEntry(), 1);
+		ItemStack chromia = new ItemStack(BlockEnum.CHROMIA.getBlockEntry(), 1);
 
 		// Advanced Casing
 		GameRegistry.addShapedRecipe(advancedStorageCasing, new Object[]
@@ -181,6 +184,10 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.addShapedRecipe(certusTank, new Object[]
 		{ "GGG", "G_G", "GCG", 'G', Blocks.blkQuartzGlass, 'C', Blocks.blkColorlessCable, });
 
+		// Chromia
+		GameRegistry.addShapedRecipe(chromia, new Object[]
+		{ "FFF", "F_F", "FFF", 'f', Item.fishRaw, });
+
 	}
 
 	public void RegisterTileEntities()
@@ -195,6 +202,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityTerminalFluid.class, "tileEntityTerminalFluid");
 		GameRegistry.registerTileEntity(TileEntityTransitionPlaneFluid.class, "tileEntityTransitionPlaneFluid");
 		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
+		GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
 	}
 
 	public void RegisterRenderers()
@@ -215,26 +223,28 @@ public class CommonProxy implements IGuiHandler
 
 	public void RegisterBlocks()
 	{
-		Extracells.SolderingStation = new BlockSolderingStation(Extracells.SolderingStation_ID);
-		GameRegistry.registerBlock(Extracells.SolderingStation, ItemBlockSpecial.class, Extracells.SolderingStation.getUnlocalizedName());
-		Extracells.MEDropper = new BlockMEDropper(Extracells.MEDropper_ID);
-		GameRegistry.registerBlock(Extracells.MEDropper, ItemBlockSpecial.class, Extracells.MEDropper.getUnlocalizedName());
-		Extracells.MEBattery = new BlockMEBattery(Extracells.MEBattery_ID);
-		GameRegistry.registerBlock(Extracells.MEBattery, ItemBlockSpecial.class, Extracells.MEBattery.getUnlocalizedName());
-		Extracells.HardMEDrive = new BlockHardMEDrive(Extracells.HardMEDrive_ID);
-		GameRegistry.registerBlock(Extracells.HardMEDrive, ItemBlockSpecial.class, Extracells.HardMEDrive.getUnlocalizedName());
-		Extracells.BusFluidImport = new BlockBusFluidImport(Extracells.BusFluidImport_ID);
-		GameRegistry.registerBlock(Extracells.BusFluidImport, ItemBlockSpecial.class, Extracells.BusFluidImport.getUnlocalizedName());
-		Extracells.BusFluidExport = new BlockBusFluidExport(Extracells.BusFluidExport_ID);
-		GameRegistry.registerBlock(Extracells.BusFluidExport, ItemBlockSpecial.class, Extracells.BusFluidExport.getUnlocalizedName());
-		Extracells.BusFluidStorage = new BlockBusFluidStorage(Extracells.BusFluidStorage_ID);
-		GameRegistry.registerBlock(Extracells.BusFluidStorage, ItemBlockSpecial.class, Extracells.BusFluidStorage.getUnlocalizedName());
-		Extracells.TerminalFluid = new BlockTerminalFluid(Extracells.TerminalFluid_ID);
-		GameRegistry.registerBlock(Extracells.TerminalFluid, ItemBlockSpecial.class, Extracells.TerminalFluid.getUnlocalizedName());
-		Extracells.TransitionPlaneFluid = new BlockFluidTransitionPlane(Extracells.FluidTransitionPlane_ID);
-		GameRegistry.registerBlock(Extracells.TransitionPlaneFluid, ItemBlockSpecial.class, Extracells.TransitionPlaneFluid.getUnlocalizedName());
-		Extracells.CertusTank = new BlockCertusTank(Extracells.CertusTank_ID);
-		GameRegistry.registerBlock(Extracells.CertusTank, ItemBlockCertusTank.class, Extracells.CertusTank.getUnlocalizedName());
+		BlockEnum.SOLDERINGSTATION.setBlockEntry(new BlockSolderingStation(BlockEnum.SOLDERINGSTATION.getID()));
+		GameRegistry.registerBlock(BlockEnum.SOLDERINGSTATION.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.SOLDERINGSTATION.getBlockEntry().getUnlocalizedName());
+		BlockEnum.MEDROPPER.setBlockEntry(new BlockMEDropper(BlockEnum.MEDROPPER.getID()));
+		GameRegistry.registerBlock(BlockEnum.MEDROPPER.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.MEDROPPER.getBlockEntry().getUnlocalizedName());
+		BlockEnum.MEBATTERY.setBlockEntry(new BlockMEBattery(BlockEnum.MEBATTERY.getID()));
+		GameRegistry.registerBlock(BlockEnum.MEBATTERY.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.MEBATTERY.getBlockEntry().getUnlocalizedName());
+		BlockEnum.BRMEDRIVE.setBlockEntry(new BlockHardMEDrive(BlockEnum.BRMEDRIVE.getID()));
+		GameRegistry.registerBlock(BlockEnum.BRMEDRIVE.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.BRMEDRIVE.getBlockEntry().getUnlocalizedName());
+		BlockEnum.FLUIDIMPORT.setBlockEntry(new BlockBusFluidImport(BlockEnum.FLUIDIMPORT.getID()));
+		GameRegistry.registerBlock(BlockEnum.FLUIDIMPORT.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDIMPORT.getBlockEntry().getUnlocalizedName());
+		BlockEnum.FLUIDEXPORT.setBlockEntry(new BlockBusFluidExport(BlockEnum.FLUIDEXPORT.getID()));
+		GameRegistry.registerBlock(BlockEnum.FLUIDEXPORT.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDEXPORT.getBlockEntry().getUnlocalizedName());
+		BlockEnum.FLUIDSTORAGE.setBlockEntry(new BlockBusFluidStorage(BlockEnum.FLUIDSTORAGE.getID()));
+		GameRegistry.registerBlock(BlockEnum.FLUIDSTORAGE.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDSTORAGE.getBlockEntry().getUnlocalizedName());
+		BlockEnum.FLUIDTERMINAL.setBlockEntry(new BlockTerminalFluid(BlockEnum.FLUIDTERMINAL.getID()));
+		GameRegistry.registerBlock(BlockEnum.FLUIDTERMINAL.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDTERMINAL.getBlockEntry().getUnlocalizedName());
+		BlockEnum.FLUIDTRANSITION.setBlockEntry(new BlockFluidTransitionPlane(BlockEnum.FLUIDTRANSITION.getID()));
+		GameRegistry.registerBlock(BlockEnum.FLUIDTRANSITION.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDTRANSITION.getBlockEntry().getUnlocalizedName());
+		BlockEnum.CERTUSTANK.setBlockEntry(new BlockCertusTank(BlockEnum.CERTUSTANK.getID()));
+		GameRegistry.registerBlock(BlockEnum.CERTUSTANK.getBlockEntry(), ItemBlockCertusTank.class, BlockEnum.CERTUSTANK.getBlockEntry().getUnlocalizedName());
+		BlockEnum.CHROMIA.setBlockEntry(new BlockWalrusLoader(BlockEnum.CHROMIA.getID()));
+		GameRegistry.registerBlock(BlockEnum.CHROMIA.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.CHROMIA.getBlockEntry().getUnlocalizedName());
 	}
 
 	@Override
@@ -248,15 +258,15 @@ public class CommonProxy implements IGuiHandler
 			case 0: // GUI Hard ME Drive
 				return new GuiHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			case 1: // GUI Fluid Terminal
-				return new GuiTerminalFluid(x, y, z, player.inventory, tileEntity);
+				return new GuiTerminalFluid(world, (TileEntityTerminalFluid) tileEntity, player.inventory);
 			case 2: // GUI Storage Bus Fluid
-				return new GuiBusFluidStorage(player.inventory, ((TileEntityBusFluidStorage) tileEntity).getInventory(), (TileEntityBusFluidStorage) tileEntity);
+				return new GuiBusFluidStorage(world, player.inventory, (TileEntityBusFluidStorage) tileEntity);
 			case 3: // GUI Import Bus Fluid
-				return new GuiBusFluidImport(player.inventory, ((TileEntityBusFluidImport) tileEntity).getInventory(), world, (TileEntityBusFluidImport) tileEntity, player);
+				return new GuiBusFluidImport(world, player.inventory, (TileEntityBusFluidImport) tileEntity, player);
 			case 4: // GUI Export Bus Fluid
-				return new GuiBusFluidExport(player.inventory, ((TileEntityBusFluidExport) tileEntity).getInventory(), world, (TileEntityBusFluidExport) tileEntity, player);
+				return new GuiBusFluidExport(world, player.inventory, (TileEntityBusFluidExport) tileEntity, player);
 			case 5: // GUI ME Battery
-				return new GuiMEBattery(world, new WorldCoord(x, y, z), player);
+				return new GuiMEBattery(world, (TileEntityMEBattery) tileEntity, player);
 			default:
 				return false;
 			}
@@ -278,7 +288,7 @@ public class CommonProxy implements IGuiHandler
 			case 0: // GUI Hard ME Drive
 				return new ContainerHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			case 1: // GUI Fluid Terminal
-				return new ContainerTerminalFluid(player.inventory, tileEntity);
+				return new ContainerTerminalFluid(player.inventory, ((TileEntityTerminalFluid) tileEntity).getInventory());
 			case 2: // GUI Storage Bus Fluid
 				return new ContainerBusFluidStorage(player.inventory, ((TileEntityBusFluidStorage) tileEntity).getInventory());
 			case 3: // GUI Import Bus Fluid

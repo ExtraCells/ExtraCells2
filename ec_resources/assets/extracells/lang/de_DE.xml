@@ -32,11 +32,13 @@
   <entry key="tile.block.fluid.terminal.name">Flüssigkeits-Zugriffs-Terminal</entry>
   <entry key="tile.block.fluid.transitionplane.name">ME-Flüssigkeits-Übergangsmembran</entry>
   <entry key="tile.block.certustank.name">ME-Certus-Tank</entry>
+  <entry key="tile.block.walrus.name">Walross</entry>
   <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
   <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
   <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>
   <entry key="tooltip.storageencrypted">Speicher verschlüsselt!</entry>
-  <entry key="tooltip.empty">Leerer</entry>
+  <entry key="tooltip.empty1">Leerer</entry>
+  <entry key="tooltip.empty2">Leerer</entry>
   <entry key="tooltip.block">Block</entry>
   <entry key="tooltip.equaltrade1">Gleicher-Handel-Modus (1*1)</entry>
   <entry key="tooltip.equaltrade3">Gleicher-Handel-Modus (3*3)</entry>
