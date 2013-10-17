@@ -23,7 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class BlockTerminalFluid extends BlockRotatable
+public class BlockTerminalFluid extends ColorableRotatableECBlock
 {
 
 	@SideOnly(Side.CLIENT)
@@ -110,6 +110,7 @@ public class BlockTerminalFluid extends BlockRotatable
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
+		super.onBlockPlacedBy(world, x, y, z, player, itemstack);
 		int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 
 		if (l == 0)

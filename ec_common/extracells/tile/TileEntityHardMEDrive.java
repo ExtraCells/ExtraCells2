@@ -21,7 +21,7 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 
-public class TileEntityHardMEDrive extends TileEntity implements IInventory, IGridMachine, ICellContainer
+public class TileEntityHardMEDrive extends ColorableECTile implements IInventory, IGridMachine, ICellContainer
 {
 
 	Boolean powerStatus = true, networkReady = true;

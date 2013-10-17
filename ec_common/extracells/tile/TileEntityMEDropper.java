@@ -15,7 +15,7 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IGridTileEntity;
 import appeng.api.me.util.IGridInterface;
 
-public class TileEntityMEDropper extends TileEntity implements IGridMachine, IDirectionalMETile
+public class TileEntityMEDropper extends ColorableECTile implements IGridMachine, IDirectionalMETile
 {
 
 	public ItemStack todispense;

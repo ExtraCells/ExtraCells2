@@ -18,7 +18,7 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.util.IGridInterface;
 
-public class TileEntityTransitionPlaneFluid extends TileEntity implements IGridMachine, IDirectionalMETile
+public class TileEntityTransitionPlaneFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile
 {
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;

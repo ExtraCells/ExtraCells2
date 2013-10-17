@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 
-public class BlockBusFluidImport extends BlockRotatable
+public class BlockBusFluidImport extends ColorableRotatableECBlock
 {
 
 	@SideOnly(Side.CLIENT)
@@ -122,21 +122,5 @@ public class BlockBusFluidImport extends BlockRotatable
 		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
 		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
 		this.topIcon = iconregister.registerIcon("extracells:machine.top");
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
-	{
-		if (player.isSneaking())
-		{
-			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)).getOpposite().ordinal(), 3);
-		}
-	}
-
-	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hiZ, int meta)
-	{
-
-		return side;
 	}
 }

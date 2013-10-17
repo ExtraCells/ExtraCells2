@@ -32,7 +32,7 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 
-public class TileEntityBusFluidImport extends TileEntity implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
+public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
 	Boolean powerStatus = true, networkReady = true, redstoneFlag = false;
 	IGridInterface grid;

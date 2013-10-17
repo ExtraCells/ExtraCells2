@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityBusFluidStorage;
 
-public class BlockBusFluidStorage extends BlockRotatable
+public class BlockBusFluidStorage extends ColorableRotatableECBlock
 {
 
 	@SideOnly(Side.CLIENT)
@@ -126,21 +126,5 @@ public class BlockBusFluidStorage extends BlockRotatable
 		{
 			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
 		}
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
-	{
-		if (player.isSneaking())
-		{
-			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)).getOpposite().ordinal(), 3);
-		}
-	}
-
-	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hiZ, int meta)
-	{
-
-		return side;
 	}
 }

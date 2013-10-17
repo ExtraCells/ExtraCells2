@@ -62,7 +62,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long remainingItemCount()
 	{
-		if (tank != null && tank instanceof IFluidHandler && ((IFluidHandler) tank).getTankInfo(facing)[0].fluid != null)
+		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0].fluid != null)
 		{
 			return getTankInfo(tank)[0].capacity - getTankInfo(tank)[0].fluid.amount;
 		}
@@ -72,7 +72,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long remainingItemTypes()
 	{
-		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0].fluid != null)
+		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0].fluid == null)
 		{
 			return 1;
 		}
@@ -190,7 +190,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 			}
 		} catch (Throwable e)
 		{
-			System.out.println("I prevented a crash (I HOPE SO). Please send me the following error! ~M3gaF3ak/Leomnelf");
+			System.out.println("I prevented a crash (I HOPE SO). Please send me the following error! ~M3gaF3ak/Leonelf");
 			e.printStackTrace();
 		}
 

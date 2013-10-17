@@ -2,6 +2,7 @@ package extracells.tile;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,7 @@ import appeng.api.networkevents.MENetworkStorageEvent;
 import extracells.Extracells;
 import extracells.SpecialFluidStack;
 
-public class TileEntityTerminalFluid extends TileEntity implements IGridMachine, IDirectionalMETile
+public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile
 {
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
@@ -239,6 +240,8 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 				}
 			}
 		}
+		
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 
 	public boolean fillFluid(FluidStack toImport)
@@ -272,11 +275,10 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 
 					if (takenStack == null)
 					{
-						grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize()), toDrain.getItemDamage())));
 						return false;
 					} else if (takenStack.getStackSize() != (int) toDrain.getStackSize())
 					{
-						grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (takenStack.getStackSize()), toDrain.getItemDamage())));
+						grid.getCellArray().addItems(takenStack);
 						return false;
 					} else
 					{
@@ -403,9 +405,12 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	@Override
 	public void setGrid(IGridInterface gi)
 	{
-		grid = gi;
-		if (getGrid() != null)
-			updateFluids(getGrid().getCellArray().getAvailableItems());
+		if (!worldObj.isRemote)
+		{
+			grid = gi;
+			if (getGrid() != null)
+				updateFluids(getGrid().getCellArray().getAvailableItems());
+		}
 	}
 
 	@Override
@@ -429,9 +434,12 @@ public class TileEntityTerminalFluid extends TileEntity implements IGridMachine,
 	@Override
 	public void setNetworkReady(boolean isReady)
 	{
-		networkReady = isReady;
-		if (getGrid() != null)
-			updateFluids(getGrid().getCellArray().getAvailableItems());
+		if (!worldObj.isRemote)
+		{
+			networkReady = isReady;
+			if (getGrid() != null)
+				updateFluids(getGrid().getCellArray().getAvailableItems());
+		}
 	}
 
 	@Override

@@ -33,7 +33,7 @@ import appeng.api.me.util.IMEInventoryHandler;
 import extracells.Extracells;
 import extracells.handler.FluidBusInventoryHandler;
 
-public class TileEntityBusFluidStorage extends TileEntity implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
+public class TileEntityBusFluidStorage extends ColorableECTile implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid = null;

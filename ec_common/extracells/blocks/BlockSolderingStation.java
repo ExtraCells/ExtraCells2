@@ -18,7 +18,7 @@ import extracells.Extracells;
 import extracells.gui.GuiSolderingStation;
 import extracells.tile.TileEntitySolderingStation;
 
-public class BlockSolderingStation extends BlockRotatable
+public class BlockSolderingStation extends ColorableRotatableECBlock
 {
 
 	public BlockSolderingStation(int id)
@@ -112,5 +112,10 @@ public class BlockSolderingStation extends BlockRotatable
 		{
 			return true;
 		}
+	}
+
+	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hiZ, int meta)
+	{
+		return meta;
 	}
 }

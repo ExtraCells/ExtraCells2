@@ -16,9 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
@@ -34,7 +32,7 @@ import appeng.api.me.util.IGridInterface;
 import extracells.Extracells;
 import extracells.SpecialFluidStack;
 
-public class TileEntityBusFluidExport extends TileEntity implements IGridMachine, IDirectionalMETile, ITileCable
+public class TileEntityBusFluidExport extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable
 {
 	Boolean powerStatus = true, networkReady = true, redstoneFlag = false;
 	IGridInterface grid;

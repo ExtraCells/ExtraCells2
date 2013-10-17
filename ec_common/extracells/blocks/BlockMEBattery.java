@@ -106,10 +106,5 @@ public class BlockMEBattery extends BlockContainer
 		}
 		player.openGui(Extracells.instance, 5, world, x, y, z);
 		return true;
-
-		/*
-		 * / TileEntity tileentity = world.getBlockTileEntity(x, y, z); if (!world.isRemote && tileentity != null) { TileEntityMEBattery meBattery = (TileEntityMEBattery) tileentity; Double energy = meBattery.getEnergy(); Double maxEnergy = meBattery.getMaxEnergy(); if (energy > maxEnergy) { player.addChatMessage("Current Energy: " + new DecimalFormat("#").format(maxEnergy)); }
-		 * else { player.addChatMessage("Current Energy: " + new DecimalFormat("#").format(energy)); } player.addChatMessage("Max Energy: " + new DecimalFormat("#").format(maxEnergy)); } return true; //
-		 */
 	}
 }

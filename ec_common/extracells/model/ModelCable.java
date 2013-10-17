@@ -12,54 +12,61 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class ModelCable extends ModelBase
 {
-	ModelRenderer Shape1;
+	ModelRenderer CableExtend;
+	ModelRenderer CableBase;
 
 	public ModelCable()
 	{
 		textureWidth = 64;
 		textureHeight = 32;
 
-		Shape1 = new ModelRenderer(this, 0, 0);
-		Shape1.addBox(0F, 0F, 0F, 4, 6, 4);
-		Shape1.setRotationPoint(-2F, 18F, -2F);
-		Shape1.setTextureSize(64, 32);
-		Shape1.mirror = true;
-		setRotation(Shape1, 0F, 0F, 0F);
+		CableExtend = new ModelRenderer(this, 0, 4);
+		CableExtend.addBox(0F, 0F, 0F, 4, 6, 4);
+		CableExtend.setRotationPoint(-2F, 18F, -2F);
+		CableExtend.setTextureSize(64, 32);
+		CableExtend.mirror = true;
+		setRotation(CableExtend, 0F, 0F, 0F);
+		CableBase = new ModelRenderer(this, 0, 0);
+		CableBase.addBox(0F, 0F, 0F, 4, 4, 4);
+		CableBase.setRotationPoint(-2F, 14F, -2F);
+		CableBase.setTextureSize(64, 32);
+		CableBase.mirror = true;
+		setRotation(CableBase, 0F, 0F, 0F);
 	}
 
-	public void render(double x, double y, double z, ForgeDirection orientation)
+	public void renderExtend(double x, double y, double z, ForgeDirection orientation, Colors color)
 	{
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_cable.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(color.getTexture());
 		GL11.glPushMatrix();
-		
+
 		switch (orientation)
 		{
 		case UP:
-			GL11.glTranslatef((float) x + 0.5F, (float) y + -0.5F, (float) z + 0.5F);
+			GL11.glTranslatef((float) x + 0.5F, (float) y + -0.57F, (float) z + 0.5F);
 			GL11.glRotatef(180F, 1F, 0F, 0F);
 			break;
 		case DOWN:
-			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.57F, (float) z + 0.5F);
 			GL11.glRotatef(0F, 0F, 0F, 0F);
 			break;
 
 		case SOUTH:
-			GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + -0.5F);
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + -0.57F);
 			GL11.glRotatef(90F, 1F, 0F, 0F);
 			GL11.glRotatef(180F, 0F, 0F, 1F);
 			break;
 		case NORTH:
-			GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 1.5F);
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 0.5F, (float) z + 1.57F);
 			GL11.glRotatef(90F, 1F, 0F, 0F);
 			GL11.glRotatef(0F, 0F, 0F, 1F);
 			break;
 		case WEST:
-			GL11.glTranslatef((float) x + 1.5F, (float) y + 0.5F, (float) z + 0.5F);
+			GL11.glTranslatef((float) x + 1.57F, (float) y + 0.5F, (float) z + 0.5F);
 			GL11.glRotatef(90F, 1F, 0F, 0F);
 			GL11.glRotatef(-90F, 0F, 0F, 1F);
 			break;
 		case EAST:
-			GL11.glTranslatef((float) x + -0.5F, (float) y + 0.5F, (float) z + 0.5F);
+			GL11.glTranslatef((float) x + -0.57F, (float) y + 0.5F, (float) z + 0.5F);
 			GL11.glRotatef(90F, 1F, 0F, 0F);
 			GL11.glRotatef(90F, 0F, 0F, 1F);
 			break;
@@ -69,14 +76,19 @@ public class ModelCable extends ModelBase
 			break;
 		}
 
-		GL11.glScalef(0.88F, -1.001F, -0.88F);
-		this.render(0.0625f);
+		GL11.glScalef(0.8799F, -1.05F, -0.8799F);
+		CableExtend.render(0.0625f);
 		GL11.glPopMatrix();
 	}
 
-	public void render(float f)
+	public void renderBase(double x, double y, double z, Colors color)
 	{
-		Shape1.render(f);
+		Minecraft.getMinecraft().renderEngine.bindTexture(color.getTexture());
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float) x + 0.5F, (float) y + -0.5F, (float) z + 0.5F);
+		GL11.glScalef(0.8799F, 1, 0.8799F);
+		CableBase.render(0.0625f);
+		GL11.glPopMatrix();
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z)
@@ -84,5 +96,52 @@ public class ModelCable extends ModelBase
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
+	}
+
+	public enum Colors
+	{
+		CLEAR("blank.png"),
+		BLACK("black.png"),
+		BLUE("blue.png"),
+		BROWN("brown.png"),
+		GREEN("green.png"),
+		RED("red.png"),
+		WHITE("white.png"),
+		YELLOW("yellow.png");
+
+		private final String path;
+
+		Colors(String path)
+		{
+			this.path = path;
+		}
+
+		ResourceLocation getTexture()
+		{
+			return new ResourceLocation("extracells", "textures/blocks/cable_textures/" + path);
+		}
+
+		public static Colors getColorByID(int ID)
+		{
+			switch (ID)
+			{
+			case 0:
+				return BLUE;
+			case 1:
+				return BLACK;
+			case 2:
+				return WHITE;
+			case 3:
+				return BROWN;
+			case 4:
+				return RED;
+			case 5:
+				return YELLOW;
+			case 6:
+				return GREEN;
+			default:
+				return CLEAR;
+			}
+		}
 	}
 }

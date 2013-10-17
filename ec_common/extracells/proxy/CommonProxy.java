@@ -186,7 +186,7 @@ public class CommonProxy implements IGuiHandler
 
 		// Chromia
 		GameRegistry.addShapedRecipe(chromia, new Object[]
-		{ "FFF", "F_F", "FFF", 'f', Item.fishRaw, });
+		{ "FFF", "F_F", "FFF", 'F', Item.fishRaw, });
 
 	}
 

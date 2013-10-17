@@ -20,7 +20,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class BlockFluidTransitionPlane extends BlockRotatable
+public class BlockFluidTransitionPlane extends ColorableRotatableECBlock
 {
 
 	@SideOnly(Side.CLIENT)
@@ -80,21 +80,5 @@ public class BlockFluidTransitionPlane extends BlockRotatable
 		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
 		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
 		this.topIcon = iconregister.registerIcon("extracells:machine.top");
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
-	{
-		if (player.isSneaking())
-		{
-			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)).getOpposite().ordinal(), 3);
-		}
-	}
-
-	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hiZ, int meta)
-	{
-
-		return side;
 	}
 }

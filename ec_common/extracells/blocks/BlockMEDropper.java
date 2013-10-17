@@ -38,7 +38,7 @@ import appeng.api.me.items.IAEWrench;
 import extracells.Extracells;
 import extracells.tile.TileEntityMEDropper;
 
-public class BlockMEDropper extends BlockRotatable
+public class BlockMEDropper extends ColorableRotatableECBlock
 {
 	public static final IRegistry dispenseBehaviorRegistry = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
 	@SideOnly(Side.CLIENT)
@@ -201,21 +201,5 @@ public class BlockMEDropper extends BlockRotatable
 	public boolean hasTileEntity()
 	{
 		return true;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
-	{
-		if (player.isSneaking())
-		{
-			world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)).getOpposite().ordinal(), 3);
-		}
-	}
-
-	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hiZ, int meta)
-	{
-
-		return side;
 	}
 }

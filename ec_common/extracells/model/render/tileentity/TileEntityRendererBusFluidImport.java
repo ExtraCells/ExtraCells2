@@ -7,6 +7,8 @@ import net.minecraftforge.common.ForgeDirection;
 import appeng.api.me.tiles.IDirectionalMETile;
 import extracells.model.ModelBusFluidImport;
 import extracells.model.ModelCable;
+import extracells.model.ModelCable.Colors;
+import extracells.tile.ColorableECTile;
 
 public class TileEntityRendererBusFluidImport extends TileEntitySpecialRenderer
 {
@@ -23,16 +25,13 @@ public class TileEntityRendererBusFluidImport extends TileEntitySpecialRenderer
 		int zCoord = tileEntity.zCoord;
 		World world = tileEntity.worldObj;
 
-		for (ForgeDirection direction : ForgeDirection.values())
+		if (((ColorableECTile) tileEntity).getVisualConnections() != null)
 		{
-			TileEntity offsetTileEntity = world.getBlockTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
-			if (direction != ForgeDirection.UNKNOWN && tileEntity.getBlockMetadata() != direction.ordinal() && offsetTileEntity instanceof appeng.api.me.tiles.IGridTileEntity)
+			for (ForgeDirection direction : ((ColorableECTile) tileEntity).getVisualConnections())
 			{
-				if (!(offsetTileEntity instanceof appeng.api.me.tiles.IDirectionalMETile) || (offsetTileEntity instanceof appeng.api.me.tiles.IDirectionalMETile && ((IDirectionalMETile) offsetTileEntity).canConnect(direction.getOpposite())))
-				{
-					modelCable.render(x, y, z, direction);
-				}
+				modelCable.renderExtend(x, y, z, direction, Colors.getColorByID(((ColorableECTile) tileEntity).getColor()));
 			}
 		}
+		modelCable.renderBase(x, y, z, Colors.getColorByID(((ColorableECTile) tileEntity).getColor()));
 	}
 }

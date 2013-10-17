@@ -18,7 +18,6 @@ public class ModelBusFluidImport extends ModelBase
 	ModelRenderer Shape2;
 	ModelRenderer Shape3;
 	ModelRenderer Shape4;
-	ModelRenderer Shape5;
 
 	public ModelBusFluidImport()
 	{
@@ -49,12 +48,6 @@ public class ModelBusFluidImport extends ModelBase
 		Shape4.setTextureSize(64, 64);
 		Shape4.mirror = true;
 		setRotation(Shape4, 0F, 0F, 0F);
-		Shape5 = new ModelRenderer(this, 0, 41);
-		Shape5.addBox(0F, 0F, 0F, 4, 4, 4);
-		Shape5.setRotationPoint(-2F, 14F, -2F);
-		Shape5.setTextureSize(64, 64);
-		Shape5.mirror = true;
-		setRotation(Shape5, 0F, 0F, 0F);
 	}
 
 	public void render(float f5)
@@ -63,7 +56,6 @@ public class ModelBusFluidImport extends ModelBase
 		Shape2.render(f5);
 		Shape3.render(f5);
 		Shape4.render(f5);
-		Shape5.render(f5);
 	}
 
 	public void render(TileEntity tileEntity, double x, double y, double z)
