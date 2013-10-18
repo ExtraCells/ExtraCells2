@@ -1,0 +1,38 @@
+buildscript {
+        repositories { mavenCentral() }
+        dependencies { classpath 'com.github.abrarsyed.gmcp:GMCP:0.8.+' }
+}
+ 
+apply plugin: "gmcp"
+ 
+group = 'extracells'
+version = "1.4.9e"
+archivesBaseName = 'ExtraCells'
+ 
+logger.lifecycle ""+version
+ 
+minecraft { minecraftVersion = "1.6.4" }
+ 
+processResources
+{
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.lang'
+        include '**/*.info'
+
+        expand 'version':project.version, 'mcversion':project.minecraft.minecraftVersion
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.lang'
+        exclude '**/*.info'
+    }
+}
+
+task deobfJar(type: Jar) {
+        from sourceSets.main.output
+        appendix = 'deobf'
+}
+ 
+artifacts {
+        archives deobfJar
+}
