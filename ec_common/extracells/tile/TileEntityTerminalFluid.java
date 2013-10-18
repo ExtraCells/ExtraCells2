@@ -39,7 +39,13 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
 	private ItemStack[] slots = new ItemStack[3];
 	private int fluidIndex = 0;
-	ECPrivateInventory inventory = new ECPrivateInventory(slots, costumName, 64);
+	ECPrivateInventory inventory = new ECPrivateInventory(slots, costumName, 64)
+	{
+		public boolean isItemValidForSlot(int i, ItemStack itemstack)
+		{
+			return FluidContainerRegistry.isContainer(itemstack) || (itemstack != null && itemstack.getItem() instanceof IFluidContainerItem);
+		}
+	};
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 
 	public void updateEntity()
@@ -240,7 +246,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 				}
 			}
 		}
-		
+
 		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 

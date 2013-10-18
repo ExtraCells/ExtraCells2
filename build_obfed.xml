@@ -47,10 +47,6 @@
 		</exec>
 	</target>
 
-	<target name="sign_jar">
-		<signjar jar="${build.dir.development}\${build.dir.release}\${build.release.minecraft.version}\${build.release.mod.version}\${build.release.mod.name}-universal-${build.release.mod.version}-${build_number.build_number}.jar" keystore="${build.keystore.location}" alias="${build.keystore.alias}" storepass="${build.keystore.password}" />
-	</target>
-
 	<target name="build">
 		<!-- Prep for the build -->
 		<antcall target="clean" />
@@ -87,9 +83,6 @@
 			<fileset dir="${build.dir.development}\forge\mcp\reobf\minecraft\" excludes="appeng/**" />
 			<fileset dir="${build.dir.development}\source\${build.dir.modproject}\${build.dir.modresources}" excludes="**/xcf/**" />
 		</jar>
-
-		<!-- Sign the finished jar -->
-		<antcall target="sign_jar" />
 
 		<!-- Clean up the MCP source now that we are done -->
 		<antcall target="clean" />
