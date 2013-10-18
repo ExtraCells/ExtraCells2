@@ -8,7 +8,9 @@
 		<delete file="${build.dir.development}\forge\mcp\src\minecraft\mcmod.info" />
 		<delete dir="${build.dir.development}\forge\mcp\src\minecraft\de\extracells" />
 		<delete dir="${build.dir.development}\forge\mcp\src\minecraft\extracells" />
-		<delete dir="${build.dir.development}\forge\mcp\bin\minecraft" />
+		<delete dir="${build.dir.development}\forge\mcp\src\minecraft\de\appeng" />
+		<delete dir="${build.dir.development}\forge\mcp\src\minecraft\appeng" />
+		<delete dir="${build.dir.development}\forge\mcp\reobf\minecraft" />
 	</target>
 
 	<target name="increment_build_number">
