@@ -1,12 +1,7 @@
-# gradle stuff
-build
-.gradle
-
-# eclipse stuff
-.classpath
-.project
-.settings
-bin
-
-# GMCP plugin stuff
-minecraft
+/*
+!/.gitignore
+!src
+!gradle
+!gradlew
+!gradlew.bat
+!README.md
