@@ -21,7 +21,7 @@
   <entry key="item.cluster.tera">МЭ Тера-кластер памяти</entry>
   <entry key="item.storage.physical_secure.encrypted">Шифруемая ячейка памяти - зашифрованная</entry>
   <entry key="item.storage.physical_secure.decrypted">Шифруемая ячейка памяти - расшифрованная</entry>
-  <entry key="item.casing.advanced">Продвинутый корпус для ячейки памяти</entry>
+  <entry key="item.casing.advanced.phsyical">Продвинутый корпус для ячейки памяти</entry>
   <entry key="tile.block.solderingstation.name">Паяльная станция</entry>
   <entry key="tile.block.mebattery.name">МЭ резервный аккумулятор</entry>
   <entry key="tile.block.medropper.name">МЭ выбрасыватель предметов</entry>

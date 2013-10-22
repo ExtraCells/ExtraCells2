@@ -15,22 +15,22 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 
-public class ItemCluster extends Item implements IStorageComponent
+public class ItemStorageComponent extends Item implements IStorageComponent
 {
 
 	// Localization suffixes
 	public static final String[] suffixes = new String[]
-	{ "kilo", "mega", "giga", "tera" };
+	{ "physical.kilo", "physical.mega", "physical.giga", "physical.tera", "fluid.cell", "fluid.segment", "fluid.block", "fluid.cluster" };
 
 	// Sizes
 	public static final int[] size = new int[]
-	{ 262144, 1048576, 4194304, 16777216 };
+	{ 262144, 1048576, 4194304, 16777216, 1024, 4096, 16384, 65536 };
 
 	// Icons
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;
 
-	public ItemCluster(int id)
+	public ItemStorageComponent(int id)
 	{
 		super(id);
 		this.setMaxStackSize(64);
@@ -42,13 +42,12 @@ public class ItemCluster extends Item implements IStorageComponent
 	@Override
 	public String getItemDisplayName(ItemStack itemstack)
 	{
-		return StatCollector.translateToLocal(this.getUnlocalizedName(itemstack));
+		return StatCollector.translateToLocal(getUnlocalizedName(itemstack));
 	}
 
 	@SideOnly(Side.CLIENT)
-	public Icon getIconFromDamage(int par1)
+	public Icon getIconFromDamage(int j)
 	{
-		int j = MathHelper.clamp_int(par1, 0, 3);
 		return this.icons[j];
 	}
 
@@ -59,7 +58,7 @@ public class ItemCluster extends Item implements IStorageComponent
 
 		for (int i = 0; i < suffixes.length; ++i)
 		{
-			this.icons[i] = par1IconRegister.registerIcon("extracells:" + "cluster." + suffixes[i]);
+			this.icons[i] = par1IconRegister.registerIcon("extracells:" + "storagecomponent." + suffixes[i]);
 		}
 	}
 
@@ -67,17 +66,15 @@ public class ItemCluster extends Item implements IStorageComponent
 	public String getUnlocalizedName(ItemStack itemstack)
 	{
 		int i = itemstack.getItemDamage();
-		return "item.cluster." + suffixes[i];
+		return "item.storagecomponent." + suffixes[i];
 	}
 
-	@SuppressWarnings(
-	{ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+	public void getSubItems(int itemID, CreativeTabs creativeTab, List itemList)
 	{
-		for (int j = 0; j < 4; ++j)
+		for (int j = 0; j < suffixes.length; ++j)
 		{
-			par3List.add(new ItemStack(par1, 1, j));
+			itemList.add(new ItemStack(itemID, 1, j));
 		}
 	}
 

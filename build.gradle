@@ -6,7 +6,7 @@ buildscript {
 apply plugin: "gmcp"
  
 group = 'extracells'
-version = "1.4.9e"
+version = "1.5.0"
 archivesBaseName = 'ExtraCells'
  
 logger.lifecycle ""+version

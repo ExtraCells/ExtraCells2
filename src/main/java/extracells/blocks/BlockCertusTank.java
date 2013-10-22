@@ -1,13 +1,18 @@
 package extracells.blocks;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -15,9 +20,11 @@ import net.minecraftforge.fluids.FluidStack;
 import extracells.BlockEnum;
 import extracells.Extracells;
 import extracells.tile.TileEntityCertusTank;
+import extracells.tile.TileEntityMEBattery;
 
 public class BlockCertusTank extends BlockContainer
 {
+	Icon breakIcon;
 
 	public BlockCertusTank(int id)
 	{
@@ -33,6 +40,19 @@ public class BlockCertusTank extends BlockContainer
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
 		return getDropWithNBT(world, x, y, z);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getIcon(int i, int b)
+	{
+		return breakIcon;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconregister)
+	{
+		breakIcon = iconregister.registerIcon("extracells:certustank");
 	}
 
 	@Override

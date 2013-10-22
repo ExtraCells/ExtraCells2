@@ -232,7 +232,6 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		return EnumRarity.epic;
 	}
 
-	@ForgeSubscribe
 	@Override
 	public ItemStack onItemRightClick(ItemStack i, World w, EntityPlayer p)
 	{
@@ -242,9 +241,8 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 			{
 				if (Util.getCellRegistry().getHandlerForCell(i).storedItemCount() == 0)
 				{
-					p.inventory.decrStackSize(p.inventory.currentItem, 1);
-					p.inventory.addItemStackToInventory(new ItemStack(Extracells.Cluster, 1, i.getItemDamage()));
-					p.inventory.addItemStackToInventory(new ItemStack(Extracells.Casing, 1));
+					if (p.inventory.addItemStackToInventory(new ItemStack(Extracells.Casing, 1)))
+						return new ItemStack(Extracells.Cluster, 1, i.getItemDamage());
 				}
 			} else if (i.getItemDamage() == 4)
 			{

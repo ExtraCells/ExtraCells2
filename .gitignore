@@ -1,7 +1,7 @@
 /*
 !/.gitignore
-!src
-!gradle
-!gradlew
-!gradlew.bat
-!README.md
+!/src
+!/gradle
+!/gradlew
+!/gradlew.bat
+!/README.md

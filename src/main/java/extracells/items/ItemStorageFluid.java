@@ -103,7 +103,7 @@ public class ItemStorageFluid extends Item
 				return StatCollector.translateToLocal(getUnlocalizedName(itemstack)) + " - " + Util.getCellRegistry().getHandlerForCell(itemstack).getAvailableItems().getItems().get(0).getDisplayName();
 			} else
 			{
-				return StatCollector.translateToLocal("tooltip.empty") + " " + StatCollector.translateToLocal(getUnlocalizedName(itemstack));
+				return StatCollector.translateToLocal("tooltip.empty2") + " " + StatCollector.translateToLocal(getUnlocalizedName(itemstack));
 			}
 		} else
 		{
@@ -144,9 +144,19 @@ public class ItemStorageFluid extends Item
 		}
 	}
 
+	@Override
+	public ItemStack onItemRightClick(ItemStack i, World w, EntityPlayer p)
+	{
+		if (p.isSneaking())
+		{
+			if (Util.getCellRegistry().getHandlerForCell(i).storedItemCount() == 0 && p.inventory.addItemStackToInventory(new ItemStack(Extracells.Casing, 1, 1)))
+				return new ItemStack(Extracells.Cluster, 1, i.getItemDamage() + 4); // offset of 4 because FLUID cell
+		}
+		return i;
+	}
+
 	public int getBytes(ItemStack itemstack)
 	{
-		// 1 bytes equals half a bucket now. nerf weas needed :D
 		return spaces[itemstack.getItemDamage()] * 250;
 	}
 

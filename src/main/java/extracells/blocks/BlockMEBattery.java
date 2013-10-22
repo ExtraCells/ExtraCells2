@@ -43,7 +43,6 @@ public class BlockMEBattery extends BlockContainer
 	public Icon getIcon(int i, int b)
 	{
 		return iconLow;
-
 	}
 
 	@Override
