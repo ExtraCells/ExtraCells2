@@ -20,7 +20,6 @@ public interface IMemoryCard {
 	 * @param is
 	 * @param SettingsName
 	 * @param data
-	 *  - tooltip - is a unlocalized string displayed after the settings name.
 	 */
 	void setMemoryCardContents( ItemStack is, String SettingsName, NBTTagCompound data );
 	

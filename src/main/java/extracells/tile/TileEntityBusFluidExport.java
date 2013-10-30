@@ -29,12 +29,12 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
-import extracells.Extracells;
+import extracells.ItemEnum;
 import extracells.SpecialFluidStack;
 
 public class TileEntityBusFluidExport extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable
 {
-	Boolean powerStatus = true, networkReady = true, redstoneFlag = false;
+	Boolean powerStatus = true, redstoneFlag = false, networkReady = true;
 	IGridInterface grid;
 	ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
@@ -45,7 +45,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	@Override
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote && isMachineActive())
+		if (!worldObj.isRemote && isPowered())
 		{
 			switch (getRedstoneAction())
 			{
@@ -86,6 +86,20 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		}
 	}
 
+	@Override
+	public void validate()
+	{
+		super.validate();
+		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
+	}
+
 	private void doWork()
 	{
 		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
@@ -103,7 +117,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 				{
 					if (entry != null)
 					{
-						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(Extracells.FluidDisplay, 1, entry.getID()));
+						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, entry.getID()));
 
 						long contained = getGrid().getCellArray().countOfItemType(entryToAEIS);
 
@@ -128,7 +142,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		{
 			int filled = tankToFill.fill(from, toExport, true);
 
-			IAEItemStack toExtract = Util.createItemStack(new ItemStack(Extracells.FluidDisplay, filled, toExport.fluidID));
+			IAEItemStack toExtract = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), filled, toExport.fluidID));
 
 			IAEItemStack extracted = grid.getCellArray().extractItems(toExtract);
 
@@ -194,20 +208,6 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
 		readFromNBT(packet.data);
-	}
-
-	@Override
-	public void validate()
-	{
-		super.validate();
-		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
-	}
-
-	@Override
-	public void invalidate()
-	{
-		super.invalidate();
-		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
@@ -325,13 +325,11 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		return false;
 	}
 
-	@Override
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
 	}
 
-	@Override
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;

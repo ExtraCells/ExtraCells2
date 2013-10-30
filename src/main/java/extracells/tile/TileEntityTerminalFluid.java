@@ -2,13 +2,9 @@ package extracells.tile;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -26,13 +22,13 @@ import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
+import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
-import appeng.api.networkevents.MENetworkEventSubscribe;
-import appeng.api.networkevents.MENetworkStorageEvent;
-import extracells.Extracells;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.ItemEnum;
 import extracells.SpecialFluidStack;
 
-public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile
+public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, IStorageAware
 {
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
@@ -68,7 +64,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 				if (fluidsInNetwork.get(fluidIndex) != null)
 				{
 					Fluid requestedFluid = fluidsInNetwork.get(fluidIndex).getFluid();
-					ItemStack preview = new ItemStack(extracells.Extracells.FluidDisplay, 1, fluidsInNetwork.get(fluidIndex).getID());
+					ItemStack preview = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, fluidsInNetwork.get(fluidIndex).getID());
 
 					if (preview.getTagCompound() == null)
 						preview.setTagCompound(new NBTTagCompound());
@@ -226,10 +222,10 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		return inventory;
 	}
 
-	@MENetworkEventSubscribe
-	public void networkUpdate(MENetworkStorageEvent e)
+	@Override
+	public void onNetworkInventoryChange(IItemList iss)
 	{
-		updateFluids(e.currentItems);
+		updateFluids(iss);
 	}
 
 	public void updateFluids(IItemList currentItems)
@@ -240,7 +236,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		{
 			for (IAEItemStack itemstack : currentItems)
 			{
-				if (itemstack.getItem() == extracells.Extracells.FluidDisplay && itemstack.getStackSize() > 0)
+				if (itemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && itemstack.getStackSize() > 0)
 				{
 					fluidsInNetwork.add(new SpecialFluidStack(itemstack.getItemDamage(), itemstack.getStackSize()));
 				}
@@ -252,10 +248,10 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 	public boolean fillFluid(FluidStack toImport)
 	{
-		IAEItemStack toFill = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, toImport.amount, toImport.fluidID));
+		IAEItemStack toFill = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), toImport.amount, toImport.fluidID));
 		if (grid != null)
 		{
-			IAEItemStack sim = grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(Extracells.FluidDisplay, (int) (toFill.getStackSize()), toFill.getItemDamage())));
+			IAEItemStack sim = grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), (int) (toFill.getStackSize()), toFill.getItemDamage())));
 
 			if (sim != null)
 			{
@@ -270,7 +266,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 	public boolean drainFluid(FluidStack toExport)
 	{
-		IAEItemStack toDrain = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, toExport.amount, toExport.fluidID));
+		IAEItemStack toDrain = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), toExport.amount, toExport.fluidID));
 		if (grid != null)
 		{
 			for (SpecialFluidStack fluidstack : fluidsInNetwork)
@@ -437,18 +433,11 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		return 5.0F;
 	}
 
-	@Override
 	public void setNetworkReady(boolean isReady)
 	{
-		if (!worldObj.isRemote)
-		{
-			networkReady = isReady;
-			if (getGrid() != null)
-				updateFluids(getGrid().getCellArray().getAvailableItems());
-		}
+		networkReady = isReady;
 	}
 
-	@Override
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;

@@ -71,7 +71,6 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 		}
 	}
 
-	@Override
 	public void onMEConnectionsChanged(Set<ForgeDirection> connections, Set<ForgeDirection> visualConnections)
 	{
 		this.connections = connections;
@@ -84,26 +83,29 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 		return this.visualConnections;
 	}
 
-	@Override
-	public boolean isColored(ForgeDirection dir)
+	// AE 13
+	public boolean isColored()
 	{
 		return color != -1;
 	}
 
-	@Override
+	// AE 14
+	public boolean isColored(ForgeDirection input)
+	{
+		return isColored();
+	}
+
 	public void setColor(int offset)
 	{
 		color = offset;
 		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 
-	@Override
 	public int getColor()
 	{
 		return color;
 	}
 
-	@Override
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound nbtTag = new NBTTagCompound();
@@ -111,7 +113,6 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
 
-	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
 		readFromNBT(packet.data);

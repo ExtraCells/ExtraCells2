@@ -3,10 +3,10 @@ package extracells.items;
 import java.util.List;
 
 import appeng.api.Util;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
+import extracells.ItemEnum;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -75,7 +75,7 @@ public class ItemSecureStoragePhysicalEncrypted extends Item
 	public ItemStack onItemRightClick(ItemStack stack, World w, EntityPlayer p)
 	{
 		ItemStack itemStackEncrypted = p.inventory.getCurrentItem();
-		ItemStack itemStackDecrypted = new ItemStack(Extracells.StoragePhysicalDecrypted, 1);
+		ItemStack itemStackDecrypted = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemEntry(), 1);
 
 		if (!itemStackEncrypted.hasTagCompound())
 		{

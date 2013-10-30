@@ -1,9 +1,7 @@
 package extracells.tile;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,6 +15,7 @@ import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.util.IGridInterface;
+import extracells.ItemEnum;
 
 public class TileEntityTransitionPlaneFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile
 {
@@ -37,24 +36,24 @@ public class TileEntityTransitionPlaneFluid extends ColorableECTile implements I
 			{
 				FluidStack simulation = ((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, false);
 
-				if (simulation != null && grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, simulation.amount, simulation.fluidID))) == null)
+				if (simulation != null && grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID))) == null)
 				{
 					((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, true);
-					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, simulation.amount, simulation.fluidID)));
+					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID)));
 				}
 			} else if (offsetID == FluidRegistry.WATER.getBlockID() && offsetMeta == 0)
 			{
-				if (grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1000, FluidRegistry.WATER.getID()))) == null)
+				if (grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID()))) == null)
 				{
 					worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
-					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1000, FluidRegistry.WATER.getID())));
+					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID())));
 				}
 			} else if (offsetID == FluidRegistry.LAVA.getBlockID() && offsetMeta == 0)
 			{
-				if (grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1000, FluidRegistry.LAVA.getID()))) == null)
+				if (grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID()))) == null)
 				{
 					worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
-					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1000, FluidRegistry.LAVA.getID())));
+					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID())));
 				}
 			}
 		}
@@ -127,13 +126,12 @@ public class TileEntityTransitionPlaneFluid extends ColorableECTile implements I
 	{
 		return 0;
 	}
-	@Override
+
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
 	}
 
-	@Override
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;

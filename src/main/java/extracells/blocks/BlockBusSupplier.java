@@ -20,24 +20,19 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityBusFluidStorage;
+import extracells.tile.TileEntityBusSupplier;
 
-public class BlockBusFluidStorage extends ColorableRotatableECBlock
+public class BlockBusSupplier extends ColorableRotatableECBlock
 {
 
 	@SideOnly(Side.CLIENT)
-	Icon frontIcon;
-	@SideOnly(Side.CLIENT)
-	Icon sideIcon;
-	@SideOnly(Side.CLIENT)
-	Icon bottomIcon;
-	@SideOnly(Side.CLIENT)
-	Icon topIcon;
+	Icon icon;
 
-	public BlockBusFluidStorage(int id)
+	public BlockBusSupplier(int id)
 	{
 		super(id, Material.rock);
 		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.bus.storage");
+		this.setUnlocalizedName("block.bus.supplier");
 		this.setHardness(2.0F);
 		this.setResistance(10.0F);
 	}
@@ -63,7 +58,7 @@ public class BlockBusFluidStorage extends ColorableRotatableECBlock
 	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
-		return new TileEntityBusFluidStorage();
+		return new TileEntityBusSupplier();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -75,7 +70,7 @@ public class BlockBusFluidStorage extends ColorableRotatableECBlock
 	@SideOnly(Side.CLIENT)
 	public Icon giveIcon(int side, int metadata)
 	{
-		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
+		return icon;
 	}
 
 	@Override
@@ -95,11 +90,16 @@ public class BlockBusFluidStorage extends ColorableRotatableECBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
+		icon = iconregister.registerIcon("extracells:machine.side");
+	}
 
-		this.frontIcon = iconregister.registerIcon("extracells:fluid.bus.storage.front");
-		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
-		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
+	{
+		if (!world.isRemote)
+		{
+			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
+		}
 	}
 
 	@Override
@@ -113,17 +113,7 @@ public class BlockBusFluidStorage extends ColorableRotatableECBlock
 		{
 			return false;
 		}
-		PacketDispatcher.sendPacketToPlayer(world.getBlockTileEntity(x, y, z).getDescriptionPacket(), (Player) player);
-		player.openGui(Extracells.instance, 2, world, x, y, z);
+		player.openGui(Extracells.instance, 6, world, x, y, z);
 		return true;
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
-	{
-		if (!world.isRemote)
-		{
-			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
-		}
 	}
 }

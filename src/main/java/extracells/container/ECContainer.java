@@ -3,10 +3,9 @@ package extracells.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import extracells.container.slot.IPhantomSlot;
+import extracells.container.slot.SlotFake;
 
 public abstract class ECContainer extends Container
 {
@@ -22,7 +21,7 @@ public abstract class ECContainer extends Container
 	public ItemStack slotClick(int slotNum, int mouseButton, int modifier, EntityPlayer player)
 	{
 		Slot slot = slotNum < 0 ? null : (Slot) this.inventorySlots.get(slotNum);
-		if (slot instanceof IPhantomSlot)
+		if (slot instanceof SlotFake)
 		{
 			return slotClickPhantom(slot, mouseButton, modifier, player);
 		}
@@ -35,7 +34,7 @@ public abstract class ECContainer extends Container
 
 		if (mouseButton == 2)
 		{
-			if (((IPhantomSlot) slot).canAdjust())
+			if (((SlotFake) slot).canAdjust())
 			{
 				slot.putStack(null);
 			}
@@ -89,7 +88,7 @@ public abstract class ECContainer extends Container
 
 	protected void adjustPhantomSlot(Slot slot, int mouseButton, int modifier)
 	{
-		if (!((IPhantomSlot) slot).canAdjust())
+		if (!((SlotFake) slot).canAdjust())
 		{
 			return;
 		}
@@ -118,7 +117,7 @@ public abstract class ECContainer extends Container
 
 	protected void fillPhantomSlot(Slot slot, ItemStack stackHeld, int mouseButton, int modifier)
 	{
-		if (!((IPhantomSlot) slot).canAdjust())
+		if (!((SlotFake) slot).canAdjust())
 		{
 			return;
 		}
@@ -192,7 +191,7 @@ public abstract class ECContainer extends Container
 			{
 				continue;
 			}
-			if (slot instanceof IPhantomSlot)
+			if (slot instanceof SlotFake)
 			{
 				continue;
 			}

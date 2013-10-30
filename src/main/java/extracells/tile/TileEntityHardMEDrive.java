@@ -285,13 +285,11 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 		return 2.0F;
 	}
 
-	@Override
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
 	}
 
-	@Override
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;

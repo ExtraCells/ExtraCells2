@@ -5,6 +5,7 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
+import extracells.ItemEnum;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -100,7 +101,7 @@ public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorage
 		if (p.isSneaking())
 		{
 			ItemStack itemStackDecrypted = p.inventory.getCurrentItem();
-			ItemStack itemStackEncrypted = new ItemStack(Extracells.StoragePhysicalEncrypted, 1);
+			ItemStack itemStackEncrypted = new ItemStack(ItemEnum.STORAGEPHYSICALENCRYPTED.getItemEntry(), 1);
 			if (!itemStackEncrypted.hasTagCompound())
 			{
 				itemStackEncrypted.setTagCompound(new NBTTagCompound());
@@ -164,10 +165,8 @@ public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorage
 		return false;
 	}
 
-	@Override
 	public boolean isStorageCell(ItemStack i)
 	{
-		return i != null && i.getItem() == this;
+		return true;
 	}
-
 }

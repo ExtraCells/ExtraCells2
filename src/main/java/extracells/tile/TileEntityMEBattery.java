@@ -166,13 +166,11 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 		return 0.0F;
 	}
 
-	@Override
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
 	}
 
-	@Override
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;

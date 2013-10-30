@@ -23,6 +23,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
+import extracells.ItemEnum;
 
 public class ItemStoragePhysical extends Item implements IStorageCell
 {
@@ -241,8 +242,8 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 			{
 				if (Util.getCellRegistry().getHandlerForCell(i).storedItemCount() == 0)
 				{
-					if (p.inventory.addItemStackToInventory(new ItemStack(Extracells.Casing, 1)))
-						return new ItemStack(Extracells.Cluster, 1, i.getItemDamage());
+					if (p.inventory.addItemStackToInventory(new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1)))
+						return new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, i.getItemDamage());
 				}
 			} else if (i.getItemDamage() == 4)
 			{
@@ -449,9 +450,8 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		return false;
 	}
 
-	@Override
 	public boolean isStorageCell(ItemStack i)
 	{
-		return i != null && i.getItem() == this;
+		return true;
 	}
 }

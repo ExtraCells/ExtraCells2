@@ -14,13 +14,14 @@ public interface IAETagCompound {
 	 * Create a copy ( the copy will not be a IAETagCompount, it will be a NBTTagCompound. )
 	 * @return
 	 */
-	public NBTTagCompound getNBTTagCompoundCopy();
+	NBTTagCompound clone();
 	
 	/**
 	 * compare to other NBTTagCompounds or IAETagCompounds
 	 * @param a
 	 * @return true, if they are the same.
 	 */
+	@Override
 	boolean equals( Object a );
 	
 	/**

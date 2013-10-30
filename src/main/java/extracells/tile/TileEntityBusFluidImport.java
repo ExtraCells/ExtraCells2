@@ -31,10 +31,11 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
+import extracells.ItemEnum;
 
 public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
-	Boolean powerStatus = true, networkReady = true, redstoneFlag = false;
+	Boolean powerStatus = true, redstoneFlag = false, networkReady = true;
 	IGridInterface grid;
 	ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
@@ -49,7 +50,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 	@Override
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote && isMachineActive())
+		if (!worldObj.isRemote && isPowered())
 		{
 			Boolean redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
 			switch (getRedstoneAction())
@@ -105,7 +106,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 			if (drainable != null)
 			{
 				List<Fluid> fluidFilter = getFilterFluids(filterSlots);
-				IAEItemStack toImport = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, drainable.amount, drainable.fluidID));
+				IAEItemStack toImport = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), drainable.amount, drainable.fluidID));
 
 				IAEItemStack notImported = grid.getCellArray().calculateItemAddition(toImport.copy());
 
@@ -330,14 +331,14 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		if (resource != null && getGrid() != null && isMachineActive() && from.ordinal() == this.blockMetadata)
+		if (resource != null && getGrid() != null && isPowered() && from.ordinal() == this.blockMetadata)
 		{
 			IAEItemStack added;
 
 			int amount = resource.amount;
 			int fluidID = resource.fluidID;
 
-			IAEItemStack temp = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, amount, fluidID));
+			IAEItemStack temp = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), amount, fluidID));
 			temp.setStackSize(amount);
 
 			if (doFill)
@@ -377,7 +378,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		return grid.getCellArray().canAccept(Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1, fluid.getID())));
+		return grid.getCellArray().canAccept(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, fluid.getID())));
 	}
 
 	@Override
@@ -396,7 +397,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 
 			for (IAEItemStack item : getGrid().getCellArray().getAvailableItems())
 			{
-				if (item.getItem() == extracells.Extracells.FluidDisplay)
+				if (item.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 					tankInfo.add(new FluidTankInfo(new FluidStack(FluidRegistry.getFluid(item.getItemDamage()), (int) item.getStackSize()), (int) getGrid().getCellArray().freeBytes()));
 			}
 
@@ -415,13 +416,11 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 		return false;
 	}
 
-	@Override
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
 	}
 
-	@Override
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;

@@ -155,13 +155,11 @@ public class TileEntityMEDropper extends ColorableECTile implements IGridMachine
 		return 0.5F;
 	}
 
-	@Override
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
 	}
 
-	@Override
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;

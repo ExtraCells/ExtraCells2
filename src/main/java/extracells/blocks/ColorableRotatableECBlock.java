@@ -1,5 +1,7 @@
 package extracells.blocks;
 
+import java.lang.reflect.Method;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -70,7 +72,29 @@ public abstract class ColorableRotatableECBlock extends BlockContainer
 		{
 			if (clickedOnTileEntity instanceof IColoredMETile)
 			{
-				if (((IColoredMETile) clickedOnTileEntity).isColored(orientation.getOpposite()))
+
+				// All this shit to make it compatible w/ AE 13 AND 14 :D
+				Method isColoredMethod = null;
+				boolean isColored = false;
+
+				try
+				{
+					// Method for AE 14 (With forgeDireciton argument)
+					isColoredMethod = ((IColoredMETile) clickedOnTileEntity).getClass().getDeclaredMethod("isColored", ForgeDirection.class);
+					isColored = (Boolean) isColoredMethod.invoke((IColoredMETile) clickedOnTileEntity, orientation);
+				} catch (Throwable ex)
+				{
+					try
+					{
+						// Method for AE 13 (W/O the argument)
+						isColoredMethod = ((IColoredMETile) clickedOnTileEntity).getClass().getDeclaredMethod("isColored");
+						isColored = (Boolean) isColoredMethod.invoke((IColoredMETile) clickedOnTileEntity);
+					} catch (Throwable e)
+					{
+					}
+				}
+
+				if (isColored)
 				{
 					((IColoredMETile) blockTileEntity).setColor(((IColoredMETile) clickedOnTileEntity).getColor());
 				} else

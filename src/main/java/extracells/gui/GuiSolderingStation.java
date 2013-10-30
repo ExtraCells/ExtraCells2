@@ -12,12 +12,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.Util;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
-import extracells.network.PacketHandler;
+import extracells.ItemEnum;
 import extracells.network.packet.PacketSolderingStation;
 
 @SideOnly(Side.CLIENT)
@@ -110,7 +108,7 @@ public class GuiSolderingStation extends GuiScreen
 	{
 		if (this.mc.thePlayer.getHeldItem() != null)
 		{
-			if (this.mc.thePlayer.getHeldItem().getItem() == Extracells.StoragePhysical && this.mc.thePlayer.getHeldItem().getItemDamage() == 5)
+			if (this.mc.thePlayer.getHeldItem().getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && this.mc.thePlayer.getHeldItem().getItemDamage() == 5)
 			{
 				if (this.mc.thePlayer.getHeldItem().hasTagCompound())
 				{

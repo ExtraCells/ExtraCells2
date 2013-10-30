@@ -3,6 +3,7 @@ package extracells.handler;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.ItemEnum;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -84,7 +85,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
 		{
-			return aeitemstack.getItem() == extracells.Extracells.FluidDisplay && aeitemstack.getItemDamage() == ((IFluidHandler) tank).getTankInfo(facing.getOpposite())[0].fluid.fluidID;
+			return aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && aeitemstack.getItemDamage() == ((IFluidHandler) tank).getTankInfo(facing.getOpposite())[0].fluid.fluidID;
 		}
 		return false;
 	}
@@ -100,7 +101,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
 		{
-			return aeitemstack.getItem() == extracells.Extracells.FluidDisplay ? aeitemstack.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID ? getTankInfo(tank)[0].fluid.amount : 0 : 0;
+			return aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() ? aeitemstack.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID ? getTankInfo(tank)[0].fluid.amount : 0 : 0;
 		}
 		return 0;
 	}
@@ -110,7 +111,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		IAEItemStack addedStack = input.copy();
 
-		if (input.getItem() == extracells.Extracells.FluidDisplay && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
+		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
 			if (tank instanceof IFluidHandler)
 			{
@@ -144,7 +145,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		IAEItemStack removedStack = request.copy();
 
-		if (request.getItem() == extracells.Extracells.FluidDisplay && tank != null && tank instanceof IFluidHandler)
+		if (request.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && tank != null && tank instanceof IFluidHandler)
 		{
 			if (getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
 			{
@@ -182,7 +183,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 			{
 				if (getTankInfo(tank)[0].fluid != null && getTankInfo(tank)[0].fluid.getFluid() != null)
 				{
-					IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1, getTankInfo(tank)[0].fluid.getFluid().getID()));
+					IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, getTankInfo(tank)[0].fluid.getFluid().getID()));
 					currentItemStack.setStackSize(getTankInfo(tank)[0].fluid.amount);
 					out.add(currentItemStack);
 				}
@@ -219,7 +220,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		IAEItemStack addedStack = input.copy();
 
-		if (input.getItem() == extracells.Extracells.FluidDisplay && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
+		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
 			if (tank instanceof IFluidHandler)
 			{
@@ -251,7 +252,21 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long getAvailableSpaceByItem(IAEItemStack itemstack, long maxNeeded)
 	{
-		return itemstack.getItem() == extracells.Extracells.FluidDisplay ? remainingItemCount() : 0;
+		if (itemstack != null)
+		{
+			if (remainingItemCount() > 0)
+			{
+				return itemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() ? remainingItemCount() : 0;
+			} else
+			{
+				for (IAEItemStack stack : this.getAvailableItems())
+				{
+					if (stack != null && stack.getItem() == itemstack.getItem() && stack.getItemDamage() == itemstack.getItemDamage())
+						return remainingItemCount();
+				}
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -281,7 +296,6 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		if (tank != null && tank instanceof IFluidHandler)
 		{
-
 			return getTankInfo(tank)[0].fluid != null ? getTankInfo(tank)[0].capacity - getTankInfo(tank)[0].fluid.amount : getTankInfo(tank)[0].capacity;
 		}
 		return 0;
@@ -410,7 +424,17 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean canAccept(IAEItemStack input)
 	{
-		return input.getItem() == extracells.Extracells.FluidDisplay;
+		if (input != null)
+		{
+			if (getTankInfo(tank)[0].fluid != null)
+			{
+				return input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && input.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID;
+			} else
+			{
+				return input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry();
+			}
+		}
+		return false;
 	}
 
 	@Override

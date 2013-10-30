@@ -16,6 +16,7 @@ import appeng.api.config.ItemFlow;
 import appeng.api.config.ListMode;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
+import extracells.ItemEnum;
 
 public class FluidStorageInventoryHandler implements IMEInventoryHandler
 {
@@ -108,7 +109,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean containsItemType(IAEItemStack aeitemstack)
 	{
-		if (aeitemstack.getItem() != extracells.Extracells.FluidDisplay)
+		if (aeitemstack.getItem() != ItemEnum.FLUIDDISPLAY.getItemEntry())
 			return false;
 		if (storage.stackTagCompound == null)
 			storage.stackTagCompound = new NBTTagCompound();
@@ -140,7 +141,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		long countOfFluidType = 0;
 
-		if (aeitemstack != null && aeitemstack.getItem() == extracells.Extracells.FluidDisplay)
+		if (aeitemstack != null && aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 		{
 			for (int i = 0; i < totalTypes; i++)
 			{
@@ -156,7 +157,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	{
 		IAEItemStack addedStack = input.copy();
 
-		if (input.getItem() == extracells.Extracells.FluidDisplay && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
+		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
 			if (storage.stackTagCompound == null)
 				storage.stackTagCompound = new NBTTagCompound();
@@ -208,7 +209,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	{
 		IAEItemStack removedStack = request.copy();
 
-		if (request.getItem() == extracells.Extracells.FluidDisplay)
+		if (request.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 		{
 			if (storage.stackTagCompound == null)
 				storage.stackTagCompound = new NBTTagCompound();
@@ -252,7 +253,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			if (nbt.getInteger("FluidID#" + i) != 0 && nbt.getLong("FluidAmount#" + i) != 0)
 			{
-				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(extracells.Extracells.FluidDisplay, 1, nbt.getInteger("FluidID#" + i)));
+				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, nbt.getInteger("FluidID#" + i)));
 				currentItemStack.setStackSize(nbt.getLong("FluidAmount#" + i));
 				out.add(currentItemStack);
 			}
@@ -271,7 +272,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public IAEItemStack calculateItemAddition(IAEItemStack input)
 	{
-		if (input.getItem() == extracells.Extracells.FluidDisplay && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
+		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
 			if (storage.stackTagCompound == null)
 				storage.stackTagCompound = new NBTTagCompound();
@@ -311,9 +312,23 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	}
 
 	@Override
-	public long getAvailableSpaceByItem(IAEItemStack i, long maxNeeded)
+	public long getAvailableSpaceByItem(IAEItemStack itemstack, long maxNeeded)
 	{
-		return remainingItemCount();
+		if (itemstack != null)
+		{
+			if (remainingItemCount() > 0)
+			{
+				return itemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() ? remainingItemCount() : 0;
+			} else
+			{
+				for (IAEItemStack stack : this.getAvailableItems())
+				{
+					if (stack != null && stack.getItem() == itemstack.getItem() && stack.getItemDamage() == itemstack.getItemDamage())
+						return remainingItemCount();
+				}
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -389,7 +404,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			if (nbt.getInteger("PreformattedFluidID#" + i) != 0)
 			{
-				fluidItemList.add(new ItemStack(extracells.Extracells.FluidDisplay, 1, nbt.getInteger("PreformattedFluidID#" + i)));
+				fluidItemList.add(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, nbt.getInteger("PreformattedFluidID#" + i)));
 			}
 		}
 
@@ -484,7 +499,21 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean canAccept(IAEItemStack input)
 	{
-		return input.getItem() == extracells.Extracells.FluidDisplay;
+		if (input != null)
+		{
+			if (getAvailableItems() != null)
+			{
+				for (IAEItemStack current : getAvailableItems())
+				{
+					if (current == null || current.getItemDamage() == input.getItemDamage())
+						return true;
+				}
+			} else
+			{
+				return input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry();
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -522,7 +551,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 					if (FluidContainerRegistry.isFilledContainer(currentItemStack))
 					{
 						nbt.setInteger("PreformattedFluidID#" + i, FluidContainerRegistry.getFluidForFilledItem(currentItemStack).fluidID);
-					} else if (currentItemStack.getItem() == extracells.Extracells.FluidDisplay)
+					} else if (currentItemStack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 					{
 						nbt.setInteger("PreformattedFluidID#" + i, currentItemStack.getItemDamage());
 					} else if (currentItemStack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) currentItemStack.getItem()).getFluid(currentItemStack) != null)

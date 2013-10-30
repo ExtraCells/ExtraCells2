@@ -2,28 +2,47 @@ package extracells;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.StatCollector;
+import extracells.blocks.BlockBusFluidExport;
+import extracells.blocks.BlockBusFluidImport;
+import extracells.blocks.BlockBusFluidStorage;
+import extracells.blocks.BlockBusSupplier;
+import extracells.blocks.BlockCertusTank;
+import extracells.blocks.BlockFluidTransitionPlane;
+import extracells.blocks.BlockHardMEDrive;
+import extracells.blocks.BlockMEBattery;
+import extracells.blocks.BlockMEDropper;
+import extracells.blocks.BlockSolderingStation;
+import extracells.blocks.BlockTerminalFluid;
+import extracells.blocks.BlockWalrusLoader;
 
 public enum BlockEnum
 {
-	CERTUSTANK("tile.block.certustank.name"),
-	FLUIDIMPORT("tile.block.fluid.bus.import.name"),
-	FLUIDEXPORT("tile.block.fluid.bus.export.name"),
-	FLUIDSTORAGE("tile.block.fluid.bus.storage.name"),
-	FLUIDTERMINAL("tile.block.fluid.terminal.name"),
-	FLUIDTRANSITION("tile.block.fluid.transitionplane.name"),
-	BRMEDRIVE("tile.block.hardmedrive.name"),
-	MEDROPPER("tile.block.medropper.name"),
-	MEBATTERY("tile.block.mebattery.name"),
-	SOLDERINGSTATION("tile.block.solderingstation.name"),
-	CHROMIA("tile.block.walrus.name");
+	SOLDERINGSTATION("tile.block.solderingstation.name", 500, BlockSolderingStation.class, "ID for the soldering station", "SolderingStation"),
+	MEDROPPER("tile.block.medropper.name", 501, BlockMEDropper.class, "ID for the ME Item Dropper", "MEDropper"),
+	MEBATTERY("tile.block.mebattery.name", 502, BlockMEBattery.class, "ID for the ME Backup Battery", "MEBattery"),
+	BLASTRESISTANTMEDRIVE("tile.block.hardmedrive.name", 503, BlockHardMEDrive.class, "ID for the Blast Resistant ME Drive", "HardMEDrive"),
+	FLUIDIMPORT("tile.block.fluid.bus.import.name", 504, BlockBusFluidImport.class, "ID for the Fluid Import Bus", "BusFluidImport"),
+	FLUIDEXPORT("tile.block.fluid.bus.export.name", 505, BlockBusFluidExport.class, "ID for the Fluid Export Bus", "BusFluidExport"),
+	FLUIDSTORAGE("tile.block.fluid.bus.storage.name", 506, BlockBusFluidStorage.class, "ID for the Fluid Storage Bus", "BusFluidStorage"),
+	FLUIDTERMINAL("tile.block.fluid.terminal.name", 507, BlockTerminalFluid.class, "ID for the Fluid Storage Terminal", "TerminalFluid"),
+	FLUIDTRANSITION("tile.block.fluid.transitionplane.name", 508, BlockFluidTransitionPlane.class, "ID for the Fluid Transition Plance", "FluidTransitionPlane"),
+	CERTUSTANK("tile.block.certustank.name", 509, BlockCertusTank.class, "ID for the ME Certus Tank", "CertusTank"),
+	CHROMIA("tile.block.walrus.name", 510, BlockWalrusLoader.class, "ID for the Walrus", "Walrus"),
+	SUPPLYBUS("tile.block.bus.supplier", 511, BlockBusSupplier.class, "ID for the ME Supplier Bus", "BusSupplier");
 
 	private final String internalName;
+	private String description, IDName;
 	private int ID;
 	private Block block;
+	private Class<? extends Block> blockClass;
 
-	BlockEnum(String internalName)
+	BlockEnum(String internalName, int ID, Class<? extends Block> blockClass, String description, String IDName)
 	{
 		this.internalName = internalName;
+		this.ID = ID;
+		this.blockClass = blockClass;
+		this.description = description;
+		this.IDName = IDName;
 	}
 
 	public String getLocalizedName()
@@ -49,5 +68,20 @@ public enum BlockEnum
 	public Block getBlockEntry()
 	{
 		return block;
+	}
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+	public String getIDName()
+	{
+		return IDName;
+	}
+
+	public Class<? extends Block> getBlockClass()
+	{
+		return blockClass;
 	}
 }

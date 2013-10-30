@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.ICraftingHandler;
 import extracells.Extracells;
+import extracells.ItemEnum;
 
 public class CraftingHandler implements ICraftingHandler
 {
@@ -15,7 +16,7 @@ public class CraftingHandler implements ICraftingHandler
 	{
 		// set size of Adjustable Cell on crafting
 
-		if (item.getItem() == Extracells.StoragePhysical && item.getItemDamage() == 5)
+		if (item.getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && item.getItemDamage() == 5)
 		{
 			if (!item.hasTagCompound())
 			{

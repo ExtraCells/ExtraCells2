@@ -14,9 +14,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.BlockEnum;
 import extracells.Extracells;
+import extracells.ItemEnum;
 import extracells.blocks.BlockBusFluidExport;
 import extracells.blocks.BlockBusFluidImport;
 import extracells.blocks.BlockBusFluidStorage;
+import extracells.blocks.BlockBusSupplier;
 import extracells.blocks.BlockCertusTank;
 import extracells.blocks.BlockFluidTransitionPlane;
 import extracells.blocks.BlockHardMEDrive;
@@ -28,12 +30,14 @@ import extracells.blocks.BlockWalrusLoader;
 import extracells.container.ContainerBusFluidExport;
 import extracells.container.ContainerBusFluidImport;
 import extracells.container.ContainerBusFluidStorage;
+import extracells.container.ContainerBusSupplier;
 import extracells.container.ContainerHardMEDrive;
 import extracells.container.ContainerMEBattery;
 import extracells.container.ContainerTerminalFluid;
 import extracells.gui.GuiBusFluidExport;
 import extracells.gui.GuiBusFluidImport;
 import extracells.gui.GuiBusFluidStorage;
+import extracells.gui.GuiBusSupplier;
 import extracells.gui.GuiHardMEDrive;
 import extracells.gui.GuiMEBattery;
 import extracells.gui.GuiTerminalFluid;
@@ -41,15 +45,16 @@ import extracells.handler.CraftingHandler;
 import extracells.items.ItemBlockCertusTank;
 import extracells.items.ItemBlockSpecial;
 import extracells.items.ItemCasing;
-import extracells.items.ItemStorageComponent;
 import extracells.items.ItemFluidDisplay;
 import extracells.items.ItemSecureStoragePhysicalDecrypted;
 import extracells.items.ItemSecureStoragePhysicalEncrypted;
+import extracells.items.ItemStorageComponent;
 import extracells.items.ItemStorageFluid;
 import extracells.items.ItemStoragePhysical;
 import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
+import extracells.tile.TileEntityBusSupplier;
 import extracells.tile.TileEntityCertusTank;
 import extracells.tile.TileEntityHardMEDrive;
 import extracells.tile.TileEntityMEBattery;
@@ -65,38 +70,38 @@ public class CommonProxy implements IGuiHandler
 	{
 		GameRegistry.registerCraftingHandler(new CraftingHandler());
 
-		ItemStack storagePhysical256k = new ItemStack(Extracells.StoragePhysical, 1, 0);
-		ItemStack storagePhysical1m = new ItemStack(Extracells.StoragePhysical, 1, 1);
-		ItemStack storagePhysical4m = new ItemStack(Extracells.StoragePhysical, 1, 2);
-		ItemStack storagePhysical16m = new ItemStack(Extracells.StoragePhysical, 1, 3);
+		ItemStack storagePhysical256k = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 0);
+		ItemStack storagePhysical1m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 1);
+		ItemStack storagePhysical4m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 2);
+		ItemStack storagePhysical16m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 3);
 
-		ItemStack storageFluid1k = new ItemStack(Extracells.StorageFluid, 1, 0);
-		ItemStack storageFluid4k = new ItemStack(Extracells.StorageFluid, 1, 1);
-		ItemStack storageFluid16k = new ItemStack(Extracells.StorageFluid, 1, 2);
-		ItemStack storageFluid64k = new ItemStack(Extracells.StorageFluid, 1, 3);
+		ItemStack storageFluid1k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 0);
+		ItemStack storageFluid4k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 1);
+		ItemStack storageFluid16k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 2);
+		ItemStack storageFluid64k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 3);
 
-		ItemStack containerCell = new ItemStack(Extracells.StoragePhysical, 1, 4);
+		ItemStack containerCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 4);
 
-		ItemStack encryptableCell = new ItemStack(Extracells.StoragePhysicalDecrypted, 1, 0);
+		ItemStack encryptableCell = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemEntry(), 1, 0);
 
-		ItemStack customCell = new ItemStack(Extracells.StoragePhysical, 1, 5);
+		ItemStack customCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 5);
 
-		ItemStack physicalKilo = new ItemStack(Extracells.Cluster, 1, 0);
-		ItemStack physicalMega = new ItemStack(Extracells.Cluster, 1, 1);
-		ItemStack physicalGiga = new ItemStack(Extracells.Cluster, 1, 2);
-		ItemStack physicalTera = new ItemStack(Extracells.Cluster, 1, 3);
-		ItemStack fluidCell = new ItemStack(Extracells.Cluster, 1, 4);
-		ItemStack fluidSegment = new ItemStack(Extracells.Cluster, 1, 5);
-		ItemStack fluidBlock = new ItemStack(Extracells.Cluster, 1, 6);
-		ItemStack fluidCluster = new ItemStack(Extracells.Cluster, 1, 7);
+		ItemStack physicalKilo = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 0);
+		ItemStack physicalMega = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 1);
+		ItemStack physicalGiga = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 2);
+		ItemStack physicalTera = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 3);
+		ItemStack fluidCell = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 4);
+		ItemStack fluidSegment = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 5);
+		ItemStack fluidBlock = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 6);
+		ItemStack fluidCluster = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 7);
 
-		ItemStack advancedStorageCasingPhysical = new ItemStack(Extracells.Casing, 1, 0);
-		ItemStack advancedStorageCasingFluid = new ItemStack(Extracells.Casing, 1, 1);
+		ItemStack advancedStorageCasingPhysical = new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 0);
+		ItemStack advancedStorageCasingFluid = new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 1);
 
 		ItemStack meItemDropper = new ItemStack(BlockEnum.MEDROPPER.getBlockEntry(), 1);
 		ItemStack solderingStation = new ItemStack(BlockEnum.SOLDERINGSTATION.getBlockEntry(), 1);
 		ItemStack meBattery = new ItemStack(BlockEnum.MEBATTERY.getBlockEntry(), 1);
-		ItemStack hardMEDrive = new ItemStack(BlockEnum.BRMEDRIVE.getBlockEntry(), 1);
+		ItemStack hardMEDrive = new ItemStack(BlockEnum.BLASTRESISTANTMEDRIVE.getBlockEntry(), 1);
 		ItemStack fluidImportBus = new ItemStack(BlockEnum.FLUIDIMPORT.getBlockEntry(), 1);
 		ItemStack fluidExportBus = new ItemStack(BlockEnum.FLUIDEXPORT.getBlockEntry(), 1);
 		ItemStack fluidStorageBus = new ItemStack(BlockEnum.FLUIDSTORAGE.getBlockEntry(), 1);
@@ -240,6 +245,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityTransitionPlaneFluid.class, "tileEntityTransitionPlaneFluid");
 		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
 		GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
+		GameRegistry.registerTileEntity(TileEntityBusSupplier.class, "tileEntityBusSupplier");
 	}
 
 	public void RegisterRenderers()
@@ -249,39 +255,35 @@ public class CommonProxy implements IGuiHandler
 
 	public void RegisterItems()
 	{
-		Extracells.Cluster = new ItemStorageComponent(Extracells.Cluster_ID);
-		Extracells.StoragePhysical = new ItemStoragePhysical(Extracells.StoragePhysical_ID);
-		Extracells.StoragePhysicalDecrypted = new ItemSecureStoragePhysicalDecrypted(Extracells.StoragePhysicalDecrypted_ID);
-		Extracells.StoragePhysicalEncrypted = new ItemSecureStoragePhysicalEncrypted(Extracells.StoragePhysicalEncrypted_ID);
-		Extracells.StorageFluid = new ItemStorageFluid(Extracells.StorageFluid_ID);
-		Extracells.Casing = new ItemCasing(Extracells.Casing_ID);
-		Extracells.FluidDisplay = new ItemFluidDisplay(Extracells.FluidDisplay_ID);
+		for (ItemEnum current : ItemEnum.values())
+		{
+			try
+			{
+				current.setItemEntry(current.getItemClass().getConstructor(int.class).newInstance(current.getID()));
+			} catch (Throwable e)
+			{
+			}
+		}
 	}
 
 	public void RegisterBlocks()
 	{
-		BlockEnum.SOLDERINGSTATION.setBlockEntry(new BlockSolderingStation(BlockEnum.SOLDERINGSTATION.getID()));
-		GameRegistry.registerBlock(BlockEnum.SOLDERINGSTATION.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.SOLDERINGSTATION.getBlockEntry().getUnlocalizedName());
-		BlockEnum.MEDROPPER.setBlockEntry(new BlockMEDropper(BlockEnum.MEDROPPER.getID()));
-		GameRegistry.registerBlock(BlockEnum.MEDROPPER.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.MEDROPPER.getBlockEntry().getUnlocalizedName());
-		BlockEnum.MEBATTERY.setBlockEntry(new BlockMEBattery(BlockEnum.MEBATTERY.getID()));
-		GameRegistry.registerBlock(BlockEnum.MEBATTERY.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.MEBATTERY.getBlockEntry().getUnlocalizedName());
-		BlockEnum.BRMEDRIVE.setBlockEntry(new BlockHardMEDrive(BlockEnum.BRMEDRIVE.getID()));
-		GameRegistry.registerBlock(BlockEnum.BRMEDRIVE.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.BRMEDRIVE.getBlockEntry().getUnlocalizedName());
-		BlockEnum.FLUIDIMPORT.setBlockEntry(new BlockBusFluidImport(BlockEnum.FLUIDIMPORT.getID()));
-		GameRegistry.registerBlock(BlockEnum.FLUIDIMPORT.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDIMPORT.getBlockEntry().getUnlocalizedName());
-		BlockEnum.FLUIDEXPORT.setBlockEntry(new BlockBusFluidExport(BlockEnum.FLUIDEXPORT.getID()));
-		GameRegistry.registerBlock(BlockEnum.FLUIDEXPORT.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDEXPORT.getBlockEntry().getUnlocalizedName());
-		BlockEnum.FLUIDSTORAGE.setBlockEntry(new BlockBusFluidStorage(BlockEnum.FLUIDSTORAGE.getID()));
-		GameRegistry.registerBlock(BlockEnum.FLUIDSTORAGE.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDSTORAGE.getBlockEntry().getUnlocalizedName());
-		BlockEnum.FLUIDTERMINAL.setBlockEntry(new BlockTerminalFluid(BlockEnum.FLUIDTERMINAL.getID()));
-		GameRegistry.registerBlock(BlockEnum.FLUIDTERMINAL.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDTERMINAL.getBlockEntry().getUnlocalizedName());
-		BlockEnum.FLUIDTRANSITION.setBlockEntry(new BlockFluidTransitionPlane(BlockEnum.FLUIDTRANSITION.getID()));
-		GameRegistry.registerBlock(BlockEnum.FLUIDTRANSITION.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.FLUIDTRANSITION.getBlockEntry().getUnlocalizedName());
-		BlockEnum.CERTUSTANK.setBlockEntry(new BlockCertusTank(BlockEnum.CERTUSTANK.getID()));
-		GameRegistry.registerBlock(BlockEnum.CERTUSTANK.getBlockEntry(), ItemBlockCertusTank.class, BlockEnum.CERTUSTANK.getBlockEntry().getUnlocalizedName());
-		BlockEnum.CHROMIA.setBlockEntry(new BlockWalrusLoader(BlockEnum.CHROMIA.getID()));
-		GameRegistry.registerBlock(BlockEnum.CHROMIA.getBlockEntry(), ItemBlockSpecial.class, BlockEnum.CHROMIA.getBlockEntry().getUnlocalizedName());
+		for (BlockEnum current : BlockEnum.values())
+		{
+			try
+			{
+				current.setBlockEntry(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
+				if (current != BlockEnum.CERTUSTANK)
+				{
+					GameRegistry.registerBlock(current.getBlockEntry(), ItemBlockSpecial.class, current.getBlockEntry().getUnlocalizedName());
+				} else
+				{
+					GameRegistry.registerBlock(BlockEnum.CERTUSTANK.getBlockEntry(), ItemBlockCertusTank.class, BlockEnum.CERTUSTANK.getBlockEntry().getUnlocalizedName());
+				}
+			} catch (Throwable e)
+			{
+			}
+		}
 	}
 
 	@Override
@@ -304,6 +306,8 @@ public class CommonProxy implements IGuiHandler
 				return new GuiBusFluidExport(world, player.inventory, (TileEntityBusFluidExport) tileEntity, player);
 			case 5: // GUI ME Battery
 				return new GuiMEBattery(world, (TileEntityMEBattery) tileEntity, player);
+			case 6: // GUI Bus Supplier
+				return new GuiBusSupplier(world, player.inventory, (TileEntityBusSupplier) tileEntity, player);
 			default:
 				return false;
 			}
@@ -334,6 +338,8 @@ public class CommonProxy implements IGuiHandler
 				return new ContainerBusFluidExport(player.inventory, ((TileEntityBusFluidExport) tileEntity).getInventory());
 			case 5: // GUI ME Battery
 				return new ContainerMEBattery();
+			case 6: // GUI Bus Supplier
+				return new ContainerBusSupplier(player.inventory, ((TileEntityBusSupplier) tileEntity).getInventory());
 			default:
 				return false;
 			}

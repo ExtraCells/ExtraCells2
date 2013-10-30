@@ -2,10 +2,7 @@ package extracells.blocks;
 
 import java.util.Random;
 
-import appeng.api.me.items.IAEWrench;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,8 +10,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import appeng.api.me.items.IAEWrench;
 import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.Extracells;
+import extracells.ItemEnum;
 import extracells.gui.GuiSolderingStation;
 import extracells.tile.TileEntitySolderingStation;
 
@@ -106,7 +105,7 @@ public class BlockSolderingStation extends ColorableRotatableECBlock
 			((TileEntitySolderingStation) world.getBlockTileEntity(x, y, z)).addUser(player.username);
 		if (world.isRemote)
 		{
-			FMLCommonHandler.instance().showGuiScreen(new GuiSolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == Extracells.StoragePhysical && player.getHeldItem().getItemDamage() == 5)));
+			FMLCommonHandler.instance().showGuiScreen(new GuiSolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && player.getHeldItem().getItemDamage() == 5)));
 			return true;
 		} else
 		{

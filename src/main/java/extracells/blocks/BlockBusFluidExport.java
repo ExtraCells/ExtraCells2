@@ -36,6 +36,7 @@ public class BlockBusFluidExport extends ColorableRotatableECBlock
 		this.setUnlocalizedName("block.fluid.bus.export");
 		this.setHardness(2.0F);
 		this.setResistance(10.0F);
+		setBlockBounds(0.05F, 0.05F, 0.05F, 0.95F, 0.95F, 0.95F);
 	}
 
 	@Override

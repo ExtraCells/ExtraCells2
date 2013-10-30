@@ -31,12 +31,13 @@ import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.Extracells;
+import extracells.ItemEnum;
 import extracells.handler.FluidBusInventoryHandler;
 
 public class TileEntityBusFluidStorage extends ColorableECTile implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {
 	Boolean powerStatus = true, networkReady = true;
-	IGridInterface grid = null;
+	IGridInterface grid;
 	int priority = 1;
 	ItemStack[] filterSlots = new ItemStack[54];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
@@ -57,12 +58,12 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 		if (lastTile != tankTE)
 			MinecraftForge.EVENT_BUS.post(new GridStorageUpdateEvent(worldObj, getLocation(), getGrid()));
 		lastTile = tankTE;
-		
+
 		if (getGrid() != null && !worldObj.isRemote)
 		{
 			if (lastFluid != null)
 			{
-				IAEItemStack toRemove = Util.createItemStack(new ItemStack(Extracells.FluidDisplay, 1, lastFluid.fluidID));
+				IAEItemStack toRemove = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, lastFluid.fluidID));
 				toRemove.setStackSize(lastFluid.amount);
 				getGrid().notifyExtractItems(toRemove);
 			}
@@ -73,7 +74,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 				lastFluid = currentFluid;
 				if (currentFluid != null)
 				{
-					IAEItemStack toAdd = Util.createItemStack(new ItemStack(Extracells.FluidDisplay, 1, currentFluid.fluidID));
+					IAEItemStack toAdd = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, currentFluid.fluidID));
 					toAdd.setStackSize(currentFluid.amount);
 					getGrid().notifyAddItems(toAdd);
 				}
@@ -231,11 +232,11 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 
 				if (FluidContainerRegistry.isFilledContainer(itemStack))
 				{
-					fluidContainer = new ItemStack(extracells.Extracells.FluidDisplay, 1, FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid().getID());
+					fluidContainer = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid().getID());
 					filter.add(fluidContainer);
 				} else if (itemStack != null && itemStack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemStack.getItem()).getFluid(itemStack) != null)
 				{
-					fluidContainer = new ItemStack(extracells.Extracells.FluidDisplay, 1, ((IFluidContainerItem) itemStack.getItem()).getFluid(itemStack).fluidID);
+					fluidContainer = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, ((IFluidContainerItem) itemStack.getItem()).getFluid(itemStack).fluidID);
 					filter.add(fluidContainer);
 				}
 			}
@@ -263,13 +264,11 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 		return false;
 	}
 
-	@Override
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
 	}
 
-	@Override
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;
