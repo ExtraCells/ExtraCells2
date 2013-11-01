@@ -424,7 +424,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean canAccept(IAEItemStack input)
 	{
-		if (input != null)
+		if (input != null && tank instanceof IFluidHandler && input != null)
 		{
 			if (getTankInfo(tank)[0].fluid != null)
 			{
