@@ -23,7 +23,7 @@ import extracells.tile.TileEntityCertusTank;
 public class ModelCertusTank extends ModelBase
 {
 	ModelRenderer Shape1;
-
+	
 	public ModelCertusTank()
 	{
 		textureWidth = 64;

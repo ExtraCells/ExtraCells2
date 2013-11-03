@@ -68,9 +68,4 @@ public class ItemFluidDisplay extends Item
 	{
 		return StatCollector.translateToLocal(this.getUnlocalizedName(aStack));
 	}
-
-	@SideOnly(Side.CLIENT)
-	public void func_77633_a(int var1, CreativeTabs aTab, List aList)
-	{
-	}
 }

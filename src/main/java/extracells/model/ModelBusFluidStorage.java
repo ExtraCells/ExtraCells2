@@ -21,7 +21,7 @@ public class ModelBusFluidStorage extends ModelBase
 	ModelRenderer Shape5;
 	ModelRenderer Shape6;
 	ModelRenderer Shape7;
-
+	
 	public ModelBusFluidStorage()
 	{
 		textureWidth = 64;

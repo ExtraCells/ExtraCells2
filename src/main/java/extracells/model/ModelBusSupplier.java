@@ -16,23 +16,24 @@ public class ModelBusSupplier extends ModelBase
 {
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
+
 	public ModelBusSupplier()
 	{
 		textureWidth = 64;
-	    textureHeight = 64;
-	    
-	      Shape1 = new ModelRenderer(this, 0, 0);
-	      Shape1.addBox(0F, 0F, 0F, 16, 2, 16);
-	      Shape1.setRotationPoint(-8F, 22F, -8F);
-	      Shape1.setTextureSize(64, 32);
-	      Shape1.mirror = true;
-	      setRotation(Shape1, 0F, 0F, 0F);
-	      Shape2 = new ModelRenderer(this, 0, 18);
-	      Shape2.addBox(0F, 0F, 0F, 6, 14, 6);
-	      Shape2.setRotationPoint(-3F, 8F, -3F);
-	      Shape2.setTextureSize(64, 32);
-	      Shape2.mirror = true;
-	      setRotation(Shape2, 0F, 0F, 0F);
+		textureHeight = 64;
+
+		Shape1 = new ModelRenderer(this, 0, 0);
+		Shape1.addBox(0F, 0F, 0F, 16, 2, 16);
+		Shape1.setRotationPoint(-8F, 22F, -8F);
+		Shape1.setTextureSize(64, 32);
+		Shape1.mirror = true;
+		setRotation(Shape1, 0F, 0F, 0F);
+		Shape2 = new ModelRenderer(this, 0, 18);
+		Shape2.addBox(0F, 0F, 0F, 6, 14, 6);
+		Shape2.setRotationPoint(-3F, 8F, -3F);
+		Shape2.setTextureSize(64, 32);
+		Shape2.mirror = true;
+		setRotation(Shape2, 0F, 0F, 0F);
 	}
 
 	public void render(float f5)

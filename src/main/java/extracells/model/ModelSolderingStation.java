@@ -77,7 +77,7 @@ public class ModelSolderingStation extends ModelBase
 		Solder.mirror = true;
 		setRotation(Solder, 0F, 0F, 0.5205006F);
 	}
-	
+
 	private void setRotation(ModelRenderer model, float x, float y, float z)
 	{
 		model.rotateAngleX = x;

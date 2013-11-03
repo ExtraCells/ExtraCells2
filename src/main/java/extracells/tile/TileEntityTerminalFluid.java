@@ -251,14 +251,14 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		IAEItemStack toFill = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), toImport.amount, toImport.fluidID));
 		if (grid != null)
 		{
-			IAEItemStack sim = grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), (int) (toFill.getStackSize()), toFill.getItemDamage())));
+			IAEItemStack sim = grid.getCellArray().calculateItemAddition(toFill.copy());
 
 			if (sim != null)
 			{
 				return false;
 			}
 
-			grid.getCellArray().addItems(Util.createItemStack(new ItemStack(toFill.getItem(), (int) (toFill.getStackSize()), toFill.getItemDamage())));
+			grid.getCellArray().addItems(toFill.copy());
 			return true;
 		}
 		return false;
