@@ -34,6 +34,7 @@
   <entry key="tile.block.fluid.bus.import.name">ME-Flüssigkeits-Importbus</entry>
   <entry key="tile.block.fluid.bus.export.name">ME-Flüssigkeits-Exportbus</entry>
   <entry key="tile.block.fluid.bus.storage.name">ME-Flüssigkeits-Speicherbus</entry>
+  <entry key="tile.block.bus.supplier.name">ME-Item-Versorgungsbus</entry>
   <entry key="tile.block.fluid.terminal.name">Flüssigkeits-Zugriffs-Terminal</entry>
   <entry key="tile.block.fluid.transitionplane.name">ME-Flüssigkeits-Übergangsmembran</entry>
   <entry key="tile.block.certustank.name">ME-Certus-Tank</entry>
