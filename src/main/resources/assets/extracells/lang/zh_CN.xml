@@ -35,9 +35,10 @@
   <entry key="tile.block.fluid.bus.import.name">ME流体导入总线</entry>
   <entry key="tile.block.fluid.bus.export.name">ME流体导出总线</entry>
   <entry key="tile.block.fluid.bus.storage.name">ME流体存储总线</entry>
+  <entry key="tile.block.bus.supplier.name">ME物品供应总线</entry>
   <entry key="tile.block.fluid.terminal.name">ME流体访问终端</entry>
   <entry key="tile.block.fluid.transitionplane.name">ME流体转换板</entry>
-  <entry key="tile.block.certustank.name">INSERT NAME HERE! :D</entry>
+  <entry key="tile.block.certustank.name">此处输入名称! :D</entry>
   <entry key="tooltip.belongsto">该存储器属于:</entry>
   <entry key="tooltip.notyours">你是这台存储驱动器的拥有者!</entry>
   <entry key="tooltip.accessgranted">授权访问!</entry>
