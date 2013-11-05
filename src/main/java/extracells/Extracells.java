@@ -80,7 +80,7 @@ public class Extracells
 		proxy.RegisterBlocks();
 		proxy.RegisterRenderers();
 		proxy.RegisterTileEntities();
-		proxy.addRecipes();		
+		proxy.addRecipes();
 		if (!debug)
 			Util.addBasicBlackList(ItemEnum.FLUIDDISPLAY.getItemEntry().itemID, OreDictionary.WILDCARD_VALUE);
 		Util.getCellRegistry().addCellHandler(new FluidCellHandler());

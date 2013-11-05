@@ -424,14 +424,20 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean canAccept(IAEItemStack input)
 	{
-		if (input != null && tank instanceof IFluidHandler && input != null)
+		if (input != null && input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 		{
-			if (getTankInfo(tank)[0].fluid != null)
+			if (getAvailableItems() != null)
 			{
-				return input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && input.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID;
+				for (IAEItemStack current : getAvailableItems())
+				{
+					if (current == null || current.getItemDamage() == input.getItemDamage())
+						return true;
+				}
+				if (getAvailableItems().size() == 0)
+					return true;
 			} else
 			{
-				return input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry();
+				return true;
 			}
 		}
 		return false;

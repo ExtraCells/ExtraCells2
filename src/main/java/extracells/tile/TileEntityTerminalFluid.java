@@ -248,7 +248,8 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 	public boolean fillFluid(FluidStack toImport)
 	{
-		IAEItemStack toFill = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), toImport.amount, toImport.fluidID));
+		IAEItemStack toFill = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 0, toImport.fluidID));
+		toFill.setStackSize(toImport.amount);
 		if (grid != null)
 		{
 			IAEItemStack sim = grid.getCellArray().calculateItemAddition(toFill.copy());
@@ -266,7 +267,9 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 	public boolean drainFluid(FluidStack toExport)
 	{
-		IAEItemStack toDrain = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), toExport.amount, toExport.fluidID));
+		IAEItemStack toDrain = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 0, toExport.fluidID));
+		toDrain.setStackSize(toExport.amount);
+
 		if (grid != null)
 		{
 			for (SpecialFluidStack fluidstack : fluidsInNetwork)

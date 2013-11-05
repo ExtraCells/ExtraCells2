@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
@@ -38,68 +39,53 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long storedItemTypes()
 	{
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
 		int storedFluidTypes = 0;
 
 		for (int i = 0; i < totalTypes; i++)
 		{
-			if (nbt.getInteger("FluidID#" + i) != 0)
+			if (readFluidStackFromSlot(i) != null)
 				storedFluidTypes++;
 		}
+
 		return storedFluidTypes;
 	}
 
 	@Override
 	public long storedItemCount()
 	{
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
 		int storedFluidAmount = 0;
 
 		for (int i = 0; i < totalTypes; i++)
 		{
-			storedFluidAmount += nbt.getLong("FluidAmount#" + i);
+			FluidStack currentStack = readFluidStackFromSlot(i);
+			storedFluidAmount += currentStack != null ? currentStack.amount : 0;
 		}
+
 		return storedFluidAmount;
 	}
 
 	@Override
 	public long remainingItemCount()
 	{
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
 		long remainingFluidSpace = totalBytes;
 
 		for (int i = 0; i < totalTypes * 8000; i++)
 		{
-			remainingFluidSpace -= nbt.getLong("FluidAmount#" + i);
+			FluidStack currentStack = readFluidStackFromSlot(i);
+			remainingFluidSpace -= currentStack != null ? currentStack.amount : 0;
 		}
 
-		if (remainingFluidSpace < 0)
-			remainingFluidSpace = 0;
-
-		return remainingFluidSpace;
+		return remainingFluidSpace < 0 ? 0 : remainingFluidSpace;
 	}
 
 	@Override
 	public long remainingItemTypes()
 	{
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
 		long remainingFluidTypes = totalBytes;
 
 		for (int i = 0; i < totalTypes; i++)
 		{
-			if (nbt.getInteger("FluidID#" + i) == 0)
+			if (readFluidStackFromSlot(i) == null)
 				remainingFluidTypes += 1;
 		}
 
@@ -109,18 +95,16 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean containsItemType(IAEItemStack aeitemstack)
 	{
-		if (aeitemstack.getItem() != ItemEnum.FLUIDDISPLAY.getItemEntry())
-			return false;
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
 		long remainingFluidTypes = totalBytes;
 
-		for (int i = 0; i < totalTypes; i++)
+		if (aeitemstack != null && aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 		{
-			if (nbt.getInteger("FluidID#" + i) == aeitemstack.getItemDamage() && nbt.getLong("FluidAmount#" + i) > 0)
-				return true;
+			for (int i = 0; i < totalTypes; i++)
+			{
+				FluidStack currentStack = readFluidStackFromSlot(i);
+				if (currentStack != null && currentStack.fluidID == aeitemstack.getItemDamage())
+					return true;
+			}
 		}
 
 		return false;
@@ -135,18 +119,15 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long countOfItemType(IAEItemStack aeitemstack)
 	{
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
 		long countOfFluidType = 0;
 
 		if (aeitemstack != null && aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 		{
 			for (int i = 0; i < totalTypes; i++)
 			{
-				if (nbt.getInteger("FluidID#" + i) == aeitemstack.getItemDamage())
-					countOfFluidType += nbt.getLong("FluidAmount#" + i);
+				FluidStack currentStack = readFluidStackFromSlot(i);
+				if (currentStack != null && currentStack.fluidID == aeitemstack.getItemDamage())
+					countOfFluidType += currentStack.amount;
 			}
 		}
 		return countOfFluidType;
@@ -159,23 +140,18 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
-			if (storage.stackTagCompound == null)
-				storage.stackTagCompound = new NBTTagCompound();
-			NBTTagCompound nbt = storage.stackTagCompound;
-
 			for (int i = 0; i < totalTypes; i++)
 			{
-				if (input.getItemDamage() == nbt.getInteger("FluidID#" + i))
+				FluidStack currentStack = readFluidStackFromSlot(i);
+				if (currentStack != null && currentStack.fluidID == input.getItemDamage())
 				{
 					if (input.getStackSize() <= freeBytes())
 					{
-						nbt.setInteger("FluidID#" + i, input.getItemDamage());
-						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) + input.getStackSize());
+						writeFluidStackToSlot(i, new FluidStack(input.getItemDamage(), currentStack.amount + (int) input.getStackSize()));
 						addedStack = null;
 					} else
 					{
-						nbt.setInteger("FluidID#" + i, input.getItemDamage());
-						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) + freeBytes());
+						writeFluidStackToSlot(i, new FluidStack(input.getItemDamage(), currentStack.amount + (int) freeBytes()));
 						addedStack.setStackSize(input.getStackSize() - freeBytes());
 					}
 					return addedStack;
@@ -184,17 +160,16 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 			for (int i = 0; i < totalTypes; i++)
 			{
-				if (nbt.getInteger("FluidID#" + i) == 0)
+				FluidStack currentStack = readFluidStackFromSlot(i);
+				if (currentStack == null)
 				{
 					if (input.getStackSize() <= freeBytes())
 					{
-						nbt.setInteger("FluidID#" + i, input.getItemDamage());
-						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) + input.getStackSize());
+						writeFluidStackToSlot(i, new FluidStack(input.getItemDamage(), (int) input.getStackSize()));
 						addedStack = null;
 					} else
 					{
-						nbt.setInteger("FluidID#" + i, input.getItemDamage());
-						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) + freeBytes());
+						writeFluidStackToSlot(i, new FluidStack(input.getItemDamage(), (int) freeBytes()));
 						addedStack.setStackSize(input.getStackSize() - freeBytes());
 					}
 					return addedStack;
@@ -205,31 +180,60 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	}
 
 	@Override
+	public IAEItemStack calculateItemAddition(IAEItemStack input)
+	{
+		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
+		{
+			if (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack())))
+			{
+				IAEItemStack addedStack = input.copy();
+
+				for (int i = 0; i < totalTypes; i++)
+				{
+					FluidStack currentStack = readFluidStackFromSlot(i);
+					if (currentStack == null || currentStack.fluidID == input.getItemDamage())
+					{
+						if (input.getStackSize() <= freeBytes())
+						{
+							addedStack = null;
+						} else
+						{
+							addedStack.setStackSize(input.getStackSize() - freeBytes());
+						}
+						return addedStack;
+					}
+				}
+			}
+		}
+		return input;
+	}
+
+	@Override
 	public IAEItemStack extractItems(IAEItemStack request)
 	{
 		IAEItemStack removedStack = request.copy();
 
 		if (request.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 		{
-			if (storage.stackTagCompound == null)
-				storage.stackTagCompound = new NBTTagCompound();
-			NBTTagCompound nbt = storage.stackTagCompound;
-
 			for (int i = 0; i < totalTypes; i++)
 			{
-				if (request.getItemDamage() == nbt.getInteger("FluidID#" + i))
+				FluidStack currentStack = readFluidStackFromSlot(i);
+				if (currentStack != null && currentStack.fluidID == request.getItemDamage())
 				{
-					if (nbt.getLong("FluidAmount#" + i) - request.getStackSize() >= 0)
+					if (currentStack.amount - request.getStackSize() >= 0)
 					{
 						removedStack.setStackSize(request.getStackSize());
-						if (nbt.getLong("FluidAmount#" + i) - request.getStackSize() == 0)
-							nbt.setInteger("FluidID#" + i, 0);
-						nbt.setLong("FluidAmount#" + i, nbt.getLong("FluidAmount#" + i) - request.getStackSize());
+						if (currentStack.amount - request.getStackSize() == 0)
+						{
+							writeFluidStackToSlot(i, null);
+						} else
+						{
+							writeFluidStackToSlot(i, new FluidStack(currentStack.fluidID, currentStack.amount - (int) request.getStackSize()));
+						}
 					} else
 					{
-						removedStack.setStackSize(nbt.getLong("FluidAmount#" + i));
-						nbt.setInteger("FluidID#" + i, 0);
-						nbt.setLong("FluidAmount#" + i, 0);
+						removedStack.setStackSize(currentStack.amount);
+						writeFluidStackToSlot(i, null);
 					}
 
 					if (updateTarget != null)
@@ -245,16 +249,13 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public IItemList getAvailableItems(IItemList out)
 	{
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
 		for (int i = 0; i < totalTypes; i++)
 		{
-			if (nbt.getInteger("FluidID#" + i) != 0 && nbt.getLong("FluidAmount#" + i) != 0)
+			FluidStack currentStack = readFluidStackFromSlot(i);
+			if (currentStack != null)
 			{
-				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, nbt.getInteger("FluidID#" + i)));
-				currentItemStack.setStackSize(nbt.getLong("FluidAmount#" + i));
+				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, currentStack.fluidID));
+				currentItemStack.setStackSize(currentStack.amount);
 				out.add(currentItemStack);
 			}
 		}
@@ -266,36 +267,6 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	public IItemList getAvailableItems()
 	{
 		return getAvailableItems(Util.createItemList());
-
-	}
-
-	@Override
-	public IAEItemStack calculateItemAddition(IAEItemStack input)
-	{
-		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
-		{
-			if (storage.stackTagCompound == null)
-				storage.stackTagCompound = new NBTTagCompound();
-			NBTTagCompound nbt = storage.stackTagCompound;
-
-			IAEItemStack addedStack = input.copy();
-
-			for (int i = 0; i < totalTypes; i++)
-			{
-				if (nbt.getInteger("FluidID#" + i) == 0 || input.getItemDamage() == nbt.getInteger("FluidID#" + i))
-				{
-					if (input.getStackSize() <= freeBytes())
-					{
-						addedStack = null;
-					} else
-					{
-						addedStack.setStackSize(input.getStackSize() - freeBytes());
-					}
-					return addedStack;
-				}
-			}
-		}
-		return input;
 	}
 
 	public boolean isItemInPreformattedItems(ItemStack request)
@@ -499,7 +470,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean canAccept(IAEItemStack input)
 	{
-		if (input != null)
+		if (input != null && input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 		{
 			if (getAvailableItems() != null)
 			{
@@ -508,9 +479,11 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 					if (current == null || current.getItemDamage() == input.getItemDamage())
 						return true;
 				}
+				if (getAvailableItems().size() == 0)
+					return true;
 			} else
 			{
-				return input.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry();
+				return true;
 			}
 		}
 		return false;
@@ -573,5 +546,24 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	public ListMode getListMode()
 	{
 		return ListMode.BLACKLIST;
+	}
+
+	public void writeFluidStackToSlot(int slotID, FluidStack input)
+	{
+		if (storage.stackTagCompound == null)
+			storage.stackTagCompound = new NBTTagCompound();
+		NBTTagCompound nbt = storage.stackTagCompound;
+
+		nbt.setInteger("FluidID#" + slotID, input != null ? input.fluidID : 0);
+		nbt.setLong("FluidAmount#" + slotID, input != null ? input.amount : 0);
+	}
+
+	public FluidStack readFluidStackFromSlot(int slotID)
+	{
+		if (storage.stackTagCompound == null)
+			storage.stackTagCompound = new NBTTagCompound();
+		NBTTagCompound nbt = storage.stackTagCompound;
+
+		return nbt.getInteger("FluidID#" + slotID) > 0 && nbt.getLong("FluidAmount#" + slotID) > 0 ? new FluidStack(nbt.getInteger("FluidID#" + slotID), (int) nbt.getLong("FluidAmount#" + slotID)) : null;
 	}
 }
