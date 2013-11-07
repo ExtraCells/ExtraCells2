@@ -12,10 +12,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import extracells.tile.TileEntityWalrus;
 
-public class BlockWalrusLoader extends Block implements ITileEntityProvider
+public class BlockWalrus extends Block implements ITileEntityProvider
 {
 
-	public BlockWalrusLoader(int id)
+	public BlockWalrus(int id)
 	{
 		super(id, Material.rock);
 		this.setCreativeTab(extracells.Extracells.ModTab);

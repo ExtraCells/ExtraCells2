@@ -42,7 +42,7 @@ public class ItemRendererWalrus implements IItemRenderer
 		case FIRST_PERSON_MAP:
 			break;
 		case INVENTORY:
-			GL11.glTranslatef(-0.3F, -0.2F, -0.2F);
+			GL11.glTranslatef(-0.5F, -0.5F, -0.1F);
 			break;
 		default:
 			break;

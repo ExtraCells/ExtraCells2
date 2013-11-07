@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import appeng.api.Blocks;
 import appeng.api.Items;
 import appeng.api.Materials;
@@ -13,50 +14,30 @@ import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.BlockEnum;
-import extracells.Extracells;
 import extracells.ItemEnum;
-import extracells.blocks.BlockBusFluidExport;
-import extracells.blocks.BlockBusFluidImport;
-import extracells.blocks.BlockBusFluidStorage;
-import extracells.blocks.BlockBusSupplier;
-import extracells.blocks.BlockCertusTank;
-import extracells.blocks.BlockFluidTransitionPlane;
-import extracells.blocks.BlockHardMEDrive;
-import extracells.blocks.BlockMEBattery;
-import extracells.blocks.BlockMEDropper;
-import extracells.blocks.BlockSolderingStation;
-import extracells.blocks.BlockTerminalFluid;
-import extracells.blocks.BlockWalrusLoader;
 import extracells.container.ContainerBusFluidExport;
 import extracells.container.ContainerBusFluidImport;
 import extracells.container.ContainerBusFluidStorage;
-import extracells.container.ContainerBusSupplier;
 import extracells.container.ContainerHardMEDrive;
+import extracells.container.ContainerLevelEmitterFluid;
 import extracells.container.ContainerMEBattery;
 import extracells.container.ContainerTerminalFluid;
 import extracells.gui.GuiBusFluidExport;
 import extracells.gui.GuiBusFluidImport;
 import extracells.gui.GuiBusFluidStorage;
-import extracells.gui.GuiBusSupplier;
 import extracells.gui.GuiHardMEDrive;
+import extracells.gui.GuiLevelEmitterFluid;
 import extracells.gui.GuiMEBattery;
 import extracells.gui.GuiTerminalFluid;
 import extracells.handler.CraftingHandler;
 import extracells.items.ItemBlockCertusTank;
 import extracells.items.ItemBlockSpecial;
-import extracells.items.ItemCasing;
-import extracells.items.ItemFluidDisplay;
-import extracells.items.ItemSecureStoragePhysicalDecrypted;
-import extracells.items.ItemSecureStoragePhysicalEncrypted;
-import extracells.items.ItemStorageComponent;
-import extracells.items.ItemStorageFluid;
-import extracells.items.ItemStoragePhysical;
 import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
-import extracells.tile.TileEntityBusSupplier;
 import extracells.tile.TileEntityCertusTank;
 import extracells.tile.TileEntityHardMEDrive;
+import extracells.tile.TileEntityLevelEmitterFluid;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
 import extracells.tile.TileEntitySolderingStation;
@@ -109,6 +90,7 @@ public class CommonProxy implements IGuiHandler
 		ItemStack transitionPlaneFluid = new ItemStack(BlockEnum.FLUIDTRANSITION.getBlockEntry(), 1);
 		ItemStack certusTank = new ItemStack(BlockEnum.CERTUSTANK.getBlockEntry(), 1);
 		ItemStack chromia = new ItemStack(BlockEnum.CHROMIA.getBlockEntry(), 1);
+		ItemStack levelEmitter = new ItemStack(BlockEnum.FLUIDLEVELEMITTER.getBlockEntry(), 1);
 
 		// Advanced Casing Physical
 		GameRegistry.addShapedRecipe(advancedStorageCasingPhysical, new Object[]
@@ -230,6 +212,9 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.addShapedRecipe(chromia, new Object[]
 		{ "FFF", "F_F", "FFF", 'F', Item.fishRaw, });
 
+		GameRegistry.addRecipe(new ShapelessOreRecipe(levelEmitter, new Object[]
+		{ Blocks.blkLevelEmitter, "dyeBlue" }));
+
 	}
 
 	public void RegisterTileEntities()
@@ -245,7 +230,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityTransitionPlaneFluid.class, "tileEntityTransitionPlaneFluid");
 		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
 		GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
-		GameRegistry.registerTileEntity(TileEntityBusSupplier.class, "tileEntityBusSupplier");
+		GameRegistry.registerTileEntity(TileEntityLevelEmitterFluid.class, "tileEntityLevelEmitterFluid");
 	}
 
 	public void RegisterRenderers()
@@ -306,8 +291,8 @@ public class CommonProxy implements IGuiHandler
 				return new GuiBusFluidExport(world, player.inventory, (TileEntityBusFluidExport) tileEntity, player);
 			case 5: // GUI ME Battery
 				return new GuiMEBattery(world, (TileEntityMEBattery) tileEntity, player);
-			case 6: // GUI Bus Supplier
-				return new GuiBusSupplier(world, player.inventory, (TileEntityBusSupplier) tileEntity, player);
+			case 6: // GUI ME Fluid Level Emitter
+				return new GuiLevelEmitterFluid(player.inventory, (TileEntityLevelEmitterFluid) tileEntity);
 			default:
 				return false;
 			}
@@ -338,8 +323,8 @@ public class CommonProxy implements IGuiHandler
 				return new ContainerBusFluidExport(player.inventory, ((TileEntityBusFluidExport) tileEntity).getInventory());
 			case 5: // GUI ME Battery
 				return new ContainerMEBattery();
-			case 6: // GUI Bus Supplier
-				return new ContainerBusSupplier(player.inventory, ((TileEntityBusSupplier) tileEntity).getInventory());
+			case 6: // GUI ME Fluid Level Emitter
+				return new ContainerLevelEmitterFluid(player.inventory, ((TileEntityLevelEmitterFluid) tileEntity).getInventory());
 			default:
 				return false;
 			}

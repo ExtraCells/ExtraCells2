@@ -10,27 +10,27 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.FMLClientHandler;
+import extracells.tile.TileEntityLevelEmitterFluid;
 
-public class ModelBusSupplier extends ModelBase
+public class ModelLevelEmitterFluid extends ModelBase
 {
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
 
-	public ModelBusSupplier()
+	public ModelLevelEmitterFluid()
 	{
 		textureWidth = 64;
-		textureHeight = 64;
+		textureHeight = 32;
 
 		Shape1 = new ModelRenderer(this, 0, 0);
-		Shape1.addBox(0F, 0F, 0F, 16, 2, 16);
-		Shape1.setRotationPoint(-8F, 22F, -8F);
+		Shape1.addBox(0F, 0F, 0F, 6, 6, 6);
+		Shape1.setRotationPoint(-3F, 13F, -3F);
 		Shape1.setTextureSize(64, 32);
 		Shape1.mirror = true;
 		setRotation(Shape1, 0F, 0F, 0F);
-		Shape2 = new ModelRenderer(this, 0, 18);
-		Shape2.addBox(0F, 0F, 0F, 6, 14, 6);
-		Shape2.setRotationPoint(-3F, 8F, -3F);
+		Shape2 = new ModelRenderer(this, 32, 0);
+		Shape2.addBox(0F, 0F, 0F, 2, 6, 2);
+		Shape2.setRotationPoint(-1F, 17.25F, -1F);
 		Shape2.setTextureSize(64, 32);
 		Shape2.mirror = true;
 		setRotation(Shape2, 0F, 0F, 0F);
@@ -44,7 +44,14 @@ public class ModelBusSupplier extends ModelBase
 
 	public void render(TileEntity tileEntity, double x, double y, double z)
 	{
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_supplier.png"));
+		if (((TileEntityLevelEmitterFluid) tileEntity).getBrightness() > 0)
+		{
+			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_level_emitter_on.png"));
+		} else
+		{
+			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_level_emitter_off.png"));
+		}
+
 		GL11.glPushMatrix();
 
 		switch (ForgeDirection.getOrientation(tileEntity.getBlockMetadata()))

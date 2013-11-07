@@ -39,6 +39,7 @@
   <entry key="tile.block.fluid.transitionplane.name">ME Fluid Transition Plane</entry>
   <entry key="tile.block.certustank.name">ME Certus Tank</entry>
   <entry key="tile.block.walrus.name">walrus</entry>
+  <entry key="tile.block.fluid.levelemitter.name">ME Fluid Level Emitter</entry>
   <entry key="tooltip.belongsto">This storage belongs to:</entry>
   <entry key="tooltip.notyours">You are not the owner of this storage drive!</entry>
   <entry key="tooltip.accessgranted">Access granted!</entry>
@@ -63,4 +64,6 @@
   <entry key="tooltip.solderingwarning.needstoragecell">To upgrade the size of your storage, you need one ME Storage Cell for each 2048 Bytes!</entry>
   <entry key="tooltip.solderingwarning.needconversionmatrix">To upgrade the number of types of your Storage, you need one ME Conversion Matrix for each type!</entry>
   <entry key="tooltip.solderingwarning.cellnotempty">This Cell is not Empty!</entry>
+  <entry key="fluid.tile.water">Water</entry>
+  <entry key="fluid.tile.lava">Lava</entry>
   </properties>

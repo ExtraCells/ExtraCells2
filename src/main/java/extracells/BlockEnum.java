@@ -5,15 +5,15 @@ import net.minecraft.util.StatCollector;
 import extracells.blocks.BlockBusFluidExport;
 import extracells.blocks.BlockBusFluidImport;
 import extracells.blocks.BlockBusFluidStorage;
-import extracells.blocks.BlockBusSupplier;
 import extracells.blocks.BlockCertusTank;
 import extracells.blocks.BlockFluidTransitionPlane;
 import extracells.blocks.BlockHardMEDrive;
+import extracells.blocks.BlockLevelEmitterFluid;
 import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
 import extracells.blocks.BlockSolderingStation;
 import extracells.blocks.BlockTerminalFluid;
-import extracells.blocks.BlockWalrusLoader;
+import extracells.blocks.BlockWalrus;
 
 public enum BlockEnum
 {
@@ -27,8 +27,8 @@ public enum BlockEnum
 	FLUIDTERMINAL("tile.block.fluid.terminal.name", 507, BlockTerminalFluid.class, "ID for the Fluid Storage Terminal", "TerminalFluid"),
 	FLUIDTRANSITION("tile.block.fluid.transitionplane.name", 508, BlockFluidTransitionPlane.class, "ID for the Fluid Transition Plance", "FluidTransitionPlane"),
 	CERTUSTANK("tile.block.certustank.name", 509, BlockCertusTank.class, "ID for the ME Certus Tank", "CertusTank"),
-	CHROMIA("tile.block.walrus.name", 510, BlockWalrusLoader.class, "ID for the Walrus", "Walrus"),
-	SUPPLYBUS("tile.block.bus.supplier", 511, BlockBusSupplier.class, "ID for the ME Supplier Bus", "BusSupplier");
+	CHROMIA("tile.block.walrus.name", 510, BlockWalrus.class, "ID for the Walrus", "Walrus"),
+	FLUIDLEVELEMITTER("tile.block.fluid.levelemitter.name", 511, BlockLevelEmitterFluid.class, "ID for the ME Fluid Level Emitter", "LevelEmitterFluid");
 
 	private final String internalName;
 	private String description, IDName;

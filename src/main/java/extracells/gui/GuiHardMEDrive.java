@@ -40,7 +40,7 @@ public class GuiHardMEDrive extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j)
 	{
-		this.fontRenderer.drawString(BlockEnum.BLASTRESISTANTMEDRIVE.getLocalizedName(), 0, 0, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.BLASTRESISTANTMEDRIVE.getLocalizedName(), 5, 5, 0x000000);
 	}
 
 	public int getRowLength()

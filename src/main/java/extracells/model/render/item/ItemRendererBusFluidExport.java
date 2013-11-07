@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -39,6 +40,7 @@ public class ItemRendererBusFluidExport implements IItemRenderer
 		GL11.glRotatef(-90F, 0, 0, 1);
 		model.render(0.0625f);
 		cable.renderBase(-0.5, 0.5F, -0.5F, Colors.CLEAR);
+		cable.renderExtend(-0.5, 0.5F, -0.5F, ForgeDirection.DOWN, Colors.CLEAR);
 		GL11.glPopMatrix();
 	}
 }
