@@ -116,14 +116,19 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 				for (Fluid entry : fluidFilter)
 				{
 					if (entry != null)
-					{
-						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, entry.getID()));
-
-						long contained = getGrid().getCellArray().countOfItemType(entryToAEIS);
-
-						if (contained > 0)
+					{// sometimes the grid becomes null after the null check, it happens so rarely, that a trycatch wont be bad for performance.
+						try
 						{
-							exportFluid(new FluidStack(entry, contained < 20 ? (int) contained : 20), facingTank, facing.getOpposite());
+							IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, entry.getID()));
+
+							long contained = getGrid().getCellArray().countOfItemType(entryToAEIS);
+
+							if (contained > 0)
+							{
+								exportFluid(new FluidStack(entry, contained < 20 ? (int) contained : 20), facingTank, facing.getOpposite());
+							}
+						} catch (NullPointerException e)
+						{
 						}
 					}
 				}

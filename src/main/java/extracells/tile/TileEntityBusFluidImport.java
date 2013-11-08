@@ -341,23 +341,28 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 			IAEItemStack temp = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), amount, fluidID));
 			temp.setStackSize(amount);
 
-			if (doFill)
-			{
-				added = grid.getCellArray().addItems(temp);
-			} else
-			{
-				added = grid.getCellArray().calculateItemAddition(temp);
-			}
-			if (added == null)
-			{
+			try
+			{// sometimes the grid becomes null after the null check, it happens so rarely, that a trycatch wont be bad for performance.
 				if (doFill)
-					grid.useMEEnergy(amount / 20, "Import Fluid");
-				return resource.amount;
-			} else
+				{
+					added = getGrid().getCellArray().addItems(temp);
+				} else
+				{
+					added = getGrid().getCellArray().calculateItemAddition(temp);
+				}
+				if (added == null)
+				{
+					if (doFill)
+						getGrid().useMEEnergy(amount / 20, "Import Fluid");
+					return resource.amount;
+				} else
+				{
+					if (doFill)
+						getGrid().useMEEnergy(amount - added.getStackSize() / 20, "Import Fluid");
+					return (int) (resource.amount - added.getStackSize());
+				}
+			} catch (NullPointerException e)
 			{
-				if (doFill)
-					grid.useMEEnergy(amount - added.getStackSize() / 20, "Import Fluid");
-				return (int) (resource.amount - added.getStackSize());
 			}
 		}
 		return 0;
