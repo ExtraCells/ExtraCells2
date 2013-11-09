@@ -15,6 +15,7 @@ import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.util.IGridInterface;
+import appeng.api.me.util.IMEInventoryHandler;
 import extracells.ItemEnum;
 
 public class TileEntityTransitionPlaneFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile
@@ -32,28 +33,32 @@ public class TileEntityTransitionPlaneFluid extends ColorableECTile implements I
 			int offsetID = worldObj.getBlockId(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
 			int offsetMeta = worldObj.getBlockMetadata(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
 
-			if (Block.blocksList[offsetID] instanceof IFluidBlock)
+			IMEInventoryHandler cellArray = getGrid().getCellArray();
+			if (cellArray != null)
 			{
-				FluidStack simulation = ((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, false);
+				if (Block.blocksList[offsetID] instanceof IFluidBlock)
+				{
+					FluidStack simulation = ((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, false);
 
-				if (simulation != null && grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID))) == null)
+					if (simulation != null && cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID))) == null)
+					{
+						((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, true);
+						cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID)));
+					}
+				} else if (offsetID == FluidRegistry.WATER.getBlockID() && offsetMeta == 0)
 				{
-					((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, true);
-					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID)));
-				}
-			} else if (offsetID == FluidRegistry.WATER.getBlockID() && offsetMeta == 0)
-			{
-				if (grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID()))) == null)
+					if (cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID()))) == null)
+					{
+						worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
+						cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID())));
+					}
+				} else if (offsetID == FluidRegistry.LAVA.getBlockID() && offsetMeta == 0)
 				{
-					worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
-					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID())));
-				}
-			} else if (offsetID == FluidRegistry.LAVA.getBlockID() && offsetMeta == 0)
-			{
-				if (grid.getCellArray().calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID()))) == null)
-				{
-					worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
-					grid.getCellArray().addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID())));
+					if (cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID()))) == null)
+					{
+						worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
+						cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID())));
+					}
 				}
 			}
 		}

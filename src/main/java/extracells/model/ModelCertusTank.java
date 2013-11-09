@@ -51,7 +51,7 @@ public class ModelCertusTank extends ModelBase
 		Shape1.render(0.0625F);
 
 		// render same cube again, but inside out, so it has inner textures :D
-		GL11.glScalef(1.0F, 0.9999F, -1F);
+		GL11.glScalef(1.0F, 0.999F, -1F);
 		Shape1.render(0.0625F);
 
 		if (tileEntity != null && ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null)

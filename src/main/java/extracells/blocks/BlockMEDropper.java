@@ -1,11 +1,5 @@
 package extracells.blocks;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.BlockSourceImpl;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -16,25 +10,19 @@ import net.minecraft.dispenser.IPosition;
 import net.minecraft.dispenser.IRegistry;
 import net.minecraft.dispenser.PositionImpl;
 import net.minecraft.dispenser.RegistryDefaulted;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
 import appeng.api.Util;
-import appeng.api.WorldCoord;
-import appeng.api.events.GridTileConnectivityEvent;
-import appeng.api.events.GridTileLoadEvent;
-import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.items.IAEWrench;
+import appeng.api.me.util.IMEInventoryHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityMEDropper;
 
@@ -150,7 +138,8 @@ public class BlockMEDropper extends ColorableRotatableECBlock
 				{
 					if (((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getGrid() != null)
 					{
-						if (((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getGrid().getCellArray().extractItems(Util.createItemStack(request)) != null)
+						IMEInventoryHandler cellArray = ((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getGrid().getCellArray();
+						if (cellArray != null && cellArray.extractItems(Util.createItemStack(request)) != null)
 						{
 							dispense(world, x, y, z, ((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getItem().copy());
 							unpowered = false;

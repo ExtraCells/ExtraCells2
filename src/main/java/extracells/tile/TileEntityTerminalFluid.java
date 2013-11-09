@@ -24,6 +24,7 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
+import appeng.api.me.util.IMEInventoryHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.ItemEnum;
 import extracells.SpecialFluidStack;
@@ -252,15 +253,19 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		toFill.setStackSize(toImport.amount);
 		if (grid != null)
 		{
-			IAEItemStack sim = grid.getCellArray().calculateItemAddition(toFill.copy());
-
-			if (sim != null)
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			if (cellArray != null)
 			{
-				return false;
-			}
+				IAEItemStack sim = cellArray.calculateItemAddition(toFill.copy());
 
-			grid.getCellArray().addItems(toFill.copy());
-			return true;
+				if (sim != null)
+				{
+					return false;
+				}
+
+				cellArray.addItems(toFill.copy());
+				return true;
+			}
 		}
 		return false;
 	}
@@ -272,22 +277,26 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 		if (grid != null)
 		{
-			for (SpecialFluidStack fluidstack : fluidsInNetwork)
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			if (cellArray != null)
 			{
-				if (fluidstack.getFluid() == toExport.getFluid() && fluidstack.amount >= toExport.amount)
+				for (SpecialFluidStack fluidstack : fluidsInNetwork)
 				{
-					IAEItemStack takenStack = grid.getCellArray().extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize()), toDrain.getItemDamage())));
+					if (fluidstack.getFluid() == toExport.getFluid() && fluidstack.amount >= toExport.amount)
+					{
+						IAEItemStack takenStack = cellArray.extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize()), toDrain.getItemDamage())));
 
-					if (takenStack == null)
-					{
-						return false;
-					} else if (takenStack.getStackSize() != (int) toDrain.getStackSize())
-					{
-						grid.getCellArray().addItems(takenStack);
-						return false;
-					} else
-					{
-						return true;
+						if (takenStack == null)
+						{
+							return false;
+						} else if (takenStack.getStackSize() != (int) toDrain.getStackSize())
+						{
+							cellArray.addItems(takenStack);
+							return false;
+						} else
+						{
+							return true;
+						}
 					}
 				}
 			}
@@ -414,7 +423,11 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		{
 			grid = gi;
 			if (getGrid() != null)
-				updateFluids(getGrid().getCellArray().getAvailableItems());
+			{
+				IMEInventoryHandler cellArray = getGrid().getCellArray();
+				if (cellArray != null)
+					updateFluids(cellArray.getAvailableItems());
+			}
 		}
 	}
 

@@ -29,6 +29,7 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
+import appeng.api.me.util.IMEInventoryHandler;
 import extracells.ItemEnum;
 import extracells.SpecialFluidStack;
 
@@ -115,20 +116,17 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 			{
 				for (Fluid entry : fluidFilter)
 				{
-					if (entry != null)
-					{// sometimes the grid becomes null after the null check, it happens so rarely, that a trycatch wont be bad for performance.
-						try
-						{
-							IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, entry.getID()));
+					IMEInventoryHandler cellArray = getGrid().getCellArray();
 
-							long contained = getGrid().getCellArray().countOfItemType(entryToAEIS);
+					if (entry != null && cellArray != null)
+					{
+						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, entry.getID()));
 
-							if (contained > 0)
-							{
-								exportFluid(new FluidStack(entry, contained < 20 ? (int) contained : 20), facingTank, facing.getOpposite());
-							}
-						} catch (NullPointerException e)
+						long contained = cellArray.countOfItemType(entryToAEIS);
+
+						if (contained > 0)
 						{
+							exportFluid(new FluidStack(entry, contained < 20 ? (int) contained : 20), facingTank, facing.getOpposite());
 						}
 					}
 				}
@@ -149,18 +147,22 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 
 			IAEItemStack toExtract = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), filled, toExport.fluidID));
 
-			IAEItemStack extracted = grid.getCellArray().extractItems(toExtract);
-
-			grid.useMEEnergy(12.0F, "Export Fluid");
-
-			if (extracted == null)
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			if (cellArray != null)
 			{
-				toExport.amount = filled;
-				tankToFill.drain(from, toExport, true);
-			} else if (extracted.getStackSize() < filled)
-			{
-				toExport.amount = (int) (filled - (filled - extracted.getStackSize()));
-				tankToFill.drain(from, toExport, true);
+				IAEItemStack extracted = cellArray.extractItems(toExtract);
+
+				grid.useMEEnergy(12.0F, "Export Fluid");
+
+				if (extracted == null)
+				{
+					toExport.amount = filled;
+					tankToFill.drain(from, toExport, true);
+				} else if (extracted.getStackSize() < filled)
+				{
+					toExport.amount = (int) (filled - (filled - extracted.getStackSize()));
+					tankToFill.drain(from, toExport, true);
+				}
 			}
 		}
 	}

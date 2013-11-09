@@ -4,14 +4,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import appeng.api.WorldCoord;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -43,11 +42,22 @@ public class GuiTerminalFluid extends GuiContainer
 	public void drawScreen(int mouseX, int mouseY, float f)
 	{
 		super.drawScreen(mouseX, mouseY, f);
+
+		int deltaWheel = Mouse.getDWheel();
+
+		if (deltaWheel > 0)
+		{
+			PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0).makePacket());
+		} else if (deltaWheel < 0)
+		{
+			PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 1).makePacket());
+		}
 	}
 
 	@Override
 	public void initGui()
 	{
+		Mouse.getDWheel();
 		super.initGui();
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;

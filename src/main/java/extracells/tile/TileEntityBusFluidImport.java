@@ -31,6 +31,7 @@ import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
+import appeng.api.me.util.IMEInventoryHandler;
 import extracells.ItemEnum;
 
 public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
@@ -108,24 +109,28 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 				List<Fluid> fluidFilter = getFilterFluids(filterSlots);
 				IAEItemStack toImport = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), drainable.amount, drainable.fluidID));
 
-				IAEItemStack notImported = grid.getCellArray().calculateItemAddition(toImport.copy());
-
-				if (fluidFilter != null && !fluidFilter.isEmpty() && fluidFilter.size() > 0)
+				IMEInventoryHandler cellArray = getGrid().getCellArray();
+				if (cellArray != null)
 				{
-					if (fluidFilter.contains(drainable.getFluid()))
+					IAEItemStack notImported = cellArray.calculateItemAddition(toImport.copy());
+
+					if (fluidFilter != null && !fluidFilter.isEmpty() && fluidFilter.size() > 0)
+					{
+						if (fluidFilter.contains(drainable.getFluid()))
+						{
+							if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
+							{
+								((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
+								cellArray.addItems(toImport.copy());
+							}
+						}
+					} else
 					{
 						if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
 						{
 							((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
-							grid.getCellArray().addItems(toImport.copy());
+							cellArray.addItems(toImport.copy());
 						}
-					}
-				} else
-				{
-					if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
-					{
-						((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
-						grid.getCellArray().addItems(toImport.copy());
 					}
 				}
 			}
@@ -341,14 +346,15 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 			IAEItemStack temp = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), amount, fluidID));
 			temp.setStackSize(amount);
 
-			try
-			{// sometimes the grid becomes null after the null check, it happens so rarely, that a trycatch wont be bad for performance.
+			IMEInventoryHandler cellArray = getGrid().getCellArray();
+			if (cellArray != null)
+			{
 				if (doFill)
 				{
-					added = getGrid().getCellArray().addItems(temp);
+					added = cellArray.addItems(temp);
 				} else
 				{
-					added = getGrid().getCellArray().calculateItemAddition(temp);
+					added = cellArray.calculateItemAddition(temp);
 				}
 				if (added == null)
 				{
@@ -361,8 +367,6 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 						getGrid().useMEEnergy(amount - added.getStackSize() / 20, "Import Fluid");
 					return (int) (resource.amount - added.getStackSize());
 				}
-			} catch (NullPointerException e)
-			{
 			}
 		}
 		return 0;
@@ -383,7 +387,8 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		return grid.getCellArray().canAccept(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, fluid.getID())));
+		IMEInventoryHandler cellArray = grid.getCellArray();
+		return cellArray != null && cellArray.canAccept(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, fluid.getID())));
 	}
 
 	@Override
@@ -400,17 +405,21 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 			List<FluidTankInfo> tankInfo = new ArrayList<FluidTankInfo>();
 			FluidTankInfo[] tankArray = new FluidTankInfo[1];
 
-			for (IAEItemStack item : getGrid().getCellArray().getAvailableItems())
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			if (cellArray != null)
 			{
-				if (item.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
-					tankInfo.add(new FluidTankInfo(new FluidStack(FluidRegistry.getFluid(item.getItemDamage()), (int) item.getStackSize()), (int) getGrid().getCellArray().freeBytes()));
+				for (IAEItemStack item : cellArray.getAvailableItems())
+				{
+					if (item.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
+						tankInfo.add(new FluidTankInfo(new FluidStack(FluidRegistry.getFluid(item.getItemDamage()), (int) item.getStackSize()), (int) getGrid().getCellArray().freeBytes()));
+				}
+
+				if (tankInfo.isEmpty())
+					tankInfo.add(new FluidTankInfo(null, (int) cellArray.freeBytes()));
+
+				tankArray = tankInfo.toArray(tankArray);
+				return tankArray;
 			}
-
-			if (tankInfo.isEmpty())
-				tankInfo.add(new FluidTankInfo(null, (int) getGrid().getCellArray().freeBytes()));
-
-			tankArray = tankInfo.toArray(tankArray);
-			return tankArray;
 		}
 		return null;
 	}

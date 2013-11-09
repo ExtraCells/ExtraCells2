@@ -29,25 +29,30 @@ public class ClientProxy extends CommonProxy
 {
 	public void RegisterRenderers()
 	{
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolderingStation.class, new TileEntityRendererSolderingStation());
-		MinecraftForgeClient.registerItemRenderer(BlockEnum.SOLDERINGSTATION.getBlockEntry().blockID, new ItemRendererSolderingStation());
+		try
+		{
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolderingStation.class, new TileEntityRendererSolderingStation());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.SOLDERINGSTATION.getBlockEntry().blockID, new ItemRendererSolderingStation());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidStorage.class, new TileEntityRendererBusFluidStorage());
-		MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDSTORAGE.getBlockEntry().blockID, new ItemRendererBusFluidStorage());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidStorage.class, new TileEntityRendererBusFluidStorage());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDSTORAGE.getBlockEntry().blockID, new ItemRendererBusFluidStorage());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidImport.class, new TileEntityRendererBusFluidImport());
-		MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDIMPORT.getBlockEntry().blockID, new ItemRendererBusFluidImport());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidImport.class, new TileEntityRendererBusFluidImport());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDIMPORT.getBlockEntry().blockID, new ItemRendererBusFluidImport());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidExport.class, new TileEntityRendererBusFluidExport());
-		MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDEXPORT.getBlockEntry().blockID, new ItemRendererBusFluidExport());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidExport.class, new TileEntityRendererBusFluidExport());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDEXPORT.getBlockEntry().blockID, new ItemRendererBusFluidExport());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCertusTank.class, new TileEntityRendererCertusTank());
-		MinecraftForgeClient.registerItemRenderer(BlockEnum.CERTUSTANK.getBlockEntry().blockID, new ItemRendererCertusTank());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCertusTank.class, new TileEntityRendererCertusTank());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.CERTUSTANK.getBlockEntry().blockID, new ItemRendererCertusTank());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRedererWalrus());
-		MinecraftForgeClient.registerItemRenderer(BlockEnum.CHROMIA.getBlockEntry().blockID, new ItemRendererWalrus());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRedererWalrus());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.CHROMIA.getBlockEntry().blockID, new ItemRendererWalrus());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLevelEmitterFluid.class, new TileEntityRendererLevelEmitterFluid());
-		MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDLEVELEMITTER.getBlockEntry().blockID, new ItemRendererLevelEmitterFluid());
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLevelEmitterFluid.class, new TileEntityRendererLevelEmitterFluid());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDLEVELEMITTER.getBlockEntry().blockID, new ItemRendererLevelEmitterFluid());
+		} catch (NullPointerException e)
+		{
+		}
 	}
 }
