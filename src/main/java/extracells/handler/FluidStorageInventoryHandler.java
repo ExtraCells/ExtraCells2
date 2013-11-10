@@ -31,23 +31,30 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	private TileEntity updateTarget;
 	private IGridInterface grid;
 	private IMEInventoryHandler parent;
-	private FluidStack[] cachedInventory;
+	private List<FluidStack> cachedInventory;
+	private List<Fluid> cachedPreformats = new ArrayList<Fluid>(63);
 	private String cachedName;
 	private Item fluidItem = ItemEnum.FLUIDDISPLAY.getItemEntry();
+	String cake;
 
 	public FluidStorageInventoryHandler(ItemStack itemstack, long totalBytes, int totalTypes)
 	{
 		this.storage = itemstack;
 		this.totalBytes = totalBytes;
 		this.totalTypes = totalTypes;
-		cachedInventory = new FluidStack[totalTypes];
+		cachedInventory = new ArrayList<FluidStack>(totalTypes);
 
 		for (int i = 0; i < totalTypes; i++)
 		{
-			cachedInventory[i] = readFluidStackFromSlot(i);
+			cachedInventory.add(readFluidStackFromSlot(i));
 		}
 
 		cachedName = readNameFromNBT();
+
+		for (int i = 0; i < 63; i++)
+		{
+			cachedPreformats.add(getPreformattedFluid(i));
+		}
 	}
 
 	@Override
@@ -57,7 +64,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		for (int i = 0; i < totalTypes; i++)
 		{
-			if (cachedInventory[i] != null)
+			if (cachedInventory.get(i) != null)
 				storedFluidTypes++;
 		}
 
@@ -71,7 +78,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		for (int i = 0; i < totalTypes; i++)
 		{
-			FluidStack currentStack = cachedInventory[i];
+			FluidStack currentStack = cachedInventory.get(i);
 			storedFluidAmount += currentStack != null ? currentStack.amount : 0;
 		}
 
@@ -85,7 +92,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		for (int i = 0; i < totalTypes; i++)
 		{
-			FluidStack currentStack = cachedInventory[i];
+			FluidStack currentStack = cachedInventory.get(i);
 			remainingFluidSpace -= currentStack != null ? currentStack.amount : 0;
 		}
 
@@ -99,7 +106,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		for (int i = 0; i < totalTypes; i++)
 		{
-			if (cachedInventory[i] == null)
+			if (cachedInventory.get(i) == null)
 				remainingFluidTypes += 1;
 		}
 
@@ -115,7 +122,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			for (int i = 0; i < totalTypes; i++)
 			{
-				FluidStack currentStack = cachedInventory[i];
+				FluidStack currentStack = cachedInventory.get(i);
 				if (currentStack != null && currentStack.fluidID == aeitemstack.getItemDamage())
 					return true;
 			}
@@ -139,7 +146,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			for (int i = 0; i < totalTypes; i++)
 			{
-				FluidStack currentStack = cachedInventory[i];
+				FluidStack currentStack = cachedInventory.get(i);
 				if (currentStack != null && currentStack.fluidID == aeitemstack.getItemDamage())
 					countOfFluidType += currentStack.amount;
 			}
@@ -156,7 +163,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			for (int i = 0; i < totalTypes; i++)
 			{
-				FluidStack currentStack = cachedInventory[i];
+				FluidStack currentStack = cachedInventory.get(i);
 				if (currentStack != null && currentStack.fluidID == input.getItemDamage())
 				{
 					if (input.getStackSize() <= freeBytes())
@@ -174,7 +181,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 			for (int i = 0; i < totalTypes; i++)
 			{
-				FluidStack currentStack = cachedInventory[i];
+				FluidStack currentStack = cachedInventory.get(i);
 				if (currentStack == null)
 				{
 					if (input.getStackSize() <= freeBytes())
@@ -204,7 +211,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 				for (int i = 0; i < totalTypes; i++)
 				{
-					FluidStack currentStack = cachedInventory[i];
+					FluidStack currentStack = cachedInventory.get(i);
 					if (currentStack == null || currentStack.fluidID == input.getItemDamage())
 					{
 						if (input.getStackSize() <= freeBytes())
@@ -231,7 +238,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			for (int i = 0; i < totalTypes; i++)
 			{
-				FluidStack currentStack = cachedInventory[i];
+				FluidStack currentStack = cachedInventory.get(i);
 				if (currentStack != null && currentStack.fluidID == request.getItemDamage())
 				{
 					if (currentStack.amount - request.getStackSize() >= 0)
@@ -265,7 +272,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	{
 		for (int i = 0; i < totalTypes; i++)
 		{
-			FluidStack currentStack = cachedInventory[i];
+			FluidStack currentStack = cachedInventory.get(i);
 			if (currentStack != null)
 			{
 				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(fluidItem, 1, currentStack.fluidID));
@@ -357,7 +364,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	{
 		for (int i = 0; i < totalTypes; i++)
 		{
-			if (cachedInventory[i] == null)
+			if (cachedInventory.get(i) == null)
 			{
 				return true;
 			}
@@ -382,25 +389,21 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		for (int i = 0; i < 63; i++)
 		{
-			if (nbt.getInteger("PreformattedFluidID#" + i) != 0)
+			Fluid current = cachedPreformats.get(i);
+			if (current != null)
 			{
-				fluidItemList.add(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, nbt.getInteger("PreformattedFluidID#" + i)));
+				fluidItemList.add(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, current.getID()));
 			}
 		}
-
 		return fluidItemList;
 	}
 
 	@Override
 	public boolean isPreformatted()
 	{
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
-
 		for (int i = 0; i < 63; i++)
 		{
-			if (nbt.getInteger("PreformattedFluidID#" + i) != 0)
+			if (cachedPreformats.get(0) != null)
 				return true;
 		}
 		return false;
@@ -515,6 +518,13 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 			storage.stackTagCompound = new NBTTagCompound();
 		NBTTagCompound nbt = storage.stackTagCompound;
 
+		cachedPreformats = new ArrayList<Fluid>(63);
+
+		for (int i = 0; i < 63; i++)
+		{
+			nbt.setInteger("PreformattedFluidID#" + i, -1);
+		}
+
 		if (!in.getItems().isEmpty())
 		{
 			for (int i = 0; i < in.getItems().size(); i++)
@@ -524,13 +534,18 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 				{
 					if (FluidContainerRegistry.isFilledContainer(currentItemStack))
 					{
+						FluidStack toWrite = FluidContainerRegistry.getFluidForFilledItem(currentItemStack);
+						cachedPreformats.add(toWrite.getFluid());
 						nbt.setInteger("PreformattedFluidID#" + i, FluidContainerRegistry.getFluidForFilledItem(currentItemStack).fluidID);
 					} else if (currentItemStack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 					{
-						nbt.setInteger("PreformattedFluidID#" + i, currentItemStack.getItemDamage());
+						int toWrite = currentItemStack.getItemDamage();
+						cachedPreformats.add(FluidRegistry.getFluid(toWrite));
+						nbt.setInteger("PreformattedFluidID#" + i, toWrite);
 					} else if (currentItemStack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) currentItemStack.getItem()).getFluid(currentItemStack) != null)
 					{
-						nbt.setInteger("PreformattedFluidID#" + i, ((IFluidContainerItem) currentItemStack.getItem()).getFluid(currentItemStack).fluidID);
+						FluidStack toWrite = ((IFluidContainerItem) currentItemStack.getItem()).getFluid(currentItemStack);
+						nbt.setInteger("PreformattedFluidID#" + i, toWrite.fluidID);
 					}
 				}
 			}
@@ -538,9 +553,10 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			for (int i = 0; i < 63; i++)
 			{
-				nbt.setInteger("PreformattedFluidID#" + i, 0);
+				nbt.setInteger("PreformattedFluidID#" + i, -1);
 			}
 		}
+		System.out.println("");
 	}
 
 	@Override
@@ -551,7 +567,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 	private void writeFluidStackToSlot(int slotID, FluidStack input)
 	{
-		cachedInventory[slotID] = input;
+		cachedInventory.set(slotID, input);
 
 		if (storage.stackTagCompound == null)
 			storage.stackTagCompound = new NBTTagCompound();
@@ -586,5 +602,14 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		NBTTagCompound nbt = storage.stackTagCompound;
 
 		return nbt.getString("PreformattedName");
+	}
+
+	private Fluid getPreformattedFluid(int slotID)
+	{
+		if (storage.stackTagCompound == null)
+			storage.stackTagCompound = new NBTTagCompound();
+		NBTTagCompound nbt = storage.stackTagCompound;
+
+		return nbt.getInteger("PreformattedFluidID#" + slotID) > 0 ? FluidRegistry.getFluid(nbt.getInteger("PreformattedFluidID#" + slotID)) : null;
 	}
 }

@@ -53,6 +53,7 @@ public class ClientProxy extends CommonProxy
 			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDLEVELEMITTER.getBlockEntry().blockID, new ItemRendererLevelEmitterFluid());
 		} catch (NullPointerException e)
 		{
+			System.out.println("Mod ExtraCells: Another mod probably overrid an ExtraCells item causing EC to cancel the registration of ItemRenderers!");
 		}
 	}
 }
