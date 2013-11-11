@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.AbstractPacket;
 import extracells.tile.TileEntitySolderingStation;
@@ -14,21 +15,32 @@ public class PacketSolderingStation extends AbstractPacket
 	String playerName;
 	int PacketType;
 	int x, y, z;
-	int size, types;
-	boolean remove;
-	char upgrade, downgrade;
+	int deltaSize, deltaTypes, slotID;
 
-	public PacketSolderingStation(String playerName, int x, int y, int z, int size, int types, boolean remove, char upgrade, char downgrade)
+	public static PacketSolderingStation changeSize(EntityPlayer player, int x, int y, int z, int deltaSize, int slotID)
 	{
-		this.playerName = playerName;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.size = size;
-		this.types = types;
-		this.remove = remove;
-		this.upgrade = upgrade;
-		this.downgrade = downgrade;
+		PacketSolderingStation packet = new PacketSolderingStation();
+		packet.playerName = player.username;
+		packet.x = x;
+		packet.y = y;
+		packet.z = z;
+		packet.deltaSize = deltaSize;
+		packet.deltaTypes = 0;
+		packet.slotID = slotID;
+		return packet;
+	}
+
+	public static PacketSolderingStation changeTypes(EntityPlayer player, int x, int y, int z, int deltaTypes, int slotID)
+	{
+		PacketSolderingStation packet = new PacketSolderingStation();
+		packet.playerName = player.username;
+		packet.x = x;
+		packet.y = y;
+		packet.z = z;
+		packet.deltaSize = 0;
+		packet.deltaTypes = deltaTypes;
+		packet.slotID = slotID;
+		return packet;
 	}
 
 	public PacketSolderingStation()
@@ -42,11 +54,9 @@ public class PacketSolderingStation extends AbstractPacket
 		out.writeInt(x);
 		out.writeInt(y);
 		out.writeInt(z);
-		out.writeInt(size);
-		out.writeInt(types);
-		out.writeBoolean(remove);
-		out.writeChar(upgrade);
-		out.writeChar(downgrade);
+		out.writeInt(deltaSize);
+		out.writeInt(deltaTypes);
+		out.writeInt(slotID);
 	}
 
 	@Override
@@ -56,11 +66,9 @@ public class PacketSolderingStation extends AbstractPacket
 		x = in.readInt();
 		y = in.readInt();
 		z = in.readInt();
-		int size = in.readInt();
-		int types = in.readInt();
-		Boolean remove = in.readBoolean();
-		char upgrade = in.readChar();
-		char downgrade = in.readChar();
+		deltaSize = in.readInt();
+		deltaTypes = in.readInt();
+		slotID = in.readInt();
 	}
 
 	@Override
@@ -69,13 +77,9 @@ public class PacketSolderingStation extends AbstractPacket
 		if (side.isServer())
 		{
 			TileEntitySolderingStation tile = (TileEntitySolderingStation) player.worldObj.getBlockTileEntity(x, y, z);
-			if (remove)
-			{
-				tile.remUser(playerName);
-			} else
-			{
-				tile.updateData(playerName, size, types, upgrade, downgrade);
-			}
+
+			tile.changeStorage(player, slotID, deltaSize);
+			tile.changeTypes(player, slotID, deltaTypes);
 		}
 	}
 }

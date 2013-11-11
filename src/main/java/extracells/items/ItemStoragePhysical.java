@@ -106,6 +106,20 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 
 	}
 
+	public void onCreated(ItemStack itemstack, World world, EntityPlayer player)
+	{
+		if (itemstack.getItemDamage() == 5)
+		{
+
+			if (!itemstack.hasTagCompound())
+			{
+				itemstack.setTagCompound(new NBTTagCompound());
+				itemstack.getTagCompound().setInteger("custom_size", 4096);
+				itemstack.getTagCompound().setInteger("custom_types", 27);
+			}
+		}
+	}
+
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
 	@SideOnly(Side.CLIENT)
@@ -117,10 +131,12 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 
 			if (j == 5)
 			{
-				if (toAdd.stackTagCompound == null)
-					toAdd.stackTagCompound = new NBTTagCompound();
-				toAdd.stackTagCompound.setInteger("costum_size", 4096);
-				toAdd.stackTagCompound.setInteger("costum_types", 27);
+				if (!toAdd.hasTagCompound())
+				{
+					toAdd.setTagCompound(new NBTTagCompound());
+					toAdd.getTagCompound().setInteger("custom_size", 4096);
+					toAdd.getTagCompound().setInteger("custom_types", 27);
+				}
 			}
 
 			listSubItems.add(toAdd);
@@ -171,7 +187,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		{
 			if (i.hasTagCompound())
 			{
-				return i.getTagCompound().getInteger("costum_size");
+				return i.getTagCompound().getInteger("custom_size");
 			} else
 			{
 				return 0;
@@ -189,12 +205,12 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		{
 			if (i.hasTagCompound())
 			{
-				if (Math.round(i.getTagCompound().getInteger("costum_types") / 128) == 0)
+				if (Math.round(i.getTagCompound().getInteger("custom_types") / 128) == 0)
 				{
 					return 1;
 				} else
 				{
-					return Math.round(i.getTagCompound().getInteger("costum_types") / 128);
+					return Math.round(i.getTagCompound().getInteger("custom_types") / 128);
 				}
 			} else
 			{
@@ -212,7 +228,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		{
 			if (i.hasTagCompound())
 			{
-				return i.getTagCompound().getInteger("costum_types");
+				return i.getTagCompound().getInteger("custom_types");
 			} else
 			{
 				return 0;

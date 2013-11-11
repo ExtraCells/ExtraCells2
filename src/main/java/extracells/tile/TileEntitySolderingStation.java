@@ -1,102 +1,95 @@
 package extracells.tile;
 
-import java.util.ArrayList;
-
+import appeng.api.Materials;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import extracells.ItemEnum;
 
 public class TileEntitySolderingStation extends TileEntity
 {
-	private ArrayList<String> users;
-
-	public TileEntitySolderingStation()
+	public boolean canUpdate()
 	{
-		users = new ArrayList<String>();
+		return false;
 	}
 
-	public void addUser(String name)
+	public void changeTypes(EntityPlayer player, int slotID, int typesDelta)
 	{
-		if (!users.contains(name))
+		ItemStack storage = player.inventory.getCurrentItem().copy();
+		if (storage != null && storage.getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && storage.getItemDamage() == 5)
 		{
-			users.add(name);
-		}
-	}
 
-	public void remUser(String name)
-	{
-		users.remove(name);
-	}
-
-	public void updateData(String user, int size, int types, char upgrade, char downgrade)
-	{
-		EntityPlayer p = worldObj.getPlayerEntityByName(user);
-		if (users.contains(user))
-		{
-			if (p.getHeldItem() != null)
+			if (!storage.hasTagCompound())
 			{
-				ItemStack stack = p.getHeldItem();
-				if (!stack.hasTagCompound())
-					stack.setTagCompound(new NBTTagCompound());
-				NBTTagCompound tag = stack.getTagCompound();
-				tag.setInteger("costum_size", size);
-				tag.setInteger("costum_types", types);
+				storage.setTagCompound(new NBTTagCompound());
 			}
-		}
-
-		if (upgrade != '\0')
-		{
-			switch (upgrade)
+			NBTTagCompound nbt = storage.getTagCompound();
+			int oldTypes = nbt.getInteger("custom_types");
+			if (oldTypes + typesDelta >= 27 && oldTypes + typesDelta <= 63 && typesDelta != 0)
 			{
-			case 's':
-				decreaseStackInInv(p, appeng.api.Materials.matStorageCell.copy(), 1);
-				break;
-			case 't':
-				decreaseStackInInv(p, appeng.api.Materials.matConversionMatrix.copy(), 1);
-				break;
-			}
-		}
-
-		if (downgrade != '\0')
-		{
-			switch (downgrade)
-
-			{
-			case 's':
-				p.inventory.addItemStackToInventory(new ItemStack(appeng.api.Materials.matStorageCell.copy().getItem(), 1, appeng.api.Materials.matStorageCell.getItemDamage()));
-				break;
-			case 't':
-				p.inventory.addItemStackToInventory(new ItemStack(appeng.api.Materials.matConversionMatrix.copy().getItem(), 1, appeng.api.Materials.matConversionMatrix.getItemDamage()));
-				break;
-			}
-		}
-	}
-
-	// Find ItemStack in inventory are remove int number items from it
-	public void decreaseStackInInv(EntityPlayer user, ItemStack itemstack, int number)
-	{
-		int left = number;
-		for (int i = 0; i < user.inventory.mainInventory.length; i++)
-		{
-			if (user.inventory.mainInventory[i] != null)
-			{
-				if (user.inventory.mainInventory[i].getItem() == itemstack.getItem() && user.inventory.mainInventory[i].getItemDamage() == itemstack.getItemDamage())
+				if (typesDelta > 0)
 				{
-					if (left != 0)
+					if (decreaseItemStack(Materials.matConversionMatrix.copy(), player.inventory))
 					{
-						if (user.inventory.mainInventory[i].stackSize == 1)
-						{
-							user.inventory.mainInventory[i] = null;
-							left = left - 1;
-						} else
-						{
-							user.inventory.mainInventory[i] = new ItemStack(user.inventory.mainInventory[i].getItem(), user.inventory.mainInventory[i].stackSize - 1, user.inventory.mainInventory[i].getItemDamage());
-							left = left - 1;
-						}
+						nbt.setInteger("custom_types", oldTypes + typesDelta);
+						player.inventory.mainInventory[player.inventory.currentItem] = storage;
+					}
+				} else if (typesDelta < 0)
+				{
+					if (player.inventory.addItemStackToInventory(Materials.matConversionMatrix.copy()))
+					{
+						nbt.setInteger("custom_types", oldTypes + typesDelta);
+						player.inventory.mainInventory[player.inventory.currentItem] = storage;
 					}
 				}
 			}
 		}
+	}
+
+	public void changeStorage(EntityPlayer player, int slotID, int storageDelta)
+	{
+		ItemStack storage = player.inventory.getCurrentItem().copy();
+		if (storage != null && storage.getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && storage.getItemDamage() == 5)
+		{
+			if (!storage.hasTagCompound())
+			{
+				storage.setTagCompound(new NBTTagCompound());
+			}
+			NBTTagCompound nbt = storage.getTagCompound();
+			int oldSize = nbt.getInteger("custom_size");
+			if (oldSize + storageDelta >= 4096 && storageDelta != 0)
+			{
+				if (storageDelta > 0)
+				{
+					if (decreaseItemStack(Materials.matStorageCell.copy(), player.inventory))
+						nbt.setInteger("custom_size", oldSize + storageDelta);
+					player.inventory.mainInventory[player.inventory.currentItem] = storage;
+				} else if (storageDelta < 0)
+				{
+					if (player.inventory.addItemStackToInventory(Materials.matStorageCell.copy()))
+						nbt.setInteger("custom_size", oldSize + storageDelta);
+					player.inventory.mainInventory[player.inventory.currentItem] = storage;
+				}
+			}
+		}
+	}
+
+	public Boolean decreaseItemStack(ItemStack toRemove, IInventory inventory)
+	{
+		for (int i = 0; i < inventory.getSizeInventory(); i++)
+		{
+			ItemStack current = inventory.getStackInSlot(i);
+			if (current != null && current.isItemEqual(toRemove))
+			{
+				inventory.decrStackSize(i, 1);
+				return true;
+			}
+		}
+		return false;
 	}
 }

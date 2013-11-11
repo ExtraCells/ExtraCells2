@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -15,7 +16,6 @@ import appeng.api.Util;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.ItemEnum;
 import extracells.network.packet.PacketSolderingStation;
 
 @SideOnly(Side.CLIENT)
@@ -28,13 +28,13 @@ public class GuiSolderingStation extends GuiScreen
 	public final int ySize = 88;
 	private GuiTextField textfield_size;
 	private GuiTextField textfield_types;
-	private int int_size;
-	private int int_types;
 	private boolean rightItem;
+	EntityPlayer player;
 
-	public GuiSolderingStation(int x, int y, int z, boolean rightItem)
+	public GuiSolderingStation(EntityPlayer player, int x, int y, int z, boolean rightItem)
 	{
 		super();
+		this.player = player;
 		this.tileX = x;
 		this.tileY = y;
 		this.tileZ = z;
@@ -92,40 +92,16 @@ public class GuiSolderingStation extends GuiScreen
 			textfield_types = new GuiTextField(fontRenderer, posX + 40, posY + 50, 90, 15);
 			textfield_types.setFocused(false);
 			textfield_types.setMaxStringLength(2);
-
-			ItemStack itemstack = this.mc.thePlayer.getHeldItem();
-
-			textfield_size.setText(Integer.toString(itemstack.getTagCompound().getInteger("costum_size")));
-			textfield_types.setText(Integer.toString(itemstack.getTagCompound().getInteger("costum_types")));
-
-			int_size = itemstack.getTagCompound().getInteger("costum_size");
-			int_types = itemstack.getTagCompound().getInteger("costum_types");
 		}
-
 	}
 
+	@Override
 	public void updateScreen()
 	{
-		if (this.mc.thePlayer.getHeldItem() != null)
-		{
-			if (this.mc.thePlayer.getHeldItem().getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && this.mc.thePlayer.getHeldItem().getItemDamage() == 5)
-			{
-				if (this.mc.thePlayer.getHeldItem().hasTagCompound())
-				{
-					PacketDispatcher.sendPacketToServer(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0').makePacket());
-					ItemStack itemstack = this.mc.thePlayer.getHeldItem();
-					itemstack.getTagCompound().setInteger("costum_size", int_size);
-					itemstack.getTagCompound().setInteger("costum_types", int_types);
+		ItemStack itemstack = player.inventory.getCurrentItem();
 
-					if (textfield_size.getText() != Integer.toString(itemstack.getTagCompound().getInteger("costum_size")) || textfield_types.getText() != Integer.toString(itemstack.getTagCompound().getInteger("costum_types")))
-					{
-						PacketDispatcher.sendPacketToServer(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', '\0').makePacket());
-						textfield_size.setText(Integer.toString(int_size));
-						textfield_types.setText(Integer.toString(int_types));
-					}
-				}
-			}
-		}
+		textfield_size.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_size")));
+		textfield_types.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_types")));
 	}
 
 	public void keyTyped(char keyChar, int keyID)
@@ -133,7 +109,6 @@ public class GuiSolderingStation extends GuiScreen
 		super.keyTyped(keyChar, keyID);
 		if (keyID == Keyboard.KEY_ESCAPE || keyID == mc.gameSettings.keyBindInventory.keyCode)
 		{
-			PacketDispatcher.sendPacketToServer(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, true, '\0', '\0').makePacket());
 			this.mc.displayGuiScreen((GuiScreen) null);
 			this.mc.setIngameFocus();
 		}
@@ -141,23 +116,14 @@ public class GuiSolderingStation extends GuiScreen
 
 	public void actionPerformed(GuiButton button)
 	{
+		int slotID = mc.thePlayer.inventory.currentItem;
 		switch (button.id)
 		{
 		case 0:
-			// -64
+			// -2048
 			if (Util.getCellRegistry().getHandlerForCell(this.mc.thePlayer.getCurrentEquippedItem()).storedItemCount() == 0)
 			{
-				if (!((int_size - 2048) < 4096))
-				{
-					if (isSpaceInInventory(appeng.api.Materials.matStorageCell.copy()))
-					{
-						int_size = int_size - 2048;
-						PacketDispatcher.sendPacketToServer(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 's').makePacket());
-					} else
-					{
-						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.nospacestoragecell"));
-					}
-				}
+				PacketDispatcher.sendPacketToServer(PacketSolderingStation.changeSize(mc.thePlayer, tileX, tileY, tileZ, -2048, slotID).makePacket());
 			} else
 			{
 				this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.cellnotempty"));
@@ -165,17 +131,10 @@ public class GuiSolderingStation extends GuiScreen
 			break;
 
 		case 1:
-			// +64
+			// +2048
 			if (Util.getCellRegistry().getHandlerForCell(this.mc.thePlayer.getCurrentEquippedItem()).storedItemCount() == 0)
 			{
-				if (doesInvContain(appeng.api.Materials.matStorageCell.copy()))
-				{
-					int_size = int_size + 2048;
-					PacketDispatcher.sendPacketToServer(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 's', '\0').makePacket());
-				} else
-				{
-					this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.needstoragecell"));
-				}
+				PacketDispatcher.sendPacketToServer(PacketSolderingStation.changeSize(mc.thePlayer, tileX, tileY, tileZ, 2048, slotID).makePacket());
 			} else
 			{
 				this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.cellnotempty"));
@@ -186,17 +145,7 @@ public class GuiSolderingStation extends GuiScreen
 			// -1
 			if (Util.getCellRegistry().getHandlerForCell(this.mc.thePlayer.getCurrentEquippedItem()).storedItemCount() == 0)
 			{
-				if (!((int_types - 1) < 27))
-				{
-					if (isSpaceInInventory(appeng.api.Materials.matConversionMatrix.copy()))
-					{
-						int_types = int_types - 1;
-						PacketDispatcher.sendPacketToServer(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, '\0', 't').makePacket());
-					} else
-					{
-						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.nospaceconversionmatrix"));
-					}
-				}
+				PacketDispatcher.sendPacketToServer(PacketSolderingStation.changeTypes(mc.thePlayer, tileX, tileY, tileZ, -1, slotID).makePacket());
 			} else
 			{
 				this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.cellnotempty"));
@@ -207,17 +156,7 @@ public class GuiSolderingStation extends GuiScreen
 			// +1
 			if (Util.getCellRegistry().getHandlerForCell(this.mc.thePlayer.getCurrentEquippedItem()).storedItemCount() == 0)
 			{
-				if (!((int_types + 1) > 63))
-				{
-					if (doesInvContain(appeng.api.Materials.matConversionMatrix))
-					{
-						int_types = int_types + 1;
-						PacketDispatcher.sendPacketToServer(new PacketSolderingStation(mc.thePlayer.username, tileX, tileY, tileZ, int_size, int_types, false, 't', '\0').makePacket());
-					} else
-					{
-						this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.needconversionmatrix"));
-					}
-				}
+				PacketDispatcher.sendPacketToServer(PacketSolderingStation.changeTypes(mc.thePlayer, tileX, tileY, tileZ, 1, slotID).makePacket());
 			} else
 			{
 				this.mc.thePlayer.addChatMessage(StatCollector.translateToLocal("tooltip.solderingwarning.cellnotempty"));
@@ -227,40 +166,5 @@ public class GuiSolderingStation extends GuiScreen
 		default:
 			break;
 		}
-	}
-
-	// Returns if inventory contains ItemStack itemstack
-	public boolean doesInvContain(ItemStack itemstack)
-	{
-		for (int i = 0; i < this.mc.thePlayer.inventory.mainInventory.length; i++)
-		{
-			if (this.mc.thePlayer.inventory.mainInventory[i] != null)
-			{
-				if (this.mc.thePlayer.inventory.mainInventory[i].getItem() == itemstack.getItem() && this.mc.thePlayer.inventory.mainInventory[i].getItemDamage() == itemstack.getItemDamage())
-				{
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	// Returns if there is space for ItemStack itemstack in inventory
-	public boolean isSpaceInInventory(ItemStack itemstack)
-	{
-		for (int i = 0; i < this.mc.thePlayer.inventory.mainInventory.length; i++)
-		{
-			if (this.mc.thePlayer.inventory.mainInventory[i] != null)
-			{
-				if (this.mc.thePlayer.inventory.mainInventory[i].getItem() == itemstack.getItem() && this.mc.thePlayer.inventory.mainInventory[i].getItemDamage() == itemstack.getItemDamage() && this.mc.thePlayer.inventory.mainInventory[i].stackSize <= 63)
-				{
-					return true;
-				}
-			} else
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 }

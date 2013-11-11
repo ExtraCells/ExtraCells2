@@ -29,7 +29,6 @@ import extracells.gui.GuiHardMEDrive;
 import extracells.gui.GuiLevelEmitterFluid;
 import extracells.gui.GuiMEBattery;
 import extracells.gui.GuiTerminalFluid;
-import extracells.handler.CraftingHandler;
 import extracells.items.ItemBlockCertusTank;
 import extracells.items.ItemBlockSpecial;
 import extracells.tile.TileEntityBusFluidExport;
@@ -49,8 +48,6 @@ public class CommonProxy implements IGuiHandler
 {
 	public void addRecipes()
 	{
-		GameRegistry.registerCraftingHandler(new CraftingHandler());
-
 		ItemStack storagePhysical256k = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 0);
 		ItemStack storagePhysical1m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 1);
 		ItemStack storagePhysical4m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 2);

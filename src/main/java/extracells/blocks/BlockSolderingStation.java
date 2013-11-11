@@ -101,11 +101,9 @@ public class BlockSolderingStation extends ColorableRotatableECBlock
 		{
 			return false;
 		}
-		if (!world.isRemote)
-			((TileEntitySolderingStation) world.getBlockTileEntity(x, y, z)).addUser(player.username);
 		if (world.isRemote)
 		{
-			FMLCommonHandler.instance().showGuiScreen(new GuiSolderingStation(x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && player.getHeldItem().getItemDamage() == 5)));
+			FMLCommonHandler.instance().showGuiScreen(new GuiSolderingStation(player, x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && player.getHeldItem().getItemDamage() == 5)));
 			return true;
 		} else
 		{
