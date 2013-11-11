@@ -10,6 +10,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
+import extracells.gui.widget.WidgetFluidModes.FluidMode;
 import extracells.network.AbstractPacket;
 import extracells.tile.TileEntityBusFluidExport;
 
@@ -56,6 +57,10 @@ public class PacketBusFluidExport extends AbstractPacket
 		action = in.readInt();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see extracells.network.AbstractPacket#execute(net.minecraft.entity.player.EntityPlayer, cpw.mods.fml.relauncher.Side)
+	 */
 	@Override
 	public void execute(EntityPlayer player, Side side) throws ProtocolException
 	{
@@ -69,13 +74,24 @@ public class PacketBusFluidExport extends AbstractPacket
 					PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());
 				break;
 			case 1:
-				if (tile.getRedstoneAction().ordinal() >= 3)
+				if (tile.getRedstoneMode().ordinal() >= 3)
 				{
 
-					tile.setRedstoneAction(RedstoneModeInput.values()[0]);
+					tile.setRedstoneMode(RedstoneModeInput.values()[0]);
 				} else
 				{
-					tile.setRedstoneAction(RedstoneModeInput.values()[tile.getRedstoneAction().ordinal() + 1]);
+					tile.setRedstoneMode(RedstoneModeInput.values()[tile.getRedstoneMode().ordinal() + 1]);
+				}
+				if (tile != null)
+					PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());
+				break;
+			case 2:
+				if (tile.getFluidMode().ordinal() >= 2)
+				{
+					tile.setFluidMode(FluidMode.values()[0]);
+				} else
+				{
+					tile.setFluidMode(FluidMode.values()[tile.getFluidMode().ordinal() + 1]);
 				}
 				if (tile != null)
 					PacketDispatcher.sendPacketToAllPlayers(tile.getDescriptionPacket());

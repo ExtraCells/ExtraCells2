@@ -97,7 +97,7 @@ public class BlockBusFluidExport extends ColorableRotatableECBlock
 		}
 		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
 		{
-			System.out.println(((TileEntityBusFluidExport) world.getBlockTileEntity(x, y, z)).getRedstoneAction());
+			System.out.println(((TileEntityBusFluidExport) world.getBlockTileEntity(x, y, z)).getRedstoneMode());
 			return false;
 		}
 		player.openGui(Extracells.instance, 4, world, x, y, z);

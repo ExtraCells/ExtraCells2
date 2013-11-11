@@ -14,7 +14,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.BlockEnum;
 import extracells.container.ContainerLevelEmitterFluid;
 import extracells.gui.widget.DigitTextField;
-import extracells.gui.widget.WidgetRedstoneSwitch;
+import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketLevelEmitterFluid;
 import extracells.tile.TileEntityLevelEmitterFluid;
 
@@ -81,7 +81,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 
 		if (tileentity instanceof TileEntityLevelEmitterFluid)
 		{
-			WidgetRedstoneSwitch button = (WidgetRedstoneSwitch) buttonList.get(6);
+			WidgetRedstoneModes button = (WidgetRedstoneModes) buttonList.get(6);
 			button.setRedstoneMode(tileentity.getRedstoneAction());
 		}
 	}
@@ -103,7 +103,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 		buttonList.add(new GuiButton(3, posX + 65 - 46, posY + 58 - 2, 42, 20, "+1"));
 		buttonList.add(new GuiButton(4, posX + 115 - 46, posY + 58 - 2, 42, 20, "+10"));
 		buttonList.add(new GuiButton(5, posX + 165 - 46, posY + 58 - 2, 42, 20, "+100"));
-		buttonList.add(new WidgetRedstoneSwitch(6, posX + 120, posY + 36, 16, 16, RedstoneModeInput.WhenOff));
+		buttonList.add(new WidgetRedstoneModes(6, posX + 120, posY + 36, 16, 16, RedstoneModeInput.WhenOff));
 
 		amountField.setText(Long.toString(tileentity.getAmount()));
 

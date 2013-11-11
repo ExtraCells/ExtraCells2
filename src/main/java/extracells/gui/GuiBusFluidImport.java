@@ -16,8 +16,11 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.BlockEnum;
 import extracells.container.ContainerBusFluidImport;
-import extracells.gui.widget.WidgetRedstoneSwitch;
+import extracells.gui.widget.WidgetFluidModes;
+import extracells.gui.widget.WidgetRedstoneModes;
+import extracells.gui.widget.WidgetFluidModes.FluidMode;
 import extracells.network.PacketHandler;
+import extracells.network.packet.PacketBusFluidExport;
 import extracells.network.packet.PacketBusFluidImport;
 import extracells.tile.TileEntityBusFluidImport;
 
@@ -57,8 +60,10 @@ public class GuiBusFluidImport extends GuiContainer
 
 		if (tileentity instanceof TileEntityBusFluidImport)
 		{
-			WidgetRedstoneSwitch button = (WidgetRedstoneSwitch) buttonList.get(0);
-			button.setRedstoneMode(tileentity.getRedstoneAction());
+			WidgetRedstoneModes redstoneSwitch = (WidgetRedstoneModes) buttonList.get(0);
+			redstoneSwitch.setRedstoneMode(tileentity.getRedstoneMode());
+			WidgetFluidModes fluidSwitch = (WidgetFluidModes) buttonList.get(1);
+			fluidSwitch.setFluidMode(tileentity.getFluidMode());
 		}
 
 		this.fontRenderer.drawString(BlockEnum.FLUIDIMPORT.getLocalizedName(), 5, 0, 0x000000);
@@ -68,16 +73,20 @@ public class GuiBusFluidImport extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
-		buttonList.add(new WidgetRedstoneSwitch(0, guiLeft + 153, guiTop + 2, 16, 16, tileentity.getRedstoneAction()));
+		buttonList.add(new WidgetRedstoneModes(0, guiLeft + 126, guiTop + 19, 16, 16, tileentity.getRedstoneMode()));
+		buttonList.add(new WidgetFluidModes(1, guiLeft + 126, guiTop + 41, 16, 16, FluidMode.BUCKETS));
 	}
 
 	public void actionPerformed(GuiButton button)
 	{
-		int modeOrdinal = tileentity.getRedstoneAction().ordinal();
+		int modeOrdinal = tileentity.getRedstoneMode().ordinal();
 		switch (button.id)
 		{
 		case 0:
 			PacketDispatcher.sendPacketToServer(new PacketBusFluidImport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
+			break;
+		case 1:
+			PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 2, player.username).makePacket());
 			break;
 		default:
 		}

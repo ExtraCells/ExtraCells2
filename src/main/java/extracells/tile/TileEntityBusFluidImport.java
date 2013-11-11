@@ -33,6 +33,7 @@ import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.ItemEnum;
+import extracells.gui.widget.WidgetFluidModes.FluidMode;
 
 public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
@@ -41,7 +42,8 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 	ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
-	RedstoneModeInput redstoneAction = RedstoneModeInput.Ignore;
+	RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
+	FluidMode fluidMode = FluidMode.DROPS;
 
 	public TileEntityBusFluidImport()
 	{
@@ -54,18 +56,18 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 		if (!worldObj.isRemote && isPowered())
 		{
 			Boolean redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
-			switch (getRedstoneAction())
+			switch (getRedstoneMode())
 			{
 			case WhenOn:
 				if (redstonePowered)
 				{
-					importFluid();
+					doWork(fluidMode);
 				}
 				break;
 			case WhenOff:
 				if (!redstonePowered)
 				{
-					importFluid();
+					doWork(fluidMode);
 				}
 				break;
 			case OnPulse:
@@ -76,16 +78,16 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 				{
 					if (!redstoneFlag)
 					{
-						importFluid();
+						doWork(fluidMode);
 					} else
 					{
 						redstoneFlag = true;
-						importFluid();
+						doWork(fluidMode);
 					}
 				}
 				break;
 			case Ignore:
-				importFluid();
+				doWork(fluidMode);
 				break;
 			default:
 				break;
@@ -93,7 +95,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 		}
 	}
 
-	private void importFluid()
+	private void doWork(FluidMode mode)
 	{
 		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
 		TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
@@ -102,7 +104,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 		{
 			IFluidHandler tank = (IFluidHandler) facingTileEntity;
 
-			FluidStack drainable = tank.drain(facing.getOpposite(), 20, false);
+			FluidStack drainable = tank.drain(facing.getOpposite(), mode.getAmount(), false);
 
 			if (drainable != null)
 			{
@@ -118,7 +120,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 					{
 						if (fluidFilter.contains(drainable.getFluid()))
 						{
-							if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
+							if (grid.useMEEnergy(mode.getCost(), "Import Fluid") && notImported == null)
 							{
 								((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
 								cellArray.addItems(toImport.copy());
@@ -126,7 +128,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 						}
 					} else
 					{
-						if (grid.useMEEnergy(12.0F, "Import Fluid") && notImported == null)
+						if (grid.useMEEnergy(mode.getCost(), "Import Fluid") && notImported == null)
 						{
 							((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
 							cellArray.addItems(toImport.copy());
@@ -163,14 +165,24 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 		return filterFluids;
 	}
 
-	public RedstoneModeInput getRedstoneAction()
+	public RedstoneModeInput getRedstoneMode()
 	{
-		return redstoneAction;
+		return redstoneMode;
 	}
 
-	public void setRedstoneAction(RedstoneModeInput mode)
+	public void setRedstoneMode(RedstoneModeInput mode)
 	{
-		redstoneAction = mode;
+		redstoneMode = mode;
+	}
+
+	public FluidMode getFluidMode()
+	{
+		return fluidMode;
+	}
+
+	public void setFluidMode(FluidMode mode)
+	{
+		fluidMode = mode;
 	}
 
 	@Override
@@ -300,7 +312,8 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 			nbt.setString("CustomName", this.costumName);
 		}
 
-		nbt.setInteger("RedstoneMode", getRedstoneAction().ordinal());
+		nbt.setInteger("RedstoneMode", getRedstoneMode().ordinal());
+		nbt.setInteger("FluidMode", getFluidMode().ordinal());
 	}
 
 	@Override
@@ -325,7 +338,8 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 		}
 		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 
-		setRedstoneAction(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
+		setRedstoneMode(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
+		setFluidMode(FluidMode.values()[nbt.getInteger("FluidMode")]);
 	}
 
 	public ECPrivateInventory getInventory()

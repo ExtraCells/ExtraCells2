@@ -15,11 +15,11 @@ import org.lwjgl.opengl.GL12;
 
 import appeng.api.config.RedstoneModeInput;
 
-public class WidgetRedstoneSwitch extends GuiButton
+public class WidgetRedstoneModes extends GuiButton
 {
 	public static RedstoneModeInput redstoneMode;
 
-	public WidgetRedstoneSwitch(int ID, int xPos, int yPos, int width, int heigth, RedstoneModeInput mode)
+	public WidgetRedstoneModes(int ID, int xPos, int yPos, int width, int heigth, RedstoneModeInput mode)
 	{
 		super(ID, xPos, yPos, width, heigth, "ScrewStrings :D");
 		redstoneMode = mode;

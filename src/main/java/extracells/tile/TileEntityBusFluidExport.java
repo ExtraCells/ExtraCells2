@@ -32,54 +32,57 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.ItemEnum;
 import extracells.SpecialFluidStack;
+import extracells.gui.widget.WidgetFluidModes.FluidMode;
 
 public class TileEntityBusFluidExport extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable
 {
-	Boolean powerStatus = true, redstoneFlag = false, networkReady = true;
-	IGridInterface grid;
-	ItemStack[] filterSlots = new ItemStack[8];
+	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true;
+	private IGridInterface grid;
+	private ItemStack[] filterSlots = new ItemStack[8];
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
-	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
-	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
-	RedstoneModeInput redstoneAction = RedstoneModeInput.Ignore;
+	private ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
+	private ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+	private RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
+	private FluidMode fluidMode = FluidMode.DROPS;
 
 	@Override
 	public void updateEntity()
 	{
 		if (!worldObj.isRemote && isPowered())
 		{
-			switch (getRedstoneAction())
+			Boolean redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
+			switch (getRedstoneMode())
 			{
 			case WhenOn:
-				if (worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord))
+				if (redstonePowered)
 				{
-					doWork();
+					doWork(fluidMode);
 				}
 				break;
 			case WhenOff:
-				if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord))
+				if (!redstonePowered)
 				{
-					doWork();
+					doWork(fluidMode);
 				}
 				break;
 			case OnPulse:
-				if (!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord))
+				if (!redstonePowered)
 				{
 					redstoneFlag = false;
 				} else
 				{
 					if (!redstoneFlag)
 					{
-						doWork();
+						doWork(fluidMode);
 					} else
 					{
 						redstoneFlag = true;
-						doWork();
+						doWork(fluidMode);
 					}
 				}
 				break;
 			case Ignore:
-				doWork();
+				doWork(fluidMode);
 				break;
 			default:
 				break;
@@ -101,7 +104,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 
-	private void doWork()
+	private void doWork(FluidMode mode)
 	{
 		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
 		TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
@@ -126,7 +129,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 
 						if (contained > 0)
 						{
-							exportFluid(new FluidStack(entry, contained < 20 ? (int) contained : 20), facingTank, facing.getOpposite());
+							exportFluid(new FluidStack(entry, contained < mode.getAmount() ? (int) contained : mode.getAmount()), facingTank, facing.getOpposite(), mode);
 						}
 					}
 				}
@@ -134,7 +137,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		}
 	}
 
-	public void exportFluid(FluidStack toExport, IFluidHandler tankToFill, ForgeDirection from)
+	public void exportFluid(FluidStack toExport, IFluidHandler tankToFill, ForgeDirection from, FluidMode mode)
 	{
 		if (toExport == null)
 			return;
@@ -152,7 +155,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 			{
 				IAEItemStack extracted = cellArray.extractItems(toExtract);
 
-				grid.useMEEnergy(12.0F, "Export Fluid");
+				grid.useMEEnergy(mode.getCost(), "Export Fluid");
 
 				if (extracted == null)
 				{
@@ -193,14 +196,24 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		return filterFluids;
 	}
 
-	public RedstoneModeInput getRedstoneAction()
+	public RedstoneModeInput getRedstoneMode()
 	{
-		return redstoneAction;
+		return redstoneMode;
 	}
 
-	public void setRedstoneAction(RedstoneModeInput mode)
+	public void setRedstoneMode(RedstoneModeInput mode)
 	{
-		redstoneAction = mode;
+		redstoneMode = mode;
+	}
+
+	public FluidMode getFluidMode()
+	{
+		return fluidMode;
+	}
+
+	public void setFluidMode(FluidMode mode)
+	{
+		fluidMode = mode;
 	}
 
 	@Override
@@ -293,7 +306,8 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 			nbt.setString("CustomName", this.costumName);
 		}
 
-		nbt.setInteger("RedstoneMode", getRedstoneAction().ordinal());
+		nbt.setInteger("RedstoneMode", getRedstoneMode().ordinal());
+		nbt.setInteger("FluidMode", getFluidMode().ordinal());
 	}
 
 	@Override
@@ -318,7 +332,8 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		}
 		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 
-		setRedstoneAction(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
+		setRedstoneMode(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
+		setFluidMode(FluidMode.values()[nbt.getInteger("FluidMode")]);
 	}
 
 	public ECPrivateInventory getInventory()
