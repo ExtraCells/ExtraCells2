@@ -522,7 +522,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		for (int i = 0; i < 63; i++)
 		{
-			nbt.setInteger("PreformattedFluidID#" + i, -1);
+			nbt.setString("PreformattedFluidName#" + i, null);
 		}
 
 		if (!in.getItems().isEmpty())
@@ -536,16 +536,16 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 					{
 						FluidStack toWrite = FluidContainerRegistry.getFluidForFilledItem(currentItemStack);
 						cachedPreformats.add(toWrite.getFluid());
-						nbt.setInteger("PreformattedFluidID#" + i, FluidContainerRegistry.getFluidForFilledItem(currentItemStack).fluidID);
+						nbt.setString("PreformattedFluidName#" + i, FluidContainerRegistry.getFluidForFilledItem(currentItemStack).getFluid().getName());
 					} else if (currentItemStack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
 					{
 						int toWrite = currentItemStack.getItemDamage();
 						cachedPreformats.add(FluidRegistry.getFluid(toWrite));
-						nbt.setInteger("PreformattedFluidID#" + i, toWrite);
+						nbt.setString("PreformattedFluidName#" + i, FluidRegistry.getFluidName(toWrite));
 					} else if (currentItemStack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) currentItemStack.getItem()).getFluid(currentItemStack) != null)
 					{
 						FluidStack toWrite = ((IFluidContainerItem) currentItemStack.getItem()).getFluid(currentItemStack);
-						nbt.setInteger("PreformattedFluidID#" + i, toWrite.fluidID);
+						nbt.setString("PreformattedFluidName#" + i, toWrite.getFluid().getName());
 					}
 				}
 			}
@@ -553,7 +553,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			for (int i = 0; i < 63; i++)
 			{
-				nbt.setInteger("PreformattedFluidID#" + i, -1);
+				nbt.setString("PreformattedFluidName#" + i, null);
 			}
 		}
 		System.out.println("");
@@ -573,8 +573,15 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 			storage.stackTagCompound = new NBTTagCompound();
 		NBTTagCompound nbt = storage.stackTagCompound;
 
-		nbt.setInteger("FluidID#" + slotID, input != null ? input.fluidID : -1);
-		nbt.setLong("FluidAmount#" + slotID, input != null ? input.amount : -1);
+		if (input != null)
+		{
+			NBTTagCompound fluidTag = new NBTTagCompound();
+			input.writeToNBT(fluidTag);
+			nbt.setCompoundTag("Fluid#" + slotID, fluidTag);
+		} else
+		{
+			nbt.setCompoundTag("Fluid#" + slotID, null);
+		}
 	}
 
 	private FluidStack readFluidStackFromSlot(int slotID)
@@ -583,7 +590,17 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 			storage.stackTagCompound = new NBTTagCompound();
 		NBTTagCompound nbt = storage.stackTagCompound;
 
-		return nbt.getInteger("FluidID#" + slotID) > 0 && nbt.getLong("FluidAmount#" + slotID) > 0 ? new FluidStack(nbt.getInteger("FluidID#" + slotID), (int) nbt.getLong("FluidAmount#" + slotID)) : null;
+		// Temporary Code, will stay 5 versions!
+		int oldFluidID = nbt.getInteger("FluidID#" + slotID);
+		long oldFluidAmount = nbt.getLong("FluidAmount#" + slotID);
+		if (oldFluidID > 0 && oldFluidAmount > 0)
+		{
+			nbt.removeTag("FluidID#" + slotID);
+			nbt.removeTag("FluidAmount#" + slotID);
+			return new FluidStack(oldFluidID, (int) oldFluidAmount);
+		}
+
+		return FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("Fluid#" + slotID));
 	}
 
 	private void writeNameToNBT(String name)
@@ -610,6 +627,6 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 			storage.stackTagCompound = new NBTTagCompound();
 		NBTTagCompound nbt = storage.stackTagCompound;
 
-		return nbt.getInteger("PreformattedFluidID#" + slotID) > 0 ? FluidRegistry.getFluid(nbt.getInteger("PreformattedFluidID#" + slotID)) : null;
+		return FluidRegistry.getFluid(nbt.getString("PreformattedFluidName#" + slotID));
 	}
 }

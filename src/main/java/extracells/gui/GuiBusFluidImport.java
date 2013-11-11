@@ -86,7 +86,7 @@ public class GuiBusFluidImport extends GuiContainer
 			PacketDispatcher.sendPacketToServer(new PacketBusFluidImport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 1, player.username).makePacket());
 			break;
 		case 1:
-			PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 2, player.username).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketBusFluidImport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 2, player.username).makePacket());
 			break;
 		default:
 		}

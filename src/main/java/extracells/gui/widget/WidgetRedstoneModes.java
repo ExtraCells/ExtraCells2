@@ -20,7 +20,7 @@ import appeng.api.config.RedstoneModeInput;
 
 public class WidgetRedstoneModes extends GuiButton
 {
-	public static RedstoneModeInput redstoneMode;
+	private RedstoneModeInput redstoneMode;
 
 	public WidgetRedstoneModes(int ID, int xPos, int yPos, int width, int heigth, RedstoneModeInput mode)
 	{
@@ -36,7 +36,6 @@ public class WidgetRedstoneModes extends GuiButton
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.mouseDragged(minecraftInstance, x, y);
 
-			// Draw redstoneMode Icon
 			minecraftInstance.getTextureManager().bindTexture(new ResourceLocation("extracells", "textures/gui/redstonemodes.png"));
 			drawTexturedModalRect(xPosition, yPosition, 0, 16, 16, 16);
 
