@@ -64,4 +64,6 @@
   <entry key="tooltip.solderingwarning.needstoragecell">Um die Größe deines Speichers zu upgraden, brauchst du einen ME-Speicher je 2048 Bytes!</entry>
   <entry key="tooltip.solderingwarning.needconversionmatrix">Um die Zahl der Typen deines Speichers zu upgraden, brauchst du eine Umrechnungs-Matrix pro Typ!</entry>
   <entry key="tooltip.solderingwarning.cellnotempty">Diese Zelle ist nicht leer!</entry>
+  <entry key="fluid.tile.water">Wasser</entry>
+  <entry key="fluid.tile.lava">Lava</entry>
   </properties>
