@@ -53,6 +53,9 @@
   <entry key="tooltip.mode">Modus</entry>
   <entry key="tooltip.onlyblocks">Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container</entry>
   <entry key="tooltip.item">Item</entry> 
+  <entry key="tooltip.fluidmode">Transport-Modus</entry>
+  <entry key="tooltip.fluidmode.move">$amount mb/t bewegen</entry> 
+  <entry key="tooltip.fluidmode.cost">Kostet $cost pu/t</entry> 
   <entry key="tooltip.dropperlocked">Dropper Gesperrt</entry>
   <entry key="tooltip.dropperunlocked">Dropper Entsperrt</entry> 
   <entry key="tooltip.dropset">Drop verstellt zu</entry> 
