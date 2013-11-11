@@ -58,6 +58,9 @@
   <entry key="tooltip.dropset">Drop set to</entry> 
   <entry key="tooltip.amount">Amount</entry> 
   <entry key="tooltip.fluid">Fluid</entry> 
+  <entry key="tooltip.fluidmode">Moving-Mode</entry>
+  <entry key="tooltip.fluidmode.move">Moves $amount mb/t!</entry> 
+  <entry key="tooltip.fluidmode.cost">Costs $cost pu/t!</entry> 
   <entry key="tooltip.solderingwarning.tutorial">Put a ME Adjustable Storage into your hotbar and hold it while using the SolderingStation!</entry>
   <entry key="tooltip.solderingwarning.nospacestoragecell">Make place in your inventory to regain the ME Storage Cell!</entry>
   <entry key="tooltip.solderingwarning.nospaceconversionmatrix">Make place in your inventory to regain the ME Conversion Matrix!</entry>
