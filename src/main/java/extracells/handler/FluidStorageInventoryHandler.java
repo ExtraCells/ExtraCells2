@@ -522,7 +522,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 
 		for (int i = 0; i < 63; i++)
 		{
-			nbt.setString("PreformattedFluidName#" + i, null);
+			nbt.removeTag("PreformattedFluidName#" + i);
 		}
 
 		if (!in.getItems().isEmpty())
@@ -553,7 +553,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			for (int i = 0; i < 63; i++)
 			{
-				nbt.setString("PreformattedFluidName#" + i, null);
+				nbt.removeTag("PreformattedFluidName#" + i);
 			}
 		}
 		System.out.println("");
@@ -580,7 +580,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 			nbt.setCompoundTag("Fluid#" + slotID, fluidTag);
 		} else
 		{
-			nbt.setCompoundTag("Fluid#" + slotID, null);
+			nbt.removeTag("Fluid#" + slotID);
 		}
 	}
 
@@ -595,10 +595,10 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		long oldFluidAmount = nbt.getLong("FluidAmount#" + slotID);
 		if (oldFluidID > 0 && oldFluidAmount > 0)
 		{
-			nbt.removeTag("FluidID#" + slotID);
-			nbt.removeTag("FluidAmount#" + slotID);
 			return new FluidStack(oldFluidID, (int) oldFluidAmount);
 		}
+		nbt.removeTag("FluidID#" + slotID);
+		nbt.removeTag("FluidAmount#" + slotID);
 
 		return FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("Fluid#" + slotID));
 	}
