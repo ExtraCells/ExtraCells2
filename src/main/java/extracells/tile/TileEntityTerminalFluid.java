@@ -1,10 +1,14 @@
 package extracells.tile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -35,7 +39,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
 	private ItemStack[] slots = new ItemStack[3];
-	private int fluidIndex = 0;
+	private Fluid currentFluid = null;
 	ECPrivateInventory inventory = new ECPrivateInventory(slots, costumName, 64)
 	{
 		public boolean isItemValidForSlot(int i, ItemStack itemstack)
@@ -54,32 +58,16 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 			if (!fluidsInNetwork.isEmpty())
 			{
-				try
+				if (currentFluid == null)
+					currentFluid = fluidsInNetwork.get(0).getFluid();
+
+				if (currentFluid != null)
 				{
-					fluidsInNetwork.get(fluidIndex);
-				} catch (IndexOutOfBoundsException e)
-				{
-					fluidIndex = 0;
-				}
-
-				if (fluidsInNetwork.get(fluidIndex) != null)
-				{
-					Fluid requestedFluid = fluidsInNetwork.get(fluidIndex).getFluid();
-					ItemStack preview = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, fluidsInNetwork.get(fluidIndex).getID());
-
-					if (preview.getTagCompound() == null)
-						preview.setTagCompound(new NBTTagCompound());
-					NBTTagCompound nbt = preview.getTagCompound();
-					nbt.setLong("amount", fluidsInNetwork.get(fluidIndex).amount);
-					nbt.setString("fluidname", StatCollector.translateToLocal((FluidRegistry.getFluidName(new FluidStack(fluidsInNetwork.get(fluidIndex).getFluid(), 1)))));// (capitalizeFirstLetter(fluidsInNetwork.get(fluidIndex).fluid.getName()));
-
-					getInventory().setInventorySlotContents(2, preview);
-
 					if (input != null)
 					{
 						if (FluidContainerRegistry.isEmptyContainer(input))
 						{
-							FluidStack request = new FluidStack(requestedFluid, 1000);
+							FluidStack request = new FluidStack(currentFluid, 1000);
 
 							ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(request, input);
 
@@ -111,7 +99,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 							if (fluidContainerItem.getFluid(inputTemp) == null || fluidContainerItem.getFluid(inputTemp).amount == 0)
 							{
 
-								FluidStack request = new FluidStack(requestedFluid, fluidContainerItem.getCapacity(inputTemp));
+								FluidStack request = new FluidStack(currentFluid, fluidContainerItem.getCapacity(inputTemp));
 
 								ItemStack inputToBeFilled = inputTemp.copy();
 								inputToBeFilled.stackSize = 1;
@@ -247,7 +235,46 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 
-	public boolean fillFluid(FluidStack toImport)
+	public List<SpecialFluidStack> getFluids()
+	{
+		return fluidsInNetwork;
+	}
+
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+
+		NBTTagCompound fluids = new NBTTagCompound();
+		int[] fluidAmounts = new int[fluidsInNetwork.size()];
+		int[] fluidIDs = new int[fluidsInNetwork.size()];
+		for (int i = 0; i < fluidsInNetwork.size(); i++)
+		{
+			fluidIDs[i] = fluidsInNetwork.get(i).getID();
+			fluids.setLong("FluidAmount#" + i, fluidsInNetwork.get(i).getAmount());
+		}
+		fluids.setIntArray("FluidIDs", fluidIDs);
+		nbtTag.setCompoundTag("fluids", fluids);
+		nbtTag.setInteger("currentFluid", currentFluid != null ? currentFluid.getID() : -1);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
+
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+	{
+		readFromNBT(packet.data);
+
+		NBTTagCompound fluids = packet.data.getCompoundTag("fluids");
+
+		fluidsInNetwork = new ArrayList<SpecialFluidStack>();
+		int[] fluidIDs = fluids.getIntArray("FluidIDs");
+		for (int i = 0; i < fluidIDs.length; i++)
+		{
+			fluidsInNetwork.add(new SpecialFluidStack(fluidIDs[i], fluids.getLong("FluidAmount#" + i)));
+		}
+		currentFluid = FluidRegistry.getFluid(packet.data.getInteger("currentFluid"));
+	}
+
+	private boolean fillFluid(FluidStack toImport)
 	{
 		IAEItemStack toFill = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 0, toImport.fluidID));
 		toFill.setStackSize(toImport.amount);
@@ -270,7 +297,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		return false;
 	}
 
-	public boolean drainFluid(FluidStack toExport)
+	private boolean drainFluid(FluidStack toExport)
 	{
 		IAEItemStack toDrain = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 0, toExport.fluidID));
 		toDrain.setStackSize(toExport.amount);
@@ -304,20 +331,15 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		return false;
 	}
 
-	public void setCurrentFluid(int modifier)
+	public void setCurrentFluid(int fluidID)
 	{
-		if (fluidIndex + modifier >= 0)
-		{
-			this.fluidIndex = fluidIndex + modifier;
-		} else
-		{
-			this.fluidIndex = this.fluidsInNetwork.size() - 1;
-		}
+		this.currentFluid = FluidRegistry.getFluid(fluidID);
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 
-	public int getCurrentFluid()
+	public Fluid getCurrentFluid()
 	{
-		return fluidIndex;
+		return currentFluid;
 	}
 
 	public String capitalizeFirstLetter(String original)
@@ -422,9 +444,9 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		if (!worldObj.isRemote)
 		{
 			grid = gi;
-			if (getGrid() != null)
+			if (gi != null)
 			{
-				IMEInventoryHandler cellArray = getGrid().getCellArray();
+				IMEInventoryHandler cellArray = gi.getCellArray();
 				if (cellArray != null)
 					updateFluids(cellArray.getAvailableItems());
 			}
@@ -452,6 +474,13 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	public void setNetworkReady(boolean isReady)
 	{
 		networkReady = isReady;
+
+		if (getGrid() != null)
+		{
+			IMEInventoryHandler cellArray = getGrid().getCellArray();
+			if (cellArray != null)
+				updateFluids(cellArray.getAvailableItems());
+		}
 	}
 
 	public boolean isMachineActive()

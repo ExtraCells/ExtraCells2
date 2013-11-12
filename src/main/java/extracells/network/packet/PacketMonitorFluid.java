@@ -16,15 +16,15 @@ public class PacketMonitorFluid extends AbstractPacket
 {
 	int x, y, z;
 	World world;
-	int action;
+	int fluidID;
 
-	public PacketMonitorFluid(World world, int x, int y, int z, int action)
+	public PacketMonitorFluid(World world, int x, int y, int z, int fluidID)
 	{
 		this.world = world;
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.action = action;
+		this.fluidID = fluidID;
 	}
 
 	public PacketMonitorFluid()
@@ -38,7 +38,7 @@ public class PacketMonitorFluid extends AbstractPacket
 		out.writeInt(x);
 		out.writeInt(y);
 		out.writeInt(z);
-		out.writeInt(action);
+		out.writeInt(fluidID);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class PacketMonitorFluid extends AbstractPacket
 		x = in.readInt();
 		y = in.readInt();
 		z = in.readInt();
-		action = in.readInt();
+		fluidID = in.readInt();
 	}
 
 	@Override
@@ -57,16 +57,7 @@ public class PacketMonitorFluid extends AbstractPacket
 		if (side.isServer())
 		{
 			TileEntityTerminalFluid tile = (TileEntityTerminalFluid) world.getBlockTileEntity(x, y, z);
-			int currentFluid = tile.getCurrentFluid();
-			switch (action)
-			{
-			case 0:
-				tile.setCurrentFluid(-1);
-				break;
-			case 1:
-				tile.setCurrentFluid(1);
-				break;
-			}
+			tile.setCurrentFluid(fluidID);
 		}
 	}
 }

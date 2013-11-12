@@ -1,11 +1,7 @@
 package extracells.tile;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import com.google.common.primitives.Ints;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -16,6 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import appeng.api.me.tiles.IColoredMETile;
 import appeng.api.me.tiles.IConnectionSensitive;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.SpecialFluidStack;
 
 public abstract class ColorableECTile extends TileEntity implements IConnectionSensitive, IColoredMETile
 {
@@ -110,6 +107,7 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 	{
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		this.writeToNBT(nbtTag);
+		
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
 
