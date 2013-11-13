@@ -424,6 +424,8 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	public void setPowerStatus(boolean hasPower)
 	{
 		powerStatus = hasPower;
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
+		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -481,6 +483,9 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 			if (cellArray != null)
 				updateFluids(cellArray.getAvailableItems());
 		}
+
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
+		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
 	}
 
 	public boolean isMachineActive()
