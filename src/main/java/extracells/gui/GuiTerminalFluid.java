@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -35,6 +35,7 @@ public class GuiTerminalFluid extends GuiContainer
 	private int currentScroll = 0;
 	public String fluidName;
 	TileEntityTerminalFluid tileEntity;
+	GuiTextField searchbar;
 	List<WidgetFluidSelector> selectors = new ArrayList<WidgetFluidSelector>();
 
 	public GuiTerminalFluid(World world, TileEntityTerminalFluid tileEntity, InventoryPlayer inventory)
@@ -52,12 +53,21 @@ public class GuiTerminalFluid extends GuiContainer
 		{
 			List<SpecialFluidStack> fluidList = tileEntity.getFluids();
 			fluidTypes = fluidList.size();
-			for (int i = currentScroll * 9; i < fluidList.size(); i++)
+			int currFluidTypes = 0;
+
+			List<SpecialFluidStack> validFluids = new ArrayList<SpecialFluidStack>();
+			for (SpecialFluidStack current : fluidList)
 			{
-				selectors.get(i - currentScroll * 9).setFluid(fluidList.get(i).getFluid());
-				selectors.get(i - currentScroll * 9).setAmount(fluidList.get(i).amount);
+				if (current != null && current.getFluid().getLocalizedName().toLowerCase().contains(searchbar.getText().toLowerCase()))
+					validFluids.add(current);
 			}
-			for (int i = fluidList.size() - currentScroll * 9; i >= 0 && i < selectors.size(); i++)
+
+			for (int i = currentScroll * 9; i < validFluids.size(); i++)
+			{
+				selectors.get(i - currentScroll * 9).setFluid(validFluids.get(i).getFluid());
+				selectors.get(i - currentScroll * 9).setAmount(validFluids.get(i).amount);
+			}
+			for (int i = validFluids.size() - currentScroll * 9; i >= 0 && i < selectors.size(); i++)
 			{
 				selectors.get(i).setFluid(null);
 				selectors.get(i).setAmount(-1);
@@ -113,6 +123,24 @@ public class GuiTerminalFluid extends GuiContainer
 				selectors.add(new WidgetFluidSelector(x + 7, y - 1, null, 0, 0XFF00FFFF, 1));
 			}
 		}
+
+		searchbar = new GuiTextField(fontRenderer, posX + 81, posY + 6, 88, 10)
+		{
+			private int xPos = 0;
+			private int yPos = 0;
+			private int width = 0;
+			private int height = 0;
+
+			public void mouseClicked(int x, int y, int mouseBtn)
+			{
+				boolean flag = x >= xPos && x < xPos + width && y >= yPos && y < yPos + height;
+				if (flag && mouseBtn == 3)
+					setText("");
+			}
+		};
+		searchbar.setEnableBackgroundDrawing(false);
+		searchbar.setFocused(true);
+		searchbar.setMaxStringLength(15);
 	}
 
 	@Override
@@ -124,12 +152,13 @@ public class GuiTerminalFluid extends GuiContainer
 		int posX = (width - xSize) / 2;
 		int posY = (height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
+		searchbar.drawTextBox();
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getLocalizedName(), 5, -12, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getLocalizedName().replace("ME ", ""), 5, -12, 0x000000);
 
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
@@ -183,6 +212,7 @@ public class GuiTerminalFluid extends GuiContainer
 	protected void mouseClicked(int x, int y, int mouseBtn)
 	{
 		super.mouseClicked(x, y, mouseBtn);
+		searchbar.mouseClicked(x, y, mouseBtn);
 		for (WidgetFluidSelector selector : selectors)
 		{
 			if (selector.getFluid() != null)
@@ -193,5 +223,13 @@ public class GuiTerminalFluid extends GuiContainer
 				}
 			}
 		}
+	}
+
+	@Override
+	protected void keyTyped(char key, int keyID)
+	{
+		if (keyID == Keyboard.KEY_ESCAPE)
+			mc.thePlayer.closeScreen();
+		searchbar.textboxKeyTyped(key, keyID);
 	}
 }

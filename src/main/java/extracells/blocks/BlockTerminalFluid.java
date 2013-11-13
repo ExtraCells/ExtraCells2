@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityBusFluidImport;
+import extracells.tile.TileEntityLevelEmitterFluid;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityTerminalFluid;
 import net.minecraft.block.BlockContainer;
@@ -48,6 +49,11 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileEntityTerminalFluid();
+	}
+
+	public float getBlockBrightness(IBlockAccess block, int x, int y, int z)
+	{
+		return ((TileEntityTerminalFluid) block.getBlockTileEntity(x, y, z)).isMachineActive() ? 1.0F : 0.0F;
 	}
 
 	@Override
