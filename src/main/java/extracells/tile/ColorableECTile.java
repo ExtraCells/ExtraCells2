@@ -24,48 +24,12 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 	{
 		super.writeToNBT(nbtTag);
 		nbtTag.setInteger("Color", color);
-
-		if (connections != null)
-		{
-			int[] connectionInts = new int[connections.size()];
-			int counter = 0;
-			for (ForgeDirection direction : connections)
-			{
-				connectionInts[counter] = direction.ordinal();
-				counter++;
-			}
-
-			nbtTag.setIntArray("ValidDirections", connectionInts);
-		}
-		if (visualConnections != null)
-		{
-			int[] visualConnectionInts = new int[connections.size()];
-			int counter = 0;
-			for (ForgeDirection direction : visualConnections)
-			{
-				visualConnectionInts[counter] = direction.ordinal();
-				counter++;
-			}
-
-			nbtTag.setIntArray("ValidVisualDirections", visualConnectionInts);
-		}
 	}
 
 	public void readFromNBT(NBTTagCompound nbtTag)
 	{
 		super.readFromNBT(nbtTag);
 		color = nbtTag.getInteger("Color");
-
-		connections = new HashSet<ForgeDirection>();
-		for (int directionInt : nbtTag.getIntArray("ValidDirections"))
-		{
-			connections.add(ForgeDirection.getOrientation(directionInt));
-		}
-		visualConnections = new HashSet<ForgeDirection>();
-		for (int directionInt : nbtTag.getIntArray("ValidVisualDirections"))
-		{
-			visualConnections.add(ForgeDirection.getOrientation(directionInt));
-		}
 	}
 
 	public void onMEConnectionsChanged(Set<ForgeDirection> connections, Set<ForgeDirection> visualConnections)
@@ -103,16 +67,54 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 		return color;
 	}
 
-	public Packet getDescriptionPacket()
+	public NBTTagCompound getColorDataForPacket()
 	{
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		this.writeToNBT(nbtTag);
-		
-		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+
+		if (connections != null)
+		{
+			int[] connectionInts = new int[connections.size()];
+			int counter = 0;
+			for (ForgeDirection direction : connections)
+			{
+				connectionInts[counter] = direction.ordinal();
+				counter++;
+			}
+
+			nbtTag.setIntArray("ValidDirections", connectionInts);
+		}
+		if (visualConnections != null)
+		{
+			int[] visualConnectionInts = new int[connections.size()];
+			int counter = 0;
+			for (ForgeDirection direction : visualConnections)
+			{
+				visualConnectionInts[counter] = direction.ordinal();
+				counter++;
+			}
+
+			nbtTag.setIntArray("ValidVisualDirections", visualConnectionInts);
+		}
+
+		return nbtTag;
 	}
 
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
 		readFromNBT(packet.data);
+
+		connections = new HashSet<ForgeDirection>();
+		for (int directionInt : packet.data.getIntArray("ValidDirections"))
+		{
+			connections.add(ForgeDirection.getOrientation(directionInt));
+		}
+		visualConnections = new HashSet<ForgeDirection>();
+		for (int directionInt : packet.data.getIntArray("ValidVisualDirections"))
+		{
+			visualConnections.add(ForgeDirection.getOrientation(directionInt));
+		}
+
+		System.out.println("yap");
 	}
 }

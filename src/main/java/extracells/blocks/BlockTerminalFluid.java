@@ -51,9 +51,12 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 		return new TileEntityTerminalFluid();
 	}
 
-	public float getBlockBrightness(IBlockAccess block, int x, int y, int z)
+	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
-		return ((TileEntityTerminalFluid) block.getBlockTileEntity(x, y, z)).isMachineActive() ? 1.0F : 0.0F;
+		TileEntity te = world.getBlockTileEntity(x, y, z);
+		if (te instanceof TileEntityTerminalFluid)
+			return ((TileEntityTerminalFluid) te).isMachineActive() ? 15 : 0;
+		return 0;
 	}
 
 	@Override

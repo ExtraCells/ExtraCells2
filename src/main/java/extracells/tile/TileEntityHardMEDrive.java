@@ -8,6 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -47,7 +49,13 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 		super.invalidate();
 		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
-
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbtTag = getColorDataForPacket();
+		this.writeToNBT(nbtTag);
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{

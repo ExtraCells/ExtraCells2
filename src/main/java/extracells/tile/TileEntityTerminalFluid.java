@@ -35,11 +35,12 @@ import extracells.SpecialFluidStack;
 
 public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, IStorageAware
 {
-	Boolean powerStatus = true, networkReady = true;
+	Boolean powerStatus = false, networkReady = true;
 	IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
-	private ItemStack[] slots = new ItemStack[3];
+	private ItemStack[] slots = new ItemStack[2];
 	private Fluid currentFluid = null;
+	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 	ECPrivateInventory inventory = new ECPrivateInventory(slots, costumName, 64)
 	{
 		public boolean isItemValidForSlot(int i, ItemStack itemstack)
@@ -47,7 +48,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 			return FluidContainerRegistry.isContainer(itemstack) || (itemstack != null && itemstack.getItem() instanceof IFluidContainerItem);
 		}
 	};
-	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 
 	public void updateEntity()
 	{
@@ -242,7 +242,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 	public Packet getDescriptionPacket()
 	{
-		NBTTagCompound nbtTag = new NBTTagCompound();
+		NBTTagCompound nbtTag = getColorDataForPacket();
 		this.writeToNBT(nbtTag);
 
 		NBTTagCompound fluids = new NBTTagCompound();
@@ -256,11 +256,14 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		fluids.setIntArray("FluidIDs", fluidIDs);
 		nbtTag.setCompoundTag("fluids", fluids);
 		nbtTag.setInteger("currentFluid", currentFluid != null ? currentFluid.getID() : -1);
+		nbtTag.setBoolean("powered", isPowered());
+		nbtTag.setBoolean("ready", networkReady);
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
 
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
+		super.onDataPacket(net, packet);
 		readFromNBT(packet.data);
 
 		NBTTagCompound fluids = packet.data.getCompoundTag("fluids");
@@ -272,6 +275,9 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 			fluidsInNetwork.add(new SpecialFluidStack(fluidIDs[i], fluids.getLong("FluidAmount#" + i)));
 		}
 		currentFluid = FluidRegistry.getFluid(packet.data.getInteger("currentFluid"));
+		powerStatus = packet.data.getBoolean("powered");
+		networkReady = packet.data.getBoolean("ready");
+		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
 	}
 
 	private boolean fillFluid(FluidStack toImport)
@@ -453,6 +459,8 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 					updateFluids(cellArray.getAvailableItems());
 			}
 		}
+
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 
 	@Override
@@ -485,11 +493,10 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		}
 
 		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
-		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
 	}
 
 	public boolean isMachineActive()
 	{
-		return powerStatus && networkReady;
+		return powerStatus && networkReady	;
 	}
 }

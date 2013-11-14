@@ -10,7 +10,7 @@ sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
 group = 'extracells'
-version = "1.5.5b"
+version = "1.5.5c"
 archivesBaseName = 'ExtraCells'
  
 logger.lifecycle ""+version

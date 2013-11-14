@@ -1,14 +1,20 @@
 package extracells.tile;
 
+import java.util.ArrayList;
+
 import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.FluidRegistry;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.WorldCoord;
@@ -22,6 +28,7 @@ import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import extracells.BlockEnum;
 import extracells.ItemEnum;
+import extracells.SpecialFluidStack;
 
 public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable, IStorageAware
 {
@@ -46,17 +53,26 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 		}
 	}
 
-	public float getBrightness()
+	public Packet getDescriptionPacket()
 	{
-		switch (redstoneAction)
-		{
-		case WhenOff:
-			return currentAmount < filterAmount ? 0 : 1.0F;
-		case WhenOn:
-			return currentAmount > filterAmount ? 0 : 1.0F;
-		default:
-			return 0;
-		}
+		NBTTagCompound nbtTag = getColorDataForPacket();
+		this.writeToNBT(nbtTag);
+
+		nbtTag.setLong("currentAmount", currentAmount);
+		nbtTag.setLong("filterAmount", filterAmount);
+
+		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
+
+	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+	{
+		super.onDataPacket(net, packet);
+		readFromNBT(packet.data);
+
+		currentAmount = packet.data.getLong("currentAmount");
+		filterAmount = packet.data.getLong("filterAmount");
+
+		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
 	}
 
 	public void updateRedstoneStates()
@@ -67,6 +83,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 			if (neighbor != null)
 				neighbor.onNeighborBlockChange(worldObj, xCoord + currentSide.offsetX, yCoord + currentSide.offsetY, zCoord + currentSide.offsetZ, BlockEnum.FLUIDLEVELEMITTER.getBlockEntry().blockID);
 		}
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
 	}
 

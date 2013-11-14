@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import extracells.Extracells;
 import extracells.tile.TileEntityLevelEmitterFluid;
+import extracells.tile.TileEntityTerminalFluid;
 
 public class BlockLevelEmitterFluid extends ColorableRotatableECBlock
 {
@@ -61,9 +62,9 @@ public class BlockLevelEmitterFluid extends ColorableRotatableECBlock
 		return ((TileEntityLevelEmitterFluid) block.getBlockTileEntity(x, y, z)).getRedstonePowerBySide(ForgeDirection.getOrientation(side));
 	}
 
-	public float getBlockBrightness(IBlockAccess block, int x, int y, int z)
+	public int getLightValue(IBlockAccess world, int x, int y, int z)
 	{
-		return ((TileEntityLevelEmitterFluid) block.getBlockTileEntity(x, y, z)).getBrightness();
+		return isProvidingStrongPower(world, x, y, z, ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)).getOpposite().ordinal());
 	}
 
 	public boolean canProvidePower()

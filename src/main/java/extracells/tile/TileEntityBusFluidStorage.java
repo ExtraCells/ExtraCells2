@@ -88,7 +88,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		NBTTagCompound nbtTag = new NBTTagCompound();
+		NBTTagCompound nbtTag = getColorDataForPacket();
 		this.writeToNBT(nbtTag);
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
@@ -96,6 +96,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
+		super.onDataPacket(net, packet);
 		readFromNBT(packet.data);
 	}
 

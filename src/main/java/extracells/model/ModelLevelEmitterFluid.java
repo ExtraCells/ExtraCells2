@@ -44,7 +44,7 @@ public class ModelLevelEmitterFluid extends ModelBase
 
 	public void render(TileEntity tileEntity, double x, double y, double z)
 	{
-		if (((TileEntityLevelEmitterFluid) tileEntity).getBrightness() > 0)
+		if (((TileEntityLevelEmitterFluid) tileEntity).getRedstonePowerBySide(ForgeDirection.getOrientation(tileEntity.getBlockMetadata()).getOpposite()) > 0)
 		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_level_emitter_on.png"));
 		} else

@@ -38,7 +38,7 @@ public class ItemCasing extends Item
 	@SideOnly(Side.CLIENT)
 	public Icon getIconFromDamage(int dmg)
 	{
-		return icons[dmg];
+		return dmg > icons.length ? null : icons[dmg];
 	}
 
 	@Override

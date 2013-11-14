@@ -219,7 +219,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	@Override
 	public Packet getDescriptionPacket()
 	{
-		NBTTagCompound nbtTag = new NBTTagCompound();
+		NBTTagCompound nbtTag = getColorDataForPacket();
 		this.writeToNBT(nbtTag);
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
@@ -227,6 +227,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	@Override
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
+		super.onDataPacket(net, packet);
 		readFromNBT(packet.data);
 	}
 
