@@ -39,29 +39,34 @@ public class TileEntityTransitionPlaneFluid extends ColorableECTile implements I
 			IMEInventoryHandler cellArray = getGrid().getCellArray();
 			if (cellArray != null)
 			{
-				if (Block.blocksList[offsetID] instanceof IFluidBlock)
+				try
 				{
-					FluidStack simulation = ((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, false);
+					if (Block.blocksList[offsetID] instanceof IFluidBlock)
+					{
+						FluidStack simulation = ((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, false);
 
-					if (simulation != null && cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID))) == null)
+						if (simulation != null && cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID))) == null)
+						{
+							((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, true);
+							cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID)));
+						}
+					} else if (offsetID == FluidRegistry.WATER.getBlockID() && offsetMeta == 0)
 					{
-						((IFluidBlock) Block.blocksList[offsetID]).drain(worldObj, xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ, true);
-						cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), simulation.amount, simulation.fluidID)));
+						if (cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID()))) == null)
+						{
+							worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
+							cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID())));
+						}
+					} else if (offsetID == FluidRegistry.LAVA.getBlockID() && offsetMeta == 0)
+					{
+						if (cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID()))) == null)
+						{
+							worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
+							cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID())));
+						}
 					}
-				} else if (offsetID == FluidRegistry.WATER.getBlockID() && offsetMeta == 0)
+				} catch (Throwable e)
 				{
-					if (cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID()))) == null)
-					{
-						worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
-						cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.WATER.getID())));
-					}
-				} else if (offsetID == FluidRegistry.LAVA.getBlockID() && offsetMeta == 0)
-				{
-					if (cellArray.calculateItemAddition(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID()))) == null)
-					{
-						worldObj.setBlockToAir(xCoord + orientation.offsetX, yCoord + orientation.offsetY, zCoord + orientation.offsetZ);
-						cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1000, FluidRegistry.LAVA.getID())));
-					}
 				}
 			}
 		}

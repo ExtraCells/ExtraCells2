@@ -103,7 +103,7 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.frontIcon = iconregister.registerIcon("extracells:fluid.monitor.front");
+		this.frontIcon = iconregister.registerIcon("extracells:fluid.terminal.front");
 		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
 		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
 		this.topIcon = iconregister.registerIcon("extracells:machine.top");

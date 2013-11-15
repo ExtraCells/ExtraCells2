@@ -114,7 +114,5 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 		{
 			visualConnections.add(ForgeDirection.getOrientation(directionInt));
 		}
-
-		System.out.println("yap");
 	}
 }

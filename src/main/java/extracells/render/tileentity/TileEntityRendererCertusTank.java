@@ -1,4 +1,4 @@
-package extracells.model.render.tileentity;
+package extracells.render.tileentity;
 
 import extracells.model.ModelCertusTank;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

@@ -127,9 +127,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 						}
 					}
 				}
-			} else
-			{
-				getInventory().setInventorySlotContents(2, null);
 			}
 
 			if (FluidContainerRegistry.isFilledContainer(input))
@@ -497,6 +494,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 	public boolean isMachineActive()
 	{
-		return powerStatus && networkReady	;
+		return powerStatus && networkReady;
 	}
 }

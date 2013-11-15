@@ -1,4 +1,4 @@
-package extracells.model.render.tileentity;
+package extracells.render.tileentity;
 
 import org.lwjgl.opengl.GL11;
 

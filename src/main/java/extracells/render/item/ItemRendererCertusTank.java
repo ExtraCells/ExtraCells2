@@ -1,4 +1,4 @@
-package extracells.model.render.item;
+package extracells.render.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

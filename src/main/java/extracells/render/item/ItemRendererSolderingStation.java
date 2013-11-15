@@ -1,4 +1,4 @@
-package extracells.model.render.item;
+package extracells.render.item;
 
 import org.lwjgl.opengl.GL11;
 

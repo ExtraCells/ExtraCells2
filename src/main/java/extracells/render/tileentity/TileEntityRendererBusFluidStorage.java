@@ -1,17 +1,18 @@
-package extracells.model.render.tileentity;
+package extracells.render.tileentity;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import appeng.api.me.tiles.IDirectionalMETile;
+import extracells.model.ModelBusFluidStorage;
 import extracells.model.ModelCable;
 import extracells.model.ModelCable.Colors;
-import extracells.model.ModelLevelEmitterFluid;
 import extracells.tile.ColorableECTile;
 
-public class TileEntityRendererLevelEmitterFluid extends TileEntitySpecialRenderer
+public class TileEntityRendererBusFluidStorage extends TileEntitySpecialRenderer
 {
-	private ModelLevelEmitterFluid modelBus = new ModelLevelEmitterFluid();
+	private ModelBusFluidStorage modelBus = new ModelBusFluidStorage();
 	private ModelCable modelCable = new ModelCable();
 
 	@Override

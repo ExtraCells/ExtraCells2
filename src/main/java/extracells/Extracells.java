@@ -1,13 +1,8 @@
 package extracells;
 
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
-import net.minecraftforge.common.Property.Type;
 import net.minecraftforge.oredict.OreDictionary;
 import appeng.api.Util;
 import cpw.mods.fml.common.Mod;
@@ -31,7 +26,6 @@ import extracells.proxy.CommonProxy;
 { AbstractPacket.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Extracells
 {
-
 	@Instance("extracells")
 	public static Extracells instance;
 	public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells")

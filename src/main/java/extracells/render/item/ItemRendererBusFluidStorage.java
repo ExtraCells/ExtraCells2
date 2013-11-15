@@ -1,4 +1,4 @@
-package extracells.model.render.item;
+package extracells.render.item;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -9,13 +9,13 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import extracells.model.ModelBusFluidExport;
+import extracells.model.ModelBusFluidStorage;
 import extracells.model.ModelCable;
 import extracells.model.ModelCable.Colors;
 
-public class ItemRendererBusFluidExport implements IItemRenderer
+public class ItemRendererBusFluidStorage implements IItemRenderer
 {
-	private ModelBusFluidExport model = new ModelBusFluidExport();
+	private ModelBusFluidStorage model = new ModelBusFluidStorage();
 	private ModelCable cable = new ModelCable();
 
 	@Override
@@ -32,7 +32,7 @@ public class ItemRendererBusFluidExport implements IItemRenderer
 
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_export_bus.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_storage_bus.png"));
 		GL11.glPushMatrix();
 		GL11.glTranslatef(-1.0F, 0.5F, 0.5F);
 		GL11.glScalef(1.0F, -1F, -1F);

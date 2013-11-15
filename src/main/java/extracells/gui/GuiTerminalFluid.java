@@ -1,7 +1,6 @@
 package extracells.gui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -21,7 +20,6 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.BlockEnum;
-import extracells.ComparatorName;
 import extracells.SpecialFluidStack;
 import extracells.container.ContainerTerminalFluid;
 import extracells.gui.widget.WidgetFluidSelector;
