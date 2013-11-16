@@ -315,7 +315,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 			{
 				for (IAEItemStack stack : this.getAvailableItems())
 				{
-					if (stack != null && stack.getItem() == itemstack.getItem() && stack.getItemDamage() == itemstack.getItemDamage())
+					if (stack == null || stack != null && stack.getItem() == itemstack.getItem() && stack.getItemDamage() == itemstack.getItemDamage())
 						return remainingItemCount();
 				}
 			}
@@ -483,7 +483,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 					if (current == null || current.getItemDamage() == input.getItemDamage())
 						return true;
 				}
-				if (getAvailableItems().size() == 0)
+				if (getAvailableItems().size() < getTotalItemTypes())
 					return true;
 			} else
 			{

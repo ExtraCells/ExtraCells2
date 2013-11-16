@@ -86,7 +86,7 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 		}
 		if (visualConnections != null)
 		{
-			int[] visualConnectionInts = new int[connections.size()];
+			int[] visualConnectionInts = new int[visualConnections.size()];
 			int counter = 0;
 			for (ForgeDirection direction : visualConnections)
 			{
