@@ -13,6 +13,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.StatCollector;
@@ -45,15 +46,17 @@ public class WidgetFluidSelector extends Gui
 		this(posX, posY, 18, 18, fluid, amount, color, borderThickness);
 	}
 
-	public void drawSelector()
+	public void drawSelector(Minecraft minecraftInstance, int x, int y)
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 
+        GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		if (fluid != null)
-			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), sizeX - 2, sizeY - 2);
+			drawTexturedModelRectFromIcon(x + posX + 1, y + posY + 1, fluid.getIcon(), sizeX - 2, sizeY - 2);
 		if (selected)
-			drawHollowRectWithCorners(posX, posY, sizeX, sizeY, color, borderThickness);
+			drawHollowRectWithCorners(x + posX, y + posY, sizeX, sizeY, color, borderThickness);
+        GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	public void drawTooltip(int x, int y)

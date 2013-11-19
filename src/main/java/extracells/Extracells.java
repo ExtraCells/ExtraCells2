@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import appeng.api.Util;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -20,6 +21,7 @@ import extracells.localization.LocalizationHandler;
 import extracells.network.AbstractPacket;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
+import extracells.render.RenderHandler;
 
 @Mod(modid = "extracells", name = "Extra Cells", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
@@ -35,6 +37,8 @@ public class Extracells
 			return new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 4);
 		}
 	};
+
+	public static int renderID;
 
 	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -79,6 +83,9 @@ public class Extracells
 			Util.addBasicBlackList(ItemEnum.FLUIDDISPLAY.getItemEntry().itemID, OreDictionary.WILDCARD_VALUE);
 		Util.getCellRegistry().addCellHandler(new FluidCellHandler());
 		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
+		renderID = RenderingRegistry.getNextAvailableRenderId();
+		RenderHandler handler = new RenderHandler(renderID);
+		RenderingRegistry.registerBlockHandler(handler);
 	}
 
 	@EventHandler

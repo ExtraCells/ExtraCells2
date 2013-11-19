@@ -3,6 +3,7 @@ package extracells.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -428,7 +429,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	{
 		powerStatus = hasPower;
 		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
-		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
+		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 	}
 
 	@Override
@@ -454,10 +455,12 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 				IMEInventoryHandler cellArray = gi.getCellArray();
 				if (cellArray != null)
 					updateFluids(cellArray.getAvailableItems());
+			} else
+			{
+				setPowerStatus(false);
 			}
+			PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 		}
-
-		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 
 	@Override

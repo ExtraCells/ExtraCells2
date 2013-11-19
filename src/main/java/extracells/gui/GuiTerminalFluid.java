@@ -45,6 +45,39 @@ public class GuiTerminalFluid extends GuiContainer
 	}
 
 	@Override
+	public void initGui()
+	{
+		super.initGui();
+		Mouse.getDWheel();
+
+		for (int y = 0; y < 4 * 18; y += 18)
+		{
+			for (int x = 0; x < 9 * 18; x += 18)
+			{
+				selectors.add(new WidgetFluidSelector(x + 7, y - 1, null, 0, 0XFF00FFFF, 1));
+			}
+		}
+
+		searchbar = new GuiTextField(fontRenderer, guiLeft + 81, guiTop - 12, 88, 10)
+		{
+			private int xPos = 0;
+			private int yPos = 0;
+			private int width = 0;
+			private int height = 0;
+
+			public void mouseClicked(int x, int y, int mouseBtn)
+			{
+				boolean flag = x >= xPos && x < xPos + width && y >= yPos && y < yPos + height;
+				if (flag && mouseBtn == 3)
+					setText("");
+			}
+		};
+		searchbar.setEnableBackgroundDrawing(false);
+		searchbar.setFocused(true);
+		searchbar.setMaxStringLength(15);
+	}
+
+	@Override
 	public void drawScreen(int mouseX, int mouseY, float f)
 	{
 		super.drawScreen(mouseX, mouseY, f);
@@ -61,16 +94,16 @@ public class GuiTerminalFluid extends GuiContainer
 				if (current != null && current.getFluid().getLocalizedName().toLowerCase().contains(searchbar.getText().toLowerCase()))
 					validFluids.add(current);
 			}
-
-			for (int i = currentScroll * 9; i < validFluids.size(); i++)
+			
+			for(WidgetFluidSelector selector : selectors){
+				selector.setFluid(null);
+				selector.setAmount(-1);
+			}
+			
+			for (int i = currentScroll * 9; i < validFluids.size() && i < selectors.size(); i++)
 			{
 				selectors.get(i - currentScroll * 9).setFluid(validFluids.get(i).getFluid());
 				selectors.get(i - currentScroll * 9).setAmount(validFluids.get(i).amount);
-			}
-			for (int i = validFluids.size() - currentScroll * 9; i >= 0 && i < selectors.size(); i++)
-			{
-				selectors.get(i).setFluid(null);
-				selectors.get(i).setAmount(-1);
 			}
 
 			Fluid currentFluid = tileEntity.getCurrentFluid();
@@ -106,41 +139,18 @@ public class GuiTerminalFluid extends GuiContainer
 			currentScroll = 0;
 		if (fluidTypes / 9 < 4 && currentScroll < fluidTypes / 9 + 4)
 			currentScroll = 0;
-	}
 
-	@Override
-	public void initGui()
-	{
-		Mouse.getDWheel();
-		super.initGui();
-		int posX = (this.width - xSize) / 2;
-		int posY = (this.height - ySize) / 2;
-
-		for (int y = 0; y < 4 * 18; y += 18)
+		for (WidgetFluidSelector selector : selectors)
 		{
-			for (int x = 0; x < 9 * 18; x += 18)
+			selector.drawSelector(mc, guiLeft, guiTop);
+		}
+		for (WidgetFluidSelector selector : selectors)
+		{
+			if (isPointInRegion(selector.posX, selector.posY, selector.sizeX, selector.sizeY, mouseX, mouseY))
 			{
-				selectors.add(new WidgetFluidSelector(x + 7, y - 1, null, 0, 0XFF00FFFF, 1));
+				selector.drawTooltip(mouseX, mouseY);
 			}
 		}
-
-		searchbar = new GuiTextField(fontRenderer, posX + 81, posY + 6, 88, 10)
-		{
-			private int xPos = 0;
-			private int yPos = 0;
-			private int width = 0;
-			private int height = 0;
-
-			public void mouseClicked(int x, int y, int mouseBtn)
-			{
-				boolean flag = x >= xPos && x < xPos + width && y >= yPos && y < yPos + height;
-				if (flag && mouseBtn == 3)
-					setText("");
-			}
-		};
-		searchbar.setEnableBackgroundDrawing(false);
-		searchbar.setFocused(true);
-		searchbar.setMaxStringLength(15);
 	}
 
 	@Override
@@ -149,9 +159,7 @@ public class GuiTerminalFluid extends GuiContainer
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/terminalfluid.png"));
-		int posX = (width - xSize) / 2;
-		int posY = (height - ySize) / 2;
-		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
+		drawTexturedModalRect(guiLeft, guiTop - 18, 0, 0, xSize, ySize);
 		searchbar.drawTextBox();
 	}
 
@@ -160,14 +168,10 @@ public class GuiTerminalFluid extends GuiContainer
 	{
 		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getLocalizedName().replace("ME ", ""), 5, -12, 0x000000);
 
-		int posX = (this.width - xSize) / 2;
-		int posY = (this.height - ySize) / 2;
-
 		long amount = 0;
 		String name = "";
 		for (WidgetFluidSelector selector : selectors)
 		{
-			selector.drawSelector();
 			if (selector.isSelected())
 			{
 				amount = selector.getAmount();
@@ -196,17 +200,6 @@ public class GuiTerminalFluid extends GuiContainer
 
 		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);
 		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + name, 45, 83, 0x000000);
-
-		int mouseX = Mouse.getX() * this.width / this.mc.displayWidth;
-		int mouseY = this.height - Mouse.getY() * this.height / this.mc.displayHeight - 1;
-
-		for (WidgetFluidSelector selector : selectors)
-		{
-			if (isPointInRegion(selector.posX, selector.posY, selector.sizeX, selector.sizeY, mouseX, mouseY))
-			{
-				selector.drawTooltip(mouseX - posX, mouseY - posY);
-			}
-		}
 	}
 
 	protected void mouseClicked(int x, int y, int mouseBtn)

@@ -28,13 +28,17 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 {
 
 	@SideOnly(Side.CLIENT)
-	Icon frontIcon;
+	public Icon frontIcon;
 	@SideOnly(Side.CLIENT)
 	Icon sideIcon;
 	@SideOnly(Side.CLIENT)
 	Icon bottomIcon;
 	@SideOnly(Side.CLIENT)
 	Icon topIcon;
+	@SideOnly(Side.CLIENT)
+	public Icon baseLayer;
+	@SideOnly(Side.CLIENT)
+	public Icon[] colorLayers;
 
 	public BlockTerminalFluid(int id)
 	{
@@ -46,17 +50,15 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 	}
 
 	@Override
+	public int getRenderType()
+	{
+		return Extracells.renderID;
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world)
 	{
 		return new TileEntityTerminalFluid();
-	}
-
-	public int getLightValue(IBlockAccess world, int x, int y, int z)
-	{
-		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if (te instanceof TileEntityTerminalFluid)
-			return ((TileEntityTerminalFluid) te).isMachineActive() ? 15 : 0;
-		return 0;
 	}
 
 	@Override
@@ -77,13 +79,7 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
-		return giveIcon(side, 4);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public Icon giveIcon(int side, int metadata)
-	{
-		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
+		return side == 3 ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
 	}
 
 	@Override
@@ -95,7 +91,7 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 
 		if (tileentity != null)
 		{
-			return giveIcon(side, metadata);
+			return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
 		}
 		return null;
 	}
@@ -103,10 +99,13 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.frontIcon = iconregister.registerIcon("extracells:fluid.terminal.front");
+		this.frontIcon = iconregister.registerIcon("extracells:fluid.terminal.hotbar");
 		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
 		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
 		this.topIcon = iconregister.registerIcon("extracells:machine.top");
+		this.baseLayer = iconregister.registerIcon("extracells:fluid.terminal.layerbase");
+		colorLayers = new Icon[]
+		{ iconregister.registerIcon("extracells:fluid.terminal.layer3"), iconregister.registerIcon("extracells:fluid.terminal.layer2"), iconregister.registerIcon("extracells:fluid.terminal.layer1") };
 	}
 
 	@Override

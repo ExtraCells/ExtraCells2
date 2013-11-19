@@ -103,7 +103,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 		buttonList.add(new GuiButton(3, posX + 65 - 46, posY + 58 - 2, 42, 20, "+1"));
 		buttonList.add(new GuiButton(4, posX + 115 - 46, posY + 58 - 2, 42, 20, "+10"));
 		buttonList.add(new GuiButton(5, posX + 165 - 46, posY + 58 - 2, 42, 20, "+100"));
-		buttonList.add(new WidgetRedstoneModes(6, posX + 120, posY + 36, 16, 16, RedstoneModeInput.WhenOff));
+		buttonList.add(new WidgetRedstoneModes(6, posX + 120, posY + 36, 16, 16, RedstoneModeInput.WhenOff, true));
 
 		amountField.setText(Long.toString(tileentity.getAmount()));
 

@@ -9,6 +9,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
@@ -16,15 +17,26 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import com.google.common.base.Splitter;
+
 import appeng.api.config.RedstoneModeInput;
 
 public class WidgetRedstoneModes extends GuiButton
 {
 	private RedstoneModeInput redstoneMode;
+	private boolean emitter = false;
+
+	public WidgetRedstoneModes(int ID, int xPos, int yPos, int width, int heigth, RedstoneModeInput mode, boolean emitter)
+	{
+		super(ID, xPos, yPos, width, heigth, "ScrewStrings :D");
+		this.emitter = emitter;
+		redstoneMode = mode;
+	}
 
 	public WidgetRedstoneModes(int ID, int xPos, int yPos, int width, int heigth, RedstoneModeInput mode)
 	{
 		super(ID, xPos, yPos, width, heigth, "ScrewStrings :D");
+		this.emitter = false;
 		redstoneMode = mode;
 	}
 
@@ -41,28 +53,34 @@ public class WidgetRedstoneModes extends GuiButton
 
 			List<String> description = new ArrayList<String>();
 			description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.RedstoneMode"));
+			String explaination = "";
 			switch (redstoneMode)
 			{
 			case WhenOn:
 				drawTexturedModalRect(xPosition, yPosition, 16, 0, 16, 16);
-				description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.ActiveWithSignal"));
+				explaination = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelAbove" : "AppEng.GuiITooltip.ActiveWithSignal");
 				break;
 			case WhenOff:
 				drawTexturedModalRect(xPosition, yPosition, 0, 0, 16, 16);
-				description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.ActiveWithoutSignal"));
+				explaination = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelsBelow" : "AppEng.GuiITooltip.ActiveWithoutSignal");
 				break;
 			case OnPulse:
 				drawTexturedModalRect(xPosition, yPosition, 32, 0, 16, 16);
-				description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.ActiveOnPulse"));
+				explaination = StatCollector.translateToLocal("AppEng.GuiITooltip.ActiveOnPulse");
 				break;
 			case Ignore:
 				drawTexturedModalRect(xPosition, yPosition, 48, 0, 16, 16);
-				description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.AlwaysActive"));
+				explaination = StatCollector.translateToLocal("AppEng.GuiITooltip.AlwaysActive");
 				break;
 			default:
 				break;
 			}
 
+			for (String current : Splitter.fixedLength(30).split(explaination))
+			{
+				description.add(EnumChatFormatting.GRAY + current);
+			}
+			
 			Minecraft mc = Minecraft.getMinecraft();
 			ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 

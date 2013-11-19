@@ -16,6 +16,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
@@ -30,7 +31,6 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
-import extracells.Extracells;
 import extracells.ItemEnum;
 import extracells.handler.FluidBusInventoryHandler;
 
@@ -70,13 +70,17 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 			if (tankTE instanceof IFluidHandler)
 			{
 				IFluidHandler tank = (IFluidHandler) tankTE;
-				FluidStack currentFluid = tank.getTankInfo(getFacing().getOpposite())[0].fluid;
-				lastFluid = currentFluid;
-				if (currentFluid != null)
+				FluidTankInfo tankInfo = tank.getTankInfo(getFacing().getOpposite())[0];
+				if (tankInfo != null)
 				{
-					IAEItemStack toAdd = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, currentFluid.fluidID));
-					toAdd.setStackSize(currentFluid.amount);
-					getGrid().notifyAddItems(toAdd);
+					FluidStack currentFluid = tankInfo.fluid;
+					lastFluid = currentFluid;
+					if (currentFluid != null)
+					{
+						IAEItemStack toAdd = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, currentFluid.fluidID));
+						toAdd.setStackSize(currentFluid.amount);
+						getGrid().notifyAddItems(toAdd);
+					}
 				}
 			} else
 			{
