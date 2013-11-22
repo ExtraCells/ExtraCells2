@@ -317,16 +317,14 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		FluidTankInfo[] tankArray;
 		IFluidHandler tankTile = (IFluidHandler) tileEntity;
 
-		if (((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
+		if (tankTile != null && ((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
 		{
 			return tankTile.getTankInfo(facing);
 		} else if (tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
 		{
 			return tankTile.getTankInfo(ForgeDirection.UNKNOWN);
-		} else
-		{
-			return null;
 		}
+		return null;
 	}
 
 	@Override

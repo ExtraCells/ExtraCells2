@@ -71,18 +71,21 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 			{
 				IFluidHandler tank = (IFluidHandler) tankTE;
 				FluidTankInfo[] tankInfoArray = tank.getTankInfo(getFacing().getOpposite());
-				if (tankInfoArray != null)
+				if (tank != null)
 				{
-					FluidTankInfo tankInfo = tankInfoArray[0];
-					if (tankInfo != null)
+					if (tankInfoArray != null)
 					{
-						FluidStack currentFluid = tankInfo.fluid;
-						lastFluid = currentFluid;
-						if (currentFluid != null)
+						FluidTankInfo tankInfo = tankInfoArray[0];
+						if (tankInfo != null)
 						{
-							IAEItemStack toAdd = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, currentFluid.fluidID));
-							toAdd.setStackSize(currentFluid.amount);
-							getGrid().notifyAddItems(toAdd);
+							FluidStack currentFluid = tankInfo.fluid;
+							lastFluid = currentFluid;
+							if (currentFluid != null)
+							{
+								IAEItemStack toAdd = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, currentFluid.fluidID));
+								toAdd.setStackSize(currentFluid.amount);
+								getGrid().notifyAddItems(toAdd);
+							}
 						}
 					}
 				}

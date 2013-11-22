@@ -99,9 +99,11 @@ public class GuiSolderingStation extends GuiScreen
 	public void updateScreen()
 	{
 		ItemStack itemstack = player.inventory.getCurrentItem();
-
-		textfield_size.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_size")));
-		textfield_types.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_types")));
+		if (itemstack != null && itemstack.hasTagCompound())
+		{
+			textfield_size.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_size")));
+			textfield_types.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_types")));
+		}
 	}
 
 	public void keyTyped(char keyChar, int keyID)
