@@ -106,7 +106,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 
 			FluidStack drainable = tank.drain(facing.getOpposite(), mode.getAmount(), false);
 
-			if (drainable != null)
+			if (drainable != null && drainable.amount > 0)
 			{
 				List<Fluid> fluidFilter = getFilterFluids(filterSlots);
 				IAEItemStack toImport = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), drainable.amount, drainable.fluidID));
@@ -122,16 +122,18 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 						{
 							if (grid.useMEEnergy(mode.getCost(), "Import Fluid") && notImported == null)
 							{
-								((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
-								cellArray.addItems(toImport.copy());
+								FluidStack drained = ((IFluidHandler) facingTileEntity).drain(facing.getOpposite(), (int) toImport.getStackSize(), true);
+								if (drained != null)
+									cellArray.addItems(toImport.copy());
 							}
 						}
 					} else
 					{
 						if (grid.useMEEnergy(mode.getCost(), "Import Fluid") && notImported == null)
 						{
-							((IFluidHandler) facingTileEntity).drain(facing, (int) toImport.getStackSize(), true);
-							cellArray.addItems(toImport.copy());
+							FluidStack drained = ((IFluidHandler) facingTileEntity).drain(facing.getOpposite(), (int) toImport.getStackSize(), true);
+							if (drained != null)
+								cellArray.addItems(toImport.copy());
 						}
 					}
 				}
@@ -354,13 +356,10 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 		if (resource != null && getGrid() != null && isPowered() && from.ordinal() == this.blockMetadata)
 		{
 			IAEItemStack added;
-
 			int amount = resource.amount;
 			int fluidID = resource.fluidID;
-
 			IAEItemStack temp = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), amount, fluidID));
 			temp.setStackSize(amount);
-
 			IMEInventoryHandler cellArray = getGrid().getCellArray();
 			if (cellArray != null)
 			{
