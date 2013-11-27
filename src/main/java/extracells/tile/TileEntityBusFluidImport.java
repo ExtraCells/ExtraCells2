@@ -401,8 +401,12 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid)
 	{
-		IMEInventoryHandler cellArray = grid.getCellArray();
-		return cellArray != null && cellArray.canAccept(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, fluid.getID())));
+		if (grid != null)
+		{
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			return cellArray != null && fluid != null && cellArray.canAccept(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, fluid.getID())));
+		}
+		return false;
 	}
 
 	@Override

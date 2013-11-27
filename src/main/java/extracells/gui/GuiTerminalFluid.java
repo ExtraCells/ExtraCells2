@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -78,9 +79,58 @@ public class GuiTerminalFluid extends GuiContainer
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float f)
+	protected void drawGuiContainerBackgroundLayer(float alpha, int sizeX, int sizeY)
 	{
-		super.drawScreen(mouseX, mouseY, f);
+		drawDefaultBackground();
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/terminalfluid.png"));
+		drawTexturedModalRect(guiLeft, guiTop - 18, 0, 0, xSize, ySize);
+		searchbar.drawTextBox();
+	}
+
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
+	{
+		drawSelectors(mouseX, mouseY);
+
+		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getLocalizedName().replace("ME ", ""), 5, -12, 0x000000);
+
+		long amount = 0;
+		String name = "";
+		for (WidgetFluidSelector selector : selectors)
+		{
+			if (selector.isSelected())
+			{
+				amount = selector.getAmount();
+				name = selector.getFluid().getLocalizedName();
+			}
+		}
+
+		String amountToText = amount + "mB";
+
+		if (amount > (long) Math.pow(10, 6))
+		{
+			amountToText = amount / Math.pow(10, 3) + "B";
+		} else if (amount > (long) Math.pow(10, 9))
+		{
+			amountToText = amount / Math.pow(10, 6) + "kB";
+		} else if (amount > (long) Math.pow(10, 12))
+		{
+			amountToText = amount / Math.pow(10, 9) + "MB";
+		} else if (amount > (long) Math.pow(10, 15))
+		{
+			amountToText = amount / Math.pow(10, 12) + "GB";
+		} else if (amount > (long) Math.pow(10, 18))
+		{
+			amountToText = amount / Math.pow(10, 15) + "TB";
+		}
+
+		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);
+		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + name, 45, 83, 0x000000);
+	}
+
+	public void drawSelectors(int mouseX, int mouseY)
+	{
 		int fluidTypes = 0;
 		if (tileEntity != null && !tileEntity.getFluids().isEmpty())
 		{
@@ -94,12 +144,13 @@ public class GuiTerminalFluid extends GuiContainer
 				if (current != null && current.getFluid().getLocalizedName().toLowerCase().contains(searchbar.getText().toLowerCase()))
 					validFluids.add(current);
 			}
-			
-			for(WidgetFluidSelector selector : selectors){
+
+			for (WidgetFluidSelector selector : selectors)
+			{
 				selector.setFluid(null);
 				selector.setAmount(-1);
 			}
-			
+
 			for (int i = currentScroll * 9; i < validFluids.size() && i < selectors.size(); i++)
 			{
 				selectors.get(i - currentScroll * 9).setFluid(validFluids.get(i).getFluid());
@@ -142,64 +193,15 @@ public class GuiTerminalFluid extends GuiContainer
 
 		for (WidgetFluidSelector selector : selectors)
 		{
-			selector.drawSelector(mc, guiLeft, guiTop);
+			selector.drawSelector(mc, 0, 0);
 		}
 		for (WidgetFluidSelector selector : selectors)
 		{
 			if (isPointInRegion(selector.posX, selector.posY, selector.sizeX, selector.sizeY, mouseX, mouseY))
 			{
-				selector.drawTooltip(mouseX, mouseY);
+				selector.drawTooltip(mouseX - guiLeft, mouseY - guiTop);
 			}
 		}
-	}
-
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float alpha, int sizeX, int sizeY)
-	{
-		drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/terminalfluid.png"));
-		drawTexturedModalRect(guiLeft, guiTop - 18, 0, 0, xSize, ySize);
-		searchbar.drawTextBox();
-	}
-
-	@Override
-	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
-	{
-		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getLocalizedName().replace("ME ", ""), 5, -12, 0x000000);
-
-		long amount = 0;
-		String name = "";
-		for (WidgetFluidSelector selector : selectors)
-		{
-			if (selector.isSelected())
-			{
-				amount = selector.getAmount();
-				name = selector.getFluid().getLocalizedName();
-			}
-		}
-
-		String amountToText = amount + "mB";
-
-		if (amount > (long) Math.pow(10, 6))
-		{
-			amountToText = amount / Math.pow(10, 3) + "B";
-		} else if (amount > (long) Math.pow(10, 9))
-		{
-			amountToText = amount / Math.pow(10, 6) + "kB";
-		} else if (amount > (long) Math.pow(10, 12))
-		{
-			amountToText = amount / Math.pow(10, 9) + "MB";
-		} else if (amount > (long) Math.pow(10, 15))
-		{
-			amountToText = amount / Math.pow(10, 12) + "GB";
-		} else if (amount > (long) Math.pow(10, 18))
-		{
-			amountToText = amount / Math.pow(10, 15) + "TB";
-		}
-
-		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);
-		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + name, 45, 83, 0x000000);
 	}
 
 	protected void mouseClicked(int x, int y, int mouseBtn)

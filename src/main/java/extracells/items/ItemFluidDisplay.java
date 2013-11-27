@@ -2,6 +2,7 @@ package extracells.items;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -10,6 +11,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,16 +24,11 @@ public class ItemFluidDisplay extends Item
 		this.setMaxStackSize(Integer.MAX_VALUE);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void func_94581_a(IconRegister aIconRegister)
-	{
-	}
-
 	@Override
 	public Icon getIconFromDamage(int dmg)
 	{
 		Fluid tFluid = FluidRegistry.getFluid(dmg);
-		return tFluid != null ? tFluid.getStillIcon() : null;
+		return tFluid != null ? tFluid.getStillIcon() : Block.stone.getIcon(0, 0);
 	}
 
 	public int func_94901_k()
@@ -42,9 +39,9 @@ public class ItemFluidDisplay extends Item
 	@Override
 	public String getUnlocalizedName()
 	{
-		return "FluidDisplay";		
+		return "FluidDisplay - this item is just used to mime fluids!";
 	}
-	
+
 	public String getUnlocalizedName(ItemStack aStack)
 	{
 		if (aStack != null)
@@ -56,7 +53,7 @@ public class ItemFluidDisplay extends Item
 			}
 		}
 
-		return "FluidDisplay";
+		return "FluidDisplay - this item is just used to mime fluids!";
 	}
 
 	public String getItemStackDisplayName(ItemStack aStack)

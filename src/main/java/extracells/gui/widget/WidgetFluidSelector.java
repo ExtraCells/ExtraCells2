@@ -50,13 +50,13 @@ public class WidgetFluidSelector extends Gui
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 
-        GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		if (fluid != null)
+		if (fluid != null && fluid.getIcon() != null)
 			drawTexturedModelRectFromIcon(x + posX + 1, y + posY + 1, fluid.getIcon(), sizeX - 2, sizeY - 2);
 		if (selected)
 			drawHollowRectWithCorners(x + posX, y + posY, sizeX, sizeY, color, borderThickness);
-        GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	public void drawTooltip(int x, int y)

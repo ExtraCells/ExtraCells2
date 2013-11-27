@@ -2,18 +2,11 @@ package extracells.blocks;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
-import appeng.api.events.GridStorageUpdateEvent;
-import appeng.api.me.items.IAEWrench;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
@@ -105,16 +98,15 @@ public class BlockBusFluidStorage extends ColorableRotatableECBlock
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
-		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		if (!world.isRemote)
 		{
-			return false;
+			if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
+			{
+				return false;
+			}
+			PacketDispatcher.sendPacketToPlayer(world.getBlockTileEntity(x, y, z).getDescriptionPacket(), (Player) player);
+			player.openGui(Extracells.instance, 2, world, x, y, z);
 		}
-		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
-		{
-			return false;
-		}
-		PacketDispatcher.sendPacketToPlayer(world.getBlockTileEntity(x, y, z).getDescriptionPacket(), (Player) player);
-		player.openGui(Extracells.instance, 2, world, x, y, z);
 		return true;
 	}
 

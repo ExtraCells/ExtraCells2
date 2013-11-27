@@ -125,7 +125,6 @@ public class BlockCertusTank extends BlockContainer
 				}
 			}
 		}
-
 		return false;
 	}
 

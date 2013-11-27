@@ -35,7 +35,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	private List<Fluid> cachedPreformats = new ArrayList<Fluid>(63);
 	private String cachedName;
 	private Item fluidItem = ItemEnum.FLUIDDISPLAY.getItemEntry();
-	String cake;
+	private ListMode preformattedMode = ListMode.WHITELIST;
 
 	public FluidStorageInventoryHandler(ItemStack itemstack, long totalBytes, int totalTypes)
 	{
@@ -55,6 +55,8 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		{
 			cachedPreformats.add(getPreformattedFluid(i));
 		}
+
+		preformattedMode = readPreformattedMode();
 	}
 
 	@Override
@@ -298,9 +300,9 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		for (ItemStack itemstack : getPreformattedItems())
 		{
 			if (itemstack.getItem() == request.getItem() && itemstack.getItemDamage() == request.getItemDamage())
-				return true;
+				return preformattedMode == ListMode.WHITELIST ? true : false;
 		}
-		return false;
+		return preformattedMode == ListMode.WHITELIST ? false : true;
 	}
 
 	@Override
@@ -519,6 +521,8 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		NBTTagCompound nbt = storage.stackTagCompound;
 
 		cachedPreformats = new ArrayList<Fluid>(63);
+		preformattedMode = m;
+		writePreformattedMode(m);
 
 		for (int i = 0; i < 63; i++)
 		{
@@ -562,7 +566,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public ListMode getListMode()
 	{
-		return ListMode.BLACKLIST;
+		return preformattedMode;
 	}
 
 	private void writeFluidStackToSlot(int slotID, FluidStack input)
@@ -628,5 +632,24 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 		NBTTagCompound nbt = storage.stackTagCompound;
 
 		return FluidRegistry.getFluid(nbt.getString("PreformattedFluidName#" + slotID));
+	}
+
+	public ListMode readPreformattedMode()
+	{
+		if (storage.stackTagCompound == null)
+			storage.stackTagCompound = new NBTTagCompound();
+		NBTTagCompound nbt = storage.stackTagCompound;
+
+		int mode = nbt.getInteger("PreformattedMode");
+		return mode == 0 ? ListMode.WHITELIST : mode == 1 ? ListMode.BLACKLIST : ListMode.WHITELIST;
+	}
+
+	public void writePreformattedMode(ListMode mode)
+	{
+		if (storage.stackTagCompound == null)
+			storage.stackTagCompound = new NBTTagCompound();
+		NBTTagCompound nbt = storage.stackTagCompound;
+
+		nbt.setInteger("PreformattedMode", mode != null ? mode == ListMode.BLACKLIST ? 1 : 0 : 0);
 	}
 }

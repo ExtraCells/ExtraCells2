@@ -1,18 +1,15 @@
 package extracells.blocks;
 
-import appeng.api.me.items.IAEWrench;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import extracells.Extracells;
 import extracells.tile.TileEntityLevelEmitterFluid;
-import extracells.tile.TileEntityTerminalFluid;
 
 public class BlockLevelEmitterFluid extends ColorableRotatableECBlock
 {
@@ -34,16 +31,15 @@ public class BlockLevelEmitterFluid extends ColorableRotatableECBlock
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
-		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		if (!world.isRemote)
 		{
-			return false;
+			if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
+			{
+				return false;
+			}
+			PacketDispatcher.sendPacketToPlayer(world.getBlockTileEntity(x, y, z).getDescriptionPacket(), (Player) player);
+			player.openGui(Extracells.instance, 6, world, x, y, z);
 		}
-		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
-		{
-			return false;
-		}
-		PacketDispatcher.sendPacketToPlayer(world.getBlockTileEntity(x, y, z).getDescriptionPacket(), (Player) player);
-		player.openGui(Extracells.instance, 6, world, x, y, z);
 		return true;
 	}
 

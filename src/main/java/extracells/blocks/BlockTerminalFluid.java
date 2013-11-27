@@ -1,17 +1,5 @@
 package extracells.blocks;
 
-import java.text.DecimalFormat;
-
-import appeng.api.me.items.IAEWrench;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
-import extracells.tile.TileEntityBusFluidImport;
-import extracells.tile.TileEntityLevelEmitterFluid;
-import extracells.tile.TileEntityMEBattery;
-import extracells.tile.TileEntityTerminalFluid;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,6 +11,10 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
+import extracells.tile.TileEntityTerminalFluid;
 
 public class BlockTerminalFluid extends ColorableRotatableECBlock
 {
@@ -64,15 +56,14 @@ public class BlockTerminalFluid extends ColorableRotatableECBlock
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
-		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		if (!world.isRemote)
 		{
-			return false;
+			if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
+			{
+				return false;
+			}
+			player.openGui(Extracells.instance, 1, world, x, y, z);
 		}
-		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
-		{
-			return false;
-		}
-		player.openGui(Extracells.instance, 1, world, x, y, z);
 		return true;
 	}
 

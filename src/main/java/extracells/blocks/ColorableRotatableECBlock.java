@@ -21,12 +21,6 @@ public abstract class ColorableRotatableECBlock extends BlockContainer
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return null;
-	}
-
-	@Override
 	public boolean rotateBlock(World worldObj, int x, int y, int z, ForgeDirection axis)
 	{
 		Boolean validDirection = isInValidRotations(worldObj, x, y, z, axis);

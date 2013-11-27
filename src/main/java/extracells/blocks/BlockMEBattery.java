@@ -95,15 +95,14 @@ public class BlockMEBattery extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
-		if (player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() instanceof IAEWrench)
+		if (!world.isRemote)
 		{
-			return false;
+			if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
+			{
+				return false;
+			}
+			player.openGui(Extracells.instance, 5, world, x, y, z);
 		}
-		if (world.getBlockTileEntity(x, y, z) == null || player.isSneaking())
-		{
-			return false;
-		}
-		player.openGui(Extracells.instance, 5, world, x, y, z);
 		return true;
 	}
 }
