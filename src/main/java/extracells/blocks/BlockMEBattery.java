@@ -17,6 +17,7 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
+import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityMEBattery;
 
 public class BlockMEBattery extends BlockContainer
@@ -90,6 +91,15 @@ public class BlockMEBattery extends BlockContainer
 	public boolean hasTileEntity()
 	{
 		return true;
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
+	{
+		if (!world.isRemote)
+		{
+			((TileEntityMEBattery) world.getBlockTileEntity(x, y, z)).onNeighborBlockChange(world, x, y, z, neighbourID);
+		}
 	}
 
 	@Override

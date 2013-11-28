@@ -115,6 +115,7 @@ public class BlockBusFluidStorage extends ColorableRotatableECBlock
 	{
 		if (!world.isRemote)
 		{
+			((TileEntityBusFluidStorage) world.getBlockTileEntity(x, y, z)).updateGrid();
 			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
 		}
 	}

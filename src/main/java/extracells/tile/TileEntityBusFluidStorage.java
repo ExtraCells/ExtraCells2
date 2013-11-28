@@ -43,7 +43,6 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 	FluidStack lastFluid;
-	TileEntity lastTile;
 
 	public void setPriority(int priority)
 	{
@@ -55,45 +54,52 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	{
 		TileEntity tankTE = worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ);
 
-		if (lastTile != tankTE)
-			MinecraftForge.EVENT_BUS.post(new GridStorageUpdateEvent(worldObj, getLocation(), getGrid()));
-		lastTile = tankTE;
-
 		if (getGrid() != null && !worldObj.isRemote)
 		{
-			if (lastFluid != null)
-			{
-				IAEItemStack toRemove = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, lastFluid.fluidID));
-				toRemove.setStackSize(lastFluid.amount);
-				getGrid().notifyExtractItems(toRemove);
-			}
+			FluidStack tankFluid = null;
 			if (tankTE instanceof IFluidHandler)
 			{
 				IFluidHandler tank = (IFluidHandler) tankTE;
-				FluidTankInfo[] tankInfoArray = tank.getTankInfo(getFacing().getOpposite());
 				if (tank != null)
 				{
-					if (tankInfoArray != null)
+					FluidTankInfo[] tankInfos = tank.getTankInfo(getFacing().getOpposite());
+
+					if (tankInfos != null)
 					{
-						FluidTankInfo tankInfo = tankInfoArray[0];
-						if (tankInfo != null)
-						{
-							FluidStack currentFluid = tankInfo.fluid;
-							lastFluid = currentFluid;
-							if (currentFluid != null)
-							{
-								IAEItemStack toAdd = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, currentFluid.fluidID));
-								toAdd.setStackSize(currentFluid.amount);
-								getGrid().notifyAddItems(toAdd);
-							}
-						}
+						if (tankInfos[0] != null)
+							tankFluid = tankInfos[0].fluid;
 					}
 				}
-			} else
+			}
+
+			if (tankFluid != lastFluid)
 			{
-				lastFluid = null;
+				if (lastFluid != null)
+				{
+					IAEItemStack toRemove = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, lastFluid.fluidID));
+					toRemove.setStackSize(lastFluid.amount);
+					getGrid().notifyExtractItems(toRemove);
+				}
+
+				if (tankFluid != null)
+				{
+					IAEItemStack toAdd = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, tankFluid.fluidID));
+					toAdd.setStackSize(tankFluid.amount);
+					getGrid().notifyAddItems(toAdd);
+
+					lastFluid = tankFluid.copy();
+				} else
+				{
+					lastFluid = null;
+				}
 			}
 		}
+	}
+
+	public void updateGrid()
+	{
+		if (getGrid() != null)
+			MinecraftForge.EVENT_BUS.post(new GridStorageUpdateEvent(worldObj, getLocation(), getGrid()));
 	}
 
 	@Override

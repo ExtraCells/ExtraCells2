@@ -1,5 +1,6 @@
 package extracells.blocks;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
@@ -19,6 +20,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import extracells.BlockEnum;
 import extracells.Extracells;
+import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityCertusTank;
 import extracells.tile.TileEntityMEBattery;
 
@@ -168,5 +170,14 @@ public class BlockCertusTank extends BlockContainer
 	public boolean isOpaqueCube()
 	{
 		return false;
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
+	{
+		if (!world.isRemote)
+		{
+			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
+		}
 	}
 }

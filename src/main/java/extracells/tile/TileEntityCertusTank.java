@@ -21,7 +21,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound nbtTag = new NBTTagCompound();
-		this.writeToNBT(nbtTag);
+		writeToNBT(nbtTag);
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
 
@@ -112,7 +112,8 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 			{
 				if (offTE != null && offTE instanceof TileEntityCertusTank)
 				{
-					if ((((TileEntityCertusTank) offTE).getFluid() != null && ((TileEntityCertusTank) offTE).getFluid() == fluid.getFluid()))
+					Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
+					if (offFluid != null && offFluid == fluid.getFluid())
 					{
 						mainTank = (TileEntityCertusTank) worldObj.getBlockTileEntity(xCoord, yCoord + yOff, zCoord);
 						yOff++;
@@ -127,7 +128,8 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 		}
 
 		FluidStack drained = tank.drain(fluid.amount, doDrain);
-		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+		if (drained != null && drained.amount > 0)
+			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
 
 		if (drained == null || drained.amount < fluid.amount)
 		{
@@ -161,7 +163,8 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 			{
 				if (offTE != null && offTE instanceof TileEntityCertusTank)
 				{
-					if ((((TileEntityCertusTank) offTE).getFluid() == null || ((TileEntityCertusTank) offTE).getFluid() == fluid.getFluid()))
+					Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
+					if (offFluid == null || offFluid == fluid.getFluid())
 					{
 						mainTank = (TileEntityCertusTank) worldObj.getBlockTileEntity(xCoord, yCoord - yOff, zCoord);
 						yOff++;
@@ -176,7 +179,8 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 		}
 
 		int filled = tank.fill(fluid, doFill);
-		PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+		if (filled > 0)
+			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
 
 		if (filled < fluid.amount)
 		{
@@ -254,6 +258,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 
 	public Fluid getFluid()
 	{
-		return tank.getFluid() != null ? tank.getFluid().getFluid() : null;
+		FluidStack tankFluid = tank.getFluid();
+		return tankFluid != null && tankFluid.amount > 0 ? tankFluid.getFluid() : null;
 	}
 }

@@ -43,7 +43,6 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 			IMEPowerStorage controller = (IMEPowerStorage) getGrid().getController();
 			if (rechargeNetwork)
 			{
-				// Only return power to the network if it needs it.
 				if ( controller.getMECurrentPower() < controller.getMEMaxPower() ) 
 				{
 					energy = controller.addMEPower(energy);
