@@ -28,18 +28,26 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 	private final float takeEnergy = 10.0F;
 	Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
-	private Boolean storingPower = true;
+	private Boolean rechargeNetwork = null;
 
 	@Override
 	public void updateEntity()
 	{
-		storingPower = this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
 		if (getGrid() != null)
 		{
-			IMEPowerStorage controller = (IMEPowerStorage) getGrid().getController();
-			if (storingPower)
+			if (rechargeNetwork == null) 
 			{
-				energy = controller.addMEPower(energy);
+				updateRechargeNetwork();
+			}
+			
+			IMEPowerStorage controller = (IMEPowerStorage) getGrid().getController();
+			if (rechargeNetwork)
+			{
+				// Only return power to the network if it needs it.
+				if ( controller.getMECurrentPower() < controller.getMEMaxPower() ) 
+				{
+					energy = controller.addMEPower(energy);
+				}
 			} else
 			{
 				for (int i = 0; i < 5; i++)
@@ -54,6 +62,16 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 				}
 			}
 		}
+	}
+	
+	public void onNeighborBlockChange(World world, int i, int j, int k, int l) 
+	{
+		updateRechargeNetwork();
+	}
+	
+	private void updateRechargeNetwork() 
+	{
+		rechargeNetwork = this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
 	}
 
 	public void updateGuiTile(String playername)
