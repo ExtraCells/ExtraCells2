@@ -29,6 +29,7 @@ import appeng.api.me.util.IGridInterface;
 import extracells.BlockEnum;
 import extracells.ItemEnum;
 import extracells.SpecialFluidStack;
+import static extracells.ItemEnum.*;
 
 public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable, IStorageAware
 {
@@ -109,7 +110,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 			{
 				if (currentStack != null)
 				{
-					if (currentStack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
+					if (currentStack.getItem() == FLUIDDISPLAY.getItemEntry())
 					{
 						if (currentStack.getItemDamage() == filterSlots[0].getItemDamage())
 						{

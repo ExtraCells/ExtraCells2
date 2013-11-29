@@ -1,6 +1,6 @@
 package extracells.tile;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -49,6 +48,7 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 		super.invalidate();
 		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -56,6 +56,7 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 		this.writeToNBT(nbtTag);
 		return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
 	}
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
@@ -269,16 +270,15 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 	{
 		if (powerStatus)
 		{
-			IMEInventoryHandler[] cellArray = new IMEInventoryHandler[3];
-			for (int i = 0; i < 3; i++)
+			List<IMEInventoryHandler> cellArray = new ArrayList<IMEInventoryHandler>();
+			for (ItemStack current : slots)
 			{
-				cellArray[i] = appeng.api.Util.getCellRegistry().getHandlerForCell(this.slots[i]);
+				if (appeng.api.Util.getCellRegistry().isCellHandled(current))
+					cellArray.add(appeng.api.Util.getCellRegistry().getHandlerForCell(current));
 			}
-			return Arrays.asList(cellArray);
-		} else
-		{
-			return null;
+			return cellArray;
 		}
+		return null;
 	}
 
 	@Override

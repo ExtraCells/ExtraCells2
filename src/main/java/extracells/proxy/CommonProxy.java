@@ -48,6 +48,7 @@ public class CommonProxy implements IGuiHandler
 {
 	public void addRecipes()
 	{
+		try{
 		ItemStack storagePhysical256k = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 0);
 		ItemStack storagePhysical1m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 1);
 		ItemStack storagePhysical4m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 2);
@@ -211,7 +212,10 @@ public class CommonProxy implements IGuiHandler
 
 		GameRegistry.addRecipe(new ShapelessOreRecipe(levelEmitter, new Object[]
 		{ Blocks.blkLevelEmitter, "dyeBlue" }));
-
+		}catch(Throwable e){
+			System.out.println("There was an ID conflict in extracells! Shutting down now!");
+			System.exit(1);
+		}
 	}
 
 	public void RegisterTileEntities()

@@ -33,6 +33,7 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.ItemEnum;
 import extracells.handler.FluidBusInventoryHandler;
+import static extracells.ItemEnum.*;
 
 public class TileEntityBusFluidStorage extends ColorableECTile implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {
@@ -76,14 +77,14 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 			{
 				if (lastFluid != null)
 				{
-					IAEItemStack toRemove = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, lastFluid.fluidID));
+					IAEItemStack toRemove = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, lastFluid.fluidID));
 					toRemove.setStackSize(lastFluid.amount);
 					getGrid().notifyExtractItems(toRemove);
 				}
 
 				if (tankFluid != null)
 				{
-					IAEItemStack toAdd = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, tankFluid.fluidID));
+					IAEItemStack toAdd = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, tankFluid.fluidID));
 					toAdd.setStackSize(tankFluid.amount);
 					getGrid().notifyAddItems(toAdd);
 
@@ -250,11 +251,11 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 
 				if (FluidContainerRegistry.isFilledContainer(itemStack))
 				{
-					fluidContainer = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid().getID());
+					fluidContainer = new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, FluidContainerRegistry.getFluidForFilledItem(itemStack).getFluid().getID());
 					filter.add(fluidContainer);
 				} else if (itemStack != null && itemStack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemStack.getItem()).getFluid(itemStack) != null)
 				{
-					fluidContainer = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, ((IFluidContainerItem) itemStack.getItem()).getFluid(itemStack).fluidID);
+					fluidContainer = new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, ((IFluidContainerItem) itemStack.getItem()).getFluid(itemStack).fluidID);
 					filter.add(fluidContainer);
 				}
 			}

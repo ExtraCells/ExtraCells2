@@ -20,7 +20,13 @@ public class ContainerHardMEDrive extends Container
 		this.tileentity = tileentity;
 		for (int i = 0; i < 3; i++)
 		{
-			addSlotToContainer(new SlotRespective(tileentity, i, 62 + 18, 17 + i * 18));
+			addSlotToContainer(new SlotRespective(tileentity, i, 62 + 18, 17 + i * 18)
+			{
+				public boolean isItemValid(ItemStack item)
+				{
+					return appeng.api.Util.getCellRegistry().isCellHandled(item);
+				}
+			});
 		}
 		bindPlayerInventory(inventory);
 	}
@@ -56,7 +62,7 @@ public class ContainerHardMEDrive extends Container
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			if (slot.isItemValid(itemstack))
+			if (appeng.api.Util.getCellRegistry().isCellHandled(itemstack))
 			{
 				if (i < 3)
 				{
@@ -84,5 +90,10 @@ public class ContainerHardMEDrive extends Container
 	public void onContainerClosed(EntityPlayer entityplayer)
 	{
 		super.onContainerClosed(entityplayer);
+	}
+
+	protected void retrySlotClick(int par1, int par2, boolean par3, EntityPlayer par4EntityPlayer)
+	{
+		// DONT DO ANYTHING YOU SHITTY METHOD!
 	}
 }
