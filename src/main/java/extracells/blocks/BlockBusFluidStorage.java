@@ -1,12 +1,11 @@
 package extracells.blocks;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import appeng.api.Blocks;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
@@ -14,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityBusFluidStorage;
 
-public class BlockBusFluidStorage extends ColorableRotatableECBlock
+public class BlockBusFluidStorage extends RotatableColorBlock
 {
 
 	@SideOnly(Side.CLIENT)
@@ -59,40 +58,9 @@ public class BlockBusFluidStorage extends ColorableRotatableECBlock
 		return new TileEntityBusFluidStorage();
 	}
 
-	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
-		return giveIcon(side, 3);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public Icon giveIcon(int side, int metadata)
-	{
-		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
-	{
-		TileEntity tileentity = blockAccess.getBlockTileEntity(x, y, z);
-		int metadata = blockAccess.getBlockMetadata(x, y, z);
-
-		if (tileentity != null)
-		{
-			return giveIcon(side, metadata);
-		}
-		return null;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconregister)
-	{
-
-		this.frontIcon = iconregister.registerIcon("extracells:fluid.bus.storage.front");
-		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
-		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
+		return Blocks.blkInterface.getIconIndex();
 	}
 
 	@Override

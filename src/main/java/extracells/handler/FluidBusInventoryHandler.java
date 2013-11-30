@@ -83,9 +83,9 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean containsItemType(IAEItemStack aeitemstack)
 	{
-		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
+		if (aeitemstack != null && tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
 		{
-			return aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && aeitemstack.getItemDamage() == ((IFluidHandler) tank).getTankInfo(facing.getOpposite())[0].fluid.fluidID;
+			return aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && aeitemstack.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID;
 		}
 		return false;
 	}
@@ -121,9 +121,14 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 					int filled = 0;
 
-					for (long i = 0; i < input.getStackSize(); i++)
+					for (long i = 0; i < input.getStackSize() / 25; i++)
 					{
-						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), 1), true);
+						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), 25), true);
+					}
+					int remainder = (int) (input.getStackSize() - ((input.getStackSize() / 25) * 25));
+					if (remainder > 0)
+					{
+						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), remainder), true);
 					}
 
 					addedStack.setStackSize(input.getStackSize() - filled);
@@ -151,9 +156,16 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 			{
 				long drainedAmount = 0;
 
-				for (long i = 0; i < request.getStackSize(); i++)
+				for (long i = 0; i < request.getStackSize() / 25; i++)
 				{
-					FluidStack drainedStack = ((IFluidHandler) tank).drain(facing, 1, true);
+					FluidStack drainedStack = ((IFluidHandler) tank).drain(facing, 25, true);
+					if (drainedStack != null && drainedStack.amount != 0)
+						drainedAmount += drainedStack.amount;
+				}
+				int remainder = (int) (request.getStackSize() - ((request.getStackSize() / 25) * 25));
+				if (remainder > 0)
+				{
+					FluidStack drainedStack = ((IFluidHandler) tank).drain(facing, remainder, true);
 					if (drainedStack != null && drainedStack.amount != 0)
 						drainedAmount += drainedStack.amount;
 				}
@@ -230,9 +242,14 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 					int filled = 0;
 
-					for (long i = 0; i < input.getStackSize(); i++)
+					for (long i = 0; i < input.getStackSize() / 25; i++)
 					{
-						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), 1), false);
+						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), 25), false);
+					}
+					int remainder = (int) (input.getStackSize() - ((input.getStackSize() / 25) * 25));
+					if (remainder > 0)
+					{
+						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), remainder), false);
 					}
 
 					addedStack.setStackSize(input.getStackSize() - filled);

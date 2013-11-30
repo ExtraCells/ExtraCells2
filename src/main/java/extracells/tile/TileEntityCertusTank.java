@@ -51,6 +51,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 
 	public void readFromNBTWithoutCoords(NBTTagCompound tag)
 	{
+		tank = new FluidTank(32000);
 		tank.readFromNBT(tag);
 	}
 

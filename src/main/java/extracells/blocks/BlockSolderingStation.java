@@ -17,7 +17,7 @@ import extracells.ItemEnum;
 import extracells.gui.GuiSolderingStation;
 import extracells.tile.TileEntitySolderingStation;
 
-public class BlockSolderingStation extends ColorableRotatableECBlock
+public class BlockSolderingStation extends RotatableColorBlock
 {
 
 	public BlockSolderingStation(int id)

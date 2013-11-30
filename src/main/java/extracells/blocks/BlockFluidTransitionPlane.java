@@ -1,26 +1,16 @@
 package extracells.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
-import extracells.tile.TileEntityBusFluidExport;
-import extracells.tile.TileEntityBusFluidImport;
-import extracells.tile.TileEntityTransitionPlaneFluid;
-import extracells.tile.TileEntityMEBattery;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.tile.TileEntityTransitionPlaneFluid;
 
-public class BlockFluidTransitionPlane extends ColorableRotatableECBlock
+public class BlockFluidTransitionPlane extends RotatableColorBlock
 {
 
 	@SideOnly(Side.CLIENT)
@@ -50,13 +40,7 @@ public class BlockFluidTransitionPlane extends ColorableRotatableECBlock
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
-		return giveIcon(side, 3);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public Icon giveIcon(int side, int metadata)
-	{
-		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
+		return side == 3 ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
 	}
 
 	@Override
@@ -68,7 +52,7 @@ public class BlockFluidTransitionPlane extends ColorableRotatableECBlock
 
 		if (tileentity != null)
 		{
-			return giveIcon(side, metadata);
+			return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
 		}
 		return null;
 	}

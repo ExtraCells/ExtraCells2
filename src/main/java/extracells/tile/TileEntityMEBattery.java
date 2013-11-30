@@ -35,40 +35,43 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 	{
 		if (getGrid() != null)
 		{
-			if (rechargeNetwork == null) 
+			if (rechargeNetwork == null)
 			{
 				updateRechargeNetwork();
 			}
-			
+
 			IMEPowerStorage controller = (IMEPowerStorage) getGrid().getController();
-			if (rechargeNetwork)
+			if (controller != null)
 			{
-				if ( controller.getMECurrentPower() < controller.getMEMaxPower() ) 
+				if (rechargeNetwork)
 				{
-					energy = controller.addMEPower(energy);
-				}
-			} else
-			{
-				for (int i = 0; i < 5; i++)
+					if (controller.getMECurrentPower() < controller.getMEMaxPower())
+					{
+						energy = controller.addMEPower(energy);
+					}
+				} else
 				{
-					if (energy + takeEnergy <= maxEnergy && controller.useMEEnergy(takeEnergy, StatCollector.translateToLocal("tile.block.mebattery")))
+					for (int i = 0; i < 5; i++)
 					{
-						energy += takeEnergy;
-					} else
-					{
-						break;
+						if (energy + takeEnergy <= maxEnergy && controller.useMEEnergy(takeEnergy, StatCollector.translateToLocal("tile.block.mebattery")))
+						{
+							energy += takeEnergy;
+						} else
+						{
+							break;
+						}
 					}
 				}
 			}
 		}
 	}
-	
-	public void onNeighborBlockChange(World world, int i, int j, int k, int l) 
+
+	public void onNeighborBlockChange(World world, int i, int j, int k, int l)
 	{
 		updateRechargeNetwork();
 	}
-	
-	private void updateRechargeNetwork() 
+
+	private void updateRechargeNetwork()
 	{
 		rechargeNetwork = this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
 	}

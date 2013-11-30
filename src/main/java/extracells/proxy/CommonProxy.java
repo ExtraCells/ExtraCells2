@@ -19,6 +19,7 @@ import extracells.container.ContainerBusFluidExport;
 import extracells.container.ContainerBusFluidImport;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.container.ContainerHardMEDrive;
+import extracells.container.ContainerInterfaceFluid;
 import extracells.container.ContainerLevelEmitterFluid;
 import extracells.container.ContainerMEBattery;
 import extracells.container.ContainerTerminalFluid;
@@ -26,6 +27,7 @@ import extracells.gui.GuiBusFluidExport;
 import extracells.gui.GuiBusFluidImport;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.gui.GuiHardMEDrive;
+import extracells.gui.GuiInterfaceFluid;
 import extracells.gui.GuiLevelEmitterFluid;
 import extracells.gui.GuiMEBattery;
 import extracells.gui.GuiTerminalFluid;
@@ -36,6 +38,7 @@ import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityCertusTank;
 import extracells.tile.TileEntityHardMEDrive;
+import extracells.tile.TileEntityInterfaceFluid;
 import extracells.tile.TileEntityLevelEmitterFluid;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
@@ -48,171 +51,178 @@ public class CommonProxy implements IGuiHandler
 {
 	public void addRecipes()
 	{
-		try{
-		ItemStack storagePhysical256k = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 0);
-		ItemStack storagePhysical1m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 1);
-		ItemStack storagePhysical4m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 2);
-		ItemStack storagePhysical16m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 3);
+		try
+		{
+			ItemStack storagePhysical256k = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 0);
+			ItemStack storagePhysical1m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 1);
+			ItemStack storagePhysical4m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 2);
+			ItemStack storagePhysical16m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 3);
 
-		ItemStack storageFluid1k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 0);
-		ItemStack storageFluid4k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 1);
-		ItemStack storageFluid16k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 2);
-		ItemStack storageFluid64k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 3);
+			ItemStack storageFluid1k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 0);
+			ItemStack storageFluid4k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 1);
+			ItemStack storageFluid16k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 2);
+			ItemStack storageFluid64k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 3);
 
-		ItemStack containerCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 4);
+			ItemStack containerCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 4);
 
-		ItemStack encryptableCell = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemEntry(), 1, 0);
+			ItemStack encryptableCell = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemEntry(), 1, 0);
 
-		ItemStack customCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 5);
+			ItemStack customCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 5);
 
-		ItemStack physicalKilo = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 0);
-		ItemStack physicalMega = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 1);
-		ItemStack physicalGiga = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 2);
-		ItemStack physicalTera = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 3);
-		ItemStack fluidCell = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 4);
-		ItemStack fluidSegment = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 5);
-		ItemStack fluidBlock = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 6);
-		ItemStack fluidCluster = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 7);
+			ItemStack physicalKilo = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 0);
+			ItemStack physicalMega = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 1);
+			ItemStack physicalGiga = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 2);
+			ItemStack physicalTera = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 3);
+			ItemStack fluidCell = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 4);
+			ItemStack fluidSegment = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 5);
+			ItemStack fluidBlock = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 6);
+			ItemStack fluidCluster = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 7);
 
-		ItemStack advancedStorageCasingPhysical = new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 0);
-		ItemStack advancedStorageCasingFluid = new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 1);
+			ItemStack advancedStorageCasingPhysical = new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 0);
+			ItemStack advancedStorageCasingFluid = new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 1);
 
-		ItemStack meItemDropper = new ItemStack(BlockEnum.MEDROPPER.getBlockEntry(), 1);
-		ItemStack solderingStation = new ItemStack(BlockEnum.SOLDERINGSTATION.getBlockEntry(), 1);
-		ItemStack meBattery = new ItemStack(BlockEnum.MEBATTERY.getBlockEntry(), 1);
-		ItemStack hardMEDrive = new ItemStack(BlockEnum.BLASTRESISTANTMEDRIVE.getBlockEntry(), 1);
-		ItemStack fluidImportBus = new ItemStack(BlockEnum.FLUIDIMPORT.getBlockEntry(), 1);
-		ItemStack fluidExportBus = new ItemStack(BlockEnum.FLUIDEXPORT.getBlockEntry(), 1);
-		ItemStack fluidStorageBus = new ItemStack(BlockEnum.FLUIDSTORAGE.getBlockEntry(), 1);
-		ItemStack fluidTerminal = new ItemStack(BlockEnum.FLUIDTERMINAL.getBlockEntry(), 1);
-		ItemStack transitionPlaneFluid = new ItemStack(BlockEnum.FLUIDTRANSITION.getBlockEntry(), 1);
-		ItemStack certusTank = new ItemStack(BlockEnum.CERTUSTANK.getBlockEntry(), 1);
-		ItemStack chromia = new ItemStack(BlockEnum.CHROMIA.getBlockEntry(), 1);
-		ItemStack levelEmitter = new ItemStack(BlockEnum.FLUIDLEVELEMITTER.getBlockEntry(), 1);
+			ItemStack meItemDropper = new ItemStack(BlockEnum.MEDROPPER.getBlockEntry(), 1);
+			ItemStack solderingStation = new ItemStack(BlockEnum.SOLDERINGSTATION.getBlockEntry(), 1);
+			ItemStack meBattery = new ItemStack(BlockEnum.MEBATTERY.getBlockEntry(), 1);
+			ItemStack hardMEDrive = new ItemStack(BlockEnum.BLASTRESISTANTMEDRIVE.getBlockEntry(), 1);
+			ItemStack fluidImportBus = new ItemStack(BlockEnum.FLUIDIMPORT.getBlockEntry(), 1);
+			ItemStack fluidExportBus = new ItemStack(BlockEnum.FLUIDEXPORT.getBlockEntry(), 1);
+			ItemStack fluidStorageBus = new ItemStack(BlockEnum.FLUIDSTORAGE.getBlockEntry(), 1);
+			ItemStack fluidTerminal = new ItemStack(BlockEnum.FLUIDTERMINAL.getBlockEntry(), 1);
+			ItemStack transitionPlaneFluid = new ItemStack(BlockEnum.FLUIDTRANSITION.getBlockEntry(), 1);
+			ItemStack certusTank = new ItemStack(BlockEnum.CERTUSTANK.getBlockEntry(), 1);
+			ItemStack chromia = new ItemStack(BlockEnum.CHROMIA.getBlockEntry(), 1);
+			ItemStack levelEmitter = new ItemStack(BlockEnum.FLUIDLEVELEMITTER.getBlockEntry(), 1);
+			ItemStack fluidInterface = new ItemStack(BlockEnum.FLUIDINTERFACE.getBlockEntry(), 1);
 
-		// Advanced Casing Physical
-		GameRegistry.addShapedRecipe(advancedStorageCasingPhysical, new Object[]
-		{ "GFG", "F_F", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond });
+			// Advanced Casing Physical
+			GameRegistry.addShapedRecipe(advancedStorageCasingPhysical, new Object[]
+			{ "GFG", "F_F", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond });
 
-		// Advanced Casing Fluid
-		GameRegistry.addShapedRecipe(advancedStorageCasingFluid, new Object[]
-		{ "GFG", "F_F", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'G', Blocks.blkQuartzGlass });
+			// Advanced Casing Fluid
+			GameRegistry.addShapedRecipe(advancedStorageCasingFluid, new Object[]
+			{ "GFG", "F_F", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'G', Blocks.blkQuartzGlass });
 
-		// Normal Cells
-		GameRegistry.addShapedRecipe(storagePhysical256k, new Object[]
-		{ "GFG", "FCF", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalKilo });
-		GameRegistry.addShapelessRecipe(storagePhysical256k, new Object[]
-		{ advancedStorageCasingPhysical, physicalKilo });
-		GameRegistry.addShapedRecipe(storagePhysical1m, new Object[]
-		{ "GFG", "FCF", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalMega });
-		GameRegistry.addShapelessRecipe(storagePhysical1m, new Object[]
-		{ advancedStorageCasingPhysical, physicalMega });
-		GameRegistry.addShapedRecipe(storagePhysical4m, new Object[]
-		{ "GFG", "FCF", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalGiga });
-		GameRegistry.addShapelessRecipe(storagePhysical4m, new Object[]
-		{ advancedStorageCasingPhysical, physicalGiga });
-		GameRegistry.addShapedRecipe(storagePhysical16m, new Object[]
-		{ "GFG", "FCF", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalTera });
-		GameRegistry.addShapelessRecipe(storagePhysical16m, new Object[]
-		{ advancedStorageCasingPhysical, physicalTera });
+			// Normal Cells
+			GameRegistry.addShapedRecipe(storagePhysical256k, new Object[]
+			{ "GFG", "FCF", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalKilo });
+			GameRegistry.addShapelessRecipe(storagePhysical256k, new Object[]
+			{ advancedStorageCasingPhysical, physicalKilo });
+			GameRegistry.addShapedRecipe(storagePhysical1m, new Object[]
+			{ "GFG", "FCF", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalMega });
+			GameRegistry.addShapelessRecipe(storagePhysical1m, new Object[]
+			{ advancedStorageCasingPhysical, physicalMega });
+			GameRegistry.addShapedRecipe(storagePhysical4m, new Object[]
+			{ "GFG", "FCF", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalGiga });
+			GameRegistry.addShapelessRecipe(storagePhysical4m, new Object[]
+			{ advancedStorageCasingPhysical, physicalGiga });
+			GameRegistry.addShapedRecipe(storagePhysical16m, new Object[]
+			{ "GFG", "FCF", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalTera });
+			GameRegistry.addShapelessRecipe(storagePhysical16m, new Object[]
+			{ advancedStorageCasingPhysical, physicalTera });
 
-		// Fluid Cells
-		GameRegistry.addShapedRecipe(storageFluid1k, new Object[]
-		{ "GFG", "FCF", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'G', Blocks.blkQuartzGlass, 'C', fluidCell });
-		GameRegistry.addShapelessRecipe(storageFluid1k, new Object[]
-		{ advancedStorageCasingFluid, fluidCell });
-		GameRegistry.addShapedRecipe(storageFluid4k, new Object[]
-		{ "GFG", "FCF", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'G', Blocks.blkQuartzGlass, 'C', fluidSegment });
-		GameRegistry.addShapelessRecipe(storageFluid4k, new Object[]
-		{ advancedStorageCasingFluid, fluidSegment });
-		GameRegistry.addShapedRecipe(storageFluid16k, new Object[]
-		{ "GFG", "FCF", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'G', Blocks.blkQuartzGlass, 'C', fluidBlock });
-		GameRegistry.addShapelessRecipe(storageFluid16k, new Object[]
-		{ advancedStorageCasingFluid, fluidBlock });
-		GameRegistry.addShapedRecipe(storageFluid64k, new Object[]
-		{ "GFG", "FCF", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'G', Blocks.blkQuartzGlass, 'C', fluidCluster });
-		GameRegistry.addShapelessRecipe(storageFluid64k, new Object[]
-		{ advancedStorageCasingFluid, fluidCluster });
+			// Fluid Cells
+			GameRegistry.addShapedRecipe(storageFluid1k, new Object[]
+			{ "GFG", "FCF", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'G', Blocks.blkQuartzGlass, 'C', fluidCell });
+			GameRegistry.addShapelessRecipe(storageFluid1k, new Object[]
+			{ advancedStorageCasingFluid, fluidCell });
+			GameRegistry.addShapedRecipe(storageFluid4k, new Object[]
+			{ "GFG", "FCF", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'G', Blocks.blkQuartzGlass, 'C', fluidSegment });
+			GameRegistry.addShapelessRecipe(storageFluid4k, new Object[]
+			{ advancedStorageCasingFluid, fluidSegment });
+			GameRegistry.addShapedRecipe(storageFluid16k, new Object[]
+			{ "GFG", "FCF", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'G', Blocks.blkQuartzGlass, 'C', fluidBlock });
+			GameRegistry.addShapelessRecipe(storageFluid16k, new Object[]
+			{ advancedStorageCasingFluid, fluidBlock });
+			GameRegistry.addShapedRecipe(storageFluid64k, new Object[]
+			{ "GFG", "FCF", "TTT", 'T', certusTank, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'G', Blocks.blkQuartzGlass, 'C', fluidCluster });
+			GameRegistry.addShapelessRecipe(storageFluid64k, new Object[]
+			{ advancedStorageCasingFluid, fluidCluster });
 
-		// Cell Container
-		GameRegistry.addShapelessRecipe(containerCell, new Object[]
-		{ appeng.api.Items.itemCell1k, Block.chest });
+			// Cell Container
+			GameRegistry.addShapelessRecipe(containerCell, new Object[]
+			{ appeng.api.Items.itemCell1k, Block.chest });
 
-		// Encryptable Cell
-		GameRegistry.addShapedRecipe(encryptableCell, new Object[]
-		{ "_II", "ICI", "III", 'I', Item.ingotIron, 'C', Items.itemCell1k });
+			// Encryptable Cell
+			GameRegistry.addShapedRecipe(encryptableCell, new Object[]
+			{ "_II", "ICI", "III", 'I', Item.ingotIron, 'C', Items.itemCell1k });
 
-		// Customizable Cell
-		GameRegistry.addShapedRecipe(customCell, new Object[]
-		{ " P ", "SSS", " P ", 'P', appeng.api.Materials.matProcessorBasic, 'S', appeng.api.Items.itemCell1k });
+			// Customizable Cell
+			GameRegistry.addShapedRecipe(customCell, new Object[]
+			{ " P ", "SSS", " P ", 'P', appeng.api.Materials.matProcessorBasic, 'S', appeng.api.Items.itemCell1k });
 
-		// Clusters Phsyical
-		GameRegistry.addShapedRecipe(physicalKilo, new Object[]
-		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', appeng.api.Materials.matStorageCluster });
-		GameRegistry.addShapedRecipe(physicalMega, new Object[]
-		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalKilo });
-		GameRegistry.addShapedRecipe(physicalGiga, new Object[]
-		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalMega });
-		GameRegistry.addShapedRecipe(physicalTera, new Object[]
-		{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalGiga });
+			// Clusters Phsyical
+			GameRegistry.addShapedRecipe(physicalKilo, new Object[]
+			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', appeng.api.Materials.matStorageCluster });
+			GameRegistry.addShapedRecipe(physicalMega, new Object[]
+			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalKilo });
+			GameRegistry.addShapedRecipe(physicalGiga, new Object[]
+			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalMega });
+			GameRegistry.addShapedRecipe(physicalTera, new Object[]
+			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalGiga });
 
-		// Clusters Fluid
-		GameRegistry.addShapedRecipe(fluidCell, new Object[]
-		{ "FCF", "CPC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'C', appeng.api.Materials.matFluxCrystal });
-		GameRegistry.addShapedRecipe(fluidSegment, new Object[]
-		{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidCell });
-		GameRegistry.addShapedRecipe(fluidBlock, new Object[]
-		{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidSegment });
-		GameRegistry.addShapedRecipe(fluidCluster, new Object[]
-		{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidBlock });
+			// Clusters Fluid
+			GameRegistry.addShapedRecipe(fluidCell, new Object[]
+			{ "FCF", "CPC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'C', appeng.api.Materials.matFluxCrystal });
+			GameRegistry.addShapedRecipe(fluidSegment, new Object[]
+			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidCell });
+			GameRegistry.addShapedRecipe(fluidBlock, new Object[]
+			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidSegment });
+			GameRegistry.addShapedRecipe(fluidCluster, new Object[]
+			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidBlock });
 
-		// SolderingStation
-		GameRegistry.addShapedRecipe(solderingStation, new Object[]
-		{ "III", "IDI", "I_I", 'I', Item.ingotIron, 'D', Item.diamond });
+			// SolderingStation
+			GameRegistry.addShapedRecipe(solderingStation, new Object[]
+			{ "III", "IDI", "I_I", 'I', Item.ingotIron, 'D', Item.diamond });
 
-		// ME Item Dropper
-		GameRegistry.addShapedRecipe(meItemDropper, new Object[]
-		{ "CMC", "I_I", "IRI", 'C', Block.cobblestone, 'R', Item.redstone, 'M', appeng.api.Materials.matConversionMatrix, 'I', Item.ingotIron });
+			// ME Item Dropper
+			GameRegistry.addShapedRecipe(meItemDropper, new Object[]
+			{ "CMC", "I_I", "IRI", 'C', Block.cobblestone, 'R', Item.redstone, 'M', appeng.api.Materials.matConversionMatrix, 'I', Item.ingotIron });
 
-		// ME Backup Battery
-		GameRegistry.addShapedRecipe(meBattery, new Object[]
-		{ "EFE", "FPF", "EFE", 'E', appeng.api.Blocks.blkEnergyCell, 'F', appeng.api.Materials.matFluxCrystal, 'P', appeng.api.Materials.matProcessorBasic });
+			// ME Backup Battery
+			GameRegistry.addShapedRecipe(meBattery, new Object[]
+			{ "EFE", "FPF", "EFE", 'E', appeng.api.Blocks.blkEnergyCell, 'F', appeng.api.Materials.matFluxCrystal, 'P', appeng.api.Materials.matProcessorBasic });
 
-		// Blast resistant ME Drive
-		GameRegistry.addShapedRecipe(hardMEDrive, new Object[]
-		{ "OOO", "ODO", "OCO", 'O', Block.obsidian, 'D', appeng.api.Blocks.blkDrive, 'C', appeng.api.Blocks.blkColorlessCableCovered });
+			// Blast resistant ME Drive
+			GameRegistry.addShapedRecipe(hardMEDrive, new Object[]
+			{ "OOO", "ODO", "OCO", 'O', Block.obsidian, 'D', appeng.api.Blocks.blkDrive, 'C', appeng.api.Blocks.blkColorlessCableCovered });
 
-		// ME Fluid Import Bus
-		GameRegistry.addShapedRecipe(fluidImportBus, new Object[]
-		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkInputCablePrecision, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			// ME Fluid Import Bus
+			GameRegistry.addShapedRecipe(fluidImportBus, new Object[]
+			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkInputCablePrecision, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 
-		// ME Fluid Export Bus
-		GameRegistry.addShapedRecipe(fluidExportBus, new Object[]
-		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkOutputCablePrecision, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			// ME Fluid Export Bus
+			GameRegistry.addShapedRecipe(fluidExportBus, new Object[]
+			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkOutputCablePrecision, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 
-		// ME Fluid Storage Bus
-		GameRegistry.addShapedRecipe(fluidStorageBus, new Object[]
-		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkStorageBus, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			// ME Fluid Storage Bus
+			GameRegistry.addShapedRecipe(fluidStorageBus, new Object[]
+			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkStorageBus, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 
-		// ME Fluid Terminal
-		GameRegistry.addShapedRecipe(fluidTerminal, new Object[]
-		{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkTerminal, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', certusTank });
+			// ME Fluid Terminal
+			GameRegistry.addShapedRecipe(fluidTerminal, new Object[]
+			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkTerminal, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', certusTank });
 
-		// ME Fluid Transition Plane
-		GameRegistry.addShapedRecipe(transitionPlaneFluid, new Object[]
-		{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkTransitionPlane, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			// ME Fluid Transition Plane
+			GameRegistry.addShapedRecipe(transitionPlaneFluid, new Object[]
+			{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkTransitionPlane, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 
-		// Certus Tank
-		GameRegistry.addShapedRecipe(certusTank, new Object[]
-		{ "GGG", "G_G", "GCG", 'G', Blocks.blkQuartzGlass, 'C', Blocks.blkColorlessCable, });
+			// ME Fluid Transition Plane
+			GameRegistry.addShapedRecipe(fluidInterface, new Object[]
+			{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkInterface, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
 
-		// Chromia
-		GameRegistry.addShapedRecipe(chromia, new Object[]
-		{ "FFF", "F_F", "FFF", 'F', Item.fishRaw, });
+			// Certus Tank
+			GameRegistry.addShapedRecipe(certusTank, new Object[]
+			{ "GGG", "G_G", "GCG", 'G', Blocks.blkQuartzGlass, 'C', Blocks.blkColorlessCable, });
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(levelEmitter, new Object[]
-		{ Blocks.blkLevelEmitter, "dyeBlue" }));
-		}catch(Throwable e){
+			// Chromia
+			GameRegistry.addShapedRecipe(chromia, new Object[]
+			{ "FFF", "F_F", "FFF", 'F', Item.fishRaw, });
+
+			GameRegistry.addRecipe(new ShapelessOreRecipe(levelEmitter, new Object[]
+			{ Blocks.blkLevelEmitter, "dyeBlue" }));
+		} catch (Throwable e)
+		{
 			System.out.println("There was an ID conflict in extracells! Shutting down now!");
 			System.exit(1);
 		}
@@ -232,6 +242,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
 		GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
 		GameRegistry.registerTileEntity(TileEntityLevelEmitterFluid.class, "tileEntityLevelEmitterFluid");
+		GameRegistry.registerTileEntity(TileEntityInterfaceFluid.class, "tileEntityInterfaceFluid");
 	}
 
 	public void RegisterRenderers()
@@ -294,6 +305,8 @@ public class CommonProxy implements IGuiHandler
 				return new GuiMEBattery(world, (TileEntityMEBattery) tileEntity, player);
 			case 6: // GUI ME Fluid Level Emitter
 				return new GuiLevelEmitterFluid(player.inventory, (TileEntityLevelEmitterFluid) tileEntity);
+			case 7: // GUI ME Fluid Interface
+				return new GuiInterfaceFluid(player.inventory, (TileEntityInterfaceFluid) tileEntity);
 			default:
 				return false;
 			}
@@ -326,6 +339,8 @@ public class CommonProxy implements IGuiHandler
 				return new ContainerMEBattery();
 			case 6: // GUI ME Fluid Level Emitter
 				return new ContainerLevelEmitterFluid(player.inventory, ((TileEntityLevelEmitterFluid) tileEntity).getInventory());
+			case 7: // GUI ME Fluid Interface
+				return new ContainerInterfaceFluid(player.inventory, ((TileEntityInterfaceFluid) tileEntity).getInventory());
 			default:
 				return false;
 			}

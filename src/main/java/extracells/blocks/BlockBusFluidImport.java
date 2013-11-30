@@ -1,29 +1,22 @@
 package extracells.blocks;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import appeng.api.Blocks;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityBusFluidImport;
 
-public class BlockBusFluidImport extends ColorableRotatableECBlock
+public class BlockBusFluidImport extends RotatableColorBlock
 {
 
 	@SideOnly(Side.CLIENT)
 	Icon frontIcon;
-	@SideOnly(Side.CLIENT)
-	Icon sideIcon;
-	@SideOnly(Side.CLIENT)
-	Icon bottomIcon;
-	@SideOnly(Side.CLIENT)
-	Icon topIcon;
 
 	public BlockBusFluidImport(int id)
 	{
@@ -58,36 +51,15 @@ public class BlockBusFluidImport extends ColorableRotatableECBlock
 		return new TileEntityBusFluidImport();
 	}
 
-	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int metadata)
-	{
-		return giveIcon(side, 3);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public Icon giveIcon(int side, int metadata)
-	{
-		return side == metadata ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
-	}
-
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
 	{
 		PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess blockAccess, int x, int y, int z, int side)
+	public Icon getIcon(int side, int metadata)
 	{
-		TileEntity tileentity = blockAccess.getBlockTileEntity(x, y, z);
-		int metadata = blockAccess.getBlockMetadata(x, y, z);
-
-		if (tileentity != null)
-		{
-			return giveIcon(side, metadata);
-		}
-		return null;
+		return Blocks.blkInterface.getIconIndex();
 	}
 
 	@Override
@@ -102,14 +74,5 @@ public class BlockBusFluidImport extends ColorableRotatableECBlock
 			player.openGui(Extracells.instance, 3, world, x, y, z);
 		}
 		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconregister)
-	{
-		this.frontIcon = iconregister.registerIcon("extracells:fluid.bus.import.front");
-		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
-		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
 	}
 }

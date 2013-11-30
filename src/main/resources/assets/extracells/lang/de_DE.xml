@@ -40,6 +40,7 @@
   <entry key="tile.block.certustank.name">ME-Certus-Tank</entry>
   <entry key="tile.block.walrus.name">Walross</entry>
   <entry key="tile.block.fluid.levelemitter.name">ME-Flüssigkeits-Füllstands-Emitter</entry>
+  <entry key="tile.block.fluid.interface.name">ME-Flüssigkeits-Schnittstelle</entry>
   <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
   <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
   <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>
@@ -67,6 +68,13 @@
   <entry key="tooltip.solderingwarning.needstoragecell">Um die Größe deines Speichers zu upgraden, brauchst du einen ME-Speicher je 2048 Bytes!</entry>
   <entry key="tooltip.solderingwarning.needconversionmatrix">Um die Zahl der Typen deines Speichers zu upgraden, brauchst du eine Umrechnungs-Matrix pro Typ!</entry>
   <entry key="tooltip.solderingwarning.cellnotempty">Diese Zelle ist nicht leer!</entry>
+  <entry key="tooltip.direction.0">Unten</entry>
+  <entry key="tooltip.direction.1">Oben</entry>
+  <entry key="tooltip.direction.2">Norden</entry>
+  <entry key="tooltip.direction.3">Süden</entry>
+  <entry key="tooltip.direction.4">Westen</entry>
+  <entry key="tooltip.direction.5">Osten</entry>
+  <entry key="tooltip.direction.6">Unbekannt</entry>
   <entry key="fluid.tile.water">Wasser</entry>
   <entry key="fluid.tile.lava">Lava</entry>
   </properties>

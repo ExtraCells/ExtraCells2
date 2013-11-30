@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityMEDropper;
 
-public class BlockMEDropper extends ColorableRotatableECBlock
+public class BlockMEDropper extends RotatableColorBlock
 {
 	public static final IRegistry dispenseBehaviorRegistry = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
 	@SideOnly(Side.CLIENT)
@@ -51,13 +51,7 @@ public class BlockMEDropper extends ColorableRotatableECBlock
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
-		return giveIcon(side, 3);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public Icon giveIcon(int side, int metadata)
-	{
-		return side == metadata ? (metadata != 1 && metadata != 0 ? this.frontHorizontalIcon : this.frontVerticalIcon) : (metadata != 1 && metadata != 0 ? (side != 1 && side != 0 ? this.sideIcon : this.topIcon) : this.topIcon);
+		return side == 3 ? (metadata != 1 && metadata != 0 ? frontHorizontalIcon : frontVerticalIcon) : (metadata != 1 && metadata != 0 ? (side != 1 && side != 0 ? sideIcon : topIcon) : topIcon);
 	}
 
 	@Override
@@ -69,7 +63,7 @@ public class BlockMEDropper extends ColorableRotatableECBlock
 
 		if (tileentity != null)
 		{
-			return giveIcon(side, metadata);
+			return side == metadata ? (metadata != 1 && metadata != 0 ? frontHorizontalIcon : frontVerticalIcon) : (metadata != 1 && metadata != 0 ? (side != 1 && side != 0 ? sideIcon : topIcon) : topIcon);
 		}
 		return null;
 	}

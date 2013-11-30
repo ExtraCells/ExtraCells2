@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityTerminalFluid;
 
-public class BlockTerminalFluid extends ColorableRotatableECBlock
+public class BlockTerminalFluid extends RotatableColorBlock
 {
 
 	@SideOnly(Side.CLIENT)

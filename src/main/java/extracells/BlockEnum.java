@@ -8,6 +8,7 @@ import extracells.blocks.BlockBusFluidStorage;
 import extracells.blocks.BlockCertusTank;
 import extracells.blocks.BlockFluidTransitionPlane;
 import extracells.blocks.BlockHardMEDrive;
+import extracells.blocks.BlockInterFaceFluid;
 import extracells.blocks.BlockLevelEmitterFluid;
 import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
@@ -28,7 +29,8 @@ public enum BlockEnum
 	FLUIDTRANSITION("tile.block.fluid.transitionplane.name", 508, BlockFluidTransitionPlane.class, "ID for the Fluid Transition Plance", "FluidTransitionPlane"),
 	CERTUSTANK("tile.block.certustank.name", 509, BlockCertusTank.class, "ID for the ME Certus Tank", "CertusTank"),
 	CHROMIA("tile.block.walrus.name", 510, BlockWalrus.class, "ID for the Walrus", "Walrus"),
-	FLUIDLEVELEMITTER("tile.block.fluid.levelemitter.name", 511, BlockLevelEmitterFluid.class, "ID for the ME Fluid Level Emitter", "LevelEmitterFluid");
+	FLUIDLEVELEMITTER("tile.block.fluid.levelemitter.name", 511, BlockLevelEmitterFluid.class, "ID for the ME Fluid Level Emitter", "LevelEmitterFluid"),
+	FLUIDINTERFACE("tile.block.fluid.interface.name", 512, BlockInterFaceFluid.class, "ID for the ME Fluid Interface", "InterfaceFluid");
 
 	private final String internalName;
 	private String description, IDName;

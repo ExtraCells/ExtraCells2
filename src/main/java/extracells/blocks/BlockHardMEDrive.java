@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tile.TileEntityHardMEDrive;
 
-public class BlockHardMEDrive extends ColorableRotatableECBlock
+public class BlockHardMEDrive extends RotatableColorBlock
 {
 	@SideOnly(Side.CLIENT)
 	Icon frontIcon;

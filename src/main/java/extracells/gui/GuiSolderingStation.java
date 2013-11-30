@@ -101,8 +101,13 @@ public class GuiSolderingStation extends GuiScreen
 		ItemStack itemstack = player.inventory.getCurrentItem();
 		if (itemstack != null && itemstack.hasTagCompound())
 		{
-			textfield_size.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_size")));
-			textfield_types.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_types")));
+			try
+			{
+				textfield_size.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_size")));
+				textfield_types.setText(Integer.toString(itemstack.getTagCompound().getInteger("custom_types")));
+			} catch (Throwable e)
+			{
+			}
 		}
 	}
 

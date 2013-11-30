@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidTank;
 
 import org.lwjgl.opengl.GL11;
 
@@ -17,6 +19,7 @@ import extracells.BlockEnum;
 import extracells.container.ContainerBusFluidExport;
 import extracells.gui.widget.WidgetFluidModes;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
+import extracells.gui.widget.WidgetFluidTank;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketBusFluidExport;
 import extracells.tile.TileEntityBusFluidExport;
@@ -50,7 +53,7 @@ public class GuiBusFluidExport extends GuiContainer
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
 

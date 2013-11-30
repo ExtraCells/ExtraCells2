@@ -8,7 +8,7 @@ import net.minecraftforge.client.model.IModelCustom;
 
 public class ModelWalrus extends ModelBase
 {
-	private IModelCustom model;
+	public IModelCustom model;
 
 	public ModelWalrus()
 	{

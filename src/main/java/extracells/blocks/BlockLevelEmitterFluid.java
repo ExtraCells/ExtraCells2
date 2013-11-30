@@ -11,7 +11,7 @@ import cpw.mods.fml.common.network.Player;
 import extracells.Extracells;
 import extracells.tile.TileEntityLevelEmitterFluid;
 
-public class BlockLevelEmitterFluid extends ColorableRotatableECBlock
+public class BlockLevelEmitterFluid extends RotatableColorBlock
 {
 
 	public BlockLevelEmitterFluid(int id)
