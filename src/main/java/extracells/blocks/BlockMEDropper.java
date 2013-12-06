@@ -103,7 +103,8 @@ public class BlockMEDropper extends RotatableColorBlock
 					}
 				} else
 				{
-					player.addChatMessage(StatCollector.translateToLocal("tooltip.item") + ": " + ((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getItem().getDisplayName());
+					ItemStack item = ((TileEntityMEDropper) world.getBlockTileEntity(x, y, z)).getItem();
+					player.addChatMessage(StatCollector.translateToLocal("tooltip.item") + ": " + item != null ? item.getDisplayName() : StatCollector.translateToLocal("tooltip.empty1"));
 				}
 			} else
 			{

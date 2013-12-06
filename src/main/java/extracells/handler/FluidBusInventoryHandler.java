@@ -236,8 +236,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		{
 			if (tank instanceof IFluidHandler)
 			{
-
-				if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
+				if (getTankInfo(tank) != null && (getTankInfo(tank)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid()))
 				{
 
 					int filled = 0;
