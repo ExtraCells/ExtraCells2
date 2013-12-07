@@ -83,8 +83,10 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean containsItemType(IAEItemStack aeitemstack)
 	{
-		if (aeitemstack != null && tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
+		if (aeitemstack != null && tank != null && getTankInfo(tank) != null && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
 		{
+			if (getTankInfo(tank)[0].fluid == null)
+				return false;
 			return aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry() && aeitemstack.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID;
 		}
 		return false;
@@ -189,24 +191,16 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public IItemList getAvailableItems(IItemList out)
 	{
-		try
+		if (tank != null && tank instanceof IFluidHandler)
 		{
-			if (tank != null && tank instanceof IFluidHandler)
+			if (getTankInfo(tank) != null && getTankInfo(tank)[0].fluid != null && getTankInfo(tank)[0].fluid.getFluid() != null)
 			{
-				if (getTankInfo(tank)[0].fluid != null && getTankInfo(tank)[0].fluid.getFluid() != null)
-				{
-					IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, getTankInfo(tank)[0].fluid.getFluid().getID()));
-					currentItemStack.setStackSize(getTankInfo(tank)[0].fluid.amount);
-					out.add(currentItemStack);
-				}
-
+				IAEItemStack currentItemStack = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, getTankInfo(tank)[0].fluid.getFluid().getID()));
+				currentItemStack.setStackSize(getTankInfo(tank)[0].fluid.amount);
+				out.add(currentItemStack);
 			}
-		} catch (Throwable e)
-		{
-			System.out.println("I prevented a crash (I HOPE SO). Please send me the following error! ~M3gaF3ak/Leonelf");
-			e.printStackTrace();
-		}
 
+		}
 		return out;
 	}
 
@@ -330,15 +324,20 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 	public FluidTankInfo[] getTankInfo(TileEntity tileEntity)
 	{
-		FluidTankInfo[] tankArray;
-		IFluidHandler tankTile = (IFluidHandler) tileEntity;
-
-		if (tankTile != null && ((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
+		if (tileEntity instanceof IFluidHandler)
 		{
-			return tankTile.getTankInfo(facing);
-		} else if (tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
-		{
-			return tankTile.getTankInfo(ForgeDirection.UNKNOWN);
+			IFluidHandler tankTile = (IFluidHandler) tileEntity;
+			if (tankTile != null)
+			{
+				FluidTankInfo[] tankArray;
+				if (((IFluidHandler) tileEntity).getTankInfo(facing) != null && ((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
+				{
+					return tankTile.getTankInfo(facing);
+				} else if (tankTile.getTankInfo(ForgeDirection.UNKNOWN) != null && tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+				{
+					return tankTile.getTankInfo(ForgeDirection.UNKNOWN);
+				}
+			}
 		}
 		return null;
 	}

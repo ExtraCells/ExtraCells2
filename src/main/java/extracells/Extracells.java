@@ -1,7 +1,13 @@
 package extracells;
 
+import java.util.List;
+
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import appeng.api.Util;
@@ -91,6 +97,5 @@ public class Extracells
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-
 	}
 }
