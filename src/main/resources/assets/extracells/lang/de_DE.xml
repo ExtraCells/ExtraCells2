@@ -41,6 +41,7 @@
   <entry key="tile.block.walrus.name">Walross</entry>
   <entry key="tile.block.fluid.levelemitter.name">ME-Flüssigkeits-Füllstands-Emitter</entry>
   <entry key="tile.block.fluid.interface.name">ME-Flüssigkeits-Schnittstelle</entry>
+  <entry key="tile.block.fluid.void.name">Flüssigkeits-Leere</entry>
   <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
   <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
   <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>

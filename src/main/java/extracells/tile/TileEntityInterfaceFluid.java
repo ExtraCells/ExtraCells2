@@ -39,7 +39,21 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	{
 		for (int i = 0; i < tanks.length; i++)
 		{
-			tanks[i] = new FluidTank(10000);
+			tanks[i] = new FluidTank(10000)
+			{
+				public FluidTank readFromNBT(NBTTagCompound nbt)
+				{
+					if (!nbt.hasKey("Empty"))
+					{
+						FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+						setFluid(fluid);
+					} else
+					{
+						setFluid(null);
+					}
+					return this;
+				}
+			};
 		}
 	}
 
@@ -96,6 +110,8 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 		IAEItemStack extracted = getGrid().getCellArray().extractItems(request);
 		if (extracted == null)
 			return null;
+
+		getGrid().useMEEnergy(extracted.getStackSize() / 4, "FluidInterface");
 		return new FluidStack(extracted.getItemDamage(), (int) extracted.getStackSize());
 	}
 
@@ -115,6 +131,8 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 		}
 		if (added == null)
 			return toFill.amount;
+
+		getGrid().useMEEnergy(added.getStackSize() / 4, "FluidInterface");
 		return toFill.amount - (int) added.getStackSize();
 	}
 

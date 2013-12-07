@@ -16,7 +16,21 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 {
 
-	protected FluidTank tank = new FluidTank(32000);
+	protected FluidTank tank = new FluidTank(32000)
+	{
+		public FluidTank readFromNBT(NBTTagCompound nbt)
+		{
+			if (!nbt.hasKey("Empty"))
+			{
+				FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+				setFluid(fluid);
+			} else
+			{
+				setFluid(null);
+			}
+			return this;
+		}
+	};
 
 	public Packet getDescriptionPacket()
 	{
@@ -51,7 +65,6 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 
 	public void readFromNBTWithoutCoords(NBTTagCompound tag)
 	{
-		tank = new FluidTank(32000);
 		tank.readFromNBT(tag);
 	}
 
