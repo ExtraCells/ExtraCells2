@@ -12,18 +12,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import extracells.tile.TileEntityCertusTank;
 
 public class ModelCertusTank extends ModelBase
 {
 	ModelRenderer Shape1;
-	
+
 	public ModelCertusTank()
 	{
 		textureWidth = 64;
@@ -56,18 +55,18 @@ public class ModelCertusTank extends ModelBase
 
 		if (tileEntity != null && ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null)
 		{
-			FluidStack storedFluid = ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
-			int tankCapacity = ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].capacity;
+			Fluid storedFluid = ((TileEntityCertusTank) tileEntity).getRenderFluid();
+			float scale = ((TileEntityCertusTank) tileEntity).getRenderScale();
 
-			if (storedFluid != null && storedFluid.getFluid() != null && storedFluid.amount > 0)
+			if (storedFluid != null && scale > 0)
 			{
-				Icon fluidIcon = storedFluid.getFluid().getIcon();
+				Icon fluidIcon = storedFluid.getIcon();
 
 				Tessellator tessellator = Tessellator.instance;
 				RenderBlocks renderer = new RenderBlocks();
 
 				GL11.glScalef(1.0F, -1.0F, 1.0F);
-				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, (float) ((float) storedFluid.amount / (float) tankCapacity) * 0.999F, 0.92F);
+				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, scale * 0.999F, 0.92F);
 				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 				GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 

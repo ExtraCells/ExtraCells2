@@ -53,46 +53,45 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	@Override
 	public void updateEntity()
 	{
+		if (getGrid() == null || worldObj.isRemote)
+			return;
+
 		TileEntity tankTE = worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ);
-
-		if (getGrid() != null && !worldObj.isRemote)
+		FluidStack tankFluid = null;
+		if (tankTE instanceof IFluidHandler)
 		{
-			FluidStack tankFluid = null;
-			if (tankTE instanceof IFluidHandler)
+			IFluidHandler tank = (IFluidHandler) tankTE;
+			if (tank != null)
 			{
-				IFluidHandler tank = (IFluidHandler) tankTE;
-				if (tank != null)
-				{
-					FluidTankInfo[] tankInfos = tank.getTankInfo(getFacing().getOpposite());
+				FluidTankInfo[] tankInfos = tank.getTankInfo(getFacing().getOpposite());
 
-					if (tankInfos != null)
-					{
-						if (tankInfos[0] != null)
-							tankFluid = tankInfos[0].fluid;
-					}
+				if (tankInfos != null)
+				{
+					if (tankInfos[0] != null)
+						tankFluid = tankInfos[0].fluid;
 				}
 			}
+		}
 
-			if (tankFluid != lastFluid)
+		if (tankFluid != null && !tankFluid.isFluidStackIdentical(lastFluid) || lastFluid != null && !lastFluid.isFluidStackIdentical(tankFluid))
+		{
+			if (lastFluid != null)
 			{
-				if (lastFluid != null)
-				{
-					IAEItemStack toRemove = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, lastFluid.fluidID));
-					toRemove.setStackSize(lastFluid.amount);
-					getGrid().notifyExtractItems(toRemove);
-				}
+				IAEItemStack toRemove = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, lastFluid.fluidID));
+				toRemove.setStackSize(lastFluid.amount);
+				getGrid().notifyExtractItems(toRemove);
+			}
 
-				if (tankFluid != null)
-				{
-					IAEItemStack toAdd = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, tankFluid.fluidID));
-					toAdd.setStackSize(tankFluid.amount);
-					getGrid().notifyAddItems(toAdd);
+			if (tankFluid != null)
+			{
+				IAEItemStack toAdd = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, tankFluid.fluidID));
+				toAdd.setStackSize(tankFluid.amount);
+				getGrid().notifyAddItems(toAdd);
 
-					lastFluid = tankFluid.copy();
-				} else
-				{
-					lastFluid = null;
-				}
+				lastFluid = tankFluid.copy();
+			} else
+			{
+				lastFluid = null;
 			}
 		}
 	}

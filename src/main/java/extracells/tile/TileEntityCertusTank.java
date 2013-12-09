@@ -16,6 +16,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 {
 
+	private FluidStack lastBeforeUpdate = null;
 	protected FluidTank tank = new FluidTank(32000)
 	{
 		public FluidTank readFromNBT(NBTTagCompound nbt)
@@ -142,8 +143,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 		}
 
 		FluidStack drained = tank.drain(fluid.amount, doDrain);
-		if (drained != null && drained.amount > 0)
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+		compareAndUpdate();
 
 		if (drained == null || drained.amount < fluid.amount)
 		{
@@ -193,8 +193,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 		}
 
 		int filled = tank.fill(fluid, doFill);
-		if (filled > 0)
-			PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+		compareAndUpdate();
 
 		if (filled < fluid.amount)
 		{
@@ -274,5 +273,42 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	{
 		FluidStack tankFluid = tank.getFluid();
 		return tankFluid != null && tankFluid.amount > 0 ? tankFluid.getFluid() : null;
+	}
+
+	public void compareAndUpdate()
+	{
+		FluidStack current = tank.getFluid();
+		if (current != null)
+		{
+			if (lastBeforeUpdate != null)
+			{
+				if (Math.abs(current.amount - lastBeforeUpdate.amount) >= 500)
+				{
+					PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+					lastBeforeUpdate = current.copy();
+				}
+			} else
+			{
+				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+				lastBeforeUpdate = current.copy();
+			}
+		} else
+		{
+			if (lastBeforeUpdate != null)
+			{
+				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+				lastBeforeUpdate = null;
+			}
+		}
+	}
+
+	public Fluid getRenderFluid()
+	{
+		return tank.getFluid() != null ? tank.getFluid().getFluid() : null;
+	}
+
+	public float getRenderScale()
+	{
+		return (float) tank.getFluidAmount() / tank.getCapacity();
 	}
 }
