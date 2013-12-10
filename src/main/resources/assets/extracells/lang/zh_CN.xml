@@ -38,7 +38,11 @@
   <entry key="tile.block.bus.supplier.name">ME物品供应总线</entry>
   <entry key="tile.block.fluid.terminal.name">ME流体访问终端</entry>
   <entry key="tile.block.fluid.transitionplane.name">ME流体转换板</entry>
-  <entry key="tile.block.certustank.name">此处输入名称! :D</entry>
+  <entry key="tile.block.certustank.name">赛特斯水槽</entry>
+  <entry key="tile.block.walrus.name">海象</entry>
+  <entry key="tile.block.fluid.levelemitter.name">ME液体信号发射器</entry>
+  <entry key="tile.block.fluid.interface.name">ME液体接口</entry>
+  <entry key="tile.block.fluid.void.name">虚空液体接口</entry>
   <entry key="tooltip.belongsto">该存储器属于:</entry>
   <entry key="tooltip.notyours">你是这台存储驱动器的拥有者!</entry>
   <entry key="tooltip.accessgranted">授权访问!</entry>
