@@ -33,25 +33,25 @@ public class ClientProxy extends CommonProxy
 		try
 		{
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolderingStation.class, new TileEntityRendererSolderingStation());
-			MinecraftForgeClient.registerItemRenderer(BlockEnum.SOLDERINGSTATION.getBlockEntry().blockID, new ItemRendererSolderingStation());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.SOLDERINGSTATION.getBlockInstance().blockID, new ItemRendererSolderingStation());
 
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidStorage.class, new TileEntityRendererBusFluidStorage());
-			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDSTORAGE.getBlockEntry().blockID, new ItemRendererBusFluidStorage());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDSTORAGE.getBlockInstance().blockID, new ItemRendererBusFluidStorage());
 
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidImport.class, new TileEntityRendererBusFluidImport());
-			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDIMPORT.getBlockEntry().blockID, new ItemRendererBusFluidImport());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDIMPORT.getBlockInstance().blockID, new ItemRendererBusFluidImport());
 
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBusFluidExport.class, new TileEntityRendererBusFluidExport());
-			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDEXPORT.getBlockEntry().blockID, new ItemRendererBusFluidExport());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDEXPORT.getBlockInstance().blockID, new ItemRendererBusFluidExport());
 
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCertusTank.class, new TileEntityRendererCertusTank());
-			MinecraftForgeClient.registerItemRenderer(BlockEnum.CERTUSTANK.getBlockEntry().blockID, new ItemRendererCertusTank());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.CERTUSTANK.getBlockInstance().blockID, new ItemRendererCertusTank());
 
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRedererWalrus());
-			MinecraftForgeClient.registerItemRenderer(BlockEnum.CHROMIA.getBlockEntry().blockID, new ItemRendererWalrus());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.CHROMIA.getBlockInstance().blockID, new ItemRendererWalrus());
 
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLevelEmitterFluid.class, new TileEntityRendererLevelEmitterFluid());
-			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDLEVELEMITTER.getBlockEntry().blockID, new ItemRendererLevelEmitterFluid());
+			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDLEVELEMITTER.getBlockInstance().blockID, new ItemRendererLevelEmitterFluid());
 		} catch (NullPointerException e)
 		{
 			System.out.println("Mod ExtraCells: Another mod probably overrid an ExtraCells item causing EC to cancel the registration of ItemRenderers!");

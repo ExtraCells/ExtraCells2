@@ -150,8 +150,8 @@ public class ItemStorageFluid extends Item
 	{
 		if (p.isSneaking())
 		{
-			if (Util.getCellRegistry().getHandlerForCell(i).storedItemCount() == 0 && p.inventory.addItemStackToInventory(new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 1)))
-				return new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, i.getItemDamage() + 4); // offset of 4 because FLUID cell
+			if (Util.getCellRegistry().getHandlerForCell(i).storedItemCount() == 0 && p.inventory.addItemStackToInventory(new ItemStack(ItemEnum.STORAGECASING.getItemInstance(), 1, 1)))
+				return new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, i.getItemDamage() + 4); // offset of 4 because FLUID cell
 		}
 		return i;
 	}

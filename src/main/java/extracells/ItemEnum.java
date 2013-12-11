@@ -50,12 +50,12 @@ public enum ItemEnum
 		return ID;
 	}
 
-	public void setItemEntry(Item item)
+	public void setItemInstance(Item item)
 	{
 		this.item = item;
 	}
 
-	public Item getItemEntry()
+	public Item getItemInstance()
 	{
 		return item;
 	}

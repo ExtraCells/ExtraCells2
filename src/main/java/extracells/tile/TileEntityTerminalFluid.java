@@ -224,7 +224,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		{
 			for (IAEItemStack itemstack : currentItems)
 			{
-				if (itemstack.getItem() == FLUIDDISPLAY.getItemEntry() && itemstack.getStackSize() > 0)
+				if (itemstack.getItem() == FLUIDDISPLAY.getItemInstance() && itemstack.getStackSize() > 0)
 				{
 					fluidsInNetwork.add(new SpecialFluidStack(itemstack.getItemDamage(), itemstack.getStackSize()));
 				}
@@ -281,7 +281,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 	private boolean fillFluid(FluidStack toImport)
 	{
-		IAEItemStack toFill = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 0, toImport.fluidID));
+		IAEItemStack toFill = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), 0, toImport.fluidID));
 		toFill.setStackSize(toImport.amount);
 		if (grid != null)
 		{
@@ -304,7 +304,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 	private boolean drainFluid(FluidStack toExport)
 	{
-		IAEItemStack toDrain = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 0, toExport.fluidID));
+		IAEItemStack toDrain = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), 0, toExport.fluidID));
 		toDrain.setStackSize(toExport.amount);
 
 		if (grid != null)

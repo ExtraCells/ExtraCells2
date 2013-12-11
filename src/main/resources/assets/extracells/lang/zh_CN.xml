@@ -25,7 +25,6 @@
   <entry key="item.storagecomponent.fluid.cluster">流体存储簇</entry>
   <entry key="item.storage.physical_secure.encrypted">加密单元-已加密</entry>
   <entry key="item.storage.physical_secure.decrypted">加密单元-已破译</entry>
-  <entry key="item.casing.advanced">高级存储单元仓</entry>
   <entry key="item.casing.advanced.physical">高级存储单元仓</entry>
   <entry key="item.casing.advanced.fluid">高级流体存储单元仓</entry>
   <entry key="tile.block.solderingstation.name">焊接台</entry>
@@ -59,11 +58,23 @@
   <entry key="tooltip.dropperunlocked">投掷器已解锁</entry> 
   <entry key="tooltip.dropset">投掷设置为</entry> 
   <entry key="tooltip.amount">数量</entry> 
-  <entry key="tooltip.fluid">流体</entry> 
+  <entry key="tooltip.fluid">流体</entry>
+  <entry key="tooltip.fluidmode">Moving-Mode</entry>
+  <entry key="tooltip.fluidmode.move">Moves $amount mb/t!</entry> 
+  <entry key="tooltip.fluidmode.cost">Costs $cost pu/t!</entry> 
   <entry key="tooltip.solderingwarning.tutorial">将可调式存储单元放入快捷栏，然后拿着它使用焊接台!</entry>
   <entry key="tooltip.solderingwarning.nospacestoragecell">在物品栏腾出空间来取出ME存储单元!</entry>
   <entry key="tooltip.solderingwarning.nospaceconversionmatrix">在物品栏腾出空间来取出ME转换矩阵!</entry>
   <entry key="tooltip.solderingwarning.needstoragecell">为提升存储器容量，每增加2048字节你需要一个ME存储单元!</entry>
   <entry key="tooltip.solderingwarning.needconversionmatrix">为提升存储器存储物品类型数量，每增加一个类型你需要一个ME转换矩阵!</entry>
   <entry key="tooltip.solderingwarning.cellnotempty">该单元不是空单元!</entry>
+  <entry key="tooltip.direction.0">下</entry>
+  <entry key="tooltip.direction.1">上</entry>
+  <entry key="tooltip.direction.2">北</entry>
+  <entry key="tooltip.direction.3">南</entry>
+  <entry key="tooltip.direction.4">西</entry>
+  <entry key="tooltip.direction.5">东</entry>
+  <entry key="tooltip.direction.6">未知</entry>
+  <entry key="fluid.tile.water">水</entry>
+  <entry key="fluid.tile.lava">岩浆</entry>
   </properties>

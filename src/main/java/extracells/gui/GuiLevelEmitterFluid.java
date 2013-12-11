@@ -77,7 +77,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j)
 	{
-		this.fontRenderer.drawString(BlockEnum.FLUIDLEVELEMITTER.getLocalizedName(), 5, 5, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
 
 		if (tileentity instanceof TileEntityLevelEmitterFluid)
 		{

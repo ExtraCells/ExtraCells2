@@ -258,8 +258,8 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 			{
 				if (Util.getCellRegistry().getHandlerForCell(i).storedItemCount() == 0)
 				{
-					if (p.inventory.addItemStackToInventory(new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 0)))
-						return new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, i.getItemDamage());
+					if (p.inventory.addItemStackToInventory(new ItemStack(ItemEnum.STORAGECASING.getItemInstance(), 1, 0)))
+						return new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, i.getItemDamage());
 				}
 			} else if (i.getItemDamage() == 4)
 			{

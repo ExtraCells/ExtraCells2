@@ -105,7 +105,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	{
 		if (getGrid() == null || getGrid().getCellArray() == null || toDrain == null)
 			return null;
-		IAEItemStack request = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, toDrain.fluidID));
+		IAEItemStack request = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, toDrain.fluidID));
 		request.setStackSize(toDrain.amount);
 		IAEItemStack extracted = getGrid().getCellArray().extractItems(request);
 		if (extracted == null)
@@ -119,7 +119,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	{
 		if (getGrid() == null || getGrid().getCellArray() == null || toFill == null)
 			return 0;
-		IAEItemStack request = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, toFill.fluidID));
+		IAEItemStack request = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, toFill.fluidID));
 		request.setStackSize(toFill.amount);
 		IAEItemStack added = null;
 		if (doFill)

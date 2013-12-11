@@ -11,13 +11,13 @@ public class FluidCellHandler implements ICellHandler
 	@Override
 	public boolean isCell(ItemStack is)
 	{
-		return is != null ? is.getItem() == ItemEnum.STORAGEFLUID.getItemEntry() : false;
+		return is != null ? is.getItem() == ItemEnum.STORAGEFLUID.getItemInstance() : false;
 	}
 
 	@Override
 	public IMEInventoryHandler getCellHandler(ItemStack itemstack)
 	{
-		if (itemstack.getItem() == ItemEnum.STORAGEFLUID.getItemEntry())
+		if (itemstack.getItem() == ItemEnum.STORAGEFLUID.getItemInstance())
 		{
 			ItemStorageFluid cell = (ItemStorageFluid) itemstack.getItem();
 			return new FluidStorageInventoryHandler(itemstack, cell.getBytes(itemstack), cell.getTotalTypes(itemstack));

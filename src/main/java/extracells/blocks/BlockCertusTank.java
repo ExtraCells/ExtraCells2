@@ -136,7 +136,7 @@ public class BlockCertusTank extends BlockContainer
 		TileEntity worldTE = world.getBlockTileEntity(x, y, z);
 		if (worldTE != null && worldTE instanceof TileEntityCertusTank)
 		{
-			ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlockEntry(), 1);
+			ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlockInstance(), 1);
 
 			((TileEntityCertusTank) worldTE).writeToNBTWithoutCoords(tileEntity);
 

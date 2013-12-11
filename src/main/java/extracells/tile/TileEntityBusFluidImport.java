@@ -110,7 +110,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 			if (drainable != null && drainable.amount > 0)
 			{
 				List<Fluid> fluidFilter = getFilterFluids(filterSlots);
-				IAEItemStack toImport = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), drainable.amount, drainable.fluidID));
+				IAEItemStack toImport = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), drainable.amount, drainable.fluidID));
 
 				IMEInventoryHandler cellArray = getGrid().getCellArray();
 				if (cellArray != null)
@@ -359,7 +359,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 			IAEItemStack added;
 			int amount = resource.amount;
 			int fluidID = resource.fluidID;
-			IAEItemStack temp = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), amount, fluidID));
+			IAEItemStack temp = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), amount, fluidID));
 			temp.setStackSize(amount);
 			IMEInventoryHandler cellArray = getGrid().getCellArray();
 			if (cellArray != null)
@@ -405,7 +405,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 		if (grid != null)
 		{
 			IMEInventoryHandler cellArray = grid.getCellArray();
-			return cellArray != null && fluid != null && cellArray.canAccept(Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, fluid.getID())));
+			return cellArray != null && fluid != null && cellArray.canAccept(Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), 1, fluid.getID())));
 		}
 		return false;
 	}
@@ -429,7 +429,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 			{
 				for (IAEItemStack item : cellArray.getAvailableItems())
 				{
-					if (item.getItem() == FLUIDDISPLAY.getItemEntry())
+					if (item.getItem() == FLUIDDISPLAY.getItemInstance())
 						tankInfo.add(new FluidTankInfo(new FluidStack(FluidRegistry.getFluid(item.getItemDamage()), (int) item.getStackSize()), (int) getGrid().getCellArray().freeBytes()));
 				}
 

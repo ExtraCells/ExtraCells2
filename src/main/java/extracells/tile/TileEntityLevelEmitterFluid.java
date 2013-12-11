@@ -82,7 +82,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 		{
 			Block neighbor = Block.blocksList[worldObj.getBlockId(xCoord + currentSide.offsetX, yCoord + currentSide.offsetY, zCoord + currentSide.offsetZ)];
 			if (neighbor != null)
-				neighbor.onNeighborBlockChange(worldObj, xCoord + currentSide.offsetX, yCoord + currentSide.offsetY, zCoord + currentSide.offsetZ, BlockEnum.FLUIDLEVELEMITTER.getBlockEntry().blockID);
+				neighbor.onNeighborBlockChange(worldObj, xCoord + currentSide.offsetX, yCoord + currentSide.offsetY, zCoord + currentSide.offsetZ, BlockEnum.FLUIDLEVELEMITTER.getBlockInstance().blockID);
 		}
 		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 		worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
@@ -110,7 +110,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 			{
 				if (currentStack != null)
 				{
-					if (currentStack.getItem() == FLUIDDISPLAY.getItemEntry())
+					if (currentStack.getItem() == FLUIDDISPLAY.getItemInstance())
 					{
 						if (currentStack.getItemDamage() == filterSlots[0].getItemDamage())
 						{

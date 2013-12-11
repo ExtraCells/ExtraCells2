@@ -40,7 +40,7 @@ public class Extracells
 	{
 		public ItemStack getIconItemStack()
 		{
-			return new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 4);
+			return new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemInstance(), 1, 4);
 		}
 	};
 
@@ -61,6 +61,7 @@ public class Extracells
 		// Config
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
+		
 		// Items
 		for (ItemEnum current : ItemEnum.values())
 		{
@@ -86,7 +87,7 @@ public class Extracells
 		proxy.RegisterTileEntities();
 		proxy.addRecipes();
 		if (!debug)
-			Util.addBasicBlackList(ItemEnum.FLUIDDISPLAY.getItemEntry().itemID, OreDictionary.WILDCARD_VALUE);
+			Util.addBasicBlackList(ItemEnum.FLUIDDISPLAY.getItemInstance().itemID, OreDictionary.WILDCARD_VALUE);
 		Util.getCellRegistry().addCellHandler(new FluidCellHandler());
 		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
 		renderID = RenderingRegistry.getNextAvailableRenderId();

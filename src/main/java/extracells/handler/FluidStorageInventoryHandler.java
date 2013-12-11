@@ -34,7 +34,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	private List<FluidStack> cachedInventory;
 	private List<Fluid> cachedPreformats = new ArrayList<Fluid>(63);
 	private String cachedName;
-	private Item fluidItem = ItemEnum.FLUIDDISPLAY.getItemEntry();
+	private Item fluidItem = ItemEnum.FLUIDDISPLAY.getItemInstance();
 	private ListMode preformattedMode = ListMode.WHITELIST;
 
 	public FluidStorageInventoryHandler(ItemStack itemstack, long totalBytes, int totalTypes)
@@ -394,7 +394,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 			Fluid current = cachedPreformats.get(i);
 			if (current != null)
 			{
-				fluidItemList.add(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, current.getID()));
+				fluidItemList.add(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, current.getID()));
 			}
 		}
 		return fluidItemList;
@@ -541,7 +541,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 						FluidStack toWrite = FluidContainerRegistry.getFluidForFilledItem(currentItemStack);
 						cachedPreformats.add(toWrite.getFluid());
 						nbt.setString("PreformattedFluidName#" + i, FluidContainerRegistry.getFluidForFilledItem(currentItemStack).getFluid().getName());
-					} else if (currentItemStack.getItem() == ItemEnum.FLUIDDISPLAY.getItemEntry())
+					} else if (currentItemStack.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance())
 					{
 						int toWrite = currentItemStack.getItemDamage();
 						cachedPreformats.add(FluidRegistry.getFluid(toWrite));

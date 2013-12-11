@@ -31,8 +31,6 @@ import extracells.gui.GuiInterfaceFluid;
 import extracells.gui.GuiLevelEmitterFluid;
 import extracells.gui.GuiMEBattery;
 import extracells.gui.GuiTerminalFluid;
-import extracells.items.ItemBlockCertusTank;
-import extracells.items.ItemBlockSpecial;
 import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
@@ -53,48 +51,48 @@ public class CommonProxy implements IGuiHandler
 	{
 		try
 		{
-			ItemStack storagePhysical256k = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 0);
-			ItemStack storagePhysical1m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 1);
-			ItemStack storagePhysical4m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 2);
-			ItemStack storagePhysical16m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 3);
+			ItemStack storagePhysical256k = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemInstance(), 1, 0);
+			ItemStack storagePhysical1m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemInstance(), 1, 1);
+			ItemStack storagePhysical4m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemInstance(), 1, 2);
+			ItemStack storagePhysical16m = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemInstance(), 1, 3);
 
-			ItemStack storageFluid1k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 0);
-			ItemStack storageFluid4k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 1);
-			ItemStack storageFluid16k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 2);
-			ItemStack storageFluid64k = new ItemStack(ItemEnum.STORAGEFLUID.getItemEntry(), 1, 3);
+			ItemStack storageFluid1k = new ItemStack(ItemEnum.STORAGEFLUID.getItemInstance(), 1, 0);
+			ItemStack storageFluid4k = new ItemStack(ItemEnum.STORAGEFLUID.getItemInstance(), 1, 1);
+			ItemStack storageFluid16k = new ItemStack(ItemEnum.STORAGEFLUID.getItemInstance(), 1, 2);
+			ItemStack storageFluid64k = new ItemStack(ItemEnum.STORAGEFLUID.getItemInstance(), 1, 3);
 
-			ItemStack containerCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 4);
+			ItemStack containerCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemInstance(), 1, 4);
 
-			ItemStack encryptableCell = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemEntry(), 1, 0);
+			ItemStack encryptableCell = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemInstance(), 1, 0);
 
-			ItemStack customCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemEntry(), 1, 5);
+			ItemStack customCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemInstance(), 1, 5);
 
-			ItemStack physicalKilo = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 0);
-			ItemStack physicalMega = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 1);
-			ItemStack physicalGiga = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 2);
-			ItemStack physicalTera = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 3);
-			ItemStack fluidCell = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 4);
-			ItemStack fluidSegment = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 5);
-			ItemStack fluidBlock = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 6);
-			ItemStack fluidCluster = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemEntry(), 1, 7);
+			ItemStack physicalKilo = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 0);
+			ItemStack physicalMega = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 1);
+			ItemStack physicalGiga = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 2);
+			ItemStack physicalTera = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 3);
+			ItemStack fluidCell = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 4);
+			ItemStack fluidSegment = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 5);
+			ItemStack fluidBlock = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 6);
+			ItemStack fluidCluster = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 7);
 
-			ItemStack advancedStorageCasingPhysical = new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 0);
-			ItemStack advancedStorageCasingFluid = new ItemStack(ItemEnum.STORAGECASING.getItemEntry(), 1, 1);
+			ItemStack advancedStorageCasingPhysical = new ItemStack(ItemEnum.STORAGECASING.getItemInstance(), 1, 0);
+			ItemStack advancedStorageCasingFluid = new ItemStack(ItemEnum.STORAGECASING.getItemInstance(), 1, 1);
 
-			ItemStack meItemDropper = new ItemStack(BlockEnum.MEDROPPER.getBlockEntry(), 1);
-			ItemStack solderingStation = new ItemStack(BlockEnum.SOLDERINGSTATION.getBlockEntry(), 1);
-			ItemStack meBattery = new ItemStack(BlockEnum.MEBATTERY.getBlockEntry(), 1);
-			ItemStack hardMEDrive = new ItemStack(BlockEnum.BLASTRESISTANTMEDRIVE.getBlockEntry(), 1);
-			ItemStack fluidImportBus = new ItemStack(BlockEnum.FLUIDIMPORT.getBlockEntry(), 1);
-			ItemStack fluidExportBus = new ItemStack(BlockEnum.FLUIDEXPORT.getBlockEntry(), 1);
-			ItemStack fluidStorageBus = new ItemStack(BlockEnum.FLUIDSTORAGE.getBlockEntry(), 1);
-			ItemStack fluidTerminal = new ItemStack(BlockEnum.FLUIDTERMINAL.getBlockEntry(), 1);
-			ItemStack transitionPlaneFluid = new ItemStack(BlockEnum.FLUIDTRANSITION.getBlockEntry(), 1);
-			ItemStack certusTank = new ItemStack(BlockEnum.CERTUSTANK.getBlockEntry(), 1);
-			ItemStack chromia = new ItemStack(BlockEnum.CHROMIA.getBlockEntry(), 1);
-			ItemStack levelEmitter = new ItemStack(BlockEnum.FLUIDLEVELEMITTER.getBlockEntry(), 1);
-			ItemStack fluidInterface = new ItemStack(BlockEnum.FLUIDINTERFACE.getBlockEntry(), 1);
-
+			ItemStack meItemDropper = new ItemStack(BlockEnum.MEDROPPER.getBlockInstance(), 1);
+			ItemStack solderingStation = new ItemStack(BlockEnum.SOLDERINGSTATION.getBlockInstance(), 1);
+			ItemStack meBattery = new ItemStack(BlockEnum.MEBATTERY.getBlockInstance(), 1);
+			ItemStack hardMEDrive = new ItemStack(BlockEnum.BLASTRESISTANTMEDRIVE.getBlockInstance(), 1);
+			ItemStack fluidImportBus = new ItemStack(BlockEnum.FLUIDIMPORT.getBlockInstance(), 1);
+			ItemStack fluidExportBus = new ItemStack(BlockEnum.FLUIDEXPORT.getBlockInstance(), 1);
+			ItemStack fluidStorageBus = new ItemStack(BlockEnum.FLUIDSTORAGE.getBlockInstance(), 1);
+			ItemStack fluidTerminal = new ItemStack(BlockEnum.FLUIDTERMINAL.getBlockInstance(), 1);
+			ItemStack transitionPlaneFluid = new ItemStack(BlockEnum.FLUIDTRANSITION.getBlockInstance(), 1);
+			ItemStack certusTank = new ItemStack(BlockEnum.CERTUSTANK.getBlockInstance(), 1);
+			ItemStack chromia = new ItemStack(BlockEnum.CHROMIA.getBlockInstance(), 1);
+			ItemStack levelEmitter = new ItemStack(BlockEnum.FLUIDLEVELEMITTER.getBlockInstance(), 1);
+			ItemStack fluidInterface = new ItemStack(BlockEnum.FLUIDINTERFACE.getBlockInstance(), 1);
+			ItemStack fluidVoid = new ItemStack(BlockEnum.FLUIDVOID.getBlockInstance(), 1);
 			// Advanced Casing Physical
 			GameRegistry.addShapedRecipe(advancedStorageCasingPhysical, new Object[]
 			{ "GFG", "F_F", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond });
@@ -219,8 +217,13 @@ public class CommonProxy implements IGuiHandler
 			GameRegistry.addShapedRecipe(chromia, new Object[]
 			{ "FFF", "F_F", "FFF", 'F', Item.fishRaw, });
 
+			// Level Emitter
 			GameRegistry.addRecipe(new ShapelessOreRecipe(levelEmitter, new Object[]
 			{ Blocks.blkLevelEmitter, "dyeBlue" }));
+
+			// Fluid Void
+			GameRegistry.addShapedRecipe(fluidVoid, new Object[]
+			{ "FIF", "IEI", "FIF", 'F', Materials.matFluxCrystal, 'E', new ItemStack(Item.enderPearl, 1), 'I', new ItemStack(Item.ingotIron, 1) });
 		} catch (Throwable e)
 		{
 			System.out.println("There was an ID conflict in extracells! Shutting down now!");
@@ -256,7 +259,7 @@ public class CommonProxy implements IGuiHandler
 		{
 			try
 			{
-				current.setItemEntry(current.getItemClass().getConstructor(int.class).newInstance(current.getID()));
+				current.setItemInstance(current.getItemClass().getConstructor(int.class).newInstance(current.getID()));
 			} catch (Throwable e)
 			{
 			}
@@ -269,14 +272,8 @@ public class CommonProxy implements IGuiHandler
 		{
 			try
 			{
-				current.setBlockEntry(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
-				if (current != BlockEnum.CERTUSTANK)
-				{
-					GameRegistry.registerBlock(current.getBlockEntry(), ItemBlockSpecial.class, current.getBlockEntry().getUnlocalizedName());
-				} else
-				{
-					GameRegistry.registerBlock(BlockEnum.CERTUSTANK.getBlockEntry(), ItemBlockCertusTank.class, BlockEnum.CERTUSTANK.getBlockEntry().getUnlocalizedName());
-				}
+				current.setBlockInstance(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
+				GameRegistry.registerBlock(current.getBlockInstance(), current.getItemBlockClass(), current.getBlockInstance().getUnlocalizedName());
 			} catch (Throwable e)
 			{
 			}

@@ -101,7 +101,7 @@ public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorage
 		if (p.isSneaking())
 		{
 			ItemStack itemStackDecrypted = p.inventory.getCurrentItem();
-			ItemStack itemStackEncrypted = new ItemStack(ItemEnum.STORAGEPHYSICALENCRYPTED.getItemEntry(), 1);
+			ItemStack itemStackEncrypted = new ItemStack(ItemEnum.STORAGEPHYSICALENCRYPTED.getItemInstance(), 1);
 			if (!itemStackEncrypted.hasTagCompound())
 			{
 				itemStackEncrypted.setTagCompound(new NBTTagCompound());

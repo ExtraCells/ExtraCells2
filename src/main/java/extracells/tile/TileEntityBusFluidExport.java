@@ -124,7 +124,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 
 					if (entry != null && cellArray != null)
 					{
-						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), 1, entry.getID()));
+						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), 1, entry.getID()));
 
 						long contained = cellArray.countOfItemType(entryToAEIS);
 
@@ -149,7 +149,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		{
 			int filled = tankToFill.fill(from, toExport, true);
 
-			IAEItemStack toExtract = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemEntry(), filled, toExport.fluidID));
+			IAEItemStack toExtract = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), filled, toExport.fluidID));
 
 			IMEInventoryHandler cellArray = grid.getCellArray();
 			if (cellArray != null)

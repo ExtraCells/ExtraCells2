@@ -67,7 +67,7 @@ public class GuiBusFluidExport extends GuiContainer
 			fluidSwitch.setFluidMode(tileentity.getFluidMode());
 		}
 
-		this.fontRenderer.drawString(BlockEnum.FLUIDEXPORT.getLocalizedName(), 5, 0, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDEXPORT.getStatName(), 5, 0, 0x000000);
 	}
 
 	@Override

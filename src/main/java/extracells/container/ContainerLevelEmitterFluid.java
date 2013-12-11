@@ -38,12 +38,12 @@ public class ContainerLevelEmitterFluid extends ECContainer
 					{
 						FluidStack inContainer = FluidContainerRegistry.getFluidForFilledItem(itemstack);
 						if (inContainer != null)
-							itemstack = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, inContainer.fluidID);
+							itemstack = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, inContainer.fluidID);
 					} else if (itemstack.getItem() instanceof ItemFluidContainer)
 					{
 						FluidStack inContainer = ((ItemFluidContainer) itemstack.getItem()).getFluid(itemstack);
 						if (inContainer != null)
-							itemstack = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, inContainer.fluidID);
+							itemstack = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, inContainer.fluidID);
 					} else
 					{
 						itemstack = null;
@@ -119,12 +119,12 @@ public class ContainerLevelEmitterFluid extends ECContainer
 		{
 			FluidStack inContainer = FluidContainerRegistry.getFluidForFilledItem(source);
 			if (inContainer != null)
-				return new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, inContainer.fluidID);
+				return new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, inContainer.fluidID);
 		} else if (source.getItem() instanceof ItemFluidContainer)
 		{
 			FluidStack inContainer = ((ItemFluidContainer) source.getItem()).getFluid(source);
 			if (inContainer != null)
-				return new ItemStack(ItemEnum.FLUIDDISPLAY.getItemEntry(), 1, inContainer.fluidID);
+				return new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, inContainer.fluidID);
 		}
 		return null;
 	}

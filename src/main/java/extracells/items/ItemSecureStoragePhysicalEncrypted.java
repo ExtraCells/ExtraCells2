@@ -75,7 +75,7 @@ public class ItemSecureStoragePhysicalEncrypted extends Item
 	public ItemStack onItemRightClick(ItemStack stack, World w, EntityPlayer p)
 	{
 		ItemStack itemStackEncrypted = p.inventory.getCurrentItem();
-		ItemStack itemStackDecrypted = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemEntry(), 1);
+		ItemStack itemStackDecrypted = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemInstance(), 1);
 
 		if (!itemStackEncrypted.hasTagCompound())
 		{

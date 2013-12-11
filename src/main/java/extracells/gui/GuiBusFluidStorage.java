@@ -53,7 +53,7 @@ public class GuiBusFluidStorage extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int sizeX, int sizeY)
 	{
-		this.fontRenderer.drawString(BlockEnum.FLUIDSTORAGE.getLocalizedName(), 5, -23, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDSTORAGE.getStatName(), 5, -23, 0x000000);
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class ContainerHardMEDrive extends Container
 		this.tileentity = tileentity;
 		for (int i = 0; i < 3; i++)
 		{
-			addSlotToContainer(new SlotRespective(tileentity, i, 62 + 18, 17 + i * 18)
+			addSlotToContainer(new SlotRespective(tileentity, i, 80, 17 + i * 18)
 			{
 				public boolean isItemValid(ItemStack item)
 				{

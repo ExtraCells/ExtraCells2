@@ -93,7 +93,7 @@ public class GuiTerminalFluid extends GuiContainer
 	{
 		drawSelectors(mouseX, mouseY);
 
-		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getLocalizedName().replace("ME ", ""), 5, -12, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getStatName().replace("ME ", ""), 5, -12, 0x000000);
 
 		long amount = 0;
 		String name = "";

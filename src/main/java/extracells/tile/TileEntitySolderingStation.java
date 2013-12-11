@@ -21,7 +21,7 @@ public class TileEntitySolderingStation extends TileEntity
 	public void changeTypes(EntityPlayer player, int slotID, int typesDelta)
 	{
 		ItemStack storage = player.inventory.getCurrentItem().copy();
-		if (storage != null && storage.getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && storage.getItemDamage() == 5)
+		if (storage != null && storage.getItem() == ItemEnum.STORAGEPHYSICAL.getItemInstance() && storage.getItemDamage() == 5)
 		{
 
 			if (!storage.hasTagCompound())
@@ -54,7 +54,7 @@ public class TileEntitySolderingStation extends TileEntity
 	public void changeStorage(EntityPlayer player, int slotID, int storageDelta)
 	{
 		ItemStack storage = player.inventory.getCurrentItem().copy();
-		if (storage != null && storage.getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && storage.getItemDamage() == 5)
+		if (storage != null && storage.getItem() == ItemEnum.STORAGEPHYSICAL.getItemInstance() && storage.getItemDamage() == 5)
 		{
 			if (!storage.hasTagCompound())
 			{

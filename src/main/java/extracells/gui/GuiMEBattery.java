@@ -42,7 +42,7 @@ public class GuiMEBattery extends GuiScreen
 		int posY = (this.height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 
-		fontRenderer.drawString(BlockEnum.MEBATTERY.getLocalizedName(), posX + 5, posY + 5, 0x000000);
+		fontRenderer.drawString(BlockEnum.MEBATTERY.getStatName(), posX + 5, posY + 5, 0x000000);
 		fontRenderer.drawString("Energy: " + currentEnergy + "/" + maxEnergy, posX + 5, posY + 15, 0x000000);
 
 		super.drawScreen(x, y, f);

@@ -103,7 +103,7 @@ public class BlockSolderingStation extends RotatableColorBlock
 		}
 		if (world.isRemote)
 		{
-			FMLCommonHandler.instance().showGuiScreen(new GuiSolderingStation(player, x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == ItemEnum.STORAGEPHYSICAL.getItemEntry() && player.getHeldItem().getItemDamage() == 5)));
+			FMLCommonHandler.instance().showGuiScreen(new GuiSolderingStation(player, x, y, z, (player.getHeldItem() != null && player.getHeldItem().getItem() == ItemEnum.STORAGEPHYSICAL.getItemInstance() && player.getHeldItem().getItemDamage() == 5)));
 			return true;
 		} else
 		{

@@ -52,7 +52,7 @@ public class GuiInterfaceFluid extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		this.fontRenderer.drawString(BlockEnum.FLUIDINTERFACE.getLocalizedName(), 5, 103, 0x000000);
+		this.fontRenderer.drawString(BlockEnum.FLUIDINTERFACE.getStatName(), 5, 103, 0x000000);
 		for (WidgetFluidTank tank : tanks)
 		{
 			tank.draw(guiLeft, guiTop, mouseX, mouseY);

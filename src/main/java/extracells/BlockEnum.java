@@ -1,13 +1,13 @@
 package extracells;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
 import extracells.blocks.BlockBusFluidExport;
 import extracells.blocks.BlockBusFluidImport;
 import extracells.blocks.BlockBusFluidStorage;
 import extracells.blocks.BlockCertusTank;
 import extracells.blocks.BlockFluidTransitionPlane;
-import extracells.blocks.BlockVoidFluid;
 import extracells.blocks.BlockHardMEDrive;
 import extracells.blocks.BlockInterFaceFluid;
 import extracells.blocks.BlockLevelEmitterFluid;
@@ -15,7 +15,9 @@ import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
 import extracells.blocks.BlockSolderingStation;
 import extracells.blocks.BlockTerminalFluid;
+import extracells.blocks.BlockVoidFluid;
 import extracells.blocks.BlockWalrus;
+import extracells.items.ItemBlockCertusTank;
 
 public enum BlockEnum
 {
@@ -28,7 +30,7 @@ public enum BlockEnum
 	FLUIDSTORAGE("tile.block.fluid.bus.storage.name", 506, BlockBusFluidStorage.class, "ID for the Fluid Storage Bus", "BusFluidStorage"),
 	FLUIDTERMINAL("tile.block.fluid.terminal.name", 507, BlockTerminalFluid.class, "ID for the Fluid Storage Terminal", "TerminalFluid"),
 	FLUIDTRANSITION("tile.block.fluid.transitionplane.name", 508, BlockFluidTransitionPlane.class, "ID for the Fluid Transition Plance", "FluidTransitionPlane"),
-	CERTUSTANK("tile.block.certustank.name", 509, BlockCertusTank.class, "ID for the ME Certus Tank", "CertusTank"),
+	CERTUSTANK("tile.block.certustank.name", 509, BlockCertusTank.class, ItemBlockCertusTank.class, "ID for the ME Certus Tank", "CertusTank"),
 	CHROMIA("tile.block.walrus.name", 510, BlockWalrus.class, "ID for the Walrus", "Walrus"),
 	FLUIDLEVELEMITTER("tile.block.fluid.levelemitter.name", 511, BlockLevelEmitterFluid.class, "ID for the ME Fluid Level Emitter", "LevelEmitterFluid"),
 	FLUIDINTERFACE("tile.block.fluid.interface.name", 512, BlockInterFaceFluid.class, "ID for the ME Fluid Interface", "InterfaceFluid"),
@@ -39,17 +41,24 @@ public enum BlockEnum
 	private int ID;
 	private Block block;
 	private Class<? extends Block> blockClass;
+	private Class<? extends ItemBlock> itemBlockClass;
 
 	BlockEnum(String internalName, int ID, Class<? extends Block> blockClass, String description, String IDName)
+	{
+		this(internalName, ID, blockClass, ItemBlock.class, description, IDName);
+	}
+
+	BlockEnum(String internalName, int ID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemBlockClass, String description, String IDName)
 	{
 		this.internalName = internalName;
 		this.ID = ID;
 		this.blockClass = blockClass;
+		this.itemBlockClass = itemBlockClass;
 		this.description = description;
 		this.IDName = IDName;
 	}
 
-	public String getLocalizedName()
+	public String getStatName()
 	{
 		return StatCollector.translateToLocal(internalName);
 	}
@@ -64,12 +73,12 @@ public enum BlockEnum
 		return ID;
 	}
 
-	public void setBlockEntry(Block block)
+	public void setBlockInstance(Block block)
 	{
 		this.block = block;
 	}
 
-	public Block getBlockEntry()
+	public Block getBlockInstance()
 	{
 		return block;
 	}
@@ -87,5 +96,10 @@ public enum BlockEnum
 	public Class<? extends Block> getBlockClass()
 	{
 		return blockClass;
+	}
+
+	public Class<? extends ItemBlock> getItemBlockClass()
+	{
+		return itemBlockClass;
 	}
 }
