@@ -67,7 +67,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 		{
 			FluidTank tank = tanks[i];
 			FluidStack tankFluid = tanks[i].getFluid();
-			Fluid filterFluid = filterSlots.get(i) != null ? FluidRegistry.getFluid(filterSlots.get(i).getItemDamage()) : null;
+			Fluid filterFluid = inventory.slots.get(i) != null ? FluidRegistry.getFluid(inventory.slots.get(i).getItemDamage()) : null;
 			if (filterFluid == null)
 			{
 				if (tankFluid != null)
@@ -164,13 +164,13 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		filterSlots = new ArrayList<ItemStack>(getInventory().getSizeInventory());
+		inventory.slots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
 		}
-		
+
 		for (int i = 0; i < tanks.length; i++)
 		{
 			NBTTagCompound tankNBT = nbt.getCompoundTag("tank#" + i);
@@ -182,7 +182,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		
+
 		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{

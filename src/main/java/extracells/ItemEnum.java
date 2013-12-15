@@ -25,7 +25,6 @@ public enum ItemEnum
 	private int ID;
 	private Item item;
 	private Class<? extends Item> itemClass;
-	private boolean isEnabled = false;
 
 	ItemEnum(String internalName, int ID, Class<? extends Item> itemClass, String description, String IDName)
 	{
@@ -34,16 +33,6 @@ public enum ItemEnum
 		this.itemClass = itemClass;
 		this.description = description;
 		this.IDName = IDName;
-	}
-
-	public void setEnabled(boolean enabled)
-	{
-		isEnabled = enabled;
-	}
-
-	public boolean isEnabled()
-	{
-		return isEnabled;
 	}
 
 	public String getLocalizedName()

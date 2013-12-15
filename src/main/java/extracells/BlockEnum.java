@@ -44,7 +44,6 @@ public enum BlockEnum
 	private Block block;
 	private Class<? extends Block> blockClass;
 	private Class<? extends ItemBlock> itemBlockClass;
-	private boolean isEnabled = false;
 
 	BlockEnum(String internalName, int ID, Class<? extends Block> blockClass, String description, String IDName)
 	{
@@ -59,16 +58,6 @@ public enum BlockEnum
 		this.itemBlockClass = itemBlockClass;
 		this.description = description;
 		this.IDName = IDName;
-	}
-
-	public void setEnabled(boolean enabled)
-	{
-		isEnabled = enabled;
-	}
-
-	public boolean isEnabled()
-	{
-		return isEnabled;
 	}
 
 	public String getStatName()
