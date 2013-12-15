@@ -1,4 +1,4 @@
-package extracells.model;
+package extracells.render.model;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -10,48 +10,81 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import extracells.tile.TileEntityLevelEmitterFluid;
+import cpw.mods.fml.client.FMLClientHandler;
 
-public class ModelLevelEmitterFluid extends ModelBase
+public class ModelBusFluidStorage extends ModelBase
 {
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
-
-	public ModelLevelEmitterFluid()
+	ModelRenderer Shape3;
+	ModelRenderer Shape4;
+	ModelRenderer Shape5;
+	ModelRenderer Shape6;
+	ModelRenderer Shape7;
+	
+	public ModelBusFluidStorage()
 	{
 		textureWidth = 64;
-		textureHeight = 32;
+		textureHeight = 64;
 
 		Shape1 = new ModelRenderer(this, 0, 0);
-		Shape1.addBox(0F, 0F, 0F, 6, 6, 6);
-		Shape1.setRotationPoint(-3F, 13F, -3F);
-		Shape1.setTextureSize(64, 32);
+		Shape1.addBox(0F, 0F, 0F, 15, 4, 15);
+		Shape1.setRotationPoint(-7.5F, 20F, -7.5F);
+		Shape1.setTextureSize(64, 64);
 		Shape1.mirror = true;
 		setRotation(Shape1, 0F, 0F, 0F);
-		Shape2 = new ModelRenderer(this, 32, 0);
-		Shape2.addBox(0F, 0F, 0F, 2, 6, 2);
-		Shape2.setRotationPoint(-1F, 17.25F, -1F);
-		Shape2.setTextureSize(64, 32);
+		Shape2 = new ModelRenderer(this, 0, 19);
+		Shape2.addBox(0F, 0F, 0F, 6, 2, 6);
+		Shape2.setRotationPoint(-3F, 18F, -3F);
+		Shape2.setTextureSize(64, 64);
 		Shape2.mirror = true;
 		setRotation(Shape2, 0F, 0F, 0F);
+		Shape3 = new ModelRenderer(this, 0, 27);
+		Shape3.addBox(0F, 0F, 0F, 12, 1, 12);
+		Shape3.setRotationPoint(-6F, 19F, -6F);
+		Shape3.setTextureSize(64, 64);
+		Shape3.mirror = true;
+		setRotation(Shape3, 0F, 0F, 0F);
+		Shape4 = new ModelRenderer(this, 0, 40);
+		Shape4.addBox(0F, 0F, 0F, 1, 3, 15);
+		Shape4.setRotationPoint(6.8F, 20.2F, -7.5F);
+		Shape4.setTextureSize(64, 64);
+		Shape4.mirror = true;
+		setRotation(Shape4, 0F, 0F, 0F);
+		Shape5 = new ModelRenderer(this, 0, 40);
+		Shape5.addBox(0F, 0F, 0F, 15, 3, 1);
+		Shape5.setRotationPoint(-7.5F, 20.2F, 6.8F);
+		Shape5.setTextureSize(64, 64);
+		Shape5.mirror = true;
+		setRotation(Shape5, 0F, 0F, 0F);
+		Shape7 = new ModelRenderer(this, 0, 40);
+		Shape7.addBox(0F, 0F, 0F, 15, 3, 1);
+		Shape7.setRotationPoint(-7.5F, 20.2F, -7.8F);
+		Shape7.setTextureSize(64, 64);
+		Shape7.mirror = true;
+		setRotation(Shape7, 0F, 0F, 0F);
+		Shape6 = new ModelRenderer(this, 0, 40);
+		Shape6.addBox(0F, 0F, 0F, 1, 3, 15);
+		Shape6.setRotationPoint(-7.8F, 20.2F, -7.5F);
+		Shape6.setTextureSize(64, 64);
+		Shape6.mirror = true;
+		setRotation(Shape6, 0F, 0F, 0F);
 	}
 
 	public void render(float f5)
 	{
 		Shape1.render(f5);
 		Shape2.render(f5);
+		Shape3.render(f5);
+		Shape4.render(f5);
+		Shape5.render(f5);
+		Shape6.render(f5);
+		Shape7.render(f5);
 	}
 
 	public void render(TileEntity tileEntity, double x, double y, double z)
 	{
-		if (((TileEntityLevelEmitterFluid) tileEntity).getRedstonePowerBySide(ForgeDirection.getOrientation(tileEntity.getBlockMetadata()).getOpposite()) > 0)
-		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_level_emitter_on.png"));
-		} else
-		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_level_emitter_off.png"));
-		}
-
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_storage_bus.png"));
 		GL11.glPushMatrix();
 
 		switch (ForgeDirection.getOrientation(tileEntity.getBlockMetadata()))

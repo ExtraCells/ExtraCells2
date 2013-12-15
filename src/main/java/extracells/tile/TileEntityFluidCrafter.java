@@ -23,15 +23,16 @@ import appeng.api.me.util.ICraftingPattern;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.ITileCraftingProvider;
 import extracells.ItemEnum;
+import extracells.util.ECPrivateInventory;
+import extracells.util.ECPrivatePatternInventory;
 
 public class TileEntityFluidCrafter extends TileEntity implements ITileCraftingProvider, IGridMachine
 {
 	private List<ItemStack> pattern = Arrays.asList(new ItemStack[9]);
-	private List<ItemStack> buffer = Arrays.asList(new ItemStack[18]);
 	private List<ICraftingPattern> patternHandlers = new ArrayList<ICraftingPattern>();
 	private ItemStack currentRequest = null;
-	private ECPrivatePatternInventory patternInventory = new ECPrivatePatternInventory(pattern, "", 64, this);
-	private ECPrivateInventory bufferInventory = new ECPrivateInventory(buffer, "", 10000);
+	private ECPrivatePatternInventory patternInventory = new ECPrivatePatternInventory("", 9, 64, this);
+	private ECPrivateInventory bufferInventory = new ECPrivateInventory("", 18, 10000);
 	private IGridInterface grid;
 	private boolean powerStatus = false, networkStatus = true;
 
@@ -219,8 +220,6 @@ public class TileEntityFluidCrafter extends TileEntity implements ITileCraftingP
 		super.readFromNBT(nbt);
 		NBTTagList bufferList = nbt.getTagList("BufferItems");
 		NBTTagList patternList = nbt.getTagList("InventoryItems");
-		buffer = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
-		pattern = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
 		bufferInventory.readFromNBT(bufferList);
 		patternInventory.readFromNBT(patternList);
 		if (nbt.hasKey("BufferItemsName"))

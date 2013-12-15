@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,13 +15,13 @@ import appeng.api.me.tiles.IGridTileEntity;
 
 public class ECPrivateInventory implements IInventory
 {
-	List<ItemStack> slots;
-	String customName;
-	int stackLimit;
+	public List<ItemStack> slots;
+	public String customName;
+	private int stackLimit;
 
-	public ECPrivateInventory(List<ItemStack> slots, String costumName, int stackLimit)
+	public ECPrivateInventory(String costumName, int size, int stackLimit)
 	{
-		this.slots = slots;
+		this.slots = Arrays.asList(new ItemStack[size]);
 		this.customName = costumName;
 		this.stackLimit = stackLimit;
 	}
@@ -146,7 +146,6 @@ public class ECPrivateInventory implements IInventory
 
 	public void readFromNBT(NBTTagList nbtList)
 	{
-		slots = Arrays.asList(new ItemStack[slots.size()]);
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
 			NBTTagCompound nbttagcompound = (NBTTagCompound) nbtList.tagAt(i);

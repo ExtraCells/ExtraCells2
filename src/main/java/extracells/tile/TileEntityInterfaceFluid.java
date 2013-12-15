@@ -29,15 +29,15 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.util.IGridInterface;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.ItemEnum;
+import extracells.util.ECPrivateInventory;
 
 public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMachine, IFluidHandler
 {
 	private Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	public FluidTank[] tanks = new FluidTank[6];
-	private List<ItemStack> filterSlots = Arrays.asList(new ItemStack[6]);
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
-	private ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+	private ECPrivateInventory inventory = new ECPrivateInventory(costumName, 6, 1);
 
 	public TileEntityInterfaceFluid()
 	{
@@ -164,7 +164,6 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		inventory.slots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{

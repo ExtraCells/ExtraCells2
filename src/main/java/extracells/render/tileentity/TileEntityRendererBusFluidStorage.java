@@ -5,9 +5,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import appeng.api.me.tiles.IDirectionalMETile;
-import extracells.model.ModelBusFluidStorage;
-import extracells.model.ModelCable;
-import extracells.model.ModelCable.Colors;
+import extracells.render.model.ModelBusFluidStorage;
+import extracells.render.model.ModelCable;
+import extracells.render.model.ModelCable.Colors;
 import extracells.tile.ColorableECTile;
 
 public class TileEntityRendererBusFluidStorage extends TileEntitySpecialRenderer

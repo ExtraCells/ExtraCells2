@@ -9,9 +9,9 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import extracells.model.ModelBusFluidImport;
-import extracells.model.ModelCable;
-import extracells.model.ModelCable.Colors;
+import extracells.render.model.ModelBusFluidImport;
+import extracells.render.model.ModelCable;
+import extracells.render.model.ModelCable.Colors;
 
 public class ItemRendererBusFluidImport implements IItemRenderer
 {

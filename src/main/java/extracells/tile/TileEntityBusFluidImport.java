@@ -36,14 +36,14 @@ import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
+import extracells.util.ECPrivateInventory;
 
 public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
 	Boolean powerStatus = true, redstoneFlag = false, networkReady = true;
 	IGridInterface grid;
-	List<ItemStack> filterSlots = Arrays.asList(new ItemStack[8]);
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
-	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+	ECPrivateInventory inventory = new ECPrivateInventory(costumName, 8, 1);
 	RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
 	FluidMode fluidMode = FluidMode.DROPS;
 
@@ -110,7 +110,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 
 			if (drainable != null && drainable.amount > 0)
 			{
-				List<Fluid> fluidFilter = getFilterFluids(filterSlots);
+				List<Fluid> fluidFilter = getFilterFluids(inventory.slots);
 				IAEItemStack toImport = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), drainable.amount, drainable.fluidID));
 
 				IMEInventoryHandler cellArray = getGrid().getCellArray();
@@ -314,7 +314,6 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		filterSlots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{

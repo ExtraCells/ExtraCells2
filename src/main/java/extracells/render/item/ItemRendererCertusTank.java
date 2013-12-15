@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import extracells.model.ModelCertusTank;
+import extracells.render.model.ModelCertusTank;
 import extracells.tile.TileEntityCertusTank;
 
 public class ItemRendererCertusTank implements IItemRenderer

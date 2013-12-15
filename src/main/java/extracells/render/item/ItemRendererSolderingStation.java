@@ -9,7 +9,7 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import cpw.mods.fml.client.FMLClientHandler;
-import extracells.model.ModelSolderingStation;
+import extracells.render.model.ModelSolderingStation;
 
 public class ItemRendererSolderingStation implements IItemRenderer
 {

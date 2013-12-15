@@ -35,7 +35,7 @@ public enum ItemEnum
 		this.IDName = IDName;
 	}
 
-	public String getLocalizedName()
+	public String getStatName()
 	{
 		return StatCollector.translateToLocal(internalName);
 	}

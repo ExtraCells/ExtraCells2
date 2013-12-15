@@ -34,6 +34,7 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.ItemEnum;
 import extracells.handler.FluidBusInventoryHandler;
+import extracells.util.ECPrivateInventory;
 import static extracells.ItemEnum.*;
 
 public class TileEntityBusFluidStorage extends ColorableECTile implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
@@ -41,9 +42,8 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
 	int priority = 1;
-	private List<ItemStack> filterSlots = Arrays.asList(new ItemStack[54]);
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
-	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+	ECPrivateInventory inventory = new ECPrivateInventory(costumName, 54, 1);
 	FluidStack lastFluid;
 
 	public void setPriority(int priority)
@@ -154,7 +154,6 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		filterSlots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
@@ -222,8 +221,8 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	{
 		List<ItemStack> filter = new ArrayList<ItemStack>();
 
-		if (filterSlots.size() > 0)
-			for (ItemStack itemStack : filterSlots)
+		if (inventory.slots.size() > 0)
+			for (ItemStack itemStack : inventory.slots)
 			{
 				ItemStack fluidContainer;
 

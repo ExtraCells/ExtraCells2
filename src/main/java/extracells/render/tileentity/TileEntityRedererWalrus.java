@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
 
-import extracells.model.ModelWalrus;
+import extracells.render.model.ModelWalrus;
 
 public class TileEntityRedererWalrus extends TileEntitySpecialRenderer
 {

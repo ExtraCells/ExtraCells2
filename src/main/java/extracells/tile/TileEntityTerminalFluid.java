@@ -33,7 +33,8 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.ItemEnum;
-import extracells.SpecialFluidStack;
+import extracells.util.ECPrivateInventory;
+import extracells.util.SpecialFluidStack;
 import static extracells.ItemEnum.*;
 
 public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, IStorageAware
@@ -41,10 +42,9 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	Boolean powerStatus = false, networkReady = true;
 	IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
-	private List<ItemStack> slots = Arrays.asList(new ItemStack[2]);
 	private Fluid currentFluid = null;
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
-	ECPrivateInventory inventory = new ECPrivateInventory(slots, costumName, 64)
+	ECPrivateInventory inventory = new ECPrivateInventory(costumName, 2, 64)
 	{
 		public boolean isItemValidForSlot(int i, ItemStack itemstack)
 		{
@@ -361,13 +361,13 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		super.writeToNBT(nbt);
 		NBTTagList nbttaglist = new NBTTagList();
 
-		for (int i = 0; i < slots.size(); ++i)
+		for (int i = 0; i < inventory.slots.size(); ++i)
 		{
-			if (slots.get(i) != null)
+			if (inventory.slots.get(i) != null)
 			{
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				nbttagcompound1.setByte("Slot", (byte) i);
-				slots.get(i).writeToNBT(nbttagcompound1);
+				inventory.slots.get(i).writeToNBT(nbttagcompound1);
 				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}
@@ -383,7 +383,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		slots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{

@@ -30,7 +30,8 @@ import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import extracells.BlockEnum;
 import extracells.ItemEnum;
-import extracells.SpecialFluidStack;
+import extracells.util.ECPrivateInventory;
+import extracells.util.SpecialFluidStack;
 import static extracells.ItemEnum.*;
 
 public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable, IStorageAware
@@ -38,9 +39,8 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	private Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	private long currentAmount = 0, filterAmount = 0;
-	private List<ItemStack> filterSlots = Arrays.asList(new ItemStack[1]);
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.levelemitter");
-	private ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+	private ECPrivateInventory inventory = new ECPrivateInventory(costumName, 1, 1);
 	private RedstoneModeInput redstoneAction = RedstoneModeInput.WhenOff;
 
 	public int getRedstonePowerBySide(ForgeDirection side)
@@ -106,7 +106,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	@Override
 	public void onNetworkInventoryChange(IItemList iss)
 	{
-		if (filterSlots.get(0) != null && iss != null)
+		if (inventory.slots.get(0) != null && iss != null)
 		{
 			for (IAEItemStack currentStack : iss)
 			{
@@ -114,7 +114,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 				{
 					if (currentStack.getItem() == FLUIDDISPLAY.getItemInstance())
 					{
-						if (currentStack.getItemDamage() == filterSlots.get(0).getItemDamage())
+						if (currentStack.getItemDamage() == inventory.slots.get(0).getItemDamage())
 						{
 							if (currentStack.getStackSize() != currentAmount)
 							{
@@ -125,7 +125,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 					}
 				}
 			}
-		} else if (filterSlots.get(0) == null)
+		} else if (inventory.slots.get(0) == null)
 		{
 			currentAmount = 0;
 		}
@@ -219,7 +219,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		
+
 		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
@@ -235,7 +235,6 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		filterSlots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{

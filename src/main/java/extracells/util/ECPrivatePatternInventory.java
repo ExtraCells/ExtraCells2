@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,10 +20,9 @@ public class ECPrivatePatternInventory extends ECPrivateInventory
 {
 	IGridTileEntity gridTE;
 
-	public ECPrivatePatternInventory(List<ItemStack> slots, String customName, int stackLimit, IGridTileEntity gridTE)
+	public ECPrivatePatternInventory(String customName, int size, int stackLimit, IGridTileEntity gridTE)
 	{
-		super(slots, customName, stackLimit);
-		this.gridTE = gridTE;
+		super(customName, size, stackLimit);
 	}
 
 	@Override

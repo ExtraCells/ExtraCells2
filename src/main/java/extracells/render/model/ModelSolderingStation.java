@@ -1,4 +1,4 @@
-package extracells.model;
+package extracells.render.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

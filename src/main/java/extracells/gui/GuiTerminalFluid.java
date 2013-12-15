@@ -20,11 +20,11 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.BlockEnum;
-import extracells.SpecialFluidStack;
 import extracells.container.ContainerTerminalFluid;
 import extracells.gui.widget.WidgetFluidSelector;
 import extracells.network.packet.PacketMonitorFluid;
 import extracells.tile.TileEntityTerminalFluid;
+import extracells.util.SpecialFluidStack;
 
 @SideOnly(Side.CLIENT)
 public class GuiTerminalFluid extends GuiContainer

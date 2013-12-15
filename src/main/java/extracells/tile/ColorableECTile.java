@@ -12,7 +12,7 @@ import net.minecraftforge.common.ForgeDirection;
 import appeng.api.me.tiles.IColoredMETile;
 import appeng.api.me.tiles.IConnectionSensitive;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.SpecialFluidStack;
+import extracells.util.SpecialFluidStack;
 
 public abstract class ColorableECTile extends TileEntity implements IConnectionSensitive, IColoredMETile
 {

@@ -7,7 +7,7 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
-import extracells.model.ModelWalrus;
+import extracells.render.model.ModelWalrus;
 
 public class ItemRendererWalrus implements IItemRenderer
 {

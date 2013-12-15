@@ -1,4 +1,4 @@
-package extracells.model;
+package extracells.render.model;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -10,57 +10,48 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.FMLClientHandler;
+import extracells.tile.TileEntityLevelEmitterFluid;
 
-public class ModelBusFluidExport extends ModelBase
+public class ModelLevelEmitterFluid extends ModelBase
 {
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
-	ModelRenderer Shape3;
-	ModelRenderer Shape4;
 
-	public ModelBusFluidExport()
+	public ModelLevelEmitterFluid()
 	{
 		textureWidth = 64;
-		textureHeight = 64;
+		textureHeight = 32;
 
 		Shape1 = new ModelRenderer(this, 0, 0);
-		Shape1.addBox(0F, 0F, 0F, 10, 2, 10);
-		Shape1.setRotationPoint(-5F, 18F, -5F);
-		Shape1.setTextureSize(64, 64);
+		Shape1.addBox(0F, 0F, 0F, 6, 6, 6);
+		Shape1.setRotationPoint(-3F, 13F, -3F);
+		Shape1.setTextureSize(64, 32);
 		Shape1.mirror = true;
 		setRotation(Shape1, 0F, 0F, 0F);
-		Shape2 = new ModelRenderer(this, 0, 12);
-		Shape2.addBox(0F, 0F, 0F, 9, 2, 9);
-		Shape2.setRotationPoint(-4.5F, 19.4F, -4.5F);
-		Shape2.setTextureSize(64, 64);
+		Shape2 = new ModelRenderer(this, 32, 0);
+		Shape2.addBox(0F, 0F, 0F, 2, 6, 2);
+		Shape2.setRotationPoint(-1F, 17.25F, -1F);
+		Shape2.setTextureSize(64, 32);
 		Shape2.mirror = true;
 		setRotation(Shape2, 0F, 0F, 0F);
-		Shape3 = new ModelRenderer(this, 0, 23);
-		Shape3.addBox(0F, 0F, 0F, 8, 2, 8);
-		Shape3.setRotationPoint(-4F, 20.7F, -4F);
-		Shape3.setTextureSize(64, 64);
-		Shape3.mirror = true;
-		setRotation(Shape3, 0F, 0F, 0F);
-		Shape4 = new ModelRenderer(this, 0, 33);
-		Shape4.addBox(0F, 0F, 0F, 6, 2, 6);
-		Shape4.setRotationPoint(-3F, 22F, -3F);
-		Shape4.setTextureSize(64, 64);
-		Shape4.mirror = true;
-		setRotation(Shape4, 0F, 0F, 0F);
 	}
 
 	public void render(float f5)
 	{
 		Shape1.render(f5);
 		Shape2.render(f5);
-		Shape3.render(f5);
-		Shape4.render(f5);
 	}
 
 	public void render(TileEntity tileEntity, double x, double y, double z)
 	{
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_export_bus.png"));
+		if (((TileEntityLevelEmitterFluid) tileEntity).getRedstonePowerBySide(ForgeDirection.getOrientation(tileEntity.getBlockMetadata()).getOpposite()) > 0)
+		{
+			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_level_emitter_on.png"));
+		} else
+		{
+			Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_level_emitter_off.png"));
+		}
+
 		GL11.glPushMatrix();
 
 		switch (ForgeDirection.getOrientation(tileEntity.getBlockMetadata()))

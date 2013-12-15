@@ -53,6 +53,21 @@ import extracells.tile.TileEntityWalrus;
 
 public class CommonProxy implements IGuiHandler
 {
+	public void checkForIDMismatches()
+	{
+		for (BlockEnum entry : BlockEnum.values())
+		{
+			if (!entry.getBlockClass().isInstance(Block.blocksList[entry.getID()]))
+				FMLLog.log(Level.SEVERE, "!IMPORTANT! ExtraCells has found ID mismatches! The Block \"" + entry.getStatName() + "\"with the id " + entry.getID() + " has been overridden by another mod!");
+		}
+
+		for (ItemEnum entry : ItemEnum.values())
+		{
+			if (!entry.getItemClass().isInstance(Item.itemsList[entry.getID() + 256]))
+				FMLLog.log(Level.SEVERE, "!IMPORTANT! ExtraCells has found ID mismatches! The Item \"" + entry.getStatName() + "\"with the id " + entry.getID() + " (in config, ingame it'shifted up by 256 by forge) has been overridden by another mod!");
+		}
+	}
+
 	public void addRecipes()
 	{
 		try

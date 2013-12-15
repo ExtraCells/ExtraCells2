@@ -4,9 +4,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import extracells.model.ModelCable;
-import extracells.model.ModelCable.Colors;
-import extracells.model.ModelLevelEmitterFluid;
+import extracells.render.model.ModelCable;
+import extracells.render.model.ModelLevelEmitterFluid;
+import extracells.render.model.ModelCable.Colors;
 import extracells.tile.ColorableECTile;
 
 public class TileEntityRendererLevelEmitterFluid extends TileEntitySpecialRenderer
