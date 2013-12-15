@@ -1,56 +1,68 @@
 package extracells.tile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
+import appeng.api.me.tiles.IGridTileEntity;
 
 public class ECPrivateInventory implements IInventory
 {
-	ItemStack[] slots;
-	String costumName;
+	List<ItemStack> slots;
+	String customName;
 	int stackLimit;
 
-	public ECPrivateInventory(ItemStack[] slots, String costumName, int stackLimit)
+	public ECPrivateInventory(List<ItemStack> slots, String costumName, int stackLimit)
 	{
 		this.slots = slots;
-		this.costumName = costumName;
+		this.customName = costumName;
 		this.stackLimit = stackLimit;
 	}
 
 	@Override
 	public int getSizeInventory()
 	{
-		return slots.length;
+		return slots.size();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int i)
 	{
-		return slots[i];
+		return slots.get(i);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int i, int j)
 	{
-		if (this.slots[i] != null)
+		if (slots.get(i) != null)
 		{
 			ItemStack itemstack;
-			if (this.slots[i].stackSize <= j)
+			if (slots.get(i).stackSize <= j)
 			{
-				itemstack = this.slots[i];
-				this.slots[i] = null;
+				itemstack = slots.get(i);
+				slots.set(i, null);
 				this.onInventoryChanged();
 				return itemstack;
 			} else
 			{
-				itemstack = this.slots[i].splitStack(j);
-				if (this.slots[i].stackSize == 0)
+				ItemStack temp = slots.get(i);
+				itemstack = temp.splitStack(j);
+				slots.set(i, temp);
+				if (temp.stackSize == 0)
 				{
-					this.slots[i] = null;
+					slots.set(i, null);
+				} else
+				{
+					slots.set(i, temp);
 				}
-				this.onInventoryChanged();
+				onInventoryChanged();
 				return itemstack;
 			}
 		} else
@@ -62,10 +74,10 @@ public class ECPrivateInventory implements IInventory
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i)
 	{
-		if (this.slots[i] != null)
+		if (slots.get(i) != null)
 		{
-			ItemStack itemstack = this.slots[i];
-			this.slots[i] = null;
+			ItemStack itemstack = slots.get(i);
+			slots.set(i, null);
 			return itemstack;
 		} else
 		{
@@ -76,19 +88,19 @@ public class ECPrivateInventory implements IInventory
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack)
 	{
-		this.slots[i] = itemstack;
-
 		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
 		{
 			itemstack.stackSize = this.getInventoryStackLimit();
 		}
-		this.onInventoryChanged();
+		slots.set(i, itemstack);
+
+		onInventoryChanged();
 	}
 
 	@Override
 	public String getInvName()
 	{
-		return costumName;
+		return customName;
 	}
 
 	@Override
@@ -130,7 +142,37 @@ public class ECPrivateInventory implements IInventory
 	@Override
 	public void onInventoryChanged()
 	{
-
 	}
 
+	public void readFromNBT(NBTTagList nbtList)
+	{
+		slots = Arrays.asList(new ItemStack[slots.size()]);
+		for (int i = 0; i < nbtList.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound = (NBTTagCompound) nbtList.tagAt(i);
+			int j = nbttagcompound.getByte("Slot") & 255;
+
+			if (j >= 0 && j < slots.size())
+			{
+				slots.set(j, ItemStack.loadItemStackFromNBT(nbttagcompound));
+			}
+		}
+	}
+
+	public NBTTagList writeToNBT()
+	{
+		NBTTagList nbtList = new NBTTagList();
+
+		for (int i = 0; i < slots.size(); ++i)
+		{
+			if (slots.get(i) != null)
+			{
+				NBTTagCompound nbttagcompound = new NBTTagCompound();
+				nbttagcompound.setByte("Slot", (byte) i);
+				slots.get(i).writeToNBT(nbttagcompound);
+				nbtList.appendTag(nbttagcompound);
+			}
+		}
+		return nbtList;
+	}
 }

@@ -1,15 +1,13 @@
 package extracells.blocks;
 
-import java.lang.reflect.Method;
-
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import appeng.api.me.tiles.IColoredMETile;
+import net.minecraftforge.common.MinecraftForge;
+import appeng.api.WorldCoord;
+import appeng.api.events.GridTileConnectivityEvent;
+import appeng.api.me.tiles.IGridTileEntity;
 
 public abstract class RotatableColorBlock extends ColorBlock
 {
@@ -31,6 +29,11 @@ public abstract class RotatableColorBlock extends ColorBlock
 		} else if (validDirection)
 		{
 			worldObj.setBlockMetadataWithNotify(x, y, z, axis.ordinal(), 3);
+			TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+			if (te instanceof IGridTileEntity)
+			{
+				MinecraftForge.EVENT_BUS.post(new GridTileConnectivityEvent((IGridTileEntity) te, worldObj, new WorldCoord(x, y, z)));
+			}
 		}
 		return true;
 	}

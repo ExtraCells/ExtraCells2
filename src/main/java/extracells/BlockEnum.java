@@ -7,6 +7,7 @@ import extracells.blocks.BlockBusFluidExport;
 import extracells.blocks.BlockBusFluidImport;
 import extracells.blocks.BlockBusFluidStorage;
 import extracells.blocks.BlockCertusTank;
+import extracells.blocks.BlockFluidCrafter;
 import extracells.blocks.BlockFluidTransitionPlane;
 import extracells.blocks.BlockHardMEDrive;
 import extracells.blocks.BlockInterFaceFluid;
@@ -34,7 +35,8 @@ public enum BlockEnum
 	CHROMIA("tile.block.walrus.name", 510, BlockWalrus.class, "ID for the Walrus", "Walrus"),
 	FLUIDLEVELEMITTER("tile.block.fluid.levelemitter.name", 511, BlockLevelEmitterFluid.class, "ID for the ME Fluid Level Emitter", "LevelEmitterFluid"),
 	FLUIDINTERFACE("tile.block.fluid.interface.name", 512, BlockInterFaceFluid.class, "ID for the ME Fluid Interface", "InterfaceFluid"),
-	FLUIDVOID("tile.block.fluid.void.name", 513, BlockVoidFluid.class, "ID for the ME Fluid Void", "VoidFluid");
+	FLUIDVOID("tile.block.fluid.void.name", 513, BlockVoidFluid.class, "ID for the ME Fluid Void", "VoidFluid"),
+	FLUIDCRAFTER("tile.block.fluid.crafter.name", 514, BlockFluidCrafter.class, "ID for the ME Fluid Crafter", "FluidCrafter");
 
 	private final String internalName;
 	private String description, IDName;
@@ -42,6 +44,7 @@ public enum BlockEnum
 	private Block block;
 	private Class<? extends Block> blockClass;
 	private Class<? extends ItemBlock> itemBlockClass;
+	private boolean isEnabled = false;
 
 	BlockEnum(String internalName, int ID, Class<? extends Block> blockClass, String description, String IDName)
 	{
@@ -56,6 +59,16 @@ public enum BlockEnum
 		this.itemBlockClass = itemBlockClass;
 		this.description = description;
 		this.IDName = IDName;
+	}
+
+	public void setEnabled(boolean enabled)
+	{
+		isEnabled = enabled;
+	}
+
+	public boolean isEnabled()
+	{
+		return isEnabled;
 	}
 
 	public String getStatName()

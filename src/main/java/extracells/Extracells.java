@@ -1,13 +1,7 @@
 package extracells;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import appeng.api.Util;
@@ -17,6 +11,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -61,7 +56,7 @@ public class Extracells
 		// Config
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		
+
 		// Items
 		for (ItemEnum current : ItemEnum.values())
 		{
@@ -93,6 +88,9 @@ public class Extracells
 		renderID = RenderingRegistry.getNextAvailableRenderId();
 		RenderHandler handler = new RenderHandler(renderID);
 		RenderingRegistry.registerBlockHandler(handler);
+
+		// EnderNET Support
+		FMLInterModComms.sendMessage("endernet", "WhitelistItemNBT", new ItemStack(ItemEnum.STORAGEFLUID.getItemInstance(), 1));
 	}
 
 	@EventHandler

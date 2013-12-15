@@ -1,5 +1,9 @@
 package extracells.tile;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -31,7 +35,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	private Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	public FluidTank[] tanks = new FluidTank[6];
-	private ItemStack[] filterSlots = new ItemStack[6];
+	private List<ItemStack> filterSlots = Arrays.asList(new ItemStack[6]);
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	private ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 
@@ -63,7 +67,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 		{
 			FluidTank tank = tanks[i];
 			FluidStack tankFluid = tanks[i].getFluid();
-			Fluid filterFluid = filterSlots[i] != null ? FluidRegistry.getFluid(filterSlots[i].getItemDamage()) : null;
+			Fluid filterFluid = filterSlots.get(i) != null ? FluidRegistry.getFluid(filterSlots.get(i).getItemDamage()) : null;
 			if (filterFluid == null)
 			{
 				if (tankFluid != null)
@@ -160,22 +164,13 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.filterSlots = new ItemStack[getInventory().getSizeInventory()];
+		filterSlots = new ArrayList<ItemStack>(getInventory().getSizeInventory());
+		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
 		}
-		for (int i = 0; i < nbttaglist.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
-			int j = nbttagcompound1.getByte("Slot") & 255;
-
-			if (j >= 0 && j < this.filterSlots.length)
-			{
-				this.filterSlots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-			}
-		}
-		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
+		
 		for (int i = 0; i < tanks.length; i++)
 		{
 			NBTTagCompound tankNBT = nbt.getCompoundTag("tank#" + i);
@@ -187,19 +182,8 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		NBTTagList nbttaglist = new NBTTagList();
-
-		for (int i = 0; i < this.filterSlots.length; ++i)
-		{
-			if (this.filterSlots[i] != null)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte) i);
-				this.filterSlots[i].writeToNBT(nbttagcompound1);
-				nbttaglist.appendTag(nbttagcompound1);
-			}
-		}
-		nbt.setTag("Items", nbttaglist);
+		
+		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
 			nbt.setString("CustomName", this.costumName);

@@ -1,6 +1,7 @@
 package extracells.tile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -40,7 +41,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
 	int priority = 1;
-	ItemStack[] filterSlots = new ItemStack[54];
+	private List<ItemStack> filterSlots = Arrays.asList(new ItemStack[54]);
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
 	ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 	FluidStack lastFluid;
@@ -140,19 +141,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		NBTTagList nbttaglist = new NBTTagList();
-
-		for (int i = 0; i < this.filterSlots.length; ++i)
-		{
-			if (this.filterSlots[i] != null)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte) i);
-				this.filterSlots[i].writeToNBT(nbttagcompound1);
-				nbttaglist.appendTag(nbttagcompound1);
-			}
-		}
-		nbt.setTag("Items", nbttaglist);
+		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
 			nbt.setString("CustomName", this.costumName);
@@ -165,22 +154,12 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.filterSlots = new ItemStack[getInventory().getSizeInventory()];
+		filterSlots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
+		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
 		}
-		for (int i = 0; i < nbttaglist.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
-			int j = nbttagcompound1.getByte("Slot") & 255;
-
-			if (j >= 0 && j < this.filterSlots.length)
-			{
-				this.filterSlots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-			}
-		}
-		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 		setPriority(nbt.getInteger("Priority"));
 	}
 
@@ -243,7 +222,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	{
 		List<ItemStack> filter = new ArrayList<ItemStack>();
 
-		if (filterSlots.length != 0)
+		if (filterSlots.size() > 0)
 			for (ItemStack itemStack : filterSlots)
 			{
 				ItemStack fluidContainer;

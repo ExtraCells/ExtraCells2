@@ -1,6 +1,7 @@
 package extracells.tile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -40,7 +41,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	Boolean powerStatus = false, networkReady = true;
 	IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
-	private ItemStack[] slots = new ItemStack[2];
+	private List<ItemStack> slots = Arrays.asList(new ItemStack[2]);
 	private Fluid currentFluid = null;
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 	ECPrivateInventory inventory = new ECPrivateInventory(slots, costumName, 64)
@@ -360,13 +361,13 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		super.writeToNBT(nbt);
 		NBTTagList nbttaglist = new NBTTagList();
 
-		for (int i = 0; i < this.slots.length; ++i)
+		for (int i = 0; i < slots.size(); ++i)
 		{
-			if (this.slots[i] != null)
+			if (slots.get(i) != null)
 			{
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				nbttagcompound1.setByte("Slot", (byte) i);
-				this.slots[i].writeToNBT(nbttagcompound1);
+				slots.get(i).writeToNBT(nbttagcompound1);
 				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}
@@ -382,20 +383,11 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.slots = new ItemStack[getInventory().getSizeInventory()];
+		slots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
+		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
-		}
-		for (int i = 0; i < nbttaglist.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
-			int j = nbttagcompound1.getByte("Slot") & 255;
-
-			if (j >= 0 && j < this.slots.length)
-			{
-				this.slots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-			}
 		}
 	}
 

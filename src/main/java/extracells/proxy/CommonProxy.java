@@ -1,5 +1,7 @@
 package extracells.proxy;
 
+import java.util.logging.Level;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -10,6 +12,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import appeng.api.Blocks;
 import appeng.api.Items;
 import appeng.api.Materials;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -18,6 +21,7 @@ import extracells.ItemEnum;
 import extracells.container.ContainerBusFluidExport;
 import extracells.container.ContainerBusFluidImport;
 import extracells.container.ContainerBusFluidStorage;
+import extracells.container.ContainerFluidCrafter;
 import extracells.container.ContainerHardMEDrive;
 import extracells.container.ContainerInterfaceFluid;
 import extracells.container.ContainerLevelEmitterFluid;
@@ -26,6 +30,7 @@ import extracells.container.ContainerTerminalFluid;
 import extracells.gui.GuiBusFluidExport;
 import extracells.gui.GuiBusFluidImport;
 import extracells.gui.GuiBusFluidStorage;
+import extracells.gui.GuiFluidCrafter;
 import extracells.gui.GuiHardMEDrive;
 import extracells.gui.GuiInterfaceFluid;
 import extracells.gui.GuiLevelEmitterFluid;
@@ -35,6 +40,7 @@ import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityCertusTank;
+import extracells.tile.TileEntityFluidCrafter;
 import extracells.tile.TileEntityHardMEDrive;
 import extracells.tile.TileEntityInterfaceFluid;
 import extracells.tile.TileEntityLevelEmitterFluid;
@@ -93,6 +99,8 @@ public class CommonProxy implements IGuiHandler
 			ItemStack levelEmitter = new ItemStack(BlockEnum.FLUIDLEVELEMITTER.getBlockInstance(), 1);
 			ItemStack fluidInterface = new ItemStack(BlockEnum.FLUIDINTERFACE.getBlockInstance(), 1);
 			ItemStack fluidVoid = new ItemStack(BlockEnum.FLUIDVOID.getBlockInstance(), 1);
+			ItemStack fluidCrafter = new ItemStack(BlockEnum.FLUIDCRAFTER.getBlockInstance(), 1);
+
 			// Advanced Casing Physical
 			GameRegistry.addShapedRecipe(advancedStorageCasingPhysical, new Object[]
 			{ "GFG", "F_F", "DDD", 'G', Blocks.blkQuartzGlass, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond });
@@ -147,27 +155,27 @@ public class CommonProxy implements IGuiHandler
 
 			// Customizable Cell
 			GameRegistry.addShapedRecipe(customCell, new Object[]
-			{ " P ", "SSS", " P ", 'P', appeng.api.Materials.matProcessorBasic, 'S', appeng.api.Items.itemCell1k });
+			{ " P ", "SSS", " P ", 'P', appeng.api.Materials.matProcessorBasic.copy(), 'S', appeng.api.Items.itemCell1k.copy() });
 
 			// Clusters Phsyical
 			GameRegistry.addShapedRecipe(physicalKilo, new Object[]
-			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', appeng.api.Materials.matStorageCluster });
+			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced.copy(), 'F', appeng.api.Materials.matFluxDust.copy(), 'D', Item.diamond, 'C', appeng.api.Materials.matStorageCluster.copy() });
 			GameRegistry.addShapedRecipe(physicalMega, new Object[]
-			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalKilo });
+			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced.copy(), 'F', appeng.api.Materials.matFluxDust.copy(), 'D', Item.diamond, 'C', physicalKilo });
 			GameRegistry.addShapedRecipe(physicalGiga, new Object[]
-			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalMega });
+			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced.copy(), 'F', appeng.api.Materials.matFluxDust.copy(), 'D', Item.diamond, 'C', physicalMega });
 			GameRegistry.addShapedRecipe(physicalTera, new Object[]
-			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'D', Item.diamond, 'C', physicalGiga });
+			{ "FPF", "CDC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced.copy(), 'F', appeng.api.Materials.matFluxDust.copy(), 'D', Item.diamond, 'C', physicalGiga });
 
 			// Clusters Fluid
 			GameRegistry.addShapedRecipe(fluidCell, new Object[]
-			{ "FCF", "CPC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'C', appeng.api.Materials.matFluxCrystal });
+			{ "FCF", "CPC", "FCF", 'P', appeng.api.Materials.matProcessorAdvanced.copy(), 'F', appeng.api.Materials.matFluxDust.copy(), 'C', appeng.api.Materials.matFluxCrystal.copy() });
 			GameRegistry.addShapedRecipe(fluidSegment, new Object[]
-			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidCell });
+			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced.copy(), 'F', appeng.api.Materials.matFluxDust.copy(), 'P', Materials.matProcessorAdvanced.copy(), 'C', fluidCell });
 			GameRegistry.addShapedRecipe(fluidBlock, new Object[]
-			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidSegment });
+			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced.copy(), 'F', appeng.api.Materials.matFluxDust.copy(), 'P', Materials.matProcessorAdvanced.copy(), 'C', fluidSegment });
 			GameRegistry.addShapedRecipe(fluidCluster, new Object[]
-			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced, 'F', appeng.api.Materials.matFluxDust, 'P', Materials.matProcessorAdvanced, 'C', fluidBlock });
+			{ "FPF", "CGC", "FCF", 'G', Blocks.blkQuartzGlass, 'P', appeng.api.Materials.matProcessorAdvanced.copy(), 'F', appeng.api.Materials.matFluxDust.copy(), 'P', Materials.matProcessorAdvanced.copy(), 'C', fluidBlock });
 
 			// SolderingStation
 			GameRegistry.addShapedRecipe(solderingStation, new Object[]
@@ -175,43 +183,43 @@ public class CommonProxy implements IGuiHandler
 
 			// ME Item Dropper
 			GameRegistry.addShapedRecipe(meItemDropper, new Object[]
-			{ "CMC", "I_I", "IRI", 'C', Block.cobblestone, 'R', Item.redstone, 'M', appeng.api.Materials.matConversionMatrix, 'I', Item.ingotIron });
+			{ "CMC", "I_I", "IRI", 'C', Block.cobblestone, 'R', Item.redstone, 'M', appeng.api.Materials.matConversionMatrix.copy(), 'I', Item.ingotIron });
 
 			// ME Backup Battery
 			GameRegistry.addShapedRecipe(meBattery, new Object[]
-			{ "EFE", "FPF", "EFE", 'E', appeng.api.Blocks.blkEnergyCell, 'F', appeng.api.Materials.matFluxCrystal, 'P', appeng.api.Materials.matProcessorBasic });
+			{ "EFE", "FPF", "EFE", 'E', appeng.api.Blocks.blkEnergyCell, 'F', appeng.api.Materials.matFluxCrystal.copy(), 'P', appeng.api.Materials.matProcessorBasic.copy() });
 
 			// Blast resistant ME Drive
 			GameRegistry.addShapedRecipe(hardMEDrive, new Object[]
-			{ "OOO", "ODO", "OCO", 'O', Block.obsidian, 'D', appeng.api.Blocks.blkDrive, 'C', appeng.api.Blocks.blkColorlessCableCovered });
+			{ "OOO", "ODO", "OCO", 'O', Block.obsidian, 'D', appeng.api.Blocks.blkDrive.copy(), 'C', appeng.api.Blocks.blkColorlessCableCovered.copy() });
 
 			// ME Fluid Import Bus
 			GameRegistry.addShapedRecipe(fluidImportBus, new Object[]
-			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkInputCablePrecision, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkInputCablePrecision.copy(), 'C', appeng.api.Blocks.blkColorlessCableCovered.copy(), 'B', Item.bucketEmpty });
 
 			// ME Fluid Export Bus
 			GameRegistry.addShapedRecipe(fluidExportBus, new Object[]
-			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkOutputCablePrecision, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkOutputCablePrecision.copy(), 'C', appeng.api.Blocks.blkColorlessCableCovered.copy(), 'B', Item.bucketEmpty });
 
 			// ME Fluid Storage Bus
 			GameRegistry.addShapedRecipe(fluidStorageBus, new Object[]
-			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkStorageBus, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkStorageBus.copy(), 'C', appeng.api.Blocks.blkColorlessCableCovered.copy(), 'B', Item.bucketEmpty });
 
 			// ME Fluid Terminal
 			GameRegistry.addShapedRecipe(fluidTerminal, new Object[]
-			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkTerminal, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', certusTank });
+			{ "IBI", "ISI", "ICI", 'I', Item.ingotIron, 'S', appeng.api.Blocks.blkTerminal.copy(), 'C', appeng.api.Blocks.blkColorlessCableCovered.copy(), 'B', certusTank });
 
 			// ME Fluid Transition Plane
 			GameRegistry.addShapedRecipe(transitionPlaneFluid, new Object[]
-			{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkTransitionPlane, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkTransitionPlane.copy(), 'C', appeng.api.Blocks.blkColorlessCableCovered.copy(), 'B', Item.bucketEmpty });
 
 			// ME Fluid Transition Plane
 			GameRegistry.addShapedRecipe(fluidInterface, new Object[]
-			{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkInterface, 'C', appeng.api.Blocks.blkColorlessCableCovered, 'B', Item.bucketEmpty });
+			{ "BBB", "ITI", "ICI", 'I', Item.ingotIron, 'T', appeng.api.Blocks.blkInterface.copy(), 'C', appeng.api.Blocks.blkColorlessCableCovered.copy(), 'B', Item.bucketEmpty });
 
 			// Certus Tank
 			GameRegistry.addShapedRecipe(certusTank, new Object[]
-			{ "GGG", "G_G", "GCG", 'G', Blocks.blkQuartzGlass, 'C', Blocks.blkColorlessCable, });
+			{ "GGG", "G_G", "GCG", 'G', Blocks.blkQuartzGlass, 'C', Blocks.blkColorlessCable.copy(), });
 
 			// Chromia
 			GameRegistry.addShapedRecipe(chromia, new Object[]
@@ -223,10 +231,14 @@ public class CommonProxy implements IGuiHandler
 
 			// Fluid Void
 			GameRegistry.addShapedRecipe(fluidVoid, new Object[]
-			{ "FIF", "IEI", "FIF", 'F', Materials.matFluxCrystal, 'E', new ItemStack(Item.enderPearl, 1), 'I', new ItemStack(Item.ingotIron, 1) });
+			{ "FIF", "IEI", "FIF", 'F', Materials.matFluxCrystal.copy(), 'E', new ItemStack(Item.enderPearl, 1), 'I', new ItemStack(Item.ingotIron, 1) });
+
+			// Fluid Crafter
+			GameRegistry.addShapedRecipe(fluidCrafter, new Object[]
+			{ "III", "MPM", "TCT", 'T', certusTank, 'M', Materials.matConversionMatrix.copy(), 'P', Blocks.blkAssembler.copy(), 'I', new ItemStack(Item.ingotIron, 1), 'C', Blocks.blkColorlessCable.copy(), });
 		} catch (Throwable e)
 		{
-			System.out.println("There was an ID conflict in extracells! Shutting down now!");
+			FMLLog.log(Level.SEVERE, "There was an ID conflict in extracells! Shutting down now!");
 			System.exit(1);
 		}
 	}
@@ -246,6 +258,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
 		GameRegistry.registerTileEntity(TileEntityLevelEmitterFluid.class, "tileEntityLevelEmitterFluid");
 		GameRegistry.registerTileEntity(TileEntityInterfaceFluid.class, "tileEntityInterfaceFluid");
+		GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
 	}
 
 	public void RegisterRenderers()
@@ -291,7 +304,7 @@ public class CommonProxy implements IGuiHandler
 			case 0: // GUI Hard ME Drive
 				return new GuiHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			case 1: // GUI Fluid Terminal
-				return new GuiTerminalFluid(world, (TileEntityTerminalFluid) tileEntity, player.inventory);
+				return new GuiTerminalFluid(world, (TileEntityTerminalFluid) tileEntity, player);
 			case 2: // GUI Storage Bus Fluid
 				return new GuiBusFluidStorage(world, player.inventory, (TileEntityBusFluidStorage) tileEntity);
 			case 3: // GUI Import Bus Fluid
@@ -304,6 +317,8 @@ public class CommonProxy implements IGuiHandler
 				return new GuiLevelEmitterFluid(player.inventory, (TileEntityLevelEmitterFluid) tileEntity);
 			case 7: // GUI ME Fluid Interface
 				return new GuiInterfaceFluid(player.inventory, (TileEntityInterfaceFluid) tileEntity);
+			case 8: // GUI ME Fluid Crafter
+				return new GuiFluidCrafter(player.inventory, ((TileEntityFluidCrafter) tileEntity).getInventory());
 			default:
 				return false;
 			}
@@ -325,7 +340,7 @@ public class CommonProxy implements IGuiHandler
 			case 0: // GUI Hard ME Drive
 				return new ContainerHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			case 1: // GUI Fluid Terminal
-				return new ContainerTerminalFluid(player.inventory, ((TileEntityTerminalFluid) tileEntity).getInventory());
+				return new ContainerTerminalFluid(player, ((TileEntityTerminalFluid) tileEntity).getInventory());
 			case 2: // GUI Storage Bus Fluid
 				return new ContainerBusFluidStorage(player.inventory, ((TileEntityBusFluidStorage) tileEntity).getInventory());
 			case 3: // GUI Import Bus Fluid
@@ -338,6 +353,8 @@ public class CommonProxy implements IGuiHandler
 				return new ContainerLevelEmitterFluid(player.inventory, ((TileEntityLevelEmitterFluid) tileEntity).getInventory());
 			case 7: // GUI ME Fluid Interface
 				return new ContainerInterfaceFluid(player.inventory, ((TileEntityInterfaceFluid) tileEntity).getInventory());
+			case 8: // GUI ME Fluid Crafter
+				return new ContainerFluidCrafter(player.inventory, ((TileEntityFluidCrafter) tileEntity).getInventory());
 			default:
 				return false;
 			}

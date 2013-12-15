@@ -1,28 +1,29 @@
 package extracells.container;
 
-import extracells.container.slot.SlotRespective;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerDispenser;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
+import extracells.container.slot.SlotRespective;
 
-public class ContainerTerminalFluid extends Container
+public class ContainerFluidCrafter extends Container
 {
+	IInventory tileentity;
 
-	IInventory inventoryTileEntity;
-
-	public ContainerTerminalFluid(EntityPlayer player, IInventory inventoryTileEntity)
+	public ContainerFluidCrafter(InventoryPlayer player, IInventory tileentity)
 	{
-		this.inventoryTileEntity = inventoryTileEntity;
-		// Input Slot accepts all FluidContainers
-		addSlotToContainer(new SlotRespective(inventoryTileEntity, 0, 8, 74));
-		// Input Slot accepts nothing
-		addSlotToContainer(new SlotFurnace(player, inventoryTileEntity, 1, 26, 74));
-
-		bindPlayerInventory(player.inventory);
+		this.tileentity = tileentity;
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				addSlotToContainer(new Slot(tileentity, j + i * 3, 62 + j * 18, 17 + i * 18));
+			}
+		}
+		bindPlayerInventory(player);
 	}
 
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
@@ -31,13 +32,13 @@ public class ContainerTerminalFluid extends Container
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 104));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 84));
 			}
 		}
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 162));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
 		}
 	}
 
@@ -56,13 +57,13 @@ public class ContainerTerminalFluid extends Container
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			if (inventoryTileEntity.isItemValidForSlot(0, itemstack1))
+			if (tileentity.isItemValidForSlot(0, itemstack1))
 			{
-				if (slotnumber == 1 || slotnumber == 0)
+				if (slotnumber < 10)
 				{
-					if (!mergeItemStack(itemstack1, 3, 38, false))
+					if (!mergeItemStack(itemstack1, 10, 36, false))
 						return null;
-				} else if (slotnumber != 1 && slotnumber != 0)
+				} else if (slotnumber >= 10 && slotnumber <= 36)
 				{
 					if (!mergeItemStack(itemstack1, 0, 1, false))
 						return null;

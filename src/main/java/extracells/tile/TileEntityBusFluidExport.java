@@ -1,6 +1,7 @@
 package extracells.tile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -39,7 +40,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 {
 	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true;
 	private IGridInterface grid;
-	private ItemStack[] filterSlots = new ItemStack[8];
+	private List<ItemStack> filterSlots = Arrays.asList(new ItemStack[8]);
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	private ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 	private ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
@@ -171,7 +172,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		}
 	}
 
-	public List<Fluid> getFilterFluids(ItemStack[] filterItemStacks)
+	public List<Fluid> getFilterFluids(List<ItemStack> filterItemStacks)
 	{
 		List<Fluid> filterFluids = new ArrayList<Fluid>();
 
@@ -290,19 +291,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		NBTTagList nbttaglist = new NBTTagList();
-
-		for (int i = 0; i < this.filterSlots.length; ++i)
-		{
-			if (this.filterSlots[i] != null)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte) i);
-				this.filterSlots[i].writeToNBT(nbttagcompound1);
-				nbttaglist.appendTag(nbttagcompound1);
-			}
-		}
-		nbt.setTag("Items", nbttaglist);
+		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
 			nbt.setString("CustomName", this.costumName);
@@ -317,22 +306,12 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.filterSlots = new ItemStack[getInventory().getSizeInventory()];
+		filterSlots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
+		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
-			this.costumName = nbt.getString("CustomName");
+			costumName = nbt.getString("CustomName");
 		}
-		for (int i = 0; i < nbttaglist.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
-			int j = nbttagcompound1.getByte("Slot") & 255;
-
-			if (j >= 0 && j < this.filterSlots.length)
-			{
-				this.filterSlots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-			}
-		}
-		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 
 		setRedstoneMode(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
 		setFluidMode(FluidMode.values()[nbt.getInteger("FluidMode")]);

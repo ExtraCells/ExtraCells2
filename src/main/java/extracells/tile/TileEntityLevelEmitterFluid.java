@@ -1,6 +1,8 @@
 package extracells.tile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.block.Block;
@@ -36,7 +38,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	private Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	private long currentAmount = 0, filterAmount = 0;
-	private ItemStack[] filterSlots = new ItemStack[1];
+	private List<ItemStack> filterSlots = Arrays.asList(new ItemStack[1]);
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.levelemitter");
 	private ECPrivateInventory inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 	private RedstoneModeInput redstoneAction = RedstoneModeInput.WhenOff;
@@ -104,7 +106,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	@Override
 	public void onNetworkInventoryChange(IItemList iss)
 	{
-		if (filterSlots[0] != null && iss != null)
+		if (filterSlots.get(0) != null && iss != null)
 		{
 			for (IAEItemStack currentStack : iss)
 			{
@@ -112,7 +114,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 				{
 					if (currentStack.getItem() == FLUIDDISPLAY.getItemInstance())
 					{
-						if (currentStack.getItemDamage() == filterSlots[0].getItemDamage())
+						if (currentStack.getItemDamage() == filterSlots.get(0).getItemDamage())
 						{
 							if (currentStack.getStackSize() != currentAmount)
 							{
@@ -123,7 +125,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 					}
 				}
 			}
-		} else if (filterSlots[0] == null)
+		} else if (filterSlots.get(0) == null)
 		{
 			currentAmount = 0;
 		}
@@ -217,19 +219,8 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		NBTTagList nbttaglist = new NBTTagList();
-
-		for (int i = 0; i < this.filterSlots.length; ++i)
-		{
-			if (this.filterSlots[i] != null)
-			{
-				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", (byte) i);
-				this.filterSlots[i].writeToNBT(nbttagcompound1);
-				nbttaglist.appendTag(nbttagcompound1);
-			}
-		}
-		nbt.setTag("Items", nbttaglist);
+		
+		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
 			nbt.setString("CustomName", this.costumName);
@@ -244,22 +235,12 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	{
 		super.readFromNBT(nbt);
 		NBTTagList nbttaglist = nbt.getTagList("Items");
-		this.filterSlots = new ItemStack[getInventory().getSizeInventory()];
+		filterSlots = Arrays.asList(new ItemStack[getInventory().getSizeInventory()]);
+		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
 			this.costumName = nbt.getString("CustomName");
 		}
-		for (int i = 0; i < nbttaglist.tagCount(); ++i)
-		{
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.tagAt(i);
-			int j = nbttagcompound1.getByte("Slot") & 255;
-
-			if (j >= 0 && j < this.filterSlots.length)
-			{
-				this.filterSlots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-			}
-		}
-		inventory = new ECPrivateInventory(filterSlots, costumName, 1);
 
 		redstoneAction = RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")];
 		filterAmount = nbt.getLong("filterAmount");

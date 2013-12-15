@@ -5,9 +5,8 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -39,9 +38,9 @@ public class GuiTerminalFluid extends GuiContainer
 	GuiTextField searchbar;
 	List<WidgetFluidSelector> selectors = new ArrayList<WidgetFluidSelector>();
 
-	public GuiTerminalFluid(World world, TileEntityTerminalFluid tileEntity, InventoryPlayer inventory)
+	public GuiTerminalFluid(World world, TileEntityTerminalFluid tileEntity, EntityPlayer player)
 	{
-		super(new ContainerTerminalFluid(inventory, tileEntity.getInventory()));
+		super(new ContainerTerminalFluid(player, tileEntity.getInventory()));
 		this.tileEntity = tileEntity;
 	}
 
