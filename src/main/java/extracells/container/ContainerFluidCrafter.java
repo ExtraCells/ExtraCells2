@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import extracells.container.slot.SlotRespective;
 
 public class ContainerFluidCrafter extends Container
 {
@@ -18,7 +19,7 @@ public class ContainerFluidCrafter extends Container
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				addSlotToContainer(new Slot(tileentity, j + i * 3, 62 + j * 18, 17 + i * 18));
+				addSlotToContainer(new SlotRespective(tileentity, j + i * 3, 62 + j * 18, 17 + i * 18));
 			}
 		}
 		bindPlayerInventory(player);
@@ -85,5 +86,10 @@ public class ContainerFluidCrafter extends Container
 	public void onContainerClosed(EntityPlayer entityplayer)
 	{
 		super.onContainerClosed(entityplayer);
+	}
+
+	protected void retrySlotClick(int par1, int par2, boolean par3, EntityPlayer par4EntityPlayer)
+	{
+		// DONT DO ANYTHING YOU SHITTY METHOD!
 	}
 }
