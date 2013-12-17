@@ -1,6 +1,5 @@
 package extracells.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import appeng.api.me.tiles.IGridTileEntity;
 
 public class ECPrivateInventory implements IInventory
 {

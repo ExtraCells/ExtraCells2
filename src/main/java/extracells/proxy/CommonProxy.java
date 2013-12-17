@@ -49,6 +49,7 @@ import extracells.tile.TileEntityMEDropper;
 import extracells.tile.TileEntitySolderingStation;
 import extracells.tile.TileEntityTerminalFluid;
 import extracells.tile.TileEntityTransitionPlaneFluid;
+import extracells.tile.TileEntityVoidFluid;
 import extracells.tile.TileEntityWalrus;
 
 public class CommonProxy implements IGuiHandler
@@ -114,7 +115,6 @@ public class CommonProxy implements IGuiHandler
 			ItemStack levelEmitter = new ItemStack(BlockEnum.FLUIDLEVELEMITTER.getBlockInstance(), 1);
 			ItemStack fluidInterface = new ItemStack(BlockEnum.FLUIDINTERFACE.getBlockInstance(), 1);
 			ItemStack fluidVoid = new ItemStack(BlockEnum.FLUIDVOID.getBlockInstance(), 1);
-			ItemStack fluidCrafter = new ItemStack(BlockEnum.FLUIDCRAFTER.getBlockInstance(), 1);
 
 			// Advanced Casing Physical
 			GameRegistry.addShapedRecipe(advancedStorageCasingPhysical, new Object[]
@@ -247,10 +247,18 @@ public class CommonProxy implements IGuiHandler
 			// Fluid Void
 			GameRegistry.addShapedRecipe(fluidVoid, new Object[]
 			{ "FIF", "IEI", "FIF", 'F', Materials.matFluxCrystal.copy(), 'E', new ItemStack(Item.enderPearl, 1), 'I', new ItemStack(Item.ingotIron, 1) });
-
-			// Fluid Crafter
-			GameRegistry.addShapedRecipe(fluidCrafter, new Object[]
-			{ "III", "MPM", "TCT", 'T', certusTank, 'M', Materials.matConversionMatrix.copy(), 'P', Blocks.blkAssembler.copy(), 'I', new ItemStack(Item.ingotIron, 1), 'C', Blocks.blkColorlessCable.copy(), });
+			try 
+		    {
+		        Class.forName("appeng.api.me.util.ITileCraftingProvider");
+				ItemStack fluidCrafter = new ItemStack(BlockEnum.FLUIDCRAFTER.getBlockInstance(), 1);
+			   	// Fluid Crafter
+				GameRegistry.addShapedRecipe(fluidCrafter, new Object[]
+				{ "III", "MPM", "TCT", 'T', certusTank, 'M', Materials.matConversionMatrix.copy(), 'P', Blocks.blkAssembler.copy(), 'I', new ItemStack(Item.ingotIron, 1), 'C', Blocks.blkColorlessCable.copy(), });
+			} 
+		    catch (ClassNotFoundException e) 
+		    {
+		    	//AE13
+		    }
 		} catch (Throwable e)
 		{
 			FMLLog.log(Level.SEVERE, "There was an ID conflict in extracells! Shutting down now!");
@@ -272,8 +280,18 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
 		GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
 		GameRegistry.registerTileEntity(TileEntityLevelEmitterFluid.class, "tileEntityLevelEmitterFluid");
+		GameRegistry.registerTileEntity(TileEntityVoidFluid.class, "tileEntityVoidFluid");
 		GameRegistry.registerTileEntity(TileEntityInterfaceFluid.class, "tileEntityInterfaceFluid");
-		GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
+		
+		try 
+	    {
+	        Class.forName("appeng.api.me.util.ITileCraftingProvider");
+			GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
+	    } 
+	    catch (ClassNotFoundException e) 
+	    {
+	    	//AE13
+	    }
 	}
 
 	public void RegisterRenderers()
@@ -300,8 +318,21 @@ public class CommonProxy implements IGuiHandler
 		{
 			try
 			{
+				if(current!=BlockEnum.FLUIDCRAFTER){
 				current.setBlockInstance(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
 				GameRegistry.registerBlock(current.getBlockInstance(), current.getItemBlockClass(), current.getBlockInstance().getUnlocalizedName());
+				}else{
+					try 
+				    {
+				        Class.forName("appeng.api.me.util.ITileCraftingProvider");
+				        current.setBlockInstance(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
+						GameRegistry.registerBlock(current.getBlockInstance(), current.getItemBlockClass(), current.getBlockInstance().getUnlocalizedName());
+				    } 
+				    catch (ClassNotFoundException e) 
+				    {
+				    	//AE13
+				    }
+				}
 			} catch (Throwable e)
 			{
 			}
