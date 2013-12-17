@@ -99,6 +99,7 @@ public class WidgetFluidTank extends Gui
 		drawHoveringText(description, x, y, Minecraft.getMinecraft().fontRenderer);
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected void drawHoveringText(List list, int x, int y, FontRenderer fontrenderer)
 	{
 		if (!list.isEmpty())

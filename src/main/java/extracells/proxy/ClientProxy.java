@@ -3,7 +3,6 @@ package extracells.proxy;
 import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import extracells.BlockEnum;
-import extracells.Extracells;
 import extracells.render.item.ItemRendererBusFluidExport;
 import extracells.render.item.ItemRendererBusFluidImport;
 import extracells.render.item.ItemRendererBusFluidStorage;

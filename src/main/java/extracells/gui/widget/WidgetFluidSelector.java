@@ -4,20 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class WidgetFluidSelector extends Gui
 {
@@ -131,6 +126,7 @@ public class WidgetFluidSelector extends Gui
 		drawRect(posX, posY + sizeY, posX + thickness + 1, posY + sizeY - thickness - 1, color);
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected void drawHoveringText(List list, int x, int y, FontRenderer fontrenderer)
 	{
 		if (!list.isEmpty())

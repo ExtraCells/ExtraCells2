@@ -33,9 +33,9 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	private IMEInventoryHandler parent;
 	private List<FluidStack> cachedInventory;
 	private List<Fluid> cachedPreformats = new ArrayList<Fluid>(63);
-	private String cachedName;
 	private Item fluidItem = ItemEnum.FLUIDDISPLAY.getItemInstance();
 	private ListMode preformattedMode = ListMode.WHITELIST;
+	private String cachedName;
 
 	public FluidStorageInventoryHandler(ItemStack itemstack, long totalBytes, int totalTypes)
 	{
@@ -118,8 +118,6 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public boolean containsItemType(IAEItemStack aeitemstack)
 	{
-		long remainingFluidTypes = totalBytes;
-
 		if (aeitemstack != null && aeitemstack.getItem() == fluidItem)
 		{
 			for (int i = 0; i < totalTypes; i++)
@@ -385,9 +383,6 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	public List<ItemStack> getPreformattedItems()
 	{
 		List<ItemStack> fluidItemList = new ArrayList<ItemStack>();
-		if (storage.stackTagCompound == null)
-			storage.stackTagCompound = new NBTTagCompound();
-		NBTTagCompound nbt = storage.stackTagCompound;
 
 		for (int i = 0; i < 63; i++)
 		{
@@ -433,7 +428,7 @@ public class FluidStorageInventoryHandler implements IMEInventoryHandler
 	@Override
 	public String getName()
 	{
-		return readNameFromNBT();
+		return !cachedName.isEmpty() ? cachedName : readNameFromNBT();
 	}
 
 	@Override

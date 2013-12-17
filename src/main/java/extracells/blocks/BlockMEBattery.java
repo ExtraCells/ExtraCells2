@@ -1,9 +1,5 @@
 package extracells.blocks;
 
-import java.text.DecimalFormat;
-
-import appeng.api.me.items.IAEWrench;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -12,12 +8,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
-import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityMEBattery;
 
 public class BlockMEBattery extends BlockContainer

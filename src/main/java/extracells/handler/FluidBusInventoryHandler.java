@@ -1,17 +1,14 @@
 package extracells.handler;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import extracells.ItemEnum;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
@@ -20,7 +17,7 @@ import appeng.api.config.ItemFlow;
 import appeng.api.config.ListMode;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
-import net.minecraftforge.fluids.IFluidHandler;
+import extracells.ItemEnum;
 
 public class FluidBusInventoryHandler implements IMEInventoryHandler
 {
@@ -329,7 +326,6 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 			IFluidHandler tankTile = (IFluidHandler) tileEntity;
 			if (tankTile != null)
 			{
-				FluidTankInfo[] tankArray;
 				if (((IFluidHandler) tileEntity).getTankInfo(facing) != null && ((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
 				{
 					return tankTile.getTankInfo(facing);

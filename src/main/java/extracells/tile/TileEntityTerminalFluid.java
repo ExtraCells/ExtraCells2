@@ -1,10 +1,10 @@
 package extracells.tile;
 
+import static extracells.ItemEnum.FLUIDDISPLAY;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -32,11 +32,10 @@ import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.ItemEnum;
 import extracells.util.ECPrivateInventory;
 import extracells.util.SpecialFluidStack;
-import static extracells.ItemEnum.*;
 
+@SuppressWarnings("deprecation")
 public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, IStorageAware
 {
 	Boolean powerStatus = false, networkReady = true;
@@ -106,7 +105,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 
 								ItemStack inputToBeFilled = inputTemp.copy();
 								inputToBeFilled.stackSize = 1;
-								int filledAmount = fluidContainerItem.fill(inputToBeFilled, request, true);
 
 								if (output == null)
 								{
@@ -135,7 +133,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 			if (FluidContainerRegistry.isFilledContainer(input))
 			{
 				ItemStack drainedContainer = input.getItem().getContainerItemStack(input);
-				FluidStack containedFluid = FluidContainerRegistry.getFluidForFilledItem(input);
 
 				if (FluidContainerRegistry.getFluidForFilledItem(input) != null)
 				{
@@ -177,8 +174,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 				{
 					ItemStack inputToBeDrained = inputTemp.copy();
 					inputToBeDrained.stackSize = 1;
-
-					int drainedAmount = fluidContainerItem.drain(inputToBeDrained, containedFluid.amount, true).amount;
 
 					if (output == null)
 					{
@@ -246,7 +241,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		this.writeToNBT(nbtTag);
 
 		NBTTagCompound fluids = new NBTTagCompound();
-		int[] fluidAmounts = new int[fluidsInNetwork.size()];
 		int[] fluidIDs = new int[fluidsInNetwork.size()];
 		for (int i = 0; i < fluidsInNetwork.size(); i++)
 		{

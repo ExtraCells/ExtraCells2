@@ -51,6 +51,7 @@ public abstract class AbstractPacket
 		}
 	}
 
+	@SuppressWarnings("serial")
 	public static class ProtocolException extends Exception
 	{
 

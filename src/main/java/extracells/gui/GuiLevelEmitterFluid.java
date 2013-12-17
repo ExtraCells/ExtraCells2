@@ -45,8 +45,6 @@ public class GuiLevelEmitterFluid extends GuiContainer
 	public void drawScreen(int x, int y, float f)
 	{
 		drawDefaultBackground();
-		int posX = (this.width - xSize) / 2;
-		int posY = (this.height - ySize) / 2;
 
 		String[] buttonNames =
 		{ "-1", "-10", "-100", "+1", "+10", "+100" };
@@ -86,6 +84,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void initGui()
 	{
 		int posX = (this.width - xSize) / 2;

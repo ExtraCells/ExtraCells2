@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.AbstractPacket;
 import extracells.tile.TileEntitySolderingStation;

@@ -2,31 +2,17 @@ package extracells.items;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import appeng.api.IAEItemStack;
-import appeng.api.IItemList;
-import appeng.api.Materials;
 import appeng.api.Util;
-import appeng.api.config.FuzzyMode;
-import appeng.api.me.items.IStorageCell;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
@@ -126,7 +112,6 @@ public class ItemStorageFluid extends Item
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
 	{
 		Boolean partitioned = Util.getCellRegistry().getHandlerForCell(stack).isPreformatted();
-		Boolean fuzzy = Util.getCellRegistry().getHandlerForCell(stack).isFuzzyPreformatted();
 		long used_bytes = Util.getCellRegistry().getHandlerForCell(stack).usedBytes();
 		long total_bytes = Util.getCellRegistry().getHandlerForCell(stack).totalBytes();
 		long used_types = Util.getCellRegistry().getHandlerForCell(stack).storedItemTypes();

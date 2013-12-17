@@ -5,14 +5,12 @@ import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import appeng.api.me.tiles.IColoredMETile;
 import appeng.api.me.tiles.IConnectionSensitive;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.util.SpecialFluidStack;
 
 public abstract class ColorableECTile extends TileEntity implements IConnectionSensitive, IColoredMETile
 {

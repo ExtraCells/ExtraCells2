@@ -1,7 +1,6 @@
 package extracells.tile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -28,7 +27,6 @@ import extracells.util.ECPrivatePatternInventory;
 
 public class TileEntityFluidCrafter extends TileEntity implements ITileCraftingProvider, IGridMachine
 {
-	private List<ItemStack> pattern = Arrays.asList(new ItemStack[9]);
 	private List<ICraftingPattern> patternHandlers = new ArrayList<ICraftingPattern>();
 	private ItemStack currentRequest = null;
 	private ECPrivatePatternInventory patternInventory = new ECPrivatePatternInventory("", 9, 64, this);
@@ -60,7 +58,7 @@ public class TileEntityFluidCrafter extends TileEntity implements ITileCraftingP
 		{
 			ItemStack item = bufferInventory.getStackInSlot(i) != null ? bufferInventory.getStackInSlot(i).copy() : null;
 
-			if (item != null && item.isItemEqual(stack) && item.areItemStackTagsEqual(stack, item))
+			if (item != null && item.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(stack, item))
 			{
 				if (item.stackSize > stack.stackSize)
 				{
@@ -88,7 +86,7 @@ public class TileEntityFluidCrafter extends TileEntity implements ITileCraftingP
 	{
 		for (ItemStack stack : bufferInventory.slots)
 		{
-			if (stack != null && stack.isItemEqual(items) && stack.areItemStackTagsEqual(items, stack) && stack.stackSize >= items.stackSize)
+			if (stack != null && stack.isItemEqual(items) && ItemStack.areItemStackTagsEqual(items, stack) && stack.stackSize >= items.stackSize)
 			{
 				return true;
 			}
@@ -129,7 +127,7 @@ public class TileEntityFluidCrafter extends TileEntity implements ITileCraftingP
 				{
 					bufferInventory.slots.set(i, out);
 					return rejected;
-				} else if (stack.isItemEqual(out) && stack.areItemStackTagsEqual(out, stack))
+				} else if (stack.isItemEqual(out) && ItemStack.areItemStackTagsEqual(out, stack))
 				{
 					stack.stackSize += out.stackSize;
 					bufferInventory.slots.set(i, stack);

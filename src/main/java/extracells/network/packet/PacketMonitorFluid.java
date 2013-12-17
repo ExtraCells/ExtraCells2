@@ -2,7 +2,6 @@ package extracells.network.packet;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldManager;
 import net.minecraftforge.common.DimensionManager;
 
 import com.google.common.io.ByteArrayDataInput;

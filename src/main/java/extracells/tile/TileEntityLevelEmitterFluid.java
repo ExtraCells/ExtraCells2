@@ -1,12 +1,7 @@
 package extracells.tile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
+import static extracells.ItemEnum.FLUIDDISPLAY;
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
@@ -16,7 +11,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidRegistry;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.WorldCoord;
@@ -28,12 +22,11 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.BlockEnum;
-import extracells.ItemEnum;
 import extracells.util.ECPrivateInventory;
-import extracells.util.SpecialFluidStack;
-import static extracells.ItemEnum.*;
 
+@SuppressWarnings("deprecation")
 public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable, IStorageAware
 {
 	private Boolean powerStatus = true, networkReady = true;

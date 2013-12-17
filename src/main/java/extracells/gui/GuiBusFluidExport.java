@@ -7,8 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,7 +17,6 @@ import extracells.BlockEnum;
 import extracells.container.ContainerBusFluidExport;
 import extracells.gui.widget.WidgetFluidModes;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
-import extracells.gui.widget.WidgetFluidTank;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketBusFluidExport;
 import extracells.tile.TileEntityBusFluidExport;
@@ -70,6 +67,7 @@ public class GuiBusFluidExport extends GuiContainer
 		this.fontRenderer.drawString(BlockEnum.FLUIDEXPORT.getStatName(), 5, 0, 0x000000);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
@@ -80,7 +78,6 @@ public class GuiBusFluidExport extends GuiContainer
 
 	public void actionPerformed(GuiButton button)
 	{
-		int modeOrdinal = tileentity.getRedstoneMode().ordinal();
 		switch (button.id)
 		{
 		case 0:

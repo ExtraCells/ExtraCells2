@@ -135,7 +135,6 @@ public class GuiTerminalFluid extends GuiContainer
 		{
 			List<SpecialFluidStack> fluidList = tileEntity.getFluids();
 			fluidTypes = fluidList.size();
-			int currFluidTypes = 0;
 
 			List<SpecialFluidStack> validFluids = new ArrayList<SpecialFluidStack>();
 			for (SpecialFluidStack current : fluidList)

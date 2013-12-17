@@ -4,9 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import appeng.api.WorldCoord;
@@ -14,7 +12,6 @@ import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IGridTileEntity;
 import appeng.api.me.util.IGridInterface;
 
 public class TileEntityMEDropper extends ColorableECTile implements IGridMachine, IDirectionalMETile
@@ -24,10 +21,8 @@ public class TileEntityMEDropper extends ColorableECTile implements IGridMachine
 	public Boolean locked = false;
 	private IGridInterface grid = null;
 	protected boolean isLoaded = false;
-	private Chunk cachedChunk = null;
 	Boolean powerStatus = true, networkReady = true;
 	public int gridIndex = 0;
-	private boolean isValidFlag = true;
 
 	public TileEntityMEDropper()
 	{

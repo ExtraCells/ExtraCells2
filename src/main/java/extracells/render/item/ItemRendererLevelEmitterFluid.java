@@ -8,10 +8,9 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import extracells.render.model.ModelBusFluidExport;
 import extracells.render.model.ModelCable;
-import extracells.render.model.ModelLevelEmitterFluid;
 import extracells.render.model.ModelCable.Colors;
+import extracells.render.model.ModelLevelEmitterFluid;
 
 public class ItemRendererLevelEmitterFluid implements IItemRenderer
 {

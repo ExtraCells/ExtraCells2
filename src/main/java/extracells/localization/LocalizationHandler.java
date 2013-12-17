@@ -1,6 +1,5 @@
 package extracells.localization;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.Extracells;
 
 public class LocalizationHandler

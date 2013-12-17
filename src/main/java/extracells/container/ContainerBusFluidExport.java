@@ -1,11 +1,10 @@
 package extracells.container;
 
-import extracells.container.slot.SlotFake;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import extracells.container.slot.SlotFake;
 
 public class ContainerBusFluidExport extends ECContainer
 {

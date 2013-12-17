@@ -16,8 +16,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import appeng.api.config.RedstoneModeInput;
-
 public class WidgetFluidModes extends GuiButton
 {
 	private FluidMode fluidMode;
@@ -81,6 +79,7 @@ public class WidgetFluidModes extends GuiButton
 		return fluidMode;
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected void drawHoveringText(List list, int x, int y, FontRenderer fontrenderer)
 	{
 		if (!list.isEmpty())

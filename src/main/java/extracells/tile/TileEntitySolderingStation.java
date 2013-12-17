@@ -1,14 +1,11 @@
 package extracells.tile;
 
-import appeng.api.Materials;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import appeng.api.Materials;
 import extracells.ItemEnum;
 
 public class TileEntitySolderingStation extends TileEntity

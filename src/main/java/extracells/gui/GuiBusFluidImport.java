@@ -6,7 +6,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
@@ -17,10 +16,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.BlockEnum;
 import extracells.container.ContainerBusFluidImport;
 import extracells.gui.widget.WidgetFluidModes;
-import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
-import extracells.network.PacketHandler;
-import extracells.network.packet.PacketBusFluidExport;
+import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketBusFluidImport;
 import extracells.tile.TileEntityBusFluidImport;
 
@@ -69,6 +66,7 @@ public class GuiBusFluidImport extends GuiContainer
 		this.fontRenderer.drawString(BlockEnum.FLUIDIMPORT.getStatName(), 5, 0, 0x000000);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{
@@ -79,7 +77,6 @@ public class GuiBusFluidImport extends GuiContainer
 
 	public void actionPerformed(GuiButton button)
 	{
-		int modeOrdinal = tileentity.getRedstoneMode().ordinal();
 		switch (button.id)
 		{
 		case 0:

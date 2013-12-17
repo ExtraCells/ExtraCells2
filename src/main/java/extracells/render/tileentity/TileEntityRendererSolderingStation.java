@@ -1,12 +1,12 @@
 package extracells.render.tileentity;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import extracells.render.model.ModelSolderingStation;
 import extracells.tile.TileEntitySolderingStation;
 

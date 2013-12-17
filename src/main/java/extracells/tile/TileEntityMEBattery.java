@@ -12,13 +12,10 @@ import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IGridTileEntity;
 import appeng.api.me.tiles.IMEPowerStorage;
 import appeng.api.me.util.IGridInterface;
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import cpw.mods.fml.server.FMLServerHandler;
 
 public class TileEntityMEBattery extends TileEntity implements IGridMachine
 {

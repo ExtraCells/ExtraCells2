@@ -1,7 +1,8 @@
 package extracells.tile;
 
+import static extracells.ItemEnum.FLUIDDISPLAY;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -31,18 +32,14 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
-import extracells.ItemEnum;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
 import extracells.util.ECPrivateInventory;
-import extracells.util.SpecialFluidStack;
-import static extracells.ItemEnum.*;
 
 public class TileEntityBusFluidExport extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable
 {
 	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true;
 	private IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
-	private ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 	private ECPrivateInventory inventory = new ECPrivateInventory(costumName, 8, 1);
 	private RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
 	private FluidMode fluidMode = FluidMode.DROPS;

@@ -99,6 +99,7 @@ public class WidgetRedstoneModes extends GuiButton
 		redstoneMode = mode;
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected void drawHoveringText(List list, int x, int y, FontRenderer fontrenderer)
 	{
 		if (!list.isEmpty())

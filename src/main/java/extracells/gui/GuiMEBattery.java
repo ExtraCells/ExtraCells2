@@ -74,12 +74,4 @@ public class GuiMEBattery extends GuiScreen
 	{
 		return false;
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void initGui()
-	{
-		int posX = (this.width - xSize) / 2;
-		int posY = (this.height - ySize) / 2;
-	}
 }

@@ -2,10 +2,6 @@ package extracells.items;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
-import extracells.ItemEnum;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -13,13 +9,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
 import appeng.api.IAEItemStack;
 import appeng.api.Util;
 import appeng.api.me.items.IStorageCell;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
+import extracells.ItemEnum;
 
 public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorageCell
 {
@@ -58,7 +57,6 @@ public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorage
 	{
 		Boolean hasName = !Util.getCellRegistry().getHandlerForCell(stack).getName().isEmpty();
 		String partitionName = Util.getCellRegistry().getHandlerForCell(stack).getName();
-		long used_bytes = Util.getCellRegistry().getHandlerForCell(stack).usedBytes();
 		if (hasName)
 		{
 			return StatCollector.translateToLocal(getUnlocalizedName(stack)) + " - " + partitionName;
@@ -112,7 +110,6 @@ public class ItemSecureStoragePhysicalDecrypted extends Item implements IStorage
 				itemStackDecrypted.setTagCompound(new NBTTagCompound());
 			}
 
-			NBTTagCompound tagEncrypted = itemStackEncrypted.getTagCompound();
 			NBTTagCompound tagDecrypted = itemStackDecrypted.getTagCompound();
 
 			// copy over content

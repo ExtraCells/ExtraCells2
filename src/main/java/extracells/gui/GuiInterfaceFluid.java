@@ -1,18 +1,17 @@
 package extracells.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeDirection;
+
 import org.lwjgl.opengl.GL11;
 
 import extracells.BlockEnum;
 import extracells.container.ContainerInterfaceFluid;
-import extracells.gui.widget.WidgetFluidSelector;
 import extracells.gui.widget.WidgetFluidTank;
 import extracells.tile.TileEntityInterfaceFluid;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeDirection;
 
 public class GuiInterfaceFluid extends GuiContainer
 {

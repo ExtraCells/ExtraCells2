@@ -1,14 +1,12 @@
 package extracells.render.item;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
-import cpw.mods.fml.client.FMLClientHandler;
+
+import org.lwjgl.opengl.GL11;
+
 import extracells.render.model.ModelSolderingStation;
 
 public class ItemRendererSolderingStation implements IItemRenderer

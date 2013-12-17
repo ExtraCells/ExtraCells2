@@ -8,7 +8,6 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import appeng.api.me.items.IStorageComponent;
 import cpw.mods.fml.relauncher.Side;
@@ -69,6 +68,7 @@ public class ItemStorageComponent extends Item implements IStorageComponent
 		return "item.storagecomponent." + suffixes[i];
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(int itemID, CreativeTabs creativeTab, List itemList)
 	{

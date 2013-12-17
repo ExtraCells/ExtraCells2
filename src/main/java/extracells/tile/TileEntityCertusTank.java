@@ -214,8 +214,6 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 			return new FluidTankInfo[]
 			{ tank.getInfo() };
 
-		FluidTankInfo[] tankInfo = new FluidTankInfo[1];
-
 		int amount = 0, capacity = 0;
 		Fluid fluid = null;
 

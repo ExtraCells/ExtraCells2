@@ -1,7 +1,8 @@
 package extracells.tile;
 
+import static extracells.ItemEnum.FLUIDDISPLAY;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -32,10 +33,8 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
-import extracells.ItemEnum;
 import extracells.handler.FluidBusInventoryHandler;
 import extracells.util.ECPrivateInventory;
-import static extracells.ItemEnum.*;
 
 public class TileEntityBusFluidStorage extends ColorableECTile implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {

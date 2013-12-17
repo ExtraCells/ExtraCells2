@@ -10,8 +10,6 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.client.FMLClientHandler;
-
 public class ModelBusFluidStorage extends ModelBase
 {
 	ModelRenderer Shape1;

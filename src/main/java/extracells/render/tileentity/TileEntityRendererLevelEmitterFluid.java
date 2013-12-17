@@ -2,11 +2,10 @@ package extracells.render.tileentity;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import extracells.render.model.ModelCable;
-import extracells.render.model.ModelLevelEmitterFluid;
 import extracells.render.model.ModelCable.Colors;
+import extracells.render.model.ModelLevelEmitterFluid;
 import extracells.tile.ColorableECTile;
 
 public class TileEntityRendererLevelEmitterFluid extends TileEntitySpecialRenderer
@@ -18,11 +17,6 @@ public class TileEntityRendererLevelEmitterFluid extends TileEntitySpecialRender
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float tick)
 	{
 		modelBus.render(tileEntity, x, y, z);
-
-		int xCoord = tileEntity.xCoord;
-		int yCoord = tileEntity.yCoord;
-		int zCoord = tileEntity.zCoord;
-		World world = tileEntity.worldObj;
 
 		if (((ColorableECTile) tileEntity).getVisualConnections() != null)
 		{

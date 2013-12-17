@@ -15,7 +15,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.event.ForgeSubscribe;
 import appeng.api.IAEItemStack;
 import appeng.api.Util;
 import appeng.api.me.items.IStorageCell;
@@ -143,6 +142,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)

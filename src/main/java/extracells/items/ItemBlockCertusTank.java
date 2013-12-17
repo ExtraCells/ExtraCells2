@@ -2,17 +2,16 @@ package extracells.items;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.tile.TileEntityCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.tile.TileEntityCertusTank;
 
 public class ItemBlockCertusTank extends ItemBlock
 {
@@ -35,7 +34,6 @@ public class ItemBlockCertusTank extends ItemBlock
 
 					if (fluidInTank != null && fluidInTank.getFluid() != null)
 					{
-						String fluidName = fluidInTank.getFluid().getLocalizedName();
 						return StatCollector.translateToLocal(this.getUnlocalizedName(itemstack) + ".name") + " - " + fluidInTank.getFluid().getLocalizedName();
 					}
 				} catch (Throwable e)
@@ -47,6 +45,7 @@ public class ItemBlockCertusTank extends ItemBlock
 		return "";
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
