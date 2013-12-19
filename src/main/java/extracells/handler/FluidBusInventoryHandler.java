@@ -98,7 +98,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long countOfItemType(IAEItemStack aeitemstack)
 	{
-		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
+		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank) != null && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
 		{
 			return aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance() ? aeitemstack.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID ? getTankInfo(tank)[0].fluid.amount : 0 : 0;
 		}
