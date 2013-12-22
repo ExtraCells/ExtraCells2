@@ -65,7 +65,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 			{
 				FluidTankInfo[] tankInfos = tank.getTankInfo(getFacing().getOpposite());
 
-				if (tankInfos != null)
+				if (tankInfos != null && tankInfos.length > 0)
 				{
 					if (tankInfos[0] != null)
 						tankFluid = tankInfos[0].fluid;
