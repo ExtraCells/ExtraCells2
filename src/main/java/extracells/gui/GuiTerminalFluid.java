@@ -90,9 +90,9 @@ public class GuiTerminalFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
+		fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getStatName().replace("ME ", ""), 5, -12, 0x000000);
+		
 		drawSelectors(mouseX, mouseY);
-
-		this.fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getStatName().replace("ME ", ""), 5, -12, 0x000000);
 
 		long amount = 0;
 		String name = "";
