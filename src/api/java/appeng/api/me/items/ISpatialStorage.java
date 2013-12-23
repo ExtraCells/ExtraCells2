@@ -20,5 +20,7 @@ public interface ISpatialStorage {
 	WorldCoord getMax( ItemStack is );
 	
 	TransitionResult doSpatialTransition( ItemStack is, World w, WorldCoord min, WorldCoord max, boolean doTransition );
+
+	World createNewWorld(ItemStack is);
 	
 }

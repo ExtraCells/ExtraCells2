@@ -1,6 +1,7 @@
 package appeng.api.config;
 
-import net.minecraft.src.ModLoader;
+import cpw.mods.fml.common.Loader;
+
 
 public enum SearchBoxMode implements IConfigEnum<ActionItems> {
 	Autosearch,
@@ -10,7 +11,7 @@ public enum SearchBoxMode implements IConfigEnum<ActionItems> {
 
 	@Override
 	public IConfigEnum[] getValues() {
-		if ( ModLoader.isModLoaded( "NotEnoughItems" ) )
+		if ( Loader.isModLoaded( "NotEnoughItems" ) )
 			return values();
 		return new SearchBoxMode[]{ Autosearch, Standard };
 	}

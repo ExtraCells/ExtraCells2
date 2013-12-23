@@ -1,9 +1,17 @@
 buildscript {
-        repositories { mavenCentral() }
-        dependencies { classpath 'com.github.abrarsyed.gmcp:GMCP:0.8.+' }
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    }
 }
- 
-apply plugin: "gmcp"
+
+apply plugin: 'forge'
 apply plugin: 'java'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
@@ -15,7 +23,9 @@ archivesBaseName = 'ExtraCells'
  
 logger.lifecycle ""+version
  
-minecraft { minecraftVersion = "1.6.4" }
+minecraft {
+    version = "1.6.4-9.11.1.964"
+}
  
 processResources
 {
@@ -24,7 +34,7 @@ processResources
         include '**/*.info'
         include '**/*.properties'
 
-        expand 'version':project.version, 'mcversion':project.minecraft.minecraftVersion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
