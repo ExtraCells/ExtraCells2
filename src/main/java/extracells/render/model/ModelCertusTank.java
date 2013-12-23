@@ -61,7 +61,9 @@ public class ModelCertusTank extends ModelBase
 			if (storedFluid != null && scale > 0)
 			{
 				Icon fluidIcon = storedFluid.getIcon();
-
+				if(fluidIcon==null)
+					fluidIcon = FluidRegistry.LAVA.getIcon();
+				
 				Tessellator tessellator = Tessellator.instance;
 				RenderBlocks renderer = new RenderBlocks();
 
