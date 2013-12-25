@@ -247,18 +247,17 @@ public class CommonProxy implements IGuiHandler
 			// Fluid Void
 			GameRegistry.addShapedRecipe(fluidVoid, new Object[]
 			{ "FIF", "IEI", "FIF", 'F', Materials.matFluxCrystal.copy(), 'E', new ItemStack(Item.enderPearl, 1), 'I', new ItemStack(Item.ingotIron, 1) });
-			try 
-		    {
-		        Class.forName("appeng.api.me.util.ITileCraftingProvider");
+			try
+			{
+				Class.forName("appeng.api.me.util.ITileCraftingProvider");
 				ItemStack fluidCrafter = new ItemStack(BlockEnum.FLUIDCRAFTER.getBlockInstance(), 1);
-			   	// Fluid Crafter
+				// Fluid Crafter
 				GameRegistry.addShapedRecipe(fluidCrafter, new Object[]
 				{ "III", "MPM", "TCT", 'T', certusTank, 'M', Materials.matConversionMatrix.copy(), 'P', Blocks.blkAssembler.copy(), 'I', new ItemStack(Item.ingotIron, 1), 'C', Blocks.blkColorlessCable.copy(), });
-			} 
-		    catch (ClassNotFoundException e) 
-		    {
-		    	//AE13
-		    }
+			} catch (ClassNotFoundException e)
+			{
+				// AE13
+			}
 		} catch (Throwable e)
 		{
 			FMLLog.log(Level.SEVERE, "There was an ID conflict in extracells! Shutting down now!");
@@ -282,16 +281,15 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityLevelEmitterFluid.class, "tileEntityLevelEmitterFluid");
 		GameRegistry.registerTileEntity(TileEntityVoidFluid.class, "tileEntityVoidFluid");
 		GameRegistry.registerTileEntity(TileEntityInterfaceFluid.class, "tileEntityInterfaceFluid");
-		
-		try 
-	    {
-	        Class.forName("appeng.api.me.util.ITileCraftingProvider");
+
+		try
+		{
+			Class.forName("appeng.api.me.util.ITileCraftingProvider");
 			GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
-	    } 
-	    catch (ClassNotFoundException e) 
-	    {
-	    	//AE13
-	    }
+		} catch (ClassNotFoundException e)
+		{
+			// AE13
+		}
 	}
 
 	public void RegisterRenderers()
@@ -306,6 +304,7 @@ public class CommonProxy implements IGuiHandler
 			try
 			{
 				current.setItemInstance(current.getItemClass().getConstructor(int.class).newInstance(current.getID()));
+				GameRegistry.registerItem(current.getItemInstance(), current.getItemInstance().getUnlocalizedName(), "extracells");
 			} catch (Throwable e)
 			{
 			}
@@ -318,20 +317,21 @@ public class CommonProxy implements IGuiHandler
 		{
 			try
 			{
-				if(current!=BlockEnum.FLUIDCRAFTER){
-				current.setBlockInstance(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
-				GameRegistry.registerBlock(current.getBlockInstance(), current.getItemBlockClass(), current.getBlockInstance().getUnlocalizedName());
-				}else{
-					try 
-				    {
-				        Class.forName("appeng.api.me.util.ITileCraftingProvider");
-				        current.setBlockInstance(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
+				if (current != BlockEnum.FLUIDCRAFTER)
+				{
+					current.setBlockInstance(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
+					GameRegistry.registerBlock(current.getBlockInstance(), current.getItemBlockClass(), current.getBlockInstance().getUnlocalizedName());
+				} else
+				{
+					try
+					{
+						Class.forName("appeng.api.me.util.ITileCraftingProvider");
+						current.setBlockInstance(current.getBlockClass().getConstructor(int.class).newInstance(current.getID()));
 						GameRegistry.registerBlock(current.getBlockInstance(), current.getItemBlockClass(), current.getBlockInstance().getUnlocalizedName());
-				    } 
-				    catch (ClassNotFoundException e) 
-				    {
-				    	//AE13
-				    }
+					} catch (ClassNotFoundException e)
+					{
+						// AE13
+					}
 				}
 			} catch (Throwable e)
 			{

@@ -91,7 +91,7 @@ public class GuiTerminalFluid extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getStatName().replace("ME ", ""), 5, -12, 0x000000);
-		
+
 		drawSelectors(mouseX, mouseY);
 
 		long amount = 0;
@@ -139,7 +139,7 @@ public class GuiTerminalFluid extends GuiContainer
 			List<SpecialFluidStack> validFluids = new ArrayList<SpecialFluidStack>();
 			for (SpecialFluidStack current : fluidList)
 			{
-				if (current != null && current.getFluid().getLocalizedName().toLowerCase().contains(searchbar.getText().toLowerCase()))
+				if (current != null && current.getFluid() != null && searchbar != null && current.getFluid().getLocalizedName().toLowerCase().contains(searchbar.getText().toLowerCase()))
 					validFluids.add(current);
 			}
 

@@ -116,10 +116,9 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 
 			if (fluidFilter != null && fluidFilter.size() > 0)
 			{
+				IMEInventoryHandler cellArray = getGrid().getCellArray();
 				for (Fluid entry : fluidFilter)
 				{
-					IMEInventoryHandler cellArray = getGrid().getCellArray();
-
 					if (entry != null && cellArray != null)
 					{
 						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), 1, entry.getID()));
