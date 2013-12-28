@@ -105,20 +105,6 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 
 	}
 
-	public void onCreated(ItemStack itemstack, World world, EntityPlayer player)
-	{
-		if (itemstack.getItemDamage() == 5)
-		{
-
-			if (!itemstack.hasTagCompound())
-			{
-				itemstack.setTagCompound(new NBTTagCompound());
-				itemstack.getTagCompound().setInteger("custom_size", 4096);
-				itemstack.getTagCompound().setInteger("custom_types", 27);
-			}
-		}
-	}
-
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
 	@SideOnly(Side.CLIENT)

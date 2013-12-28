@@ -1,5 +1,6 @@
 package extracells.blocks;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -48,6 +49,15 @@ public class BlockBusFluidExport extends RotatableColorBlock
 	public Icon getIcon(int side, int metadata)
 	{
 		return Blocks.blkInterface.getIconIndex();
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int neighborID)
+	{
+		super.onNeighborBlockChange(world, x, y, z, neighborID);
+		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityBusFluidExport)
+			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
+		((TileEntityBusFluidExport) world.getBlockTileEntity(x, y, z)).setRedstoneStatus(world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z));
 	}
 
 	@Override

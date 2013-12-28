@@ -5,14 +5,16 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 
 import org.lwjgl.opengl.GL11;
 
-import extracells.blocks.BlockTerminalFluid;
-import extracells.tile.TileEntityTerminalFluid;
+import extracells.blocks.BlockMonitorStorageFluid;
+import extracells.tile.TileEntityMonitorStorageFluid;
 
-public class RenderHelperTerminalFluid extends RenderHelper
+public class RenderHelperMonitorStorageFluid extends RenderHelper
 {
+
 	public static void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		Tessellator tessellator = Tessellator.instance;
@@ -47,7 +49,7 @@ public class RenderHelperTerminalFluid extends RenderHelper
 		tessellator.setColorRGBA_I(0xFFFFFF, 0xFF);
 		int[] color =
 		{ 0x1B2344, 0x895CA8, 0xDABDEF };
-		BlockTerminalFluid terminal = (BlockTerminalFluid) block;
+		BlockMonitorStorageFluid terminal = (BlockMonitorStorageFluid) block;
 		renderer.renderFaceXNeg(block, 0, 0, 0, terminal.baseLayer);
 		for (int i = 0; i < 3; i++)
 		{
@@ -69,15 +71,15 @@ public class RenderHelperTerminalFluid extends RenderHelper
 
 	public static boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
-		renderer.renderStandardBlock(block, x, y, z);
-
 		Tessellator ts = Tessellator.instance;
+		ts.setColorOpaque_I(0xFFFFFF);
 		ForgeDirection face = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-		BlockTerminalFluid terminal = (BlockTerminalFluid) block;
+		renderer.renderStandardBlock(block, x, y, z);
+		BlockMonitorStorageFluid monitor = (BlockMonitorStorageFluid) block;
 		int[] color =
 		{ 0, 0, 0 };
 
-		switch (((TileEntityTerminalFluid) world.getBlockTileEntity(x, y, z)).getColor())
+		switch (((TileEntityMonitorStorageFluid) world.getBlockTileEntity(x, y, z)).getColor())
 		{
 		case -1:
 			color = fluix.clone();
@@ -105,19 +107,15 @@ public class RenderHelperTerminalFluid extends RenderHelper
 			break;
 		}
 
-		boolean active = ((TileEntityTerminalFluid) world.getBlockTileEntity(x, y, z)).isMachineActive();
-
+		boolean active = ((TileEntityMonitorStorageFluid) world.getBlockTileEntity(x, y, z)).isMachineActive();
 		ts.setBrightness(15 << 2 | 15 << 0);
-
 		if (active)
 			ts.setBrightness(15 << 20 | 15 << 4);
 
-		ts.setColorOpaque_I(0xFFFFFF);
-		drawFace(face, block, x, y, z, terminal.baseLayer, renderer);
 		for (int i = 0; i < 3; i++)
 		{
 			ts.setColorOpaque_I(color[i]);
-			drawFace(face, block, x, y, z, terminal.colorLayers[i], renderer);
+			drawFace(face, block, x, y, z, monitor.colorLayers[i], renderer);
 		}
 		return true;
 	}

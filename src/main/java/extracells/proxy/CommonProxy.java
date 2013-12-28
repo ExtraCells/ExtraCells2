@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -46,6 +47,7 @@ import extracells.tile.TileEntityInterfaceFluid;
 import extracells.tile.TileEntityLevelEmitterFluid;
 import extracells.tile.TileEntityMEBattery;
 import extracells.tile.TileEntityMEDropper;
+import extracells.tile.TileEntityMonitorStorageFluid;
 import extracells.tile.TileEntitySolderingStation;
 import extracells.tile.TileEntityTerminalFluid;
 import extracells.tile.TileEntityTransitionPlaneFluid;
@@ -88,6 +90,10 @@ public class CommonProxy implements IGuiHandler
 			ItemStack encryptableCell = new ItemStack(ItemEnum.STORAGEPHYSICALDECRYPTED.getItemInstance(), 1, 0);
 
 			ItemStack customCell = new ItemStack(ItemEnum.STORAGEPHYSICAL.getItemInstance(), 1, 5);
+			if (!customCell.hasTagCompound())
+				customCell.setTagCompound(new NBTTagCompound());
+			customCell.getTagCompound().setInteger("custom_size", 4096);
+			customCell.getTagCompound().setInteger("custom_types", 27);
 
 			ItemStack physicalKilo = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 0);
 			ItemStack physicalMega = new ItemStack(ItemEnum.STORAGECOMPONENT.getItemInstance(), 1, 1);
@@ -244,6 +250,8 @@ public class CommonProxy implements IGuiHandler
 			GameRegistry.addRecipe(new ShapelessOreRecipe(levelEmitter, new Object[]
 			{ Blocks.blkLevelEmitter, "dyeBlue" }));
 
+			// Fluid Storage Monitor TODO
+
 			// Fluid Void
 			GameRegistry.addShapedRecipe(fluidVoid, new Object[]
 			{ "FIF", "IEI", "FIF", 'F', Materials.matFluxCrystal.copy(), 'E', new ItemStack(Item.enderPearl, 1), 'I', new ItemStack(Item.ingotIron, 1) });
@@ -281,6 +289,7 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityLevelEmitterFluid.class, "tileEntityLevelEmitterFluid");
 		GameRegistry.registerTileEntity(TileEntityVoidFluid.class, "tileEntityVoidFluid");
 		GameRegistry.registerTileEntity(TileEntityInterfaceFluid.class, "tileEntityInterfaceFluid");
+		GameRegistry.registerTileEntity(TileEntityMonitorStorageFluid.class, "tileEntityMonitorStorageFluid");
 
 		try
 		{

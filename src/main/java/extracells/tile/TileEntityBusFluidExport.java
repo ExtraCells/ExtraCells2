@@ -37,7 +37,7 @@ import extracells.util.ECPrivateInventory;
 
 public class TileEntityBusFluidExport extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable
 {
-	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true;
+	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus;
 	private IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	private ECPrivateInventory inventory = new ECPrivateInventory(costumName, 8, 1);
@@ -49,23 +49,22 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	{
 		if (!worldObj.isRemote && isPowered())
 		{
-			Boolean redstonePowered = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
 			switch (getRedstoneMode())
 			{
 			case WhenOn:
-				if (redstonePowered)
+				if (redstoneStatus)
 				{
 					doWork(fluidMode);
 				}
 				break;
 			case WhenOff:
-				if (!redstonePowered)
+				if (!redstoneStatus)
 				{
 					doWork(fluidMode);
 				}
 				break;
 			case OnPulse:
-				if (!redstonePowered)
+				if (!redstoneStatus)
 				{
 					redstoneFlag = false;
 				} else
@@ -89,11 +88,17 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		}
 	}
 
+	public void setRedstoneStatus(boolean redstone)
+	{
+		redstoneStatus = redstone;
+	}
+
 	@Override
 	public void validate()
 	{
 		super.validate();
 		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
+		setRedstoneStatus(worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord));
 	}
 
 	@Override

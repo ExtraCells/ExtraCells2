@@ -14,6 +14,7 @@ import extracells.blocks.BlockInterFaceFluid;
 import extracells.blocks.BlockLevelEmitterFluid;
 import extracells.blocks.BlockMEBattery;
 import extracells.blocks.BlockMEDropper;
+import extracells.blocks.BlockMonitorStorageFluid;
 import extracells.blocks.BlockSolderingStation;
 import extracells.blocks.BlockTerminalFluid;
 import extracells.blocks.BlockVoidFluid;
@@ -36,7 +37,8 @@ public enum BlockEnum
 	FLUIDLEVELEMITTER("tile.block.fluid.levelemitter.name", 511, BlockLevelEmitterFluid.class, "ID for the ME Fluid Level Emitter", "LevelEmitterFluid"),
 	FLUIDINTERFACE("tile.block.fluid.interface.name", 512, BlockInterFaceFluid.class, "ID for the ME Fluid Interface", "InterfaceFluid"),
 	FLUIDVOID("tile.block.fluid.void.name", 513, BlockVoidFluid.class, "ID for the ME Fluid Void", "VoidFluid"),
-	FLUIDCRAFTER("tile.block.fluid.crafter.name", 514, BlockFluidCrafter.class, "ID for the ME Fluid Crafter", "FluidCrafter");
+	FLUIDCRAFTER("tile.block.fluid.crafter.name", 514, BlockFluidCrafter.class, "ID for the ME Fluid Crafter", "FluidCrafter"),
+	FLUIDMONITOR("tile.block.fluid.monitor.storage.name", 515, BlockMonitorStorageFluid.class, "ID for the ME Fluid Storage Monitor", "StorageMonitorFluid");
 
 	private final String internalName;
 	private String description, IDName;

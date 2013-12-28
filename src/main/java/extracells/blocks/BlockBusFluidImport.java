@@ -10,6 +10,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
+import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 
 public class BlockBusFluidImport extends RotatableColorBlock
@@ -52,8 +53,11 @@ public class BlockBusFluidImport extends RotatableColorBlock
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
+	public void onNeighborBlockChange(World world, int x, int y, int z, int neighborID)
 	{
+		super.onNeighborBlockChange(world, x, y, z, neighborID);
+		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityBusFluidImport)
+			((TileEntityBusFluidImport) world.getBlockTileEntity(x, y, z)).setRedstoneStatus(world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z));
 		PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
 	}
 

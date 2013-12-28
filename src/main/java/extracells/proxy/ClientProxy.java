@@ -16,12 +16,14 @@ import extracells.render.tileentity.TileEntityRendererBusFluidImport;
 import extracells.render.tileentity.TileEntityRendererBusFluidStorage;
 import extracells.render.tileentity.TileEntityRendererCertusTank;
 import extracells.render.tileentity.TileEntityRendererLevelEmitterFluid;
+import extracells.render.tileentity.TileEntityRendererMonitorStorageFluid;
 import extracells.render.tileentity.TileEntityRendererSolderingStation;
 import extracells.tile.TileEntityBusFluidExport;
 import extracells.tile.TileEntityBusFluidImport;
 import extracells.tile.TileEntityBusFluidStorage;
 import extracells.tile.TileEntityCertusTank;
 import extracells.tile.TileEntityLevelEmitterFluid;
+import extracells.tile.TileEntityMonitorStorageFluid;
 import extracells.tile.TileEntitySolderingStation;
 import extracells.tile.TileEntityWalrus;
 
@@ -51,6 +53,8 @@ public class ClientProxy extends CommonProxy
 
 			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLevelEmitterFluid.class, new TileEntityRendererLevelEmitterFluid());
 			MinecraftForgeClient.registerItemRenderer(BlockEnum.FLUIDLEVELEMITTER.getBlockInstance().blockID, new ItemRendererLevelEmitterFluid());
+
+			ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMonitorStorageFluid.class, new TileEntityRendererMonitorStorageFluid());
 		} catch (NullPointerException e)
 		{
 			System.out.println("Mod ExtraCells: Another mod probably overrid an ExtraCells item causing EC to cancel the registration of ItemRenderers!");
