@@ -98,7 +98,6 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	{
 		super.validate();
 		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
-		setRedstoneStatus(worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord));
 	}
 
 	@Override
@@ -300,6 +299,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 
 		nbt.setInteger("RedstoneMode", getRedstoneMode().ordinal());
 		nbt.setInteger("FluidMode", getFluidMode().ordinal());
+		nbt.setBoolean("RedstoneState", redstoneStatus);
 	}
 
 	@Override
@@ -315,6 +315,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 
 		setRedstoneMode(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);
 		setFluidMode(FluidMode.values()[nbt.getInteger("FluidMode")]);
+		redstoneStatus = nbt.getBoolean("RedstoneState");
 	}
 
 	public ECPrivateInventory getInventory()

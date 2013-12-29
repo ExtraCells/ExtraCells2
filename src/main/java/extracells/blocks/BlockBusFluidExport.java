@@ -55,9 +55,17 @@ public class BlockBusFluidExport extends RotatableColorBlock
 	public void onNeighborBlockChange(World world, int x, int y, int z, int neighborID)
 	{
 		super.onNeighborBlockChange(world, x, y, z, neighborID);
-		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityBusFluidExport)
-			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
-		((TileEntityBusFluidExport) world.getBlockTileEntity(x, y, z)).setRedstoneStatus(world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z));
+		if (!world.isRemote)
+		{
+			if (world.getBlockTileEntity(x, y, z) instanceof TileEntityBusFluidExport)
+				PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
+			((TileEntityBusFluidExport) world.getBlockTileEntity(x, y, z)).setRedstoneStatus(world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z));
+		}
+	}
+
+	@Override
+	protected void initializeBlock()
+	{
 	}
 
 	@Override
