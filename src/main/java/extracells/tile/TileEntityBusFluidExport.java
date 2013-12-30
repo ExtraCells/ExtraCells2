@@ -37,7 +37,7 @@ import extracells.util.ECPrivateInventory;
 
 public class TileEntityBusFluidExport extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable
 {
-	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus;
+	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus = false;
 	private IGridInterface grid;
 	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	private ECPrivateInventory inventory = new ECPrivateInventory(costumName, 8, 1);
