@@ -39,8 +39,8 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 {
 	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus = false;
 	private IGridInterface grid;
-	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
-	private ECPrivateInventory inventory = new ECPrivateInventory(costumName, 8, 1);
+	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
+	private ECPrivateInventory inventory = new ECPrivateInventory(customName, 8, 1);
 	private RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
 	private FluidMode fluidMode = FluidMode.DROPS;
 
@@ -294,7 +294,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
-			nbt.setString("CustomName", this.costumName);
+			nbt.setString("CustomName", this.customName);
 		}
 
 		nbt.setInteger("RedstoneMode", getRedstoneMode().ordinal());
@@ -310,7 +310,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
-			costumName = nbt.getString("CustomName");
+			customName = nbt.getString("CustomName");
 		}
 
 		setRedstoneMode(RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")]);

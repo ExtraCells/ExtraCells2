@@ -17,10 +17,10 @@ public class ECPrivateInventory implements IInventory
 	public String customName;
 	private int stackLimit;
 
-	public ECPrivateInventory(String costumName, int size, int stackLimit)
+	public ECPrivateInventory(String customName, int size, int stackLimit)
 	{
 		this.slots = Arrays.asList(new ItemStack[size]);
-		this.customName = costumName;
+		this.customName = customName;
 		this.stackLimit = stackLimit;
 	}
 

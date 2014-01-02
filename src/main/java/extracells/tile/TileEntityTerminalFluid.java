@@ -40,10 +40,10 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 {
 	Boolean powerStatus = false, networkReady = true;
 	IGridInterface grid;
-	private String costumName = StatCollector.translateToLocal("tile.block.fluid.terminal");
+	private String customName = StatCollector.translateToLocal("tile.block.fluid.terminal");
 	private Fluid currentFluid = null;
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
-	ECPrivateInventory inventory = new ECPrivateInventory(costumName, 2, 64)
+	ECPrivateInventory inventory = new ECPrivateInventory(customName, 2, 64)
 	{
 		public boolean isItemValidForSlot(int i, ItemStack itemstack)
 		{
@@ -104,23 +104,26 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 								FluidStack request = new FluidStack(currentFluid, fluidContainerItem.getCapacity(inputTemp));
 
 								ItemStack inputToBeFilled = inputTemp.copy();
+								int filled = fluidContainerItem.fill(inputToBeFilled, request, true);
 								inputToBeFilled.stackSize = 1;
-
-								if (output == null)
+								if (filled >= request.amount)
 								{
-									if (drainFluid(request))
-									{
-										getInventory().setInventorySlotContents(1, inputToBeFilled);
-										getInventory().decrStackSize(0, 1);
-									}
-								} else if (output != null && output.itemID == inputToBeFilled.itemID && (!inputToBeFilled.getHasSubtypes() || inputToBeFilled.getItemDamage() == output.getItemDamage()) && ItemStack.areItemStackTagsEqual(inputToBeFilled, output))
-								{
-									if (output.stackSize + inputToBeFilled.stackSize <= inputToBeFilled.getMaxStackSize())
+									if (output == null)
 									{
 										if (drainFluid(request))
 										{
-											output.stackSize = output.stackSize + 1;
+											getInventory().setInventorySlotContents(1, inputToBeFilled);
 											getInventory().decrStackSize(0, 1);
+										}
+									} else if (output != null && output.itemID == inputToBeFilled.itemID && (!inputToBeFilled.getHasSubtypes() || inputToBeFilled.getItemDamage() == output.getItemDamage()) && ItemStack.areItemStackTagsEqual(inputToBeFilled, output))
+									{
+										if (output.stackSize + inputToBeFilled.stackSize <= inputToBeFilled.getMaxStackSize())
+										{
+											if (drainFluid(request))
+											{
+												output.stackSize = output.stackSize + 1;
+												getInventory().decrStackSize(0, 1);
+											}
 										}
 									}
 								}
@@ -173,25 +176,28 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 				if (containedFluid != null && containedFluid.amount > 0)
 				{
 					ItemStack inputToBeDrained = inputTemp.copy();
+					FluidStack drained = fluidContainerItem.drain(inputToBeDrained, containedFluid.amount, true);
 					inputToBeDrained.stackSize = 1;
-
-					if (output == null)
+					if (drained != null && drained.amount >= containedFluid.amount)
 					{
-						if (fillFluid(containedFluid))
+						if (output == null)
 						{
-							getInventory().setInventorySlotContents(1, inputToBeDrained);
-							getInventory().decrStackSize(0, 1);
-						}
-					} else if (output.isStackable() && output.stackSize < output.getMaxStackSize())
-					{
-						if (output != null && output.itemID == inputToBeDrained.itemID && (!inputToBeDrained.getHasSubtypes() || inputToBeDrained.getItemDamage() == output.getItemDamage()) && ItemStack.areItemStackTagsEqual(inputToBeDrained, output))
-						{
-							if (output.stackSize + inputToBeDrained.stackSize <= inputToBeDrained.getMaxStackSize())
+							if (fillFluid(containedFluid))
 							{
-								if (fillFluid(containedFluid))
+								getInventory().setInventorySlotContents(1, inputToBeDrained);
+								getInventory().decrStackSize(0, 1);
+							}
+						} else if (output.isStackable() && output.stackSize < output.getMaxStackSize())
+						{
+							if (output != null && output.itemID == inputToBeDrained.itemID && (!inputToBeDrained.getHasSubtypes() || inputToBeDrained.getItemDamage() == output.getItemDamage()) && ItemStack.areItemStackTagsEqual(inputToBeDrained, output))
+							{
+								if (output.stackSize + inputToBeDrained.stackSize <= inputToBeDrained.getMaxStackSize())
 								{
-									output.stackSize = output.stackSize + 1;
-									getInventory().decrStackSize(0, 1);
+									if (fillFluid(containedFluid))
+									{
+										output.stackSize = output.stackSize + 1;
+										getInventory().decrStackSize(0, 1);
+									}
 								}
 							}
 						}
@@ -368,7 +374,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		nbt.setTag("Items", nbttaglist);
 		if (getInventory().isInvNameLocalized())
 		{
-			nbt.setString("CustomName", this.costumName);
+			nbt.setString("CustomName", this.customName);
 		}
 	}
 
@@ -380,7 +386,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
-			this.costumName = nbt.getString("CustomName");
+			this.customName = nbt.getString("CustomName");
 		}
 	}
 

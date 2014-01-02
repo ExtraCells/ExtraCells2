@@ -32,8 +32,8 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	private Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	public FluidTank[] tanks = new FluidTank[6];
-	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
-	private ECPrivateInventory inventory = new ECPrivateInventory(costumName, 6, 1);
+	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
+	private ECPrivateInventory inventory = new ECPrivateInventory(customName, 6, 1);
 
 	public TileEntityInterfaceFluid()
 	{
@@ -163,7 +163,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
-			this.costumName = nbt.getString("CustomName");
+			this.customName = nbt.getString("CustomName");
 		}
 
 		for (int i = 0; i < tanks.length; i++)
@@ -181,7 +181,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
-			nbt.setString("CustomName", this.costumName);
+			nbt.setString("CustomName", this.customName);
 		}
 		for (int i = 0; i < tanks.length; i++)
 		{
@@ -327,8 +327,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	{
 		if (from == ForgeDirection.UNKNOWN)
 			return null;
-		FluidTankInfo[] tankInfos = new FluidTankInfo[6];
-		tankInfos[0] = tanks[from.ordinal()].getInfo();
-		return tankInfos;
+		return new FluidTankInfo[]
+		{ tanks[from.ordinal()].getInfo() };
 	}
 }

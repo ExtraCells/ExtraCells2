@@ -32,8 +32,8 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 	private Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	private long currentAmount = 0, filterAmount = 0;
-	private String costumName = StatCollector.translateToLocal("tile.block.fluid.levelemitter");
-	private ECPrivateInventory inventory = new ECPrivateInventory(costumName, 1, 1);
+	private String customName = StatCollector.translateToLocal("tile.block.fluid.levelemitter");
+	private ECPrivateInventory inventory = new ECPrivateInventory(customName, 1, 1);
 	private RedstoneModeInput redstoneAction = RedstoneModeInput.WhenOff;
 
 	public int getRedstonePowerBySide(ForgeDirection side)
@@ -216,7 +216,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
-			nbt.setString("CustomName", this.costumName);
+			nbt.setString("CustomName", this.customName);
 		}
 
 		nbt.setInteger("RedstoneMode", getRedstoneAction().ordinal());
@@ -231,7 +231,7 @@ public class TileEntityLevelEmitterFluid extends ColorableECTile implements IGri
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
-			this.costumName = nbt.getString("CustomName");
+			this.customName = nbt.getString("CustomName");
 		}
 
 		redstoneAction = RedstoneModeInput.values()[nbt.getInteger("RedstoneMode")];

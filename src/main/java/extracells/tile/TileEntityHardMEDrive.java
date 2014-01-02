@@ -27,7 +27,7 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 
 	Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
-	private String costumName = StatCollector.translateToLocal("tile.block.hardmedrive");
+	private String customName = StatCollector.translateToLocal("tile.block.hardmedrive");
 	private ItemStack[] slots = new ItemStack[3];
 
 	public TileEntityHardMEDrive()
@@ -76,7 +76,7 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 		nbt.setTag("Items", nbttaglist);
 		if (this.isInvNameLocalized())
 		{
-			nbt.setString("CustomName", this.costumName);
+			nbt.setString("CustomName", this.customName);
 		}
 	}
 
@@ -88,7 +88,7 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 		this.slots = new ItemStack[this.getSizeInventory()];
 		if (nbt.hasKey("CustomName"))
 		{
-			this.costumName = nbt.getString("CustomName");
+			this.customName = nbt.getString("CustomName");
 		}
 		for (int i = 0; i < nbttaglist.tagCount(); ++i)
 		{
@@ -184,7 +184,7 @@ public class TileEntityHardMEDrive extends ColorableECTile implements IInventory
 	@Override
 	public String getInvName()
 	{
-		return costumName;
+		return customName;
 	}
 
 	@Override

@@ -41,8 +41,8 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	Boolean powerStatus = true, networkReady = true;
 	IGridInterface grid;
 	int priority = 1;
-	private String costumName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
-	ECPrivateInventory inventory = new ECPrivateInventory(costumName, 54, 1);
+	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
+	ECPrivateInventory inventory = new ECPrivateInventory(customName, 54, 1);
 	FluidStack lastFluid;
 
 	public void setPriority(int priority)
@@ -143,7 +143,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 		nbt.setTag("Items", inventory.writeToNBT());
 		if (getInventory().isInvNameLocalized())
 		{
-			nbt.setString("CustomName", this.costumName);
+			nbt.setString("CustomName", this.customName);
 		}
 		nbt.setInteger("Priority", getPriority());
 	}
@@ -156,7 +156,7 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 		inventory.readFromNBT(nbttaglist);
 		if (nbt.hasKey("CustomName"))
 		{
-			this.costumName = nbt.getString("CustomName");
+			this.customName = nbt.getString("CustomName");
 		}
 		setPriority(nbt.getInteger("Priority"));
 	}
