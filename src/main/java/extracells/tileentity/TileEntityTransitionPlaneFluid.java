@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.tileentity;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;

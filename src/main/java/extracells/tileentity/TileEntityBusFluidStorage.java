@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.tileentity;
 
 import static extracells.ItemEnum.FLUIDDISPLAY;
 
@@ -11,7 +11,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -33,17 +32,19 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
+import extracells.BlockEnum;
 import extracells.handler.FluidBusInventoryHandler;
 import extracells.util.ECPrivateInventory;
 
 public class TileEntityBusFluidStorage extends ColorableECTile implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {
-	Boolean powerStatus = true, networkReady = true;
+	Boolean powerStatus = true, networkReady = true, fluidHandlerCached = false;
 	IGridInterface grid;
 	int priority = 1;
 	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
 	ECPrivateInventory inventory = new ECPrivateInventory(customName, 54, 1);
 	FluidStack lastFluid;
+	IFluidHandler fluidHandler = null;
 
 	public void setPriority(int priority)
 	{
@@ -53,23 +54,24 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	@Override
 	public void updateEntity()
 	{
+		if (!fluidHandlerCached)
+		{
+			BlockEnum.FLUIDSTORAGE.getBlockInstance().onNeighborBlockChange(worldObj, xCoord, yCoord, zCoord, 1);
+			fluidHandlerCached = true;
+		}
+
 		if (getGrid() == null || worldObj.isRemote)
 			return;
 
-		TileEntity tankTE = worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ);
 		FluidStack tankFluid = null;
-		if (tankTE instanceof IFluidHandler)
+		if (fluidHandler != null)
 		{
-			IFluidHandler tank = (IFluidHandler) tankTE;
-			if (tank != null)
-			{
-				FluidTankInfo[] tankInfos = tank.getTankInfo(getFacing().getOpposite());
+			FluidTankInfo[] tankInfos = fluidHandler.getTankInfo(getFacing().getOpposite());
 
-				if (tankInfos != null && tankInfos.length > 0)
-				{
-					if (tankInfos[0] != null)
-						tankFluid = tankInfos[0].fluid;
-				}
+			if (tankInfos != null && tankInfos.length > 0)
+			{
+				if (tankInfos[0] != null)
+					tankFluid = tankInfos[0].fluid;
 			}
 		}
 
@@ -94,6 +96,11 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 				lastFluid = null;
 			}
 		}
+	}
+
+	public void setFluidHandler(IFluidHandler handler)
+	{
+		fluidHandler = handler;
 	}
 
 	public void updateGrid()
@@ -237,7 +244,8 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 			}
 
 		List<IMEInventoryHandler> tankHandler = new ArrayList<IMEInventoryHandler>();
-		tankHandler.add(new FluidBusInventoryHandler(worldObj.getBlockTileEntity(xCoord + getFacing().offsetX, yCoord + getFacing().offsetY, zCoord + getFacing().offsetZ), getFacing().getOpposite(), getPriority(), filter));
+		if (fluidHandler != null)
+			tankHandler.add(new FluidBusInventoryHandler(fluidHandler, getFacing().getOpposite(), getPriority(), filter));
 
 		return tankHandler;
 	}

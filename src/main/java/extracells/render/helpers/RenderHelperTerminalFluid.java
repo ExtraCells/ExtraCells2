@@ -9,7 +9,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import extracells.blocks.BlockTerminalFluid;
-import extracells.tile.TileEntityTerminalFluid;
+import extracells.tileentity.TileEntityTerminalFluid;
 
 public class RenderHelperTerminalFluid extends RenderHelper
 {

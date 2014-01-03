@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
-import extracells.tile.TileEntityFluidCrafter;
+import extracells.tileentity.TileEntityFluidCrafter;
 
 public class BlockFluidCrafter extends RotatableColorBlock
 {

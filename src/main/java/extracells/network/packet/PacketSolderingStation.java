@@ -7,7 +7,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.AbstractPacket;
-import extracells.tile.TileEntitySolderingStation;
+import extracells.tileentity.TileEntitySolderingStation;
 
 public class PacketSolderingStation extends AbstractPacket
 {

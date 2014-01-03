@@ -17,7 +17,7 @@ import appeng.api.Materials;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
-import extracells.tile.TileEntityMonitorStorageFluid;
+import extracells.tileentity.TileEntityMonitorStorageFluid;
 
 public class BlockMonitorStorageFluid extends RotatableColorBlock
 {

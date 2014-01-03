@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.opengl.GL11;
 
 import extracells.render.model.ModelWalrus;
-import extracells.tile.TileEntityMonitorStorageFluid;
+import extracells.tileentity.TileEntityMonitorStorageFluid;
 
 public class TileEntityRendererMonitorStorageFluid extends TileEntitySpecialRenderer
 {

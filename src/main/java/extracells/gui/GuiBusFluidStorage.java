@@ -15,7 +15,7 @@ import extracells.BlockEnum;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.widget.DigitTextField;
 import extracells.network.packet.PacketBusFluidStorage;
-import extracells.tile.TileEntityBusFluidStorage;
+import extracells.tileentity.TileEntityBusFluidStorage;
 
 @SideOnly(Side.CLIENT)
 public class GuiBusFluidStorage extends GuiContainer

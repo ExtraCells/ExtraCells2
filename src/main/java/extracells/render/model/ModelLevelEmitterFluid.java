@@ -10,7 +10,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import extracells.tile.TileEntityLevelEmitterFluid;
+import extracells.tileentity.TileEntityLevelEmitterFluid;
 
 public class ModelLevelEmitterFluid extends ModelBase
 {

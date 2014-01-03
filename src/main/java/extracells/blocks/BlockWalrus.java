@@ -10,7 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import extracells.tile.TileEntityWalrus;
+import extracells.tileentity.TileEntityWalrus;
 
 public class BlockWalrus extends Block implements ITileEntityProvider
 {
@@ -51,7 +51,7 @@ public class BlockWalrus extends Block implements ITileEntityProvider
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
-		int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
 		if (l == 0)
 		{

@@ -8,7 +8,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import extracells.render.model.ModelSolderingStation;
-import extracells.tile.TileEntitySolderingStation;
 
 public class TileEntityRendererSolderingStation extends TileEntitySpecialRenderer
 {
@@ -48,8 +47,7 @@ public class TileEntityRendererSolderingStation extends TileEntitySpecialRendere
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float tick)
 	{
-		renderAModelAt((TileEntitySolderingStation) tileentity, x, y, z, tick);
-
+		renderAModelAt(tileentity, x, y, z, tick);
 	}
 
 }

@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import org.lwjgl.opengl.GL11;
 
-import extracells.tile.TileEntityCertusTank;
+import extracells.tileentity.TileEntityCertusTank;
 
 public class ModelCertusTank extends ModelBase
 {

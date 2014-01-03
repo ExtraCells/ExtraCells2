@@ -21,7 +21,7 @@ import extracells.ItemEnum;
 
 public class FluidBusInventoryHandler implements IMEInventoryHandler
 {
-	public TileEntity tank;
+	public IFluidHandler tank;
 	ForgeDirection facing;
 	public int priority;
 	List<ItemStack> filter;
@@ -29,7 +29,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	public IGridInterface grid;
 	public IMEInventoryHandler parent;
 
-	public FluidBusInventoryHandler(TileEntity tank, ForgeDirection facing, int priority, List<ItemStack> filter)
+	public FluidBusInventoryHandler(IFluidHandler tank, ForgeDirection facing, int priority, List<ItemStack> filter)
 	{
 		this.tank = tank;
 		this.facing = facing;
@@ -40,7 +40,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long storedItemTypes()
 	{
-		if (tank != null && tank instanceof IFluidHandler)
+		if (tank != null)
 		{
 			return getTankInfo(tank)[0].fluid != null ? 1 : 0;
 		}
@@ -50,7 +50,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long storedItemCount()
 	{
-		if (tank != null && tank instanceof IFluidHandler)
+		if (tank != null	)
 		{
 			return getTankInfo(tank)[0].fluid.amount;
 		}
@@ -60,7 +60,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long remainingItemCount()
 	{
-		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0].fluid != null)
+		if (tank != null && getTankInfo(tank)[0].fluid != null)
 		{
 			return getTankInfo(tank)[0].capacity - getTankInfo(tank)[0].fluid.amount;
 		}
@@ -70,7 +70,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long remainingItemTypes()
 	{
-		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank)[0].fluid == null)
+		if (tank != null && getTankInfo(tank)[0].fluid == null)
 		{
 			return 1;
 		}
@@ -98,7 +98,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long countOfItemType(IAEItemStack aeitemstack)
 	{
-		if (tank != null && tank instanceof IFluidHandler && getTankInfo(tank) != null && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
+		if (tank != null && getTankInfo(tank) != null && getTankInfo(tank)[0] != null && getTankInfo(tank)[0].fluid != null)
 		{
 			return aeitemstack.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance() ? aeitemstack.getItemDamage() == getTankInfo(tank)[0].fluid.fluidID ? getTankInfo(tank)[0].fluid.amount : 0 : 0;
 		}
@@ -112,27 +112,27 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance() && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
-			if (tank instanceof IFluidHandler)
+			if (tank != null)
 			{
 
-				if (((IFluidHandler) tank).getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == ((IFluidHandler) tank).getTankInfo(facing)[0].fluid.getFluid())
+				if (tank.getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == tank.getTankInfo(facing)[0].fluid.getFluid())
 				{
 
 					int filled = 0;
 
 					for (long i = 0; i < input.getStackSize() / 25; i++)
 					{
-						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), 25), true);
+						filled += tank.fill(facing, new FluidStack(input.getItemDamage(), 25), true);
 					}
 					int remainder = (int) (input.getStackSize() - ((input.getStackSize() / 25) * 25));
 					if (remainder > 0)
 					{
-						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), remainder), true);
+						filled += tank.fill(facing, new FluidStack(input.getItemDamage(), remainder), true);
 					}
 
 					addedStack.setStackSize(input.getStackSize() - filled);
 
-					tank.onInventoryChanged();
+					((TileEntity) tank).onInventoryChanged();
 
 					if (addedStack != null && addedStack.getStackSize() == 0)
 						addedStack = null;
@@ -149,7 +149,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	{
 		IAEItemStack removedStack = request.copy();
 
-		if (request.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance() && tank != null && tank instanceof IFluidHandler)
+		if (request.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance() && tank != null)
 		{
 			if (getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
 			{
@@ -157,19 +157,19 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 				for (long i = 0; i < request.getStackSize() / 25; i++)
 				{
-					FluidStack drainedStack = ((IFluidHandler) tank).drain(facing, 25, true);
+					FluidStack drainedStack = tank.drain(facing, 25, true);
 					if (drainedStack != null && drainedStack.amount != 0)
 						drainedAmount += drainedStack.amount;
 				}
 				int remainder = (int) (request.getStackSize() - ((request.getStackSize() / 25) * 25));
 				if (remainder > 0)
 				{
-					FluidStack drainedStack = ((IFluidHandler) tank).drain(facing, remainder, true);
+					FluidStack drainedStack = tank.drain(facing, remainder, true);
 					if (drainedStack != null && drainedStack.amount != 0)
 						drainedAmount += drainedStack.amount;
 				}
 
-				tank.onInventoryChanged();
+				((TileEntity) tank).onInventoryChanged();
 
 				if (drainedAmount == 0)
 				{
@@ -188,7 +188,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public IItemList getAvailableItems(IItemList out)
 	{
-		if (tank != null && tank instanceof IFluidHandler)
+		if (tank != null)
 		{
 			if (getTankInfo(tank) != null && getTankInfo(tank)[0].fluid != null && getTankInfo(tank)[0].fluid.getFluid() != null)
 			{
@@ -225,7 +225,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 		if (input.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance() && (!isPreformatted() || (isPreformatted() && isItemInPreformattedItems(input.getItemStack()))))
 		{
-			if (tank instanceof IFluidHandler)
+			if (tank != null)
 			{
 				if (getTankInfo(tank) != null && (getTankInfo(tank)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid()))
 				{
@@ -234,17 +234,17 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 					for (long i = 0; i < input.getStackSize() / 25; i++)
 					{
-						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), 25), false);
+						filled += tank.fill(facing, new FluidStack(input.getItemDamage(), 25), false);
 					}
 					int remainder = (int) (input.getStackSize() - ((input.getStackSize() / 25) * 25));
 					if (remainder > 0)
 					{
-						filled += ((IFluidHandler) tank).fill(facing, new FluidStack(input.getItemDamage(), remainder), false);
+						filled += tank.fill(facing, new FluidStack(input.getItemDamage(), remainder), false);
 					}
 
 					addedStack.setStackSize(input.getStackSize() - filled);
 
-					tank.onInventoryChanged();
+					((TileEntity) tank).onInventoryChanged();
 
 					if (addedStack != null && addedStack.getStackSize() == 0)
 						addedStack = null;
@@ -291,7 +291,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long totalBytes()
 	{
-		if (tank != null && tank instanceof IFluidHandler)
+		if (tank != null)
 		{
 			return getTankInfo(tank) != null ? getTankInfo(tank)[0].capacity : 0;
 		}
@@ -301,7 +301,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long freeBytes()
 	{
-		if (tank != null && tank instanceof IFluidHandler)
+		if (tank != null)
 		{
 			return getTankInfo(tank)[0].fluid != null ? getTankInfo(tank)[0].capacity - getTankInfo(tank)[0].fluid.amount : getTankInfo(tank)[0].capacity;
 		}
@@ -311,7 +311,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long usedBytes()
 	{
-		if (tank != null && tank instanceof IFluidHandler)
+		if (tank != null)
 		{
 
 			return getTankInfo(tank) != null ? getTankInfo(tank)[0].fluid.amount : 0;
@@ -319,20 +319,16 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		return 0;
 	}
 
-	public FluidTankInfo[] getTankInfo(TileEntity tileEntity)
+	public FluidTankInfo[] getTankInfo(IFluidHandler tileEntity)
 	{
-		if (tileEntity instanceof IFluidHandler)
+		if (tileEntity != null)
 		{
-			IFluidHandler tankTile = (IFluidHandler) tileEntity;
-			if (tankTile != null)
+			if (tileEntity.getTankInfo(facing) != null && tileEntity.getTankInfo(facing).length != 0)
 			{
-				if (((IFluidHandler) tileEntity).getTankInfo(facing) != null && ((IFluidHandler) tileEntity).getTankInfo(facing).length != 0)
-				{
-					return tankTile.getTankInfo(facing);
-				} else if (tankTile.getTankInfo(ForgeDirection.UNKNOWN) != null && tankTile.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
-				{
-					return tankTile.getTankInfo(ForgeDirection.UNKNOWN);
-				}
+				return tileEntity.getTankInfo(facing);
+			} else if (tileEntity.getTankInfo(ForgeDirection.UNKNOWN) != null && tileEntity.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+			{
+				return tileEntity.getTankInfo(ForgeDirection.UNKNOWN);
 			}
 		}
 		return null;

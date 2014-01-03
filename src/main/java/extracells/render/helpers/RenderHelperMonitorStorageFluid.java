@@ -9,7 +9,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import extracells.blocks.BlockMonitorStorageFluid;
-import extracells.tile.TileEntityMonitorStorageFluid;
+import extracells.tileentity.TileEntityMonitorStorageFluid;
 
 public class RenderHelperMonitorStorageFluid extends RenderHelper
 {

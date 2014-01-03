@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeDirection;
 import extracells.render.model.ModelBusFluidStorage;
 import extracells.render.model.ModelCable;
 import extracells.render.model.ModelCable.Colors;
-import extracells.tile.ColorableECTile;
+import extracells.tileentity.ColorableECTile;
 
 public class TileEntityRendererBusFluidStorage extends TileEntitySpecialRenderer
 {

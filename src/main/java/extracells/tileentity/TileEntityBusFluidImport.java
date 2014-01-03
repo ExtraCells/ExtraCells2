@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.tileentity;
 
 import static extracells.ItemEnum.FLUIDDISPLAY;
 
@@ -11,14 +11,15 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.IAEItemStack;
@@ -32,22 +33,29 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
+import extracells.BlockEnum;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
 import extracells.util.ECPrivateInventory;
 
-public class TileEntityBusFluidExport extends ColorableECTile implements IGridMachine, IDirectionalMETile, ITileCable
+public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
-	private Boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus = false;
-	private IGridInterface grid;
-	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
-	private ECPrivateInventory inventory = new ECPrivateInventory(customName, 8, 1);
-	private RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
-	private FluidMode fluidMode = FluidMode.DROPS;
+	boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus = false, fluidHandlerCached = false;
+	IGridInterface grid;
+	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
+	ECPrivateInventory inventory = new ECPrivateInventory(customName, 8, 1);
+	RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
+	FluidMode fluidMode = FluidMode.DROPS;
+	IFluidHandler fluidHandler = null;
 
 	@Override
 	public void updateEntity()
 	{
-		if (!worldObj.isRemote && isPowered())
+		if (!fluidHandlerCached)
+		{
+			BlockEnum.FLUIDIMPORT.getBlockInstance().onNeighborBlockChange(worldObj, xCoord, yCoord, zCoord, 1);
+			fluidHandlerCached = true;
+		}
+		if (!worldObj.isRemote && isPowered() && grid != null && fluidHandler != null)
 		{
 			switch (getRedstoneMode())
 			{
@@ -88,85 +96,50 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 		}
 	}
 
+	public void setFluidHandler(IFluidHandler handler)
+	{
+		fluidHandler = handler;
+	}
+
 	public void setRedstoneStatus(boolean redstone)
 	{
 		redstoneStatus = redstone;
 	}
 
-	@Override
-	public void validate()
-	{
-		super.validate();
-		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
-	}
-
-	@Override
-	public void invalidate()
-	{
-		super.invalidate();
-		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
-	}
-
 	private void doWork(FluidMode mode)
 	{
 		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
-		TileEntity facingTileEntity = worldObj.getBlockTileEntity(xCoord + facing.offsetX, yCoord + facing.offsetY, zCoord + facing.offsetZ);
+		FluidStack drainable = fluidHandler.drain(facing.getOpposite(), mode.getAmount(), false);
 
-		if (grid != null && facingTileEntity != null && facingTileEntity instanceof IFluidHandler)
+		if (drainable != null && drainable.amount > 0)
 		{
-			IFluidHandler facingTank = (IFluidHandler) facingTileEntity;
-
 			List<Fluid> fluidFilter = getFilterFluids(inventory.slots);
+			IAEItemStack toImport = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), drainable.amount, drainable.fluidID));
 
-			if (fluidFilter != null && fluidFilter.size() > 0)
-			{
-				IMEInventoryHandler cellArray = getGrid().getCellArray();
-				for (Fluid entry : fluidFilter)
-				{
-					if (entry != null && cellArray != null)
-					{
-						IAEItemStack entryToAEIS = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), 1, entry.getID()));
-
-						long contained = cellArray.countOfItemType(entryToAEIS);
-
-						if (contained > 0)
-						{
-							exportFluid(new FluidStack(entry, contained < mode.getAmount() ? (int) contained : mode.getAmount()), facingTank, facing.getOpposite(), mode);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public void exportFluid(FluidStack toExport, IFluidHandler tankToFill, ForgeDirection from, FluidMode mode)
-	{
-		if (toExport == null)
-			return;
-
-		int fillable = tankToFill.fill(from, toExport, false);
-
-		if (fillable > 0)
-		{
-			int filled = tankToFill.fill(from, toExport, true);
-
-			IAEItemStack toExtract = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), filled, toExport.fluidID));
-
-			IMEInventoryHandler cellArray = grid.getCellArray();
+			IMEInventoryHandler cellArray = getGrid().getCellArray();
 			if (cellArray != null)
 			{
-				IAEItemStack extracted = cellArray.extractItems(toExtract);
+				IAEItemStack notImported = cellArray.calculateItemAddition(toImport.copy());
 
-				grid.useMEEnergy(mode.getCost(), "Export Fluid");
-
-				if (extracted == null)
+				if (fluidFilter != null && !fluidFilter.isEmpty() && fluidFilter.size() > 0)
 				{
-					toExport.amount = filled;
-					tankToFill.drain(from, toExport, true);
-				} else if (extracted.getStackSize() < filled)
+					if (fluidFilter.contains(drainable.getFluid()))
+					{
+						if (grid.useMEEnergy(mode.getCost(), "Import Fluid") && notImported == null)
+						{
+							FluidStack drained = fluidHandler.drain(facing.getOpposite(), (int) toImport.getStackSize(), true);
+							if (drained != null)
+								cellArray.addItems(toImport.copy());
+						}
+					}
+				} else
 				{
-					toExport.amount = (int) (filled - (filled - extracted.getStackSize()));
-					tankToFill.drain(from, toExport, true);
+					if (grid.useMEEnergy(mode.getCost(), "Import Fluid") && notImported == null)
+					{
+						FluidStack drained = fluidHandler.drain(facing.getOpposite(), (int) toImport.getStackSize(), true);
+						if (drained != null)
+							cellArray.addItems(toImport.copy());
+					}
 				}
 			}
 		}
@@ -231,6 +204,20 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	{
 		super.onDataPacket(net, packet);
 		readFromNBT(packet.data);
+	}
+
+	@Override
+	public void validate()
+	{
+		super.validate();
+		MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj, getLocation()));
+	}
+
+	@Override
+	public void invalidate()
+	{
+		super.invalidate();
+		MinecraftForge.EVENT_BUS.post(new GridTileUnloadEvent(this, worldObj, getLocation()));
 	}
 
 	@Override
@@ -321,6 +308,98 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	public ECPrivateInventory getInventory()
 	{
 		return inventory;
+	}
+
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		if (resource != null && getGrid() != null && isPowered() && from.ordinal() == this.blockMetadata)
+		{
+			IAEItemStack added;
+			int amount = resource.amount;
+			int fluidID = resource.fluidID;
+			IAEItemStack temp = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), amount, fluidID));
+			temp.setStackSize(amount);
+			IMEInventoryHandler cellArray = getGrid().getCellArray();
+			if (cellArray != null)
+			{
+				if (doFill)
+				{
+					added = cellArray.addItems(temp);
+				} else
+				{
+					added = cellArray.calculateItemAddition(temp);
+				}
+				if (added == null)
+				{
+					if (doFill)
+						getGrid().useMEEnergy(amount / 50, "Import Fluid");
+					return resource.amount;
+				} else
+				{
+					if (doFill)
+						getGrid().useMEEnergy(amount - added.getStackSize() / 50, "Import Fluid");
+					return (int) (resource.amount - added.getStackSize());
+				}
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		return null;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		if (grid != null)
+		{
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			return cellArray != null && fluid != null && cellArray.canAccept(Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), 1, fluid.getID())));
+		}
+		return false;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		if (getGrid() != null && from.ordinal() == this.blockMetadata)
+		{
+			List<FluidTankInfo> tankInfo = new ArrayList<FluidTankInfo>();
+			FluidTankInfo[] tankArray = new FluidTankInfo[1];
+
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			if (cellArray != null)
+			{
+				for (IAEItemStack item : cellArray.getAvailableItems())
+				{
+					if (item.getItem() == FLUIDDISPLAY.getItemInstance())
+						tankInfo.add(new FluidTankInfo(new FluidStack(FluidRegistry.getFluid(item.getItemDamage()), (int) item.getStackSize()), (int) getGrid().getCellArray().freeBytes()));
+				}
+
+				if (tankInfo.isEmpty())
+					tankInfo.add(new FluidTankInfo(null, (int) cellArray.freeBytes()));
+
+				tankArray = tankInfo.toArray(tankArray);
+				return tankArray;
+			}
+		}
+		return null;
 	}
 
 	@Override

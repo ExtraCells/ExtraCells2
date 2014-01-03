@@ -7,7 +7,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import extracells.container.slot.SlotRespective;
-import extracells.tile.TileEntityHardMEDrive;
+import extracells.tileentity.TileEntityHardMEDrive;
 
 public class ContainerHardMEDrive extends Container
 {

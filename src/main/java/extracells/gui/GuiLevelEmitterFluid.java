@@ -16,7 +16,7 @@ import extracells.container.ContainerLevelEmitterFluid;
 import extracells.gui.widget.DigitTextField;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketLevelEmitterFluid;
-import extracells.tile.TileEntityLevelEmitterFluid;
+import extracells.tileentity.TileEntityLevelEmitterFluid;
 
 public class GuiLevelEmitterFluid extends GuiContainer
 {
@@ -77,7 +77,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 	{
 		this.fontRenderer.drawString(BlockEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
 
-		if (tileentity instanceof TileEntityLevelEmitterFluid)
+		if (tileentity != null)
 		{
 			WidgetRedstoneModes button = (WidgetRedstoneModes) buttonList.get(6);
 			button.setRedstoneMode(tileentity.getRedstoneAction());
@@ -142,6 +142,6 @@ public class GuiLevelEmitterFluid extends GuiContainer
 	{
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 			amount *= 100;
-		PacketDispatcher.sendPacketToServer(new PacketLevelEmitterFluid(tileentity.worldObj, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, (int) amount).makePacket());
+		PacketDispatcher.sendPacketToServer(new PacketLevelEmitterFluid(tileentity.worldObj, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, amount).makePacket());
 	}
 }

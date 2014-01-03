@@ -9,7 +9,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.AbstractPacket;
-import extracells.tile.TileEntityMEBattery;
+import extracells.tileentity.TileEntityMEBattery;
 
 public class PacketMEBattery extends AbstractPacket
 {

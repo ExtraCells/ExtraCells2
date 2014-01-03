@@ -11,7 +11,7 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
-import extracells.tile.TileEntityInterfaceFluid;
+import extracells.tileentity.TileEntityInterfaceFluid;
 
 public class BlockInterFaceFluid extends ColorBlock
 {

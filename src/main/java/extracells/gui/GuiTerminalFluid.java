@@ -23,7 +23,7 @@ import extracells.BlockEnum;
 import extracells.container.ContainerTerminalFluid;
 import extracells.gui.widget.WidgetFluidSelector;
 import extracells.network.packet.PacketMonitorFluid;
-import extracells.tile.TileEntityTerminalFluid;
+import extracells.tileentity.TileEntityTerminalFluid;
 import extracells.util.SpecialFluidStack;
 
 @SideOnly(Side.CLIENT)

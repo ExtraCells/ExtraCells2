@@ -9,7 +9,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.tile.TileEntityVoidFluid;
+import extracells.tileentity.TileEntityVoidFluid;
 
 public class BlockVoidFluid extends Block implements ITileEntityProvider
 {

@@ -15,7 +15,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.Extracells;
 import extracells.ItemEnum;
 import extracells.gui.GuiSolderingStation;
-import extracells.tile.TileEntitySolderingStation;
+import extracells.tileentity.TileEntitySolderingStation;
 
 public class BlockSolderingStation extends RotatableColorBlock
 {
@@ -40,7 +40,7 @@ public class BlockSolderingStation extends RotatableColorBlock
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
-		int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
 		if (l == 0)
 		{

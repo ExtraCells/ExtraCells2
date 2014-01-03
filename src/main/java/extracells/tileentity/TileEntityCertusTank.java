@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;

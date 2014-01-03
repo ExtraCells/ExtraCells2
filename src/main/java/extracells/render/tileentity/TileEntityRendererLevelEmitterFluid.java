@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeDirection;
 import extracells.render.model.ModelCable;
 import extracells.render.model.ModelCable.Colors;
 import extracells.render.model.ModelLevelEmitterFluid;
-import extracells.tile.ColorableECTile;
+import extracells.tileentity.ColorableECTile;
 
 public class TileEntityRendererLevelEmitterFluid extends TileEntitySpecialRenderer
 {

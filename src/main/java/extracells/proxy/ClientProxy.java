@@ -18,14 +18,14 @@ import extracells.render.tileentity.TileEntityRendererCertusTank;
 import extracells.render.tileentity.TileEntityRendererLevelEmitterFluid;
 import extracells.render.tileentity.TileEntityRendererMonitorStorageFluid;
 import extracells.render.tileentity.TileEntityRendererSolderingStation;
-import extracells.tile.TileEntityBusFluidExport;
-import extracells.tile.TileEntityBusFluidImport;
-import extracells.tile.TileEntityBusFluidStorage;
-import extracells.tile.TileEntityCertusTank;
-import extracells.tile.TileEntityLevelEmitterFluid;
-import extracells.tile.TileEntityMonitorStorageFluid;
-import extracells.tile.TileEntitySolderingStation;
-import extracells.tile.TileEntityWalrus;
+import extracells.tileentity.TileEntityBusFluidExport;
+import extracells.tileentity.TileEntityBusFluidImport;
+import extracells.tileentity.TileEntityBusFluidStorage;
+import extracells.tileentity.TileEntityCertusTank;
+import extracells.tileentity.TileEntityLevelEmitterFluid;
+import extracells.tileentity.TileEntityMonitorStorageFluid;
+import extracells.tileentity.TileEntitySolderingStation;
+import extracells.tileentity.TileEntityWalrus;
 
 public class ClientProxy extends CommonProxy
 {

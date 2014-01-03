@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.BlockEnum;
 import extracells.Extracells;
-import extracells.tile.TileEntityCertusTank;
+import extracells.tileentity.TileEntityCertusTank;
 
 public class BlockCertusTank extends BlockContainer
 {

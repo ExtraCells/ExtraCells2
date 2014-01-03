@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.BlockEnum;
 import extracells.network.packet.PacketMEBattery;
-import extracells.tile.TileEntityMEBattery;
+import extracells.tileentity.TileEntityMEBattery;
 
 public class GuiMEBattery extends GuiScreen
 {

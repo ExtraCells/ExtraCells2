@@ -56,7 +56,7 @@ public class ItemRendererCertusTank implements IItemRenderer
 				RenderBlocks renderer = new RenderBlocks();
 
 				GL11.glScalef(1.0F, 1.0F, -1.0F);
-				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, (float) ((float) storedFluid.amount / (float) tankCapacity) * 0.999F, 0.92F);
+				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, (float) storedFluid.amount / (float) tankCapacity * 0.999F, 0.92F);
 				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 				GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 

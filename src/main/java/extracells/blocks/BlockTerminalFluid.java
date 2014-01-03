@@ -14,7 +14,7 @@ import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
-import extracells.tile.TileEntityTerminalFluid;
+import extracells.tileentity.TileEntityTerminalFluid;
 
 public class BlockTerminalFluid extends RotatableColorBlock
 {
@@ -110,7 +110,7 @@ public class BlockTerminalFluid extends RotatableColorBlock
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemstack)
 	{
 		super.onBlockPlacedBy(world, x, y, z, player, itemstack);
-		int l = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
 		if (l == 0)
 		{

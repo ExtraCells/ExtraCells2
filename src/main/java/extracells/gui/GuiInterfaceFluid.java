@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import extracells.BlockEnum;
 import extracells.container.ContainerInterfaceFluid;
 import extracells.gui.widget.WidgetFluidTank;
-import extracells.tile.TileEntityInterfaceFluid;
+import extracells.tileentity.TileEntityInterfaceFluid;
 
 public class GuiInterfaceFluid extends GuiContainer
 {

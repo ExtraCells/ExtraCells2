@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.BlockEnum;
 import extracells.container.ContainerHardMEDrive;
-import extracells.tile.TileEntityHardMEDrive;
+import extracells.tileentity.TileEntityHardMEDrive;
 
 @SideOnly(Side.CLIENT)
 public class GuiHardMEDrive extends GuiContainer

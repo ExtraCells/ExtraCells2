@@ -9,7 +9,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.AbstractPacket;
-import extracells.tile.TileEntityBusFluidStorage;
+import extracells.tileentity.TileEntityBusFluidStorage;
 
 public class PacketBusFluidStorage extends AbstractPacket
 {

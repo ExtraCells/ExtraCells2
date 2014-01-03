@@ -19,7 +19,7 @@ import extracells.gui.widget.WidgetFluidModes;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketBusFluidExport;
-import extracells.tile.TileEntityBusFluidExport;
+import extracells.tileentity.TileEntityBusFluidExport;
 
 @SideOnly(Side.CLIENT)
 public class GuiBusFluidExport extends GuiContainer
@@ -56,7 +56,7 @@ public class GuiBusFluidExport extends GuiContainer
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/exportbusfluid.png"));
 
-		if (tileentity instanceof TileEntityBusFluidExport)
+		if (tileentity != null)
 		{
 			WidgetRedstoneModes redstoneSwitch = (WidgetRedstoneModes) buttonList.get(0);
 			redstoneSwitch.setRedstoneMode(tileentity.getRedstoneMode());

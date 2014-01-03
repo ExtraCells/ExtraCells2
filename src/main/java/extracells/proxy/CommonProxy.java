@@ -37,22 +37,22 @@ import extracells.gui.GuiInterfaceFluid;
 import extracells.gui.GuiLevelEmitterFluid;
 import extracells.gui.GuiMEBattery;
 import extracells.gui.GuiTerminalFluid;
-import extracells.tile.TileEntityBusFluidExport;
-import extracells.tile.TileEntityBusFluidImport;
-import extracells.tile.TileEntityBusFluidStorage;
-import extracells.tile.TileEntityCertusTank;
-import extracells.tile.TileEntityFluidCrafter;
-import extracells.tile.TileEntityHardMEDrive;
-import extracells.tile.TileEntityInterfaceFluid;
-import extracells.tile.TileEntityLevelEmitterFluid;
-import extracells.tile.TileEntityMEBattery;
-import extracells.tile.TileEntityMEDropper;
-import extracells.tile.TileEntityMonitorStorageFluid;
-import extracells.tile.TileEntitySolderingStation;
-import extracells.tile.TileEntityTerminalFluid;
-import extracells.tile.TileEntityTransitionPlaneFluid;
-import extracells.tile.TileEntityVoidFluid;
-import extracells.tile.TileEntityWalrus;
+import extracells.tileentity.TileEntityBusFluidExport;
+import extracells.tileentity.TileEntityBusFluidImport;
+import extracells.tileentity.TileEntityBusFluidStorage;
+import extracells.tileentity.TileEntityCertusTank;
+import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.tileentity.TileEntityHardMEDrive;
+import extracells.tileentity.TileEntityInterfaceFluid;
+import extracells.tileentity.TileEntityLevelEmitterFluid;
+import extracells.tileentity.TileEntityMEBattery;
+import extracells.tileentity.TileEntityMEDropper;
+import extracells.tileentity.TileEntityMonitorStorageFluid;
+import extracells.tileentity.TileEntitySolderingStation;
+import extracells.tileentity.TileEntityTerminalFluid;
+import extracells.tileentity.TileEntityTransitionPlaneFluid;
+import extracells.tileentity.TileEntityVoidFluid;
+import extracells.tileentity.TileEntityWalrus;
 
 public class CommonProxy implements IGuiHandler
 {

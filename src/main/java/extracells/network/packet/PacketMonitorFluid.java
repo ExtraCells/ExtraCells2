@@ -9,7 +9,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.AbstractPacket;
-import extracells.tile.TileEntityTerminalFluid;
+import extracells.tileentity.TileEntityTerminalFluid;
 
 public class PacketMonitorFluid extends AbstractPacket
 {

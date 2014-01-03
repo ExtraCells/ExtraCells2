@@ -9,7 +9,7 @@ import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import extracells.Extracells;
-import extracells.tile.TileEntityLevelEmitterFluid;
+import extracells.tileentity.TileEntityLevelEmitterFluid;
 
 public class BlockLevelEmitterFluid extends RotatableColorBlock
 {

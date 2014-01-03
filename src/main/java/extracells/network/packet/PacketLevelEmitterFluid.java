@@ -10,7 +10,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.AbstractPacket;
-import extracells.tile.TileEntityLevelEmitterFluid;
+import extracells.tileentity.TileEntityLevelEmitterFluid;
 
 public class PacketLevelEmitterFluid extends AbstractPacket
 {

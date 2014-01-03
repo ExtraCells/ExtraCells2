@@ -1,14 +1,16 @@
 package extracells.blocks;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.IFluidHandler;
 import appeng.api.Blocks;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.Extracells;
-import extracells.tile.TileEntityBusFluidExport;
+import extracells.tileentity.TileEntityBusFluidExport;
 
 public class BlockBusFluidExport extends RotatableColorBlock
 {
@@ -60,6 +62,13 @@ public class BlockBusFluidExport extends RotatableColorBlock
 			if (world.getBlockTileEntity(x, y, z) instanceof TileEntityBusFluidExport)
 				PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
 			((TileEntityBusFluidExport) world.getBlockTileEntity(x, y, z)).setRedstoneStatus(world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z));
+		}
+		ForgeDirection blockOrientation = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
+		TileEntity blockTE = world.getBlockTileEntity(x, y, z);
+		if (blockTE instanceof TileEntityBusFluidExport)
+		{
+			TileEntity fluidHandler = world.getBlockTileEntity(x + blockOrientation.offsetX, y + blockOrientation.offsetY, z + blockOrientation.offsetZ);
+			((TileEntityBusFluidExport) blockTE).setFluidHandler(fluidHandler instanceof IFluidHandler ? (IFluidHandler) fluidHandler : null);
 		}
 	}
 

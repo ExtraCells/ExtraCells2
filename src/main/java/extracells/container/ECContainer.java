@@ -187,10 +187,6 @@ public abstract class ECContainer extends Container
 		for (int machineIndex = 0; machineIndex < numSlots - 9 * 4; machineIndex++)
 		{
 			Slot slot = (Slot) inventorySlots.get(machineIndex);
-			if (slot instanceof Slot)
-			{
-				continue;
-			}
 			if (slot instanceof SlotFake)
 			{
 				continue;

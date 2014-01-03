@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.tile.TileEntityCertusTank;
+import extracells.tileentity.TileEntityCertusTank;
 
 public class ItemBlockCertusTank extends ItemBlock
 {

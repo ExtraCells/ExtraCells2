@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.tileentity;
 
 import static extracells.ItemEnum.FLUIDDISPLAY;
 

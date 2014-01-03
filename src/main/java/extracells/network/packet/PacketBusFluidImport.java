@@ -12,7 +12,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
 import extracells.network.AbstractPacket;
-import extracells.tile.TileEntityBusFluidImport;
+import extracells.tileentity.TileEntityBusFluidImport;
 
 public class PacketBusFluidImport extends AbstractPacket
 {

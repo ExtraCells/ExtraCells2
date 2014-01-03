@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.tileentity;
 
 import java.util.ArrayList;
 import java.util.List;

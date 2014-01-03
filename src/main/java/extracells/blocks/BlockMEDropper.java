@@ -24,7 +24,7 @@ import appeng.api.me.util.IMEInventoryHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
-import extracells.tile.TileEntityMEDropper;
+import extracells.tileentity.TileEntityMEDropper;
 
 public class BlockMEDropper extends RotatableColorBlock
 {
@@ -164,9 +164,9 @@ public class BlockMEDropper extends RotatableColorBlock
 	public static IPosition getIPositionFromBlockSource(IBlockSource par0IBlockSource)
 	{
 		EnumFacing enumfacing = getFacing(par0IBlockSource.getBlockMetadata());
-		double d0 = par0IBlockSource.getX() + 0.7D * (double) enumfacing.getFrontOffsetX();
-		double d1 = par0IBlockSource.getY() + 0.7D * (double) enumfacing.getFrontOffsetY();
-		double d2 = par0IBlockSource.getZ() + 0.7D * (double) enumfacing.getFrontOffsetZ();
+		double d0 = par0IBlockSource.getX() + 0.7D * enumfacing.getFrontOffsetX();
+		double d1 = par0IBlockSource.getY() + 0.7D * enumfacing.getFrontOffsetY();
+		double d2 = par0IBlockSource.getZ() + 0.7D * enumfacing.getFrontOffsetZ();
 		return new PositionImpl(d0, d1, d2);
 	}
 

@@ -1,4 +1,4 @@
-package extracells.tile;
+package extracells.tileentity;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;

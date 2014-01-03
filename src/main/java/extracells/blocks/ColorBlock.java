@@ -47,7 +47,7 @@ public abstract class ColorBlock extends BlockContainer
 					{
 						// Method for AE 13 (W/O the argument)
 						isColoredMethod = ((IColoredMETile) clickedOnTileEntity).getClass().getDeclaredMethod("isColored");
-						isColored = (Boolean) isColoredMethod.invoke((IColoredMETile) clickedOnTileEntity);
+						isColored = (Boolean) isColoredMethod.invoke(clickedOnTileEntity);
 					} catch (Throwable e)
 					{
 					}
