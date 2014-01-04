@@ -5,6 +5,8 @@ import static extracells.ItemEnum.FLUIDDISPLAY;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -36,7 +38,7 @@ import extracells.util.ECPrivateInventory;
 import extracells.util.SpecialFluidStack;
 
 @SuppressWarnings("deprecation")
-public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, IStorageAware
+public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, IStorageAware, ISidedInventory
 {
 	Boolean powerStatus = false, networkReady = true;
 	IGridInterface grid;
@@ -376,6 +378,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		{
 			nbt.setString("CustomName", this.customName);
 		}
+		nbt.setInteger("currentFluid", currentFluid != null ? currentFluid.getID() : -1);
 	}
 
 	@Override
@@ -388,6 +391,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		{
 			this.customName = nbt.getString("CustomName");
 		}
+		currentFluid = FluidRegistry.getFluid(nbt.getInteger("currentFluid"));
 	}
 
 	@Override
@@ -490,5 +494,94 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;
+	}
+
+	@Override
+	public int getSizeInventory()
+	{
+		return inventory.getSizeInventory();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int i)
+	{
+		return inventory.getStackInSlot(i);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int i, int j)
+	{
+		return inventory.decrStackSize(i, j);
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int i)
+	{
+		return inventory.getStackInSlotOnClosing(i);
+	}
+
+	@Override
+	public void setInventorySlotContents(int i, ItemStack itemstack)
+	{
+		inventory.setInventorySlotContents(i, itemstack);
+	}
+
+	@Override
+	public String getInvName()
+	{
+		return inventory.getInvName();
+	}
+
+	@Override
+	public boolean isInvNameLocalized()
+	{
+		return inventory.isInvNameLocalized();
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return inventory.getInventoryStackLimit();
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer)
+	{
+		return inventory.isUseableByPlayer(entityplayer);
+	}
+
+	@Override
+	public void openChest()
+	{
+	}
+
+	@Override
+	public void closeChest()
+	{
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	{
+		return inventory.isItemValidForSlot(i, itemstack);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int var1)
+	{
+		return new int[]
+		{ 0, 1 };
+	}
+
+	@Override
+	public boolean canInsertItem(int i, ItemStack itemstack, int j)
+	{
+		return inventory.isItemValidForSlot(i, itemstack) && i == 0;
+	}
+
+	@Override
+	public boolean canExtractItem(int i, ItemStack itemstack, int j)
+	{
+		return i == 1;
 	}
 }

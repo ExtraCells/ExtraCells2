@@ -13,6 +13,8 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import appeng.api.Blocks;
 import appeng.api.Items;
 import appeng.api.Materials;
+import appeng.api.Util;
+import appeng.api.movable.IMovableRegistry;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -69,6 +71,26 @@ public class CommonProxy implements IGuiHandler
 			if (!entry.getItemClass().isInstance(Item.itemsList[entry.getID() + 256]))
 				FMLLog.log(Level.SEVERE, "!IMPORTANT! ExtraCells has found ID mismatches! The Item \"" + entry.getStatName() + "\"with the id " + entry.getID() + " (in config, ingame it'shifted up by 256 by forge) has been overridden by another mod!");
 		}
+	}
+
+	public void registerMovables()
+	{
+		IMovableRegistry registry = Util.getAppEngApi().getMovableRegistry();
+		registry.whiteListTileEntity(TileEntitySolderingStation.class);
+		registry.whiteListTileEntity(TileEntityMEDropper.class);
+		registry.whiteListTileEntity(TileEntityMEBattery.class);
+		registry.whiteListTileEntity(TileEntityHardMEDrive.class);
+		registry.whiteListTileEntity(TileEntityBusFluidImport.class);
+		registry.whiteListTileEntity(TileEntityBusFluidExport.class);
+		registry.whiteListTileEntity(TileEntityBusFluidStorage.class);
+		registry.whiteListTileEntity(TileEntityTerminalFluid.class);
+		registry.whiteListTileEntity(TileEntityTransitionPlaneFluid.class);
+		registry.whiteListTileEntity(TileEntityCertusTank.class);
+		registry.whiteListTileEntity(TileEntityWalrus.class);
+		registry.whiteListTileEntity(TileEntityLevelEmitterFluid.class);
+		registry.whiteListTileEntity(TileEntityVoidFluid.class);
+		registry.whiteListTileEntity(TileEntityInterfaceFluid.class);
+		registry.whiteListTileEntity(TileEntityMonitorStorageFluid.class);
 	}
 
 	public void addRecipes()
