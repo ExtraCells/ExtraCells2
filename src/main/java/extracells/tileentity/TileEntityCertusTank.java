@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 {
@@ -282,26 +281,26 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 			{
 				if (Math.abs(current.amount - lastBeforeUpdate.amount) >= 500)
 				{
-					PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+					worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType().blockID, current.fluidID, current.amount);
 					lastBeforeUpdate = current.copy();
 				} else
 				{
 					if (lastBeforeUpdate.amount < tank.getCapacity() && current.amount == tank.getCapacity() || lastBeforeUpdate.amount == tank.getCapacity() && current.amount < tank.getCapacity())
 					{
-						PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+						worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType().blockID, current.fluidID, current.amount);
 						lastBeforeUpdate = current.copy();
 					}
 				}
 			} else
 			{
-				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+				worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType().blockID, current.fluidID, current.amount);
 				lastBeforeUpdate = current.copy();
 			}
 		} else
 		{
 			if (lastBeforeUpdate != null)
 			{
-				PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
+				worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType().blockID, -1, -1);
 				lastBeforeUpdate = null;
 			}
 		}
@@ -315,5 +314,20 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	public float getRenderScale()
 	{
 		return (float) tank.getFluidAmount() / tank.getCapacity();
+	}
+
+	/**
+	 * This is kinda abusive since it's intended to use par1 as the event id and
+	 * par2 as the value...
+	 */
+	public boolean receiveClientEvent(int id, int amount)
+	{
+		if (id <= 0 || amount <= 0)
+		{
+			tank.setFluid(null);
+			return true;
+		}
+		tank.setFluid(new FluidStack(id, amount));
+		return true;
 	}
 }
