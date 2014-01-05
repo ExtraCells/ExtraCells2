@@ -115,7 +115,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 			if (tank != null)
 			{
 
-				if (tank.getTankInfo(facing)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == tank.getTankInfo(facing)[0].fluid.getFluid())
+				if (getTankInfo(tank)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == tank.getTankInfo(facing)[0].fluid.getFluid())
 				{
 
 					int filled = 0;
@@ -319,16 +319,16 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 		return 0;
 	}
 
-	public FluidTankInfo[] getTankInfo(IFluidHandler tileEntity)
+	public FluidTankInfo[] getTankInfo(IFluidHandler tank)
 	{
-		if (tileEntity != null)
+		if (tank != null)
 		{
-			if (tileEntity.getTankInfo(facing) != null && tileEntity.getTankInfo(facing).length != 0)
+			if (tank.getTankInfo(facing) != null && tank.getTankInfo(facing).length != 0)
 			{
-				return tileEntity.getTankInfo(facing);
-			} else if (tileEntity.getTankInfo(ForgeDirection.UNKNOWN) != null && tileEntity.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
+				return tank.getTankInfo(facing);
+			} else if (tank.getTankInfo(ForgeDirection.UNKNOWN) != null && tank.getTankInfo(ForgeDirection.UNKNOWN).length != 0)
 			{
-				return tileEntity.getTankInfo(ForgeDirection.UNKNOWN);
+				return tank.getTankInfo(ForgeDirection.UNKNOWN);
 			}
 		}
 		return null;

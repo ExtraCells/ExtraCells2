@@ -39,7 +39,7 @@ import extracells.util.ECPrivateInventory;
 
 public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
-	boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus = false, fluidHandlerCached = false;
+	boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus = false, fluidHandlerCached = false, redStoneCached = false;
 	IGridInterface grid;
 	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
 	ECPrivateInventory inventory = new ECPrivateInventory(customName, 8, 1);
@@ -50,10 +50,10 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 	@Override
 	public void updateEntity()
 	{
-		if (!fluidHandlerCached)
+		if (!redStoneCached || !fluidHandlerCached)
 		{
 			BlockEnum.FLUIDIMPORT.getBlockInstance().onNeighborBlockChange(worldObj, xCoord, yCoord, zCoord, 1);
-			fluidHandlerCached = true;
+			fluidHandlerCached = redStoneCached = true;
 		}
 		if (!worldObj.isRemote && isPowered() && grid != null && fluidHandler != null)
 		{

@@ -38,7 +38,7 @@ import extracells.util.ECPrivateInventory;
 
 public class TileEntityBusFluidStorage extends ColorableECTile implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {
-	Boolean powerStatus = true, networkReady = true, fluidHandlerCached = false;
+	Boolean powerStatus = true, networkReady = true, fluidHandlerCached = false, redStoneCached = false;
 	IGridInterface grid;
 	int priority = 1;
 	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
@@ -54,10 +54,10 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 	@Override
 	public void updateEntity()
 	{
-		if (!fluidHandlerCached)
+		if (!redStoneCached || !fluidHandlerCached)
 		{
 			BlockEnum.FLUIDSTORAGE.getBlockInstance().onNeighborBlockChange(worldObj, xCoord, yCoord, zCoord, 1);
-			fluidHandlerCached = true;
+			fluidHandlerCached = redStoneCached = true;
 		}
 
 		if (getGrid() == null || worldObj.isRemote)
