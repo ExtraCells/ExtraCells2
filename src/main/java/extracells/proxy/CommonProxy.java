@@ -75,22 +75,28 @@ public class CommonProxy implements IGuiHandler
 
 	public void registerMovables()
 	{
-		IMovableRegistry registry = Util.getAppEngApi().getMovableRegistry();
-		registry.whiteListTileEntity(TileEntitySolderingStation.class);
-		registry.whiteListTileEntity(TileEntityMEDropper.class);
-		registry.whiteListTileEntity(TileEntityMEBattery.class);
-		registry.whiteListTileEntity(TileEntityHardMEDrive.class);
-		registry.whiteListTileEntity(TileEntityBusFluidImport.class);
-		registry.whiteListTileEntity(TileEntityBusFluidExport.class);
-		registry.whiteListTileEntity(TileEntityBusFluidStorage.class);
-		registry.whiteListTileEntity(TileEntityTerminalFluid.class);
-		registry.whiteListTileEntity(TileEntityTransitionPlaneFluid.class);
-		registry.whiteListTileEntity(TileEntityCertusTank.class);
-		registry.whiteListTileEntity(TileEntityWalrus.class);
-		registry.whiteListTileEntity(TileEntityLevelEmitterFluid.class);
-		registry.whiteListTileEntity(TileEntityVoidFluid.class);
-		registry.whiteListTileEntity(TileEntityInterfaceFluid.class);
-		registry.whiteListTileEntity(TileEntityMonitorStorageFluid.class);
+		try
+		{
+			IMovableRegistry registry = Util.getAppEngApi().getMovableRegistry();
+			registry.whiteListTileEntity(TileEntitySolderingStation.class);
+			registry.whiteListTileEntity(TileEntityMEDropper.class);
+			registry.whiteListTileEntity(TileEntityMEBattery.class);
+			registry.whiteListTileEntity(TileEntityHardMEDrive.class);
+			registry.whiteListTileEntity(TileEntityBusFluidImport.class);
+			registry.whiteListTileEntity(TileEntityBusFluidExport.class);
+			registry.whiteListTileEntity(TileEntityBusFluidStorage.class);
+			registry.whiteListTileEntity(TileEntityTerminalFluid.class);
+			registry.whiteListTileEntity(TileEntityTransitionPlaneFluid.class);
+			registry.whiteListTileEntity(TileEntityCertusTank.class);
+			registry.whiteListTileEntity(TileEntityWalrus.class);
+			registry.whiteListTileEntity(TileEntityLevelEmitterFluid.class);
+			registry.whiteListTileEntity(TileEntityVoidFluid.class);
+			registry.whiteListTileEntity(TileEntityInterfaceFluid.class);
+			registry.whiteListTileEntity(TileEntityMonitorStorageFluid.class);
+		} catch (Throwable e)
+		{
+			// Doesn't register because AE13 is installed instead of AE14
+		}
 	}
 
 	public void addRecipes()
