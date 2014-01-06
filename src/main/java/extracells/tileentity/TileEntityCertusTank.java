@@ -75,7 +75,9 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 		if (resource == null || (tank.getFluid() != null && resource.fluidID != tank.getFluid().fluidID))
 			return 0;
 
-		return fill(resource, doFill, true);
+		int cake = fill(resource, doFill, true);
+		System.out.println(cake);
+		return cake;
 	}
 
 	@Override
@@ -317,17 +319,19 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	}
 
 	/**
-	 * This is kinda abusive since it's intended to use par1 as the event id and
-	 * par2 as the value...
+	 * This is kinda abusive since it's intended to use par1 as the event id and par2 as the value...
 	 */
 	public boolean receiveClientEvent(int id, int amount)
 	{
-		if (id <= 0 || amount <= 0)
+		if (worldObj.isRemote)
 		{
-			tank.setFluid(null);
-			return true;
+			if (id <= 0 || amount <= 0)
+			{
+				tank.setFluid(null);
+				return true;
+			}
+			tank.setFluid(new FluidStack(id, amount));
 		}
-		tank.setFluid(new FluidStack(id, amount));
 		return true;
 	}
 }
