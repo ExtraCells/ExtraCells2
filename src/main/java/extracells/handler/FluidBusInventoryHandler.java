@@ -40,7 +40,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long storedItemTypes()
 	{
-		if (tank != null)
+		if (tank != null && getTankInfo(tank) != null)
 		{
 			return getTankInfo(tank)[0].fluid != null ? 1 : 0;
 		}
@@ -50,7 +50,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long storedItemCount()
 	{
-		if (tank != null	)
+		if (tank != null && getTankInfo(tank) != null)
 		{
 			return getTankInfo(tank)[0].fluid.amount;
 		}
@@ -60,7 +60,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long remainingItemCount()
 	{
-		if (tank != null && getTankInfo(tank)[0].fluid != null)
+		if (tank != null && getTankInfo(tank) != null && getTankInfo(tank)[0].fluid != null)
 		{
 			return getTankInfo(tank)[0].capacity - getTankInfo(tank)[0].fluid.amount;
 		}
@@ -70,7 +70,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long remainingItemTypes()
 	{
-		if (tank != null && getTankInfo(tank)[0].fluid == null)
+		if (tank != null && getTankInfo(tank) != null && getTankInfo(tank)[0].fluid == null)
 		{
 			return 1;
 		}
@@ -115,7 +115,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 			if (tank != null)
 			{
 
-				if (getTankInfo(tank)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == tank.getTankInfo(facing)[0].fluid.getFluid())
+				if (getTankInfo(tank) == null || getTankInfo(tank)[0].fluid == null || FluidRegistry.getFluid(input.getItemDamage()) == tank.getTankInfo(facing)[0].fluid.getFluid())
 				{
 
 					int filled = 0;
@@ -151,7 +151,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 
 		if (request.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance() && tank != null)
 		{
-			if (getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
+			if (getTankInfo(tank) != null && getTankInfo(tank)[0].fluid != null && FluidRegistry.getFluid(request.getItemDamage()) == getTankInfo(tank)[0].fluid.getFluid())
 			{
 				long drainedAmount = 0;
 
@@ -301,7 +301,7 @@ public class FluidBusInventoryHandler implements IMEInventoryHandler
 	@Override
 	public long freeBytes()
 	{
-		if (tank != null)
+		if (tank != null && getTankInfo(tank) != null)
 		{
 			return getTankInfo(tank)[0].fluid != null ? getTankInfo(tank)[0].capacity - getTankInfo(tank)[0].fluid.amount : getTankInfo(tank)[0].capacity;
 		}
