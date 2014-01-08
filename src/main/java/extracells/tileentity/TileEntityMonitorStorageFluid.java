@@ -1,6 +1,7 @@
 package extracells.tileentity;
 
 import static extracells.ItemEnum.FLUIDDISPLAY;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -27,6 +28,7 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.ItemEnum;
+import extracells.items.ItemFluidDisplay;
 
 @SuppressWarnings("deprecation")
 public class TileEntityMonitorStorageFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, IStorageAware
@@ -85,12 +87,16 @@ public class TileEntityMonitorStorageFluid extends ColorableECTile implements IG
 	{
 		super.writeToNBT(nbtTag);
 		nbtTag.setString("fluid", fluid != null ? fluid.getName() : "");
+		nbtTag.setBoolean("matrixed", matrixed);
+		nbtTag.setBoolean("locked", locked);
 	}
 
 	public void readFromNBT(NBTTagCompound nbtTag)
 	{
 		super.readFromNBT(nbtTag);
 		fluid = FluidRegistry.getFluid(nbtTag.getString("fluid"));
+		matrixed = nbtTag.getBoolean("matrixed");
+		locked = nbtTag.getBoolean("locked");
 	}
 
 	@Override
@@ -252,7 +258,7 @@ public class TileEntityMonitorStorageFluid extends ColorableECTile implements IG
 			{
 				for (IAEItemStack fluidstack : cellArray.getAvailableItems())
 				{
-					if (fluidstack.getItemID() == toExport.fluidID && fluidstack.getStackSize() >= toExport.amount)
+					if (fluidstack != null && fluidstack.getItem() instanceof ItemFluidDisplay && fluidstack.getItemDamage() == toExport.fluidID && fluidstack.getStackSize() >= toExport.amount)
 					{
 						IAEItemStack takenStack = cellArray.extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize()), toDrain.getItemDamage())));
 
@@ -276,19 +282,26 @@ public class TileEntityMonitorStorageFluid extends ColorableECTile implements IG
 
 	public ItemStack fillContainer(ItemStack container)
 	{
+		container.stackSize = 1;
+		Item item = container.getItem();
 		if (FluidContainerRegistry.isEmptyContainer(container))
 		{
 			ItemStack toReturn = FluidContainerRegistry.fillFluidContainer(new FluidStack(fluid, 1000), container);
 			if (toReturn != null)
 				if (drainFluid(FluidContainerRegistry.getFluidForFilledItem(toReturn)))
 					return toReturn;
-		} else if (container.getItem() instanceof IFluidContainerItem)
+		} else if (item instanceof IFluidContainerItem)
 		{
-			int amountDrained = ((IFluidContainerItem) container.getItem()).fill(container, new FluidStack(fluid, ((IFluidContainerItem) container.getItem()).getCapacity(container)), true);
-			if (amountDrained >= 0)
-				if (drainFluid(new FluidStack(fluid, amountDrained)))
-					return container;
+			IFluidContainerItem fluidContainer = (IFluidContainerItem) item;
+			FluidStack inContainer = fluidContainer.getFluid(container);
+			if (inContainer == null || inContainer.amount <= 0)
+			{
+				int amountDrained = fluidContainer.fill(container, new FluidStack(fluid, fluidContainer.getCapacity(container)), true);
+				if (amountDrained >= 0)
+					if (drainFluid(new FluidStack(fluid, amountDrained)))
+						return container;
+			}
 		}
-		return container;
+		return null;
 	}
 }

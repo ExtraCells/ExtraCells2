@@ -10,6 +10,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -57,6 +58,7 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 					if (currItem.isItemEqual(Materials.matConversionMatrix))
 					{
 						monitorTE.setMatrixed();
+						return true;
 					} else if (currItem.getItem() instanceof IFluidContainerItem)
 					{
 						FluidStack fluid = ((IFluidContainerItem) currItem.getItem()).getFluid(currItem);
@@ -83,16 +85,17 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 				} else if (!player.isSneaking() && !monitorTE.isLocked())
 				{
 					monitorTE.setFluid(null);
-				} else if (monitorTE.isLocked() && currItem != null)
+				} else if (monitorTE.isLocked() && currItem != null && monitorTE.isMatrixed())
 				{
-					ItemStack toAdd = monitorTE.fillContainer(currItem);
-					if (!player.inventory.addItemStackToInventory(toAdd))
+					ItemStack toAdd = monitorTE.fillContainer(currItem.copy());
+					if (toAdd != null)
 					{
-						dropBlockAsItem_do(world, x, y, z, toAdd);
+						ForgeDirection orientation = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
+						dropBlockAsItem_do(world, x + orientation.offsetX, y + orientation.offsetY, z + orientation.offsetZ, toAdd);
+						currItem.stackSize -= 1;
+						if (currItem.stackSize <= 0)
+							currItem = null;
 					}
-					currItem.stackSize -= 1;
-					if (currItem.stackSize <= 0)
-						currItem = null;
 				}
 			}
 		}

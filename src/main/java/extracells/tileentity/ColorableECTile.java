@@ -26,7 +26,12 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 
 	public void readFromNBT(NBTTagCompound nbtTag)
 	{
-		super.readFromNBT(nbtTag);
+		if (nbtTag.hasKey("x"))
+			xCoord = nbtTag.getInteger("x");
+		if (nbtTag.hasKey("y"))
+			yCoord = nbtTag.getInteger("y");
+		if (nbtTag.hasKey("z"))
+			zCoord = nbtTag.getInteger("z");
 		color = nbtTag.getInteger("Color");
 	}
 
