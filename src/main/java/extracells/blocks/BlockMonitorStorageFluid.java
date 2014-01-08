@@ -83,6 +83,16 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 				} else if (!player.isSneaking() && !monitorTE.isLocked())
 				{
 					monitorTE.setFluid(null);
+				} else if (monitorTE.isLocked() && currItem != null)
+				{
+					ItemStack toAdd = monitorTE.fillContainer(currItem);
+					if (!player.inventory.addItemStackToInventory(toAdd))
+					{
+						dropBlockAsItem_do(world, x, y, z, toAdd);
+					}
+					currItem.stackSize -= 1;
+					if (currItem.stackSize <= 0)
+						currItem = null;
 				}
 			}
 		}

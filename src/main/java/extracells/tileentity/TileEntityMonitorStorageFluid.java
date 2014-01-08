@@ -1,5 +1,7 @@
 package extracells.tileentity;
 
+import static extracells.ItemEnum.FLUIDDISPLAY;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
@@ -8,9 +10,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
+import appeng.api.Util;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
@@ -60,6 +66,8 @@ public class TileEntityMonitorStorageFluid extends ColorableECTile implements IG
 	public void setFluid(Fluid _fluid)
 	{
 		fluid = _fluid;
+		if (grid != null && grid.getCellArray() != null)
+			onNetworkInventoryChange(getGrid().getCellArray().getAvailableItems());
 		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 
@@ -230,5 +238,57 @@ public class TileEntityMonitorStorageFluid extends ColorableECTile implements IG
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;
+	}
+
+	public boolean drainFluid(FluidStack toExport)
+	{
+		IAEItemStack toDrain = Util.createItemStack(new ItemStack(FLUIDDISPLAY.getItemInstance(), 0, toExport.fluidID));
+		toDrain.setStackSize(toExport.amount);
+
+		if (grid != null)
+		{
+			IMEInventoryHandler cellArray = grid.getCellArray();
+			if (cellArray != null)
+			{
+				for (IAEItemStack fluidstack : cellArray.getAvailableItems())
+				{
+					if (fluidstack.getItemID() == toExport.fluidID && fluidstack.getStackSize() >= toExport.amount)
+					{
+						IAEItemStack takenStack = cellArray.extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize()), toDrain.getItemDamage())));
+
+						if (takenStack == null)
+						{
+							return false;
+						} else if (takenStack.getStackSize() != (int) toDrain.getStackSize())
+						{
+							cellArray.addItems(takenStack);
+							return false;
+						} else
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public ItemStack fillContainer(ItemStack container)
+	{
+		if (FluidContainerRegistry.isEmptyContainer(container))
+		{
+			ItemStack toReturn = FluidContainerRegistry.fillFluidContainer(new FluidStack(fluid, 1000), container);
+			if (toReturn != null)
+				if (drainFluid(FluidContainerRegistry.getFluidForFilledItem(toReturn)))
+					return toReturn;
+		} else if (container.getItem() instanceof IFluidContainerItem)
+		{
+			int amountDrained = ((IFluidContainerItem) container.getItem()).fill(container, new FluidStack(fluid, ((IFluidContainerItem) container.getItem()).getCapacity(container)), true);
+			if (amountDrained >= 0)
+				if (drainFluid(new FluidStack(fluid, amountDrained)))
+					return container;
+		}
+		return container;
 	}
 }

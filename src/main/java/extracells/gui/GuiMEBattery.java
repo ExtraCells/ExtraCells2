@@ -22,6 +22,7 @@ public class GuiMEBattery extends GuiScreen
 	private final int ySize = 88;
 	private double currentEnergy;
 	private double maxEnergy;
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/solderingstation.png");
 
 	public GuiMEBattery(World world, TileEntityMEBattery tileEntity, EntityPlayer player)
 	{
@@ -37,7 +38,7 @@ public class GuiMEBattery extends GuiScreen
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/solderingstation.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);

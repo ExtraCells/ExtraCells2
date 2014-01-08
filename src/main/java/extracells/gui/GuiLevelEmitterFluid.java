@@ -24,6 +24,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 	public static final int ySize = 166;
 	private DigitTextField amountField;
 	TileEntityLevelEmitterFluid tileentity;
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png");
 
 	public GuiLevelEmitterFluid(InventoryPlayer inventory, TileEntityLevelEmitterFluid tileentity)
 	{
@@ -36,7 +37,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		int posX = (width - xSize) / 2;
 		int posY = (height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);

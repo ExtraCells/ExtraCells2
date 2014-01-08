@@ -37,6 +37,7 @@ public class GuiTerminalFluid extends GuiContainer
 	TileEntityTerminalFluid tileEntity;
 	GuiTextField searchbar;
 	List<WidgetFluidSelector> selectors = new ArrayList<WidgetFluidSelector>();
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 
 	public GuiTerminalFluid(World world, TileEntityTerminalFluid tileEntity, EntityPlayer player)
 	{
@@ -82,7 +83,7 @@ public class GuiTerminalFluid extends GuiContainer
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/terminalfluid.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(guiLeft, guiTop - 18, 0, 0, xSize, ySize);
 		searchbar.drawTextBox();
 	}
@@ -105,23 +106,15 @@ public class GuiTerminalFluid extends GuiContainer
 			}
 		}
 
-		String amountToText = amount + "mB";
+		String amountToText = Long.toString(amount) + "mB";
 
-		if (amount > (long) Math.pow(10, 6))
+		if (amount > 1000000000L)
+			amountToText = Long.toString(amount / 1000000000L) + "MegaB";
+		else if (amount > 1000000L)
+			amountToText = Long.toString(amount / 1000000L) + "KiloB";
+		else if (amount > 9999L)
 		{
-			amountToText = amount / Math.pow(10, 3) + "B";
-		} else if (amount > (long) Math.pow(10, 9))
-		{
-			amountToText = amount / Math.pow(10, 6) + "kB";
-		} else if (amount > (long) Math.pow(10, 12))
-		{
-			amountToText = amount / Math.pow(10, 9) + "MB";
-		} else if (amount > (long) Math.pow(10, 15))
-		{
-			amountToText = amount / Math.pow(10, 12) + "GB";
-		} else if (amount > (long) Math.pow(10, 18))
-		{
-			amountToText = amount / Math.pow(10, 15) + "TB";
+			amountToText = Long.toString(amount / 1000L) + "B";
 		}
 
 		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);

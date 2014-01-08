@@ -29,6 +29,7 @@ public class GuiBusFluidExport extends GuiContainer
 	TileEntityBusFluidExport tileentity;
 	public static final int xSize = 176;
 	public static final int ySize = 177;
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/exportbusfluid.png");
 
 	public GuiBusFluidExport(World world, IInventory inventory, TileEntityBusFluidExport tileentity, EntityPlayer player)
 	{
@@ -43,7 +44,7 @@ public class GuiBusFluidExport extends GuiContainer
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/exportbusfluid.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		int posX = (width - xSize) / 2;
 		int posY = (height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
@@ -54,7 +55,7 @@ public class GuiBusFluidExport extends GuiContainer
 	{
 		PacketDispatcher.sendPacketToServer(new PacketBusFluidExport(world, tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0, player.username).makePacket());
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/exportbusfluid.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 
 		if (tileentity != null)
 		{

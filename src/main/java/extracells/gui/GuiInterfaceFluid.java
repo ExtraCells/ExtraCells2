@@ -19,6 +19,7 @@ public class GuiInterfaceFluid extends GuiContainer
 	WidgetFluidTank[] tanks = new WidgetFluidTank[6];
 	public static final int xSize = 176;
 	public static final int ySize = 196;
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/interfacefluid.png");
 
 	public GuiInterfaceFluid(IInventory player, TileEntityInterfaceFluid tileentity)
 	{
@@ -43,7 +44,7 @@ public class GuiInterfaceFluid extends GuiContainer
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/interfacefluid.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 	}
 

@@ -58,24 +58,16 @@ public class WidgetFluidSelector extends Gui
 	{
 		if (amount > 0 && fluid != null)
 		{
-			String amountToText = amount + "mB";
-
-			if (amount > (long) Math.pow(10, 6))
+			String amountToText = Long.toString(amount) + "mB";
+			if (amount > 1000000000L)
+				amountToText = Long.toString(amount / 1000000000L) + "MegaB";
+			else if (amount > 1000000L)
+				amountToText = Long.toString(amount / 1000000L) + "KiloB";
+			else if (amount > 9999L)
 			{
-				amountToText = amount / Math.pow(10, 3) + "B";
-			} else if (amount > (long) Math.pow(10, 9))
-			{
-				amountToText = amount / Math.pow(10, 6) + "kB";
-			} else if (amount > (long) Math.pow(10, 12))
-			{
-				amountToText = amount / Math.pow(10, 9) + "MB";
-			} else if (amount > (long) Math.pow(10, 15))
-			{
-				amountToText = amount / Math.pow(10, 12) + "GB";
-			} else if (amount > (long) Math.pow(10, 18))
-			{
-				amountToText = amount / Math.pow(10, 15) + "TB";
+				amountToText = Long.toString(amount / 1000L) + "B";
 			}
+
 			List<String> description = new ArrayList<String>();
 			description.add(fluid.getLocalizedName());
 			description.add(amountToText);

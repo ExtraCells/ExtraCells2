@@ -19,6 +19,7 @@ public class GuiHardMEDrive extends GuiContainer
 
 	public static final int xSize = 176;
 	public static final int ySize = 166;
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/hardmedrive.png");
 
 	public GuiHardMEDrive(InventoryPlayer inventory, TileEntityHardMEDrive tileentity)
 	{
@@ -30,7 +31,7 @@ public class GuiHardMEDrive extends GuiContainer
 	{
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/hardmedrive.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		int posX = (width - xSize) / 2;
 		int posY = (height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);

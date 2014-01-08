@@ -27,6 +27,7 @@ public class GuiBusFluidStorage extends GuiContainer
 	TileEntityBusFluidStorage tileentity;
 	Boolean editMode = false;
 	DigitTextField textFieldPriority;
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/storagebusfluid.png");
 
 	public GuiBusFluidStorage(World world, IInventory inventory, TileEntityBusFluidStorage tileentity)
 	{
@@ -44,7 +45,7 @@ public class GuiBusFluidStorage extends GuiContainer
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/storagebusfluid.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 
 		textFieldPriority.drawTextBox();

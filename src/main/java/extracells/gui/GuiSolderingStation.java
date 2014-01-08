@@ -30,6 +30,7 @@ public class GuiSolderingStation extends GuiScreen
 	private GuiTextField textfield_types;
 	private boolean rightItem;
 	EntityPlayer player;
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/solderingstation.png");
 
 	public GuiSolderingStation(EntityPlayer player, int x, int y, int z, boolean rightItem)
 	{
@@ -49,7 +50,7 @@ public class GuiSolderingStation extends GuiScreen
 		int posY = (this.height - ySize) / 2;
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/gui/solderingstation.png"));
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 

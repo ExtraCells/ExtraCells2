@@ -30,7 +30,7 @@ public class TileEntityRendererMonitorStorageFluid extends TileEntitySpecialRend
 			Icon fluidIcon = fluid.getFlowingIcon();
 
 			GL11.glPushMatrix();
-			GL11.glPushAttrib(1048575);
+			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 
 			FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 			ForgeDirection d = ForgeDirection.getOrientation(tileentity.blockMetadata);
@@ -73,39 +73,44 @@ public class TileEntityRendererMonitorStorageFluid extends TileEntitySpecialRend
 				GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
 			}
 
-			GL11.glTranslatef(0.0F, 0.14F, -0.24F);
-			GL11.glScalef(0.01612903F, 0.01612903F, 0.01612903F);
+			GL11.glTranslatef(0.01F, 0.13F, -0.24F);
+			GL11.glScalef(0.0625F * 0.25F, 0.0625F * 0.25F, 0.01612903F);
 
 			long qty = ((TileEntityMonitorStorageFluid) tileentity).getAmount();
 			if (qty > 999999999999L)
 			{
 				qty = 999999999999L;
 			}
-			String msg = Long.toString(qty);
+			String msg = Long.toString(qty) + "mB";
 			if (qty > 1000000000L)
-				msg = Long.toString(qty / 1000000000L) + "B";
+				msg = Long.toString(qty / 1000000000L) + "MegaB";
 			else if (qty > 1000000L)
-				msg = Long.toString(qty / 1000000L) + "M";
+				msg = Long.toString(qty / 1000000L) + "KiloB";
 			else if (qty > 9999L)
 			{
-				msg = Long.toString(qty / 1000L) + "K";
+				msg = Long.toString(qty / 1000L) + "B";
 			}
-			int width = fr.getStringWidth(msg);
-			GL11.glTranslatef(-0.5F * width, 0.0F, -1.0F);
-			fr.drawString(msg, 0, 0, 0x00FFFF);
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 
-			GL11.glTranslated(-5, -16.5, 0.1F);
-			Tessellator cake = Tessellator.instance;
-			cake.startDrawingQuads();
-			cake.setBrightness(255);
-			cake.setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f);
-			cake.addVertexWithUV(0, 16, 0, fluidIcon.getMinU(), fluidIcon.getMaxV());
-			cake.addVertexWithUV(16, 16, 0, fluidIcon.getMaxU(), fluidIcon.getMaxV());
-			cake.addVertexWithUV(16, 0, 0, fluidIcon.getMaxU(), fluidIcon.getMinV());
-			cake.addVertexWithUV(0, 0, 0, fluidIcon.getMinU(), fluidIcon.getMinV());
-			cake.draw();
+			TileEntityMonitorStorageFluid TE = (TileEntityMonitorStorageFluid) tileentity;
+			if (TE.isMachineActive())
+			{
+				GL11.glTranslated(-8.6F, -16.3, -1.2F);
+				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+				Tessellator cake = Tessellator.instance;
+				cake.startDrawingQuads();
+				cake.setBrightness(255);
+				cake.setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f);
+				cake.addVertexWithUV(0, 16, 0, fluidIcon.getMinU(), fluidIcon.getMaxV());
+				cake.addVertexWithUV(16, 16, 0, fluidIcon.getMaxU(), fluidIcon.getMaxV());
+				cake.addVertexWithUV(16, 0, 0, fluidIcon.getMaxU(), fluidIcon.getMinV());
+				cake.addVertexWithUV(0, 0, 0, fluidIcon.getMinU(), fluidIcon.getMinV());
+				cake.draw();
 
+				int width = fr.getStringWidth(msg);
+				GL11.glTranslatef(8.25F - 0.5F * width, 24.0F, 0);
+				GL11.glScaled(1, 0.5, 1);
+				fr.drawString(msg, 0, 0, 0x00FFFF);
+			}
 			GL11.glPopMatrix();
 			GL11.glPopAttrib();
 		}
