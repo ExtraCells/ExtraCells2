@@ -1,5 +1,7 @@
 package extracells.blocks;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,6 +48,7 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float offsetX, float offsetY, float offsetZ)
 	{
+		super.onBlockActivated(world, x, y, z, player, side, offsetX, offsetY, offsetZ);
 		if (!world.isRemote)
 		{
 			TileEntity te = world.getBlockTileEntity(x, y, z);
@@ -53,23 +56,44 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 			{
 				TileEntityMonitorStorageFluid monitorTE = (TileEntityMonitorStorageFluid) te;
 				ItemStack currItem = player.getCurrentEquippedItem();
-				if (currItem != null && !monitorTE.isLocked())
+				if (currItem != null)
 				{
-					if (currItem.isItemEqual(Materials.matConversionMatrix))
+					if (!monitorTE.isMatrixed() && currItem.isItemEqual(Materials.matConversionMatrix))
 					{
 						monitorTE.setMatrixed();
+						currItem.stackSize -= 1;
+						if (currItem.stackSize <= 0)
+							currItem = null;
 						return true;
-					} else if (currItem.getItem() instanceof IFluidContainerItem)
+					}
+					if (!monitorTE.isLocked())
 					{
-						FluidStack fluid = ((IFluidContainerItem) currItem.getItem()).getFluid(currItem);
-						monitorTE.setFluid(fluid != null ? fluid.getFluid() : null);
-					} else if (FluidContainerRegistry.isFilledContainer(currItem))
+						if (currItem.getItem() instanceof IFluidContainerItem)
+						{
+							FluidStack fluid = ((IFluidContainerItem) currItem.getItem()).getFluid(currItem);
+							monitorTE.setFluid(fluid != null ? fluid.getFluid() : null);
+						} else if (FluidContainerRegistry.isFilledContainer(currItem))
+						{
+							FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(currItem);
+							monitorTE.setFluid(fluid != null ? fluid.getFluid() : null);
+						} else if (FluidContainerRegistry.isEmptyContainer(currItem))
+						{
+							monitorTE.setFluid(null);
+						}
+					} else
 					{
-						FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(currItem);
-						monitorTE.setFluid(fluid != null ? fluid.getFluid() : null);
-					} else if (FluidContainerRegistry.isEmptyContainer(currItem))
-					{
-						monitorTE.setFluid(null);
+						if (monitorTE.isMatrixed())
+						{
+							ItemStack toAdd = monitorTE.fillContainer(currItem.copy());
+							if (toAdd != null)
+							{
+								ForgeDirection orientation = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
+								dropBlockAsItem_do(world, x + orientation.offsetX, y + orientation.offsetY, z + orientation.offsetZ, toAdd);
+								currItem.stackSize -= 1;
+								if (currItem.stackSize <= 0)
+									currItem = null;
+							}
+						}
 					}
 				} else if (player.isSneaking())
 				{
@@ -85,17 +109,6 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 				} else if (!player.isSneaking() && !monitorTE.isLocked())
 				{
 					monitorTE.setFluid(null);
-				} else if (monitorTE.isLocked() && currItem != null && monitorTE.isMatrixed())
-				{
-					ItemStack toAdd = monitorTE.fillContainer(currItem.copy());
-					if (toAdd != null)
-					{
-						ForgeDirection orientation = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-						dropBlockAsItem_do(world, x + orientation.offsetX, y + orientation.offsetY, z + orientation.offsetZ, toAdd);
-						currItem.stackSize -= 1;
-						if (currItem.stackSize <= 0)
-							currItem = null;
-					}
 				}
 			}
 		}
@@ -145,4 +158,17 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 		return null;
 	}
 
+	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
+	{
+		ArrayList<ItemStack> items = super.getBlockDropped(world, x, y, z, metadata, fortune);
+		TileEntity blockTE = world.getBlockTileEntity(x, y, z);
+		if (blockTE instanceof TileEntityMonitorStorageFluid)
+		{
+			if (((TileEntityMonitorStorageFluid) blockTE).isMatrixed())
+			{
+				items.add(Materials.matConversionMatrix.copy());
+			}
+		}
+		return items;
+	}
 }
