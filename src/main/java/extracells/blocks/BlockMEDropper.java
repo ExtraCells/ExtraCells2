@@ -42,10 +42,10 @@ public class BlockMEDropper extends RotatableColorBlock
 	public BlockMEDropper(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(Extracells.ModTab);
-		this.setUnlocalizedName("block.medropper");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(Extracells.ModTab);
+		setUnlocalizedName("block.medropper");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -71,10 +71,10 @@ public class BlockMEDropper extends RotatableColorBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
-		this.frontHorizontalIcon = iconregister.registerIcon("extracells:medropper.front_horizontal");
-		this.frontVerticalIcon = iconregister.registerIcon("extracells:medropper.front_vertical");
+		sideIcon = iconregister.registerIcon("extracells:machine.side");
+		topIcon = iconregister.registerIcon("extracells:machine.top");
+		frontHorizontalIcon = iconregister.registerIcon("extracells:medropper.front_horizontal");
+		frontVerticalIcon = iconregister.registerIcon("extracells:medropper.front_vertical");
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class BlockMEDropper extends RotatableColorBlock
 	{
 		BlockSourceImpl blockSource = new BlockSourceImpl(world, x, y, z);
 		world.playAuxSFX(1001, x, y, z, 0);
-		IBehaviorDispenseItem ibehaviordispenseitem = this.getBehaviorForItemStack(toDispense);
+		IBehaviorDispenseItem ibehaviordispenseitem = getBehaviorForItemStack(toDispense);
 		ibehaviordispenseitem.dispense(blockSource, toDispense);
 	}
 

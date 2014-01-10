@@ -25,10 +25,10 @@ public class BlockBusFluidExport extends RotatableColorBlock
 	public BlockBusFluidExport(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.bus.export");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.fluid.bus.export");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@Override

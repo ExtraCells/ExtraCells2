@@ -20,10 +20,10 @@ public class BlockFluidCrafter extends RotatableColorBlock
 	public BlockFluidCrafter(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.crafter");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.fluid.crafter");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@Override

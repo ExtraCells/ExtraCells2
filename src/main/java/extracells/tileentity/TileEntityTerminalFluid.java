@@ -246,7 +246,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound nbtTag = getColorDataForPacket();
-		this.writeToNBT(nbtTag);
+		writeToNBT(nbtTag);
 
 		NBTTagCompound fluids = new NBTTagCompound();
 		int[] fluidIDs = new int[fluidsInNetwork.size()];

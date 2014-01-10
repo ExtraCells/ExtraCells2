@@ -30,10 +30,10 @@ public class BlockBusFluidImport extends RotatableColorBlock
 	public BlockBusFluidImport(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.bus.import");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.fluid.bus.import");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@Override

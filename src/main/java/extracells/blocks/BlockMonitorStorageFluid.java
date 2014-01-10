@@ -26,11 +26,13 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 {
 
 	@SideOnly(Side.CLIENT)
-	public Icon topIcon;
+	Icon frontIcon;
 	@SideOnly(Side.CLIENT)
-	public Icon sideIcon;
+	Icon topIcon;
 	@SideOnly(Side.CLIENT)
-	public Icon bottomIcon;
+	Icon sideIcon;
+	@SideOnly(Side.CLIENT)
+	Icon bottomIcon;
 	@SideOnly(Side.CLIENT)
 	public Icon baseLayer;
 	@SideOnly(Side.CLIENT)
@@ -39,10 +41,10 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 	public BlockMonitorStorageFluid(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.monitor.storage");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.fluid.monitor.storage");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@Override
@@ -130,10 +132,11 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
-		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
-		this.baseLayer = iconregister.registerIcon("extracells:fluid.monitor.layerbase");
+		frontIcon = iconregister.registerIcon("extracells:fluid.monitor.hotbar");
+		sideIcon = iconregister.registerIcon("extracells:machine.side");
+		bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
+		topIcon = iconregister.registerIcon("extracells:machine.top");
+		baseLayer = iconregister.registerIcon("extracells:fluid.monitor.layerbase");
 		colorLayers = new Icon[]
 		{ iconregister.registerIcon("extracells:fluid.monitor.layer3"), iconregister.registerIcon("extracells:fluid.monitor.layer2"), iconregister.registerIcon("extracells:fluid.monitor.layer1") };
 	}
@@ -141,7 +144,7 @@ public class BlockMonitorStorageFluid extends RotatableColorBlock
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon(int side, int metadata)
 	{
-		return side == 3 ? baseLayer : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
+		return side == 3 ? frontIcon : side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
 	}
 
 	@Override

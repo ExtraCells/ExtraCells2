@@ -20,7 +20,7 @@ public class BlockTerminalFluid extends RotatableColorBlock
 {
 
 	@SideOnly(Side.CLIENT)
-	public Icon frontIcon;
+	Icon frontIcon;
 	@SideOnly(Side.CLIENT)
 	Icon sideIcon;
 	@SideOnly(Side.CLIENT)
@@ -35,10 +35,10 @@ public class BlockTerminalFluid extends RotatableColorBlock
 	public BlockTerminalFluid(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.terminal");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.fluid.terminal");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@Override
@@ -90,11 +90,11 @@ public class BlockTerminalFluid extends RotatableColorBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.frontIcon = iconregister.registerIcon("extracells:fluid.terminal.hotbar");
-		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
-		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
-		this.baseLayer = iconregister.registerIcon("extracells:fluid.terminal.layerbase");
+		frontIcon = iconregister.registerIcon("extracells:fluid.terminal.hotbar");
+		sideIcon = iconregister.registerIcon("extracells:machine.side");
+		bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
+		topIcon = iconregister.registerIcon("extracells:machine.top");
+		baseLayer = iconregister.registerIcon("extracells:fluid.terminal.layerbase");
 		colorLayers = new Icon[]
 		{ iconregister.registerIcon("extracells:fluid.terminal.layer3"), iconregister.registerIcon("extracells:fluid.terminal.layer2"), iconregister.registerIcon("extracells:fluid.terminal.layer1") };
 	}

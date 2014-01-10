@@ -61,11 +61,9 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 
 	public void setColor(int offset)
 	{
-		if (!worldObj.isRemote)
-		{
-			color = offset;
-			PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
-		}
+		color = offset;
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
+		System.out.println(color);
 	}
 
 	public int getColor()
@@ -76,7 +74,7 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 	public NBTTagCompound getColorDataForPacket()
 	{
 		NBTTagCompound nbtTag = new NBTTagCompound();
-		this.writeToNBT(nbtTag);
+		writeToNBT(nbtTag);
 
 		if (connections != null)
 		{

@@ -149,6 +149,7 @@ public class CommonProxy implements IGuiHandler
 			ItemStack levelEmitter = new ItemStack(BlockEnum.FLUIDLEVELEMITTER.getBlockInstance(), 1);
 			ItemStack fluidInterface = new ItemStack(BlockEnum.FLUIDINTERFACE.getBlockInstance(), 1);
 			ItemStack fluidVoid = new ItemStack(BlockEnum.FLUIDVOID.getBlockInstance(), 1);
+			ItemStack fluidMonitor = new ItemStack(BlockEnum.FLUIDMONITOR.getBlockInstance(), 1);
 
 			// Advanced Casing Physical
 			GameRegistry.addShapedRecipe(advancedStorageCasingPhysical, new Object[]
@@ -278,11 +279,14 @@ public class CommonProxy implements IGuiHandler
 			GameRegistry.addRecipe(new ShapelessOreRecipe(levelEmitter, new Object[]
 			{ Blocks.blkLevelEmitter, "dyeBlue" }));
 
-			// Fluid Storage Monitor TODO
-
 			// Fluid Void
 			GameRegistry.addShapedRecipe(fluidVoid, new Object[]
 			{ "FIF", "IEI", "FIF", 'F', Materials.matFluxCrystal.copy(), 'E', new ItemStack(Item.enderPearl, 1), 'I', new ItemStack(Item.ingotIron, 1) });
+
+			// Fluid Monitor
+			GameRegistry.addShapedRecipe(fluidMonitor, new Object[]
+			{ "IIG", "CLG", "IIG", 'I', Item.ingotIron, 'G', Block.glass, 'C', Blocks.blkColorlessCableCovered.copy(), 'L', levelEmitter.copy() });
+
 			try
 			{
 				Class.forName("appeng.api.me.util.ITileCraftingProvider");

@@ -28,9 +28,9 @@ public class BlockCertusTank extends BlockContainer
 	{
 		super(id, Material.glass);
 		setCreativeTab(Extracells.ModTab);
-		this.setUnlocalizedName("block.certustank");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setUnlocalizedName("block.certustank");
+		setHardness(2.0F);
+		setResistance(10.0F);
 		setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 1.0F, 0.9375F);
 	}
 

@@ -3,6 +3,7 @@ package extracells.render.helpers;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -73,51 +74,55 @@ public class RenderHelperTerminalFluid extends RenderHelper
 
 		Tessellator ts = Tessellator.instance;
 		ForgeDirection face = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
-		BlockTerminalFluid terminal = (BlockTerminalFluid) block;
+		BlockTerminalFluid terminalBlock = (BlockTerminalFluid) block;
 		int[] color =
 		{ 0, 0, 0 };
-
-		switch (((TileEntityTerminalFluid) world.getBlockTileEntity(x, y, z)).getColor())
+		TileEntity blockTE = world.getBlockTileEntity(x, y, z);
+		if (blockTE instanceof TileEntityTerminalFluid)
 		{
-		case -1:
-			color = fluix.clone();
-			break;
-		case 0:
-			color = blue.clone();
-			break;
-		case 1:
-			color = black.clone();
-			break;
-		case 2:
-			color = white.clone();
-			break;
-		case 3:
-			color = brown.clone();
-			break;
-		case 4:
-			color = red.clone();
-			break;
-		case 5:
-			color = yellow.clone();
-			break;
-		case 6:
-			color = green.clone();
-			break;
-		}
+			TileEntityTerminalFluid terminalTE = (TileEntityTerminalFluid) blockTE;
+			switch (terminalTE.getColor())
+			{
+			case -1:
+				color = fluix.clone();
+				break;
+			case 0:
+				color = blue.clone();
+				break;
+			case 1:
+				color = black.clone();
+				break;
+			case 2:
+				color = white.clone();
+				break;
+			case 3:
+				color = brown.clone();
+				break;
+			case 4:
+				color = red.clone();
+				break;
+			case 5:
+				color = yellow.clone();
+				break;
+			case 6:
+				color = green.clone();
+				break;
+			}
 
-		boolean active = ((TileEntityTerminalFluid) world.getBlockTileEntity(x, y, z)).isMachineActive();
+			boolean active = terminalTE.isMachineActive();
 
-		ts.setBrightness(15 << 2 | 15 << 0);
+			ts.setBrightness(15 << 2 | 15 << 0);
 
-		if (active)
-			ts.setBrightness(15 << 20 | 15 << 4);
+			if (active)
+				ts.setBrightness(15 << 20 | 15 << 4);
 
-		ts.setColorOpaque_I(0xFFFFFF);
-		drawFace(face, block, x, y, z, terminal.baseLayer, renderer);
-		for (int i = 0; i < 3; i++)
-		{
-			ts.setColorOpaque_I(color[i]);
-			drawFace(face, block, x, y, z, terminal.colorLayers[i], renderer);
+			ts.setColorOpaque_I(0xFFFFFF);
+			drawFace(face, block, x, y, z, terminalBlock.baseLayer, renderer);
+			for (int i = 0; i < 3; i++)
+			{
+				ts.setColorOpaque_I(color[i]);
+				drawFace(face, block, x, y, z, terminalBlock.colorLayers[i], renderer);
+			}
 		}
 		return true;
 	}

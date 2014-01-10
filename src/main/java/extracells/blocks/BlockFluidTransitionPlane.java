@@ -25,10 +25,10 @@ public class BlockFluidTransitionPlane extends RotatableColorBlock
 	public BlockFluidTransitionPlane(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.transitionplane");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.fluid.transitionplane");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@Override
@@ -60,9 +60,9 @@ public class BlockFluidTransitionPlane extends RotatableColorBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.frontIcon = iconregister.registerIcon("extracells:fluid.transplane.front");
-		this.sideIcon = iconregister.registerIcon("extracells:machine.side");
-		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
+		frontIcon = iconregister.registerIcon("extracells:fluid.transplane.front");
+		sideIcon = iconregister.registerIcon("extracells:machine.side");
+		bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
+		topIcon = iconregister.registerIcon("extracells:machine.top");
 	}
 }

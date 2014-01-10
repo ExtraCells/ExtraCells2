@@ -18,10 +18,10 @@ public class BlockWalrus extends Block implements ITileEntityProvider
 	public BlockWalrus(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.walrus");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.walrus");
+		setHardness(2.0F);
+	setResistance(10.0F);
 	}
 
 	@Override

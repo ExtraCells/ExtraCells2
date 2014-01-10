@@ -35,10 +35,10 @@ public class BlockHardMEDrive extends RotatableColorBlock
 	public BlockHardMEDrive(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(Extracells.ModTab);
-		this.setUnlocalizedName("block.hardmedrive");
-		this.setHardness(2.0F);
-		this.setResistance(1000000.0F);
+		setCreativeTab(Extracells.ModTab);
+		setUnlocalizedName("block.hardmedrive");
+		setHardness(2.0F);
+		setResistance(1000000.0F);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -77,10 +77,10 @@ public class BlockHardMEDrive extends RotatableColorBlock
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
-		this.frontIcon = iconregister.registerIcon("extracells:hardmedrive.face");
-		this.sideIcon = iconregister.registerIcon("extracells:hardmedrive.side");
-		this.bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
-		this.topIcon = iconregister.registerIcon("extracells:machine.top");
+		frontIcon = iconregister.registerIcon("extracells:hardmedrive.face");
+		sideIcon = iconregister.registerIcon("extracells:hardmedrive.side");
+		bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
+		topIcon = iconregister.registerIcon("extracells:machine.top");
 	}
 
 	@Override

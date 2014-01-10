@@ -19,10 +19,10 @@ public class BlockVoidFluid extends Block implements ITileEntityProvider
 	public BlockVoidFluid(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.void");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.fluid.void");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@Override

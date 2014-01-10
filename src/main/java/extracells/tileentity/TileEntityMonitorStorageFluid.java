@@ -36,13 +36,7 @@ public class TileEntityMonitorStorageFluid extends ColorableECTile implements IG
 	private IGridInterface grid;
 	private boolean locked, matrixed, powerStatus = false, networkReady = true;
 	private Fluid fluid;
-	private int color;
 	private long fluidAmount;
-
-	public int getColor()
-	{
-		return color;
-	}
 
 	public void setLocked(boolean _locked)
 	{
@@ -218,7 +212,7 @@ public class TileEntityMonitorStorageFluid extends ColorableECTile implements IG
 	@Override
 	public boolean canConnect(ForgeDirection dir)
 	{
-		return dir.ordinal() != this.blockMetadata;
+		return dir.ordinal() != getBlockMetadata();
 	}
 
 	@Override

@@ -23,12 +23,12 @@ public class BlockSolderingStation extends RotatableColorBlock
 	public BlockSolderingStation(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(Extracells.ModTab);
-		this.setUnlocalizedName("block.solderingstation");
-		this.setHardness(2.0F);
-		this.setResistance(6000F);
-		this.setLightValue(0.02f);
-		this.setBlockBounds(0F, 0F, 0F, 1.0F, 1.0F, 1.0F);
+		setCreativeTab(Extracells.ModTab);
+		setUnlocalizedName("block.solderingstation");
+		setHardness(2.0F);
+		setResistance(6000F);
+		setLightValue(0.02f);
+		setBlockBounds(0F, 0F, 0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	@Override

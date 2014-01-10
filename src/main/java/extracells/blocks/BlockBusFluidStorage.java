@@ -40,10 +40,10 @@ public class BlockBusFluidStorage extends RotatableColorBlock
 	public BlockBusFluidStorage(int id)
 	{
 		super(id, Material.rock);
-		this.setCreativeTab(extracells.Extracells.ModTab);
-		this.setUnlocalizedName("block.fluid.bus.storage");
-		this.setHardness(2.0F);
-		this.setResistance(10.0F);
+		setCreativeTab(extracells.Extracells.ModTab);
+		setUnlocalizedName("block.fluid.bus.storage");
+		setHardness(2.0F);
+		setResistance(10.0F);
 	}
 
 	@Override

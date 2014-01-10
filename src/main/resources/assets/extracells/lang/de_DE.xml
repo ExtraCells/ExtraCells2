@@ -43,6 +43,7 @@
   <entry key="tile.block.fluid.interface.name">ME-Flüssigkeits-Schnittstelle</entry>
   <entry key="tile.block.fluid.void.name">Flüssigkeits-Leerraum</entry>
   <entry key="tile.block.fluid.crafter.name">ME-Flüssigkeits-Fertigungskammer</entry>
+  <entry key="tile.block.fluid.monitor.storage.name">ME-Flüssigkeits-Speichermonitor</entry>
   <entry key="tooltip.belongsto">Dieser Speicher gehört</entry>
   <entry key="tooltip.notyours">Du bist nicht der Besitzer dieses Speichers!</entry>
   <entry key="tooltip.accessgranted">Zugriff erlaubt!</entry>

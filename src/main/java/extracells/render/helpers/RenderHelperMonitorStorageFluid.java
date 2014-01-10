@@ -3,6 +3,7 @@ package extracells.render.helpers;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -74,47 +75,51 @@ public class RenderHelperMonitorStorageFluid extends RenderHelper
 		ts.setColorOpaque_I(0xFFFFFF);
 		ForgeDirection face = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
 		renderer.renderStandardBlock(block, x, y, z);
-		BlockMonitorStorageFluid monitor = (BlockMonitorStorageFluid) block;
+		BlockMonitorStorageFluid monitorBlock = (BlockMonitorStorageFluid) block;
 		int[] color =
 		{ 0, 0, 0 };
-
-		switch (((TileEntityMonitorStorageFluid) world.getBlockTileEntity(x, y, z)).getColor())
+		TileEntity blockTE = world.getBlockTileEntity(x, y, z);
+		if (blockTE instanceof TileEntityMonitorStorageFluid)
 		{
-		case -1:
-			color = fluix.clone();
-			break;
-		case 0:
-			color = blue.clone();
-			break;
-		case 1:
-			color = black.clone();
-			break;
-		case 2:
-			color = white.clone();
-			break;
-		case 3:
-			color = brown.clone();
-			break;
-		case 4:
-			color = red.clone();
-			break;
-		case 5:
-			color = yellow.clone();
-			break;
-		case 6:
-			color = green.clone();
-			break;
-		}
+			TileEntityMonitorStorageFluid monitorTE = (TileEntityMonitorStorageFluid) blockTE;
+			switch (monitorTE.getColor())
+			{
+			case -1:
+				color = fluix.clone();
+				break;
+			case 0:
+				color = blue.clone();
+				break;
+			case 1:
+				color = black.clone();
+				break;
+			case 2:
+				color = white.clone();
+				break;
+			case 3:
+				color = brown.clone();
+				break;
+			case 4:
+				color = red.clone();
+				break;
+			case 5:
+				color = yellow.clone();
+				break;
+			case 6:
+				color = green.clone();
+				break;
+			}
 
-		boolean active = ((TileEntityMonitorStorageFluid) world.getBlockTileEntity(x, y, z)).isMachineActive();
-		ts.setBrightness(15 << 2 | 15 << 0);
-		if (active)
-			ts.setBrightness(15 << 20 | 15 << 4);
+			boolean active = monitorTE.isMachineActive();
+			ts.setBrightness(15 << 2 | 15 << 0);
+			if (active)
+				ts.setBrightness(15 << 20 | 15 << 4);
 
-		for (int i = 0; i < 3; i++)
-		{
-			ts.setColorOpaque_I(color[i]);
-			drawFace(face, block, x, y, z, monitor.colorLayers[i], renderer);
+			for (int i = 0; i < 3; i++)
+			{
+				ts.setColorOpaque_I(color[i]);
+				drawFace(face, block, x, y, z, monitorBlock.colorLayers[i], renderer);
+			}
 		}
 		return true;
 	}
