@@ -1,7 +1,8 @@
-language.name=German
-language.region=DE
-language.code=de_DE
+//**********//
+//EXTRACELLS//
+//**********//
 
+//Items
 item.storage.physical.256k=256k ME-Speicher
 item.storage.physical.1024k=1M ME-Speicher
 item.storage.physical.4096k=4M ME-Speicher
@@ -28,6 +29,8 @@ item.storage.physical_secure.encrypted=Verschlüsselbare Zelle - Verschlüsselt
 item.storage.physical_secure.decrypted=Verschlüsselbare Zelle - Entschlüsselt
 item.casing.advanced.physical=Erweitertes Speichergehäuse
 item.casing.advanced.fluid=Erweitertes Flüssigkeiten-Speichergehäuse
+
+//Blocks
 tile.block.solderingstation.name=Lötstation
 tile.block.mebattery.name=ME-Reservebatterie
 tile.block.medropper.name=ME-Item-Dropper
@@ -45,6 +48,8 @@ tile.block.fluid.interface.name=ME-Flüssigkeits-Schnittstelle
 tile.block.fluid.void.name=Flüssigkeits-Leerraum
 tile.block.fluid.crafter.name=ME-Flüssigkeits-Fertigungskammer
 tile.block.fluid.monitor.storage.name=ME-Flüssigkeits-Speichermonitor
+
+//Tooltips and Chat-Messages
 tooltip.belongsto=Dieser Speicher gehört
 tooltip.notyours=Du bist nicht der Besitzer dieses Speichers!
 tooltip.accessgranted=Zugriff erlaubt!
@@ -79,5 +84,7 @@ tooltip.direction.3=Süden
 tooltip.direction.4=Westen
 tooltip.direction.5=Osten
 tooltip.direction.6=Unbekannt
+
+//Fluid API Fix
 fluid.tile.water=Wasser
 fluid.tile.lava=Lava

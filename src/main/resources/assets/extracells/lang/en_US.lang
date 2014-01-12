@@ -1,7 +1,8 @@
-language.name=English
-language.region=US
-language.code=en_US
+//**********//
+//EXTRACELLS//
+//**********//
 
+//Items
 item.storage.physical.256k=ME 256k Storage
 item.storage.physical.1024k=ME 1M Storage
 item.storage.physical.4096k=ME 4M Storage
@@ -28,6 +29,8 @@ item.storage.physical_secure.encrypted=Encryptable Cell - Encrypted
 item.storage.physical_secure.decrypted=Encryptable Cell - Decrypted
 item.casing.advanced.physical=Advanced Storage Cell Housing
 item.casing.advanced.fluid=Advanced Fluid Storage Cell Housing
+
+//Blocks
 tile.block.solderingstation.name=Soldering Station
 tile.block.mebattery.name=ME BackUp Battery
 tile.block.medropper.name=ME Item Dropper
@@ -45,6 +48,8 @@ tile.block.fluid.interface.name=ME Fluid Interface
 tile.block.fluid.void.name=Fluid Void
 tile.block.fluid.crafter.name=ME Fluid Craftingchamber
 tile.block.fluid.monitor.storage.name=ME Fluid Storage Monitor
+
+//Tooltips and Chat-Messages
 tooltip.belongsto=This storage belongs to:
 tooltip.notyours=You are not the owner of this storage drive!
 tooltip.accessgranted=Access granted!
@@ -79,5 +84,7 @@ tooltip.direction.3=South
 tooltip.direction.4=West
 tooltip.direction.5=East
 tooltip.direction.6=Unknown
+
+//Fluid API Fix
 fluid.tile.water=Water
 fluid.tile.lava=Lava
