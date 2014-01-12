@@ -12,13 +12,13 @@ import extracells.items.ItemStoragePhysical;
 
 public enum ItemEnum
 {
-	STORAGECOMPONENT("item.storagecomponent", 4141, ItemStorageComponent.class, "ID for the storage clusters (crafting)", "Cluster"),
 	STORAGEPHYSICAL("item.storage.physical", 4140, ItemStoragePhysical.class, "ID for the physical storage cells", "StoragePhysical"),
-	STORAGEFLUID("item.storage.fluid", 4145, ItemStorageFluid.class, "ID for the fluid storage cells", "StorageFluid"),
+	STORAGECOMPONENT("item.storagecomponent", 4141, ItemStorageComponent.class, "ID for the storage clusters (crafting)", "Cluster"),
 	STORAGEPHYSICALENCRYPTED("item.storage.physical_secure.encrypted", 4142, ItemSecureStoragePhysicalEncrypted.class, "ID for the encrypted storage cell", "Cell_Encrypted"),
 	STORAGEPHYSICALDECRYPTED("item.storage.physical_secure.decrypted", 4143, ItemSecureStoragePhysicalDecrypted.class, "ID for the decrypted storage cell", "Cell_Decrypted"),
 	STORAGECASING("item.casing.advanced", 4144, ItemCasing.class, "ID for the advanced storage casing", "AdvancedStorageCasing"),
-	FLUIDDISPLAY("item.fluiddisplay", 4145, ItemFluidDisplay.class, "ID for the item used for displaying fluids in the terminal and storing them in the ME Network", "FluidDisplayItem");
+	STORAGEFLUID("item.storage.fluid", 4145, ItemStorageFluid.class, "ID for the fluid storage cells", "StorageFluid"),
+	FLUIDDISPLAY("item.fluiddisplay", 4146, ItemFluidDisplay.class, "ID for the item used for displaying fluids in the terminal and storing them in the ME Network", "FluidDisplayItem");
 
 	private final String internalName;
 	private String description, IDName;
