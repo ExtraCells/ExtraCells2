@@ -1,15 +1,5 @@
 package extracells.proxy;
 
-import java.util.logging.Level;
-
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import appeng.api.Blocks;
 import appeng.api.Items;
 import appeng.api.Materials;
@@ -21,40 +11,19 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.BlockEnum;
 import extracells.ItemEnum;
-import extracells.container.ContainerBusFluidExport;
-import extracells.container.ContainerBusFluidImport;
-import extracells.container.ContainerBusFluidStorage;
-import extracells.container.ContainerFluidCrafter;
-import extracells.container.ContainerHardMEDrive;
-import extracells.container.ContainerInterfaceFluid;
-import extracells.container.ContainerLevelEmitterFluid;
-import extracells.container.ContainerMEBattery;
-import extracells.container.ContainerTerminalFluid;
-import extracells.gui.GuiBusFluidExport;
-import extracells.gui.GuiBusFluidImport;
-import extracells.gui.GuiBusFluidStorage;
-import extracells.gui.GuiFluidCrafter;
-import extracells.gui.GuiHardMEDrive;
-import extracells.gui.GuiInterfaceFluid;
-import extracells.gui.GuiLevelEmitterFluid;
-import extracells.gui.GuiMEBattery;
-import extracells.gui.GuiTerminalFluid;
-import extracells.tileentity.TileEntityBusFluidExport;
-import extracells.tileentity.TileEntityBusFluidImport;
-import extracells.tileentity.TileEntityBusFluidStorage;
-import extracells.tileentity.TileEntityCertusTank;
-import extracells.tileentity.TileEntityFluidCrafter;
-import extracells.tileentity.TileEntityHardMEDrive;
-import extracells.tileentity.TileEntityInterfaceFluid;
-import extracells.tileentity.TileEntityLevelEmitterFluid;
-import extracells.tileentity.TileEntityMEBattery;
-import extracells.tileentity.TileEntityMEDropper;
-import extracells.tileentity.TileEntityMonitorStorageFluid;
-import extracells.tileentity.TileEntitySolderingStation;
-import extracells.tileentity.TileEntityTerminalFluid;
-import extracells.tileentity.TileEntityTransitionPlaneFluid;
-import extracells.tileentity.TileEntityVoidFluid;
-import extracells.tileentity.TileEntityWalrus;
+import extracells.container.*;
+import extracells.gui.*;
+import extracells.tileentity.*;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import java.util.logging.Level;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -449,15 +418,5 @@ public class CommonProxy implements IGuiHandler
 		{
 			return false;
 		}
-	}
-
-	public String getStringLocalization(String key)
-	{
-		return LanguageRegistry.instance().getStringLocalization(key);
-	}
-
-	public void loadLocalization(String filename, String locale)
-	{
-		LanguageRegistry.instance().loadLocalization(filename, locale, true);
 	}
 }

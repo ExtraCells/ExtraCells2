@@ -41,7 +41,7 @@ public class ECPrivatePatternInventory extends ECPrivateInventory
 		if (gridTE != null)
 		{
 			ICraftingPattern currentPattern = Util.getAssemblerPattern(itemstack);
-			if (!(currentPattern instanceof ICraftingPatternMAC) || currentPattern.getRequirements() == null)
+			if (currentPattern == null || currentPattern.getRequirements() == null)
 				return false;
 			if (FluidContainerRegistry.isEmptyContainer(currentPattern.getOutput()))
 				return false;

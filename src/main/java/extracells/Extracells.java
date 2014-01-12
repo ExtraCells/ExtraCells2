@@ -1,9 +1,5 @@
 package extracells;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.oredict.OreDictionary;
 import appeng.api.Util;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
@@ -18,11 +14,14 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.handler.FluidCellHandler;
-import extracells.localization.LocalizationHandler;
 import extracells.network.AbstractPacket;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 import extracells.render.RenderHandler;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 
 @Mod(modid = "extracells", name = "Extra Cells", dependencies = "required-after:AppliedEnergistics")
 @NetworkMod(channels =
@@ -51,7 +50,6 @@ public class Extracells
 	{
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		instance = this;
-		LocalizationHandler.loadLanguages();
 
 		// Config
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());

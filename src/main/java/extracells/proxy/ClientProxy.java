@@ -1,31 +1,11 @@
 package extracells.proxy;
 
-import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import extracells.BlockEnum;
-import extracells.render.item.ItemRendererBusFluidExport;
-import extracells.render.item.ItemRendererBusFluidImport;
-import extracells.render.item.ItemRendererBusFluidStorage;
-import extracells.render.item.ItemRendererCertusTank;
-import extracells.render.item.ItemRendererLevelEmitterFluid;
-import extracells.render.item.ItemRendererSolderingStation;
-import extracells.render.item.ItemRendererWalrus;
-import extracells.render.tileentity.TileEntityRedererWalrus;
-import extracells.render.tileentity.TileEntityRendererBusFluidExport;
-import extracells.render.tileentity.TileEntityRendererBusFluidImport;
-import extracells.render.tileentity.TileEntityRendererBusFluidStorage;
-import extracells.render.tileentity.TileEntityRendererCertusTank;
-import extracells.render.tileentity.TileEntityRendererLevelEmitterFluid;
-import extracells.render.tileentity.TileEntityRendererMonitorStorageFluid;
-import extracells.render.tileentity.TileEntityRendererSolderingStation;
-import extracells.tileentity.TileEntityBusFluidExport;
-import extracells.tileentity.TileEntityBusFluidImport;
-import extracells.tileentity.TileEntityBusFluidStorage;
-import extracells.tileentity.TileEntityCertusTank;
-import extracells.tileentity.TileEntityLevelEmitterFluid;
-import extracells.tileentity.TileEntityMonitorStorageFluid;
-import extracells.tileentity.TileEntitySolderingStation;
-import extracells.tileentity.TileEntityWalrus;
+import extracells.render.item.*;
+import extracells.render.tileentity.*;
+import extracells.tileentity.*;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 public class ClientProxy extends CommonProxy
 {
