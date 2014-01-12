@@ -15,7 +15,7 @@ import extracells.tileentity.TileEntityMonitorStorageFluid;
 public class RenderHelperMonitorStorageFluid extends RenderHelper
 {
 
-	public static void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
+	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		Tessellator tessellator = Tessellator.instance;
 		block.setBlockBoundsForItemRender();
@@ -69,7 +69,7 @@ public class RenderHelperMonitorStorageFluid extends RenderHelper
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 	}
 
-	public static boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
+	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
 		Tessellator ts = Tessellator.instance;
 		ts.setColorOpaque_I(0xFFFFFF);

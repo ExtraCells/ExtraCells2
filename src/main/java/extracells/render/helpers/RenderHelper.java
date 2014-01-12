@@ -7,24 +7,24 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class RenderHelper
 {
-	static int[] blue =
+	int[] blue =
 	{ 0x2D29A0, 0x514AFF, 0xDDE6FF };
-	static int[] black =
+	int[] black =
 	{ 0x2B2B2B, 0x565656, 0x848484 };
-	static int[] white =
+	int[] white =
 	{ 0xBEBEBE, 0xDBDBDB, 0xFAFAFA };
-	static int[] brown =
+	int[] brown =
 	{ 0x724E35, 0xB7967F, 0xE0D2C8 };
-	static int[] red =
+	int[] red =
 	{ 0xA50029, 0xFF003C, 0xFFE6ED };
-	static int[] yellow =
+	int[] yellow =
 	{ 0xFFF7AA, 0xF8FF4A, 0xFFFFE8 };
-	static int[] green =
+	int[] green =
 	{ 0x45A021, 0x60E32E, 0xE3F2E3 };
-	static int[] fluix =
+	int[] fluix =
 	{ 0x1B2344, 0x895CA8, 0xDABDEF };
 
-	public static void drawFace(ForgeDirection side, Block block, double x, double y, double z, Icon icon, RenderBlocks renderer)
+	public void drawFace(ForgeDirection side, Block block, double x, double y, double z, Icon icon, RenderBlocks renderer)
 	{
 		switch (side)
 		{

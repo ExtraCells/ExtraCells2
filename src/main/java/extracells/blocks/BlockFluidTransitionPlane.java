@@ -65,4 +65,14 @@ public class BlockFluidTransitionPlane extends RotatableColorBlock
 		bottomIcon = iconregister.registerIcon("extracells:machine.bottom");
 		topIcon = iconregister.registerIcon("extracells:machine.top");
 	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
+	{
+		TileEntity blockTE = world.getBlockTileEntity(x, y, z);
+		if (blockTE instanceof TileEntityTransitionPlaneFluid)
+		{
+			((TileEntityTransitionPlaneFluid) blockTE).doWork();
+		}
+	}
 }

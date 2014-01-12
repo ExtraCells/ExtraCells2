@@ -12,6 +12,8 @@ import extracells.render.helpers.RenderHelperTerminalFluid;
 public class RenderHandler implements ISimpleBlockRenderingHandler
 {
 	int renderID = 0;
+	RenderHelperMonitorStorageFluid monitorRender = new RenderHelperMonitorStorageFluid();
+	RenderHelperTerminalFluid terminalRender = new RenderHelperTerminalFluid();
 
 	public RenderHandler(int id)
 	{
@@ -23,11 +25,11 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 	{
 		if (block instanceof BlockTerminalFluid)
 		{
-			RenderHelperTerminalFluid.renderInventoryBlock(block, metadata, modelID, renderer);
+			terminalRender.renderInventoryBlock(block, metadata, modelID, renderer);
 		}
 		if (block instanceof BlockMonitorStorageFluid)
 		{
-			RenderHelperMonitorStorageFluid.renderInventoryBlock(block, metadata, modelID, renderer);
+			monitorRender.renderInventoryBlock(block, metadata, modelID, renderer);
 		}
 	}
 
@@ -36,11 +38,11 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 	{
 		if (block instanceof BlockTerminalFluid)
 		{
-			return RenderHelperTerminalFluid.renderWorldBlock(world, x, y, z, block, modelId, renderer);
+			return terminalRender.renderWorldBlock(world, x, y, z, block, modelId, renderer);
 		}
 		if (block instanceof BlockMonitorStorageFluid)
 		{
-			return RenderHelperMonitorStorageFluid.renderWorldBlock(world, x, y, z, block, modelId, renderer);
+			return monitorRender.renderWorldBlock(world, x, y, z, block, modelId, renderer);
 		}
 		return false;
 	}

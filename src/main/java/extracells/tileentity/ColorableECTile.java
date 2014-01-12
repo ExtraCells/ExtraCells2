@@ -63,7 +63,6 @@ public abstract class ColorableECTile extends TileEntity implements IConnectionS
 	{
 		color = offset;
 		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
-		System.out.println(color);
 	}
 
 	public int getColor()

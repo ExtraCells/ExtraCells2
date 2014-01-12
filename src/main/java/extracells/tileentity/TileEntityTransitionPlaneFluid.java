@@ -23,11 +23,20 @@ import extracells.ItemEnum;
 
 public class TileEntityTransitionPlaneFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile
 {
-	Boolean powerStatus = true, networkReady = true;
+	Boolean powerStatus = true, networkReady = true, updated = false;
 	IGridInterface grid;
 
 	@Override
 	public void updateEntity()
+	{
+		if (isMachineActive() && getGrid() != null && !updated)
+		{
+			updated = true;
+			doWork();
+		}
+	}
+
+	public void doWork()
 	{
 		if (isMachineActive() && getGrid() != null)
 		{
