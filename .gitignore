@@ -8,3 +8,5 @@
 !/License.txt
 *.db
 !/build.gradle
+!/build.bat
+!/build.sh
