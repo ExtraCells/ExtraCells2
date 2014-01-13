@@ -94,7 +94,7 @@ public class Extracells
 			tickRateStorage = 20;
 
 		debug = config.get("Dev Options", "showFluidsInMETerminal", false, "Dont't activate if you dont want to debug stuff ;)").getBoolean(false);
-		shortenedBuckets = config.get("Render Options", "shortenBucketsInTerminal", false, "Do you want to show 1kB or 1000000mB?").getBoolean(true);
+		shortenedBuckets = config.get("Render Options", "shortenBucketsInTerminal", true, "Do you want to show 1kB or 1000000mB?").getBoolean(true);
 		config.save();
 	}
 
