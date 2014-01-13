@@ -5,6 +5,7 @@ import static extracells.ItemEnum.FLUIDDISPLAY;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.Extracells;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -38,21 +39,31 @@ import extracells.util.ECPrivateInventory;
 
 public class TileEntityBusFluidStorage extends ColorableECTile implements IGridMachine, IDirectionalMETile, ICellContainer, ITileCable
 {
-	Boolean powerStatus = true, networkReady = true, fluidHandlerCached = false, redStoneCached = false;
-	IGridInterface grid;
-	int priority = 1;
+	private boolean powerStatus = true, networkReady = true, fluidHandlerCached = false, redStoneCached = false;
+	private IGridInterface grid;
+	private int priority = 1;
 	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.storage");
-	ECPrivateInventory inventory = new ECPrivateInventory(customName, 54, 1);
-	FluidStack lastFluid;
-	IFluidHandler fluidHandler = null;
-
-	public void setPriority(int priority)
-	{
-		this.priority = priority;
-	}
+	private ECPrivateInventory inventory = new ECPrivateInventory(customName, 54, 1);
+	private FluidStack lastFluid;
+	private IFluidHandler fluidHandler = null;
+	private int currentTick = 0;
+	private final int tickRate = Extracells.tickRateExport;
 
 	@Override
 	public void updateEntity()
+	{
+		if (!worldObj.isRemote)
+		{
+			currentTick++;
+			if (currentTick == tickRate)
+			{
+				currentTick = 0;
+				doUpdateEntity();
+			}
+		}
+	}
+
+	public void doUpdateEntity()
 	{
 		if (!redStoneCached || !fluidHandlerCached)
 		{
@@ -96,6 +107,11 @@ public class TileEntityBusFluidStorage extends ColorableECTile implements IGridM
 				lastFluid = null;
 			}
 		}
+	}
+
+	public void setPriority(int priority)
+	{
+		this.priority = priority;
 	}
 
 	public void setFluidHandler(IFluidHandler handler)

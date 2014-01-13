@@ -3,6 +3,7 @@ package extracells.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.Extracells;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -107,14 +108,16 @@ public class GuiTerminalFluid extends GuiContainer
 		}
 
 		String amountToText = Long.toString(amount) + "mB";
-
-		if (amount > 1000000000L)
-			amountToText = Long.toString(amount / 1000000000L) + "MegaB";
-		else if (amount > 1000000L)
-			amountToText = Long.toString(amount / 1000000L) + "KiloB";
-		else if (amount > 9999L)
+		if (Extracells.shortenedBuckets)
 		{
-			amountToText = Long.toString(amount / 1000L) + "B";
+			if (amount > 1000000000L)
+				amountToText = Long.toString(amount / 1000000000L) + "MegaB";
+			else if (amount > 1000000L)
+				amountToText = Long.toString(amount / 1000000L) + "KiloB";
+			else if (amount > 9999L)
+			{
+				amountToText = Long.toString(amount / 1000L) + "B";
+			}
 		}
 
 		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);

@@ -62,8 +62,9 @@ public class WidgetFluidModes extends GuiButton
 			{
 				List<String> description = new ArrayList<String>();
 				description.add(StatCollector.translateToLocal("tooltip.fluidmode"));
-				description.add(StatCollector.translateToLocal("tooltip.fluidmode.move").replace("$amount", Integer.toString(fluidMode.getAmount())));
-				description.add(StatCollector.translateToLocal("tooltip.fluidmode.cost").replace("$cost", Float.toString(fluidMode.getCost())));
+				// escaping the escapes to make it .lang files compatible (escaped in .lang, but mc parses it as \$)
+				description.add(StatCollector.translateToLocal("tooltip.fluidmode.move").replace("\\$amount", Integer.toString(fluidMode.getAmount())));
+				description.add(StatCollector.translateToLocal("tooltip.fluidmode.cost").replace("\\$cost", Float.toString(fluidMode.getCost())));
 				drawHoveringText(description, mouseX, mouseY, mc.fontRenderer);
 			}
 		}
@@ -170,6 +171,16 @@ public class WidgetFluidModes extends GuiButton
 		public float getCost()
 		{
 			return cost;
+		}
+
+		public void setAmount(int amount)
+		{
+			this.amount = amount;
+		}
+
+		public void setCost(double cost)
+		{
+			this.cost = (float) cost;
 		}
 	}
 

@@ -5,6 +5,7 @@ import static extracells.ItemEnum.FLUIDDISPLAY;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.Extracells;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -43,10 +44,25 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 	private ECPrivateInventory inventory = new ECPrivateInventory(customName, 8, 1);
 	private RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
 	private FluidMode fluidMode = FluidMode.DROPS;
-	IFluidHandler fluidHandler = null;
+	private IFluidHandler fluidHandler = null;
+	private int currentTick = 0;
+	private final int tickRate = Extracells.tickRateExport;
 
 	@Override
 	public void updateEntity()
+	{
+		if (!worldObj.isRemote)
+		{
+			currentTick++;
+			if (currentTick == tickRate)
+			{
+				currentTick = 0;
+				doUpdateEntity();
+			}
+		}
+	}
+
+	public void doUpdateEntity()
 	{
 		if (!redStoneCached || !fluidHandlerCached)
 		{
@@ -136,7 +152,8 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 
 					if (contained > 0)
 					{
-						exportFluid(new FluidStack(entry, contained < mode.getAmount() ? (int) contained : mode.getAmount()), fluidHandler, ForgeDirection.getOrientation(getBlockMetadata()).getOpposite(), mode);
+						int modeAmount = mode.getAmount() * tickRate;
+						exportFluid(new FluidStack(entry, contained < modeAmount ? (int) contained : modeAmount), fluidHandler, ForgeDirection.getOrientation(getBlockMetadata()).getOpposite(), mode);
 					}
 				}
 			}
@@ -161,7 +178,7 @@ public class TileEntityBusFluidExport extends ColorableECTile implements IGridMa
 			{
 				IAEItemStack extracted = cellArray.extractItems(toExtract);
 
-				grid.useMEEnergy(mode.getCost(), "Export Fluid");
+				grid.useMEEnergy(mode.getCost() * tickRate, "Export Fluid");
 
 				if (extracted == null)
 				{

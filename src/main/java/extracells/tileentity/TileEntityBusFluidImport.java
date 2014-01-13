@@ -15,13 +15,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.*;
 import appeng.api.IAEItemStack;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
@@ -34,21 +28,37 @@ import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.BlockEnum;
+import extracells.Extracells;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
 import extracells.util.ECPrivateInventory;
 
 public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
 	boolean powerStatus = true, redstoneFlag = false, networkReady = true, redstoneStatus = false, fluidHandlerCached = false, redStoneCached = false;
-	IGridInterface grid;
+	private IGridInterface grid;
 	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.import");
-	ECPrivateInventory inventory = new ECPrivateInventory(customName, 8, 1);
-	RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
-	FluidMode fluidMode = FluidMode.DROPS;
-	IFluidHandler fluidHandler = null;
+	private ECPrivateInventory inventory = new ECPrivateInventory(customName, 8, 1);
+	private RedstoneModeInput redstoneMode = RedstoneModeInput.Ignore;
+	private FluidMode fluidMode = FluidMode.DROPS;
+	private IFluidHandler fluidHandler = null;
+	private int currentTick = 0;
+	private final int tickRate = Extracells.tickRateImport;
 
 	@Override
 	public void updateEntity()
+	{
+		if (!worldObj.isRemote)
+		{
+			currentTick++;
+			if (currentTick == tickRate)
+			{
+				currentTick = 0;
+				doUpdateEntity();
+			}
+		}
+	}
+
+	public void doUpdateEntity()
 	{
 		if (!redStoneCached || !fluidHandlerCached)
 		{
@@ -108,8 +118,10 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 
 	private void doWork(FluidMode mode)
 	{
+		int modeAmount = mode.getAmount() * tickRate;
+		float modeCost = mode.getCost() * tickRate;
 		ForgeDirection facing = ForgeDirection.getOrientation(getBlockMetadata());
-		FluidStack drainable = fluidHandler.drain(facing.getOpposite(), mode.getAmount(), false);
+		FluidStack drainable = fluidHandler.drain(facing.getOpposite(), modeAmount, false);
 
 		if (drainable != null && drainable.amount > 0)
 		{
@@ -125,7 +137,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 				{
 					if (fluidFilter.contains(drainable.getFluid()))
 					{
-						if (grid.useMEEnergy(mode.getCost(), "Import Fluid") && notImported == null)
+						if (grid.useMEEnergy(modeCost, "Import Fluid") && notImported == null)
 						{
 							FluidStack drained = fluidHandler.drain(facing.getOpposite(), (int) toImport.getStackSize(), true);
 							if (drained != null)
@@ -134,7 +146,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 					}
 				} else
 				{
-					if (grid.useMEEnergy(mode.getCost(), "Import Fluid") && notImported == null)
+					if (grid.useMEEnergy(modeCost, "Import Fluid") && notImported == null)
 					{
 						FluidStack drained = fluidHandler.drain(facing.getOpposite(), (int) toImport.getStackSize(), true);
 						if (drained != null)

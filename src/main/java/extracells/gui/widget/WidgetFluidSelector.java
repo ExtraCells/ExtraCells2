@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import extracells.Extracells;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -59,13 +60,16 @@ public class WidgetFluidSelector extends Gui
 		if (amount > 0 && fluid != null)
 		{
 			String amountToText = Long.toString(amount) + "mB";
-			if (amount > 1000000000L)
-				amountToText = Long.toString(amount / 1000000000L) + "MegaB";
-			else if (amount > 1000000L)
-				amountToText = Long.toString(amount / 1000000L) + "KiloB";
-			else if (amount > 9999L)
+			if (Extracells.shortenedBuckets)
 			{
-				amountToText = Long.toString(amount / 1000L) + "B";
+				if (amount > 1000000000L)
+					amountToText = Long.toString(amount / 1000000000L) + "MegaB";
+				else if (amount > 1000000L)
+					amountToText = Long.toString(amount / 1000000L) + "KiloB";
+				else if (amount > 9999L)
+				{
+					amountToText = Long.toString(amount / 1000L) + "B";
+				}
 			}
 
 			List<String> description = new ArrayList<String>();

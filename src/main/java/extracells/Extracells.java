@@ -13,6 +13,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import extracells.gui.widget.WidgetFluidModes;
 import extracells.handler.FluidCellHandler;
 import extracells.network.AbstractPacket;
 import extracells.network.PacketHandler;
@@ -44,6 +45,11 @@ public class Extracells
 	public static CommonProxy proxy;
 
 	public static boolean debug;
+	public static boolean shortenedBuckets;
+
+	public static int tickRateExport;
+	public static int tickRateImport;
+	public static int tickRateStorage;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -67,7 +73,28 @@ public class Extracells
 			current.setID(config.getBlock(current.getIDName() + "_ID", current.getID(), current.getDescription()).getInt());
 		}
 
+		// Tick Rates
+		tickRateExport = config.get("Tick Rates", "tickRateExportBus", 20, "Every x ticks the export bus ticks. mb/t get adjusted automatically ;)").getInt();
+		tickRateImport = config.get("Tick Rates", "tickRateImportBus", 20, "Every x ticks the import bus ticks. mb/t get adjusted automatically ;)").getInt();
+		tickRateStorage = config.get("Tick Rates", "tickRateStorageBus", 20, "Every x ticks the storage bus ticks. mb/t get adjusted automatically ;)").getInt();
+
+		// Fluid Mode Settings
+		WidgetFluidModes.FluidMode.DROPS.setAmount(config.get("Fluid Rates", "rateDrop", 20, "The Amount of Fluid being filled/drained per tick on the \"Drop\"-Amount").getInt());
+		WidgetFluidModes.FluidMode.QUART.setAmount(config.get("Fluid Rates", "rateQuart", 250, "The Amount of Fluid being filled/drained per tick on the \"Quart\"-Amount").getInt());
+		WidgetFluidModes.FluidMode.BUCKETS.setAmount(config.get("Fluid Rates", "rateBucket", 1000, "The Amount of Fluid being filled/drained per tick on the \"Bucket\"-Amount").getInt());
+		WidgetFluidModes.FluidMode.DROPS.setCost(config.get("Energy Rates", "rateDrop", 5.0D, "The Energy Cost per fill/drain operation on the \"Drop\"-Amount").getDouble(5.0D));
+		WidgetFluidModes.FluidMode.QUART.setCost(config.get("Energy Rates", "rateQuart", 30.0D, "The Energy Cost per fill/drain operation on the \"Quart\"-Amount").getDouble(30.0D));
+		WidgetFluidModes.FluidMode.BUCKETS.setCost(config.get("Energy Rates", "rateBucket", 60.0D, "The Energy Cost per fill/drain operation on the \"Bucket\"-Amount").getDouble(60.0D));
+
+		if (tickRateExport <= 0)
+			tickRateExport = 20;
+		if (tickRateImport <= 0)
+			tickRateImport = 20;
+		if (tickRateStorage <= 0)
+			tickRateStorage = 20;
+
 		debug = config.get("Dev Options", "showFluidsInMETerminal", false, "Dont't activate if you dont want to debug stuff ;)").getBoolean(false);
+		shortenedBuckets = config.get("Render Options", "shortenBucketsInTerminal", false, "Do you want to show 1kB or 1000000mB?").getBoolean(true);
 		config.save();
 	}
 

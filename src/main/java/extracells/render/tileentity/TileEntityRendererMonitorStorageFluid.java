@@ -1,5 +1,6 @@
 package extracells.render.tileentity;
 
+import extracells.Extracells;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -82,13 +83,16 @@ public class TileEntityRendererMonitorStorageFluid extends TileEntitySpecialRend
 				qty = 999999999999L;
 			}
 			String msg = Long.toString(qty) + "mB";
-			if (qty > 1000000000L)
-				msg = Long.toString(qty / 1000000000L) + "MegaB";
-			else if (qty > 1000000L)
-				msg = Long.toString(qty / 1000000L) + "KiloB";
-			else if (qty > 9999L)
+			if (Extracells.shortenedBuckets)
 			{
-				msg = Long.toString(qty / 1000L) + "B";
+				if (qty > 1000000000L)
+					msg = Long.toString(qty / 1000000000L) + "MegaB";
+				else if (qty > 1000000L)
+					msg = Long.toString(qty / 1000000L) + "KiloB";
+				else if (qty > 9999L)
+				{
+					msg = Long.toString(qty / 1000L) + "B";
+				}
 			}
 
 			TileEntityMonitorStorageFluid TE = (TileEntityMonitorStorageFluid) tileentity;
