@@ -1,3 +1,4 @@
+
 //**********//
 //EXTRACELLS//
 //**********//
@@ -64,8 +65,8 @@ tooltip.mode=Modus
 tooltip.onlyblocks=Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container
 tooltip.item=Item 
 tooltip.fluidmode=Transport-Modus
-tooltip.fluidmode.move=$amount mb/t bewegen 
-tooltip.fluidmode.cost=Kostet $cost pu/t 
+tooltip.fluidmode.move=\$amount mb/t bewegen 
+tooltip.fluidmode.cost=Kostet \$cost pu/t 
 tooltip.dropperlocked=Dropper Gesperrt
 tooltip.dropperunlocked=Dropper Entsperrt 
 tooltip.dropset=Drop verstellt zu 
