@@ -74,10 +74,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	{
 		if (resource == null || (tank.getFluid() != null && resource.fluidID != tank.getFluid().fluidID))
 			return 0;
-
-		int cake = fill(resource, doFill, true);
-		System.out.println(cake);
-		return cake;
+		return cake = fill(resource, doFill, true);
 	}
 
 	@Override
@@ -283,26 +280,26 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 			{
 				if (Math.abs(current.amount - lastBeforeUpdate.amount) >= 500)
 				{
-					worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType().blockID, current.fluidID, current.amount);
+					worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 					lastBeforeUpdate = current.copy();
 				} else
 				{
 					if (lastBeforeUpdate.amount < tank.getCapacity() && current.amount == tank.getCapacity() || lastBeforeUpdate.amount == tank.getCapacity() && current.amount < tank.getCapacity())
 					{
-						worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType().blockID, current.fluidID, current.amount);
+						worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 						lastBeforeUpdate = current.copy();
 					}
 				}
 			} else
 			{
-				worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType().blockID, current.fluidID, current.amount);
+				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 				lastBeforeUpdate = current.copy();
 			}
 		} else
 		{
 			if (lastBeforeUpdate != null)
 			{
-				worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType().blockID, -1, -1);
+				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 				lastBeforeUpdate = null;
 			}
 		}
