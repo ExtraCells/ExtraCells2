@@ -347,10 +347,10 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 					if (doFill)
 						getGrid().useMEEnergy(amount / 50, "Import Fluid");
 					return resource.amount;
-				} else
+				} else if (added.getStackSize() > 0)
 				{
 					if (doFill)
-						getGrid().useMEEnergy(amount - added.getStackSize() / 50, "Import Fluid");
+						getGrid().useMEEnergy((amount - added.getStackSize()) / 50, "Import Fluid");
 					return (int) (resource.amount - added.getStackSize());
 				}
 			}

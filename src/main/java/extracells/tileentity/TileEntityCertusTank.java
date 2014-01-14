@@ -74,7 +74,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	{
 		if (resource == null || (tank.getFluid() != null && resource.fluidID != tank.getFluid().fluidID))
 			return 0;
-		return cake = fill(resource, doFill, true);
+		return fill(resource, doFill, true);
 	}
 
 	@Override
@@ -149,15 +149,12 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 			if (offTE instanceof TileEntityCertusTank)
 			{
 				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
-				FluidStack externallyDrained = tank.drain(new FluidStack(fluid.fluidID, fluid.amount - drained.amount), doDrain, false);
+				FluidStack externallyDrained = tank.drain(new FluidStack(fluid.fluidID, fluid.amount - (drained != null ? drained.amount : 0)), doDrain, false);
 
 				if (externallyDrained != null)
-				{
-					return new FluidStack(drained.fluidID, drained.amount + externallyDrained.amount);
-				} else
-				{
+					return new FluidStack(fluid.fluidID, (drained != null ? drained.amount : 0) + externallyDrained.amount);
+				else
 					return drained;
-				}
 			}
 		}
 
@@ -313,22 +310,5 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	public float getRenderScale()
 	{
 		return (float) tank.getFluidAmount() / tank.getCapacity();
-	}
-
-	/**
-	 * This is kinda abusive since it's intended to use par1 as the event id and par2 as the value...
-	 */
-	public boolean receiveClientEvent(int id, int amount)
-	{
-		if (worldObj.isRemote)
-		{
-			if (id <= 0 || amount <= 0)
-			{
-				tank.setFluid(null);
-				return true;
-			}
-			tank.setFluid(new FluidStack(id, amount));
-		}
-		return true;
 	}
 }
