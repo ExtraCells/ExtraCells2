@@ -1,7 +1,6 @@
 package appeng.api.networkevents;
 
 import appeng.api.me.tiles.IGridTileEntity;
-import appeng.api.me.util.IGridInterface;
 
 /**
  * These events are posted via IGridInterface.PostEvent

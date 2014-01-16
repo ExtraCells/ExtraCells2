@@ -1,17 +1,15 @@
 package extracells.gui;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.BlockEnum;
+import extracells.network.packet.PacketMEBattery;
+import extracells.tileentity.TileEntityMEBattery;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.BlockEnum;
-import extracells.network.packet.PacketMEBattery;
-import extracells.tileentity.TileEntityMEBattery;
 
 public class GuiMEBattery extends GuiScreen
 {
@@ -53,7 +51,7 @@ public class GuiMEBattery extends GuiScreen
 	{
 		if (key == 'e' || key == '')
 		{
-			this.mc.displayGuiScreen((GuiScreen) null);
+			this.mc.displayGuiScreen(null);
 			this.mc.setIngameFocus();
 		}
 	}
@@ -65,8 +63,8 @@ public class GuiMEBattery extends GuiScreen
 		if (world.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) instanceof TileEntityMEBattery)
 		{
 			TileEntityMEBattery battery = (TileEntityMEBattery) world.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-			currentEnergy = battery.getEnergy();
-			maxEnergy = battery.getMaxEnergy();
+			currentEnergy = battery.getMECurrentPower();
+			maxEnergy = battery.getMEMaxPower();
 		}
 	}
 

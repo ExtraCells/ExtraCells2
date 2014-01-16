@@ -1,76 +1,56 @@
 package extracells.tileentity;
 
+import appeng.api.WorldCoord;
+import appeng.api.config.ItemFlow;
+import appeng.api.events.GridTileLoadEvent;
+import appeng.api.events.GridTileUnloadEvent;
+import appeng.api.me.tiles.IGridTileEntity;
+import appeng.api.me.tiles.IMEPowerStorage;
+import appeng.api.me.util.IGridInterface;
+import appeng.api.networkevents.MENetworkPowerStorage;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import appeng.api.WorldCoord;
-import appeng.api.events.GridTileLoadEvent;
-import appeng.api.events.GridTileUnloadEvent;
-import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IMEPowerStorage;
-import appeng.api.me.util.IGridInterface;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
 
-public class TileEntityMEBattery extends TileEntity implements IGridMachine
+public class TileEntityMEBattery extends TileEntity implements IGridTileEntity, IMEPowerStorage
 {
 
-	private double energy;
+	private double energy = 0;
 	private final double maxEnergy = 2000000.0D;
-	private final float takeEnergy = 10.0F;
-	Boolean powerStatus = true, networkReady = true;
+	private boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
-	private Boolean rechargeNetwork = null;
+	private boolean redstoneCached = false;
+	public boolean redstonePowered = false;
 
-	@Override
 	public void updateEntity()
 	{
-		if (getGrid() != null)
+		if (!redstoneCached)
 		{
-			if (rechargeNetwork == null)
-			{
-				updateRechargeNetwork();
-			}
-
-			IMEPowerStorage controller = (IMEPowerStorage) getGrid().getController();
-			if (controller != null)
-			{
-				if (rechargeNetwork)
-				{
-					if (controller.getMECurrentPower() < controller.getMEMaxPower())
-					{
-						energy = controller.addMEPower(energy);
-					}
-				} else
-				{
-					for (int i = 0; i < 5; i++)
-					{
-						if (energy + takeEnergy <= maxEnergy && controller.useMEEnergy(takeEnergy, StatCollector.translateToLocal("tile.block.mebattery")))
-						{
-							energy += takeEnergy;
-						} else
-						{
-							break;
-						}
-					}
-				}
-			}
+			redstoneCached = true;
+			updateRedstone();
 		}
 	}
 
-	public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+	public void updateRedstone()
 	{
-		updateRechargeNetwork();
-	}
-
-	private void updateRechargeNetwork()
-	{
-		rechargeNetwork = this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || this.worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
+		boolean newRedstone = worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) || worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
+		if (newRedstone != redstonePowered && grid != null)
+		{
+			if (energy > 0.001D)
+			{
+				getGrid().postEvent(new MENetworkPowerStorage(this, MENetworkPowerStorage.PowerEventType.PROVIDE_POWER));
+			} else if (energy < maxEnergy)
+			{
+				getGrid().postEvent(new MENetworkPowerStorage(this, MENetworkPowerStorage.PowerEventType.REQUEST_POWER));
+			}
+		}
+		redstonePowered = newRedstone;
 	}
 
 	public void updateGuiTile(String playername)
@@ -93,16 +73,6 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
 		readFromNBT(packet.data);
-	}
-
-	public double getMaxEnergy()
-	{
-		return maxEnergy;
-	}
-
-	public double getEnergy()
-	{
-		return energy;
 	}
 
 	@Override
@@ -148,8 +118,7 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 	@Override
 	public void setPowerStatus(boolean hasPower)
 	{
-		this.powerStatus = hasPower;
-
+		powerStatus = hasPower;
 	}
 
 	@Override
@@ -161,26 +130,19 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 	@Override
 	public IGridInterface getGrid()
 	{
-		return this.grid;
+		return grid;
 	}
 
 	@Override
 	public void setGrid(IGridInterface gi)
 	{
-		this.grid = gi;
-
+		grid = gi;
 	}
 
 	@Override
 	public World getWorld()
 	{
-		return this.worldObj;
-	}
-
-	@Override
-	public float getPowerDrainPerTick()
-	{
-		return 0.0F;
+		return worldObj;
 	}
 
 	public void setNetworkReady(boolean isReady)
@@ -191,5 +153,111 @@ public class TileEntityMEBattery extends TileEntity implements IGridMachine
 	public boolean isMachineActive()
 	{
 		return powerStatus && networkReady;
+	}
+
+	@Override
+	public boolean useMEEnergy(float use, String for_what)
+	{
+		if (energy > use)
+		{
+			energy -= use;
+			onUpdatePower();
+			return true;
+		}
+		energy = 0.0D;
+		onUpdatePower();
+		return false;
+	}
+
+	@Override
+	public double addMEPower(double amt)
+	{
+		if (getGrid() == null || !canFill())
+		{
+			return amt;
+		}
+		boolean wasEmpty = energy < 0.001D;
+
+		energy += amt;
+		if (energy > getMEMaxPower())
+		{
+			double overheadPower = energy - getMEMaxPower();
+			energy = getMEMaxPower();
+			onUpdatePower();
+			return overheadPower;
+		}
+
+		if (wasEmpty && energy > 0.001D)
+		{
+			getGrid().postEvent(new MENetworkPowerStorage(this, MENetworkPowerStorage.PowerEventType.PROVIDE_POWER));
+		}
+
+		onUpdatePower();
+		return 0.0D;
+	}
+
+	@Override
+	public double getMEMaxPower()
+	{
+		return maxEnergy;
+	}
+
+	@Override
+	public double getMECurrentPower()
+	{
+		return energy;
+	}
+
+	@Override
+	public boolean isPublicPowerStorage()
+	{
+		return true;
+	}
+
+	@Override
+	public ItemFlow getPowerFlow()
+	{
+		return ItemFlow.READ_WRITE;
+	}
+
+	@Override
+	public double drainMEPower(double amt)
+	{
+		if (getGrid() == null || !canDrain())
+		{
+			return 0.0D;
+		}
+		boolean wasFull = energy >= maxEnergy;
+
+		energy -= amt;
+		if (energy < 0.0D)
+		{
+			amt += energy;
+			energy = 0.0D;
+		}
+
+		if (energy < maxEnergy && wasFull)
+		{
+			getGrid().postEvent(new MENetworkPowerStorage(this, MENetworkPowerStorage.PowerEventType.REQUEST_POWER));
+		}
+		onUpdatePower();
+		return amt;
+	}
+
+	public boolean canDrain()
+	{
+		return redstonePowered;
+	}
+
+	public boolean canFill()
+	{
+		return redstonePowered;
+	}
+
+	void onUpdatePower()
+	{
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
+		if (worldObj != null)
+			worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
 	}
 }

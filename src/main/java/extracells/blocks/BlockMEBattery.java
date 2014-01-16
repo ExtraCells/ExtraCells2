@@ -49,8 +49,8 @@ public class BlockMEBattery extends BlockContainer
 		{
 			TileEntityMEBattery meBattery = (TileEntityMEBattery) tileentity;
 
-			Double energy = meBattery.getEnergy();
-			Double maxEnergy = meBattery.getMaxEnergy();
+			double energy = meBattery.getMECurrentPower();
+			double maxEnergy = meBattery.getMEMaxPower();
 
 			if (energy < (maxEnergy * 0.25))
 			{
@@ -81,17 +81,12 @@ public class BlockMEBattery extends BlockContainer
 	}
 
 	@Override
-	public boolean hasTileEntity()
-	{
-		return true;
-	}
-
-	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
 	{
 		if (!world.isRemote)
 		{
-			((TileEntityMEBattery) world.getBlockTileEntity(x, y, z)).onNeighborBlockChange(world, x, y, z, neighbourID);
+			TileEntityMEBattery battery = (TileEntityMEBattery) world.getBlockTileEntity(x, y, z);
+			battery.updateRedstone();
 		}
 	}
 

@@ -1,7 +1,6 @@
 package appeng.api.networkevents;
 
 import appeng.api.me.tiles.IGridTileEntity;
-import appeng.api.me.util.IGridInterface;
 
 /**
  * informs the controller, that a IMEPowerStorage block that had either run, out of power, or was full, is no longer in that state.

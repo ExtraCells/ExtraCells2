@@ -116,12 +116,12 @@ public class Extracells
 
 		// EnderNET Support
 		FMLInterModComms.sendMessage("endernet", "WhitelistItemNBT", new ItemStack(ItemEnum.STORAGEFLUID.getItemInstance(), 1));
-		proxy.checkForIDMismatches();
 		proxy.registerMovables();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		proxy.checkForIDMismatches();
 	}
 }

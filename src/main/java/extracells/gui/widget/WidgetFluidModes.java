@@ -1,9 +1,5 @@
 package extracells.gui.widget;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -11,10 +7,13 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class WidgetFluidModes extends GuiButton
 {
@@ -62,8 +61,8 @@ public class WidgetFluidModes extends GuiButton
 			{
 				List<String> description = new ArrayList<String>();
 				description.add(StatCollector.translateToLocal("tooltip.fluidmode"));
-				description.add(StatCollector.translateToLocal("tooltip.fluidmode.move").replace("$amount", Integer.toString(fluidMode.getAmount())));
-				description.add(StatCollector.translateToLocal("tooltip.fluidmode.cost").replace("$cost", Float.toString(fluidMode.getCost())));
+				description.add(String.format(StatCollector.translateToLocal("tooltip.fluidmode.move"), fluidMode.getAmount(), fluidMode.getAmount() * 20));
+				description.add(String.format(StatCollector.translateToLocal("tooltip.fluidmode.cost"), fluidMode.getCost()));
 				drawHoveringText(description, mouseX, mouseY, mc.fontRenderer);
 			}
 		}
