@@ -24,7 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 
-@Mod(modid = "extracells", name = "Extra Cells", dependencies = "required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", dependencies = "after:Waila;required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { AbstractPacket.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Extracells
@@ -114,8 +114,10 @@ public class Extracells
 		RenderHandler handler = new RenderHandler(renderID);
 		RenderingRegistry.registerBlockHandler(handler);
 
-		// EnderNET Support
-		FMLInterModComms.sendMessage("endernet", "WhitelistItemNBT", new ItemStack(ItemEnum.STORAGEFLUID.getItemInstance(), 1));
+		// WAILA Support
+		FMLInterModComms.sendMessage("Waila", "register", "extracells.integration.WailaDataProvider.callbackRegister");
+
+		// AE Spatial Storage Support
 		proxy.registerMovables();
 	}
 
