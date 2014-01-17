@@ -7,6 +7,7 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 
@@ -32,12 +33,13 @@ public class WailaDataProvider implements IWailaDataProvider
 	{
 		List<String> list = currenttip;
 		Class clazz = accessor.getClass();
-		if (clazz == TileEntityMonitorStorageFluid.class)
+		TileEntity tileEntity = accessor.getTileEntity();
+		if (tileEntity instanceof TileEntityMonitorStorageFluid)
 		{
-			TileEntityMonitorStorageFluid tileentity = (TileEntityMonitorStorageFluid) accessor.getTileEntity();
-			Fluid fluid = tileentity.getFluid();
+			TileEntityMonitorStorageFluid fluidMonitor = (TileEntityMonitorStorageFluid) tileEntity;
+			Fluid fluid = fluidMonitor.getFluid();
 			String fluidName = fluid != null ? fluid.getLocalizedName() : "-";
-			long fluidAmount = fluid != null ? tileentity.getAmount() : 0;
+			long fluidAmount = fluid != null ? fluidMonitor.getAmount() : 0;
 
 			String amountToText = Long.toString(fluidAmount) + "mB";
 			if (Extracells.shortenedBuckets)
