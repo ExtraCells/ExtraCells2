@@ -271,6 +271,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	public void compareAndUpdate()
 	{
 		FluidStack current = tank.getFluid();
+	
 		if (current != null)
 		{
 			if (lastBeforeUpdate != null)
@@ -279,26 +280,23 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 				{
 					worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 					lastBeforeUpdate = current.copy();
-				} else
-				{
-					if (lastBeforeUpdate.amount < tank.getCapacity() && current.amount == tank.getCapacity() || lastBeforeUpdate.amount == tank.getCapacity() && current.amount < tank.getCapacity())
+				} 
+				else if (lastBeforeUpdate.amount < tank.getCapacity() && current.amount == tank.getCapacity() || lastBeforeUpdate.amount == tank.getCapacity() && current.amount < tank.getCapacity())
 					{
 						worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 						lastBeforeUpdate = current.copy();
 					}
-				}
-			} else
+			} 
+			else
 			{
 				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 				lastBeforeUpdate = current.copy();
 			}
-		} else
+		}
+		else if (lastBeforeUpdate != null)
 		{
-			if (lastBeforeUpdate != null)
-			{
 				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 				lastBeforeUpdate = null;
-			}
 		}
 	}
 

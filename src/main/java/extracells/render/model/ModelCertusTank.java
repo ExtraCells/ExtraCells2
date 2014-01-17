@@ -1,21 +1,19 @@
 package extracells.render.model;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-
-import org.lwjgl.opengl.GL11;
 
 import extracells.tileentity.TileEntityCertusTank;
 
@@ -34,82 +32,112 @@ public class ModelCertusTank extends ModelBase
 		Shape1.setTextureSize(textureWidth, textureHeight);
 		Shape1.mirror = true;
 		setRotation(Shape1, 0F, 0F, 0F);
-	}
 
+	}
 	public void render(float f)
 	{
 		Shape1.render(f);
 	}
-
-	public void render(TileEntity tileEntity, double x, double y, double z)
+	public void renderOuterBlock(Block block, int x, int y, int z, RenderBlocks renderer,IBlockAccess world)
 	{
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_tank.png"));
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 0.50001F, (float) z + 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
-		Shape1.render(0.0625F);
 
-		// render same cube again, but inside out, so it has inner textures :D
-		GL11.glScalef(1.0F, 0.999F, -1F);
-		Shape1.render(0.0625F);
+		Tessellator tessellator=Tessellator.instance;
+		boolean tankUp=world.getBlockTileEntity(x, y+1, z) instanceof TileEntityCertusTank;
+		boolean tankDown =world.getBlockTileEntity(x, y-1, z) instanceof TileEntityCertusTank;
+		int meta=0;
+		if(tankUp&&tankDown)
+			meta=3;
+		else if(tankUp)
+			meta=2;
+		else if(tankDown)
+			meta=1;
+		if(!tankDown)
+		{
+			tessellator.setNormal(0.0F, -1F, 0.0F);
+			renderer.renderFaceYNeg(block, x, y, z,  block.getIcon(0, 0));
+		}
+		if(!(tankUp))
+		{
+			tessellator.setNormal(0.0F, 1.0F, 0.0F);
+			renderer.renderFaceYPos(block, x, y, z, block.getIcon(1, 0));
+		}
+		
+		Icon sideIcon=block.getIcon(3, meta);
+		tessellator.setNormal(0.0F, 0.0F, -1F);
+		renderer.renderFaceZNeg(block, x, y, z, sideIcon);
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		renderer.renderFaceZPos(block, x, y, z, sideIcon);
+		tessellator.setNormal(-1F, 0.0F, 0.0F);
+		renderer.renderFaceXNeg(block, x, y, z, sideIcon);
+		tessellator.setNormal(1.0F, 0.0F, 0.0F);
+		renderer.renderFaceXPos(block, x, y, z, sideIcon);
 
+	}
+	public void renderInnerBlock(Block block, int x, int y, int z, RenderBlocks renderer,IBlockAccess world)
+	{
+		Tessellator tessellator=Tessellator.instance;
+		boolean tankUp=world.getBlockTileEntity(x, y+1, z) instanceof TileEntityCertusTank;
+		boolean tankDown =world.getBlockTileEntity(x, y-1, z) instanceof TileEntityCertusTank;
+		int meta=0;
+		if(tankUp&&tankDown)
+			meta=3;
+		else if(tankUp)
+			meta=2;
+		else if(tankDown)
+			meta=1;
+		if(!tankDown)
+		{
+			tessellator.setNormal(0.0F, -1F, 0.0F);
+			renderer.renderFaceYNeg(block, x, y+0.001D, z, block.getIcon(0, 0));
+		}
+		if(!(tankUp))
+		{
+			tessellator.setNormal(0.0F, 1.0F, 0.0F);
+			renderer.renderFaceYPos(block, x, y-0.001D, z, block.getIcon(1, 0));
+		}
+		Icon sideIcon=block.getIcon(3, meta);
+		tessellator.setNormal(0.0F, 0.0F, -1F);
+		renderer.renderFaceZNeg(block, x, y, z+0.001D, sideIcon);
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		renderer.renderFaceZPos(block, x, y, z-0.001D, sideIcon);
+		tessellator.setNormal(-1F, 0.0F, 0.0F);
+		renderer.renderFaceXNeg(block, x+0.001D, y, z, sideIcon);
+		tessellator.setNormal(1.0F, 0.0F, 0.0F);
+		renderer.renderFaceXPos(block, x-0.001D, y, z, sideIcon);
+
+	}
+	public void renderFluid(TileEntity tileEntity, double x, double y, double z, RenderBlocks renderer)
+	{		
+		Tessellator tessellator = Tessellator.instance;
 		if (tileEntity != null && ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null)
 		{
 			Fluid storedFluid = ((TileEntityCertusTank) tileEntity).getRenderFluid();
 			float scale = ((TileEntityCertusTank) tileEntity).getRenderScale();
-
 			if (storedFluid != null && scale > 0)
 			{
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				Block id=Block.blocksList[FluidRegistry.WATER.getBlockID()];
 				Icon fluidIcon = storedFluid.getIcon();
 				if(fluidIcon==null)
 					fluidIcon = FluidRegistry.LAVA.getIcon();
-				
-				Tessellator tessellator = Tessellator.instance;
-				RenderBlocks renderer = new RenderBlocks();
-
-				GL11.glScalef(1.0F, -1.0F, 1.0F);
 				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, scale * 0.999F, 0.92F);
-				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-				GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-
-				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-				GL11.glEnable(GL11.GL_CULL_FACE);
-				GL11.glDisable(GL11.GL_LIGHTING);
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-				tessellator.startDrawingQuads();
 				tessellator.setNormal(0.0F, -1F, 0.0F);
-				renderer.renderFaceYNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceYNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(0.0F, 1.0F, 0.0F);
-				renderer.renderFaceYPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceYPos(id, x, y, z, fluidIcon);
 				tessellator.setNormal(0.0F, 0.0F, -1F);
-				renderer.renderFaceZNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceZNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(0.0F, 0.0F, 1.0F);
-				renderer.renderFaceZPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceZPos(id, x, y, z, fluidIcon);
 				tessellator.setNormal(-1F, 0.0F, 0.0F);
-				renderer.renderFaceXNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceXNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(1.0F, 0.0F, 0.0F);
-				renderer.renderFaceXPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-
-				GL11.glPopAttrib();
+				renderer.renderFaceXPos(id, x, y, z, fluidIcon);
+				GL11.glDisable(GL11.GL_BLEND);
 			}
-		}
-
-		GL11.glPopMatrix();
+		}	
 	}
-
 	private void setRotation(ModelRenderer model, float x, float y, float z)
 	{
 		model.rotateAngleX = x;
@@ -117,9 +145,4 @@ public class ModelCertusTank extends ModelBase
 		model.rotateAngleZ = z;
 	}
 
-	@Override
-	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity)
-	{
-		super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-	}
 }

@@ -18,12 +18,20 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.BlockEnum;
 import extracells.Extracells;
+import extracells.render.RenderHandler;
 import extracells.tileentity.TileEntityCertusTank;
 
 public class BlockCertusTank extends BlockContainer
 {
 	Icon breakIcon;
-
+	Icon topIcon;
+	Icon bottomIcon;
+	Icon sideIcon;
+	Icon sideMiddleIcon;
+	Icon sideTopIcon;
+	Icon sideBottomIcon;
+	
+	
 	public BlockCertusTank(int id)
 	{
 		super(id, Material.glass);
@@ -42,20 +50,47 @@ public class BlockCertusTank extends BlockContainer
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int i, int b)
+	public Icon getIcon(int side, int b)
 	{
-		return breakIcon;
+		//a slight abuse of metadata but it should cause little issue.
+		if(b==1)
+			return sideTopIcon;
+		if(b==2)
+			return sideBottomIcon;
+		if(b==3)
+			return sideMiddleIcon;
+		return  side == 0 ? bottomIcon : side == 1 ? topIcon :sideIcon;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconregister)
 	{
 		breakIcon = iconregister.registerIcon("extracells:certustank");
+		topIcon=iconregister.registerIcon("extracells:CTankTop");
+		bottomIcon=iconregister.registerIcon("extracells:CTankBottom");
+		sideIcon=iconregister.registerIcon("extracells:CTankSide");
+		sideMiddleIcon=iconregister.registerIcon("extracells:CTankSideMiddle");
+		sideTopIcon=iconregister.registerIcon("extracells:CTankSideTop");
+		sideBottomIcon=iconregister.registerIcon("extracells:CTankSideBottom");
 	}
-
+	
+	@Override
+	public boolean canRenderInPass(int pass)
+	{
+		RenderHandler.renderPass=pass;
+		return true;
+	}
+	
+	@Override
+	public int getRenderBlockPass()
+	{	
+		return 1;
+	}
+	
 	@Override
 	public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer entityplayer, int blockID, float offsetX, float offsetY, float offsetZ)
 	{
+
 		ItemStack current = entityplayer.inventory.getCurrentItem();
 
 		if (entityplayer.isSneaking() && current == null)
@@ -159,7 +194,7 @@ public class BlockCertusTank extends BlockContainer
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+		return Extracells.renderID;
 	}
 
 	@Override
