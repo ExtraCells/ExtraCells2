@@ -1,6 +1,7 @@
 package extracells.tileentity;
 
 import static extracells.ItemEnum.FLUIDDISPLAY;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,11 +11,7 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.*;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;

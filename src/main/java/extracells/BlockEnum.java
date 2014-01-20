@@ -3,22 +3,7 @@ package extracells;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
-import extracells.blocks.BlockBusFluidExport;
-import extracells.blocks.BlockBusFluidImport;
-import extracells.blocks.BlockBusFluidStorage;
-import extracells.blocks.BlockCertusTank;
-import extracells.blocks.BlockFluidCrafter;
-import extracells.blocks.BlockFluidTransitionPlane;
-import extracells.blocks.BlockHardMEDrive;
-import extracells.blocks.BlockInterFaceFluid;
-import extracells.blocks.BlockLevelEmitterFluid;
-import extracells.blocks.BlockMEBattery;
-import extracells.blocks.BlockMEDropper;
-import extracells.blocks.BlockMonitorStorageFluid;
-import extracells.blocks.BlockSolderingStation;
-import extracells.blocks.BlockTerminalFluid;
-import extracells.blocks.BlockVoidFluid;
-import extracells.blocks.BlockWalrus;
+import extracells.blocks.*;
 import extracells.items.ItemBlockCertusTank;
 
 public enum BlockEnum

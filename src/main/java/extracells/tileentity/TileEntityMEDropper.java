@@ -20,9 +20,7 @@ public class TileEntityMEDropper extends ColorableECTile implements IGridMachine
 	public ItemStack todispense;
 	public Boolean locked = false;
 	private IGridInterface grid = null;
-	protected boolean isLoaded = false;
 	Boolean powerStatus = true, networkReady = true;
-	public int gridIndex = 0;
 
 	public TileEntityMEDropper()
 	{

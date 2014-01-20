@@ -1,11 +1,11 @@
 package extracells.proxy;
 
+import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import extracells.BlockEnum;
 import extracells.render.item.*;
 import extracells.render.tileentity.*;
 import extracells.tileentity.*;
-import net.minecraftforge.client.MinecraftForgeClient;
 
 public class ClientProxy extends CommonProxy
 {

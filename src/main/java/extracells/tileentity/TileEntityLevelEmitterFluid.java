@@ -1,6 +1,7 @@
 package extracells.tileentity;
 
 import static extracells.ItemEnum.FLUIDDISPLAY;
+
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

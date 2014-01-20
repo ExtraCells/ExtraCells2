@@ -2,13 +2,7 @@ package extracells;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.StatCollector;
-import extracells.items.ItemCasing;
-import extracells.items.ItemFluidDisplay;
-import extracells.items.ItemSecureStoragePhysicalDecrypted;
-import extracells.items.ItemSecureStoragePhysicalEncrypted;
-import extracells.items.ItemStorageComponent;
-import extracells.items.ItemStorageFluid;
-import extracells.items.ItemStoragePhysical;
+import extracells.items.*;
 
 public enum ItemEnum
 {

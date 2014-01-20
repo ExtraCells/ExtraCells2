@@ -1,27 +1,5 @@
 package extracells.tileentity;
 
-import static extracells.ItemEnum.FLUIDDISPLAY;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
@@ -36,6 +14,24 @@ import appeng.api.me.util.IMEInventoryHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.util.ECPrivateInventory;
 import extracells.util.SpecialFluidStack;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static extracells.ItemEnum.FLUIDDISPLAY;
 
 @SuppressWarnings("deprecation")
 public class TileEntityTerminalFluid extends ColorableECTile implements IGridMachine, IDirectionalMETile, IStorageAware, ISidedInventory
@@ -63,7 +59,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 			if (!fluidsInNetwork.isEmpty())
 			{
 				if (currentFluid == null)
-					currentFluid = fluidsInNetwork.get(0).getFluid();
+					currentFluid = FluidRegistry.getFluid(fluidsInNetwork.get(0).getID());
 
 				if (currentFluid != null)
 				{
@@ -317,7 +313,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 			{
 				for (SpecialFluidStack fluidstack : fluidsInNetwork)
 				{
-					if (fluidstack.getFluid() == toExport.getFluid() && fluidstack.amount >= toExport.amount)
+					if (fluidstack.getID() == toExport.fluidID && fluidstack.amount >= toExport.amount)
 					{
 						IAEItemStack takenStack = cellArray.extractItems(Util.createItemStack(new ItemStack(toDrain.getItem(), (int) (toDrain.getStackSize()), toDrain.getItemDamage())));
 

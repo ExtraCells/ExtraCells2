@@ -17,9 +17,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import com.google.common.base.Splitter;
-
 import appeng.api.config.RedstoneModeInput;
+
+import com.google.common.base.Splitter;
 
 public class WidgetRedstoneModes extends GuiButton
 {

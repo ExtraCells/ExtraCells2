@@ -1,6 +1,5 @@
 package extracells.render.tileentity;
 
-import extracells.Extracells;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,6 +12,7 @@ import net.minecraftforge.fluids.Fluid;
 
 import org.lwjgl.opengl.GL11;
 
+import extracells.Extracells;
 import extracells.render.model.ModelWalrus;
 import extracells.tileentity.TileEntityMonitorStorageFluid;
 

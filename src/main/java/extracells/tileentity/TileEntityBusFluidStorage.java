@@ -5,7 +5,6 @@ import static extracells.ItemEnum.FLUIDDISPLAY;
 import java.util.ArrayList;
 import java.util.List;
 
-import extracells.Extracells;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -16,11 +15,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.*;
 import appeng.api.IAEItemStack;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
@@ -34,6 +29,7 @@ import appeng.api.me.tiles.ITileCable;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import extracells.BlockEnum;
+import extracells.Extracells;
 import extracells.handler.FluidBusInventoryHandler;
 import extracells.util.ECPrivateInventory;
 

@@ -1,19 +1,7 @@
 package extracells.proxy;
 
-import appeng.api.Blocks;
-import appeng.api.Items;
-import appeng.api.Materials;
-import appeng.api.Util;
-import appeng.api.movable.IMovableRegistry;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-import extracells.BlockEnum;
-import extracells.ItemEnum;
-import extracells.container.*;
-import extracells.gui.*;
-import extracells.tileentity.*;
+import java.util.logging.Level;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,8 +10,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-
-import java.util.logging.Level;
+import appeng.api.Blocks;
+import appeng.api.Items;
+import appeng.api.Materials;
+import appeng.api.Util;
+import appeng.api.movable.IMovableRegistry;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+import extracells.BlockEnum;
+import extracells.ItemEnum;
+import extracells.container.*;
+import extracells.gui.*;
+import extracells.tileentity.*;
 
 public class CommonProxy implements IGuiHandler
 {

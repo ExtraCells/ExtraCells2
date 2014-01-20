@@ -1,7 +1,7 @@
 package extracells.integration.WAILA;
 
-import extracells.Extracells;
-import extracells.tileentity.TileEntityMonitorStorageFluid;
+import java.util.List;
+
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
-
-import java.util.List;
+import extracells.Extracells;
+import extracells.tileentity.TileEntityMonitorStorageFluid;
 
 public class WailaDataProvider implements IWailaDataProvider
 {

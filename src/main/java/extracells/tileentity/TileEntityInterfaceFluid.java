@@ -1,5 +1,20 @@
 package extracells.tileentity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.*;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
@@ -16,21 +31,6 @@ import extracells.ItemEnum;
 import extracells.integration.logisticspipes.IFluidNetworkAccess;
 import extracells.util.ECPrivateInventory;
 import extracells.util.SpecialFluidStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Optional.Interface(iface = "logisticspipes.api.IRequestAPI", modid = "LogisticsPipes|Main")
 public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMachine, IFluidHandler, IStorageAware, IFluidNetworkAccess

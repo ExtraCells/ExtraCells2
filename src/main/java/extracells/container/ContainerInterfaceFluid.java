@@ -1,7 +1,5 @@
 package extracells.container;
 
-import extracells.ItemEnum;
-import extracells.container.slot.SlotFake;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -9,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ItemFluidContainer;
+import extracells.ItemEnum;
+import extracells.container.slot.SlotFake;
 
 public class ContainerInterfaceFluid extends ECContainer
 {

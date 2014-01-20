@@ -74,8 +74,9 @@ public class TileEntityTransitionPlaneFluid extends ColorableECTile implements I
 							cellArray.addItems(Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1000, FluidRegistry.LAVA.getID())));
 						}
 					}
-				} catch (Throwable e)
+				} catch (Throwable wontHappen)
 				{
+					// Nothing
 				}
 			}
 		}

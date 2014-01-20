@@ -1,5 +1,12 @@
 package extracells.tileentity;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import appeng.api.WorldCoord;
 import appeng.api.config.ItemFlow;
 import appeng.api.events.GridTileLoadEvent;
@@ -10,13 +17,6 @@ import appeng.api.me.util.IGridInterface;
 import appeng.api.networkevents.MENetworkPowerStorage;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 
 public class TileEntityMEBattery extends TileEntity implements IGridTileEntity, IMEPowerStorage
 {

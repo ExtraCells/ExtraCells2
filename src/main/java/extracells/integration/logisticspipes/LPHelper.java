@@ -1,12 +1,12 @@
 package extracells.integration.logisticspipes;
 
-import appeng.api.IAEItemStack;
+import java.lang.reflect.Field;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.lang.reflect.Field;
+import appeng.api.IAEItemStack;
 
 public class LPHelper
 {

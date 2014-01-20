@@ -1,10 +1,10 @@
 package extracells.integration.logisticspipes;
 
-import extracells.util.SpecialFluidStack;
+import java.util.List;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.List;
+import extracells.util.SpecialFluidStack;
 
 public interface IFluidNetworkAccess
 {

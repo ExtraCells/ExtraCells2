@@ -1,6 +1,7 @@
 package extracells.util;
 
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 public class SpecialFluidStack
 {
@@ -27,5 +28,10 @@ public class SpecialFluidStack
 	public int getID()
 	{
 		return fluidID;
+	}
+
+	public FluidStack getFluidStack()
+	{
+		return new FluidStack(fluidID, (int) amount);
 	}
 }
