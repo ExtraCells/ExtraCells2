@@ -1,9 +1,5 @@
 package extracells.gui.widget;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import extracells.Extracells;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -11,9 +7,13 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.fluids.Fluid;
-
+import net.minecraftforge.fluids.FluidRegistry;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class WidgetFluidSelector extends Gui
 {
@@ -82,6 +82,11 @@ public class WidgetFluidSelector extends Gui
 	public void setFluid(Fluid fluid)
 	{
 		this.fluid = fluid;
+	}
+
+	public void setFluid(int fluidID)
+	{
+		this.fluid = FluidRegistry.getFluid(fluidID);
 	}
 
 	public Fluid getFluid()

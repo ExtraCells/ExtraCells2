@@ -1,39 +1,46 @@
 package extracells.tileentity;
 
+import appeng.api.IAEItemStack;
+import appeng.api.IItemList;
+import appeng.api.Util;
+import appeng.api.WorldCoord;
+import appeng.api.events.GridTileLoadEvent;
+import appeng.api.events.GridTileUnloadEvent;
+import appeng.api.me.tiles.IGridMachine;
+import appeng.api.me.tiles.IStorageAware;
+import appeng.api.me.util.IGridInterface;
+import appeng.api.me.util.IMEInventoryHandler;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.ItemEnum;
+import extracells.integration.logisticspipes.IFluidNetworkAccess;
+import extracells.util.ECPrivateInventory;
+import extracells.util.SpecialFluidStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-import appeng.api.IAEItemStack;
-import appeng.api.Util;
-import appeng.api.WorldCoord;
-import appeng.api.events.GridTileLoadEvent;
-import appeng.api.events.GridTileUnloadEvent;
-import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.util.IGridInterface;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.ItemEnum;
-import extracells.util.ECPrivateInventory;
+import net.minecraftforge.fluids.*;
 
-public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMachine, IFluidHandler
+import java.util.ArrayList;
+import java.util.List;
+
+@Optional.Interface(iface = "logisticspipes.api.IRequestAPI", modid = "LogisticsPipes|Main")
+public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMachine, IFluidHandler, IStorageAware, IFluidNetworkAccess
 {
 	private Boolean powerStatus = true, networkReady = true;
 	private IGridInterface grid;
 	public FluidTank[] tanks = new FluidTank[6];
 	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
 	private ECPrivateInventory inventory = new ECPrivateInventory(customName, 6, 1);
+	private List<SpecialFluidStack> fluidList = new ArrayList<SpecialFluidStack>();
 
 	public TileEntityInterfaceFluid()
 	{
@@ -68,7 +75,7 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 			{
 				if (tankFluid != null)
 				{
-					int filled = fillToNetwork(tank.drain(20, false), true);
+					int filled = (int) fillToNetwork(tank.drain(20, false), true);
 					if (filled > 0)
 					{
 						tank.drain(filled, true);
@@ -81,16 +88,16 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 				{
 					if (tank.getFluid() == null || tank.getFluid().amount < 10000)
 					{
-						FluidStack drained = drainFromNetwork(new FluidStack(filterFluid, tank.fill(new FluidStack(filterFluid, 20), false)));
-						if (drained != null)
+						int drained = (int) drainFromNetwork(new FluidStack(filterFluid, tank.fill(new FluidStack(filterFluid, 20), false)), true);
+						if (drained > 0)
 						{
-							tank.fill(drained, true);
+							tank.fill(new FluidStack(filterFluid, drained), true);
 							PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 50, worldObj.provider.dimensionId, getDescriptionPacket());
 						}
 					}
 				} else
 				{
-					int filled = fillToNetwork(tank.drain(20, false), true);
+					int filled = (int) fillToNetwork(tank.drain(20, false), true);
 					if (filled > 0)
 					{
 						tank.drain(filled, true);
@@ -99,41 +106,6 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 				}
 			}
 		}
-	}
-
-	public FluidStack drainFromNetwork(FluidStack toDrain)
-	{
-		if (getGrid() == null || getGrid().getCellArray() == null || toDrain == null)
-			return null;
-		IAEItemStack request = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, toDrain.fluidID));
-		request.setStackSize(toDrain.amount);
-		IAEItemStack extracted = getGrid().getCellArray().extractItems(request);
-		if (extracted == null)
-			return null;
-
-		getGrid().useMEEnergy(extracted.getStackSize() / 4, "FluidInterface");
-		return new FluidStack(extracted.getItemDamage(), (int) extracted.getStackSize());
-	}
-
-	public int fillToNetwork(FluidStack toFill, Boolean doFill)
-	{
-		if (getGrid() == null || getGrid().getCellArray() == null || toFill == null)
-			return 0;
-		IAEItemStack request = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, toFill.fluidID));
-		request.setStackSize(toFill.amount);
-		IAEItemStack added = null;
-		if (doFill)
-		{
-			added = getGrid().getCellArray().addItems(request);
-		} else
-		{
-			added = getGrid().getCellArray().calculateItemAddition(request);
-		}
-		if (added == null)
-			return toFill.amount;
-
-		getGrid().useMEEnergy(added.getStackSize() / 4, "FluidInterface");
-		return toFill.amount - (int) added.getStackSize();
 	}
 
 	public ECPrivateInventory getInventory()
@@ -329,5 +301,88 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 			return null;
 		return new FluidTankInfo[]
 		{ tanks[from.ordinal()].getInfo() };
+	}
+
+	/* IStorageAware; used for Logistics Pipes */
+	@Override
+	public void onNetworkInventoryChange(IItemList iss)
+	{
+		fluidList = new ArrayList<SpecialFluidStack>();
+		if (iss != null)
+		{
+			for (IAEItemStack stack : iss)
+			{
+				if (stack != null && stack.getItem() == ItemEnum.FLUIDDISPLAY.getItemInstance())
+				{
+					fluidList.add(new SpecialFluidStack(stack.getItemDamage(), stack.getStackSize()));
+				}
+			}
+		}
+	}
+
+	/* IFluidNetworkAccess for Logistics Pipes */
+	@Override
+	public List<SpecialFluidStack> getFluidsInNetwork()
+	{
+		if (!isMachineActive() || grid == null || grid.getCellArray() == null)
+			return null;
+		return fluidList;
+	}
+
+	@Override
+	public long drainFromNetwork(FluidStack toDrain, boolean doDrain)
+	{
+		if (!isMachineActive() || toDrain == null || grid == null)
+			return 0;
+		IMEInventoryHandler cellArray = grid.getCellArray();
+		if (cellArray == null)
+			return 0;
+		IAEItemStack drained = cellArray.extractItems(createFluidItemStack(toDrain));
+		if (drained == null)
+			return 0;
+		if (!doDrain)
+			cellArray.addItems(drained);
+
+		getGrid().useMEEnergy(drained.getStackSize() == 0 ? 0 : drained.getStackSize() / 4, "FluidInterface");
+		return drained.getStackSize();
+	}
+
+	@Override
+	public long fillToNetwork(FluidStack toFill, boolean doFill)
+	{
+		if (!isMachineActive() || toFill == null || grid == null)
+			return 0;
+		IMEInventoryHandler cellArray = grid.getCellArray();
+		if (cellArray == null)
+			return 0;
+		IAEItemStack notFilled = cellArray.calculateItemAddition(createFluidItemStack(toFill));
+		IAEItemStack filled = createFluidItemStack(toFill);
+		if (notFilled != null)
+			filled = createFluidItemStack(new SpecialFluidStack(notFilled.getItemDamage(), toFill.amount - notFilled.getStackSize()));
+		if (doFill)
+			cellArray.addItems(filled);
+
+		getGrid().useMEEnergy(filled.getStackSize() == 0 ? 0 : filled.getStackSize() / 4, "FluidInterface");
+		return filled.getStackSize();
+	}
+
+	@Override
+	public TileEntity getNetworkController()
+	{
+		if (!isMachineActive() || grid == null)
+			return null;
+		return grid.getController();
+	}
+
+	public IAEItemStack createFluidItemStack(SpecialFluidStack stack)
+	{
+		IAEItemStack toReturn = Util.createItemStack(new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, stack.getID()));
+		toReturn.setStackSize(stack.getAmount());
+		return toReturn;
+	}
+
+	public IAEItemStack createFluidItemStack(FluidStack stack)
+	{
+		return createFluidItemStack(new SpecialFluidStack(stack.fluidID, stack.amount));
 	}
 }

@@ -1,9 +1,15 @@
 package extracells.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.BlockEnum;
 import extracells.Extracells;
+import extracells.container.ContainerTerminalFluid;
+import extracells.gui.widget.WidgetFluidSelector;
+import extracells.network.packet.PacketMonitorFluid;
+import extracells.tileentity.TileEntityTerminalFluid;
+import extracells.util.SpecialFluidStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -12,20 +18,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-
+import net.minecraftforge.fluids.FluidRegistry;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.BlockEnum;
-import extracells.container.ContainerTerminalFluid;
-import extracells.gui.widget.WidgetFluidSelector;
-import extracells.network.packet.PacketMonitorFluid;
-import extracells.tileentity.TileEntityTerminalFluid;
-import extracells.util.SpecialFluidStack;
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiTerminalFluid extends GuiContainer
@@ -135,7 +134,7 @@ public class GuiTerminalFluid extends GuiContainer
 			List<SpecialFluidStack> validFluids = new ArrayList<SpecialFluidStack>();
 			for (SpecialFluidStack current : fluidList)
 			{
-				if (current != null && current.getFluid() != null && searchbar != null && current.getFluid().getLocalizedName().toLowerCase().contains(searchbar.getText().toLowerCase()))
+				if (current != null && current.getID() > 0 && searchbar != null && FluidRegistry.getFluid(current.getID()).getLocalizedName().toLowerCase().contains(searchbar.getText().toLowerCase()))
 					validFluids.add(current);
 			}
 
@@ -147,7 +146,7 @@ public class GuiTerminalFluid extends GuiContainer
 
 			for (int i = currentScroll * 9; i < validFluids.size() && i < selectors.size(); i++)
 			{
-				selectors.get(i - currentScroll * 9).setFluid(validFluids.get(i).getFluid());
+				selectors.get(i - currentScroll * 9).setFluid(validFluids.get(i).getID());
 				selectors.get(i - currentScroll * 9).setAmount(validFluids.get(i).amount);
 			}
 

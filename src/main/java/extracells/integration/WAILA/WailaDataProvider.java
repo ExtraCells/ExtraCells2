@@ -1,4 +1,4 @@
-package extracells.integration;
+package extracells.integration.WAILA;
 
 import extracells.Extracells;
 import extracells.tileentity.TileEntityMonitorStorageFluid;

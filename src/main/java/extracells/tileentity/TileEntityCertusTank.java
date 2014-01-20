@@ -1,5 +1,6 @@
 package extracells.tileentity;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
@@ -41,6 +42,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 
 	public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
 	{
+		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 		readFromNBT(packet.data);
 	}
 
@@ -76,7 +78,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 			return 0;
 		return fill(resource, doFill, true);
 	}
-
+	
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
@@ -278,24 +280,24 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 			{
 				if (Math.abs(current.amount - lastBeforeUpdate.amount) >= 500)
 				{
-					worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+					PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 					lastBeforeUpdate = current.copy();
 				} 
 				else if (lastBeforeUpdate.amount < tank.getCapacity() && current.amount == tank.getCapacity() || lastBeforeUpdate.amount == tank.getCapacity() && current.amount < tank.getCapacity())
 					{
-						worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+						PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 						lastBeforeUpdate = current.copy();
 					}
 			} 
 			else
 			{
-				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+				PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 				lastBeforeUpdate = current.copy();
 			}
 		}
 		else if (lastBeforeUpdate != null)
 		{
-				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+			PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 				lastBeforeUpdate = null;
 		}
 	}

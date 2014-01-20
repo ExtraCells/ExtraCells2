@@ -1,5 +1,9 @@
 package extracells;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import appeng.api.Util;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
@@ -15,16 +19,13 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import extracells.gui.widget.WidgetFluidModes;
 import extracells.handler.FluidCellHandler;
+import extracells.integration.logisticspipes.LPHelper;
 import extracells.network.AbstractPacket;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 import extracells.render.RenderHandler;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.oredict.OreDictionary;
 
-@Mod(modid = "extracells", name = "Extra Cells", dependencies = "after:Waila;required-after:AppliedEnergistics")
+@Mod(modid = "extracells", name = "Extra Cells", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:AppliedEnergistics")
 @NetworkMod(channels =
 { AbstractPacket.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
 public class Extracells
@@ -50,6 +51,8 @@ public class Extracells
 	public static int tickRateExport;
 	public static int tickRateImport;
 	public static int tickRateStorage;
+	
+	public static LPHelper lpHelper;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -115,8 +118,9 @@ public class Extracells
 		RenderingRegistry.registerBlockHandler(handler);
 
 		// WAILA Support
-		FMLInterModComms.sendMessage("Waila", "register", "extracells.integration.WailaDataProvider.callbackRegister");
+		FMLInterModComms.sendMessage("Waila", "register", "extracells.integration.WAILA.WailaDataProvider.callbackRegister");
 
+		
 		// AE Spatial Storage Support
 		proxy.registerMovables();
 	}
@@ -125,5 +129,7 @@ public class Extracells
 	public void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.checkForIDMismatches();
+		//LP Support
+		lpHelper = new LPHelper();
 	}
 }

@@ -20,11 +20,12 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 	int renderID = 0;
 	RenderHelperMonitorStorageFluid monitorRender = new RenderHelperMonitorStorageFluid();
 	RenderHelperTerminalFluid terminalRender = new RenderHelperTerminalFluid();
-	ModelCertusTank tank=new ModelCertusTank();
+	ModelCertusTank tank = new ModelCertusTank();
 	public static int renderPass;
+
 	public RenderHandler(int id)
 	{
-		RenderHandler.renderPass=0;
+		RenderHandler.renderPass = 0;
 		renderID = id;
 	}
 
@@ -47,32 +48,32 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 		if (block instanceof BlockTerminalFluid)
 		{
 			return terminalRender.renderWorldBlock(world, x, y, z, block, modelId, renderer);
-		} 
+		}
 		if (block instanceof BlockMonitorStorageFluid)
 		{
 			return monitorRender.renderWorldBlock(world, x, y, z, block, modelId, renderer);
 		}
 		if (block instanceof BlockCertusTank)
 		{
-			Tessellator tessellator=Tessellator.instance;
+			Tessellator tessellator = Tessellator.instance;
 			tessellator.setColorOpaque_F(1, 1, 1);
-			boolean oldAO=renderer.enableAO;
-			renderer.enableAO=false;
-			if(RenderHandler.renderPass==0)
+			boolean oldAO = renderer.enableAO;
+			renderer.enableAO = false;
+			if (RenderHandler.renderPass == 0)
 			{
 				tank.renderOuterBlock(block, x, y, z, renderer, world);
-			}
-			else
+			} else
 			{
 				tank.renderInnerBlock(block, x, y, z, renderer, world);
-				TileEntity tileEntity=world.getBlockTileEntity(x, y, z);
-				tank.renderFluid(tileEntity, x, y, z,renderer);
+				TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+				tank.renderFluid(tileEntity, x, y, z, renderer);
 			}
-			renderer.enableAO=oldAO;
+			renderer.enableAO = oldAO;
 			return true;
 		}
 		return false;
 	}
+
 	@Override
 	public boolean shouldRender3DInInventory()
 	{
