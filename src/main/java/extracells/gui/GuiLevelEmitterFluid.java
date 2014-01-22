@@ -43,6 +43,23 @@ public class GuiLevelEmitterFluid extends GuiContainer
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 	}
 
+	@Override
+	protected void keyTyped(char key, int keyID)
+	{
+		super.keyTyped(key, keyID);
+		if ("0123456789".contains(String.valueOf(key)) || keyID == Keyboard.KEY_BACK)
+		{
+			try
+			{
+				amountField.textboxKeyTyped(key, keyID);
+				long currentFieldAmount = amountField.getText().isEmpty() ? 0 : Long.parseLong(amountField.getText());
+				modifyAmount(currentFieldAmount - tileentity.getAmount());
+			} catch (Throwable e)
+			{
+			}
+		}
+	}
+
 	public void drawScreen(int x, int y, float f)
 	{
 		drawDefaultBackground();
@@ -139,7 +156,7 @@ public class GuiLevelEmitterFluid extends GuiContainer
 		}
 	}
 
-	public void modifyAmount(int amount)
+	public void modifyAmount(long amount)
 	{
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 			amount *= 100;

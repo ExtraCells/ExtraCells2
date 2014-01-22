@@ -4,6 +4,7 @@ import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
+import appeng.api.events.GridPatternUpdateEvent;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
@@ -26,6 +27,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.*;
 
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	private String customName = StatCollector.translateToLocal("tile.block.fluid.terminal");
 	private Fluid currentFluid = null;
 	ArrayList<SpecialFluidStack> fluidsInNetwork = new ArrayList<SpecialFluidStack>();
+	ArrayList<Fluid> craftableFluidsInNetwork = new ArrayList<Fluid>();
 	ECPrivateInventory inventory = new ECPrivateInventory(customName, 2, 64)
 	{
 		public boolean isItemValidForSlot(int i, ItemStack itemstack)
@@ -48,6 +51,11 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 			return FluidContainerRegistry.isContainer(itemstack) || (itemstack != null && itemstack.getItem() instanceof IFluidContainerItem);
 		}
 	};
+
+	public TileEntityTerminalFluid()
+	{
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 
 	public void updateEntity()
 	{
@@ -210,6 +218,27 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		return inventory;
 	}
 
+	@ForgeSubscribe
+	public void onNetworkPatternChange(GridPatternUpdateEvent e)
+	{
+		if (grid != null)
+		{
+			IMEInventoryHandler inventoryHandler = grid.getCraftableArray();
+			if (inventoryHandler != null)
+			{
+				craftableFluidsInNetwork = new ArrayList<Fluid>();
+				for (IAEItemStack stack : inventoryHandler.getAvailableItems())
+				{
+					if (stack.getItem() == FLUIDDISPLAY.getItemInstance())
+					{
+						craftableFluidsInNetwork.add(FluidRegistry.getFluid(stack.getItemDamage()));
+					}
+				}
+				System.out.println(craftableFluidsInNetwork);
+			}
+		}
+	}
+
 	@Override
 	public void onNetworkInventoryChange(IItemList iss)
 	{
@@ -344,13 +373,6 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	public Fluid getCurrentFluid()
 	{
 		return currentFluid;
-	}
-
-	public String capitalizeFirstLetter(String original)
-	{
-		if (original.length() == 0)
-			return original;
-		return original.substring(0, 1).toUpperCase() + original.substring(1);
 	}
 
 	@Override
