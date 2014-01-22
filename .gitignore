@@ -10,3 +10,4 @@
 !/build.gradle
 !/build.bat
 !/build.sh
+!.travis.yml
