@@ -7,12 +7,15 @@ import appeng.api.WorldCoord;
 import appeng.api.events.GridPatternUpdateEvent;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
+import appeng.api.exceptions.AppEngTileMissingException;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
+import appeng.api.me.util.ICraftingPattern;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventoryHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.ItemEnum;
 import extracells.util.ECPrivateInventory;
 import extracells.util.SpecialFluidStack;
 import net.minecraft.entity.player.EntityPlayer;
@@ -234,9 +237,9 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 						craftableFluidsInNetwork.add(FluidRegistry.getFluid(stack.getItemDamage()));
 					}
 				}
-				System.out.println(craftableFluidsInNetwork);
 			}
 		}
+		PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 	}
 
 	@Override
@@ -268,6 +271,11 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		return fluidsInNetwork;
 	}
 
+	public List<Fluid> getCurrentCraftables()
+	{
+		return craftableFluidsInNetwork;
+	}
+
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound nbtTag = getColorDataForPacket();
@@ -282,6 +290,16 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		}
 		fluids.setIntArray("FluidIDs", fluidIDs);
 		nbtTag.setCompoundTag("fluids", fluids);
+
+		NBTTagCompound craftableFluids = new NBTTagCompound();
+		int[] craftableFluidIDs = new int[craftableFluidsInNetwork.size()];
+		for (int i = 0; i < craftableFluidsInNetwork.size(); i++)
+		{
+			craftableFluidIDs[i] = craftableFluidsInNetwork.get(i).getID();
+		}
+		craftableFluids.setIntArray("FluidIDs", craftableFluidIDs);
+		nbtTag.setCompoundTag("craftablefluids", craftableFluids);
+
 		nbtTag.setInteger("currentFluid", currentFluid != null ? currentFluid.getID() : -1);
 		nbtTag.setBoolean("powered", isPowered());
 		nbtTag.setBoolean("ready", networkReady);
@@ -294,12 +312,19 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 		readFromNBT(packet.data);
 
 		NBTTagCompound fluids = packet.data.getCompoundTag("fluids");
-
 		fluidsInNetwork = new ArrayList<SpecialFluidStack>();
 		int[] fluidIDs = fluids.getIntArray("FluidIDs");
 		for (int i = 0; i < fluidIDs.length; i++)
 		{
 			fluidsInNetwork.add(new SpecialFluidStack(fluidIDs[i], fluids.getLong("FluidAmount#" + i)));
+		}
+
+		NBTTagCompound craftableFluids = packet.data.getCompoundTag("craftablefluids");
+		craftableFluidsInNetwork = new ArrayList<Fluid>();
+		int[] craftableFluidIDs = craftableFluids.getIntArray("FluidIDs");
+		for (int i = 0; i < craftableFluidIDs.length; i++)
+		{
+			craftableFluidsInNetwork.add(FluidRegistry.getFluid(craftableFluidIDs[i]));
 		}
 		currentFluid = FluidRegistry.getFluid(packet.data.getInteger("currentFluid"));
 		powerStatus = packet.data.getBoolean("powered");
@@ -601,5 +626,20 @@ public class TileEntityTerminalFluid extends ColorableECTile implements IGridMac
 	public boolean canExtractItem(int i, ItemStack itemstack, int j)
 	{
 		return i == 1;
+	}
+
+	public void requestFluid(FluidStack toOrder)
+	{
+		ItemStack order = new ItemStack(ItemEnum.FLUIDDISPLAY.getItemInstance(), 1, toOrder.fluidID);
+		ICraftingPattern pattern = grid.getPatternFor(order);
+		System.out.println(pattern == null);
+		try
+		{
+			grid.craftingRequest(order);/*
+										 * / ITileCraftingProvider provider = pattern.getProviders().get(0); if (provider instanceof TileEntityInterfaceFluid) ((TileEntityInterfaceFluid) provider).orderFluid(toOrder);//
+										 */
+		} catch (AppEngTileMissingException wontHappen)
+		{
+		}
 	}
 }

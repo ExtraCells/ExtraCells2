@@ -1,21 +1,5 @@
 package extracells.tileentity;
 
-import static extracells.ItemEnum.FLUIDDISPLAY;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.*;
 import appeng.api.IAEItemStack;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
@@ -31,6 +15,22 @@ import extracells.BlockEnum;
 import extracells.Extracells;
 import extracells.gui.widget.WidgetFluidModes.FluidMode;
 import extracells.util.ECPrivateInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fluids.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static extracells.ItemEnum.FLUIDDISPLAY;
 
 public class TileEntityBusFluidImport extends ColorableECTile implements IGridMachine, IDirectionalMETile, IFluidHandler, ITileCable
 {
@@ -137,7 +137,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 				{
 					if (fluidFilter.contains(drainable.getFluid()))
 					{
-						if (grid.useMEEnergy(modeCost, "Import Fluid") && notImported == null)
+						if (notImported == null && grid.useMEEnergy(modeCost, "Import Fluid"))
 						{
 							FluidStack drained = fluidHandler.drain(facing.getOpposite(), (int) toImport.getStackSize(), true);
 							if (drained != null)
@@ -146,7 +146,7 @@ public class TileEntityBusFluidImport extends ColorableECTile implements IGridMa
 					}
 				} else
 				{
-					if (grid.useMEEnergy(modeCost, "Import Fluid") && notImported == null)
+					if (notImported == null && grid.useMEEnergy(modeCost, "Import Fluid"))
 					{
 						FluidStack drained = fluidHandler.drain(facing.getOpposite(), (int) toImport.getStackSize(), true);
 						if (drained != null)

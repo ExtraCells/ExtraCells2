@@ -1,66 +1,76 @@
 package extracells.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.BlockEnum;
+import extracells.Extracells;
+import extracells.container.ContainerTerminalFluid;
+import extracells.gui.widget.AbstractFluidWidget;
+import extracells.gui.widget.FluidWidgetComparator;
+import extracells.gui.widget.WidgetFluidRequest;
+import extracells.gui.widget.WidgetFluidSelector;
+import extracells.tileentity.TileEntityTerminalFluid;
+import extracells.util.SpecialFluidStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.BlockEnum;
-import extracells.Extracells;
-import extracells.container.ContainerTerminalFluid;
-import extracells.gui.widget.WidgetFluidSelector;
-import extracells.network.packet.PacketMonitorFluid;
-import extracells.tileentity.TileEntityTerminalFluid;
-import extracells.util.SpecialFluidStack;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiTerminalFluid extends GuiContainer
 {
-
 	public static final int xSize = 175;
 	public static final int ySize = 203;
+	public String currentFluidName;
+	public long currentFluidAmount;
 	private int currentScroll = 0;
-	public String fluidName;
-	TileEntityTerminalFluid tileEntity;
-	GuiTextField searchbar;
-	List<WidgetFluidSelector> selectors = new ArrayList<WidgetFluidSelector>();
+	public TileEntityTerminalFluid tileEntity;
+	private GuiTextField searchbar;
+	private List<Fluid> oldCraftables;
+	private List<SpecialFluidStack> oldFluids;
+	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 
-	public GuiTerminalFluid(World world, TileEntityTerminalFluid tileEntity, EntityPlayer player)
+	public GuiTerminalFluid(TileEntityTerminalFluid _tileEntity, EntityPlayer player)
 	{
-		super(new ContainerTerminalFluid(player, tileEntity.getInventory()));
-		this.tileEntity = tileEntity;
+		super(new ContainerTerminalFluid(player, _tileEntity.getInventory()));
+		if (_tileEntity != null)
+		{
+			tileEntity = _tileEntity;
+			oldFluids = _tileEntity.getFluids();
+			oldCraftables = _tileEntity.getCurrentCraftables();
+			currentFluidName = _tileEntity.getCurrentFluid() != null ? _tileEntity.getCurrentFluid().getLocalizedName() : "-";
+		}
 	}
 
 	@Override
 	public void initGui()
 	{
 		super.initGui();
+		fluidWidgets = new ArrayList<AbstractFluidWidget>();
 		Mouse.getDWheel();
 
-		for (int y = 0; y < 4 * 18; y += 18)
+		List<Fluid> selectorFluids = new ArrayList<Fluid>();
+		for (SpecialFluidStack stack : oldFluids)
 		{
-			for (int x = 0; x < 9 * 18; x += 18)
-			{
-				selectors.add(new WidgetFluidSelector(x + 7, y - 1, null, 0, 0XFF00FFFF, 1));
-			}
+			fluidWidgets.add(new WidgetFluidSelector(this, stack));
+			selectorFluids.add(stack.getFluidStack().getFluid());
 		}
+		for (Fluid fluid : oldCraftables)
+			if (!selectorFluids.contains(fluid))
+				fluidWidgets.add(new WidgetFluidRequest(this, fluid));
 
+		Collections.sort(fluidWidgets, new FluidWidgetComparator());
 		searchbar = new GuiTextField(fontRenderer, guiLeft + 81, guiTop - 12, 88, 10)
 		{
 			private int xPos = 0;
@@ -83,11 +93,37 @@ public class GuiTerminalFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float alpha, int sizeX, int sizeY)
 	{
-		drawDefaultBackground();
+		if (tileEntity != null && !tileEntity.getFluids().isEmpty())
+		{
+			List<SpecialFluidStack> currentFluids = tileEntity.getFluids();
+			List<Fluid> currentCraftables = tileEntity.getCurrentCraftables();
+			if (oldFluids != currentFluids || oldCraftables != currentCraftables)
+			{
+				oldFluids = currentFluids;
+				oldCraftables = currentCraftables;
+				initGui();
+			}
+		} else
+		{
+			oldFluids = new ArrayList<SpecialFluidStack>();
+			oldCraftables = new ArrayList<Fluid>();
+			currentFluidName = "-";
+			currentFluidAmount = 0;
+			initGui();
+		}
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(guiLeft, guiTop - 18, 0, 0, xSize, ySize);
 		searchbar.drawTextBox();
+	}
+
+	public void updateSelected(WidgetFluidSelector selector)
+	{
+		currentFluidName = selector.getFluid().getLocalizedName();
+		currentFluidAmount = selector.getAmount();
+		for (AbstractFluidWidget currentSelector : fluidWidgets)
+			if (currentSelector instanceof WidgetFluidSelector)
+				((WidgetFluidSelector) currentSelector).setSelected(selector == currentSelector);
 	}
 
 	@Override
@@ -95,121 +131,91 @@ public class GuiTerminalFluid extends GuiContainer
 	{
 		fontRenderer.drawString(BlockEnum.FLUIDTERMINAL.getStatName().replace("ME ", ""), 5, -12, 0x000000);
 
-		drawSelectors(mouseX, mouseY);
+		drawWidgets(mouseX, mouseY);
 
-		long amount = 0;
-		String name = "";
-		for (WidgetFluidSelector selector : selectors)
-		{
-			if (selector.isSelected())
-			{
-				amount = selector.getAmount();
-				name = selector.getFluid().getLocalizedName();
-			}
-		}
-
-		String amountToText = Long.toString(amount) + "mB";
+		String amountToText = Long.toString(currentFluidAmount) + "mB";
 		if (Extracells.shortenedBuckets)
 		{
-			if (amount > 1000000000L)
-				amountToText = Long.toString(amount / 1000000000L) + "MegaB";
-			else if (amount > 1000000L)
-				amountToText = Long.toString(amount / 1000000L) + "KiloB";
-			else if (amount > 9999L)
+			if (currentFluidAmount > 1000000000L)
+				amountToText = Long.toString(currentFluidAmount / 1000000000L) + "MegaB";
+			else if (currentFluidAmount > 1000000L)
+				amountToText = Long.toString(currentFluidAmount / 1000000L) + "KiloB";
+			else if (currentFluidAmount > 9999L)
 			{
-				amountToText = Long.toString(amount / 1000L) + "B";
+				amountToText = Long.toString(currentFluidAmount / 1000L) + "B";
 			}
 		}
 
 		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);
-		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + name, 45, 83, 0x000000);
+		fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + currentFluidName, 45, 83, 0x000000);
 	}
 
-	public void drawSelectors(int mouseX, int mouseY)
+	public void drawWidgets(int mouseX, int mouseY)
 	{
-		int fluidTypes = 0;
+		int listSize = fluidWidgets.size();
 		if (tileEntity != null && !tileEntity.getFluids().isEmpty())
 		{
-			List<SpecialFluidStack> fluidList = tileEntity.getFluids();
-			fluidTypes = fluidList.size();
-
-			List<SpecialFluidStack> validFluids = new ArrayList<SpecialFluidStack>();
-			for (SpecialFluidStack current : fluidList)
+			outerLoop: for (int y = 0; y < 4; y++)
 			{
-				if (current != null && current.getID() > 0 && searchbar != null && FluidRegistry.getFluid(current.getID()).getLocalizedName().toLowerCase().contains(searchbar.getText().toLowerCase()))
-					validFluids.add(current);
+				for (int x = 0; x < 9; x++)
+				{
+					int widgetIndex = y * 9 + x + currentScroll * 9;
+					if (0 <= widgetIndex && widgetIndex < listSize)
+					{
+						AbstractFluidWidget widget = fluidWidgets.get(widgetIndex);
+						widget.drawWidget(x * 18 + 7, y * 18 - 1);
+					} else
+					{
+						break outerLoop;
+					}
+				}
 			}
 
-			for (WidgetFluidSelector selector : selectors)
+			for (int x = 0; x < 9; x++)
 			{
-				selector.setFluid(null);
-				selector.setAmount(-1);
+				for (int y = 0; y < 4; y++)
+				{
+					int widgetIndex = y * 9 + x;
+					if (0 <= widgetIndex && widgetIndex < listSize)
+					{
+						fluidWidgets.get(widgetIndex).drawTooltip(x * 18 + 7, y * 18 - 1, mouseX, mouseY);
+					} else
+					{
+						break;
+					}
+				}
 			}
 
-			for (int i = currentScroll * 9; i < validFluids.size() && i < selectors.size(); i++)
+			int deltaWheel = Mouse.getDWheel();
+			if (deltaWheel > 0)
 			{
-				selectors.get(i - currentScroll * 9).setFluid(validFluids.get(i).getID());
-				selectors.get(i - currentScroll * 9).setAmount(validFluids.get(i).amount);
+				currentScroll++;
+			} else if (deltaWheel < 0)
+			{
+				currentScroll--;
 			}
 
-			Fluid currentFluid = tileEntity.getCurrentFluid();
-			for (WidgetFluidSelector selector : selectors)
-			{
-				selector.setSelected(currentFluid != null ? selector.getFluid() == currentFluid : false);
-			}
-		} else
-		{
-			fluidTypes = 0;
-			for (WidgetFluidSelector selector : selectors)
-			{
-				selector.setFluid(null);
-				selector.setAmount(-1);
-			}
-
-			for (WidgetFluidSelector selector : selectors)
-			{
-				selector.setSelected(false);
-			}
-		}
-		int deltaWheel = Mouse.getDWheel();
-
-		if (deltaWheel > 0)
-		{
-			currentScroll--;
-		} else if (deltaWheel < 0)
-		{
-			currentScroll++;
-		}
-
-		if (currentScroll < 0)
-			currentScroll = 0;
-		if (fluidTypes / 9 < 4 && currentScroll < fluidTypes / 9 + 4)
-			currentScroll = 0;
-
-		for (WidgetFluidSelector selector : selectors)
-		{
-			selector.drawSelector(mc, 0, 0);
-		}
-		for (WidgetFluidSelector selector : selectors)
-		{
-			if (isPointInRegion(selector.posX, selector.posY, selector.sizeX, selector.sizeY, mouseX, mouseY))
-			{
-				selector.drawTooltip(mouseX - guiLeft, mouseY - guiTop);
-			}
+			if (currentScroll < 0)
+				currentScroll = 0;
+			if (listSize / 9 < 4 && currentScroll < listSize / 9 + 4)
+				currentScroll = 0;
 		}
 	}
 
-	protected void mouseClicked(int x, int y, int mouseBtn)
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn)
 	{
-		super.mouseClicked(x, y, mouseBtn);
-		searchbar.mouseClicked(x, y, mouseBtn);
-		for (WidgetFluidSelector selector : selectors)
+		super.mouseClicked(mouseX, mouseY, mouseBtn);
+		searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
+		int listSize = fluidWidgets.size();
+		for (int x = 0; x < 9; x++)
 		{
-			if (selector.getFluid() != null)
+			for (int y = 0; y < 4; y++)
 			{
-				if (isPointInRegion(selector.posX, selector.posY, selector.sizeX, selector.sizeY, x, y))
+				int index = y * 9 + x;
+				if (0 <= index && index < listSize)
 				{
-					PacketDispatcher.sendPacketToServer(new PacketMonitorFluid(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, selector.getFluid().getID()).makePacket());
+					AbstractFluidWidget widget = fluidWidgets.get(index);
+					widget.mouseClicked(x * 18 + 7, y * 18 - 1, mouseX, mouseY);
 				}
 			}
 		}
@@ -221,5 +227,15 @@ public class GuiTerminalFluid extends GuiContainer
 		if (keyID == Keyboard.KEY_ESCAPE)
 			mc.thePlayer.closeScreen();
 		searchbar.textboxKeyTyped(key, keyID);
+	}
+
+	public int guiLeft()
+	{
+		return guiLeft;
+	}
+
+	public int guiTop()
+	{
+		return guiTop;
 	}
 }

@@ -29,6 +29,7 @@ public abstract class AbstractPacket
 		builder.put(Integer.valueOf(4), PacketBusFluidExport.class);
 		builder.put(Integer.valueOf(5), PacketBusFluidStorage.class);
 		builder.put(Integer.valueOf(6), PacketLevelEmitterFluid.class);
+		builder.put(Integer.valueOf(7), PacketTerminalFluid.class);
 
 		idMap = builder.build();
 	}

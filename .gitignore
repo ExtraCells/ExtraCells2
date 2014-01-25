@@ -6,8 +6,6 @@
 !/gradlew.bat
 !/README.md
 !/License.txt
-*.db
 !/build.gradle
 !/build.bat
 !/build.sh
-!.travis.yml

@@ -1,8 +1,24 @@
 package extracells.tileentity;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.api.IAEItemStack;
+import appeng.api.IItemList;
+import appeng.api.Util;
+import appeng.api.WorldCoord;
+import appeng.api.events.GridPatternUpdateEvent;
+import appeng.api.events.GridTileLoadEvent;
+import appeng.api.events.GridTileUnloadEvent;
+import appeng.api.me.tiles.ICraftingTracker;
+import appeng.api.me.tiles.IGridMachine;
+import appeng.api.me.tiles.IStorageAware;
+import appeng.api.me.util.IGridInterface;
+import appeng.api.me.util.IMEInventoryHandler;
+import appeng.api.me.util.ITileCraftingProvider;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.ItemEnum;
+import extracells.integration.logisticspipes.IFluidNetworkAccess;
+import extracells.util.ECPrivateInventory;
+import extracells.util.SpecialFluidStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -15,27 +31,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.*;
-import appeng.api.IAEItemStack;
-import appeng.api.IItemList;
-import appeng.api.Util;
-import appeng.api.WorldCoord;
-import appeng.api.events.GridTileLoadEvent;
-import appeng.api.events.GridTileUnloadEvent;
-import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IStorageAware;
-import appeng.api.me.util.IGridInterface;
-import appeng.api.me.util.IMEInventoryHandler;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.ItemEnum;
-import extracells.integration.logisticspipes.IFluidNetworkAccess;
-import extracells.util.ECPrivateInventory;
-import extracells.util.SpecialFluidStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Optional.Interface(iface = "logisticspipes.api.IRequestAPI", modid = "LogisticsPipes|Main")
-public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMachine, IFluidHandler, IStorageAware, IFluidNetworkAccess
+public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMachine, IFluidHandler, IStorageAware, IFluidNetworkAccess, ITileCraftingProvider
 {
-	private Boolean powerStatus = true, networkReady = true;
+	private boolean powerStatus = true, networkReady = true, cached = false;
 	private IGridInterface grid;
 	public FluidTank[] tanks = new FluidTank[6];
 	private String customName = StatCollector.translateToLocal("tile.block.fluid.bus.export");
@@ -64,8 +67,19 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 		}
 	}
 
+	public void onNeighborBlockChange()
+	{
+		if (grid != null)
+			MinecraftForge.EVENT_BUS.post(new GridPatternUpdateEvent(getWorld(), getLocation(), getGrid()));
+	}
+
 	public void updateEntity()
 	{
+		if (!cached && grid != null)
+		{
+			onNeighborBlockChange();
+			cached = !cached;
+		}
 		for (int i = 0; i < tanks.length; i++)
 		{
 			FluidTank tank = tanks[i];
@@ -384,5 +398,34 @@ public class TileEntityInterfaceFluid extends ColorableECTile implements IGridMa
 	public IAEItemStack createFluidItemStack(FluidStack stack)
 	{
 		return createFluidItemStack(new SpecialFluidStack(stack.fluidID, stack.amount));
+	}
+
+	@Override
+	public void provideCrafting(ICraftingTracker craftingTracker)
+	{
+		//craftingTracker.addCraftingOption(this, new FluidRequestPattern(this, new FluidStack(FluidRegistry.WATER, 1000)));
+	}
+
+	@Override
+	public boolean isBusy()
+	{
+		return true;
+	}
+
+	@Override
+	public ItemStack pushItem(ItemStack out)
+	{
+		return null;
+	}
+
+	@Override
+	public boolean canPushItem(ItemStack out)
+	{
+		return false;
+	}
+
+	public void orderFluid(FluidStack fluid)
+	{
+		// TODO ORDERFLUID
 	}
 }

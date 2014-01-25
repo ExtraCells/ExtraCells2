@@ -1,17 +1,17 @@
 package extracells.blocks;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.tileentity.TileEntityInterfaceFluid;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
+import net.minecraft.world.World;
 
 public class BlockInterFaceFluid extends ColorBlock
 {
@@ -57,5 +57,15 @@ public class BlockInterFaceFluid extends ColorBlock
 	public void registerIcons(IconRegister iconregister)
 	{
 		icon = iconregister.registerIcon("extracells:fluid.interface");
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, int neighborID)
+	{
+		super.onNeighborBlockChange(world, x, y, z, neighborID);
+		if (!world.isRemote)
+		{
+			((TileEntityInterfaceFluid) world.getBlockTileEntity(x, y, z)).onNeighborBlockChange();
+		}
 	}
 }

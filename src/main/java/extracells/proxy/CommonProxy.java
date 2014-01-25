@@ -1,15 +1,5 @@
 package extracells.proxy;
 
-import java.util.logging.Level;
-
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import appeng.api.Blocks;
 import appeng.api.Items;
 import appeng.api.Materials;
@@ -23,6 +13,16 @@ import extracells.ItemEnum;
 import extracells.container.*;
 import extracells.gui.*;
 import extracells.tileentity.*;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import java.util.logging.Level;
 
 public class CommonProxy implements IGuiHandler
 {
@@ -359,7 +359,7 @@ public class CommonProxy implements IGuiHandler
 			case 0: // GUI Hard ME Drive
 				return new GuiHardMEDrive(player.inventory, (TileEntityHardMEDrive) tileEntity);
 			case 1: // GUI Fluid Terminal
-				return new GuiTerminalFluid(world, (TileEntityTerminalFluid) tileEntity, player);
+				return new GuiTerminalFluid((TileEntityTerminalFluid) tileEntity, player);
 			case 2: // GUI Storage Bus Fluid
 				return new GuiBusFluidStorage(world, player.inventory, (TileEntityBusFluidStorage) tileEntity);
 			case 3: // GUI Import Bus Fluid

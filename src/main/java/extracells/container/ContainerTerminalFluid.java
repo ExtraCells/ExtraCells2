@@ -12,7 +12,7 @@ import extracells.container.slot.SlotRespective;
 public class ContainerTerminalFluid extends Container
 {
 
-	IInventory inventoryTileEntity;
+	private IInventory inventoryTileEntity;
 
 	public ContainerTerminalFluid(EntityPlayer player, IInventory inventoryTileEntity)
 	{
