@@ -21,21 +21,22 @@ public abstract class RotatableColorBlock extends ColorBlock
 	@Override
 	public boolean rotateBlock(World worldObj, int x, int y, int z, ForgeDirection axis)
 	{
-		Boolean validDirection = isInValidRotations(worldObj, x, y, z, axis);
+		ForgeDirection rotation = ForgeDirection.getOrientation(worldObj.getBlockMetadata(x, y, z));
 
-		if (ForgeDirection.getOrientation(worldObj.getBlockMetadata(x, y, z)) == axis && !worldObj.isRemote)
+		worldObj.setBlockMetadataWithNotify(x, y, z, rotateDirecions(rotation).ordinal(), 3);
+		TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+		if (te instanceof IGridTileEntity)
 		{
-			worldObj.destroyBlock(x, y, z, true);
-		} else if (validDirection)
-		{
-			worldObj.setBlockMetadataWithNotify(x, y, z, axis.ordinal(), 3);
-			TileEntity te = worldObj.getBlockTileEntity(x, y, z);
-			if (te instanceof IGridTileEntity)
-			{
-				MinecraftForge.EVENT_BUS.post(new GridTileConnectivityEvent((IGridTileEntity) te, worldObj, new WorldCoord(x, y, z)));
-			}
+			MinecraftForge.EVENT_BUS.post(new GridTileConnectivityEvent((IGridTileEntity) te, worldObj, new WorldCoord(x, y, z)));
 		}
 		return true;
+	}
+
+	public ForgeDirection rotateDirecions(ForgeDirection rotation)
+	{
+		if (ForgeDirection.VALID_DIRECTIONS.length - 1 > rotation.ordinal())
+			return ForgeDirection.VALID_DIRECTIONS[rotation.ordinal() + 1];
+		return ForgeDirection.VALID_DIRECTIONS[0];
 	}
 
 	public boolean isInValidRotations(World worldObj, int x, int y, int z, ForgeDirection toCheck)

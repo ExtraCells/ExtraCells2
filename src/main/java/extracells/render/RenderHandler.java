@@ -1,10 +1,5 @@
 package extracells.render;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import extracells.blocks.BlockCertusTank;
 import extracells.blocks.BlockMonitorStorageFluid;
@@ -12,6 +7,11 @@ import extracells.blocks.BlockTerminalFluid;
 import extracells.render.helpers.RenderHelperMonitorStorageFluid;
 import extracells.render.helpers.RenderHelperTerminalFluid;
 import extracells.render.model.ModelCertusTank;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 
 public class RenderHandler implements ISimpleBlockRenderingHandler
 {

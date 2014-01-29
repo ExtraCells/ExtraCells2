@@ -36,6 +36,7 @@ public class GuiTerminalFluid extends GuiContainer
 	private int currentScroll = 0;
 	public TileEntityTerminalFluid tileEntity;
 	private GuiTextField searchbar;
+	private Fluid oldSelected;
 	private List<Fluid> oldCraftables;
 	private List<SpecialFluidStack> oldFluids;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
@@ -47,6 +48,7 @@ public class GuiTerminalFluid extends GuiContainer
 		if (_tileEntity != null)
 		{
 			tileEntity = _tileEntity;
+			oldSelected = _tileEntity.getCurrentFluid();
 			oldFluids = _tileEntity.getFluids();
 			oldCraftables = _tileEntity.getCurrentCraftables();
 			currentFluidName = _tileEntity.getCurrentFluid() != null ? _tileEntity.getCurrentFluid().getLocalizedName() : "-";
@@ -70,6 +72,15 @@ public class GuiTerminalFluid extends GuiContainer
 			if (!selectorFluids.contains(fluid))
 				fluidWidgets.add(new WidgetFluidRequest(this, fluid));
 
+		for (AbstractFluidWidget widget : fluidWidgets)
+		{
+			if (widget instanceof WidgetFluidSelector && widget.getFluid() == oldSelected)
+			{
+				WidgetFluidSelector selector = (WidgetFluidSelector) widget;
+				selector.setSelected(true);
+				updateSelected(selector);
+			}
+		}
 		Collections.sort(fluidWidgets, new FluidWidgetComparator());
 		searchbar = new GuiTextField(fontRenderer, guiLeft + 81, guiTop - 12, 88, 10)
 		{
@@ -95,10 +106,12 @@ public class GuiTerminalFluid extends GuiContainer
 	{
 		if (tileEntity != null && !tileEntity.getFluids().isEmpty())
 		{
+			Fluid currentSelected = tileEntity.getCurrentFluid();
 			List<SpecialFluidStack> currentFluids = tileEntity.getFluids();
 			List<Fluid> currentCraftables = tileEntity.getCurrentCraftables();
-			if (oldFluids != currentFluids || oldCraftables != currentCraftables)
+			if (oldSelected != currentSelected || oldFluids != currentFluids || oldCraftables != currentCraftables)
 			{
+				oldSelected = currentSelected;
 				oldFluids = currentFluids;
 				oldCraftables = currentCraftables;
 				initGui();
@@ -107,6 +120,7 @@ public class GuiTerminalFluid extends GuiContainer
 		{
 			oldFluids = new ArrayList<SpecialFluidStack>();
 			oldCraftables = new ArrayList<Fluid>();
+			oldSelected = null;
 			currentFluidName = "-";
 			currentFluidAmount = 0;
 			initGui();

@@ -1,7 +1,10 @@
 package extracells.gui.widget;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.Extracells;
 import extracells.gui.GuiTerminalFluid;
+import extracells.network.packet.PacketTerminalFluid;
+import extracells.tileentity.TileEntityTerminalFluid;
 import extracells.util.SpecialFluidStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -72,6 +75,8 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 	{
 		if (fluid != null && isPointInRegion(posX, posY, sizeX, sizeY, mouseX, mouseY))
 		{
+			TileEntityTerminalFluid terminalFluid = guiTerminalFluid.tileEntity;
+			PacketDispatcher.sendPacketToServer(new PacketTerminalFluid(terminalFluid.worldObj, terminalFluid.xCoord, terminalFluid.yCoord, terminalFluid.zCoord, fluid).makePacket());
 			selected = true;
 			guiTerminalFluid.updateSelected(this);
 			guiTerminalFluid.currentFluidAmount = amount;
