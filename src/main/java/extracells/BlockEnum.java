@@ -3,11 +3,10 @@ package extracells;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
-import extracells.blocks.*;
-import extracells.items.ItemBlockCertusTank;
 
 public enum BlockEnum
 {
+	;/*/TODO
 	SOLDERINGSTATION("tile.block.solderingstation.name", 500, BlockSolderingStation.class, "ID for the soldering station", "SolderingStation"),
 	MEDROPPER("tile.block.medropper.name", 501, BlockMEDropper.class, "ID for the ME Item Dropper", "MEDropper"),
 	MEBATTERY("tile.block.mebattery.name", 502, BlockMEBattery.class, "ID for the ME Backup Battery", "MEBattery"),
@@ -24,7 +23,7 @@ public enum BlockEnum
 	FLUIDVOID("tile.block.fluid.void.name", 513, BlockVoidFluid.class, "ID for the ME Fluid Void", "VoidFluid"),
 	FLUIDCRAFTER("tile.block.fluid.crafter.name", 514, BlockFluidCrafter.class, "ID for the ME Fluid Crafter", "FluidCrafter"),
 	FLUIDMONITOR("tile.block.fluid.monitor.storage.name", 515, BlockMonitorStorageFluid.class, "ID for the ME Fluid Storage Monitor", "StorageMonitorFluid");
-
+//*/
 	private final String internalName;
 	private String description, IDName;
 	private int ID;
