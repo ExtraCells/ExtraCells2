@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -87,7 +88,8 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 pos)
 	{
-		return false;
+		player.sendChatToPlayer(new ChatMessageComponent().addText("YAYA"));
+		return true;
 	}
 
 	@Override

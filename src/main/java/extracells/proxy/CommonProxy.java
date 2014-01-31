@@ -5,10 +5,13 @@ import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.BlockEnum;
 import extracells.ItemEnum;
+import extracells.item.ItemECBasePart;
+import extracells.part.ECBasePart;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 import java.util.logging.Level;
 
@@ -76,14 +79,31 @@ public class CommonProxy implements IGuiHandler
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	public Object getServerGuiElement(int Id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		return null;
+		int partId = Id >> 7;
+		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
+		switch (partId)
+		{
+		default:
+			return null;
+		}
 	}
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	public Object getClientGuiElement(int Id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		return null;
+		int partId = Id >> 7;
+		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
+		switch (partId)
+		{
+		default:
+			return null;
+		}
+	}
+
+	public static int getGuiId(ECBasePart part, ForgeDirection side)
+	{
+		return ItemECBasePart.getPartId(part.getClass()) << 7 | side.ordinal();
 	}
 }

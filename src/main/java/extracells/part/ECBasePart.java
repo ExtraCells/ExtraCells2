@@ -180,6 +180,12 @@ public abstract class ECBasePart implements IPart, IGridHost
 	}
 
 	@Override
+	public boolean canBePlacedOn(BusSupport what)
+	{
+		return what != BusSupport.NO_PARTS;
+	}
+
+	@Override
 	public final IGridNode getGridNode(ForgeDirection dir)
 	{
 		return node;
@@ -196,6 +202,11 @@ public abstract class ECBasePart implements IPart, IGridHost
 	{
 	}
 
+	public ForgeDirection getSide()
+	{
+		return side;
+	}
+
 	public double getPowerUsage()
 	{
 		return powerUsage;
@@ -206,5 +217,4 @@ public abstract class ECBasePart implements IPart, IGridHost
 		ItemECBasePart.registerPart(FluidExport.class);
 		ItemECBasePart.registerPart(FluidStorage.class);
 	}
-
 }
