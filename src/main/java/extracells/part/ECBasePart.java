@@ -1,7 +1,6 @@
 package extracells.part;
 
 import appeng.api.AEApi;
-import appeng.api.networking.IGridBlock;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.parts.*;
@@ -32,7 +31,7 @@ public abstract class ECBasePart implements IPart, IGridHost
 	protected ForgeDirection side;
 	protected IPartHost host;
 	protected TileEntity tile;
-	protected IGridBlock gridBlock;
+	protected ECBaseGridBlock gridBlock;
 	protected double powerUsage;
 	protected TileEntity hostTile;
 
@@ -124,7 +123,9 @@ public abstract class ECBasePart implements IPart, IGridHost
 	}
 
 	@Override
-	public abstract void removeFromWorld();
+	public void removeFromWorld()
+	{
+	}
 
 	@Override
 	public void addToWorld()
@@ -181,7 +182,7 @@ public abstract class ECBasePart implements IPart, IGridHost
 	@Override
 	public boolean canBePlacedOn(BusSupport what)
 	{
-		return what != BusSupport.NO_PARTS;
+		return what != BusSupport.DENSE_CABLE;
 	}
 
 	@Override
@@ -193,12 +194,17 @@ public abstract class ECBasePart implements IPart, IGridHost
 	@Override
 	public AECableType getCableConnectionType(ForgeDirection dir)
 	{
-		return AECableType.GLASS;
+		return AECableType.SMART;
 	}
 
 	@Override
 	public void securityBreak()
 	{
+	}
+
+	public IPartHost getHost()
+	{
+		return host;
 	}
 
 	public ForgeDirection getSide()
@@ -211,9 +217,15 @@ public abstract class ECBasePart implements IPart, IGridHost
 		return powerUsage;
 	}
 
+	public ECBaseGridBlock getGridBlock()
+	{
+		return gridBlock;
+	}
+
 	public static void registerParts()
 	{
 		ItemECBasePart.registerPart(FluidExport.class);
 		ItemECBasePart.registerPart(FluidStorage.class);
+		ItemECBasePart.registerPart(FluidTerminal.class);
 	}
 }

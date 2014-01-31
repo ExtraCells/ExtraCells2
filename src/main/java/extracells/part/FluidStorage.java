@@ -68,18 +68,6 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 	}
 
 	@Override
-	public void removeFromWorld()
-	{
-
-	}
-
-	@Override
-	public void addToWorld()
-	{
-
-	}
-
-	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
 		bch.addBox(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);

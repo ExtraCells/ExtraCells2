@@ -101,18 +101,6 @@ public class FluidExport extends ECBasePart implements IGridTickable, IActionHos
 	}
 
 	@Override
-	public void removeFromWorld()
-	{
-
-	}
-
-	@Override
-	public void addToWorld()
-	{
-
-	}
-
-	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
 		bch.addBox(4F, 4F, 12F, 12, 12, 14);
@@ -138,14 +126,12 @@ public class FluidExport extends ECBasePart implements IGridTickable, IActionHos
 	@Override
 	public TickingRequest getTickingRequest(IGridNode node)
 	{
-		System.out.println("YA");
 		return new TickingRequest(1, 20, false, false);
 	}
 
 	@Override
 	public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall)
 	{
-		System.out.println("sdasd");
 		return doWork() ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
 	}
 

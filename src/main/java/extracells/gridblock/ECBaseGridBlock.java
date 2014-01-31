@@ -1,6 +1,9 @@
 package extracells.gridblock;
 
 import appeng.api.networking.*;
+import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import extracells.part.ECBasePart;
@@ -33,7 +36,7 @@ public class ECBaseGridBlock implements IGridBlock
 	@Override
 	public EnumSet<GridFlags> getFlags()
 	{
-		return null;
+		return EnumSet.of(GridFlags.REQURE_CHANNEL);
 	}
 
 	@Override
@@ -87,5 +90,21 @@ public class ECBaseGridBlock implements IGridBlock
 	public ItemStack getMachineRepresentation()
 	{
 		return null;// TODO
+	}
+
+	public IMEMonitor<IAEFluidStack> getMonitor()
+	{
+		IGridNode node = host.getGridNode();
+		if (node == null)
+			return null;
+		IGrid grid = node.getGrid();
+		if (grid == null)
+			return null;
+		IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+		if (storageGrid == null)
+			return null;
+		IMEMonitor<IAEFluidStack> fluidInventory = storageGrid.getFluidInventory();
+		return fluidInventory;
+
 	}
 }

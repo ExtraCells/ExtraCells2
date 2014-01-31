@@ -1,12 +1,17 @@
 package extracells.proxy;
 
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.BlockEnum;
 import extracells.ItemEnum;
+import extracells.container.ContainerTerminalFluid;
+import extracells.gui.GuiTerminalFluid;
 import extracells.item.ItemECBasePart;
 import extracells.part.ECBasePart;
+import extracells.part.FluidTerminal;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -83,8 +88,11 @@ public class CommonProxy implements IGuiHandler
 	{
 		int partId = Id >> 7;
 		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
+		IPart part = ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
 		switch (partId)
 		{
+		case 0:
+			return new ContainerTerminalFluid((FluidTerminal) part, player);
 		default:
 			return null;
 		}
@@ -95,8 +103,11 @@ public class CommonProxy implements IGuiHandler
 	{
 		int partId = Id >> 7;
 		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
+		IPart part = ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
 		switch (partId)
 		{
+		case 0:
+			return new GuiTerminalFluid((FluidTerminal) part, player);
 		default:
 			return null;
 		}
