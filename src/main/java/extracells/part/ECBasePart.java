@@ -32,7 +32,6 @@ public abstract class ECBasePart implements IPart, IGridHost
 	protected ForgeDirection side;
 	protected IPartHost host;
 	protected TileEntity tile;
-	protected IGridNode externalNode;
 	protected IGridBlock gridBlock;
 	protected double powerUsage;
 	protected TileEntity hostTile;
@@ -128,16 +127,16 @@ public abstract class ECBasePart implements IPart, IGridHost
 	public abstract void removeFromWorld();
 
 	@Override
-	public abstract void addToWorld();
+	public void addToWorld()
+	{
+		gridBlock = new ECBaseGridBlock(this);
+		node = AEApi.instance().createGridNode(gridBlock);
+	}
 
 	@Override
 	public final IGridNode getExternalFacingNode()
 	{
-		if (gridBlock == null)
-			gridBlock = new ECBaseGridBlock(this);
-		if (externalNode == null)
-			externalNode = AEApi.instance().createGridNode(gridBlock);
-		return externalNode;
+		return null;
 	}
 
 	@Override

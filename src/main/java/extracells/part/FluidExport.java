@@ -138,12 +138,14 @@ public class FluidExport extends ECBasePart implements IGridTickable, IActionHos
 	@Override
 	public TickingRequest getTickingRequest(IGridNode node)
 	{
+		System.out.println("YA");
 		return new TickingRequest(1, 20, false, false);
 	}
 
 	@Override
 	public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall)
 	{
+		System.out.println("sdasd");
 		return doWork() ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
 	}
 
