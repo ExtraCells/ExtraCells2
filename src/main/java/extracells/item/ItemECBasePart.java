@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ItemECBasePart extends Item implements IPartItem
 {
-	private static List<IPart> ecParts = new ArrayList<IPart>();
+	private static List<Class<? extends IPart>> ecParts = new ArrayList<Class<? extends IPart>>();
 
 	public ItemECBasePart(int itemId)
 	{
@@ -29,7 +29,13 @@ public class ItemECBasePart extends Item implements IPartItem
 	@Override
 	public IPart createPartFromItemStack(ItemStack is)
 	{
-		return ecParts.get(Integer.valueOf(is.getItemDamage()));
+		try
+		{
+			return ecParts.get(is.getItemDamage()).newInstance();
+		} catch (Throwable e)
+		{
+			return null;
+		}
 	}
 
 	@Override
@@ -54,9 +60,13 @@ public class ItemECBasePart extends Item implements IPartItem
 		return AEApi.instance().partHelper().placeBus(is, x, y, z, side, player, world);
 	}
 
-	public static int registerPart(IPart part)
+	public static void registerPart(Class<? extends IPart> part)
 	{
 		ecParts.add(part);
+	}
+
+	public static int getPartId(Class<? extends IPart> part)
+	{
 		return ecParts.indexOf(part);
 	}
 }

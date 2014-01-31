@@ -1,13 +1,11 @@
 package extracells.part;
 
-import appeng.api.networking.IGridBlock;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import extracells.gridblock.GBFluidExport;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -118,12 +116,6 @@ public class FluidExport extends ECBasePart implements IGridTickable
 	public void addToWorld()
 	{
 
-	}
-
-	@Override
-	public IGridBlock createGridBlock()
-	{
-		return new GBFluidExport(this);
 	}
 
 	@Override

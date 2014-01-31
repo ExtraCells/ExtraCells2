@@ -7,6 +7,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.parts.*;
 import appeng.api.util.AECableType;
 import extracells.ItemEnum;
+import extracells.gridblock.ECBaseGridBlock;
 import extracells.item.ItemECBasePart;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
@@ -27,30 +28,23 @@ import java.util.Random;
 
 public abstract class ECBasePart implements IPart, IGridHost
 {
-	protected int partId;
 	protected IGridNode node;
 	protected ForgeDirection side;
 	protected IPartHost host;
 	protected TileEntity tile;
 	protected IGridNode externalNode;
 	protected IGridBlock gridBlock;
-
-	protected ECBasePart()
-	{
-		partId = ItemECBasePart.registerPart(this);
-		gridBlock = createGridBlock();
-		externalNode = AEApi.instance().createGridNode(gridBlock);
-	}
+	protected double powerUsage;
+	protected TileEntity hostTile;
 
 	@Override
 	public ItemStack getItemStack(PartItemStack type)
 	{
-		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItemInstance(), 1);
+		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItemInstance(), 1, ItemECBasePart.getPartId(getClass()));
 		NBTTagCompound itemNbt = new NBTTagCompound();
 		NBTTagCompound partNbt = new NBTTagCompound();
 		writeToNBT(partNbt);
 		itemNbt.setCompoundTag("partNbt", partNbt);
-		itemNbt.setInteger("partId", partId);
 		is.setTagCompound(partNbt);
 		return is;
 	}
@@ -62,7 +56,9 @@ public abstract class ECBasePart implements IPart, IGridHost
 	public abstract void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer);
 
 	@Override
-	public abstract void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer);
+	public void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer)
+	{
+	}
 
 	@Override
 	public boolean isSolid()
@@ -137,10 +133,12 @@ public abstract class ECBasePart implements IPart, IGridHost
 	@Override
 	public final IGridNode getExternalFacingNode()
 	{
+		if (gridBlock == null)
+			gridBlock = new ECBaseGridBlock(this);
+		if (externalNode == null)
+			externalNode = AEApi.instance().createGridNode(gridBlock);
 		return externalNode;
 	}
-
-	public abstract IGridBlock createGridBlock();
 
 	@Override
 	public final void setPartHostInfo(ForgeDirection _side, IPartHost _host, TileEntity _tile)
@@ -148,6 +146,7 @@ public abstract class ECBasePart implements IPart, IGridHost
 		side = _side;
 		host = _host;
 		tile = _tile;
+		hostTile = _tile;
 	}
 
 	@Override
@@ -197,9 +196,15 @@ public abstract class ECBasePart implements IPart, IGridHost
 	{
 	}
 
+	public double getPowerUsage()
+	{
+		return powerUsage;
+	}
+
 	public static void registerParts()
 	{
-		new FluidExport();
-		new FluidStorage();
+		ItemECBasePart.registerPart(FluidExport.class);
+		ItemECBasePart.registerPart(FluidStorage.class);
 	}
+
 }

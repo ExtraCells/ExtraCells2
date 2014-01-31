@@ -1,14 +1,13 @@
 package extracells.part;
 
-import appeng.api.networking.IGridBlock;
 import appeng.api.networking.IGridNode;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
-import appeng.api.util.DimensionalCoord;
 import extracells.inventoryHandler.StorageBusHandler;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,19 +29,17 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
-
+		rh.setTexture(Block.stone.getIcon(0, 0));
+		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
+		rh.renderInventoryBox(renderer);
 	}
 
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
-
-	}
-
-	@Override
-	public void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer)
-	{
-
+		rh.setTexture(Block.stone.getIcon(0, 0));
+		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
+		rh.renderBlock(x, y, z, renderer);
 	}
 
 	@Override
@@ -82,15 +79,9 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 	}
 
 	@Override
-	public IGridBlock createGridBlock()
-	{
-		return null;
-	}
-
-	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
-
+		bch.addBox(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
 	}
 
 	@Override
@@ -102,7 +93,7 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 	@Override
 	public int cableConnectionRenderTo()
 	{
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -111,7 +102,7 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
 		if (channel == StorageChannel.FLUIDS)
 		{
-			list.add(new StorageBusHandler(externalNode, facingTank));
+			list.add(new StorageBusHandler(this, facingTank, side));
 		}
 		return list;
 	}
@@ -136,8 +127,7 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 	@Override
 	public void onNeighborChanged()
 	{
-		DimensionalCoord coord = gridBlock.getLocation();
-		TileEntity tileEntity = coord.getWorld().getBlockTileEntity(coord.x, coord.y, coord.z);
+		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
 		facingTank = null;
 		if (tileEntity instanceof IFluidHandler)
 			facingTank = (IFluidHandler) tileEntity;

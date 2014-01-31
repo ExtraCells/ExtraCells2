@@ -3,28 +3,32 @@ package extracells.gridblock;
 import appeng.api.networking.*;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
+import extracells.part.ECBasePart;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 import java.util.EnumSet;
 
-public abstract class ECBaseGridBlock implements IGridBlock
+public class ECBaseGridBlock implements IGridBlock
 {
-	World world;
-	int x, y, z;
-	AEColor color;
-	IGrid grid;
-	int usedChannels;
-	IGridHost host;
+	protected World world;
+	protected int x, y, z;
+	protected AEColor color;
+	protected IGrid grid;
+	protected int usedChannels;
+	protected ECBasePart host;
 
-	protected ECBaseGridBlock(IGridHost _host)
+	public ECBaseGridBlock(ECBasePart _host)
 	{
 		host = _host;
 	}
 
 	@Override
-	public abstract double getIdlePowerUsage();
+	public double getIdlePowerUsage()
+	{
+		return host.getPowerUsage();
+	}
 
 	@Override
 	public EnumSet<GridFlags> getFlags()
@@ -82,6 +86,6 @@ public abstract class ECBaseGridBlock implements IGridBlock
 	@Override
 	public ItemStack getMachineRepresentation()
 	{
-		return null;//TODO
+		return null;// TODO
 	}
 }
