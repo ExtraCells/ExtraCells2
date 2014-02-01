@@ -8,7 +8,7 @@ import appeng.api.util.AECableType;
 import extracells.Extracells;
 import extracells.ItemEnum;
 import extracells.gridblock.ECBaseGridBlock;
-import extracells.item.ItemECBasePart;
+import extracells.item.ItemPartECBase;
 import extracells.proxy.CommonProxy;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
@@ -40,7 +40,7 @@ public abstract class PartECBase implements IPart, IGridHost
 	@Override
 	public ItemStack getItemStack(PartItemStack type)
 	{
-		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItemInstance(), 1, ItemECBasePart.getPartId(getClass()));
+		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItemInstance(), 1, ItemPartECBase.getPartId(getClass()));
 		NBTTagCompound itemNbt = new NBTTagCompound();
 		NBTTagCompound partNbt = new NBTTagCompound();
 		writeToNBT(partNbt);
@@ -230,9 +230,9 @@ public abstract class PartECBase implements IPart, IGridHost
 
 	public static void registerParts()
 	{
-		ItemECBasePart.registerPart(PartFluidExport.class);
-		ItemECBasePart.registerPart(PartFluidImport.class);
-		ItemECBasePart.registerPart(PartFluidStorage.class);
-		ItemECBasePart.registerPart(PartFluidTerminal.class);
+		ItemPartECBase.registerPart(PartFluidExport.class);
+		ItemPartECBase.registerPart(PartFluidImport.class);
+		ItemPartECBase.registerPart(PartFluidStorage.class);
+		ItemPartECBase.registerPart(PartFluidTerminal.class);
 	}
 }

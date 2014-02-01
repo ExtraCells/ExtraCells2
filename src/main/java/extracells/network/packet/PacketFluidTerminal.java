@@ -7,7 +7,7 @@ import appeng.api.storage.data.IItemList;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import cpw.mods.fml.relauncher.Side;
-import extracells.container.ContainerTerminalFluid;
+import extracells.container.ContainerFluidTerminal;
 import extracells.gui.GuiTerminalFluid;
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidTerminal;
@@ -116,7 +116,7 @@ public class PacketFluidTerminal extends AbstractPacket
 				Gui gui = Minecraft.getMinecraft().currentScreen;
 				if (gui instanceof GuiTerminalFluid)
 				{
-					ContainerTerminalFluid container = (ContainerTerminalFluid) ((GuiTerminalFluid) gui).inventorySlots;
+					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiTerminalFluid) gui).inventorySlots;
 					container.updateFluidList(fluidStackList);
 				}
 			}
@@ -130,7 +130,7 @@ public class PacketFluidTerminal extends AbstractPacket
 				Gui gui = Minecraft.getMinecraft().currentScreen;
 				if (gui instanceof GuiTerminalFluid)
 				{
-					ContainerTerminalFluid container = (ContainerTerminalFluid) ((GuiTerminalFluid) gui).inventorySlots;
+					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiTerminalFluid) gui).inventorySlots;
 					container.setSelectedFluid(currentFluid);
 				}
 			}

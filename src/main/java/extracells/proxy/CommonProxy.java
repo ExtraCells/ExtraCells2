@@ -7,11 +7,11 @@ import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.BlockEnum;
 import extracells.ItemEnum;
-import extracells.container.ContainerTerminalFluid;
+import extracells.container.ContainerFluidTerminal;
 import extracells.gui.GuiTerminalFluid;
-import extracells.item.ItemECBasePart;
-import extracells.part.ECBasePart;
-import extracells.part.FluidTerminal;
+import extracells.item.ItemPartECBase;
+import extracells.part.PartECBase;
+import extracells.part.PartFluidTerminal;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,6 +20,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 import java.util.logging.Level;
 
+@SuppressWarnings("unused")
 public class CommonProxy implements IGuiHandler
 {
 	public void checkForIDMismatches()
@@ -91,8 +92,8 @@ public class CommonProxy implements IGuiHandler
 		IPart part = ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
 		switch (partId)
 		{
-		case 0:
-			return new ContainerTerminalFluid((FluidTerminal) part, player);
+		case 2:
+			return new ContainerFluidTerminal((PartFluidTerminal) part, player);
 		default:
 			return null;
 		}
@@ -106,15 +107,15 @@ public class CommonProxy implements IGuiHandler
 		IPart part = ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
 		switch (partId)
 		{
-		case 0:
-			return new GuiTerminalFluid((FluidTerminal) part, player);
+		case 2:
+			return new GuiTerminalFluid((PartFluidTerminal) part, player);
 		default:
 			return null;
 		}
 	}
 
-	public static int getGuiId(ECBasePart part, ForgeDirection side)
+	public static int getGuiId(PartECBase part)
 	{
-		return ItemECBasePart.getPartId(part.getClass()) << 7 | side.ordinal();
+		return ItemPartECBase.getPartId(part.getClass()) << 7 | part.getSide().ordinal();
 	}
 }

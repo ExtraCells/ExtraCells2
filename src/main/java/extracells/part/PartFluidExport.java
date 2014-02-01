@@ -12,7 +12,7 @@ import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
-import net.minecraft.block.Block;
+import extracells.TextureManager;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -24,41 +24,38 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class PartFluidExport extends ECBasePart implements IGridTickable, IActionHost
+public class PartFluidExport extends PartECBase implements IGridTickable, IActionHost
 {
 	IFluidHandler facingTank;
 
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(Block.stone.getIcon(0, 0));
-
+		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(4F, 4F, 12F, 12, 12, 14);
 		rh.renderInventoryBox(renderer);
 
 		rh.setBounds(5F, 5F, 14F, 11, 11, 15);
 		rh.renderInventoryBox(renderer);
 
+		rh.setTexture(TextureManager.EXPORT_FRONT.getTexture());
 		rh.setBounds(6F, 6F, 15F, 10, 10, 16);
 		rh.renderInventoryBox(renderer);
-
-		/*
-		 * / rh.setBounds(3F, 3F, 14F, 13, 13, 16); rh.renderInventoryBox(renderer); rh.setBounds(4F, 4F, 12F, 12, 12, 14); rh.renderInventoryBox(renderer); rh.setBounds(5F, 5F, 10F, 11, 11, 12); rh.renderInventoryBox(renderer); rh.setBounds(4F, 4F, 8F, 10, 10, 10); rh.renderInventoryBox(renderer); //
-		 */
 	}
 
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(Block.stone.getIcon(0, 0));
 		rh.useSimpliedRendering(x, y, z, this);
 
+		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(4F, 4F, 12F, 12, 12, 14);
 		rh.renderBlock(x, y, z, renderer);
 
 		rh.setBounds(5F, 5F, 14F, 11, 11, 15);
 		rh.renderBlock(x, y, z, renderer);
 
+		rh.setTexture(TextureManager.EXPORT_FRONT.getTexture());
 		rh.setBounds(6F, 6F, 15F, 10, 10, 16);
 		rh.renderBlock(x, y, z, renderer);
 	}
@@ -127,6 +124,8 @@ public class PartFluidExport extends ECBasePart implements IGridTickable, IActio
 			return false;
 
 		IAEFluidStack stack = monitor.extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.WATER, 250)), Actionable.SIMULATE, new MachineSource(this));
+		if (stack == null)
+			return false;
 		int filled = facingTank.fill(side.getOpposite(), stack.getFluidStack(), true);
 
 		if (filled > 0)

@@ -6,11 +6,13 @@ import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
+import extracells.TextureManager;
 import extracells.inventoryHandler.StorageBusHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import java.io.DataInputStream;
@@ -19,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartFluidStorage extends ECBasePart implements ICellContainer
+public class PartFluidStorage extends PartECBase implements ICellContainer
 {
 	int priority = 0;
 	IFluidHandler facingTank;
@@ -27,7 +29,8 @@ public class PartFluidStorage extends ECBasePart implements ICellContainer
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(Block.stone.getIcon(0, 0));
+		Icon side = TextureManager.BUS_SIDE.getTexture();
+		rh.setTexture(side, side, side, side, side, TextureManager.STORAGE_FRONT.getTexture());
 		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
 		rh.renderInventoryBox(renderer);
 	}
@@ -118,6 +121,6 @@ public class PartFluidStorage extends ECBasePart implements ICellContainer
 		facingTank = null;
 		if (tileEntity instanceof IFluidHandler)
 			facingTank = (IFluidHandler) tileEntity;
-//		node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getMonitor(), StorageChannel.FLUIDS));
+		// node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getMonitor(), StorageChannel.FLUIDS));
 	}
 }

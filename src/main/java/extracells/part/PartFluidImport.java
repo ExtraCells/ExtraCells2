@@ -12,6 +12,7 @@ import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
+import extracells.TextureManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +26,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class PartFluidImport extends ECBasePart implements IGridTickable, IActionHost
+public class PartFluidImport extends PartECBase implements IGridTickable, IActionHost
 {
 	IFluidHandler facingTank;
 
@@ -34,9 +35,11 @@ public class PartFluidImport extends ECBasePart implements IGridTickable, IActio
 	{
 		rh.setTexture(Block.stone.getIcon(0, 0));
 
+		rh.setTexture(TextureManager.IMPORT_FRONT.getTexture());
 		rh.setBounds(4F, 4F, 15F, 12, 12, 16);
 		rh.renderInventoryBox(renderer);
 
+		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(5F, 5F, 14F, 11, 11, 15);
 		rh.renderInventoryBox(renderer);
 
@@ -50,9 +53,11 @@ public class PartFluidImport extends ECBasePart implements IGridTickable, IActio
 		rh.setTexture(Block.stone.getIcon(0, 0));
 		rh.useSimpliedRendering(x, y, z, this);
 
+		rh.setTexture(TextureManager.IMPORT_FRONT.getTexture());
 		rh.setBounds(4F, 4F, 15F, 12, 12, 16);
 		rh.renderBlock(x, y, z, renderer);
 
+		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(5F, 5F, 14F, 11, 11, 15);
 		rh.renderBlock(x, y, z, renderer);
 

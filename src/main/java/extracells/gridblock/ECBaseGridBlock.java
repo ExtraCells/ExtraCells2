@@ -6,7 +6,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
-import extracells.part.ECBasePart;
+import extracells.part.PartECBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -20,9 +20,9 @@ public class ECBaseGridBlock implements IGridBlock
 	protected AEColor color;
 	protected IGrid grid;
 	protected int usedChannels;
-	protected ECBasePart host;
+	protected PartECBase host;
 
-	public ECBaseGridBlock(ECBasePart _host)
+	public ECBaseGridBlock(PartECBase _host)
 	{
 		host = _host;
 	}

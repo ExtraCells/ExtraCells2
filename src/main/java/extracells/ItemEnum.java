@@ -1,12 +1,12 @@
 package extracells;
 
-import extracells.item.ItemECBasePart;
+import extracells.item.ItemPartECBase;
 import net.minecraft.item.Item;
 import net.minecraft.util.StatCollector;
 
 public enum ItemEnum
 {
-	PARTITEM("item.part.base", 4140, ItemECBasePart.class, "The item used for all the bus parts", "ItemECBasePart");
+	PARTITEM("item.part.base", 4140, ItemPartECBase.class, "The item used for all the bus parts", "ItemPartECBase");
 
 	private final String internalName;
 	private String description, IDName;

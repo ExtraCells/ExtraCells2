@@ -8,7 +8,7 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import extracells.part.FluidStorage;
+import extracells.part.PartFluidStorage;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,13 +20,13 @@ import java.util.List;
 
 public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 {
-	private FluidStorage node;
+	private PartFluidStorage node;
 	private IFluidHandler tank;
 	private AccessRestriction access;
 	private List<Fluid> prioritizedFluids = new ArrayList<Fluid>();
 	private ForgeDirection orientation;
 
-	public StorageBusHandler(FluidStorage _node, IFluidHandler _tank, ForgeDirection _orientation)
+	public StorageBusHandler(PartFluidStorage _node, IFluidHandler _tank, ForgeDirection _orientation)
 	{
 		node = _node;
 		tank = _tank;
@@ -112,7 +112,7 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	@Override
 	public IItemList getAvailableItems(IItemList out)
 	{
-		if (tank == null)
+		if (tank != null)
 		{
 			FluidTankInfo[] infoArray = tank.getTankInfo(orientation.getOpposite());
 			if (infoArray != null && infoArray.length > 0)

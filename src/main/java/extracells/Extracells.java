@@ -1,5 +1,8 @@
 package extracells;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -7,15 +10,18 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import extracells.part.ECBasePart;
+import extracells.network.AbstractPacket;
+import extracells.network.PacketHandler;
+import extracells.part.PartECBase;
 import extracells.proxy.CommonProxy;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.Configuration;
 
 @Mod(modid = "extracells", name = "Extra Cells", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
+@NetworkMod(channels =
+{ AbstractPacket.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
+
 public class Extracells
 {
 	@Instance("extracells")
@@ -65,7 +71,7 @@ public class Extracells
 		proxy.RegisterRenderers();
 		proxy.RegisterTileEntities();
 		proxy.addRecipes();
-		ECBasePart.registerParts();
+		PartECBase.registerParts();
 		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
 	}
 

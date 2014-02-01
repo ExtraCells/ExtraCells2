@@ -1,11 +1,11 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.container.ContainerTerminalFluid;
+import extracells.container.ContainerFluidTerminal;
 import extracells.gui.widget.AbstractFluidWidget;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.WidgetFluidSelector;
-import extracells.part.FluidTerminal;
+import extracells.part.PartFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -24,19 +24,19 @@ public class GuiTerminalFluid extends GuiContainer
 {
 	public static final int xSize = 175;
 	public static final int ySize = 203;
-	private FluidTerminal terminal;
+	private PartFluidTerminal terminal;
 	private EntityPlayer player;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
-	private ContainerTerminalFluid containerTerminalFluid;
+	private ContainerFluidTerminal containerTerminalFluid;
 
-	public GuiTerminalFluid(FluidTerminal _terminal, EntityPlayer _player)
+	public GuiTerminalFluid(PartFluidTerminal _terminal, EntityPlayer _player)
 	{
-		super(new ContainerTerminalFluid(_terminal, _player));
-		containerTerminalFluid = (ContainerTerminalFluid) inventorySlots;
+		super(new ContainerFluidTerminal(_terminal, _player));
+		containerTerminalFluid = (ContainerFluidTerminal) inventorySlots;
 		containerTerminalFluid.setGui(this);
 		terminal = _terminal;
 		player = _player;
@@ -212,12 +212,12 @@ public class GuiTerminalFluid extends GuiContainer
 		return guiTop;
 	}
 
-	public FluidTerminal getTerminal()
+	public PartFluidTerminal getTerminal()
 	{
 		return terminal;
 	}
 
-	public ContainerTerminalFluid containerTerminalFluid()
+	public ContainerFluidTerminal containerTerminalFluid()
 	{
 		return containerTerminalFluid;
 	}

@@ -3,8 +3,8 @@ package extracells.part;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.container.ContainerTerminalFluid;
-import extracells.network.packet.PacketTerminalFluid;
+import extracells.container.ContainerFluidTerminal;
+import extracells.network.packet.PacketFluidTerminal;
 import extracells.util.ECPrivateInventory;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartFluidTerminal extends ECBasePart
+public class PartFluidTerminal extends PartECBase
 {
 	private Fluid currentFluid;
-	private List<ContainerTerminalFluid> containers = new ArrayList<ContainerTerminalFluid>();
+	private List<ContainerFluidTerminal> containers = new ArrayList<ContainerFluidTerminal>();
 	private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.fluid.terminal", 2, 64)
 	{
 		public boolean isItemValidForSlot(int i, ItemStack itemstack)
@@ -88,19 +88,19 @@ public class PartFluidTerminal extends ECBasePart
 	public void setCurrentFluid(Fluid _currentFluid)
 	{
 		currentFluid = _currentFluid;
-		for (ContainerTerminalFluid containerTerminalFluid : containers)
+		for (ContainerFluidTerminal containerTerminalFluid : containers)
 		{
-			PacketDispatcher.sendPacketToPlayer(new PacketTerminalFluid(currentFluid).makePacket(), containerTerminalFluid.getPlayer());
+			PacketDispatcher.sendPacketToPlayer(new PacketFluidTerminal(currentFluid).makePacket(), containerTerminalFluid.getPlayer());
 		}
 	}
 
-	public void addContainer(ContainerTerminalFluid containerTerminalFluid)
+	public void addContainer(ContainerFluidTerminal containerTerminalFluid)
 	{
 		containers.add(containerTerminalFluid);
-		PacketDispatcher.sendPacketToPlayer(new PacketTerminalFluid(currentFluid).makePacket(), containerTerminalFluid.getPlayer());
+		PacketDispatcher.sendPacketToPlayer(new PacketFluidTerminal(currentFluid).makePacket(), containerTerminalFluid.getPlayer());
 	}
 
-	public void removeContainer(ContainerTerminalFluid containerTerminalFluid)
+	public void removeContainer(ContainerFluidTerminal containerTerminalFluid)
 	{
 		containers.remove(containerTerminalFluid);
 	}
