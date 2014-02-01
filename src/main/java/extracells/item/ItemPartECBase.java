@@ -15,11 +15,11 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemECBasePart extends Item implements IPartItem
+public class ItemPartECBase extends Item implements IPartItem
 {
 	private static List<Class<? extends IPart>> ecParts = new ArrayList<Class<? extends IPart>>();
 
-	public ItemECBasePart(int itemId)
+	public ItemPartECBase(int itemId)
 	{
 		super(itemId);
 		setCreativeTab(Extracells.ModTab);

@@ -5,9 +5,11 @@ import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.parts.*;
 import appeng.api.util.AECableType;
+import extracells.Extracells;
 import extracells.ItemEnum;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.item.ItemECBasePart;
+import extracells.proxy.CommonProxy;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,7 +27,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-public abstract class ECBasePart implements IPart, IGridHost
+public abstract class PartECBase implements IPart, IGridHost
 {
 	protected IGridNode node;
 	protected ForgeDirection side;
@@ -153,7 +155,11 @@ public abstract class ECBasePart implements IPart, IGridHost
 	public abstract void getBoxes(IPartCollsionHelper bch);
 
 	@Override
-	public abstract boolean onActivate(EntityPlayer player, Vec3 pos);
+	public boolean onActivate(EntityPlayer player, Vec3 pos)
+	{
+		player.openGui(Extracells.instance, CommonProxy.getGuiId(this), hostTile.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
+		return true;
+	}
 
 	@Override
 	public boolean onShiftActivate(EntityPlayer player, Vec3 pos)
@@ -224,8 +230,9 @@ public abstract class ECBasePart implements IPart, IGridHost
 
 	public static void registerParts()
 	{
-		ItemECBasePart.registerPart(FluidExport.class);
-		ItemECBasePart.registerPart(FluidStorage.class);
-		ItemECBasePart.registerPart(FluidTerminal.class);
+		ItemECBasePart.registerPart(PartFluidExport.class);
+		ItemECBasePart.registerPart(PartFluidImport.class);
+		ItemECBasePart.registerPart(PartFluidStorage.class);
+		ItemECBasePart.registerPart(PartFluidTerminal.class);
 	}
 }

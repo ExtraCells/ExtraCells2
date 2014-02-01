@@ -1,5 +1,14 @@
 package extracells.container;
 
+import extracells.network.packet.PacketFluidTerminal;
+import extracells.part.PartFluidTerminal;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import appeng.api.AEApi;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEMonitor;
@@ -8,26 +17,19 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiTerminalFluid;
-import extracells.network.packet.PacketTerminalFluid;
-import extracells.part.FluidTerminal;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 
-public class ContainerTerminalFluid extends Container implements IMEMonitorHandlerReciever<IAEFluidStack>
+public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReciever<IAEFluidStack>
 {
-	private FluidTerminal terminal;
+	private PartFluidTerminal terminal;
 	private IMEMonitor<IAEFluidStack> monitor;
 	private IItemList<IAEFluidStack> fluidStackList = AEApi.instance().storage().createItemList();
 	private Fluid selectedFluid;
 	private EntityPlayer player;
 	private GuiTerminalFluid guiTerminalFluid;
 
-	public ContainerTerminalFluid(FluidTerminal _terminal, EntityPlayer _player)
+	public ContainerFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player)
 	{
 		terminal = _terminal;
 		player = _player;
@@ -35,14 +37,17 @@ public class ContainerTerminalFluid extends Container implements IMEMonitorHandl
 		{
 			monitor = terminal.getGridBlock().getMonitor();
 			if (monitor != null)
+			{
 				monitor.addListener(this, null);
+				fluidStackList = monitor.getStorageList();
+			}
 			terminal.addContainer(this);
-		}/*/
+		}
+
 		// Input Slot accepts all FluidContainers
 		addSlotToContainer(new SlotRespective(terminal.getInventory(), 0, 8, 74));
 		// Input Slot accepts nothing
-		addSlotToContainer(new SlotFurnace(player, terminal.getInventory(), 1, 26, 74));//*/
-
+		addSlotToContainer(new SlotFurnace(player, terminal.getInventory(), 1, 26, 74));
 		bindPlayerInventory(player.inventory);
 	}
 
@@ -93,7 +98,7 @@ public class ContainerTerminalFluid extends Container implements IMEMonitorHandl
 	public void postChange(IMEMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource)
 	{
 		fluidStackList = monitor.getStorageList();
-		PacketDispatcher.sendPacketToPlayer(new PacketTerminalFluid(fluidStackList).makePacket(), (Player) player);
+		PacketDispatcher.sendPacketToPlayer(new PacketFluidTerminal(fluidStackList).makePacket(), (Player) player);
 	}
 
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList)
@@ -115,7 +120,7 @@ public class ContainerTerminalFluid extends Container implements IMEMonitorHandl
 			guiTerminalFluid.updateSelectedFluid();
 		} else
 		{
-			PacketDispatcher.sendPacketToServer(new PacketTerminalFluid(selectedFluid, terminal).makePacket());
+			PacketDispatcher.sendPacketToServer(new PacketFluidTerminal(selectedFluid, terminal).makePacket());
 		}
 	}
 

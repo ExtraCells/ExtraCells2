@@ -10,7 +10,7 @@ import cpw.mods.fml.relauncher.Side;
 import extracells.container.ContainerTerminalFluid;
 import extracells.gui.GuiTerminalFluid;
 import extracells.network.AbstractPacket;
-import extracells.part.FluidTerminal;
+import extracells.part.PartFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,31 +20,31 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class PacketTerminalFluid extends AbstractPacket
+public class PacketFluidTerminal extends AbstractPacket
 {
 	IItemList<IAEFluidStack> fluidStackList;
 	byte mode;
 	Fluid currentFluid;
-	FluidTerminal terminalFluid;
+	PartFluidTerminal terminalFluid;
 
-	public PacketTerminalFluid(IItemList<IAEFluidStack> _list)
+	public PacketFluidTerminal(IItemList<IAEFluidStack> _list)
 	{
 		mode = 0;
 		fluidStackList = _list;
 	}
 
-	public PacketTerminalFluid()
+	public PacketFluidTerminal()
 	{
 	}
 
-	public PacketTerminalFluid(Fluid _currentFluid, FluidTerminal _terminalFluid)
+	public PacketFluidTerminal(Fluid _currentFluid, PartFluidTerminal _terminalFluid)
 	{
 		mode = 1;
 		currentFluid = _currentFluid;
 		terminalFluid = _terminalFluid;
 	}
 
-	public PacketTerminalFluid(Fluid _currentFluid)
+	public PacketFluidTerminal(Fluid _currentFluid)
 	{
 		mode = 2;
 		currentFluid = _currentFluid;
@@ -97,7 +97,7 @@ public class PacketTerminalFluid extends AbstractPacket
 			break;
 		case 1:
 			currentFluid = FluidRegistry.getFluid(in.readInt());
-			terminalFluid = (FluidTerminal) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
+			terminalFluid = (PartFluidTerminal) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
 			break;
 		case 2:
 			currentFluid = FluidRegistry.getFluid(in.readInt());

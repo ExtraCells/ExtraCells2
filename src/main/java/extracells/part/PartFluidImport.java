@@ -2,11 +2,9 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
-import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
@@ -20,7 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -28,7 +25,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class FluidExport extends ECBasePart implements IGridTickable, IActionHost
+public class PartFluidImport extends ECBasePart implements IGridTickable, IActionHost
 {
 	IFluidHandler facingTank;
 
@@ -37,18 +34,14 @@ public class FluidExport extends ECBasePart implements IGridTickable, IActionHos
 	{
 		rh.setTexture(Block.stone.getIcon(0, 0));
 
-		rh.setBounds(4F, 4F, 12F, 12, 12, 14);
+		rh.setBounds(4F, 4F, 15F, 12, 12, 16);
 		rh.renderInventoryBox(renderer);
 
 		rh.setBounds(5F, 5F, 14F, 11, 11, 15);
 		rh.renderInventoryBox(renderer);
 
-		rh.setBounds(6F, 6F, 15F, 10, 10, 16);
+		rh.setBounds(6F, 6F, 12F, 10, 10, 14);
 		rh.renderInventoryBox(renderer);
-
-		/*
-		 * / rh.setBounds(3F, 3F, 14F, 13, 13, 16); rh.renderInventoryBox(renderer); rh.setBounds(4F, 4F, 12F, 12, 12, 14); rh.renderInventoryBox(renderer); rh.setBounds(5F, 5F, 10F, 11, 11, 12); rh.renderInventoryBox(renderer); rh.setBounds(4F, 4F, 8F, 10, 10, 10); rh.renderInventoryBox(renderer); //
-		 */
 	}
 
 	@Override
@@ -57,18 +50,14 @@ public class FluidExport extends ECBasePart implements IGridTickable, IActionHos
 		rh.setTexture(Block.stone.getIcon(0, 0));
 		rh.useSimpliedRendering(x, y, z, this);
 
-		rh.setBounds(4F, 4F, 12F, 12, 12, 14);
+		rh.setBounds(4F, 4F, 15F, 12, 12, 16);
 		rh.renderBlock(x, y, z, renderer);
 
 		rh.setBounds(5F, 5F, 14F, 11, 11, 15);
 		rh.renderBlock(x, y, z, renderer);
 
-		rh.setBounds(6F, 6F, 15F, 10, 10, 16);
+		rh.setBounds(6F, 6F, 12F, 10, 10, 14);
 		rh.renderBlock(x, y, z, renderer);
-
-		/*
-		 * / rh.setBounds(3F, 3F, 14F, 13, 13, 16); rh.renderBlock(x, y, z, renderer); rh.setBounds(4F, 4F, 12F, 12, 12, 14); rh.renderBlock(x, y, z, renderer); rh.setBounds(5F, 5F, 10F, 11, 11, 12); rh.renderBlock(x, y, z, renderer); rh.setBounds(6F, 6F, 8F, 10, 10, 10); rh.renderBlock(x, y, z, renderer); //
-		 */
 	}
 
 	@Override
@@ -103,12 +92,9 @@ public class FluidExport extends ECBasePart implements IGridTickable, IActionHos
 	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
-		bch.addBox(4F, 4F, 12F, 12, 12, 14);
+		bch.addBox(4F, 4F, 15F, 12, 12, 16);
 		bch.addBox(5F, 5F, 14F, 11, 11, 15);
-		bch.addBox(6F, 6F, 15F, 10, 10, 16);
-		/*
-		 * / bch.addBox(3F, 3F, 14F, 13, 13, 16); bch.addBox(4F, 4F, 12F, 12, 12, 14); bch.addBox(5F, 5F, 10F, 11, 11, 12); bch.addBox(6F, 6F, 8F, 10, 10, 10);//
-		 */
+		bch.addBox(6F, 6F, 12F, 10, 10, 14);
 	}
 
 	@Override
@@ -137,21 +123,43 @@ public class FluidExport extends ECBasePart implements IGridTickable, IActionHos
 
 	public boolean doWork()
 	{
-		if (node == null)
+		if (gridBlock == null || facingTank == null)
 			return false;
-		IGrid grid = node.getGrid();
-		if (grid == null)
-			return false;
-		IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-		if (storageGrid == null)
-			return false;
-		IMEMonitor<IAEFluidStack> monitor = storageGrid.getFluidInventory();
+		IMEMonitor<IAEFluidStack> monitor = gridBlock.getMonitor();
 		if (monitor == null)
 			return false;
-		IAEFluidStack stack = monitor.extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.WATER, 1000)), Actionable.MODULATE, new MachineSource(this));
-		if (stack != null)
+
+		FluidStack drained = facingTank.drain(side.getOpposite(), 250, false);
+
+		if (drained == null)
+			return false;
+
+		IAEFluidStack toFill = AEApi.instance().storage().createFluidStack(drained);
+		IAEFluidStack notInjected = monitor.injectItems(toFill, Actionable.MODULATE, new MachineSource(this));
+
+		if (notInjected != null)
+		{
+			int amount = (int) (toFill.getStackSize() - notInjected.getStackSize());
+			if (amount > 0)
+			{
+				facingTank.drain(side.getOpposite(), amount, true);
+				return true;
+			} else
+			{
+				return false;
+			}
+		} else
+		{
+			facingTank.drain(side.getOpposite(), toFill.getFluidStack(), true);
 			return true;
-		return false;
+		}
+	}
+
+	@Override
+	public void addToWorld()
+	{
+		super.addToWorld();
+		onNeighborChanged();
 	}
 
 	@Override

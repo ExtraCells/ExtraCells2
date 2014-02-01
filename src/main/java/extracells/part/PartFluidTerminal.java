@@ -3,17 +3,14 @@ package extracells.part;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import extracells.Extracells;
 import extracells.container.ContainerTerminalFluid;
 import extracells.network.packet.PacketTerminalFluid;
 import extracells.util.ECPrivateInventory;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -24,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidTerminal extends ECBasePart
+public class PartFluidTerminal extends ECBasePart
 {
 	private Fluid currentFluid;
 	private List<ContainerTerminalFluid> containers = new ArrayList<ContainerTerminalFluid>();
@@ -80,13 +77,6 @@ public class FluidTerminal extends ECBasePart
 	public void getBoxes(IPartCollsionHelper bch)
 	{
 		bch.addBox(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
-	}
-
-	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos)
-	{
-		player.openGui(Extracells.instance, 0, hostTile.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
-		return true;
 	}
 
 	@Override

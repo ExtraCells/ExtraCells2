@@ -9,11 +9,8 @@ import appeng.api.storage.StorageChannel;
 import extracells.inventoryHandler.StorageBusHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import java.io.DataInputStream;
@@ -22,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidStorage extends ECBasePart implements ICellContainer
+public class PartFluidStorage extends ECBasePart implements ICellContainer
 {
 	int priority = 0;
 	IFluidHandler facingTank;
@@ -74,13 +71,6 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos)
-	{
-		player.sendChatToPlayer(new ChatMessageComponent().addText("YAYA"));
-		return true;
-	}
-
-	@Override
 	public int cableConnectionRenderTo()
 	{
 		return 1;
@@ -115,11 +105,19 @@ public class FluidStorage extends ECBasePart implements ICellContainer
 	}
 
 	@Override
+	public void addToWorld()
+	{
+		super.addToWorld();
+		onNeighborChanged();
+	}
+
+	@Override
 	public void onNeighborChanged()
 	{
 		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
 		facingTank = null;
 		if (tileEntity instanceof IFluidHandler)
 			facingTank = (IFluidHandler) tileEntity;
+//		node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getMonitor(), StorageChannel.FLUIDS));
 	}
 }
