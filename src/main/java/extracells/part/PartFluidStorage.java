@@ -1,6 +1,7 @@
 package extracells.part;
 
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
@@ -13,7 +14,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
-import net.minecraftforge.fluids.IFluidHandler;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,7 +24,7 @@ import java.util.List;
 public class PartFluidStorage extends PartECBase implements ICellContainer
 {
 	int priority = 0;
-	IFluidHandler facingTank;
+	StorageBusHandler handler = new StorageBusHandler(this);
 
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
@@ -85,7 +85,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
 		if (channel == StorageChannel.FLUIDS)
 		{
-			list.add(new StorageBusHandler(this, facingTank, side));
+			list.add(handler);
 		}
 		return list;
 	}
@@ -108,19 +108,15 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	}
 
 	@Override
-	public void addToWorld()
-	{
-		super.addToWorld();
-		onNeighborChanged();
-	}
-
-	@Override
 	public void onNeighborChanged()
 	{
-		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
-		facingTank = null;
-		if (tileEntity instanceof IFluidHandler)
-			facingTank = (IFluidHandler) tileEntity;
-		// node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getMonitor(), StorageChannel.FLUIDS));
+		handler.onNeighborChange();
+		if (node != null && node.getGrid() != null && gridBlock != null)
+			node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getMonitor(), StorageChannel.FLUIDS));
+	}
+
+	public TileEntity getHostTile()
+	{
+		return hostTile;
 	}
 }

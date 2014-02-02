@@ -12,6 +12,7 @@ import extracells.gui.GuiTerminalFluid;
 import extracells.item.ItemPartECBase;
 import extracells.part.PartECBase;
 import extracells.part.PartFluidTerminal;
+import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -46,8 +47,9 @@ public class CommonProxy implements IGuiHandler
 	{
 	}
 
-	public void RegisterTileEntities()
+	public void registerTileEntities()
 	{
+		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
 	}
 
 	public void RegisterRenderers()

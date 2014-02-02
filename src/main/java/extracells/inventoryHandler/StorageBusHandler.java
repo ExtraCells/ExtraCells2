@@ -9,6 +9,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.part.PartFluidStorage;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,13 +25,10 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	private IFluidHandler tank;
 	private AccessRestriction access;
 	private List<Fluid> prioritizedFluids = new ArrayList<Fluid>();
-	private ForgeDirection orientation;
 
-	public StorageBusHandler(PartFluidStorage _node, IFluidHandler _tank, ForgeDirection _orientation)
+	public StorageBusHandler(PartFluidStorage _node)
 	{
 		node = _node;
-		tank = _tank;
-		orientation = _orientation;
 	}
 
 	@Override
@@ -55,7 +53,7 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	{
 		if (tank == null)
 			return false;
-		FluidTankInfo[] infoArray = tank.getTankInfo(orientation.getOpposite());
+		FluidTankInfo[] infoArray = tank.getTankInfo(node.getSide().getOpposite());
 		if (infoArray != null && infoArray.length > 0)
 		{
 			FluidTankInfo info = infoArray[0];
@@ -80,10 +78,11 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	@Override
 	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src)
 	{
+		System.out.println("YoY");
 		if (tank == null || input == null)
 			return input;
 		FluidStack toFill = input.getFluidStack();
-		int filled = tank.fill(orientation.getOpposite(), toFill.copy(), mode == Actionable.MODULATE);
+		int filled = tank.fill(node.getSide().getOpposite(), toFill.copy(), mode == Actionable.MODULATE);
 		if (filled == toFill.amount)
 			return null;
 		return AEApi.instance().storage().createFluidStack(new FluidStack(toFill.fluidID, toFill.amount - filled));
@@ -92,10 +91,12 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	@Override
 	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src)
 	{
+		System.out.println(tank + " " + request);
 		if (tank == null || request == null)
 			return null;
 		FluidStack toDrain = request.getFluidStack();
-		FluidStack drained = tank.drain(orientation.getOpposite(), toDrain.copy(), mode == Actionable.MODULATE);
+		FluidStack drained = tank.drain(node.getSide().getOpposite(), toDrain.copy(), mode == Actionable.MODULATE);
+
 		if (drained != null)
 		{
 			int amount = drained.amount;
@@ -114,7 +115,7 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	{
 		if (tank != null)
 		{
-			FluidTankInfo[] infoArray = tank.getTankInfo(orientation.getOpposite());
+			FluidTankInfo[] infoArray = tank.getTankInfo(node.getSide().getOpposite());
 			if (infoArray != null && infoArray.length > 0)
 				out.add(AEApi.instance().storage().createFluidStack(infoArray[0].fluid));
 		}
@@ -125,5 +126,15 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	public StorageChannel getChannel()
 	{
 		return StorageChannel.FLUIDS;
+	}
+
+	public void onNeighborChange()
+	{
+		ForgeDirection orientation = node.getSide();
+		TileEntity hostTile = node.getHostTile();
+		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord + orientation.offsetX, hostTile.yCoord + orientation.offsetY, hostTile.zCoord + orientation.offsetZ);
+		tank = null;
+		if (tileEntity instanceof IFluidHandler)
+			tank = (IFluidHandler) tileEntity;
 	}
 }

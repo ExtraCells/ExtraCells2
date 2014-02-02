@@ -20,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -36,6 +37,7 @@ public abstract class PartECBase implements IPart, IGridHost
 	protected ECBaseGridBlock gridBlock;
 	protected double powerUsage;
 	protected TileEntity hostTile;
+	protected IFluidHandler facingTank;
 
 	@Override
 	public ItemStack getItemStack(PartItemStack type)
@@ -91,8 +93,20 @@ public abstract class PartECBase implements IPart, IGridHost
 	}
 
 	@Override
+	public void addToWorld()
+	{
+		gridBlock = new ECBaseGridBlock(this);
+		node = AEApi.instance().createGridNode(gridBlock);
+		onNeighborChanged();
+	}
+
+	@Override
 	public void onNeighborChanged()
 	{
+		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord + side.offsetX, hostTile.yCoord + side.offsetY, hostTile.zCoord + side.offsetZ);
+		facingTank = null;
+		if (tileEntity instanceof IFluidHandler)
+			facingTank = (IFluidHandler) tileEntity;
 	}
 
 	@Override
@@ -127,13 +141,7 @@ public abstract class PartECBase implements IPart, IGridHost
 	@Override
 	public void removeFromWorld()
 	{
-	}
-
-	@Override
-	public void addToWorld()
-	{
-		gridBlock = new ECBaseGridBlock(this);
-		node = AEApi.instance().createGridNode(gridBlock);
+		node.destroy();
 	}
 
 	@Override

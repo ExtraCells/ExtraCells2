@@ -1,10 +1,13 @@
 package extracells.proxy;
 
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
-import extracells.TextureManager;
 import net.minecraftforge.event.ForgeSubscribe;
+import extracells.BlockEnum;
+import extracells.TextureManager;
+import extracells.render.item.ItemRendererCertusTank;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy
@@ -17,6 +20,7 @@ public class ClientProxy extends CommonProxy
 
 	public void RegisterRenderers()
 	{
+		MinecraftForgeClient.registerItemRenderer(BlockEnum.CERTUSTANK.getBlockInstance().blockID, new ItemRendererCertusTank());
 	}
 
 	@ForgeSubscribe

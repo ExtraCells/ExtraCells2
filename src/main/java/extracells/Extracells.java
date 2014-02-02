@@ -1,8 +1,10 @@
 package extracells;
 
+import extracells.render.RenderHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -21,7 +23,6 @@ import extracells.proxy.CommonProxy;
 @Mod(modid = "extracells", name = "Extra Cells", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
 @NetworkMod(channels =
 { AbstractPacket.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
-
 public class Extracells
 {
 	@Instance("extracells")
@@ -37,6 +38,8 @@ public class Extracells
 
 	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
 	public static CommonProxy proxy;
+
+	public static int renderID;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -69,10 +72,11 @@ public class Extracells
 		proxy.RegisterItems();
 		proxy.RegisterBlocks();
 		proxy.RegisterRenderers();
-		proxy.RegisterTileEntities();
+		proxy.registerTileEntities();
 		proxy.addRecipes();
 		PartECBase.registerParts();
 		LanguageRegistry.instance().addStringLocalization("itemGroup.Extra_Cells", "en_US", "Extra Cells");
+		RenderingRegistry.registerBlockHandler(new RenderHandler(renderID = RenderingRegistry.getNextAvailableRenderId()));
 	}
 
 	@EventHandler

@@ -17,10 +17,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -28,7 +27,6 @@ import java.io.IOException;
 
 public class PartFluidImport extends PartECBase implements IGridTickable, IActionHost
 {
-	IFluidHandler facingTank;
 
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
@@ -134,8 +132,7 @@ public class PartFluidImport extends PartECBase implements IGridTickable, IActio
 		if (monitor == null)
 			return false;
 
-		FluidStack drained = facingTank.drain(side.getOpposite(), 250, false);
-
+		FluidStack drained = facingTank.drain(ForgeDirection.DOWN, 250, true);
 		if (drained == null)
 			return false;
 
@@ -158,22 +155,6 @@ public class PartFluidImport extends PartECBase implements IGridTickable, IActio
 			facingTank.drain(side.getOpposite(), toFill.getFluidStack(), true);
 			return true;
 		}
-	}
-
-	@Override
-	public void addToWorld()
-	{
-		super.addToWorld();
-		onNeighborChanged();
-	}
-
-	@Override
-	public void onNeighborChanged()
-	{
-		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
-		facingTank = null;
-		if (tileEntity instanceof IFluidHandler)
-			facingTank = (IFluidHandler) tileEntity;
 	}
 
 	@Override

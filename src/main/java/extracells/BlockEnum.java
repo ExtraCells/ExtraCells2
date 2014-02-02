@@ -3,10 +3,10 @@ package extracells;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
-
+import extracells.item.ItemBlockCertusTank;
 public enum BlockEnum
 {
-	;
+	CERTUSTANK("tile.block.certustank.name", 509, extracells.block.BlockCertusTank.class, ItemBlockCertusTank.class, "ID for the ME Certus Tank", "CertusTank");
 	private final String internalName;
 	private String description, IDName;
 	private int ID;

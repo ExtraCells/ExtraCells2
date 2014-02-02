@@ -15,10 +15,8 @@ import appeng.api.storage.data.IAEFluidStack;
 import extracells.TextureManager;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,7 +24,6 @@ import java.io.IOException;
 
 public class PartFluidExport extends PartECBase implements IGridTickable, IActionHost
 {
-	IFluidHandler facingTank;
 
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
@@ -136,22 +133,6 @@ public class PartFluidExport extends PartECBase implements IGridTickable, IActio
 		{
 			return false;
 		}
-	}
-
-	@Override
-	public void addToWorld()
-	{
-		super.addToWorld();
-		onNeighborChanged();
-	}
-
-	@Override
-	public void onNeighborChanged()
-	{
-		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
-		facingTank = null;
-		if (tileEntity instanceof IFluidHandler)
-			facingTank = (IFluidHandler) tileEntity;
 	}
 
 	@Override
