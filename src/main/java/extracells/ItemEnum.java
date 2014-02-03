@@ -1,12 +1,14 @@
 package extracells;
 
 import extracells.item.ItemPartECBase;
+import extracells.item.ItemStorageFluid;
 import net.minecraft.item.Item;
 import net.minecraft.util.StatCollector;
 
 public enum ItemEnum
 {
-	PARTITEM("item.part.base", 4140, ItemPartECBase.class, "The item used for all the bus parts", "ItemPartECBase");
+	PARTITEM("item.part.base", 4140, ItemPartECBase.class, "The item used for all the bus parts", "ItemPartECBase"),
+	FLUIDSTORAGE("item.storage.fluid", 4140, ItemStorageFluid.class, "The item used for the Fluid Storages", "ItemStorageFluid");
 
 	private final String internalName;
 	private String description, IDName;

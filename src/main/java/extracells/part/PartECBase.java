@@ -1,9 +1,14 @@
 package extracells.part;
 
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.*;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.Extracells;
 import extracells.ItemEnum;
@@ -28,7 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-public abstract class PartECBase implements IPart, IGridHost
+public abstract class PartECBase implements IPart, IGridHost, IActionHost
 {
 	protected IGridNode node;
 	protected ForgeDirection side;
@@ -38,6 +43,7 @@ public abstract class PartECBase implements IPart, IGridHost
 	protected double powerUsage;
 	protected TileEntity hostTile;
 	protected IFluidHandler facingTank;
+	protected boolean hasRedstonePower;
 
 	@Override
 	public ItemStack getItemStack(PartItemStack type)
@@ -103,10 +109,17 @@ public abstract class PartECBase implements IPart, IGridHost
 	@Override
 	public void onNeighborChanged()
 	{
-		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord + side.offsetX, hostTile.yCoord + side.offsetY, hostTile.zCoord + side.offsetZ);
+		if (hostTile == null)
+			return;
+		World world = hostTile.getWorldObj();
+		int x = hostTile.xCoord;
+		int y = hostTile.yCoord;
+		int z = hostTile.zCoord;
+		TileEntity tileEntity = world.getBlockTileEntity(x + side.offsetX, y + side.offsetY, z + side.offsetZ);
 		facingTank = null;
 		if (tileEntity instanceof IFluidHandler)
 			facingTank = (IFluidHandler) tileEntity;
+		hasRedstonePower = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
 	}
 
 	@Override
@@ -141,7 +154,8 @@ public abstract class PartECBase implements IPart, IGridHost
 	@Override
 	public void removeFromWorld()
 	{
-		node.destroy();
+		if (node != null)
+			node.destroy();
 	}
 
 	@Override
@@ -242,5 +256,31 @@ public abstract class PartECBase implements IPart, IGridHost
 		ItemPartECBase.registerPart(PartFluidImport.class);
 		ItemPartECBase.registerPart(PartFluidStorage.class);
 		ItemPartECBase.registerPart(PartFluidTerminal.class);
+	}
+
+	@Override
+	public final IGridNode getActionableNode()
+	{
+		return node;
+	}
+
+	protected final IAEFluidStack injectFluid(IAEFluidStack toInject, Actionable action)
+	{
+		if (gridBlock == null || facingTank == null)
+			return null;
+		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
+		if (monitor == null)
+			return null;
+		return monitor.injectItems(toInject, action, new MachineSource(this));
+	}
+
+	protected final IAEFluidStack extractFluid(IAEFluidStack toExtract, Actionable action)
+	{
+		if (gridBlock == null || facingTank == null)
+			return null;
+		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
+		if (monitor == null)
+			return null;
+		return monitor.extractItems(toExtract, action, new MachineSource(this));
 	}
 }

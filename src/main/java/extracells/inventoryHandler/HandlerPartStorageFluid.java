@@ -19,14 +19,14 @@ import net.minecraftforge.fluids.IFluidHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
+public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStack>
 {
 	private PartFluidStorage node;
 	private IFluidHandler tank;
 	private AccessRestriction access;
 	private List<Fluid> prioritizedFluids = new ArrayList<Fluid>();
 
-	public StorageBusHandler(PartFluidStorage _node)
+	public HandlerPartStorageFluid(PartFluidStorage _node)
 	{
 		node = _node;
 	}
@@ -78,7 +78,6 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	@Override
 	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src)
 	{
-		System.out.println("YoY");
 		if (tank == null || input == null)
 			return input;
 		FluidStack toFill = input.getFluidStack();
@@ -91,7 +90,6 @@ public class StorageBusHandler implements IMEInventoryHandler<IAEFluidStack>
 	@Override
 	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src)
 	{
-		System.out.println(tank + " " + request);
 		if (tank == null || request == null)
 			return null;
 		FluidStack toDrain = request.getFluidStack();

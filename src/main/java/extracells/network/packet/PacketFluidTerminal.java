@@ -74,7 +74,7 @@ public class PacketFluidTerminal extends AbstractPacket
 			out.writeByte(terminalFluid.getSide().ordinal());
 			break;
 		case 2:
-			out.writeInt(currentFluid.getID());
+			out.writeInt(currentFluid != null ? currentFluid.getID() : -1);
 			break;
 		}
 	}
@@ -100,7 +100,8 @@ public class PacketFluidTerminal extends AbstractPacket
 			terminalFluid = (PartFluidTerminal) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
 			break;
 		case 2:
-			currentFluid = FluidRegistry.getFluid(in.readInt());
+			int fluidID = in.readInt();
+			currentFluid = fluidID > 0 ? FluidRegistry.getFluid(fluidID) : null;
 			break;
 		}
 	}

@@ -1,6 +1,5 @@
 package extracells.part;
 
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
@@ -8,8 +7,7 @@ import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import extracells.TextureManager;
-import extracells.inventoryHandler.StorageBusHandler;
-import net.minecraft.block.Block;
+import extracells.inventoryHandler.HandlerPartStorageFluid;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -24,22 +22,27 @@ import java.util.List;
 public class PartFluidStorage extends PartECBase implements ICellContainer
 {
 	int priority = 0;
-	StorageBusHandler handler = new StorageBusHandler(this);
+	HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
 
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
 		Icon side = TextureManager.BUS_SIDE.getTexture();
-		rh.setTexture(side, side, side, side, side, TextureManager.STORAGE_FRONT.getTexture());
+		rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
 		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
+		rh.renderInventoryBox(renderer);
+		rh.setBounds(4.0F, 4.0F, 14.0F, 12.0F, 12.0F, 15.0F);
 		rh.renderInventoryBox(renderer);
 	}
 
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(Block.stone.getIcon(0, 0));
+		Icon side = TextureManager.BUS_SIDE.getTexture();
+		rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
 		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
+		rh.renderBlock(x, y, z, renderer);
+		rh.setBounds(4.0F, 4.0F, 14.0F, 12.0F, 12.0F, 15.0F);
 		rh.renderBlock(x, y, z, renderer);
 	}
 
@@ -76,7 +79,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	@Override
 	public int cableConnectionRenderTo()
 	{
-		return 1;
+		return 2;
 	}
 
 	@Override
@@ -102,17 +105,11 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	}
 
 	@Override
-	public IGridNode getActionableNode()
-	{
-		return null;
-	}
-
-	@Override
 	public void onNeighborChanged()
 	{
 		handler.onNeighborChange();
 		if (node != null && node.getGrid() != null && gridBlock != null)
-			node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getMonitor(), StorageChannel.FLUIDS));
+			node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getFluidMonitor(), StorageChannel.FLUIDS));
 	}
 
 	public TileEntity getHostTile()

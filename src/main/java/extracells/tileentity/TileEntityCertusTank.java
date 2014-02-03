@@ -78,7 +78,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
 	{
-		if (tank.getFluid() == null)
+		if (tank.getFluid() == null || resource == null || resource.fluidID != tank.getFluid().fluidID)
 			return null;
 
 		return drain(resource, doDrain, true);
@@ -205,7 +205,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 	{
 		if (!goToMainTank)
 			return new FluidTankInfo[]
-					{ tank.getInfo() };
+			{ tank.getInfo() };
 
 		int amount = 0, capacity = 0;
 		Fluid fluid = null;
@@ -257,7 +257,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 		}
 
 		return new FluidTankInfo[]
-				{ new FluidTankInfo(fluid != null ? new FluidStack(fluid, amount) : null, capacity) };
+		{ new FluidTankInfo(fluid != null ? new FluidStack(fluid, amount) : null, capacity) };
 	}
 
 	public Fluid getFluid()
@@ -278,20 +278,17 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler
 				{
 					PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 					lastBeforeUpdate = current.copy();
-				}
-				else if (lastBeforeUpdate.amount < tank.getCapacity() && current.amount == tank.getCapacity() || lastBeforeUpdate.amount == tank.getCapacity() && current.amount < tank.getCapacity())
+				} else if (lastBeforeUpdate.amount < tank.getCapacity() && current.amount == tank.getCapacity() || lastBeforeUpdate.amount == tank.getCapacity() && current.amount < tank.getCapacity())
 				{
 					PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 					lastBeforeUpdate = current.copy();
 				}
-			}
-			else
+			} else
 			{
 				PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 				lastBeforeUpdate = current.copy();
 			}
-		}
-		else if (lastBeforeUpdate != null)
+		} else if (lastBeforeUpdate != null)
 		{
 			PacketDispatcher.sendPacketToAllPlayers(getDescriptionPacket());
 			lastBeforeUpdate = null;

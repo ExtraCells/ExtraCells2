@@ -92,7 +92,7 @@ public class ECBaseGridBlock implements IGridBlock
 		return null;// TODO
 	}
 
-	public IMEMonitor<IAEFluidStack> getMonitor()
+	public IMEMonitor<IAEFluidStack> getFluidMonitor()
 	{
 		IGridNode node = host.getGridNode();
 		if (node == null)

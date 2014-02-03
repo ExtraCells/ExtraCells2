@@ -3,14 +3,11 @@ package extracells.part;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.TextureManager;
 import net.minecraft.block.Block;
@@ -19,13 +16,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class PartFluidImport extends PartECBase implements IGridTickable, IActionHost
+public class PartFluidImport extends PartECBase implements IGridTickable, IFluidHandler
 {
 
 	@Override
@@ -126,18 +126,15 @@ public class PartFluidImport extends PartECBase implements IGridTickable, IActio
 
 	public boolean doWork()
 	{
-		if (gridBlock == null || facingTank == null)
-			return false;
-		IMEMonitor<IAEFluidStack> monitor = gridBlock.getMonitor();
-		if (monitor == null)
+		if (facingTank == null)
 			return false;
 
-		FluidStack drained = facingTank.drain(ForgeDirection.DOWN, 250, true);
-		if (drained == null)
+		FluidStack drained = facingTank.drain(ForgeDirection.DOWN, 250, false);
+		if (drained == null || drained.amount <= 0 || drained.fluidID <= 0)
 			return false;
 
 		IAEFluidStack toFill = AEApi.instance().storage().createFluidStack(drained);
-		IAEFluidStack notInjected = monitor.injectItems(toFill, Actionable.MODULATE, new MachineSource(this));
+		IAEFluidStack notInjected = injectFluid(toFill, Actionable.MODULATE);
 
 		if (notInjected != null)
 		{
@@ -158,8 +155,47 @@ public class PartFluidImport extends PartECBase implements IGridTickable, IActio
 	}
 
 	@Override
-	public IGridNode getActionableNode()
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
 	{
-		return node;
+		if (resource == null)
+			return 0;
+
+		FluidStack toFill = new FluidStack(resource.fluidID, 20);// TODO mb/t
+		IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), Actionable.MODULATE);
+		if (filled == null)
+			return 20;
+		if (filled != null)
+			return toFill.amount - (int) filled.getStackSize();
+		return 0;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		return null;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid)
+	{
+		return false;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from)
+	{
+		return new FluidTankInfo[0];
 	}
 }

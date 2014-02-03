@@ -7,6 +7,9 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
+import extracells.item.ItemPartECBase;
+import extracells.network.packet.PacketFluidTerminal;
+import extracells.part.PartFluidTerminal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
 
@@ -19,6 +22,7 @@ public abstract class AbstractPacket
 	{
 		ImmutableBiMap.Builder<Integer, Class<? extends AbstractPacket>> builder = ImmutableBiMap.builder();
 
+		builder.put(Integer.valueOf(ItemPartECBase.getPartId(PartFluidTerminal.class)), PacketFluidTerminal.class);
 		idMap = builder.build();
 	}
 

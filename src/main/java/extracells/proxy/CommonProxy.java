@@ -94,7 +94,7 @@ public class CommonProxy implements IGuiHandler
 		IPart part = ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
 		switch (partId)
 		{
-		case 2:
+		case 3:
 			return new ContainerFluidTerminal((PartFluidTerminal) part, player);
 		default:
 			return null;
@@ -109,7 +109,7 @@ public class CommonProxy implements IGuiHandler
 		IPart part = ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
 		switch (partId)
 		{
-		case 2:
+		case 3:
 			return new GuiTerminalFluid((PartFluidTerminal) part, player);
 		default:
 			return null;

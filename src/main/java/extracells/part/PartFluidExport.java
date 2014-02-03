@@ -4,13 +4,11 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.TextureManager;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -114,30 +112,22 @@ public class PartFluidExport extends PartECBase implements IGridTickable, IActio
 
 	public boolean doWork()
 	{
-		if (gridBlock == null || facingTank == null)
-			return false;
-		IMEMonitor<IAEFluidStack> monitor = gridBlock.getMonitor();
-		if (monitor == null)
+		if (facingTank == null)
 			return false;
 
-		IAEFluidStack stack = monitor.extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.WATER, 250)), Actionable.SIMULATE, new MachineSource(this));
+		IAEFluidStack stack = extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.WATER, 250)), Actionable.SIMULATE);
+
 		if (stack == null)
 			return false;
 		int filled = facingTank.fill(side.getOpposite(), stack.getFluidStack(), true);
 
 		if (filled > 0)
 		{
-			monitor.extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.WATER, filled)), Actionable.MODULATE, new MachineSource(this));
+			extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.WATER, filled)), Actionable.MODULATE);
 			return true;
 		} else
 		{
 			return false;
 		}
-	}
-
-	@Override
-	public IGridNode getActionableNode()
-	{
-		return node;
 	}
 }

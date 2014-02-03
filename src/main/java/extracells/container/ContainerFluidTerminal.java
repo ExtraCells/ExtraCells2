@@ -35,7 +35,7 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 		player = _player;
 		if (!player.worldObj.isRemote)
 		{
-			monitor = terminal.getGridBlock().getMonitor();
+			monitor = terminal.getGridBlock().getFluidMonitor();
 			if (monitor != null)
 			{
 				monitor.addListener(this, null);
