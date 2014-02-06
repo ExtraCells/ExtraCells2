@@ -186,7 +186,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	}
 
 	@Override
-	public IItemList<IAEFluidStack> getAvailableItems(IItemList out)
+	public IItemList<IAEFluidStack> getAvailableItems(IItemList<IAEFluidStack> out)
 	{
 		for (FluidStack fluidStack : fluidStacks)
 			out.add(AEApi.instance().storage().createFluidStack(fluidStack));

@@ -58,7 +58,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		{
 			FluidTankInfo info = infoArray[0];
 			if (info.fluid == null || info.fluid.amount == 0 || info.fluid.fluidID == input.getFluidStack().fluidID)
-				return prioritizedFluids.isEmpty() ? true : isPrioritized(input) ? true : false;
+				return prioritizedFluids.isEmpty() || isPrioritized(input);
 		}
 		return false;
 	}
@@ -109,7 +109,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	}
 
 	@Override
-	public IItemList getAvailableItems(IItemList out)
+	public IItemList<IAEFluidStack> getAvailableItems(IItemList<IAEFluidStack> out)
 	{
 		if (tank != null)
 		{
