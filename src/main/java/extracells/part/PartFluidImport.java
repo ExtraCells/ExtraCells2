@@ -130,6 +130,7 @@ public class PartFluidImport extends PartECBase implements IGridTickable, IFluid
 			return false;
 
 		FluidStack drained = facingTank.drain(ForgeDirection.DOWN, 250, false);
+
 		if (drained == null || drained.amount <= 0 || drained.fluidID <= 0)
 			return false;
 
@@ -162,6 +163,7 @@ public class PartFluidImport extends PartECBase implements IGridTickable, IFluid
 
 		FluidStack toFill = new FluidStack(resource.fluidID, 20);// TODO mb/t
 		IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), Actionable.MODULATE);
+
 		if (filled == null)
 			return 20;
 		if (filled != null)

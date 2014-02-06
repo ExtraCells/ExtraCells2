@@ -30,6 +30,11 @@ public enum ItemEnum
 		return StatCollector.translateToLocal(internalName);
 	}
 
+	public String getInternalName()
+	{
+		return internalName;
+	}
+
 	public void setID(int ID)
 	{
 		this.ID = ID;

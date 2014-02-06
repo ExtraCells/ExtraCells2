@@ -69,4 +69,22 @@ public class ItemPartECBase extends Item implements IPartItem
 	{
 		return ecParts.indexOf(part);
 	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack itemstack)
+	{
+		switch (itemstack.getItemDamage())
+		{
+		case 0:
+			return "part.fluid.export";
+		case 1:
+			return "part.fluid.import";
+		case 2:
+			return "part.fluid.storage";
+		case 3:
+			return "part.fluid.terminal";
+		default:
+			return "INVALID PART!";
+		}
+	}
 }
