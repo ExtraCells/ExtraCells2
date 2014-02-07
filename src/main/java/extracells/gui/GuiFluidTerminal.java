@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiTerminalFluid extends GuiContainer
+public class GuiFluidTerminal extends GuiContainer
 {
 	public static final int xSize = 175;
 	public static final int ySize = 203;
@@ -33,7 +33,7 @@ public class GuiTerminalFluid extends GuiContainer
 	public IAEFluidStack currentFluid;
 	private ContainerFluidTerminal containerTerminalFluid;
 
-	public GuiTerminalFluid(PartFluidTerminal _terminal, EntityPlayer _player)
+	public GuiFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player)
 	{
 		super(new ContainerFluidTerminal(_terminal, _player));
 		containerTerminalFluid = (ContainerFluidTerminal) inventorySlots;

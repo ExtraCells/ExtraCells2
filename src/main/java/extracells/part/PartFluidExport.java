@@ -2,25 +2,15 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.ticking.IGridTickable;
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.TextureManager;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
-public class PartFluidExport extends PartECBase implements IGridTickable, IActionHost
+public class PartFluidExport extends PartFluidIO
 {
 
 	@Override
@@ -56,35 +46,6 @@ public class PartFluidExport extends PartECBase implements IGridTickable, IActio
 	}
 
 	@Override
-	public void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer)
-	{
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound data)
-	{
-
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound data)
-	{
-
-	}
-
-	@Override
-	public void writeToStream(DataOutputStream data) throws IOException
-	{
-
-	}
-
-	@Override
-	public boolean readFromStream(DataInputStream data) throws IOException
-	{
-		return false;
-	}
-
-	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
 		bch.addBox(4F, 4F, 12F, 12, 12, 14);
@@ -99,35 +60,33 @@ public class PartFluidExport extends PartECBase implements IGridTickable, IActio
 	}
 
 	@Override
-	public TickingRequest getTickingRequest(IGridNode node)
-	{
-		return new TickingRequest(1, 20, false, false);
-	}
-
-	@Override
-	public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall)
-	{
-		return doWork() ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
-	}
-
-	public boolean doWork()
+	public boolean doWork(int rate, int TicksSinceLastCall)
 	{
 		if (facingTank == null)
 			return false;
-
-		IAEFluidStack stack = extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.WATER, 250)), Actionable.SIMULATE);
-
-		if (stack == null)
-			return false;
-		int filled = facingTank.fill(side.getOpposite(), stack.getFluidStack(), true);
-
-		if (filled > 0)
+		for (Fluid fluid : filterFluids)
 		{
-			extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.WATER, filled)), Actionable.MODULATE);
-			return true;
-		} else
-		{
-			return false;
+			if (fluid != null)
+			{
+				IAEFluidStack stack = extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, rate * TicksSinceLastCall)), Actionable.SIMULATE);
+
+				if (stack == null)
+					continue;
+				int filled = facingTank.fill(side.getOpposite(), stack.getFluidStack(), true);
+
+				if (filled > 0)
+				{
+					extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE);
+					return true;
+				} else
+				{
+					continue;
+				}
+			} else
+			{
+				continue;
+			}
 		}
+		return false;
 	}
 }

@@ -1,49 +1,88 @@
 package extracells.gui.widget;
 
-import extracells.gui.GuiFluidTerminal;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import java.util.List;
 
-public abstract class AbstractFluidWidget extends Gui
+public class WidgetFluidSlot extends Gui
 {
-	protected int sizeX = 0, sizeY = 0;
-	protected Fluid fluid;
-	protected GuiFluidTerminal guiFluidTerminal;
+	private int id;
+	private int posX, posY;
+	private Fluid fluid;
+	private ResourceLocation slotTexture = new ResourceLocation("extracells", "textures/gui/fluidslot.png");
 
-	public AbstractFluidWidget(GuiFluidTerminal guiFluidTerminal, int sizeX, int sizeY, Fluid fluid)
+	public WidgetFluidSlot(int _id, int _posX, int _posY)
 	{
-		this.guiFluidTerminal = guiFluidTerminal;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
-		this.fluid = fluid;
+		id = _id;
+		posX = _posX;
+		posY = _posY;
 	}
 
-	public abstract void drawWidget(int posX, int posY);
-
-	public abstract void mouseClicked(int posX, int posY, int mouseX, int mouseY);
-
-	public abstract void drawTooltip(int posX, int posY, int mouseX, int mouseY);
-
-	public void setFluid(int fluidID)
+	public int getPosX()
 	{
-		this.fluid = FluidRegistry.getFluid(fluidID);
+		return posX;
 	}
 
-	public void setFluid(Fluid fluid)
+	public int getPosY()
 	{
-		this.fluid = fluid;
+		return posY;
 	}
 
-	public Fluid getFluid()
+	public void setFluid(Fluid _fluid)
 	{
-		return fluid;
+		fluid = _fluid;
+	}
+
+	public void drawWidget()
+	{
+		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		Minecraft.getMinecraft().renderEngine.bindTexture(slotTexture);
+		drawTexturedModalRect(posX, posY, 0, 0, 18, 18);
+		if (fluid != null && fluid.getIcon() != null)
+		{
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), 16, 16);
+			GL11.glScalef(0.5F, 0.5F, 0.5F);
+		}
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glPopMatrix();
+	}
+
+	public void mouseClicked(ItemStack stack)
+	{
+		fluid = null;
+		if (stack == null)
+			return;
+		Item item = stack.getItem();
+		if (item instanceof IFluidContainerItem)
+		{
+			FluidStack fluidStack = ((IFluidContainerItem) item).getFluid(stack);
+			if (fluidStack != null)
+				fluid = fluidStack.getFluid();
+			return;
+		} else if (FluidContainerRegistry.isFilledContainer(stack))
+		{
+			FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(stack);
+			if (fluidStack != null)
+				fluid = fluidStack.getFluid();
+			return;
+		}
+		return;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -110,14 +149,5 @@ public abstract class AbstractFluidWidget extends Gui
 			RenderHelper.enableStandardItemLighting();
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		}
-	}
-
-	protected boolean isPointInRegion(int top, int left, int height, int width, int pointX, int pointY)
-	{
-		int k1 = guiFluidTerminal.guiLeft();
-		int l1 = guiFluidTerminal.guiTop();
-		pointX -= k1;
-		pointY -= l1;
-		return pointX >= top - 1 && pointX < top + height + 1 && pointY >= left - 1 && pointY < left + width + 1;
 	}
 }

@@ -4,10 +4,12 @@ import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.container.ContainerFluidTerminal;
+import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.PacketFluidTerminal;
 import extracells.util.ECPrivateInventory;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -103,6 +105,16 @@ public class PartFluidTerminal extends PartECBase
 	public void removeContainer(ContainerFluidTerminal containerTerminalFluid)
 	{
 		containers.remove(containerTerminalFluid);
+	}
+
+	public Object getServerGuiElement(EntityPlayer player)
+	{
+		return new ContainerFluidTerminal(this, player);
+	}
+
+	public Object getClientGuiElement(EntityPlayer player)
+	{
+		return new GuiFluidTerminal(this, player);
 	}
 
 	public IInventory getInventory()

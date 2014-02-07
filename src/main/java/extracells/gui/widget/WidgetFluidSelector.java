@@ -1,7 +1,7 @@
 package extracells.gui.widget;
 
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.gui.GuiTerminalFluid;
+import extracells.gui.GuiFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import org.lwjgl.opengl.GL11;
@@ -15,9 +15,9 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 	private int color;
 	private int borderThickness;
 
-	public WidgetFluidSelector(GuiTerminalFluid guiTerminalFluid, IAEFluidStack stack)
+	public WidgetFluidSelector(GuiFluidTerminal guiFluidTerminal, IAEFluidStack stack)
 	{
-		super(guiTerminalFluid, 18, 18, stack.getFluidStack().getFluid());
+		super(guiFluidTerminal, 18, 18, stack.getFluidStack().getFluid());
 		amount = stack.getStackSize();
 		color = 0xFF00FFFF;
 		borderThickness = 1;
@@ -32,7 +32,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		if (fluid != null && fluid.getIcon() != null)
 			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), sizeX - 2, sizeY - 2);
-		if (fluid == guiTerminalFluid.currentFluid.getFluid())
+		if (fluid == guiFluidTerminal.currentFluid.getFluid())
 			drawHollowRectWithCorners(posX, posY, sizeX, sizeY, color, borderThickness);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
@@ -60,7 +60,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 				List<String> description = new ArrayList<String>();
 				description.add(fluid.getLocalizedName());
 				description.add(amountToText);
-				drawHoveringText(description, mouseX - guiTerminalFluid.guiLeft(), mouseY - guiTerminalFluid.guiTop(), Minecraft.getMinecraft().fontRenderer);
+				drawHoveringText(description, mouseX - guiFluidTerminal.guiLeft(), mouseY - guiFluidTerminal.guiTop(), Minecraft.getMinecraft().fontRenderer);
 			}
 		}
 	}
@@ -70,7 +70,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 	{
 		if (fluid != null && isPointInRegion(posX, posY, sizeX, sizeY, mouseX, mouseY))
 		{
-			guiTerminalFluid.containerTerminalFluid().setSelectedFluid(fluid);
+			guiFluidTerminal.containerTerminalFluid().setSelectedFluid(fluid);
 		}
 	}
 

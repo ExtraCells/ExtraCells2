@@ -7,9 +7,8 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
-import extracells.item.ItemPartECBase;
+import extracells.network.packet.PacketBusIOFluid;
 import extracells.network.packet.PacketFluidTerminal;
-import extracells.part.PartFluidTerminal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
 
@@ -22,13 +21,14 @@ public abstract class AbstractPacket
 	{
 		ImmutableBiMap.Builder<Integer, Class<? extends AbstractPacket>> builder = ImmutableBiMap.builder();
 
-		builder.put(Integer.valueOf(ItemPartECBase.getPartId(PartFluidTerminal.class)), PacketFluidTerminal.class);
+		builder.put(0, PacketFluidTerminal.class);
+		builder.put(1, PacketBusIOFluid.class);
 		idMap = builder.build();
 	}
 
 	public static AbstractPacket constructPacket(int packetId) throws ProtocolException, Throwable
 	{
-		Class<? extends AbstractPacket> clazz = idMap.get(Integer.valueOf(packetId));
+		Class<? extends AbstractPacket> clazz = idMap.get(packetId);
 		if (clazz == null)
 		{
 			throw new ProtocolException("Unknown Packet Id!");

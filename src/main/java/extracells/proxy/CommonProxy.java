@@ -1,17 +1,13 @@
 package extracells.proxy;
 
-import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.BlockEnum;
 import extracells.ItemEnum;
-import extracells.container.ContainerFluidTerminal;
-import extracells.gui.GuiTerminalFluid;
 import extracells.item.ItemPartECBase;
 import extracells.part.PartECBase;
-import extracells.part.PartFluidTerminal;
 import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -89,31 +85,27 @@ public class CommonProxy implements IGuiHandler
 	@Override
 	public Object getServerGuiElement(int Id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		int partId = Id >> 7;
-		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
-		IPart part = ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
-		switch (partId)
+		if (Id > 0)
 		{
-		case 3:
-			return new ContainerFluidTerminal((PartFluidTerminal) part, player);
-		default:
-			return null;
+			int partId = Id >> 7;
+			ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
+			PartECBase part = (PartECBase) ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
+			return part.getServerGuiElement(player);
 		}
+		return null;
 	}
 
 	@Override
 	public Object getClientGuiElement(int Id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		int partId = Id >> 7;
-		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
-		IPart part = ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
-		switch (partId)
+		if (Id > 0)
 		{
-		case 3:
-			return new GuiTerminalFluid((PartFluidTerminal) part, player);
-		default:
-			return null;
+			int partId = Id >> 7;
+			ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
+			PartECBase part = (PartECBase) ((IPartHost) world.getBlockTileEntity(x, y, z)).getPart(side);
+			return part.getClientGuiElement(player);
 		}
+		return null;
 	}
 
 	public static int getGuiId(PartECBase part)

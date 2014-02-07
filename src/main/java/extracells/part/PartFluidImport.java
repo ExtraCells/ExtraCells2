@@ -2,30 +2,21 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.ticking.IGridTickable;
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.TextureManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.util.Arrays;
 
-public class PartFluidImport extends PartECBase implements IGridTickable, IFluidHandler
+public class PartFluidImport extends PartFluidIO implements IFluidHandler
 {
 
 	@Override
@@ -64,35 +55,6 @@ public class PartFluidImport extends PartECBase implements IGridTickable, IFluid
 	}
 
 	@Override
-	public void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer)
-	{
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound data)
-	{
-
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound data)
-	{
-
-	}
-
-	@Override
-	public void writeToStream(DataOutputStream data) throws IOException
-	{
-
-	}
-
-	@Override
-	public boolean readFromStream(DataInputStream data) throws IOException
-	{
-		return false;
-	}
-
-	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
 		bch.addBox(4F, 4F, 15F, 12, 12, 16);
@@ -101,35 +63,32 @@ public class PartFluidImport extends PartECBase implements IGridTickable, IFluid
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos)
-	{
-		return false;
-	}
-
-	@Override
 	public int cableConnectionRenderTo()
 	{
 		return 5;
 	}
 
-	@Override
-	public TickingRequest getTickingRequest(IGridNode node)
-	{
-		return new TickingRequest(1, 20, false, false);
-	}
-
-	@Override
-	public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall)
-	{
-		return doWork() ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
-	}
-
-	public boolean doWork()
+	public boolean doWork(int rate, int TicksSinceLastCall)
 	{
 		if (facingTank == null)
 			return false;
+		for (Fluid fluid : filterFluids)
+		{
+			if (fillToNetwork(fluid, rate * TicksSinceLastCall))
+				return true;
+		}
+		if (Arrays.asList(filterFluids).isEmpty())
+			return fillToNetwork(null, rate * TicksSinceLastCall);
+		return false;
+	}
 
-		FluidStack drained = facingTank.drain(ForgeDirection.DOWN, 250, false);
+	private boolean fillToNetwork(Fluid fluid, int toDrain)
+	{
+		FluidStack drained;
+		if (fluid == null)
+			drained = facingTank.drain(ForgeDirection.DOWN, toDrain, false);
+		else
+			drained = facingTank.drain(ForgeDirection.DOWN, new FluidStack(fluid, toDrain), false);
 
 		if (drained == null || drained.amount <= 0 || drained.fluidID <= 0)
 			return false;

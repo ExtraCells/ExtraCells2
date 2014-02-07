@@ -1,6 +1,6 @@
 package extracells.gui.widget;
 
-import extracells.gui.GuiTerminalFluid;
+import extracells.gui.GuiFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumChatFormatting;
@@ -15,9 +15,9 @@ import java.util.List;
 public class WidgetFluidRequest extends AbstractFluidWidget
 {
 
-	public WidgetFluidRequest(GuiTerminalFluid guiTerminalFluid, Fluid fluid)
+	public WidgetFluidRequest(GuiFluidTerminal guiFluidTerminal, Fluid fluid)
 	{
-		super(guiTerminalFluid, 18, 18, fluid);
+		super(guiFluidTerminal, 18, 18, fluid);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget
 				List<String> description = new ArrayList<String>();
 				description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.Craftable"));
 				description.add(fluid.getLocalizedName());
-				drawHoveringText(description, mouseX - guiTerminalFluid.guiLeft(), mouseY - guiTerminalFluid.guiTop(), Minecraft.getMinecraft().fontRenderer);
+				drawHoveringText(description, mouseX - guiFluidTerminal.guiLeft(), mouseY - guiFluidTerminal.guiTop(), Minecraft.getMinecraft().fontRenderer);
 			}
 		}
 	}

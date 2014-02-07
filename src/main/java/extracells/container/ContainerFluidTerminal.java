@@ -18,7 +18,7 @@ import appeng.api.storage.data.IItemList;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import extracells.container.slot.SlotRespective;
-import extracells.gui.GuiTerminalFluid;
+import extracells.gui.GuiFluidTerminal;
 
 public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReciever<IAEFluidStack>
 {
@@ -27,7 +27,7 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 	private IItemList<IAEFluidStack> fluidStackList = AEApi.instance().storage().createItemList();
 	private Fluid selectedFluid;
 	private EntityPlayer player;
-	private GuiTerminalFluid guiTerminalFluid;
+	private GuiFluidTerminal guiFluidTerminal;
 
 	public ContainerFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player)
 	{
@@ -67,9 +67,9 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 		}
 	}
 
-	public void setGui(GuiTerminalFluid _guiTerminalFluid)
+	public void setGui(GuiFluidTerminal _guiFluidTerminal)
 	{
-		guiTerminalFluid = _guiTerminalFluid;
+		guiFluidTerminal = _guiFluidTerminal;
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList)
 	{
 		fluidStackList = _fluidStackList;
-		guiTerminalFluid.updateFluids();
+		guiFluidTerminal.updateFluids();
 	}
 
 	public Fluid getSelectedFluid()
@@ -117,7 +117,7 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 		if (player.worldObj.isRemote)
 		{
 			selectedFluid = _selectedFluid;
-			guiTerminalFluid.updateSelectedFluid();
+			guiFluidTerminal.updateSelectedFluid();
 		} else
 		{
 			PacketDispatcher.sendPacketToServer(new PacketFluidTerminal(selectedFluid, terminal).makePacket());

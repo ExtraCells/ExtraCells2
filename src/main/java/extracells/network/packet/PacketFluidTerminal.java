@@ -8,7 +8,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import cpw.mods.fml.relauncher.Side;
 import extracells.container.ContainerFluidTerminal;
-import extracells.gui.GuiTerminalFluid;
+import extracells.gui.GuiFluidTerminal;
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidTerminal;
 import net.minecraft.client.Minecraft;
@@ -115,9 +115,9 @@ public class PacketFluidTerminal extends AbstractPacket
 			if (player != null && player.worldObj.isRemote)
 			{
 				Gui gui = Minecraft.getMinecraft().currentScreen;
-				if (gui instanceof GuiTerminalFluid)
+				if (gui instanceof GuiFluidTerminal)
 				{
-					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiTerminalFluid) gui).inventorySlots;
+					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
 					container.updateFluidList(fluidStackList);
 				}
 			}
@@ -129,9 +129,9 @@ public class PacketFluidTerminal extends AbstractPacket
 			if (player != null && player.worldObj.isRemote)
 			{
 				Gui gui = Minecraft.getMinecraft().currentScreen;
-				if (gui instanceof GuiTerminalFluid)
+				if (gui instanceof GuiFluidTerminal)
 				{
-					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiTerminalFluid) gui).inventorySlots;
+					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
 					container.setSelectedFluid(currentFluid);
 				}
 			}

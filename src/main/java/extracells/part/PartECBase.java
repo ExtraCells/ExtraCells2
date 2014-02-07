@@ -283,4 +283,20 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 			return null;
 		return monitor.extractItems(toExtract, action, new MachineSource(this));
 	}
+
+	@Override
+	public boolean requireDynamicRender()
+	{
+		return false;
+	}
+
+	public Object getServerGuiElement(EntityPlayer player)
+	{
+		return null;
+	}
+
+	public Object getClientGuiElement(EntityPlayer player)
+	{
+		return null;
+	}
 }

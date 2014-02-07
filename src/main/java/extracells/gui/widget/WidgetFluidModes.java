@@ -1,9 +1,6 @@
 package extracells.gui.widget;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import extracells.util.FluidMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -11,10 +8,13 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class WidgetFluidModes extends GuiButton
 {
@@ -145,42 +145,4 @@ public class WidgetFluidModes extends GuiButton
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		}
 	}
-
-	public enum FluidMode
-	{
-
-		DROPS(20, 5F),
-		QUART(250, 30F),
-		BUCKETS(1000, 60F);
-
-		private int amount;
-		private float cost;
-
-		FluidMode(int amount, float cost)
-		{
-			this.amount = amount;
-			this.cost = cost;
-		}
-
-		public int getAmount()
-		{
-			return amount;
-		}
-
-		public float getCost()
-		{
-			return cost;
-		}
-
-		public void setAmount(int amount)
-		{
-			this.amount = amount;
-		}
-
-		public void setCost(double cost)
-		{
-			this.cost = (float) cost;
-		}
-	}
-
 }
