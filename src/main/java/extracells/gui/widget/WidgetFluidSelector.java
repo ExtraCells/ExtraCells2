@@ -4,6 +4,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import extracells.gui.GuiFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -30,17 +31,18 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		Fluid currentFluid = guiFluidTerminal.currentFluid != null ? guiFluidTerminal.currentFluid.getFluid() : null;
 		if (fluid != null && fluid.getIcon() != null)
-			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), sizeX - 2, sizeY - 2);
-		if (fluid == guiFluidTerminal.currentFluid.getFluid())
-			drawHollowRectWithCorners(posX, posY, sizeX, sizeY, color, borderThickness);
+			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), height - 2, width - 2);
+		if (fluid == currentFluid)
+			drawHollowRectWithCorners(posX, posY, height, width, color, borderThickness);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	@Override
 	public void drawTooltip(int posX, int posY, int mouseX, int mouseY)
 	{
-		if (fluid != null && isPointInRegion(posX, posY, sizeX, sizeY, mouseX, mouseY))
+		if (fluid != null && isPointInRegion(posX, posY, height, width, mouseX, mouseY))
 		{
 			if (amount > 0 && fluid != null)
 			{
@@ -68,7 +70,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 	@Override
 	public void mouseClicked(int posX, int posY, int mouseX, int mouseY)
 	{
-		if (fluid != null && isPointInRegion(posX, posY, sizeX, sizeY, mouseX, mouseY))
+		if (fluid != null && isPointInRegion(posX, posY, height, width, mouseX, mouseY))
 		{
 			guiFluidTerminal.containerTerminalFluid().setSelectedFluid(fluid);
 		}
@@ -84,16 +86,16 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 		return amount;
 	}
 
-	private void drawHollowRectWithCorners(int posX, int posY, int sizeX, int sizeY, int color, int thickness)
+	private void drawHollowRectWithCorners(int posX, int posY, int heigth, int width, int color, int thickness)
 	{
-		drawRect(posX, posY, posX + sizeX, posY + thickness, color);
-		drawRect(posX, posY + sizeY - thickness, posX + sizeX, posY + sizeY, color);
-		drawRect(posX, posY, posX + thickness, posY + sizeY, color);
-		drawRect(posX + sizeX - thickness, posY, posX + sizeX, posY + sizeY, color);
+		drawRect(posX, posY, posX + heigth, posY + thickness, color);
+		drawRect(posX, posY + width - thickness, posX + heigth, posY + width, color);
+		drawRect(posX, posY, posX + thickness, posY + width, color);
+		drawRect(posX + heigth - thickness, posY, posX + heigth, posY + width, color);
 
 		drawRect(posX, posY, posX + thickness + 1, posY + thickness + 1, color);
-		drawRect(posX + sizeX, posY + sizeY, posX + sizeX - thickness - 1, posY + sizeY - thickness - 1, color);
-		drawRect(posX + sizeX, posY, posX + sizeX - thickness - 1, posY + thickness + 1, color);
-		drawRect(posX, posY + sizeY, posX + thickness + 1, posY + sizeY - thickness - 1, color);
+		drawRect(posX + heigth, posY + width, posX + heigth - thickness - 1, posY + width - thickness - 1, color);
+		drawRect(posX + heigth, posY, posX + heigth - thickness - 1, posY + thickness + 1, color);
+		drawRect(posX, posY + width, posX + thickness + 1, posY + width - thickness - 1, color);
 	}
 }

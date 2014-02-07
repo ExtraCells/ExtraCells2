@@ -50,6 +50,12 @@ public class PacketFluidTerminal extends AbstractPacket
 		currentFluid = _currentFluid;
 	}
 
+	public PacketFluidTerminal(PartFluidTerminal _terminalFluid)
+	{
+		mode = 3;
+		terminalFluid = _terminalFluid;
+	}
+
 	@Override
 	public void write(ByteArrayDataOutput out)
 	{
@@ -61,20 +67,28 @@ public class PacketFluidTerminal extends AbstractPacket
 			for (IAEFluidStack stack : fluidStackList)
 			{
 				FluidStack fluidStack = stack.getFluidStack();
-				out.writeInt(fluidStack.fluidID);
+				System.out.println(fluidStack.getFluid().getUnlocalizedName());
+				out.writeUTF(fluidStack.getFluid().getUnlocalizedName());
 				out.writeLong(fluidStack.amount);
 			}
 			break;
 		case 1:
-			out.writeInt(currentFluid.getID());
 			out.writeInt(terminalFluid.getHost().getTile().worldObj.provider.dimensionId);
 			out.writeInt(terminalFluid.getHost().getTile().xCoord);
 			out.writeInt(terminalFluid.getHost().getTile().yCoord);
 			out.writeInt(terminalFluid.getHost().getTile().zCoord);
 			out.writeByte(terminalFluid.getSide().ordinal());
+			out.writeInt(currentFluid.getID());
 			break;
 		case 2:
 			out.writeInt(currentFluid != null ? currentFluid.getID() : -1);
+			break;
+		case 3:
+			out.writeInt(terminalFluid.getHost().getTile().worldObj.provider.dimensionId);
+			out.writeInt(terminalFluid.getHost().getTile().xCoord);
+			out.writeInt(terminalFluid.getHost().getTile().yCoord);
+			out.writeInt(terminalFluid.getHost().getTile().zCoord);
+			out.writeByte(terminalFluid.getSide().ordinal());
 			break;
 		}
 	}
@@ -90,18 +104,26 @@ public class PacketFluidTerminal extends AbstractPacket
 			int length = in.readInt();
 			for (int i = 0; i < length; i++)
 			{
-				IAEFluidStack stack = AEApi.instance().storage().createFluidStack(new FluidStack(in.readInt(), 1));
-				stack.setStackSize(in.readLong());
-				fluidStackList.add(stack);
+				Fluid fluid = FluidRegistry.getFluid(in.readUTF());
+				long fluidAmount = in.readLong();
+				if (fluid != null)
+				{
+					IAEFluidStack stack = AEApi.instance().storage().createFluidStack(new FluidStack(fluid, 1));
+					stack.setStackSize(fluidAmount);
+					fluidStackList.add(stack);
+				}
 			}
 			break;
 		case 1:
-			currentFluid = FluidRegistry.getFluid(in.readInt());
 			terminalFluid = (PartFluidTerminal) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
+			currentFluid = FluidRegistry.getFluid(in.readInt());
 			break;
 		case 2:
 			int fluidID = in.readInt();
 			currentFluid = fluidID > 0 ? FluidRegistry.getFluid(fluidID) : null;
+			break;
+		case 3:
+			terminalFluid = (PartFluidTerminal) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
 			break;
 		}
 	}
@@ -135,6 +157,10 @@ public class PacketFluidTerminal extends AbstractPacket
 					container.setSelectedFluid(currentFluid);
 				}
 			}
+			break;
+		case 3:
+			if (player.openContainer instanceof ContainerFluidTerminal)
+				((ContainerFluidTerminal) player.openContainer).forceFluidUpdate();
 			break;
 		}
 	}

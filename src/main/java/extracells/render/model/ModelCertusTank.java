@@ -113,13 +113,13 @@ public class ModelCertusTank extends ModelBase
 	public void renderFluid(TileEntity tileEntity, double x, double y, double z, RenderBlocks renderer)
 	{
 		Tessellator tessellator = Tessellator.instance;
-		tessellator.setColorOpaque(255, 255, 255);
 		if (tileEntity != null && ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null)
 		{
 			Fluid storedFluid = ((TileEntityCertusTank) tileEntity).getRenderFluid();
 			float scale = ((TileEntityCertusTank) tileEntity).getRenderScale();
 			if (storedFluid != null && scale > 0)
 			{
+				GL11.glPushMatrix();
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				Block id = Block.blocksList[FluidRegistry.WATER.getBlockID()];
@@ -139,7 +139,7 @@ public class ModelCertusTank extends ModelBase
 				renderer.renderFaceXNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(1.0F, 0.0F, 0.0F);
 				renderer.renderFaceXPos(id, x, y, z, fluidIcon);
-				GL11.glDisable(GL11.GL_BLEND);
+				GL11.glPopMatrix();
 			}
 		}
 	}

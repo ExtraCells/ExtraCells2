@@ -29,7 +29,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		if (fluid != null && fluid.getIcon() != null)
 		{
-			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), sizeX - 2, sizeY - 2);
+			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), height - 2, width - 2);
 			GL11.glScalef(0.5F, 0.5F, 0.5F);
 			String str = StatCollector.translateToLocal("AppEng.Terminal.Craft");
 			str = WordUtils.capitalize(str.toLowerCase());
@@ -48,7 +48,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget
 	@Override
 	public void drawTooltip(int posX, int posY, int mouseX, int mouseY)
 	{
-		if (fluid != null && isPointInRegion(posX, posY, sizeX, sizeY, mouseX, mouseY))
+		if (fluid != null && isPointInRegion(posX, posY, height, width, mouseX, mouseY))
 		{
 			if (fluid != null)
 			{

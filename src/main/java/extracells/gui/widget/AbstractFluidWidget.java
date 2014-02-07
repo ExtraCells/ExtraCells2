@@ -13,15 +13,15 @@ import java.util.List;
 
 public abstract class AbstractFluidWidget extends Gui
 {
-	protected int sizeX = 0, sizeY = 0;
+	protected int height = 0, width = 0;
 	protected Fluid fluid;
 	protected GuiFluidTerminal guiFluidTerminal;
 
-	public AbstractFluidWidget(GuiFluidTerminal guiFluidTerminal, int sizeX, int sizeY, Fluid fluid)
+	public AbstractFluidWidget(GuiFluidTerminal guiFluidTerminal, int height, int width, Fluid fluid)
 	{
 		this.guiFluidTerminal = guiFluidTerminal;
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
+		this.height = height;
+		this.width = width;
 		this.fluid = fluid;
 	}
 

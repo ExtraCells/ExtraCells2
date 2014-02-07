@@ -9,12 +9,15 @@ import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketBusIOFluid;
 import extracells.part.PartFluidIO;
 import extracells.util.FluidMode;
+import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -32,15 +35,17 @@ public class GuiBusIOFluid extends GuiContainer
 	public GuiBusIOFluid(PartFluidIO _terminal, EntityPlayer _player)
 	{
 		super(new ContainerBusIOFluid(_terminal, _player));
+		((ContainerBusIOFluid) inventorySlots).setGui(this);
 		part = _terminal;
 		player = _player;
 		for (int i = 0; i < 2; i++)
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				fluidSlotList.add(new WidgetFluidSlot(j + i * 4, 53 + j * 18, i * 18 + 21));
+				fluidSlotList.add(new WidgetFluidSlot(part, j + i * 4, 52 + j * 18, i * 18 + 20));
 			}
 		}
+		PacketDispatcher.sendPacketToServer(new PacketBusIOFluid(part).makePacket());
 	}
 
 	@Override
@@ -62,12 +67,39 @@ public class GuiBusIOFluid extends GuiContainer
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
 	}
 
+	public void shiftClick(ItemStack itemStack)
+	{
+		FluidStack containerFluid = FluidUtil.getFluidFromContainer(itemStack);
+		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
+		for (byte i = 0; i < fluidSlotList.size(); i++)
+		{
+			WidgetFluidSlot fluidSlot = fluidSlotList.get(i);
+			if (fluidSlot.getFluid() == null || (fluid != null && fluidSlot.getFluid() == fluid))
+			{
+				fluidSlot.mouseClicked(itemStack);
+				return;
+			}
+		}
+	}
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		for (WidgetFluidSlot fluidSlot : fluidSlotList)
 		{
 			fluidSlot.drawWidget();
+		}
+		for (WidgetFluidSlot fluidSlot : fluidSlotList)
+		{
+			if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
+			{
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1, fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17, -0x7F000001, -0x7F000001);
+				GL11.glEnable(GL11.GL_LIGHTING);
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				break;
+			}
 		}
 	}
 
@@ -94,6 +126,19 @@ public class GuiBusIOFluid extends GuiContainer
 			}
 		} catch (Throwable e)
 		{
+		}
+	}
+
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn)
+	{
+		super.mouseClicked(mouseX, mouseY, mouseBtn);
+		for (WidgetFluidSlot slot : fluidSlotList)
+		{
+			if (isPointInRegion(slot.getPosX(), slot.getPosY(), 18, 18, mouseX, mouseY))
+			{
+				slot.mouseClicked(player.inventory.getItemStack());
+				break;
+			}
 		}
 	}
 

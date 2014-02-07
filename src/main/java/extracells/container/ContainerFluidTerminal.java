@@ -51,6 +51,11 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 		bindPlayerInventory(player.inventory);
 	}
 
+	public PartFluidTerminal getTerminal()
+	{
+		return terminal;
+	}
+
 	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
 	{
 		for (int i = 0; i < 3; i++)
@@ -101,10 +106,17 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 		PacketDispatcher.sendPacketToPlayer(new PacketFluidTerminal(fluidStackList).makePacket(), (Player) player);
 	}
 
+	public void forceFluidUpdate()
+	{
+		if (monitor != null)
+			updateFluidList(monitor.getStorageList());
+	}
+
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList)
 	{
 		fluidStackList = _fluidStackList;
-		guiFluidTerminal.updateFluids();
+		if (guiFluidTerminal != null)
+			guiFluidTerminal.updateFluids();
 	}
 
 	public Fluid getSelectedFluid()
@@ -149,10 +161,9 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 				{
 					if (!mergeItemStack(itemstack1, 3, 38, false))
 						return null;
-				} else if (slotnumber != 1 && slotnumber != 0)
+				} else if (!mergeItemStack(itemstack1, 0, 1, false))
 				{
-					if (!mergeItemStack(itemstack1, 0, 1, false))
-						return null;
+					return null;
 				}
 				if (itemstack1.stackSize == 0)
 				{

@@ -1,10 +1,12 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.widget.AbstractFluidWidget;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.WidgetFluidSelector;
+import extracells.network.packet.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
@@ -38,6 +40,7 @@ public class GuiFluidTerminal extends GuiContainer
 		super(new ContainerFluidTerminal(_terminal, _player));
 		containerTerminalFluid = (ContainerFluidTerminal) inventorySlots;
 		containerTerminalFluid.setGui(this);
+		PacketDispatcher.sendPacketToServer(new PacketFluidTerminal(containerTerminalFluid.getTerminal()).makePacket());
 		terminal = _terminal;
 		player = _player;
 	}
@@ -49,6 +52,7 @@ public class GuiFluidTerminal extends GuiContainer
 		{
 			fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
 		}
+		updateSelectedFluid();
 	}
 
 	public void updateSelectedFluid()

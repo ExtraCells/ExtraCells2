@@ -14,8 +14,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import java.util.Arrays;
-
 public class PartFluidImport extends PartFluidIO implements IFluidHandler
 {
 
@@ -72,12 +70,20 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 	{
 		if (facingTank == null)
 			return false;
+		boolean empty = true;
 		for (Fluid fluid : filterFluids)
 		{
-			if (fillToNetwork(fluid, rate * TicksSinceLastCall))
-				return true;
+			if (fluid != null)
+			{
+				empty = false;
+
+				if (fillToNetwork(fluid, rate * TicksSinceLastCall))
+				{
+					return true;
+				}
+			}
 		}
-		if (Arrays.asList(filterFluids).isEmpty())
+		if (empty)
 			return fillToNetwork(null, rate * TicksSinceLastCall);
 		return false;
 	}

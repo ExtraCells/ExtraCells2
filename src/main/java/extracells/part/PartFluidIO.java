@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -45,6 +46,14 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable
 	{
 		data.setInteger("fluidMode", fluidMode.ordinal());
 		data.setInteger("redstoneMode", redstoneMode.ordinal());
+		for (int i = 0; i < filterFluids.length; i++)
+		{
+			Fluid fluid = filterFluids[i];
+			if (fluid != null)
+				data.setString("FilterFluid#" + i, fluid.getName());
+			else
+				data.setString("FilterFluid#" + i, "");
+		}
 	}
 
 	@Override
@@ -52,6 +61,10 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable
 	{
 		redstoneMode = RedstoneMode.values()[data.getInteger("redstoneMode")];
 		fluidMode = FluidMode.values()[data.getInteger("fluidMode")];
+		for (int i = 0; i < filterFluids.length; i++)
+		{
+			filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
+		}
 	}
 
 	@Override
@@ -104,22 +117,22 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable
 		return redstoneMode;
 	}
 
-	public void loopRedstoneMode(EntityPlayer player)
+	public void loopRedstoneMode(Player player)
 	{
 		if (redstoneMode.ordinal() + 1 < RedstoneMode.values().length)
 			redstoneMode = RedstoneMode.values()[redstoneMode.ordinal() + 1];
 		else
 			redstoneMode = RedstoneMode.values()[0];
-		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 0, (byte) redstoneMode.ordinal()).makePacket(), (Player) player);
+		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 0, (byte) redstoneMode.ordinal()).makePacket(), player);
 	}
 
-	public void loopFluidMode(EntityPlayer player)
+	public void loopFluidMode(Player player)
 	{
 		if (fluidMode.ordinal() + 1 < FluidMode.values().length)
 			fluidMode = FluidMode.values()[fluidMode.ordinal() + 1];
 		else
 			fluidMode = FluidMode.values()[0];
-		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 1, (byte) fluidMode.ordinal()).makePacket(), (Player) player);
+		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 1, (byte) fluidMode.ordinal()).makePacket(), player);
 	}
 
 	public Object getServerGuiElement(EntityPlayer player)
@@ -130,5 +143,12 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable
 	public Object getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiBusIOFluid(this, player);
+	}
+
+	public void sendInformation(Player player)
+	{
+		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid(Arrays.asList(filterFluids)).makePacket(), player);
+		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 0, (byte) redstoneMode.ordinal()).makePacket(), player);
+		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 1, (byte) fluidMode.ordinal()).makePacket(), player);
 	}
 }

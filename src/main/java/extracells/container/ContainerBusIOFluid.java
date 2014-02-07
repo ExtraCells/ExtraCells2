@@ -1,5 +1,6 @@
 package extracells.container;
 
+import extracells.gui.GuiBusIOFluid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -11,6 +12,7 @@ public class ContainerBusIOFluid extends Container
 {
 	private PartFluidIO terminal;
 	private EntityPlayer player;
+	private GuiBusIOFluid guiBusIOFluid;
 
 	public ContainerBusIOFluid(PartFluidIO _terminal, EntityPlayer _player)
 	{
@@ -38,6 +40,8 @@ public class ContainerBusIOFluid extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber)
 	{
+		if (guiBusIOFluid != null)
+			guiBusIOFluid.shiftClick(getSlot(slotnumber).getStack());
 		return null;
 	}
 
@@ -45,5 +49,10 @@ public class ContainerBusIOFluid extends Container
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
 		return true;
+	}
+
+	public void setGui(GuiBusIOFluid _guiBusIOFluid)
+	{
+		guiBusIOFluid = _guiBusIOFluid;
 	}
 }

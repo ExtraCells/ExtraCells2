@@ -3,6 +3,7 @@ package extracells.network.packet;
 import appeng.api.parts.IPartHost;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import extracells.gui.GuiBusIOFluid;
 import extracells.network.AbstractPacket;
@@ -30,6 +31,7 @@ public class PacketBusIOFluid extends AbstractPacket
 
 	public PacketBusIOFluid()
 	{
+
 	}
 
 	public PacketBusIOFluid(List<Fluid> _filterFluids)
@@ -58,6 +60,12 @@ public class PacketBusIOFluid extends AbstractPacket
 		mode = 3;
 		action = _action;
 		ordinal = _ordinal;
+	}
+
+	public PacketBusIOFluid(PartFluidIO _part)
+	{
+		mode = 4;
+		part = _part;
 	}
 
 	@Override
@@ -94,6 +102,13 @@ public class PacketBusIOFluid extends AbstractPacket
 			out.writeByte(action);
 			out.writeByte(ordinal);
 			break;
+		case 4:
+			out.writeInt(part.getHost().getTile().worldObj.provider.dimensionId);
+			out.writeInt(part.getHost().getTile().xCoord);
+			out.writeInt(part.getHost().getTile().yCoord);
+			out.writeInt(part.getHost().getTile().zCoord);
+			out.writeByte(part.getSide().ordinal());
+			break;
 		}
 	}
 
@@ -111,6 +126,7 @@ public class PacketBusIOFluid extends AbstractPacket
 			break;
 		case 1:
 			part = (PartFluidIO) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
+			index = in.readByte();
 			fluid = FluidRegistry.getFluid(in.readUTF());
 			break;
 		case 2:
@@ -120,6 +136,9 @@ public class PacketBusIOFluid extends AbstractPacket
 		case 3:
 			action = in.readByte();
 			ordinal = in.readByte();
+			break;
+		case 4:
+			part = (PartFluidIO) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
 			break;
 		}
 	}
@@ -141,16 +160,16 @@ public class PacketBusIOFluid extends AbstractPacket
 			}
 			break;
 		case 1:
-			part.setFilterFluid(index, fluid,player);
+			part.setFilterFluid(index, fluid, player);
 			break;
 		case 2:
 			switch (action)
 			{
 			case 0:
-				part.loopRedstoneMode(player);
+				part.loopRedstoneMode((Player) player);
 				break;
 			case 1:
-				part.loopFluidMode(player);
+				part.loopFluidMode((Player) player);
 				break;
 			}
 			break;
@@ -164,6 +183,10 @@ public class PacketBusIOFluid extends AbstractPacket
 					partGui.updateButtons(action, ordinal);
 				}
 			}
+			break;
+
+		case 4:
+			part.sendInformation((Player) player);
 			break;
 		}
 	}
