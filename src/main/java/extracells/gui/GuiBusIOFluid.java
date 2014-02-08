@@ -27,9 +27,10 @@ public class GuiBusIOFluid extends GuiContainer
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
 	public static final int xSize = 176;
-	public static final int ySize = 177;
+	public static final int ySize = 184;
 	private PartFluidIO part;
 	private EntityPlayer player;
+	private byte filterSize;
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 
 	public GuiBusIOFluid(PartFluidIO _terminal, EntityPlayer _player)
@@ -38,11 +39,12 @@ public class GuiBusIOFluid extends GuiContainer
 		((ContainerBusIOFluid) inventorySlots).setGui(this);
 		part = _terminal;
 		player = _player;
-		for (int i = 0; i < 2; i++)
+
+		for (int i = 0; i < 3; i++)
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
-				fluidSlotList.add(new WidgetFluidSlot(part, j + i * 4, 52 + j * 18, i * 18 + 20));
+				fluidSlotList.add(new WidgetFluidSlot(part, j + i * 3, 61 + j * 18, i * 18 + 12));
 			}
 		}
 		PacketDispatcher.sendPacketToServer(new PacketBusIOFluid(part).makePacket());
@@ -65,6 +67,7 @@ public class GuiBusIOFluid extends GuiContainer
 		int posX = (width - xSize) / 2;
 		int posY = (height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
+		drawTexturedModalRect(posX + 179, posY, 179, 0, 32, 86);
 	}
 
 	public void shiftClick(ItemStack itemStack)
@@ -85,22 +88,51 @@ public class GuiBusIOFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		for (WidgetFluidSlot fluidSlot : fluidSlotList)
+		boolean overlayRendered = false;
+		fluidSlotList.get(4).drawWidget();
+		overlayRendered = renderOverlay(fluidSlotList.get(4), mouseX, mouseY);
+
+		if (filterSize >= 1)
 		{
-			fluidSlot.drawWidget();
-		}
-		for (WidgetFluidSlot fluidSlot : fluidSlotList)
-		{
-			if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
+			for (byte i = 0; i < 9; i += 2)
 			{
-				GL11.glDisable(GL11.GL_LIGHTING);
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1, fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17, -0x7F000001, -0x7F000001);
-				GL11.glEnable(GL11.GL_LIGHTING);
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
-				break;
+				if (i != 4)
+				{
+					fluidSlotList.get(i).drawWidget();
+					if (!overlayRendered)
+						renderOverlay(fluidSlotList.get(i), mouseX, mouseY);
+				}
 			}
 		}
+
+		if (filterSize >= 2)
+		{
+			for (byte i = 1; i < 9; i += 2)
+			{
+				fluidSlotList.get(i).drawWidget();
+				if (!overlayRendered)
+					renderOverlay(fluidSlotList.get(i), mouseX, mouseY);
+			}
+		}
+	}
+
+	public void changeConfig(byte _filterSize)
+	{
+		filterSize = _filterSize;
+	}
+
+	public boolean renderOverlay(WidgetFluidSlot fluidSlot, int mouseX, int mouseY)
+	{
+		if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
+		{
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1, fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17, -0x7F000001, -0x7F000001);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			return true;
+		}
+		return false;
 	}
 
 	public void updateFluids(List<Fluid> fluidList)

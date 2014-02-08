@@ -84,7 +84,7 @@ public class PartFluidTerminal extends PartECBase
 	@Override
 	public int cableConnectionRenderTo()
 	{
-		return 0;
+		return 1;
 	}
 
 	public void setCurrentFluid(Fluid _currentFluid)

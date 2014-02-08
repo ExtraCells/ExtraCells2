@@ -5,60 +5,62 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.IFluidContainerItem;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class ECPrivateInventory implements IInventory
 {
-	public List<ItemStack> slots;
+	public ItemStack[] slots;
 	public String customName;
 	private int stackLimit;
+	private IInventoryUpdateReceiver receiver;
 
-	public ECPrivateInventory(String customName, int size, int stackLimit)
+	public ECPrivateInventory(String _customName, int _size, int _stackLimit)
 	{
-		this.slots = Arrays.asList(new ItemStack[size]);
-		this.customName = customName;
-		this.stackLimit = stackLimit;
+		this(_customName, _size, _stackLimit, null);
+	}
+
+	public ECPrivateInventory(String _customName, int _size, int _stackLimit, IInventoryUpdateReceiver _receiver)
+	{
+		slots = new ItemStack[_size];
+		customName = _customName;
+		stackLimit = _stackLimit;
+		receiver = _receiver;
 	}
 
 	@Override
 	public int getSizeInventory()
 	{
-		return slots.size();
+		return slots.length;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int i)
 	{
-		return slots.get(i);
+		return slots[i];
 	}
 
 	@Override
 	public ItemStack decrStackSize(int i, int j)
 	{
-		if (slots.get(i) != null)
+		if (slots[i] != null)
 		{
 			ItemStack itemstack;
-			if (slots.get(i).stackSize <= j)
+			if (slots[i].stackSize <= j)
 			{
-				itemstack = slots.get(i);
-				slots.set(i, null);
+				itemstack = slots[i];
+				slots[i] = null;
 				this.onInventoryChanged();
 				return itemstack;
 			} else
 			{
-				ItemStack temp = slots.get(i);
+				ItemStack temp = slots[i];
 				itemstack = temp.splitStack(j);
-				slots.set(i, temp);
+				slots[i] = temp;
 				if (temp.stackSize == 0)
 				{
-					slots.set(i, null);
+					slots[i] = null;
 				} else
 				{
-					slots.set(i, temp);
+					slots[i] = temp;
 				}
 				onInventoryChanged();
 				return itemstack;
@@ -72,10 +74,10 @@ public class ECPrivateInventory implements IInventory
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i)
 	{
-		if (slots.get(i) != null)
+		if (slots[i] != null)
 		{
-			ItemStack itemstack = slots.get(i);
-			slots.set(i, null);
+			ItemStack itemstack = slots[i];
+			slots[i] = null;
 			return itemstack;
 		} else
 		{
@@ -90,7 +92,7 @@ public class ECPrivateInventory implements IInventory
 		{
 			itemstack.stackSize = this.getInventoryStackLimit();
 		}
-		slots.set(i, itemstack);
+		slots[i] = itemstack;
 
 		onInventoryChanged();
 	}
@@ -134,12 +136,14 @@ public class ECPrivateInventory implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return FluidContainerRegistry.isContainer(itemstack) || (itemstack != null && itemstack.getItem() instanceof IFluidContainerItem && ((IFluidContainerItem) itemstack.getItem()).getFluid(itemstack) != null);
+		return true;
 	}
 
 	@Override
 	public void onInventoryChanged()
 	{
+		if (receiver != null)
+			receiver.onInventoryChanged();
 	}
 
 	public void readFromNBT(NBTTagList nbtList)
@@ -149,9 +153,9 @@ public class ECPrivateInventory implements IInventory
 			NBTTagCompound nbttagcompound = (NBTTagCompound) nbtList.tagAt(i);
 			int j = nbttagcompound.getByte("Slot") & 255;
 
-			if (j >= 0 && j < slots.size())
+			if (j >= 0 && j < slots.length)
 			{
-				slots.set(j, ItemStack.loadItemStackFromNBT(nbttagcompound));
+				slots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
 			}
 		}
 	}
@@ -160,16 +164,21 @@ public class ECPrivateInventory implements IInventory
 	{
 		NBTTagList nbtList = new NBTTagList();
 
-		for (int i = 0; i < slots.size(); ++i)
+		for (int i = 0; i < slots.length; ++i)
 		{
-			if (slots.get(i) != null)
+			if (slots[i] != null)
 			{
 				NBTTagCompound nbttagcompound = new NBTTagCompound();
 				nbttagcompound.setByte("Slot", (byte) i);
-				slots.get(i).writeToNBT(nbttagcompound);
+				slots[i].writeToNBT(nbttagcompound);
 				nbtList.appendTag(nbttagcompound);
 			}
 		}
 		return nbtList;
+	}
+
+	public interface IInventoryUpdateReceiver
+	{
+		public void onInventoryChanged();
 	}
 }

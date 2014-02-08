@@ -1,5 +1,6 @@
 package extracells.container;
 
+import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiBusIOFluid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -18,6 +19,9 @@ public class ContainerBusIOFluid extends Container
 	{
 		terminal = _terminal;
 		player = _player;
+
+		for (int i = 0; i < 4; i++)
+			addSlotToContainer(new SlotRespective(terminal.getUpgradeInventory(), i, 187, i * 18 - 1));
 		bindPlayerInventory(player.inventory);
 	}
 
@@ -27,13 +31,13 @@ public class ContainerBusIOFluid extends Container
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 79));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 93));
 			}
 		}
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 137));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 151));
 		}
 	}
 

@@ -28,10 +28,10 @@ public class PacketBusIOFluid extends AbstractPacket
 	private PartFluidIO part;
 	private byte action;
 	private byte ordinal;
+	private byte filterSize;
 
 	public PacketBusIOFluid()
 	{
-
 	}
 
 	public PacketBusIOFluid(List<Fluid> _filterFluids)
@@ -66,6 +66,12 @@ public class PacketBusIOFluid extends AbstractPacket
 	{
 		mode = 4;
 		part = _part;
+	}
+
+	public PacketBusIOFluid(byte _filterSize)
+	{
+		mode = 5;
+		filterSize = _filterSize;
 	}
 
 	@Override
@@ -109,6 +115,9 @@ public class PacketBusIOFluid extends AbstractPacket
 			out.writeInt(part.getHost().getTile().zCoord);
 			out.writeByte(part.getSide().ordinal());
 			break;
+		case 5:
+			out.writeByte(filterSize);
+			break;
 		}
 	}
 
@@ -139,6 +148,9 @@ public class PacketBusIOFluid extends AbstractPacket
 			break;
 		case 4:
 			part = (PartFluidIO) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
+			break;
+		case 5:
+			filterSize = in.readByte();
 			break;
 		}
 	}
@@ -184,9 +196,19 @@ public class PacketBusIOFluid extends AbstractPacket
 				}
 			}
 			break;
-
 		case 4:
 			part.sendInformation((Player) player);
+			break;
+		case 5:
+			if (player != null && player.worldObj.isRemote)
+			{
+				Gui gui = Minecraft.getMinecraft().currentScreen;
+				if (gui instanceof GuiBusIOFluid)
+				{
+					GuiBusIOFluid partGui = (GuiBusIOFluid) gui;
+					partGui.changeConfig(filterSize);
+				}
+			}
 			break;
 		}
 	}

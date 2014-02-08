@@ -61,7 +61,7 @@ public class WidgetFluidSlot extends Gui
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
-		drawTexturedModalRect(posX, posY, 176, 0, 18, 18);
+		drawTexturedModalRect(posX, posY, 79, 39, 18, 18);
 		if (lighting_enabled)
 			GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();

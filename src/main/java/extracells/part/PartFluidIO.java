@@ -1,5 +1,6 @@
 package extracells.part;
 
+import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
@@ -12,9 +13,11 @@ import cpw.mods.fml.common.network.Player;
 import extracells.container.ContainerBusIOFluid;
 import extracells.gui.GuiBusIOFluid;
 import extracells.network.packet.PacketBusIOFluid;
+import extracells.util.ECPrivateInventory;
 import extracells.util.FluidMode;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -24,11 +27,27 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable
+public abstract class PartFluidIO extends PartECBase implements IGridTickable, ECPrivateInventory.IInventoryUpdateReceiver
 {
 	protected Fluid[] filterFluids = new Fluid[8];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 	private FluidMode fluidMode = FluidMode.DROPS;
+	private byte filterSize;
+	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4, 1)
+	{
+		public boolean isItemValidForSlot(int i, ItemStack itemstack)
+		{
+			if (itemstack == null)
+				return false;
+			if (itemstack.isItemEqual(AEApi.instance().materials().materialCardCapacity.stack(1)))
+				return true;
+			else if (itemstack.isItemEqual(AEApi.instance().materials().materialCardSpeed.stack(1)))
+				return true;
+			else if (itemstack.isItemEqual(AEApi.instance().materials().materialCardRedstone.stack(1)))
+				return true;
+			return false;
+		}
+	};
 
 	@Override
 	public abstract void renderInventory(IPartRenderHelper rh, RenderBlocks renderer);
@@ -39,6 +58,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable
 	@Override
 	public final void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
+	}
+
+	public ECPrivateInventory getUpgradeInventory()
+	{
+		return upgradeInventory;
 	}
 
 	@Override
@@ -54,6 +78,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable
 			else
 				data.setString("FilterFluid#" + i, "");
 		}
+		data.setTag("upgradeInventory", upgradeInventory.writeToNBT());
 	}
 
 	@Override
@@ -65,6 +90,8 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable
 		{
 			filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
 		}
+		upgradeInventory.readFromNBT(data.getTagList("upgradeInventory"));
+		onInventoryChanged();
 	}
 
 	@Override
@@ -150,5 +177,18 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable
 		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid(Arrays.asList(filterFluids)).makePacket(), player);
 		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 0, (byte) redstoneMode.ordinal()).makePacket(), player);
 		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 1, (byte) fluidMode.ordinal()).makePacket(), player);
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
+		filterSize = 0;
+		for (int i = 0; i < upgradeInventory.getSizeInventory(); i++)
+		{
+			if (upgradeInventory.getStackInSlot(i).isItemEqual(AEApi.instance().materials().materialCardCapacity.stack(1)))
+				filterSize++;
+		}
+		PacketDispatcher.sendPacketToAllPlayers(new PacketBusIOFluid(filterSize).makePacket());
+		// TODO add speed etc.
 	}
 }
