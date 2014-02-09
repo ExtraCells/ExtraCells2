@@ -1,0 +1,63 @@
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+item.storage.physical.256k=МЭ карта памяти на 256КБ
+item.storage.physical.1024k=МЭ карта памяти на 1МБ
+item.storage.physical.4096k=МЭ карта памяти на 4МБ
+item.storage.physical.16348k=МЭ карта памяти на 16МБ
+item.storage.physical.container=МЭ контейнер
+item.storage.physical.adjustable=Регулируемая МЭ карта памяти
+item.storage.fluid.1k=МЭ жидкостная карта памяти на 1КБ
+item.storage.fluid.4k=МЭ жидкостная карта памяти на 4КБ
+item.storage.fluid.16k=МЭ жидкостная карта памяти на 16КБ
+item.storage.fluid.64k=МЭ жидкостная карта памяти на 64КБ
+item.storage.fluid.256k=МЭ жидкостная карта памяти на 256КБ
+item.storage.fluid.1m=МЭ жидкостная карта памяти на 1МБ
+item.storage.fluid.4m=МЭ жидкостная карта памяти на 4МБ
+item.storage.fluid.16m=МЭ жидкостная карта памяти на 16МБ
+item.cluster.kilo=МЭ Кило-кластер памяти
+item.cluster.mega=МЭ Мега-кластер памяти
+item.cluster.giga=МЭ Гига-кластер памяти
+item.cluster.tera=МЭ Тера-кластер памяти
+item.storage.physical_secure.encrypted=Шифруемая ячейка памяти - зашифрованная
+item.storage.physical_secure.decrypted=Шифруемая ячейка памяти - расшифрованная
+
+//Blocks
+item.casing.advanced.phsyical=Продвинутый корпус для ячейки памяти
+tile.block.solderingstation.name=Паяльная станция
+tile.block.mebattery.name=МЭ резервный аккумулятор
+tile.block.medropper.name=МЭ выбрасыватель предметов
+tile.block.hardmedrive.name=Взрывоустойчивый МЭ привод
+tile.block.fluid.bus.import.name=МЭ жидкостная импортирующая шина
+tile.block.fluid.bus.export.name=МЭ жидкостная экспортирующая шина
+tile.block.fluid.bus.storage.name=МЭ жидкостная адаптирующая шина
+tile.block.fluid.terminal.name=МЭ жидкостный терминал доступа
+tile.block.fluid.transitionplane.name=МЭ жидкостная поверхность перехода
+tile.block.certustank.name=INSERT NAME HERE! :D
+
+//Tooltips and Chat-Messages
+tooltip.belongsto=Это хранилище принадлежит:
+tooltip.notyours=Вы не владелец этого накопителя!
+tooltip.accessgranted=Доступ разрешён!
+tooltip.storageencrypted=Хранилище зашифрованно!
+tooltip.empty=Пустая(пустой)
+tooltip.block=Блок
+tooltip.equaltrade1=Режим равноценного обмена (1*1)
+tooltip.equaltrade3=Режим равноценного обмена (3*3)
+tooltip.placement=Placement Mode
+tooltip.mode=Mode
+tooltip.onlyblocks=Вы не можете класть предметы! Положите блок в контейнер БЛОКОВ
+tooltip.item=Item 
+tooltip.dropperlocked=Выбрасыватель закрыт
+tooltip.dropperunlocked=Выбрасыватель открыт 
+tooltip.dropset=Сброс установлен на 
+tooltip.amount=Amount 
+tooltip.fluid=Fluid 
+tooltip.solderingwarning.tutorial=Положите МЭ регулируемую карту памяти в свою панель быстрого доступа и выберите её, во время использования паяльной станции!
+tooltip.solderingwarning.nospacestoragecell=Освободите место в вашем инвентаре, чтобы вернуть карту памяти!
+tooltip.solderingwarning.nospaceconversionmatrix=Освободите место в вашем инвентаре, чтобы вернуть МЭ конвертирующую матрицу!
+tooltip.solderingwarning.needstoragecell=Чтобы увеличить вместимость вашей карты памяти вам нужна одна МЭ ячейка памяти для каждых 2048 байтов!
+tooltip.solderingwarning.needconversionmatrix=Чтобы увеличить количество типов вашей карты памяти вам нужна одна МЭ конвертирующая матрица для каждого типа!
+tooltip.solderingwarning.cellnotempty=Эта карта памяти не пуста!

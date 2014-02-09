@@ -1,0 +1,87 @@
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+item.storage.physical.256k=ME 256k存储器
+item.storage.physical.1024k=ME 1M存储器
+item.storage.physical.4096k=ME 4M存储器
+item.storage.physical.16348k=ME 16M存储器
+item.storage.physical.container=ME 方块容器
+item.storage.physical.adjustable=可调式ME存储器
+item.storage.fluid.1k=ME 1k流体存储器
+item.storage.fluid.4k=ME 4k流体存储器
+item.storage.fluid.16k=ME 16k流体存储器
+item.storage.fluid.64k=ME 64k流体存储器
+item.storage.fluid.256k=ME 256k流体存储器
+item.storage.fluid.1m=ME 1M流体存储器
+item.storage.fluid.4m=ME 4M流体存储器
+item.storage.fluid.16m=ME 16M流体存储器
+item.storagecomponent.physical.kilo=Kilo存储簇
+item.storagecomponent.physical.mega=Mega存储簇
+item.storagecomponent.physical.giga=Giga存储簇
+item.storagecomponent.physical.tera=Tera存储簇
+item.storagecomponent.fluid.cell=流体存储元
+item.storagecomponent.fluid.segment=流体存储端
+item.storagecomponent.fluid.block=流体存储块
+item.storagecomponent.fluid.cluster=流体存储簇
+item.storage.physical_secure.encrypted=加密单元-已加密
+item.storage.physical_secure.decrypted=加密单元-已破译
+item.casing.advanced.physical=高级存储单元仓
+item.casing.advanced.fluid=高级流体存储单元仓
+
+//Blocks
+tile.block.solderingstation.name=焊接台
+tile.block.mebattery.name=ME备份电池
+tile.block.medropper.name=ME物品投掷器
+tile.block.hardmedrive.name=防爆ME驱动器
+tile.block.fluid.bus.import.name=ME流体导入总线
+tile.block.fluid.bus.export.name=ME流体导出总线
+tile.block.fluid.bus.storage.name=ME流体存储总线
+tile.block.bus.supplier.name=ME物品供应总线
+tile.block.fluid.terminal.name=ME流体访问终端
+tile.block.fluid.transitionplane.name=ME流体转换板
+tile.block.certustank.name=赛特斯水槽
+tile.block.walrus.name=海象
+tile.block.fluid.levelemitter.name=ME液体信号发射器
+tile.block.fluid.interface.name=ME液体接口
+tile.block.fluid.void.name=虚空液体接口
+
+//Tooltips and Chat-Messages
+tooltip.belongsto=该存储器属于:
+tooltip.notyours=你是这台存储驱动器的拥有者!
+tooltip.accessgranted=授权访问!
+tooltip.storageencrypted=存储器已加密!
+tooltip.empty=空
+tooltip.block=方块
+tooltip.equaltrade1=平等交易模式(1*1)
+tooltip.equaltrade3=平等交易模式(3*3)
+tooltip.placement=放置模式
+tooltip.mode=模式
+tooltip.onlyblocks=你不能放置非方块物品,请在方块容器里放置方块!
+tooltip.item=物品 
+tooltip.dropperlocked=投掷器已锁定
+tooltip.dropperunlocked=投掷器已解锁 
+tooltip.dropset=投掷设置为 
+tooltip.amount=数量 
+tooltip.fluid=流体
+tooltip.fluidmode=Moving-Mode
+tooltip.fluidmode.move=Moves %d mb/t (%d mb/s)! 
+tooltip.fluidmode.cost=Costs %d ae/t! 
+tooltip.solderingwarning.tutorial=将可调式存储单元放入快捷栏，然后拿着它使用焊接台!
+tooltip.solderingwarning.nospacestoragecell=在物品栏腾出空间来取出ME存储单元!
+tooltip.solderingwarning.nospaceconversionmatrix=在物品栏腾出空间来取出ME转换矩阵!
+tooltip.solderingwarning.needstoragecell=为提升存储器容量，每增加2048字节你需要一个ME存储单元!
+tooltip.solderingwarning.needconversionmatrix=为提升存储器存储物品类型数量，每增加一个类型你需要一个ME转换矩阵!
+tooltip.solderingwarning.cellnotempty=该单元不是空单元!
+tooltip.direction.0=下
+tooltip.direction.1=上
+tooltip.direction.2=北
+tooltip.direction.3=南
+tooltip.direction.4=西
+tooltip.direction.5=东
+tooltip.direction.6=未知
+
+//Fluid API Fix
+fluid.tile.water=水
+fluid.tile.lava=岩浆

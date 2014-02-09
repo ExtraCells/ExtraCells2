@@ -1,0 +1,90 @@
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+item.storage.physical.256k=ME 256k Storage
+item.storage.physical.1024k=ME 1M Storage
+item.storage.physical.4096k=ME 4M Storage
+item.storage.physical.16348k=ME 16M Storage
+item.storage.physical.container=ME Block Container
+item.storage.physical.adjustable=Adjustable ME Storage
+item.storage.fluid.1k=ME 1k Fluid Storage
+item.storage.fluid.4k=ME 4k Fluid Storage
+item.storage.fluid.16k=ME 16k Fluid Storage
+item.storage.fluid.64k=ME 64k Fluid Storage
+item.storage.fluid.256k=ME 256k Fluid Storage
+item.storage.fluid.1m=ME 1M Fluid Storage
+item.storage.fluid.4m=ME 4M Fluid Storage
+item.storage.fluid.16m=ME 16M Fluid Storage
+item.storagecomponent.physical.kilo=Kilo Storage Cluster
+item.storagecomponent.physical.mega=Mega Storage Cluster
+item.storagecomponent.physical.giga=Giga Storage Cluster
+item.storagecomponent.physical.tera=Tera Storage Cluster
+item.storagecomponent.fluid.cell=Fluid Storage Cell
+item.storagecomponent.fluid.segment=Fluid Storage Segment
+item.storagecomponent.fluid.block=Fluid Storage Block
+item.storagecomponent.fluid.cluster=Fluid Storage Cluster
+item.storage.physical_secure.encrypted=Encryptable Cell - Encrypted
+item.storage.physical_secure.decrypted=Encryptable Cell - Decrypted
+item.casing.advanced.physical=Advanced Storage Cell Housing
+item.casing.advanced.fluid=Advanced Fluid Storage Cell Housing
+
+//Blocks
+tile.block.solderingstation.name=Soldering Station
+tile.block.mebattery.name=ME BackUp Battery
+tile.block.medropper.name=ME Item Dropper
+tile.block.hardmedrive.name=Blast resistant ME Drive
+tile.block.fluid.bus.import.name=ME Fluid Import Bus
+tile.block.fluid.bus.export.name=ME Fluid Export Bus
+tile.block.fluid.bus.storage.name=ME Fluid Storage Bus
+tile.block.bus.supplier.name=ME Item Supply Bus
+tile.block.fluid.terminal.name=ME Fluid Terminal
+tile.block.fluid.transitionplane.name=ME Fluid Transition Plane
+tile.block.certustank.name=ME Certus Tank
+tile.block.walrus.name=walrus
+tile.block.fluid.levelemitter.name=ME Fluid Level Emitter
+tile.block.fluid.interface.name=ME Fluid Interface
+tile.block.fluid.void.name=Fluid Void
+tile.block.fluid.crafter.name=ME Fluid Craftingchamber
+tile.block.fluid.monitor.storage.name=ME Fluid Storage Monitor
+
+//Tooltips and Chat-Messages
+tooltip.belongsto=This storage belongs to:
+tooltip.notyours=You are not the owner of this storage drive!
+tooltip.accessgranted=Access granted!
+tooltip.storageencrypted=Storage encrypted!
+tooltip.empty1=Empty
+tooltip.empty2=Empty
+tooltip.block=Block
+tooltip.equaltrade1=Equal Trade Mode (1*1)
+tooltip.equaltrade3=Equal Trade Mode (3*3)
+tooltip.placement=Placement Mode
+tooltip.mode=Mode
+tooltip.onlyblocks=You can't place Items! Put a Block into the BLOCK-Container
+tooltip.item=Item
+tooltip.dropperlocked=Dropper Locked
+tooltip.dropperunlocked=Dropper Unlocked
+tooltip.dropset=Drop set to
+tooltip.amount=Amount
+tooltip.fluid=Fluid
+tooltip.fluidmode=Moving-Mode
+tooltip.fluidmode.move=Move %d mb/t (%d mb/s)!
+tooltip.fluidmode.cost=Costs %d ae/t
+tooltip.solderingwarning.tutorial=Put a ME Adjustable Storage into your hotbar and hold it while using the SolderingStation!
+tooltip.solderingwarning.nospacestoragecell=Make place in your inventory to regain the ME Storage Cell!
+tooltip.solderingwarning.nospaceconversionmatrix=Make place in your inventory to regain the ME Conversion Matrix!
+tooltip.solderingwarning.needstoragecell=To upgrade the size of your storage, you need one ME Storage Cell for each 2048 Bytes!
+tooltip.solderingwarning.needconversionmatrix=To upgrade the number of types of your Storage, you need one ME Conversion Matrix for each type!
+tooltip.solderingwarning.cellnotempty=This Cell is not Empty!
+tooltip.direction.0=Down
+tooltip.direction.1=Up
+tooltip.direction.2=North
+tooltip.direction.3=South
+tooltip.direction.4=West
+tooltip.direction.5=East
+tooltip.direction.6=Unknown
+
+//Fluid API Fix
+fluid.tile.water=Water
+fluid.tile.lava=Lava
