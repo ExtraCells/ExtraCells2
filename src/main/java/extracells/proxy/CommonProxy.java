@@ -53,27 +53,19 @@ public class CommonProxy implements IGuiHandler
 	@Override
 	public Object getServerGuiElement(int Id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		if (Id > 0)
-		{
-			int partId = Id >> 7;
-			ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
-			PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
-			return part.getServerGuiElement(player);
-		}
-		return null;
+		int partId = Id >> 7;
+		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
+		PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
+		return part.getServerGuiElement(player);
 	}
 
 	@Override
 	public Object getClientGuiElement(int Id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		if (Id > 0)
-		{
-			int partId = Id >> 7;
-			ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
-			PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
-			return part.getClientGuiElement(player);
-		}
-		return null;
+		int partId = Id >> 7;
+		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
+		PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
+		return part.getClientGuiElement(player);
 	}
 
 	public static int getGuiId(PartECBase part)

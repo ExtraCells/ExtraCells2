@@ -1,5 +1,6 @@
 package extracells.gui;
 
+import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import extracells.container.ContainerBusIOFluid;
 import extracells.gui.widget.WidgetFluidModes;
@@ -13,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -152,12 +154,16 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn)
 	{
+		Slot slot = getSlotAtPosition(mouseX, mouseY);
+
+		if (slot != null && slot.getStack() != null && slot.getStack().isItemEqual(AEApi.instance().items().itemNetworkTool.stack(1)))
+			return;
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
-		for (WidgetFluidSlot slot : fluidSlotList)
+		for (WidgetFluidSlot fluidSlot : fluidSlotList)
 		{
-			if (isPointInRegion(slot.getPosX(), slot.getPosY(), 18, 18, mouseX, mouseY))
+			if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
 			{
-				slot.mouseClicked(player.inventory.getItemStack());
+				fluidSlot.mouseClicked(player.inventory.getItemStack());
 				break;
 			}
 		}
@@ -181,5 +187,25 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 	public byte getConfigState()
 	{
 		return filterSize;
+	}
+
+	protected Slot getSlotAtPosition(int p_146975_1_, int p_146975_2_)
+	{
+		for (int k = 0; k < this.inventorySlots.inventorySlots.size(); ++k)
+		{
+			Slot slot = (Slot) this.inventorySlots.inventorySlots.get(k);
+
+			if (this.isMouseOverSlot(slot, p_146975_1_, p_146975_2_))
+			{
+				return slot;
+			}
+		}
+
+		return null;
+	}
+
+	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_)
+	{
+		return this.func_146978_c(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
 	}
 }
