@@ -32,8 +32,8 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	protected Fluid[] filterFluids = new Fluid[8];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 	private FluidMode fluidMode = FluidMode.DROPS;
-	private byte filterSize;
-	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4, 1)
+	protected byte filterSize;
+	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4, 1, this)
 	{
 		public boolean isItemValidForSlot(int i, ItemStack itemstack)
 		{
@@ -177,6 +177,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid(Arrays.asList(filterFluids)).makePacket(), player);
 		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 0, (byte) redstoneMode.ordinal()).makePacket(), player);
 		PacketDispatcher.sendPacketToPlayer(new PacketBusIOFluid((byte) 1, (byte) fluidMode.ordinal()).makePacket(), player);
+		PacketDispatcher.sendPacketToAllPlayers(new PacketBusIOFluid(filterSize).makePacket());
 	}
 
 	@Override
@@ -185,7 +186,8 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 		filterSize = 0;
 		for (int i = 0; i < upgradeInventory.getSizeInventory(); i++)
 		{
-			if (upgradeInventory.getStackInSlot(i).isItemEqual(AEApi.instance().materials().materialCardCapacity.stack(1)))
+			ItemStack currentStack = upgradeInventory.getStackInSlot(i);
+			if (currentStack != null && currentStack.isItemEqual(AEApi.instance().materials().materialCardCapacity.stack(1)))
 				filterSize++;
 		}
 		PacketDispatcher.sendPacketToAllPlayers(new PacketBusIOFluid(filterSize).makePacket());

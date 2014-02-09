@@ -88,13 +88,13 @@ public class GuiBusIOFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		boolean overlayRendered = false;
+		boolean overlayRendered;
 		fluidSlotList.get(4).drawWidget();
 		overlayRendered = renderOverlay(fluidSlotList.get(4), mouseX, mouseY);
 
 		if (filterSize >= 1)
 		{
-			for (byte i = 0; i < 9; i += 2)
+			for (byte i = 1; i < 9; i += 2)
 			{
 				if (i != 4)
 				{
@@ -107,11 +107,14 @@ public class GuiBusIOFluid extends GuiContainer
 
 		if (filterSize >= 2)
 		{
-			for (byte i = 1; i < 9; i += 2)
+			for (byte i = 0; i < 9; i += 2)
 			{
-				fluidSlotList.get(i).drawWidget();
-				if (!overlayRendered)
-					renderOverlay(fluidSlotList.get(i), mouseX, mouseY);
+				if (i != 4)
+				{
+					fluidSlotList.get(i).drawWidget();
+					if (!overlayRendered)
+						renderOverlay(fluidSlotList.get(i), mouseX, mouseY);
+				}
 			}
 		}
 	}

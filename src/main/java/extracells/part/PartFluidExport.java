@@ -10,6 +10,9 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PartFluidExport extends PartFluidIO
 {
 
@@ -64,7 +67,32 @@ public class PartFluidExport extends PartFluidIO
 	{
 		if (facingTank == null)
 			return false;
-		for (Fluid fluid : filterFluids)
+		List<Fluid> filter = new ArrayList<Fluid>();
+		filter.add(filterFluids[4]);
+
+		if (filterSize >= 1)
+		{
+			for (byte i = 1; i < 9; i += 2)
+			{
+				if (i != 4)
+				{
+					filter.add(filterFluids[i]);
+				}
+			}
+		}
+
+		if (filterSize >= 2)
+		{
+			for (byte i = 0; i < 9; i += 2)
+			{
+				if (i != 4)
+				{
+					filter.add(filterFluids[i]);
+				}
+			}
+		}
+
+		for (Fluid fluid : filter)
 		{
 			if (fluid != null)
 			{
