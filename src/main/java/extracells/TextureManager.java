@@ -1,7 +1,7 @@
 package extracells;
 
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 
 public enum TextureManager
 {
@@ -11,7 +11,7 @@ public enum TextureManager
 	STORAGE_FRONT("storage_front");
 
 	private String textureName;
-	private Icon texture;
+	private IIcon texture;
 
 	TextureManager(String _textureName)
 	{
@@ -23,7 +23,7 @@ public enum TextureManager
 		texture = textureMap.registerIcon("extracells:part/" + textureName);
 	}
 
-	public Icon getTexture()
+	public IIcon getTexture()
 	{
 		return texture;
 	}

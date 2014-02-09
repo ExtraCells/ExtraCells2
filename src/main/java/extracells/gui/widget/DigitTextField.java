@@ -26,13 +26,13 @@ public class DigitTextField extends GuiTextField
 				this.setSelectionPos(0);
 				return true;
 			case 3:
-				GuiScreen.setClipboardString(this.getSelectedtext());
+				GuiScreen.setClipboardString(getSelectedText());
 				return true;
 			case 22:
 				this.writeText(GuiScreen.getClipboardString());
 				return true;
 			case 24:
-				GuiScreen.setClipboardString(this.getSelectedtext());
+				GuiScreen.setClipboardString(getSelectedText());
 				this.writeText("");
 				return true;
 			default:

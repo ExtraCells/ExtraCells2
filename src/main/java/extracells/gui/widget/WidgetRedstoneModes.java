@@ -40,54 +40,68 @@ public class WidgetRedstoneModes extends GuiButton
 	@Override
 	public void drawButton(Minecraft minecraftInstance, int x, int y)
 	{
-		if (this.drawButton)
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		mouseDragged(minecraftInstance, x, y);
+
+		minecraftInstance.getTextureManager().bindTexture(new ResourceLocation("extracells", "textures/gui/redstonemodes.png"));
+		drawTexturedModalRect(xPosition, yPosition, 0, 16, 16, 16);
+
+		switch (redstoneMode)
 		{
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.mouseDragged(minecraftInstance, x, y);
+		case HIGH_SIGNAL:
+			drawTexturedModalRect(xPosition, yPosition, 16, 0, 16, 16);
+			break;
+		case LOW_SIGNAL:
+			drawTexturedModalRect(xPosition, yPosition, 0, 0, 16, 16);
+			break;
+		case SIGNAL_PULSE:
+			drawTexturedModalRect(xPosition, yPosition, 32, 0, 16, 16);
+			break;
+		case IGNORE:
+			drawTexturedModalRect(xPosition, yPosition, 48, 0, 16, 16);
+			break;
+		default:
+			break;
+		}
+	}
 
-			minecraftInstance.getTextureManager().bindTexture(new ResourceLocation("extracells", "textures/gui/redstonemodes.png"));
-			drawTexturedModalRect(xPosition, yPosition, 0, 16, 16, 16);
+	public void drawTooltip(int guiLeft, int guiTop)
+	{
+		List<String> description = new ArrayList<String>();
+		description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.RedstoneMode"));
+		String explanation = "";
+		switch (redstoneMode)
+		{
+		case HIGH_SIGNAL:
+			explanation = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelAbove" : "AppEng.GuiITooltip.ActiveWithSignal");
+			break;
+		case LOW_SIGNAL:
+			explanation = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelsBelow" : "AppEng.GuiITooltip.ActiveWithoutSignal");
+			break;
+		case SIGNAL_PULSE:
+			explanation = StatCollector.translateToLocal("AppEng.GuiITooltip.ActiveOnPulse");
+			break;
+		case IGNORE:
+			explanation = StatCollector.translateToLocal("AppEng.GuiITooltip.AlwaysActive");
+			break;
+		default:
+			break;
+		}
 
-			List<String> description = new ArrayList<String>();
-			description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.RedstoneMode"));
-			String explanation = "";
-			switch (redstoneMode)
-			{
-			case HIGH_SIGNAL:
-				drawTexturedModalRect(xPosition, yPosition, 16, 0, 16, 16);
-				explanation = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelAbove" : "AppEng.GuiITooltip.ActiveWithSignal");
-				break;
-			case LOW_SIGNAL:
-				drawTexturedModalRect(xPosition, yPosition, 0, 0, 16, 16);
-				explanation = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelsBelow" : "AppEng.GuiITooltip.ActiveWithoutSignal");
-				break;
-			case SIGNAL_PULSE:
-				drawTexturedModalRect(xPosition, yPosition, 32, 0, 16, 16);
-				explanation = StatCollector.translateToLocal("AppEng.GuiITooltip.ActiveOnPulse");
-				break;
-			case IGNORE:
-				drawTexturedModalRect(xPosition, yPosition, 48, 0, 16, 16);
-				explanation = StatCollector.translateToLocal("AppEng.GuiITooltip.AlwaysActive");
-				break;
-			default:
-				break;
-			}
+		for (String current : Splitter.fixedLength(30).split(explanation))
+		{
+			description.add(EnumChatFormatting.GRAY + current);
+		}
 
-			for (String current : Splitter.fixedLength(30).split(explanation))
-			{
-				description.add(EnumChatFormatting.GRAY + current);
-			}
+		Minecraft mc = Minecraft.getMinecraft();
+		ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 
-			Minecraft mc = Minecraft.getMinecraft();
-			ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
+		int mouseX = Mouse.getX() * scaledresolution.getScaledWidth() / mc.displayWidth;
+		int mouseY = scaledresolution.getScaledHeight() - Mouse.getY() * scaledresolution.getScaledHeight() / mc.displayHeight - 1;
 
-			int mouseX = Mouse.getX() * scaledresolution.getScaledWidth() / mc.displayWidth;
-			int mouseY = scaledresolution.getScaledHeight() - Mouse.getY() * scaledresolution.getScaledHeight() / mc.displayHeight - 1;
-
-			if (mouseX >= xPosition && mouseX <= xPosition + width && mouseY >= yPosition && mouseY <= yPosition + height)
-			{
-				drawHoveringText(description, mouseX, mouseY, mc.fontRenderer);
-			}
+		if (mouseX >= xPosition && mouseX <= xPosition + width && mouseY >= yPosition && mouseY <= yPosition + height)
+		{
+			drawHoveringText(description, mouseX - guiLeft, mouseY - guiTop, mc.fontRenderer);
 		}
 	}
 

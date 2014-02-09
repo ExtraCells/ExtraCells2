@@ -3,30 +3,34 @@ package extracells;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
+import extracells.block.BlockCertusTank;
 import extracells.item.ItemBlockCertusTank;
+
 public enum BlockEnum
 {
-	CERTUSTANK("tile.block.certustank.name", 509, extracells.block.BlockCertusTank.class, ItemBlockCertusTank.class, "ID for the ME Certus Tank", "CertusTank");
+	CERTUSTANK("tile.block.certustank.name", 509, new BlockCertusTank(), ItemBlockCertusTank.class);
 	private final String internalName;
-	private String description, IDName;
-	private int ID;
+	private int Id;
 	private Block block;
-	private Class<? extends Block> blockClass;
 	private Class<? extends ItemBlock> itemBlockClass;
 
-	BlockEnum(String internalName, int ID, Class<? extends Block> blockClass, String description, String IDName)
+	BlockEnum(String _internalName, int _Id, Block _block)
 	{
-		this(internalName, ID, blockClass, ItemBlock.class, description, IDName);
+		this(_internalName, _Id, _block, ItemBlock.class);
 	}
 
-	BlockEnum(String internalName, int ID, Class<? extends Block> blockClass, Class<? extends ItemBlock> itemBlockClass, String description, String IDName)
+	BlockEnum(String _internalName, int _Id, Block _block, Class<? extends ItemBlock> _itemBlockClass)
 	{
-		this.internalName = internalName;
-		this.ID = ID;
-		this.blockClass = blockClass;
-		this.itemBlockClass = itemBlockClass;
-		this.description = description;
-		this.IDName = IDName;
+		internalName = _internalName;
+		Id = _Id;
+		block = _block;
+		block.setBlockName("extracells." + internalName);
+		itemBlockClass = _itemBlockClass;
+	}
+
+	public String getInternalName()
+	{
+		return internalName;
 	}
 
 	public String getStatName()
@@ -34,39 +38,19 @@ public enum BlockEnum
 		return StatCollector.translateToLocal(internalName);
 	}
 
-	public void setID(int ID)
+	public void setId(int id)
 	{
-		this.ID = ID;
+		this.Id = id;
 	}
 
-	public int getID()
+	public int getId()
 	{
-		return ID;
+		return Id;
 	}
 
-	public void setBlockInstance(Block block)
-	{
-		this.block = block;
-	}
-
-	public Block getBlockInstance()
+	public Block getBlock()
 	{
 		return block;
-	}
-
-	public String getDescription()
-	{
-		return description;
-	}
-
-	public String getIDName()
-	{
-		return IDName;
-	}
-
-	public Class<? extends Block> getBlockClass()
-	{
-		return blockClass;
 	}
 
 	public Class<? extends ItemBlock> getItemBlockClass()

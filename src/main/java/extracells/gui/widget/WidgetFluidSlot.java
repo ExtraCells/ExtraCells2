@@ -1,6 +1,5 @@
 package extracells.gui.widget;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.network.packet.PacketBusIOFluid;
 import extracells.part.PartFluidIO;
 import extracells.util.FluidUtil;
@@ -9,6 +8,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -25,13 +25,24 @@ public class WidgetFluidSlot extends Gui
 	private Fluid fluid;
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
 	private PartFluidIO part;
+	private EntityPlayer player;
+	private IConfigurable configurable;
+	private byte configOption;
 
-	public WidgetFluidSlot(PartFluidIO _part, int _id, int _posX, int _posY)
+	public WidgetFluidSlot(EntityPlayer _player, PartFluidIO _part, int _id, int _posX, int _posY, IConfigurable _configurable, byte _configOption)
 	{
+		player = _player;
 		part = _part;
 		id = _id;
 		posX = _posX;
 		posY = _posY;
+		configurable = _configurable;
+		configOption = _configOption;
+	}
+
+	public WidgetFluidSlot(EntityPlayer _player, PartFluidIO _part, int _id, int _posX, int _posY)
+	{
+		this(_player, _part, _id, _posX, _posY, null, (byte) 0);
 	}
 
 	public int getPosX()
@@ -56,34 +67,50 @@ public class WidgetFluidSlot extends Gui
 
 	public void drawWidget()
 	{
-		GL11.glPushMatrix();
-		boolean lighting_enabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
-		drawTexturedModalRect(posX, posY, 79, 39, 18, 18);
-		if (lighting_enabled)
-			GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glPopMatrix();
-		if (fluid != null && fluid.getIcon() != null)
+		if (canRender())
 		{
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			GL11.glPushMatrix();
+			boolean lighting_enabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
-			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), 16, 16);
-			GL11.glScalef(0.5F, 0.5F, 0.5F);
+			Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
+			drawTexturedModalRect(posX, posY, 79, 39, 18, 18);
 			if (lighting_enabled)
 				GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glPopMatrix();
+			if (fluid != null && fluid.getIcon() != null)
+			{
+				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+				GL11.glPushMatrix();
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glColor3f(1.0F, 1.0F, 1.0F);
+				drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), 16, 16);
+				GL11.glScalef(0.5F, 0.5F, 0.5F);
+				if (lighting_enabled)
+					GL11.glEnable(GL11.GL_LIGHTING);
+				GL11.glPopMatrix();
+			}
 		}
+	}
+
+	public void drawTooltip()
+	{
+		if (canRender())
+		{
+
+		}
+	}
+
+	public boolean canRender()
+	{
+		return configurable == null || configurable.getConfigState() >= configOption;
 	}
 
 	public void mouseClicked(ItemStack stack)
 	{
 		FluidStack fluidStack = FluidUtil.getFluidFromContainer(stack);
 		fluid = fluidStack == null ? null : fluidStack.getFluid();
-		PacketDispatcher.sendPacketToServer(new PacketBusIOFluid((byte) id, fluid, part).makePacket());
+		new PacketBusIOFluid(player, (byte) id, fluid, part).sendPacketToServer();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -152,5 +179,10 @@ public class WidgetFluidSlot extends Gui
 			RenderHelper.enableStandardItemLighting();
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		}
+	}
+
+	public interface IConfigurable
+	{
+		public byte getConfigState();
 	}
 }

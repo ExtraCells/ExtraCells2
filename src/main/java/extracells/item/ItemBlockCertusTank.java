@@ -15,14 +15,13 @@ import java.util.List;
 
 public class ItemBlockCertusTank extends ItemBlock
 {
-
-	public ItemBlockCertusTank(int id)
+	public ItemBlockCertusTank(Block block)
 	{
-		super(id);
+		super(block);
 	}
 
 	@Override
-	public String getItemDisplayName(ItemStack itemstack)
+	public String getItemStackDisplayName(ItemStack itemstack)
 	{
 		if (itemstack != null)
 		{
@@ -45,7 +44,8 @@ public class ItemBlockCertusTank extends ItemBlock
 		return "";
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings(
+	{ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
@@ -60,20 +60,20 @@ public class ItemBlockCertusTank extends ItemBlock
 	@Override
 	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
-		if (!world.setBlock(x, y, z, getBlockID(), metadata, 3))
+		if (!world.setBlock(x, y, z, field_150939_a, metadata, 3))
 		{
 			return false;
 		}
 
-		if (world.getBlockId(x, y, z) == getBlockID())
+		if (world.getBlock(x, y, z) == field_150939_a)
 		{
-			Block.blocksList[getBlockID()].onBlockPlacedBy(world, x, y, z, player, stack);
-			Block.blocksList[getBlockID()].onPostBlockPlaced(world, x, y, z, metadata);
+			field_150939_a.onBlockPlacedBy(world, x, y, z, player, stack);
+			field_150939_a.onPostBlockPlaced(world, x, y, z, metadata);
 		}
 
 		if (stack != null && stack.hasTagCompound())
 		{
-			((TileEntityCertusTank) world.getBlockTileEntity(x, y, z)).readFromNBTWithoutCoords(stack.getTagCompound().getCompoundTag("tileEntity"));
+			((TileEntityCertusTank) world.getTileEntity(x, y, z)).readFromNBTWithoutCoords(stack.getTagCompound().getCompoundTag("tileEntity"));
 		}
 		return true;
 	}

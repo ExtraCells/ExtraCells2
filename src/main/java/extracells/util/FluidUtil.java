@@ -8,19 +8,20 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 
 public class FluidUtil
 {
-	public static FluidStack getFluidFromContainer(ItemStack container)
+	public static FluidStack getFluidFromContainer(ItemStack stack)
 	{
 		FluidStack fluid = null;
-		if (container == null)
+		if (stack == null)
 			return null;
+
+		ItemStack container = stack.copy();
 		Item item = container.getItem();
 		if (item instanceof IFluidContainerItem)
 		{
 			return ((IFluidContainerItem) item).getFluid(container);
-		} else if (FluidContainerRegistry.isFilledContainer(container))
+		} else
 		{
 			return FluidContainerRegistry.getFluidForFilledItem(container);
 		}
-		return null;
 	}
 }

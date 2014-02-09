@@ -8,13 +8,12 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import extracells.TextureManager;
 import extracells.inventoryHandler.HandlerPartStorageFluid;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		Icon side = TextureManager.BUS_SIDE.getTexture();
+		IIcon side = TextureManager.BUS_SIDE.getTexture();
 		rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
 		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
 		rh.renderInventoryBox(renderer);
@@ -38,7 +37,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		Icon side = TextureManager.BUS_SIDE.getTexture();
+		IIcon side = TextureManager.BUS_SIDE.getTexture();
 		rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
 		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
 		rh.renderBlock(x, y, z, renderer);
@@ -59,13 +58,13 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	}
 
 	@Override
-	public void writeToStream(DataOutputStream data) throws IOException
+	public void writeToStream(ByteBuf data) throws IOException
 	{
 
 	}
 
 	@Override
-	public boolean readFromStream(DataInputStream data) throws IOException
+	public boolean readFromStream(ByteBuf data) throws IOException
 	{
 		return false;
 	}

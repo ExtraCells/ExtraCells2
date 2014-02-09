@@ -6,9 +6,8 @@ import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.TextureManager;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -23,8 +22,6 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(Block.stone.getIcon(0, 0));
-
 		rh.setTexture(TextureManager.IMPORT_FRONT.getTexture());
 		rh.setBounds(4F, 4F, 15F, 12, 12, 16);
 		rh.renderInventoryBox(renderer);
@@ -40,7 +37,6 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(Block.stone.getIcon(0, 0));
 		rh.useSimpliedRendering(x, y, z, this);
 
 		rh.setTexture(TextureManager.IMPORT_FRONT.getTexture());
@@ -160,9 +156,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 
 		if (filled == null)
 			return 20;
-		if (filled != null)
-			return toFill.amount - (int) filled.getStackSize();
-		return 0;
+		return toFill.amount - (int) filled.getStackSize();
 	}
 
 	@Override

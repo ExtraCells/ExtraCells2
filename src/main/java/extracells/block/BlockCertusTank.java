@@ -1,42 +1,40 @@
 package extracells.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import extracells.BlockEnum;
 import extracells.Extracells;
+import extracells.network.ChannelHandler;
 import extracells.render.RenderHandler;
 import extracells.tileentity.TileEntityCertusTank;
 
 public class BlockCertusTank extends BlockContainer
 {
-	Icon breakIcon;
-	Icon topIcon;
-	Icon bottomIcon;
-	Icon sideIcon;
-	Icon sideMiddleIcon;
-	Icon sideTopIcon;
-	Icon sideBottomIcon;
+	IIcon breakIcon;
+	IIcon topIcon;
+	IIcon bottomIcon;
+	IIcon sideIcon;
+	IIcon sideMiddleIcon;
+	IIcon sideTopIcon;
+	IIcon sideBottomIcon;
 
-
-	public BlockCertusTank(int id)
+	public BlockCertusTank()
 	{
-		super(id, Material.glass);
+		super(Material.glass);
 		setCreativeTab(Extracells.ModTab);
-		setUnlocalizedName("block.certustank");
+		setBlockName("extracells.block.certustank");
 		setHardness(2.0F);
 		setResistance(10.0F);
 		setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 1.0F, 0.9375F);
@@ -49,35 +47,33 @@ public class BlockCertusTank extends BlockContainer
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int b)
+	public IIcon getIcon(int side, int b)
 	{
-		//a slight abuse of metadata but it should cause little issue.
-		if(b==1)
+		if (b == 1)
 			return sideTopIcon;
-		if(b==2)
+		if (b == 2)
 			return sideBottomIcon;
-		if(b==3)
+		if (b == 3)
 			return sideMiddleIcon;
-		return  side == 0 ? bottomIcon : side == 1 ? topIcon :sideIcon;
+		return side == 0 ? bottomIcon : side == 1 ? topIcon : sideIcon;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconregister)
+	@Override
+	public void registerBlockIcons(IIconRegister iconregister)
 	{
 		breakIcon = iconregister.registerIcon("extracells:certustank");
-		topIcon=iconregister.registerIcon("extracells:CTankTop");
-		bottomIcon=iconregister.registerIcon("extracells:CTankBottom");
-		sideIcon=iconregister.registerIcon("extracells:CTankSide");
-		sideMiddleIcon=iconregister.registerIcon("extracells:CTankSideMiddle");
-		sideTopIcon=iconregister.registerIcon("extracells:CTankSideTop");
-		sideBottomIcon=iconregister.registerIcon("extracells:CTankSideBottom");
+		topIcon = iconregister.registerIcon("extracells:CTankTop");
+		bottomIcon = iconregister.registerIcon("extracells:CTankBottom");
+		sideIcon = iconregister.registerIcon("extracells:CTankSide");
+		sideMiddleIcon = iconregister.registerIcon("extracells:CTankSideMiddle");
+		sideTopIcon = iconregister.registerIcon("extracells:CTankSideTop");
+		sideBottomIcon = iconregister.registerIcon("extracells:CTankSideBottom");
 	}
 
 	@Override
 	public boolean canRenderInPass(int pass)
 	{
-		RenderHandler.renderPass=pass;
+		RenderHandler.renderPass = pass;
 		return true;
 	}
 
@@ -90,18 +86,19 @@ public class BlockCertusTank extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer entityplayer, int blockID, float offsetX, float offsetY, float offsetZ)
 	{
+		System.out.println("asdasd");
 		ItemStack current = entityplayer.inventory.getCurrentItem();
 
 		if (entityplayer.isSneaking() && current == null)
 		{
-			dropBlockAsItem_do(worldObj, x, y, z, getDropWithNBT(worldObj, x, y, z));
-			worldObj.destroyBlock(x, y, z, false);
+			dropBlockAsItem(worldObj, x, y, z, getDropWithNBT(worldObj, x, y, z));
+			worldObj.setBlockToAir(x, y, z);
 			return true;
 		}
 		if (current != null)
 		{
 			FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(current);
-			TileEntityCertusTank tank = (TileEntityCertusTank) worldObj.getBlockTileEntity(x, y, z);
+			TileEntityCertusTank tank = (TileEntityCertusTank) worldObj.getTileEntity(x, y, z);
 
 			if (liquid != null)
 			{
@@ -112,10 +109,10 @@ public class BlockCertusTank extends BlockContainer
 					if (current.stackSize > 1)
 					{
 						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
-						entityplayer.inventory.addItemStackToInventory(current.getItem().getContainerItemStack(current));
+						entityplayer.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
 					} else
 					{
-						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = current.getItem().getContainerItemStack(current);
+						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = current.getItem().getContainerItem(current);
 					}
 				}
 
@@ -163,15 +160,15 @@ public class BlockCertusTank extends BlockContainer
 	public ItemStack getDropWithNBT(World world, int x, int y, int z)
 	{
 		NBTTagCompound tileEntity = new NBTTagCompound();
-		TileEntity worldTE = world.getBlockTileEntity(x, y, z);
+		TileEntity worldTE = world.getTileEntity(x, y, z);
 		if (worldTE != null && worldTE instanceof TileEntityCertusTank)
 		{
-			ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlockInstance(), 1);
+			ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlock(), 1);
 
 			((TileEntityCertusTank) worldTE).writeToNBTWithoutCoords(tileEntity);
 
 			dropStack.setTagCompound(new NBTTagCompound());
-			dropStack.stackTagCompound.setCompoundTag("tileEntity", tileEntity);
+			dropStack.stackTagCompound.setTag("tileEntity", tileEntity);
 			return dropStack;
 
 		}
@@ -179,7 +176,7 @@ public class BlockCertusTank extends BlockContainer
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world)
+	public TileEntity createNewTileEntity(World var1, int var2)
 	{
 		return new TileEntityCertusTank();
 	}
@@ -203,11 +200,12 @@ public class BlockCertusTank extends BlockContainer
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int neighbourID)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block neighborBlock)
 	{
 		if (!world.isRemote)
 		{
-			PacketDispatcher.sendPacketToAllPlayers(world.getBlockTileEntity(x, y, z).getDescriptionPacket());
+
+			ChannelHandler.sendPacketToAllPlayers(world.getTileEntity(x, y, z).getDescriptionPacket(), world);
 		}
 	}
 }

@@ -5,7 +5,6 @@ import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,10 +18,8 @@ public class ItemPartECBase extends Item implements IPartItem
 {
 	private static List<Class<? extends IPart>> ecParts = new ArrayList<Class<? extends IPart>>();
 
-	public ItemPartECBase(int itemId)
+	public ItemPartECBase()
 	{
-		super(itemId);
-		setCreativeTab(Extracells.ModTab);
 		AEApi.instance().partHelper().setItemBusRenderer(this);
 	}
 
@@ -45,12 +42,12 @@ public class ItemPartECBase extends Item implements IPartItem
 		return 0;
 	}
 
-	public void getSubItems(int itemID, CreativeTabs creativeTab, List itemList)
+	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList)
 	{
 		for (int i = 0; i < ecParts.size(); i++)
 		{
 			if (ecParts.get(i) != null)
-				itemList.add(new ItemStack(itemID, 1, i));
+				itemList.add(new ItemStack(item, 1, i));
 		}
 	}
 

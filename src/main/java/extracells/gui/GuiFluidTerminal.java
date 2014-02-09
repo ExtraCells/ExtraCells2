@@ -1,7 +1,6 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.widget.AbstractFluidWidget;
 import extracells.gui.widget.FluidWidgetComparator;
@@ -40,7 +39,7 @@ public class GuiFluidTerminal extends GuiContainer
 		super(new ContainerFluidTerminal(_terminal, _player));
 		containerTerminalFluid = (ContainerFluidTerminal) inventorySlots;
 		containerTerminalFluid.setGui(this);
-		PacketDispatcher.sendPacketToServer(new PacketFluidTerminal(containerTerminalFluid.getTerminal()).makePacket());
+		new PacketFluidTerminal(player, containerTerminalFluid.getTerminal()).sendPacketToServer();
 		terminal = _terminal;
 		player = _player;
 	}
@@ -73,7 +72,7 @@ public class GuiFluidTerminal extends GuiContainer
 
 		updateFluids();
 		Collections.sort(fluidWidgets, new FluidWidgetComparator());
-		searchbar = new GuiTextField(fontRenderer, guiLeft + 81, guiTop - 12, 88, 10)
+		searchbar = new GuiTextField(fontRendererObj, guiLeft + 81, guiTop - 12, 88, 10)
 		{
 			private int xPos = 0;
 			private int yPos = 0;
@@ -104,7 +103,7 @@ public class GuiFluidTerminal extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		fontRenderer.drawString("extracells.part.fluid.terminal".replace("ME ", ""), 5, -12, 0x000000);
+		fontRendererObj.drawString("extracells.part.fluid.terminal".replace("ME ", ""), 5, -12, 0x000000);
 		drawWidgets(mouseX, mouseY);
 		if (currentFluid != null)
 		{
@@ -122,8 +121,8 @@ public class GuiFluidTerminal extends GuiContainer
 				}
 			}
 
-			fontRenderer.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);
-			fontRenderer.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + currentFluid.getFluid().getLocalizedName(), 45, 83, 0x000000);
+			fontRendererObj.drawString(StatCollector.translateToLocal("tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);
+			fontRendererObj.drawString(StatCollector.translateToLocal("tooltip.fluid") + ": " + currentFluid.getFluid().getLocalizedName(), 45, 83, 0x000000);
 		}
 	}
 

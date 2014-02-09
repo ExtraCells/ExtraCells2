@@ -9,16 +9,15 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
 import extracells.ItemEnum;
 import extracells.inventoryHandler.HandlerItemStorageFluid;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 
@@ -33,29 +32,27 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	{ 1024, 4096, 16348, 65536 };
 
 	@SideOnly(Side.CLIENT)
-	private Icon[] icons;
+	private IIcon[] icons;
 
-	public ItemStorageFluid(int itemId)
+	public ItemStorageFluid()
 	{
-		super(itemId);
 		AEApi.instance().registries().cell().addCellHandler(this);
 		setMaxStackSize(1);
 		setMaxDamage(0);
 		setHasSubtypes(true);
-		setCreativeTab(Extracells.ModTab);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public Icon getIconFromDamage(int dmg)
+	public IIcon getIconFromDamage(int dmg)
 	{
 		int j = MathHelper.clamp_int(dmg, 0, suffixes.length);
 		return icons[j];
 	}
 
 	@Override
-	public void registerIcons(IconRegister iconRegister)
+	public void registerIcons(IIconRegister iconRegister)
 	{
-		icons = new Icon[suffixes.length];
+		icons = new IIcon[suffixes.length];
 
 		for (int i = 0; i < suffixes.length; ++i)
 		{
@@ -66,11 +63,12 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(int itemId, CreativeTabs creativeTab, List listSubItems)
+	@Override
+	public void getSubItems(Item item, CreativeTabs creativeTab, List listSubItems)
 	{
 		for (int i = 0; i < suffixes.length; ++i)
 		{
-			listSubItems.add(new ItemStack(itemId, 1, i));
+			listSubItems.add(new ItemStack(item, 1, i));
 		}
 	}
 
@@ -89,7 +87,7 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	}
 
 	@Override
-	public Icon getTopTexture()
+	public IIcon getTopTexture()
 	{
 		return null; // TODO
 	}

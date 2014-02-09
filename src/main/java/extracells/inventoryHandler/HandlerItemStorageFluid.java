@@ -33,8 +33,8 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (!_storageStack.hasTagCompound())
 			_storageStack.setTagCompound(new NBTTagCompound());
 		stackTag = _storageStack.getTagCompound();
-		totalTypes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItemInstance()).maxTypes(_storageStack) * 250;
-		totalBytes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItemInstance()).maxStorage(_storageStack) * 250;
+		totalTypes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItem()).maxTypes(_storageStack) * 250;
+		totalBytes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItem()).maxStorage(_storageStack) * 250;
 
 		for (int i = 0; i < totalTypes; i++)
 			fluidStacks.add(FluidStack.loadFluidStackFromNBT(stackTag.getCompoundTag("Fluid#" + i)));
@@ -258,7 +258,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (fluidStack != null && fluidStack.fluidID > 0 && fluidStack.amount > 0)
 		{
 			fluidStack.writeToNBT(fluidTag);
-			stackTag.setCompoundTag("Fluid#" + i, fluidTag);
+			stackTag.setTag("Fluid#" + i, fluidTag);
 		} else
 		{
 			stackTag.removeTag("Fluid#" + i);

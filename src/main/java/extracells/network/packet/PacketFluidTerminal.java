@@ -1,65 +1,66 @@
 package extracells.network.packet;
 
 import appeng.api.AEApi;
-import appeng.api.parts.IPartHost;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import cpw.mods.fml.relauncher.Side;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.GuiFluidTerminal;
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidTerminal;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.io.IOException;
+
 public class PacketFluidTerminal extends AbstractPacket
 {
 	IItemList<IAEFluidStack> fluidStackList;
-	byte mode;
 	Fluid currentFluid;
 	PartFluidTerminal terminalFluid;
 
-	public PacketFluidTerminal(IItemList<IAEFluidStack> _list)
-	{
-		mode = 0;
-		fluidStackList = _list;
-	}
-
+	@SuppressWarnings("unused")
 	public PacketFluidTerminal()
 	{
 	}
 
-	public PacketFluidTerminal(Fluid _currentFluid, PartFluidTerminal _terminalFluid)
+	public PacketFluidTerminal(EntityPlayer _player, IItemList<IAEFluidStack> _list)
 	{
+		super(_player);
+		mode = 0;
+		fluidStackList = _list;
+	}
+
+	public PacketFluidTerminal(EntityPlayer _player, Fluid _currentFluid, PartFluidTerminal _terminalFluid)
+	{
+		super(_player);
 		mode = 1;
 		currentFluid = _currentFluid;
 		terminalFluid = _terminalFluid;
 	}
 
-	public PacketFluidTerminal(Fluid _currentFluid)
+	public PacketFluidTerminal(EntityPlayer _player, Fluid _currentFluid)
 	{
+		super(_player);
 		mode = 2;
 		currentFluid = _currentFluid;
 	}
 
-	public PacketFluidTerminal(PartFluidTerminal _terminalFluid)
+	public PacketFluidTerminal(EntityPlayer _player, PartFluidTerminal _terminalFluid)
 	{
+		super(_player);
 		mode = 3;
 		terminalFluid = _terminalFluid;
 	}
 
 	@Override
-	public void write(ByteArrayDataOutput out)
+	public void writePacketData(ByteBuf out) throws IOException
 	{
-		out.writeByte(mode);
+		super.writePacketData(out);
 		switch (mode)
 		{
 		case 0:
@@ -67,36 +68,27 @@ public class PacketFluidTerminal extends AbstractPacket
 			for (IAEFluidStack stack : fluidStackList)
 			{
 				FluidStack fluidStack = stack.getFluidStack();
-				System.out.println(fluidStack.getFluid().getUnlocalizedName());
-				out.writeUTF(fluidStack.getFluid().getUnlocalizedName());
+				writeFluid(fluidStack.getFluid(), out);
 				out.writeLong(fluidStack.amount);
 			}
 			break;
 		case 1:
-			out.writeInt(terminalFluid.getHost().getTile().worldObj.provider.dimensionId);
-			out.writeInt(terminalFluid.getHost().getTile().xCoord);
-			out.writeInt(terminalFluid.getHost().getTile().yCoord);
-			out.writeInt(terminalFluid.getHost().getTile().zCoord);
-			out.writeByte(terminalFluid.getSide().ordinal());
+			writePart(terminalFluid, out);
 			out.writeInt(currentFluid.getID());
 			break;
 		case 2:
 			out.writeInt(currentFluid != null ? currentFluid.getID() : -1);
 			break;
 		case 3:
-			out.writeInt(terminalFluid.getHost().getTile().worldObj.provider.dimensionId);
-			out.writeInt(terminalFluid.getHost().getTile().xCoord);
-			out.writeInt(terminalFluid.getHost().getTile().yCoord);
-			out.writeInt(terminalFluid.getHost().getTile().zCoord);
-			out.writeByte(terminalFluid.getSide().ordinal());
+			writePart(terminalFluid, out);
 			break;
 		}
 	}
 
 	@Override
-	public void read(ByteArrayDataInput in) throws ProtocolException
+	public void readPacketData(ByteBuf in) throws IOException
 	{
-		mode = in.readByte();
+		super.readPacketData(in);
 		switch (mode)
 		{
 		case 0:
@@ -104,7 +96,7 @@ public class PacketFluidTerminal extends AbstractPacket
 			int length = in.readInt();
 			for (int i = 0; i < length; i++)
 			{
-				Fluid fluid = FluidRegistry.getFluid(in.readUTF());
+				Fluid fluid = readFluid(in);
 				long fluidAmount = in.readLong();
 				if (fluid != null)
 				{
@@ -115,7 +107,7 @@ public class PacketFluidTerminal extends AbstractPacket
 			}
 			break;
 		case 1:
-			terminalFluid = (PartFluidTerminal) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
+			terminalFluid = (PartFluidTerminal) readPart(in);
 			currentFluid = FluidRegistry.getFluid(in.readInt());
 			break;
 		case 2:
@@ -123,13 +115,13 @@ public class PacketFluidTerminal extends AbstractPacket
 			currentFluid = fluidID > 0 ? FluidRegistry.getFluid(fluidID) : null;
 			break;
 		case 3:
-			terminalFluid = (PartFluidTerminal) ((IPartHost) DimensionManager.getWorld(in.readInt()).getBlockTileEntity(in.readInt(), in.readInt(), in.readInt())).getPart(ForgeDirection.getOrientation(in.readByte()));
+			terminalFluid = (PartFluidTerminal) readPart(in);
 			break;
 		}
 	}
 
 	@Override
-	public void execute(EntityPlayer player, Side side) throws ProtocolException
+	public void execute()
 	{
 		switch (mode)
 		{

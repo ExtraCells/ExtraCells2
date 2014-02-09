@@ -15,6 +15,7 @@ import extracells.ItemEnum;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.item.ItemPartECBase;
 import extracells.proxy.CommonProxy;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,11 +25,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -48,11 +47,11 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	@Override
 	public ItemStack getItemStack(PartItemStack type)
 	{
-		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItemInstance(), 1, ItemPartECBase.getPartId(getClass()));
+		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1, ItemPartECBase.getPartId(getClass()));
 		NBTTagCompound itemNbt = new NBTTagCompound();
 		NBTTagCompound partNbt = new NBTTagCompound();
 		writeToNBT(partNbt);
-		itemNbt.setCompoundTag("partNbt", partNbt);
+		itemNbt.setTag("partNbt", partNbt);
 		is.setTagCompound(partNbt);
 		return is;
 	}
@@ -115,7 +114,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		int x = hostTile.xCoord;
 		int y = hostTile.yCoord;
 		int z = hostTile.zCoord;
-		TileEntity tileEntity = world.getBlockTileEntity(x + side.offsetX, y + side.offsetY, z + side.offsetZ);
+		TileEntity tileEntity = world.getTileEntity(x + side.offsetX, y + side.offsetY, z + side.offsetZ);
 		facingTank = null;
 		if (tileEntity instanceof IFluidHandler)
 			facingTank = (IFluidHandler) tileEntity;
@@ -133,12 +132,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	{
 		return 0;
 	}
-
-	@Override
-	public abstract void writeToStream(DataOutputStream data) throws IOException;
-
-	@Override
-	public abstract boolean readFromStream(DataInputStream data) throws IOException;
 
 	@Override
 	public IGridNode getGridNode()
@@ -179,8 +172,19 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 pos)
 	{
-		player.openGui(Extracells.instance, CommonProxy.getGuiId(this), hostTile.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
+		player.openGui(Extracells.instance, CommonProxy.getGuiId(this), hostTile.getWorldObj(), hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
 		return true;
+	}
+
+	@Override
+	public void writeToStream(ByteBuf data) throws IOException
+	{
+	}
+
+	@Override
+	public boolean readFromStream(ByteBuf data) throws IOException
+	{
+		return false;
 	}
 
 	@Override

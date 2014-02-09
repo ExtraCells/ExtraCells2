@@ -2,12 +2,12 @@ package extracells.part;
 
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import cpw.mods.fml.common.network.PacketDispatcher;
+import extracells.TextureManager;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.PacketFluidTerminal;
 import extracells.util.ECPrivateInventory;
-import net.minecraft.block.Block;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -17,8 +17,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +36,7 @@ public class PartFluidTerminal extends PartECBase
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(Block.stone.getIcon(0, 0));
+		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
 		rh.renderInventoryBox(renderer);
 	}
@@ -46,7 +44,7 @@ public class PartFluidTerminal extends PartECBase
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(Block.stone.getIcon(0, 0));
+		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
 		rh.renderBlock(x, y, z, renderer);
 	}
@@ -64,13 +62,13 @@ public class PartFluidTerminal extends PartECBase
 	}
 
 	@Override
-	public void writeToStream(DataOutputStream data) throws IOException
+	public void writeToStream(ByteBuf data) throws IOException
 	{
 
 	}
 
 	@Override
-	public boolean readFromStream(DataInputStream data) throws IOException
+	public boolean readFromStream(ByteBuf data) throws IOException
 	{
 		return false;
 	}
@@ -92,14 +90,14 @@ public class PartFluidTerminal extends PartECBase
 		currentFluid = _currentFluid;
 		for (ContainerFluidTerminal containerTerminalFluid : containers)
 		{
-			PacketDispatcher.sendPacketToPlayer(new PacketFluidTerminal(currentFluid).makePacket(), containerTerminalFluid.getPlayer());
+			new PacketFluidTerminal(containerTerminalFluid.getPlayer(), currentFluid).sendPacketToPlayer(containerTerminalFluid.getPlayer());
 		}
 	}
 
 	public void addContainer(ContainerFluidTerminal containerTerminalFluid)
 	{
 		containers.add(containerTerminalFluid);
-		PacketDispatcher.sendPacketToPlayer(new PacketFluidTerminal(currentFluid).makePacket(), containerTerminalFluid.getPlayer());
+		new PacketFluidTerminal(containerTerminalFluid.getPlayer(), currentFluid).sendPacketToPlayer(containerTerminalFluid.getPlayer());
 	}
 
 	public void removeContainer(ContainerFluidTerminal containerTerminalFluid)

@@ -7,22 +7,18 @@ import net.minecraft.util.StatCollector;
 
 public enum ItemEnum
 {
-	PARTITEM("item.part.base", 4140, ItemPartECBase.class, "The item used for all the bus parts", "ItemPartECBase"),
-	FLUIDSTORAGE("item.storage.fluid", 4140, ItemStorageFluid.class, "The item used for the Fluid Storages", "ItemStorageFluid");
+	PARTITEM("item.part.base", new ItemPartECBase()),
+	FLUIDSTORAGE("item.storage.fluid", new ItemStorageFluid());
 
 	private final String internalName;
-	private String description, IDName;
-	private int ID;
 	private Item item;
-	private Class<? extends Item> itemClass;
 
-	ItemEnum(String internalName, int ID, Class<? extends Item> itemClass, String description, String IDName)
+	ItemEnum(String _internalName, Item _item)
 	{
-		this.internalName = internalName;
-		this.ID = ID;
-		this.itemClass = itemClass;
-		this.description = description;
-		this.IDName = IDName;
+		internalName = "extracells." + _internalName;
+		item = _item;
+		item.setUnlocalizedName(internalName);
+		item.setCreativeTab(Extracells.ModTab);
 	}
 
 	public String getStatName()
@@ -35,38 +31,8 @@ public enum ItemEnum
 		return internalName;
 	}
 
-	public void setID(int ID)
-	{
-		this.ID = ID;
-	}
-
-	public int getID()
-	{
-		return ID;
-	}
-
-	public void setItemInstance(Item item)
-	{
-		this.item = item;
-	}
-
-	public Item getItemInstance()
+	public Item getItem()
 	{
 		return item;
-	}
-
-	public String getDescription()
-	{
-		return description;
-	}
-
-	public String getIDName()
-	{
-		return IDName;
-	}
-
-	public Class<? extends Item> getItemClass()
-	{
-		return itemClass;
 	}
 }

@@ -10,7 +10,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.part.PartFluidStorage;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -130,7 +130,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	{
 		ForgeDirection orientation = node.getSide();
 		TileEntity hostTile = node.getHostTile();
-		TileEntity tileEntity = hostTile.worldObj.getBlockTileEntity(hostTile.xCoord + orientation.offsetX, hostTile.yCoord + orientation.offsetY, hostTile.zCoord + orientation.offsetZ);
+		TileEntity tileEntity = hostTile.getWorldObj().getTileEntity(hostTile.xCoord + orientation.offsetX, hostTile.yCoord + orientation.offsetY, hostTile.zCoord + orientation.offsetZ);
 		tank = null;
 		if (tileEntity instanceof IFluidHandler)
 			tank = (IFluidHandler) tileEntity;

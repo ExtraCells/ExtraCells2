@@ -1,7 +1,6 @@
 package extracells.gui;
 
 import appeng.api.config.RedstoneMode;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import extracells.container.ContainerBusIOFluid;
 import extracells.gui.widget.WidgetFluidModes;
 import extracells.gui.widget.WidgetFluidSlot;
@@ -23,7 +22,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiBusIOFluid extends GuiContainer
+public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConfigurable
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
 	public static final int xSize = 176;
@@ -40,14 +39,17 @@ public class GuiBusIOFluid extends GuiContainer
 		part = _terminal;
 		player = _player;
 
-		for (int i = 0; i < 3; i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				fluidSlotList.add(new WidgetFluidSlot(part, j + i * 3, 61 + j * 18, i * 18 + 12));
-			}
-		}
-		PacketDispatcher.sendPacketToServer(new PacketBusIOFluid(part).makePacket());
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 0, 61, 12, this, (byte) 2));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 1, 79, 12, this, (byte) 1));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 2, 97, 12, this, (byte) 2));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 3, 61, 30, this, (byte) 1));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 4, 79, 30, this, (byte) 0));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 5, 97, 30, this, (byte) 1));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 6, 61, 48, this, (byte) 2));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 7, 79, 48, this, (byte) 1));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 8, 97, 48, this, (byte) 2));
+
+		new PacketBusIOFluid(player, part).sendPacketToServer();
 	}
 
 	@Override
@@ -74,9 +76,8 @@ public class GuiBusIOFluid extends GuiContainer
 	{
 		FluidStack containerFluid = FluidUtil.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
-		for (byte i = 0; i < fluidSlotList.size(); i++)
+		for (WidgetFluidSlot fluidSlot : fluidSlotList)
 		{
-			WidgetFluidSlot fluidSlot = fluidSlotList.get(i);
 			if (fluidSlot.getFluid() == null || (fluid != null && fluidSlot.getFluid() == fluid))
 			{
 				fluidSlot.mouseClicked(itemStack);
@@ -88,34 +89,19 @@ public class GuiBusIOFluid extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		boolean overlayRendered;
-		fluidSlotList.get(4).drawWidget();
-		overlayRendered = renderOverlay(fluidSlotList.get(4), mouseX, mouseY);
 
-		if (filterSize >= 1)
+		boolean overlayRendered = false;
+		for (byte i = 0; i < 9; i++)
 		{
-			for (byte i = 1; i < 9; i += 2)
-			{
-				if (i != 4)
-				{
-					fluidSlotList.get(i).drawWidget();
-					if (!overlayRendered)
-						renderOverlay(fluidSlotList.get(i), mouseX, mouseY);
-				}
-			}
+			fluidSlotList.get(i).drawWidget();
+			if (!overlayRendered && fluidSlotList.get(i).canRender())
+				overlayRendered = renderOverlay(fluidSlotList.get(i), mouseX, mouseY);
 		}
 
-		if (filterSize >= 2)
+		for (Object button : buttonList)
 		{
-			for (byte i = 0; i < 9; i += 2)
-			{
-				if (i != 4)
-				{
-					fluidSlotList.get(i).drawWidget();
-					if (!overlayRendered)
-						renderOverlay(fluidSlotList.get(i), mouseX, mouseY);
-				}
-			}
+			if (button instanceof WidgetRedstoneModes)
+				((WidgetRedstoneModes) button).drawTooltip(guiLeft, guiTop);
 		}
 	}
 
@@ -159,7 +145,7 @@ public class GuiBusIOFluid extends GuiContainer
 				((WidgetFluidModes) buttonList.get(1)).setFluidMode(FluidMode.values()[ordinal]);
 				break;
 			}
-		} catch (Throwable e)
+		} catch (Throwable ignored)
 		{
 		}
 	}
@@ -179,6 +165,21 @@ public class GuiBusIOFluid extends GuiContainer
 
 	public void actionPerformed(GuiButton button)
 	{
-		PacketDispatcher.sendPacketToServer(new PacketBusIOFluid((byte) button.id, part).makePacket());
+		new PacketBusIOFluid(player, (byte) button.id, part).sendPacketToServer();
+	}
+
+	protected boolean isPointInRegion(int top, int left, int height, int width, int pointX, int pointY)
+	{
+		int k1 = guiLeft;
+		int l1 = guiTop;
+		pointX -= k1;
+		pointY -= l1;
+		return pointX >= top - 1 && pointX < top + height + 1 && pointY >= left - 1 && pointY < left + width + 1;
+	}
+
+	@Override
+	public byte getConfigState()
+	{
+		return filterSize;
 	}
 }

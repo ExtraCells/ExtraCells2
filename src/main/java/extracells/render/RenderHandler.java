@@ -41,7 +41,7 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 			} else
 			{
 				tank.renderInnerBlock(block, x, y, z, renderer, world);
-				TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+				TileEntity tileEntity = world.getTileEntity(x, y, z);
 				tank.renderFluid(tileEntity, x, y, z, renderer);
 			}
 			renderer.enableAO = oldAO;
@@ -51,7 +51,7 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory()
+	public boolean shouldRender3DInInventory(int modelId)
 	{
 		return true;
 	}

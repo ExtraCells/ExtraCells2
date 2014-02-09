@@ -98,15 +98,15 @@ public class ECPrivateInventory implements IInventory
 	}
 
 	@Override
-	public String getInvName()
+	public boolean hasCustomInventoryName()
 	{
-		return customName;
+		return false;
 	}
 
 	@Override
-	public boolean isInvNameLocalized()
+	public String getInventoryName()
 	{
-		return true;
+		return customName;
 	}
 
 	@Override
@@ -116,19 +116,25 @@ public class ECPrivateInventory implements IInventory
 	}
 
 	@Override
+	public void markDirty()
+	{
+
+	}
+
+	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer)
 	{
 		return true;
 	}
 
 	@Override
-	public void openChest()
+	public void openInventory()
 	{
 		// NOBODY needs this!
 	}
 
 	@Override
-	public void closeChest()
+	public void closeInventory()
 	{
 		// NOBODY needs this!
 	}
@@ -139,7 +145,6 @@ public class ECPrivateInventory implements IInventory
 		return true;
 	}
 
-	@Override
 	public void onInventoryChanged()
 	{
 		if (receiver != null)
@@ -150,7 +155,7 @@ public class ECPrivateInventory implements IInventory
 	{
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
-			NBTTagCompound nbttagcompound = (NBTTagCompound) nbtList.tagAt(i);
+			NBTTagCompound nbttagcompound = (NBTTagCompound) nbtList.getCompoundTagAt(i);
 			int j = nbttagcompound.getByte("Slot") & 255;
 
 			if (j >= 0 && j < slots.length)

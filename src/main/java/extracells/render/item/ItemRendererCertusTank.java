@@ -1,20 +1,17 @@
 package extracells.render.item;
 
-import net.minecraft.block.Block;
+import extracells.render.model.ModelCertusTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
 import org.lwjgl.opengl.GL11;
-
-import extracells.render.model.ModelCertusTank;
 
 public class ItemRendererCertusTank implements IItemRenderer
 {
@@ -50,7 +47,7 @@ public class ItemRendererCertusTank implements IItemRenderer
 
 			if (storedFluid != null && storedFluid.getFluid() != null)
 			{
-				Icon fluidIcon = storedFluid.getFluid().getIcon();
+				IIcon fluidIcon = storedFluid.getFluid().getIcon();
 
 				Tessellator tessellator = Tessellator.instance;
 				RenderBlocks renderer = new RenderBlocks();
@@ -68,27 +65,27 @@ public class ItemRendererCertusTank implements IItemRenderer
 
 				tessellator.startDrawingQuads();
 				tessellator.setNormal(0.0F, -1F, 0.0F);
-				renderer.renderFaceYNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				renderer.renderFaceYNeg(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.draw();
 				tessellator.startDrawingQuads();
 				tessellator.setNormal(0.0F, 1.0F, 0.0F);
-				renderer.renderFaceYPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				renderer.renderFaceYPos(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.draw();
 				tessellator.startDrawingQuads();
 				tessellator.setNormal(0.0F, 0.0F, -1F);
-				renderer.renderFaceZNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				renderer.renderFaceZNeg(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.draw();
 				tessellator.startDrawingQuads();
 				tessellator.setNormal(0.0F, 0.0F, 1.0F);
-				renderer.renderFaceZPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				renderer.renderFaceZPos(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.draw();
 				tessellator.startDrawingQuads();
 				tessellator.setNormal(-1F, 0.0F, 0.0F);
-				renderer.renderFaceXNeg(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				renderer.renderFaceXNeg(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.draw();
 				tessellator.startDrawingQuads();
 				tessellator.setNormal(1.0F, 0.0F, 0.0F);
-				renderer.renderFaceXPos(Block.blocksList[FluidRegistry.WATER.getBlockID()], 0.0D, 0.0D, 0.0D, fluidIcon);
+				renderer.renderFaceXPos(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.draw();
 
 				GL11.glPopAttrib();

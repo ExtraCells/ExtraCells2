@@ -29,43 +29,40 @@ public class WidgetFluidModes extends GuiButton
 	@Override
 	public void drawButton(Minecraft minecraftInstance, int x, int y)
 	{
-		if (drawButton)
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		this.mouseDragged(minecraftInstance, x, y);
+
+		minecraftInstance.getTextureManager().bindTexture(new ResourceLocation("extracells", "textures/gui/fluidmodes.png"));
+		drawTexturedModalRect(xPosition, yPosition, 0, 16, 16, 16);
+
+		switch (fluidMode)
 		{
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.mouseDragged(minecraftInstance, x, y);
+		case DROPS:
+			drawTexturedModalRect(xPosition, yPosition, 0, 0, 16, 16);
+			break;
+		case QUART:
+			drawTexturedModalRect(xPosition, yPosition, 16, 0, 16, 16);
+			break;
+		case BUCKETS:
+			drawTexturedModalRect(xPosition, yPosition, 32, 0, 16, 16);
+			break;
+		default:
+			break;
+		}
 
-			minecraftInstance.getTextureManager().bindTexture(new ResourceLocation("extracells", "textures/gui/fluidmodes.png"));
-			drawTexturedModalRect(xPosition, yPosition, 0, 16, 16, 16);
+		Minecraft mc = Minecraft.getMinecraft();
+		ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
 
-			switch (fluidMode)
-			{
-			case DROPS:
-				drawTexturedModalRect(xPosition, yPosition, 0, 0, 16, 16);
-				break;
-			case QUART:
-				drawTexturedModalRect(xPosition, yPosition, 16, 0, 16, 16);
-				break;
-			case BUCKETS:
-				drawTexturedModalRect(xPosition, yPosition, 32, 0, 16, 16);
-				break;
-			default:
-				break;
-			}
+		int mouseX = Mouse.getX() * scaledresolution.getScaledWidth() / mc.displayWidth;
+		int mouseY = scaledresolution.getScaledHeight() - Mouse.getY() * scaledresolution.getScaledHeight() / mc.displayHeight - 1;
 
-			Minecraft mc = Minecraft.getMinecraft();
-			ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
-
-			int mouseX = Mouse.getX() * scaledresolution.getScaledWidth() / mc.displayWidth;
-			int mouseY = scaledresolution.getScaledHeight() - Mouse.getY() * scaledresolution.getScaledHeight() / mc.displayHeight - 1;
-
-			if (mouseX >= xPosition && mouseX <= xPosition + width && mouseY >= yPosition && mouseY <= yPosition + height)
-			{
-				List<String> description = new ArrayList<String>();
-				description.add(StatCollector.translateToLocal("tooltip.fluidmode"));
-				description.add(String.format(StatCollector.translateToLocal("tooltip.fluidmode.move"), fluidMode.getAmount(), fluidMode.getAmount() * 20));
-				description.add(String.format(StatCollector.translateToLocal("tooltip.fluidmode.cost"), fluidMode.getCost()));
-				drawHoveringText(description, mouseX, mouseY, mc.fontRenderer);
-			}
+		if (mouseX >= xPosition && mouseX <= xPosition + width && mouseY >= yPosition && mouseY <= yPosition + height)
+		{
+			List<String> description = new ArrayList<String>();
+			description.add(StatCollector.translateToLocal("tooltip.fluidmode"));
+			description.add(String.format(StatCollector.translateToLocal("tooltip.fluidmode.move"), fluidMode.getAmount(), fluidMode.getAmount() * 20));
+			description.add(String.format(StatCollector.translateToLocal("tooltip.fluidmode.cost"), fluidMode.getCost()));
+			drawHoveringText(description, mouseX, mouseY, mc.fontRenderer);
 		}
 	}
 

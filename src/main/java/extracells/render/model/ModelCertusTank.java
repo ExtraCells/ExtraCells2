@@ -1,20 +1,18 @@
 package extracells.render.model;
 
+import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-
 import org.lwjgl.opengl.GL11;
-
-import extracells.tileentity.TileEntityCertusTank;
 
 public class ModelCertusTank extends ModelBase
 {
@@ -44,8 +42,8 @@ public class ModelCertusTank extends ModelBase
 	{
 
 		Tessellator tessellator = Tessellator.instance;
-		boolean tankUp = world.getBlockTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
-		boolean tankDown = world.getBlockTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
+		boolean tankUp = world.getTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
+		boolean tankDown = world.getTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
 		int meta = 0;
 		if (tankUp && tankDown)
 			meta = 3;
@@ -64,7 +62,7 @@ public class ModelCertusTank extends ModelBase
 			renderer.renderFaceYPos(block, x, y, z, block.getIcon(1, 0));
 		}
 
-		Icon sideIcon = block.getIcon(3, meta);
+		IIcon sideIcon = block.getIcon(3, meta);
 		tessellator.setNormal(0.0F, 0.0F, -1F);
 		renderer.renderFaceZNeg(block, x, y, z, sideIcon);
 		tessellator.setNormal(0.0F, 0.0F, 1.0F);
@@ -79,8 +77,8 @@ public class ModelCertusTank extends ModelBase
 	public void renderInnerBlock(Block block, int x, int y, int z, RenderBlocks renderer, IBlockAccess world)
 	{
 		Tessellator tessellator = Tessellator.instance;
-		boolean tankUp = world.getBlockTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
-		boolean tankDown = world.getBlockTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
+		boolean tankUp = world.getTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
+		boolean tankDown = world.getTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
 		int meta = 0;
 		if (tankUp && tankDown)
 			meta = 3;
@@ -98,7 +96,7 @@ public class ModelCertusTank extends ModelBase
 			tessellator.setNormal(0.0F, 1.0F, 0.0F);
 			renderer.renderFaceYPos(block, x, y - 0.001D, z, block.getIcon(1, 0));
 		}
-		Icon sideIcon = block.getIcon(3, meta);
+		IIcon sideIcon = block.getIcon(3, meta);
 		tessellator.setNormal(0.0F, 0.0F, -1F);
 		renderer.renderFaceZNeg(block, x, y, z + 0.001D, sideIcon);
 		tessellator.setNormal(0.0F, 0.0F, 1.0F);
@@ -122,8 +120,8 @@ public class ModelCertusTank extends ModelBase
 				GL11.glPushMatrix();
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				Block id = Block.blocksList[FluidRegistry.WATER.getBlockID()];
-				Icon fluidIcon = storedFluid.getIcon();
+				Block id = Block.getBlockById(FluidRegistry.WATER.getID());
+				IIcon fluidIcon = storedFluid.getIcon();
 				if (fluidIcon == null)
 					fluidIcon = FluidRegistry.LAVA.getIcon();
 				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, scale * 0.999F, 0.92F);
