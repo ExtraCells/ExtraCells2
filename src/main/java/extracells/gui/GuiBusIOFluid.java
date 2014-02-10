@@ -3,12 +3,10 @@ package extracells.gui;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import extracells.container.ContainerBusIOFluid;
-import extracells.gui.widget.WidgetFluidModes;
 import extracells.gui.widget.WidgetFluidSlot;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketBusIOFluid;
 import extracells.part.PartFluidIO;
-import extracells.util.FluidMode;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -33,6 +31,7 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 	private EntityPlayer player;
 	private byte filterSize;
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
+	private boolean redstoneControlled;
 
 	public GuiBusIOFluid(PartFluidIO _terminal, EntityPlayer _player)
 	{
@@ -52,15 +51,6 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 		fluidSlotList.add(new WidgetFluidSlot(player, part, 8, 97, 48, this, (byte) 2));
 
 		new PacketBusIOFluid(player, part).sendPacketToServer();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public void initGui()
-	{
-		super.initGui();
-		buttonList.add(new WidgetRedstoneModes(0, guiLeft + 126, guiTop + 19, 16, 16, part.getRedstoneMode()));
-		buttonList.add(new WidgetFluidModes(1, guiLeft + 126, guiTop + 41, 16, 16, part.getFluidMode()));
 	}
 
 	@Override
@@ -134,22 +124,10 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 		}
 	}
 
-	public void updateButtons(byte mode, byte ordinal)
+	public void updateRedstoneMode(RedstoneMode mode)
 	{
-		try
-		{
-			switch (mode)
-			{
-			case 0:
-				((WidgetRedstoneModes) buttonList.get(0)).setRedstoneMode(RedstoneMode.values()[ordinal]);
-				break;
-			case 1:
-				((WidgetFluidModes) buttonList.get(1)).setFluidMode(FluidMode.values()[ordinal]);
-				break;
-			}
-		} catch (Throwable ignored)
-		{
-		}
+		if (redstoneControlled && buttonList.size() > 0)
+			((WidgetRedstoneModes) buttonList.get(0)).setRedstoneMode(mode);
 	}
 
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn)
@@ -187,6 +165,14 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 	public byte getConfigState()
 	{
 		return filterSize;
+	}
+
+	public void setRedstoneControlled(boolean _redstoneControlled)
+	{
+		redstoneControlled = _redstoneControlled;
+		buttonList.clear();
+		if (redstoneControlled)
+			buttonList.add(new WidgetRedstoneModes(0, guiLeft - 18, guiTop, 16, 16, part.getRedstoneMode()));
 	}
 
 	protected Slot getSlotAtPosition(int p_146975_1_, int p_146975_2_)

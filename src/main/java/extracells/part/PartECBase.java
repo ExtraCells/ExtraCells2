@@ -42,7 +42,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	protected double powerUsage;
 	protected TileEntity hostTile;
 	protected IFluidHandler facingTank;
-	protected boolean hasRedstonePower;
+	protected boolean redstonePowered;
 
 	@Override
 	public ItemStack getItemStack(PartItemStack type)
@@ -118,7 +118,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		facingTank = null;
 		if (tileEntity instanceof IFluidHandler)
 			facingTank = (IFluidHandler) tileEntity;
-		hasRedstonePower = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
+		redstonePowered = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
 	}
 
 	@Override

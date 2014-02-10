@@ -12,7 +12,6 @@ import extracells.container.ContainerBusIOFluid;
 import extracells.gui.GuiBusIOFluid;
 import extracells.network.packet.PacketBusIOFluid;
 import extracells.util.ECPrivateInventory;
-import extracells.util.FluidMode;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,8 +27,10 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 {
 	protected Fluid[] filterFluids = new Fluid[9];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-	private FluidMode fluidMode = FluidMode.DROPS;
 	protected byte filterSize;
+	protected byte speedState;
+	protected boolean redstoneControlled;
+	private boolean lastRedstone;
 	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4, 1, this)
 	{
 		public boolean isItemValidForSlot(int i, ItemStack itemstack)
@@ -65,7 +66,6 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	@Override
 	public final void writeToNBT(NBTTagCompound data)
 	{
-		data.setInteger("fluidMode", fluidMode.ordinal());
 		data.setInteger("redstoneMode", redstoneMode.ordinal());
 		for (int i = 0; i < filterFluids.length; i++)
 		{
@@ -82,7 +82,6 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	public final void readFromNBT(NBTTagCompound data)
 	{
 		redstoneMode = RedstoneMode.values()[data.getInteger("redstoneMode")];
-		fluidMode = FluidMode.values()[data.getInteger("fluidMode")];
 		for (int i = 0; i < filterFluids.length; i++)
 		{
 			filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
@@ -120,7 +119,9 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	@Override
 	public final TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall)
 	{
-		return doWork(250, TicksSinceLastCall) ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
+		if (canDoWork())
+			return doWork(speedState * 250, TicksSinceLastCall) ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
+		return TickRateModulation.SLOWER;
 	}
 
 	public abstract boolean doWork(int rate, int TicksSinceLastCall);
@@ -129,11 +130,6 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	{
 		filterFluids[index] = fluid;
 		new PacketBusIOFluid(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
-	}
-
-	public FluidMode getFluidMode()
-	{
-		return fluidMode;
 	}
 
 	public RedstoneMode getRedstoneMode()
@@ -147,16 +143,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 			redstoneMode = RedstoneMode.values()[redstoneMode.ordinal() + 1];
 		else
 			redstoneMode = RedstoneMode.values()[0];
-		new PacketBusIOFluid((byte) 0, (byte) redstoneMode.ordinal()).sendPacketToPlayer(player);
-	}
-
-	public void loopFluidMode(EntityPlayer player)
-	{
-		if (fluidMode.ordinal() + 1 < FluidMode.values().length)
-			fluidMode = FluidMode.values()[fluidMode.ordinal() + 1];
-		else
-			fluidMode = FluidMode.values()[0];
-		new PacketBusIOFluid((byte) 1, (byte) fluidMode.ordinal()).sendPacketToPlayer(player);
+		new PacketBusIOFluid(redstoneMode).sendPacketToPlayer(player);
 	}
 
 	public Object getServerGuiElement(EntityPlayer player)
@@ -172,8 +159,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	public void sendInformation(EntityPlayer player)
 	{
 		new PacketBusIOFluid(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
-		new PacketBusIOFluid((byte) 0, (byte) redstoneMode.ordinal()).sendPacketToPlayer(player);
-		new PacketBusIOFluid((byte) 1, (byte) fluidMode.ordinal()).sendPacketToPlayer(player);
+		new PacketBusIOFluid(redstoneMode).sendPacketToPlayer(player);
 		new PacketBusIOFluid(filterSize).sendPacketToPlayer(player);
 	}
 
@@ -181,13 +167,55 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	public void onInventoryChanged()
 	{
 		filterSize = 0;
+		redstoneControlled = false;
+		speedState = 0;
 		for (int i = 0; i < upgradeInventory.getSizeInventory(); i++)
 		{
 			ItemStack currentStack = upgradeInventory.getStackInSlot(i);
-			if (currentStack != null && currentStack.isItemEqual(AEApi.instance().materials().materialCardCapacity.stack(1)))
-				filterSize++;
+			if (currentStack != null)
+			{
+				if (currentStack.isItemEqual(AEApi.instance().materials().materialCardCapacity.stack(1)))
+					filterSize++;
+				if (currentStack.isItemEqual(AEApi.instance().materials().materialCardRedstone.stack(1)))
+					redstoneControlled = true;
+				if (currentStack.isItemEqual(AEApi.instance().materials().materialCardSpeed.stack(1)))
+					speedState++;
+			}
 		}
 		new PacketBusIOFluid(filterSize).sendPacketToAllPlayers();
-		// TODO add speed etc.
+		new PacketBusIOFluid(redstoneControlled).sendPacketToAllPlayers();
+		// TODO add speed
+	}
+
+	private boolean canDoWork()
+	{
+		if (!redstoneControlled)
+			return true;
+		switch (getRedstoneMode())
+		{
+			case IGNORE:
+				return true;
+			case LOW_SIGNAL:
+				return !redstonePowered;
+			case HIGH_SIGNAL:
+				return redstonePowered;
+			case SIGNAL_PULSE:
+				if (!redstonePowered)
+				{
+					lastRedstone = false;
+				} else
+				{
+					if (!lastRedstone)
+					{
+						return true;
+					} else
+					{
+						lastRedstone = true;
+						return true;
+					}
+				}
+				break;
+		}
+		return false;
 	}
 }
