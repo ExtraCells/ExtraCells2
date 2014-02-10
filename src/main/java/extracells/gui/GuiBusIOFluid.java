@@ -25,13 +25,12 @@ import java.util.List;
 public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConfigurable
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
-	public static final int xSize = 176;
-	public static final int ySize = 184;
 	private PartFluidIO part;
 	private EntityPlayer player;
 	private byte filterSize;
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 	private boolean redstoneControlled;
+	private boolean hasNetworkTool;
 
 	public GuiBusIOFluid(PartFluidIO _terminal, EntityPlayer _player)
 	{
@@ -40,17 +39,21 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 		part = _terminal;
 		player = _player;
 
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 0, 61, 12, this, (byte) 2));
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 1, 79, 12, this, (byte) 1));
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 2, 97, 12, this, (byte) 2));
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 3, 61, 30, this, (byte) 1));
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 4, 79, 30, this, (byte) 0));
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 5, 97, 30, this, (byte) 1));
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 6, 61, 48, this, (byte) 2));
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 7, 79, 48, this, (byte) 1));
-		fluidSlotList.add(new WidgetFluidSlot(player, part, 8, 97, 48, this, (byte) 2));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 0, 61, 21, this, (byte) 2));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 1, 79, 21, this, (byte) 1));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 2, 97, 21, this, (byte) 2));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 3, 61, 39, this, (byte) 1));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 4, 79, 39, this, (byte) 0));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 5, 97, 39, this, (byte) 1));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 6, 61, 57, this, (byte) 2));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 7, 79, 57, this, (byte) 1));
+		fluidSlotList.add(new WidgetFluidSlot(player, part, 8, 97, 57, this, (byte) 2));
 
 		new PacketBusIOFluid(player, part).sendPacketToServer();
+		hasNetworkTool = inventorySlots.getInventory().size() > 40;
+		xSize = hasNetworkTool ? 246 : 211;
+		ySize = 184;
+
 	}
 
 	@Override
@@ -58,10 +61,11 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
-		int posX = (width - xSize) / 2;
-		int posY = (height - ySize) / 2;
-		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
-		drawTexturedModalRect(posX + 179, posY, 179, 0, 32, 86);
+		drawTexturedModalRect(guiLeft, guiTop, 0, 0, 176, 184);
+		drawTexturedModalRect(guiLeft + 179, guiTop, 179, 0, 32, 86);
+		if (hasNetworkTool)
+			drawTexturedModalRect(guiLeft + 179, guiTop + 93, 178, 93, 68, 68);
+
 	}
 
 	public void shiftClick(ItemStack itemStack)
@@ -81,7 +85,7 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		boolean overlayRendered = false;
 		for (byte i = 0; i < 9; i++)
 		{
@@ -149,6 +153,7 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 
 	public void actionPerformed(GuiButton button)
 	{
+		super.actionPerformed(button);
 		new PacketBusIOFluid(player, (byte) button.id, part).sendPacketToServer();
 	}
 

@@ -1,28 +1,52 @@
 package extracells.container;
 
+import appeng.api.AEApi;
+import appeng.api.implementations.guiobjects.IGuiItem;
+import appeng.api.implementations.guiobjects.INetworkTool;
+import appeng.api.util.DimensionalCoord;
+import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiBusIOFluid;
+import extracells.part.PartFluidIO;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import extracells.part.PartFluidIO;
 
 public class ContainerBusIOFluid extends Container
 {
-	private PartFluidIO terminal;
+	private PartFluidIO part;
 	private EntityPlayer player;
 	private GuiBusIOFluid guiBusIOFluid;
 
 	public ContainerBusIOFluid(PartFluidIO _terminal, EntityPlayer _player)
 	{
-		terminal = _terminal;
+		part = _terminal;
 		player = _player;
 
 		for (int i = 0; i < 4; i++)
-			addSlotToContainer(new SlotRespective(terminal.getUpgradeInventory(), i, 187, i * 18 - 1));
+			addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), i, 187, i * 18 + 8));
 		bindPlayerInventory(player.inventory);
+
+		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+		{
+			ItemStack stack = player.inventory.getStackInSlot(i);
+			if (stack != null && stack.isItemEqual(AEApi.instance().items().itemNetworkTool.stack(1)))
+			{
+				DimensionalCoord coord = part.getHost().getLocation();
+				IGuiItem guiItem = (IGuiItem) stack.getItem();
+				INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.x, coord.y, coord.z);
+				for (int j = 0; j < 3; j++)
+				{
+					for (int k = 0; k < 3; k++)
+					{
+						addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
+					}
+				}
+				return;
+			}
+		}
 	}
 
 	protected void bindPlayerInventory(IInventory inventoryPlayer)
@@ -31,13 +55,13 @@ public class ContainerBusIOFluid extends Container
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 93));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 102));
 			}
 		}
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 151));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 160));
 		}
 	}
 
@@ -46,7 +70,36 @@ public class ContainerBusIOFluid extends Container
 	{
 		if (guiBusIOFluid != null)
 			guiBusIOFluid.shiftClick(getSlot(slotnumber).getStack());
-		return null;
+
+		ItemStack itemstack = null;
+		Slot slot = (Slot) inventorySlots.get(slotnumber);
+
+		if (slot != null && slot.getHasStack())
+		{
+			ItemStack itemstack1 = slot.getStack();
+			itemstack = itemstack1.copy();
+
+			if (slotnumber < 36)
+			{
+				if (!mergeItemStack(itemstack1, 36, inventorySlots.size(), true))
+				{
+					return null;
+				}
+			} else if (!mergeItemStack(itemstack1, 0, 36, false))
+			{
+				return null;
+			}
+
+			if (itemstack1.stackSize == 0)
+			{
+				slot.putStack(null);
+			} else
+			{
+				slot.onSlotChanged();
+			}
+		}
+
+		return itemstack;
 	}
 
 	@Override

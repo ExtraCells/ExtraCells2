@@ -151,7 +151,7 @@ public class PacketFluidTerminal extends AbstractPacket
 			}
 			break;
 		case 3:
-			if (player.openContainer instanceof ContainerFluidTerminal)
+			if (player != null && player.openContainer instanceof ContainerFluidTerminal)
 				((ContainerFluidTerminal) player.openContainer).forceFluidUpdate();
 			break;
 		}

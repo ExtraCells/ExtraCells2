@@ -23,8 +23,6 @@ import java.util.List;
 
 public class GuiFluidTerminal extends GuiContainer
 {
-	public static final int xSize = 175;
-	public static final int ySize = 203;
 	private PartFluidTerminal terminal;
 	private EntityPlayer player;
 	private int currentScroll = 0;
@@ -42,6 +40,8 @@ public class GuiFluidTerminal extends GuiContainer
 		new PacketFluidTerminal(player, containerTerminalFluid.getTerminal()).sendPacketToServer();
 		terminal = _terminal;
 		player = _player;
+		xSize = 176;
+		ySize = 204;
 	}
 
 	public void updateFluids()

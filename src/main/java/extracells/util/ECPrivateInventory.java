@@ -39,30 +39,30 @@ public class ECPrivateInventory implements IInventory
 	}
 
 	@Override
-	public ItemStack decrStackSize(int i, int j)
+	public ItemStack decrStackSize(int slotId, int amount)
 	{
-		if (slots[i] != null)
+		if (slots[slotId] != null)
 		{
 			ItemStack itemstack;
-			if (slots[i].stackSize <= j)
+			if (slots[slotId].stackSize <= amount)
 			{
-				itemstack = slots[i];
-				slots[i] = null;
-				this.onInventoryChanged();
+				itemstack = slots[slotId];
+				slots[slotId] = null;
+				markDirty();
 				return itemstack;
 			} else
 			{
-				ItemStack temp = slots[i];
-				itemstack = temp.splitStack(j);
-				slots[i] = temp;
+				ItemStack temp = slots[slotId];
+				itemstack = temp.splitStack(amount);
+				slots[slotId] = temp;
 				if (temp.stackSize == 0)
 				{
-					slots[i] = null;
+					slots[slotId] = null;
 				} else
 				{
-					slots[i] = temp;
+					slots[slotId] = temp;
 				}
-				onInventoryChanged();
+				markDirty();
 				return itemstack;
 			}
 		} else
@@ -72,29 +72,21 @@ public class ECPrivateInventory implements IInventory
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
+	public ItemStack getStackInSlotOnClosing(int slotId)
 	{
-		if (slots[i] != null)
-		{
-			ItemStack itemstack = slots[i];
-			slots[i] = null;
-			return itemstack;
-		} else
-		{
-			return null;
-		}
+		return slots[slotId];
 	}
 
 	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
+	public void setInventorySlotContents(int slotId, ItemStack itemstack)
 	{
-		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
+		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
 		{
-			itemstack.stackSize = this.getInventoryStackLimit();
+			itemstack.stackSize = getInventoryStackLimit();
 		}
-		slots[i] = itemstack;
+		slots[slotId] = itemstack;
 
-		onInventoryChanged();
+		markDirty();
 	}
 
 	@Override
@@ -118,7 +110,8 @@ public class ECPrivateInventory implements IInventory
 	@Override
 	public void markDirty()
 	{
-
+		if (receiver != null)
+			receiver.onInventoryChanged();
 	}
 
 	@Override
@@ -145,17 +138,11 @@ public class ECPrivateInventory implements IInventory
 		return true;
 	}
 
-	public void onInventoryChanged()
-	{
-		if (receiver != null)
-			receiver.onInventoryChanged();
-	}
-
 	public void readFromNBT(NBTTagList nbtList)
 	{
 		for (int i = 0; i < nbtList.tagCount(); ++i)
 		{
-			NBTTagCompound nbttagcompound = (NBTTagCompound) nbtList.getCompoundTagAt(i);
+			NBTTagCompound nbttagcompound = nbtList.getCompoundTagAt(i);
 			int j = nbttagcompound.getByte("Slot") & 255;
 
 			if (j >= 0 && j < slots.length)
