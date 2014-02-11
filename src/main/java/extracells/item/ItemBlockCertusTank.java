@@ -33,13 +33,13 @@ public class ItemBlockCertusTank extends ItemBlock
 
 					if (fluidInTank != null && fluidInTank.getFluid() != null)
 					{
-						return StatCollector.translateToLocal(this.getUnlocalizedName(itemstack) + ".name") + " - " + fluidInTank.getFluid().getLocalizedName();
+						return StatCollector.translateToLocal(getUnlocalizedName(itemstack)) + " - " + fluidInTank.getFluid().getLocalizedName();
 					}
 				} catch (Throwable e)
 				{
 				}
 			}
-			return StatCollector.translateToLocal(this.getUnlocalizedName(itemstack) + ".name");
+			return StatCollector.translateToLocal(getUnlocalizedName(itemstack));
 		}
 		return "";
 	}

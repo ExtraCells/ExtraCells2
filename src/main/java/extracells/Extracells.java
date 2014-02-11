@@ -10,7 +10,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import extracells.network.ChannelHandler;
-import extracells.part.PartECBase;
 import extracells.proxy.CommonProxy;
 import extracells.render.RenderHandler;
 import net.minecraft.creativetab.CreativeTabs;
@@ -25,7 +24,7 @@ public class Extracells
 {
 	@Instance("extracells")
 	public static Extracells instance;
-
+	private static File configFolder;
 	public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells")
 	{
 		public ItemStack getIconItemStack()
@@ -51,8 +50,10 @@ public class Extracells
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 		instance = this;
 
+		configFolder = event.getModConfigurationDirectory();
+
 		// Config
-		Configuration config = new Configuration(new File(event.getModConfigurationDirectory().getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"));
+		Configuration config = new Configuration(new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"));
 		config.load();
 		// DO something
 		config.save();
@@ -66,9 +67,8 @@ public class Extracells
 	{
 		proxy.RegisterRenderers();
 		proxy.registerTileEntities();
-		proxy.addRecipes();
+		proxy.addRecipes(configFolder);
 		ChannelHandler.setChannels(NetworkRegistry.INSTANCE.newChannel("ExtraCells", new ChannelHandler()));
-		PartECBase.registerParts();
 		RenderingRegistry.registerBlockHandler(new RenderHandler(renderID = RenderingRegistry.getNextAvailableRenderId()));
 	}
 

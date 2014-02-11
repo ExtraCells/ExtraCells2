@@ -9,7 +9,6 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.ItemEnum;
 import extracells.inventoryHandler.HandlerItemStorageFluid;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,10 +25,10 @@ import java.util.List;
 public class ItemStorageFluid extends Item implements ICellHandler
 {
 	public static final String[] suffixes =
-	{ "1k", "4k", "16k", "64k" };
+	{ "1k", "4k", "16k", "64k", "256k", "1024k", "4096k", "16348k" };
 
 	public static final int[] spaces =
-	{ 1024, 4096, 16348, 65536 };
+	{ 1024, 4096, 16348, 65536, 262144, 1048576, 4194304, 16777216 };
 
 	@SideOnly(Side.CLIENT)
 	private IIcon[] icons;
@@ -72,16 +71,21 @@ public class ItemStorageFluid extends Item implements ICellHandler
 		}
 	}
 
+	public String getUnlocalizedName(ItemStack itemStack)
+	{
+		return "item.storage.fluid." + suffixes[itemStack.getItemDamage()];
+	}
+
 	@Override
 	public boolean isCell(ItemStack is)
 	{
-		return true;
+		return is.getItem() == this;
 	}
 
 	@Override
 	public IMEInventoryHandler getCellInventory(ItemStack is, StorageChannel channel)
 	{
-		if (channel == StorageChannel.ITEMS)
+		if (channel == StorageChannel.ITEMS || is.getItem() != this)
 			return null;
 		return new HandlerItemStorageFluid(is);
 	}
@@ -150,12 +154,5 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	public EnumRarity getRarity(ItemStack par1)
 	{
 		return EnumRarity.epic;
-	}
-
-	@Override
-	public String getUnlocalizedName(ItemStack itemstack)
-	{
-		int i = itemstack.getItemDamage();
-		return ItemEnum.FLUIDSTORAGE.getInternalName() + "." + suffixes[i];
 	}
 }

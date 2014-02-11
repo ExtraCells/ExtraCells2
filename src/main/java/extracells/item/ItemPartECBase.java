@@ -1,36 +1,57 @@
 package extracells.item;
 
 import appeng.api.AEApi;
+import appeng.api.config.Upgrades;
+import appeng.api.implementations.items.IItemGroup;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.PartEnum;
+import javafx.util.Pair;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemPartECBase extends Item implements IPartItem
+public class ItemPartECBase extends Item implements IPartItem, IItemGroup
 {
 	private static List<Class<? extends IPart>> ecParts = new ArrayList<Class<? extends IPart>>();
 
 	public ItemPartECBase()
 	{
 		AEApi.instance().partHelper().setItemBusRenderer(this);
+
+		for (PartEnum part : PartEnum.values())
+		{
+			try
+			{
+				List<Pair<Upgrades, Integer>> possibleUpgradesList = part.getUpgrades();
+				for (Pair<Upgrades, Integer> upgrade : possibleUpgradesList)
+				{
+					upgrade.getKey().registerItem(new ItemStack(this, 1, part.ordinal()), upgrade.getValue());
+				}
+			} catch (Throwable ignored)
+			{
+			}
+		}
 	}
 
 	@Override
-	public IPart createPartFromItemStack(ItemStack is)
+	public IPart createPartFromItemStack(ItemStack itemStack)
 	{
 		try
 		{
-			return ecParts.get(is.getItemDamage()).newInstance();
+			return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].newInstance(itemStack);
 		} catch (Throwable e)
 		{
+			System.out.println("SHOULD NOT HAPPEN!");
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -42,12 +63,12 @@ public class ItemPartECBase extends Item implements IPartItem
 		return 0;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList)
 	{
-		for (int i = 0; i < ecParts.size(); i++)
+		for (int i = 0; i < PartEnum.values().length; i++)
 		{
-			if (ecParts.get(i) != null)
-				itemList.add(new ItemStack(item, 1, i));
+			itemList.add(new ItemStack(item, 1, i));
 		}
 	}
 
@@ -57,31 +78,15 @@ public class ItemPartECBase extends Item implements IPartItem
 		return AEApi.instance().partHelper().placeBus(is, x, y, z, side, player, world);
 	}
 
-	public static void registerPart(Class<? extends IPart> part)
+	@Override
+	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		ecParts.add(part);
-	}
-
-	public static int getPartId(Class<? extends IPart> part)
-	{
-		return ecParts.indexOf(part);
+		return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].getUnlocalizedName();
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemstack)
+	public String getUnlocalizedGroupName(ItemStack itemStack)
 	{
-		switch (itemstack.getItemDamage())
-		{
-		case 0:
-			return "part.fluid.export";
-		case 1:
-			return "part.fluid.import";
-		case 2:
-			return "part.fluid.storage";
-		case 3:
-			return "part.fluid.terminal";
-		default:
-			return "INVALID PART!";
-		}
+		return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].getGroupName();
 	}
 }

@@ -65,7 +65,6 @@ public class PacketBusIOFluid extends AbstractPacket
 	public PacketBusIOFluid(EntityPlayer _player, PartFluidIO _part)
 	{
 		super(_player);
-		System.out.println(_player);
 		mode = 4;
 		part = _part;
 	}

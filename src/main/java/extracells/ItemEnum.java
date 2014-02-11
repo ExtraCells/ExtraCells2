@@ -2,28 +2,30 @@ package extracells;
 
 import extracells.item.ItemPartECBase;
 import extracells.item.ItemStorageFluid;
+import extracells.item.ItemStoragePhysical;
 import net.minecraft.item.Item;
 import net.minecraft.util.StatCollector;
 
 public enum ItemEnum
 {
-	PARTITEM("item.part.base", new ItemPartECBase()),
-	FLUIDSTORAGE("item.storage.fluid", new ItemStorageFluid());
+	PARTITEM("part.base", new ItemPartECBase()),
+	FLUIDSTORAGE("storage.fluid", new ItemStorageFluid()),
+	FLUIDPHYSICAL("storage.physical", new ItemStoragePhysical());
 
 	private final String internalName;
 	private Item item;
 
 	ItemEnum(String _internalName, Item _item)
 	{
-		internalName = "extracells." + _internalName;
+		internalName = _internalName;
 		item = _item;
-		item.setUnlocalizedName(internalName);
+		item.setUnlocalizedName("extracells." + internalName);
 		item.setCreativeTab(Extracells.ModTab);
 	}
 
 	public String getStatName()
 	{
-		return StatCollector.translateToLocal(internalName);
+		return StatCollector.translateToLocal(item.getUnlocalizedName());
 	}
 
 	public String getInternalName()

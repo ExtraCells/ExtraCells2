@@ -8,7 +8,7 @@ import extracells.item.ItemBlockCertusTank;
 
 public enum BlockEnum
 {
-	CERTUSTANK("tile.block.certustank.name", 509, new BlockCertusTank(), ItemBlockCertusTank.class);
+	CERTUSTANK("certustank.name", 509, new BlockCertusTank(), ItemBlockCertusTank.class);
 	private final String internalName;
 	private int Id;
 	private Block block;
@@ -35,7 +35,7 @@ public enum BlockEnum
 
 	public String getStatName()
 	{
-		return StatCollector.translateToLocal(internalName);
+		return StatCollector.translateToLocal(block.getUnlocalizedName().replace("tile.", "block."));
 	}
 
 	public void setId(int id)

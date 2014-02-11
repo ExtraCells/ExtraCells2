@@ -86,7 +86,6 @@ public class BlockCertusTank extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer entityplayer, int blockID, float offsetX, float offsetY, float offsetZ)
 	{
-		System.out.println("asdasd");
 		ItemStack current = entityplayer.inventory.getCurrentItem();
 
 		if (entityplayer.isSneaking() && current == null)
@@ -207,5 +206,10 @@ public class BlockCertusTank extends BlockContainer
 
 			ChannelHandler.sendPacketToAllPlayers(world.getTileEntity(x, y, z).getDescriptionPacket(), world);
 		}
+	}
+
+	public String getUnlocalizedName()
+	{
+		return super.getUnlocalizedName().replace("tile.extracells.", "extracells.block.");
 	}
 }

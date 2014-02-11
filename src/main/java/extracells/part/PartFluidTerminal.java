@@ -1,5 +1,6 @@
 package extracells.part;
 
+import appeng.api.config.Upgrades;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import extracells.TextureManager;
@@ -8,6 +9,7 @@ import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.PacketFluidTerminal;
 import extracells.util.ECPrivateInventory;
 import io.netty.buffer.ByteBuf;
+import javafx.util.Pair;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -118,5 +120,11 @@ public class PartFluidTerminal extends PartECBase
 	public IInventory getInventory()
 	{
 		return inventory;
+	}
+
+	public static List<Pair<Upgrades, Integer>> getPossibleUpgrades()
+	{
+		List<Pair<Upgrades, Integer>> pairList = new ArrayList<Pair<Upgrades, Integer>>();
+		return pairList;
 	}
 }

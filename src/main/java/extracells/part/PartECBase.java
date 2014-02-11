@@ -12,8 +12,8 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.Extracells;
 import extracells.ItemEnum;
+import extracells.PartEnum;
 import extracells.gridblock.ECBaseGridBlock;
-import extracells.item.ItemPartECBase;
 import extracells.proxy.CommonProxy;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -44,15 +44,24 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	protected IFluidHandler facingTank;
 	protected boolean redstonePowered;
 
+	public void initializePart(ItemStack partStack)
+	{
+		if (partStack.hasTagCompound())
+		{
+			readFromNBT(partStack.getTagCompound());
+		}
+	}
+
 	@Override
 	public ItemStack getItemStack(PartItemStack type)
 	{
-		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1, ItemPartECBase.getPartId(getClass()));
-		NBTTagCompound itemNbt = new NBTTagCompound();
-		NBTTagCompound partNbt = new NBTTagCompound();
-		writeToNBT(partNbt);
-		itemNbt.setTag("partNbt", partNbt);
-		is.setTagCompound(partNbt);
+		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1, PartEnum.getPartID(this));
+		if (type != PartItemStack.Break)
+		{
+			NBTTagCompound itemNbt = new NBTTagCompound();
+			writeToNBT(itemNbt);
+			is.setTagCompound(itemNbt);
+		}
 		return is;
 	}
 
@@ -252,14 +261,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	public ECBaseGridBlock getGridBlock()
 	{
 		return gridBlock;
-	}
-
-	public static void registerParts()
-	{
-		ItemPartECBase.registerPart(PartFluidExport.class);
-		ItemPartECBase.registerPart(PartFluidImport.class);
-		ItemPartECBase.registerPart(PartFluidStorage.class);
-		ItemPartECBase.registerPart(PartFluidTerminal.class);
 	}
 
 	@Override
