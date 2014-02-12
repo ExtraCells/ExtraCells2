@@ -15,7 +15,8 @@ public enum PartEnum
 	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO"),
 	FLUIDIMPORT("fluid.import", PartFluidImport.class, "fluid.IO"),
 	FLUIDSTORAGE("fluid.storage", PartFluidStorage.class),
-	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class);
+	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
+	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class);
 
 	String unlocalizedName;
 	Class<? extends PartECBase> partClass;

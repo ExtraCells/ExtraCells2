@@ -90,7 +90,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 		{
 			filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
 		}
-		upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));// TODO
+		upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
 		onInventoryChanged();
 	}
 
@@ -168,6 +168,25 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	}
 
 	@Override
+	public void onNeighborChanged()
+	{
+		super.onNeighborChanged();
+
+		if (redstonePowered)
+		{
+			if (!lastRedstone)
+			{
+				doWork(speedState * 125, 1);
+			} else
+			{
+				lastRedstone = true;
+				doWork(speedState * 125, 1);
+			}
+		}
+		lastRedstone = redstonePowered;
+	}
+
+	@Override
 	public void onInventoryChanged()
 	{
 		filterSize = 0;
@@ -196,32 +215,19 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 			return true;
 		switch (getRedstoneMode())
 		{
-		case IGNORE:
-			return true;
-		case LOW_SIGNAL:
-			return !redstonePowered;
-		case HIGH_SIGNAL:
-			return redstonePowered;
-		case SIGNAL_PULSE:
-			if (!redstonePowered)
-			{
-				lastRedstone = false;
-			} else
-			{
-				if (!lastRedstone)
-				{
-					return true;
-				} else
-				{
-					lastRedstone = true;
-					return true;
-				}
-			}
-			break;
+			case IGNORE:
+				return true;
+			case LOW_SIGNAL:
+				return !redstonePowered;
+			case HIGH_SIGNAL:
+				return redstonePowered;
+			case SIGNAL_PULSE:
+				return false;
 		}
 		return false;
 	}
 
+	@SuppressWarnings("unused")
 	public static List<Pair<Upgrades, Integer>> getPossibleUpgrades()
 	{
 		List<Pair<Upgrades, Integer>> pairList = new ArrayList<Pair<Upgrades, Integer>>();
