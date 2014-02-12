@@ -1,4 +1,4 @@
-package extracells;
+package extracells.registries;
 
 import appeng.api.config.Upgrades;
 import extracells.part.*;
@@ -6,21 +6,30 @@ import javafx.util.Pair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum PartEnum
 {
-	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO"),
-	FLUIDIMPORT("fluid.import", PartFluidImport.class, "fluid.IO"),
-	FLUIDSTORAGE("fluid.storage", PartFluidStorage.class),
+	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
+	FLUIDIMPORT("fluid.import", PartFluidImport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
+	FLUIDSTORAGE("fluid.storage", PartFluidStorage.class, null, generatePair(Upgrades.INVERTER, 1)),
 	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
 	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class);
 
-	String unlocalizedName;
-	Class<? extends PartECBase> partClass;
-	String groupName;
+	private String unlocalizedName;
+	private Class<? extends PartECBase> partClass;
+	private String groupName;
+	private Map<Upgrades, Integer> upgrades = new HashMap<Upgrades, Integer>();
+
+	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName, Pair<Upgrades, Integer>... _upgrades)
+	{
+		this(_unlocalizedName, _partClass, _groupName);
+		for (Pair<Upgrades, Integer> pair : _upgrades)
+		{
+			upgrades.put(pair.getKey(), pair.getValue());
+		}
+	}
 
 	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName)
 	{
@@ -76,9 +85,14 @@ public enum PartEnum
 		return getPartID(partECBase.getClass());
 	}
 
-	public List<Pair<Upgrades, Integer>> getUpgrades() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+	@SuppressWarnings("unchecked")
+	public Map<Upgrades, Integer> getUpgrades()
 	{
-		Method getPossibleUpgrades = partClass.getMethod("getPossibleUpgrades");
-		return (List<Pair<Upgrades, Integer>>) getPossibleUpgrades.invoke(null);
+		return upgrades;
+	}
+
+	private static Pair<Upgrades, Integer> generatePair(Upgrades _upgrade, int integer)
+	{
+		return new Pair<Upgrades, Integer>(_upgrade, integer);
 	}
 }

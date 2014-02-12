@@ -11,6 +11,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import extracells.network.ChannelHandler;
 import extracells.proxy.CommonProxy;
+import extracells.registries.ItemEnum;
 import extracells.render.RenderHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

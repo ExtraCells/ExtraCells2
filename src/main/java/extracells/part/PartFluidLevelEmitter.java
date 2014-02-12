@@ -1,5 +1,11 @@
 package extracells.part;
 
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import appeng.api.config.RedstoneMode;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
@@ -11,17 +17,14 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import extracells.TextureManager;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import extracells.render.TextureManager;
 
 public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IMEMonitorHandlerReciever<IAEFluidStack>
 {
 	private Fluid fluid;
-	private boolean mode;
+	private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;
 	private IStackWatcher watcher;
+	private long wantedAmount;
 	private long currentAmount;
 
 	@Override
@@ -47,14 +50,14 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 			data.setString("fluid", fluid.getName());
 		else
 			data.removeTag("fluid");
-		data.setBoolean("mode", mode);
+		data.setInteger("mode", mode.ordinal());
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound data)
 	{
 		fluid = FluidRegistry.getFluid(data.getString("fluid"));
-		mode = data.getBoolean("mode");
+		mode = RedstoneMode.values()[data.getInteger("mode")];
 	}
 
 	@Override
@@ -97,6 +100,47 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	}
 
 	@Override
+	public int isProvidingStrongPower()
+	{
+		return isPowering() ? 15 : 0;
+	}
+
+	@Override
+	public int isProvidingWeakPower()
+	{
+		return isPowering() ? 15 : 0;
+	}
+
+	private boolean isPowering()
+	{
+		switch (mode)
+		{
+		case LOW_SIGNAL:
+			return wantedAmount >= currentAmount;
+		case HIGH_SIGNAL:
+			return wantedAmount <= currentAmount;
+		default:
+			return false;
+		}
+	}
+
+	public void toggleMode()
+	{
+		switch (mode)
+		{
+		case LOW_SIGNAL:
+			mode = RedstoneMode.HIGH_SIGNAL;
+			break;
+		default:
+			mode = RedstoneMode.LOW_SIGNAL;
+			break;
+		}
+
+		tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air);
+		tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, Blocks.air);
+	}
+
+	@Override
 	public void addToWorld()
 	{
 		super.addToWorld();
@@ -118,6 +162,5 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 				monitor.removeListener(this);
 		}
 		super.removeFromWorld();
-
 	}
 }

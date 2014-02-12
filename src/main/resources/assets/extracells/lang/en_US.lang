@@ -17,7 +17,7 @@ item.storage.fluid.4096k.name=ME 4M Fluid Storage
 item.storage.fluid.16384k.name=ME 16M Fluid Storage
 
 //Item Groups
-extracells.fluid.IO.name=ME Fluid Export Bus/ME Fluid Import Bus
+extracells.fluid.IO=ME Fluid Export Bus/ME Fluid Import Bus
 
 //Parts
 extracells.part.fluid.export.name=ME Fluid Export Bus

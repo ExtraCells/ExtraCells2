@@ -1,16 +1,14 @@
 package extracells.part;
 
-import appeng.api.config.Upgrades;
 import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
-import extracells.TextureManager;
 import extracells.inventoryHandler.HandlerPartStorageFluid;
+import extracells.render.TextureManager;
 import io.netty.buffer.ByteBuf;
-import javafx.util.Pair;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -118,10 +116,4 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 		return hostTile;
 	}
 
-	public static List<Pair<Upgrades, Integer>> getPossibleUpgrades()
-	{
-		List<Pair<Upgrades, Integer>> pairList = new ArrayList<Pair<Upgrades, Integer>>();
-		pairList.add(new Pair<Upgrades, Integer>(Upgrades.INVERTER, 1));
-		return pairList;
-	}
 }

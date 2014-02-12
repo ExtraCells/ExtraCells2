@@ -7,8 +7,7 @@ import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.PartEnum;
-import javafx.util.Pair;
+import extracells.registries.PartEnum;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -18,6 +17,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ItemPartECBase extends Item implements IPartItem, IItemGroup
 {
@@ -29,15 +29,10 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup
 
 		for (PartEnum part : PartEnum.values())
 		{
-			try
+			Map<Upgrades, Integer> possibleUpgradesList = part.getUpgrades();
+			for (Upgrades upgrade : possibleUpgradesList.keySet())
 			{
-				List<Pair<Upgrades, Integer>> possibleUpgradesList = part.getUpgrades();
-				for (Pair<Upgrades, Integer> upgrade : possibleUpgradesList)
-				{
-					upgrade.getKey().registerItem(new ItemStack(this, 1, part.ordinal()), upgrade.getValue());
-				}
-			} catch (Throwable ignored)
-			{
+				upgrade.registerItem(new ItemStack(this, 1, part.ordinal()), possibleUpgradesList.get(upgrade));
 			}
 		}
 	}

@@ -127,7 +127,6 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
 	{
 		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(stack, StorageChannel.FLUIDS);

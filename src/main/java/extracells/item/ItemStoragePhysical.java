@@ -3,8 +3,6 @@ package extracells.item;
 import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.data.IAEItemStack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.util.ECCellInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -52,7 +50,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("unchecked")
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList)
 	{
 		for (int i = 0; i < suffixes.length; i++)

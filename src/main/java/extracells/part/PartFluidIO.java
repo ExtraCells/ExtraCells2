@@ -2,7 +2,6 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
-import appeng.api.config.Upgrades;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -14,7 +13,6 @@ import extracells.gui.GuiBusIOFluid;
 import extracells.network.packet.PacketBusIOFluid;
 import extracells.util.ECPrivateInventory;
 import io.netty.buffer.ByteBuf;
-import javafx.util.Pair;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,9 +21,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public abstract class PartFluidIO extends PartECBase implements IGridTickable, ECPrivateInventory.IInventoryUpdateReceiver
 {
@@ -215,25 +211,15 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 			return true;
 		switch (getRedstoneMode())
 		{
-			case IGNORE:
-				return true;
-			case LOW_SIGNAL:
-				return !redstonePowered;
-			case HIGH_SIGNAL:
-				return redstonePowered;
-			case SIGNAL_PULSE:
-				return false;
+		case IGNORE:
+			return true;
+		case LOW_SIGNAL:
+			return !redstonePowered;
+		case HIGH_SIGNAL:
+			return redstonePowered;
+		case SIGNAL_PULSE:
+			return false;
 		}
 		return false;
-	}
-
-	@SuppressWarnings("unused")
-	public static List<Pair<Upgrades, Integer>> getPossibleUpgrades()
-	{
-		List<Pair<Upgrades, Integer>> pairList = new ArrayList<Pair<Upgrades, Integer>>();
-		pairList.add(new Pair<Upgrades, Integer>(Upgrades.CAPACITY, 2));
-		pairList.add(new Pair<Upgrades, Integer>(Upgrades.REDSTONE, 1));
-		pairList.add(new Pair<Upgrades, Integer>(Upgrades.SPEED, 2));
-		return pairList;
 	}
 }

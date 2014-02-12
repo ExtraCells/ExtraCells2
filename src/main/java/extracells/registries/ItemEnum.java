@@ -1,5 +1,6 @@
-package extracells;
+package extracells.registries;
 
+import extracells.Extracells;
 import extracells.item.ItemPartECBase;
 import extracells.item.ItemStorageFluid;
 import extracells.item.ItemStoragePhysical;

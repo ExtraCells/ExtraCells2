@@ -1,4 +1,4 @@
-package extracells;
+package extracells.render;
 
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;

@@ -9,7 +9,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import com.google.common.collect.Lists;
-import extracells.ItemEnum;
+import extracells.registries.ItemEnum;
 import extracells.item.ItemStorageFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

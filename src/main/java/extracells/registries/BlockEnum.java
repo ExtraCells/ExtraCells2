@@ -1,4 +1,4 @@
-package extracells;
+package extracells.registries;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;

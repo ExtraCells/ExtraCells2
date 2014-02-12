@@ -1,8 +1,8 @@
 package extracells.proxy;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import extracells.BlockEnum;
-import extracells.TextureManager;
+import extracells.registries.BlockEnum;
+import extracells.render.TextureManager;
 import extracells.render.item.ItemRendererCertusTank;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
