@@ -8,13 +8,11 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import extracells.inventoryHandler.HandlerPartStorageFluid;
 import extracells.render.TextureManager;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +26,13 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	{
 		IIcon side = TextureManager.BUS_SIDE.getTexture();
 		rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
-		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
+		rh.setBounds(1, 1, 15, 15, 15, 16);
 		rh.renderInventoryBox(renderer);
-		rh.setBounds(4.0F, 4.0F, 14.0F, 12.0F, 12.0F, 15.0F);
+		rh.setBounds(4, 4, 14, 12, 12, 15);
 		rh.renderInventoryBox(renderer);
+
+		rh.setBounds(6, 6, 13, 10, 10, 14);
+		renderInventoryBusLights(rh, renderer);
 	}
 
 	@Override
@@ -39,10 +40,13 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	{
 		IIcon side = TextureManager.BUS_SIDE.getTexture();
 		rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
-		rh.setBounds(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
+		rh.setBounds(1, 1, 15, 15, 15, 16);
 		rh.renderBlock(x, y, z, renderer);
-		rh.setBounds(4.0F, 4.0F, 14.0F, 12.0F, 12.0F, 15.0F);
+		rh.setBounds(4, 4, 14, 12, 12, 15);
 		rh.renderBlock(x, y, z, renderer);
+
+		rh.setBounds(6, 6, 13, 10, 10, 14);
+		renderStaticBusLights(x, y, z, rh, renderer);
 	}
 
 	@Override
@@ -60,27 +64,17 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	}
 
 	@Override
-	public void writeToStream(ByteBuf data) throws IOException
-	{
-
-	}
-
-	@Override
-	public boolean readFromStream(ByteBuf data) throws IOException
-	{
-		return false;
-	}
-
-	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
-		bch.addBox(1.0F, 1.0F, 15.0F, 15.0F, 15.0F, 16.0F);
+		bch.addBox(1, 1, 15, 15, 15, 16);
+		bch.addBox(4, 4, 14, 12, 12, 15);
+		bch.addBox(6, 6, 13, 10, 10, 14);
 	}
 
 	@Override
 	public int cableConnectionRenderTo()
 	{
-		return 2;
+		return 3;
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class PartFluidExport extends PartFluidIO
 		rh.setBounds(4, 4, 13, 12, 12, 14);
 		rh.renderInventoryBox(renderer);
 
-		rh.setBounds(5, 5, 1, 11, 11, 15);
+		rh.setBounds(5, 5, 14, 11, 11, 15);
 		rh.renderInventoryBox(renderer);
 
 		IIcon side = TextureManager.BUS_SIDE.getTexture();
