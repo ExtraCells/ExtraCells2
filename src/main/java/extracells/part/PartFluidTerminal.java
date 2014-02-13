@@ -41,8 +41,11 @@ public class PartFluidTerminal extends PartECBase
 		Tessellator ts = Tessellator.instance;
 
 		IIcon side = TextureManager.BUS_SIDE.getTexture();
+		rh.setTexture(side);
+		rh.setBounds(4, 4, 13, 12, 12, 14);
+		rh.renderInventoryBox(renderer);
 		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
-		rh.setBounds(2.0F, 2.0F, 14.0F, 14.0F, 14.0F, 16.0F);
+		rh.setBounds(2, 2, 14, 14, 14, 16);
 		rh.renderInventoryBox(renderer);
 
 		ts.setBrightness(13 << 20 | 13 << 4);
@@ -50,7 +53,7 @@ public class PartFluidTerminal extends PartECBase
 		rh.setInvColor(0xFFFFFF);
 		rh.renderInventoryFace(TextureManager.BUS_BORDER.getTexture(), ForgeDirection.SOUTH, renderer);
 
-		rh.setBounds(3.0F, 3.0F, 15.0F, 13.0F, 13.0F, 16.0F);
+		rh.setBounds(3, 3, 15, 13, 13, 16);
 		rh.setInvColor(AEColor.Transparent.blackVariant);
 		rh.renderInventoryFace(TextureManager.TERMINAL_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
 		rh.setInvColor(AEColor.Transparent.mediumVariant);
@@ -58,7 +61,7 @@ public class PartFluidTerminal extends PartECBase
 		rh.setInvColor(AEColor.Transparent.whiteVariant);
 		rh.renderInventoryFace(TextureManager.TERMINAL_FRONT.getTextures()[2], ForgeDirection.SOUTH, renderer);
 
-		rh.setBounds(4.0F, 4.0F, 13.0F, 12.0F, 12.0F, 14.0F);
+		rh.setBounds(5, 5, 12, 11, 11, 13);
 		renderInventoryBusLights(rh, renderer);
 	}
 
@@ -68,17 +71,20 @@ public class PartFluidTerminal extends PartECBase
 		Tessellator ts = Tessellator.instance;
 
 		IIcon side = TextureManager.BUS_SIDE.getTexture();
+		rh.setTexture(side);
+		rh.setBounds(4, 4, 13, 12, 12, 14);
+		rh.renderBlock(x, y, z, renderer);
 		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
-		rh.setBounds(2.0F, 2.0F, 14.0F, 14.0F, 14.0F, 16.0F);
+		rh.setBounds(2, 2, 14, 14, 14, 16);
 		rh.renderBlock(x, y, z, renderer);
 
-		if (isActive)
+		if (isActive())
 			Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
 
 		ts.setColorOpaque_I(0xFFFFFF);
 		rh.renderFace(x, y, z, TextureManager.BUS_BORDER.getTexture(), ForgeDirection.SOUTH, renderer);
 
-		rh.setBounds(3.0F, 3.0F, 15.0F, 13.0F, 13.0F, 16);
+		rh.setBounds(3, 3, 15, 13, 13, 16);
 		ts.setColorOpaque_I(host.getColor().blackVariant);
 		rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
 		ts.setColorOpaque_I(host.getColor().mediumVariant);
@@ -86,7 +92,7 @@ public class PartFluidTerminal extends PartECBase
 		ts.setColorOpaque_I(host.getColor().whiteVariant);
 		rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[2], ForgeDirection.SOUTH, renderer);
 
-		rh.setBounds(4.0F, 4.0F, 13.0F, 12.0F, 12.0F, 14.0F);
+		rh.setBounds(5, 5, 12, 11, 11, 13);
 		renderStaticBusLights(x, y, z, rh, renderer);
 	}
 
@@ -105,7 +111,9 @@ public class PartFluidTerminal extends PartECBase
 	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
-		bch.addBox(2.0F, 2.0F, 14.0F, 14.0F, 14.0F, 16.0F);
+		bch.addBox(2, 2, 14, 14, 14, 16);
+		bch.addBox(4, 4, 13, 12, 12, 14);
+		bch.addBox(5, 5, 12, 11, 11, 13);
 	}
 
 	@Override

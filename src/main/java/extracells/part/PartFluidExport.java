@@ -5,9 +5,12 @@ import appeng.api.config.Actionable;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.AEColor;
 import extracells.render.TextureManager;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -20,6 +23,7 @@ public class PartFluidExport extends PartFluidIO
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
+		Tessellator ts = Tessellator.instance;
 		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(6, 6, 12, 10, 10, 13);
 		rh.renderInventoryBox(renderer);
@@ -34,6 +38,10 @@ public class PartFluidExport extends PartFluidIO
 		rh.setTexture(side, side, side, TextureManager.EXPORT_FRONT.getTexture(), side, side);
 		rh.setBounds(6, 6, 15, 10, 10, 16);
 		rh.renderInventoryBox(renderer);
+
+		rh.setInvColor(AEColor.Cyan.blackVariant);
+		ts.setBrightness(15 << 20 | 15 << 4);
+		rh.renderInventoryFace(TextureManager.EXPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 
 		rh.setBounds(6, 6, 11, 10, 10, 12);
 		renderInventoryBusLights(rh, renderer);
@@ -42,6 +50,7 @@ public class PartFluidExport extends PartFluidIO
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
+		Tessellator ts = Tessellator.instance;
 		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(6, 6, 12, 10, 10, 13);
 		rh.renderBlock(x, y, z, renderer);
@@ -53,9 +62,13 @@ public class PartFluidExport extends PartFluidIO
 		rh.renderBlock(x, y, z, renderer);
 
 		IIcon side = TextureManager.BUS_SIDE.getTexture();
-		rh.setTexture(side, side, side, TextureManager.EXPORT_FRONT.getTexture(), side, side);
+		rh.setTexture(side, side, side, TextureManager.EXPORT_FRONT.getTextures()[0], side, side);
 		rh.setBounds(6, 6, 15, 10, 10, 16);
 		rh.renderBlock(x, y, z, renderer);
+
+		ts.setColorOpaque_I(host.getColor().blackVariant);
+		ts.setBrightness(15 << 20 | 15 << 4);
+		rh.renderFace(x, y, z, TextureManager.EXPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 
 		rh.setBounds(6, 6, 11, 10, 10, 12);
 		renderStaticBusLights(x, y, z, rh, renderer);

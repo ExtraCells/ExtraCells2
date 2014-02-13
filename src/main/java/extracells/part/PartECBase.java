@@ -63,12 +63,16 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	@SuppressWarnings("unused")
 	public void setPower(MENetworkPowerStatusChange notUsed)
 	{
-		boolean nodeActive = node.isActive();
-		if (isActive != nodeActive)
+		if (node != null)
 		{
 			isActive = node.isActive();
 			host.markForUpdate();
 		}
+	}
+
+	protected boolean isActive()
+	{
+		return node != null ? node.isActive() : isActive;
 	}
 
 	@Override
@@ -134,6 +138,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	{
 		gridBlock = new ECBaseGridBlock(this);
 		node = AEApi.instance().createGridNode(gridBlock);
+		setPower(null);
 		onNeighborChanged();
 	}
 
@@ -196,6 +201,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		host = _host;
 		tile = _tile;
 		hostTile = _tile;
+		setPower(null);
 	}
 
 	@Override
@@ -211,19 +217,14 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	@Override
 	public void writeToStream(ByteBuf data) throws IOException
 	{
-		data.writeBoolean(isActive);
+		data.writeBoolean(node.isActive());
 	}
 
 	@Override
 	public boolean readFromStream(ByteBuf data) throws IOException
 	{
-		boolean newActive = data.readBoolean();
-		if (newActive != isActive)
-		{
-			isActive = newActive;
-			return true;
-		}
-		return false;
+		isActive = data.readBoolean();
+		return true;
 	}
 
 	@Override
@@ -344,7 +345,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		rh.setTexture(otherIcon, otherIcon, side, side, otherIcon, otherIcon);
 		rh.renderBlock(x, y, z, renderer);
 
-		if (isActive)
+		if (isActive())
 		{
 			ts.setBrightness(13 << 20 | 13 << 4);
 			ts.setColorOpaque_I(host.getColor().blackVariant);

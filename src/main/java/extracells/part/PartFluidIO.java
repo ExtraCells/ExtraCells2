@@ -80,6 +80,12 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	}
 
 	@Override
+	public int getLightLevel()
+	{
+		return 0;
+	}
+
+	@Override
 	public final void readFromNBT(NBTTagCompound data)
 	{
 		super.readFromNBT(data);

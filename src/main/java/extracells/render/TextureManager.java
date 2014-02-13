@@ -8,10 +8,10 @@ public enum TextureManager
 	BUS_SIDE("bus_side"),
 	BUS_BORDER("bus_border"),
 	BUS_COLOR("bus_color_border", "bus_color_point"),
-	EXPORT_FRONT("export_front"),
-	IMPORT_FRONT("import_front"),
-	STORAGE_FRONT("storage_front"),
-	TERMINAL_FRONT("terminal_layer1", "terminal_layer2", "terminal_layer3");
+	EXPORT_FRONT("export_front_1", "export_front_2"),
+	IMPORT_FRONT("import_front_1", "import_front_2"),
+	STORAGE_FRONT("storage_front_1", "storage_front_2"),
+	TERMINAL_FRONT("terminal_front_1", "terminal_front_2", "terminal_front_3");
 
 	private String[] textureNames;
 	private IIcon[] textures;
