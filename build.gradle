@@ -27,7 +27,7 @@ archivesBaseName = 'ExtraCells'
 logger.lifecycle ""+version
  
 minecraft {
-    version = "1.7.2-10.12.0.1024"
+    version = "1.7.2-10.12.0.1028"
     assetDir = "../../MinecraftDebug/run_client/assets"
 }
 

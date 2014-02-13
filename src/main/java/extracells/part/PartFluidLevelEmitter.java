@@ -1,25 +1,25 @@
 package extracells.part;
 
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.IMEMonitorHandlerReciever;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import extracells.render.TextureManager;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
-public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IMEMonitorHandlerReciever<IAEFluidStack>
+public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost
 {
 	private Fluid fluid;
 	private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;
@@ -46,6 +46,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	@Override
 	public void writeToNBT(NBTTagCompound data)
 	{
+		super.writeToNBT(data);
 		if (fluid != null)
 			data.setString("fluid", fluid.getName());
 		else
@@ -56,6 +57,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	@Override
 	public void readFromNBT(NBTTagCompound data)
 	{
+		super.readFromNBT(data);
 		fluid = FluidRegistry.getFluid(data.getString("fluid"));
 		mode = RedstoneMode.values()[data.getInteger("mode")];
 	}
@@ -73,21 +75,11 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	}
 
 	@Override
-	public boolean isValid(Object verificationToken)
-	{
-		return true;
-	}
-
-	@Override
-	public void postChange(IMEMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource)
-	{
-
-	}
-
-	@Override
 	public void updateWatcher(IStackWatcher newWatcher)
 	{
 		watcher = newWatcher;
+		if (fluid != null)
+			watcher.add(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, 1)));
 	}
 
 	@Override
@@ -124,6 +116,13 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		}
 	}
 
+	public void changeFluid(Fluid _fluid)
+	{
+		fluid = _fluid;
+		watcher.clear();
+		updateWatcher(watcher);
+	}
+
 	public void toggleMode()
 	{
 		switch (mode)
@@ -140,27 +139,4 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, Blocks.air);
 	}
 
-	@Override
-	public void addToWorld()
-	{
-		super.addToWorld();
-		if (gridBlock != null)
-		{
-			IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
-			if (monitor != null)
-				monitor.addListener(this, null);
-		}
-	}
-
-	@Override
-	public void removeFromWorld()
-	{
-		if (gridBlock != null)
-		{
-			IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
-			if (monitor != null)
-				monitor.removeListener(this);
-		}
-		super.removeFromWorld();
-	}
 }

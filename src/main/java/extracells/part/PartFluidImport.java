@@ -7,6 +7,7 @@ import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.render.TextureManager;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,41 +23,50 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(TextureManager.IMPORT_FRONT.getTexture());
-		rh.setBounds(4F, 4F, 15F, 12, 12, 16);
+		IIcon side = TextureManager.BUS_SIDE.getTexture();
+		rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTexture(), side, side);
+		rh.setBounds(4, 4, 14, 12, 12, 16);
 		rh.renderInventoryBox(renderer);
 
 		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
-		rh.setBounds(5F, 5F, 14F, 11, 11, 15);
+		rh.setBounds(5, 5, 13, 11, 11, 14);
 		rh.renderInventoryBox(renderer);
 
-		rh.setBounds(6F, 6F, 12F, 10, 10, 14);
+		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
+		rh.setBounds(6, 6, 12, 10, 10, 13);
 		rh.renderInventoryBox(renderer);
+
+		rh.setBounds(6, 6, 11, 10, 10, 12);
+		renderInventoryBusLights(rh, renderer);
 	}
 
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.useSimpliedRendering(x, y, z, this);
-
-		rh.setTexture(TextureManager.IMPORT_FRONT.getTexture());
-		rh.setBounds(4F, 4F, 15F, 12, 12, 16);
+		IIcon side = TextureManager.BUS_SIDE.getTexture();
+		rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTexture(), side, side);
+		rh.setBounds(4, 4, 14, 12, 12, 16);
 		rh.renderBlock(x, y, z, renderer);
 
 		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
-		rh.setBounds(5F, 5F, 14F, 11, 11, 15);
+		rh.setBounds(5, 5, 13, 11, 11, 14);
 		rh.renderBlock(x, y, z, renderer);
 
-		rh.setBounds(6F, 6F, 12F, 10, 10, 14);
+		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
+		rh.setBounds(6, 6, 12, 10, 10, 13);
 		rh.renderBlock(x, y, z, renderer);
+
+		rh.setBounds(6, 6, 11, 10, 10, 12);
+		renderStaticBusLights(x, y, z, rh, renderer);
 	}
 
 	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
-		bch.addBox(4F, 4F, 15F, 12, 12, 16);
-		bch.addBox(5F, 5F, 14F, 11, 11, 15);
-		bch.addBox(6F, 6F, 12F, 10, 10, 14);
+		bch.addBox(4, 4, 14, 12, 12, 16);
+		bch.addBox(5, 5, 13, 11, 11, 14);
+		bch.addBox(6, 6, 12, 10, 10, 13);
+		bch.addBox(6, 6, 11, 10, 10, 12);
 	}
 
 	@Override

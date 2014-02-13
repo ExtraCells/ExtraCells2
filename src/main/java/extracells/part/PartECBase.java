@@ -4,25 +4,31 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.*;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
 import extracells.Extracells;
-import extracells.registries.ItemEnum;
-import extracells.registries.PartEnum;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.proxy.CommonProxy;
+import extracells.registries.ItemEnum;
+import extracells.registries.PartEnum;
+import extracells.render.TextureManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -43,12 +49,25 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	protected TileEntity hostTile;
 	protected IFluidHandler facingTank;
 	protected boolean redstonePowered;
+	protected boolean isActive;
 
 	public void initializePart(ItemStack partStack)
 	{
 		if (partStack.hasTagCompound())
 		{
 			readFromNBT(partStack.getTagCompound());
+		}
+	}
+
+	@MENetworkEventSubscribe
+	@SuppressWarnings("unused")
+	public void setPower(MENetworkPowerStatusChange notUsed)
+	{
+		boolean nodeActive = node.isActive();
+		if (isActive != nodeActive)
+		{
+			isActive = node.isActive();
+			host.markForUpdate();
 		}
 	}
 
@@ -89,15 +108,19 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	}
 
 	@Override
-	public abstract void writeToNBT(NBTTagCompound data);
+	public void writeToNBT(NBTTagCompound data)
+	{
+	}
 
 	@Override
-	public abstract void readFromNBT(NBTTagCompound data);
+	public void readFromNBT(NBTTagCompound data)
+	{
+	}
 
 	@Override
 	public int getLightLevel()
 	{
-		return 0;
+		return isActive ? 15 : 0;
 	}
 
 	@Override
@@ -188,11 +211,18 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	@Override
 	public void writeToStream(ByteBuf data) throws IOException
 	{
+		data.writeBoolean(isActive);
 	}
 
 	@Override
 	public boolean readFromStream(ByteBuf data) throws IOException
 	{
+		boolean newActive = data.readBoolean();
+		if (newActive != isActive)
+		{
+			isActive = newActive;
+			return true;
+		}
 		return false;
 	}
 
@@ -303,5 +333,45 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	public Object getClientGuiElement(EntityPlayer player)
 	{
 		return null;
+	}
+
+	public void renderStaticBusLights(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
+	{
+		Tessellator ts = Tessellator.instance;
+
+		IIcon otherIcon = TextureManager.BUS_COLOR.getTextures()[0];
+		IIcon side = TextureManager.BUS_SIDE.getTexture();
+		rh.setTexture(otherIcon, otherIcon, side, side, otherIcon, otherIcon);
+		rh.renderBlock(x, y, z, renderer);
+
+		if (isActive)
+		{
+			ts.setBrightness(13 << 20 | 13 << 4);
+			ts.setColorOpaque_I(host.getColor().blackVariant);
+		} else
+		{
+			ts.setColorOpaque_I(0x000000);
+		}
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.UP, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.DOWN, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.EAST, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
+	}
+
+	public void renderInventoryBusLights(IPartRenderHelper rh, RenderBlocks renderer)
+	{
+		Tessellator ts = Tessellator.instance;
+
+		IIcon otherIcon = TextureManager.BUS_COLOR.getTextures()[0];
+		IIcon side = TextureManager.BUS_SIDE.getTexture();
+		rh.setTexture(otherIcon, otherIcon, side, side, otherIcon, otherIcon);
+		rh.renderInventoryBox(renderer);
+
+		ts.setBrightness(13 << 20 | 13 << 4);
+		rh.setInvColor(AEColor.Transparent.blackVariant);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.UP, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.DOWN, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.EAST, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
 	}
 }

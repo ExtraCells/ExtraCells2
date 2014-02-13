@@ -66,6 +66,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	@Override
 	public final void writeToNBT(NBTTagCompound data)
 	{
+		super.writeToNBT(data);
 		data.setInteger("redstoneMode", redstoneMode.ordinal());
 		for (int i = 0; i < filterFluids.length; i++)
 		{
@@ -81,6 +82,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	@Override
 	public final void readFromNBT(NBTTagCompound data)
 	{
+		super.readFromNBT(data);
 		redstoneMode = RedstoneMode.values()[data.getInteger("redstoneMode")];
 		for (int i = 0; i < 9; i++)
 		{
@@ -93,12 +95,13 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	@Override
 	public final void writeToStream(ByteBuf data) throws IOException
 	{
+		super.writeToStream(data);
 	}
 
 	@Override
 	public final boolean readFromStream(ByteBuf data) throws IOException
 	{
-		return false;
+		return super.readFromStream(data);
 	}
 
 	@Override

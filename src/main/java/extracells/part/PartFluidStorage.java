@@ -48,12 +48,14 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	@Override
 	public void writeToNBT(NBTTagCompound data)
 	{
+		super.writeToNBT(data);
 		data.setInteger("priority", priority);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound data)
 	{
+		super.readFromNBT(data);
 		priority = data.getInteger("priority");
 	}
 
