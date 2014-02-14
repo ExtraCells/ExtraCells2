@@ -6,27 +6,26 @@ import appeng.api.implementations.guiobjects.INetworkTool;
 import appeng.api.util.DimensionalCoord;
 import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
-import extracells.gui.GuiBusIOFluid;
-import extracells.part.PartFluidIO;
+import extracells.gui.GuiBusFluidStorage;
+import extracells.part.PartFluidStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerBusIOFluid extends Container
+public class ContainerBusFluidStorage extends Container
 {
-	private PartFluidIO part;
+	private PartFluidStorage part;
 	private EntityPlayer player;
-	private GuiBusIOFluid guiBusIOFluid;
+	private GuiBusFluidStorage guiBusFluidStorage;
 
-	public ContainerBusIOFluid(PartFluidIO _terminal, EntityPlayer _player)
+	public ContainerBusFluidStorage(PartFluidStorage _terminal, EntityPlayer _player)
 	{
 		part = _terminal;
 		player = _player;
 
-		for (int i = 0; i < 4; i++)
-			addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), i, 187, i * 18 + 8));
+		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
 		bindPlayerInventory(player.inventory);
 
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
@@ -55,21 +54,21 @@ public class ContainerBusIOFluid extends Container
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 102));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 140));
 			}
 		}
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 160));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 198));
 		}
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber)
 	{
-		if (guiBusIOFluid != null)
-			guiBusIOFluid.shiftClick(getSlot(slotnumber).getStack());
+		if (guiBusFluidStorage != null)
+			guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
 
 		ItemStack itemstack = null;
 		Slot slot = (Slot) inventorySlots.get(slotnumber);
@@ -108,8 +107,8 @@ public class ContainerBusIOFluid extends Container
 		return true;
 	}
 
-	public void setGui(GuiBusIOFluid _guiBusIOFluid)
+	public void setGui(GuiBusFluidStorage _guiBusFluidStorage)
 	{
-		guiBusIOFluid = _guiBusIOFluid;
+		guiBusFluidStorage = _guiBusFluidStorage;
 	}
 }

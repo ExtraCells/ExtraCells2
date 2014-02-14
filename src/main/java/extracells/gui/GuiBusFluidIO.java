@@ -2,10 +2,11 @@ package extracells.gui;
 
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
-import extracells.container.ContainerBusIOFluid;
+import extracells.container.ContainerBusFluidIO;
 import extracells.gui.widget.WidgetFluidSlot;
 import extracells.gui.widget.WidgetRedstoneModes;
-import extracells.network.packet.PacketBusIOFluid;
+import extracells.network.packet.PacketBusFluidIO;
+import extracells.network.packet.PacketFluidSlot;
 import extracells.part.PartFluidIO;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
@@ -22,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConfigurable
+public class GuiBusFluidIO extends GuiContainer implements WidgetFluidSlot.IConfigurable, PacketFluidSlot.IFluidSlotGui
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
 	private PartFluidIO part;
@@ -32,10 +33,10 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 	private boolean redstoneControlled;
 	private boolean hasNetworkTool;
 
-	public GuiBusIOFluid(PartFluidIO _terminal, EntityPlayer _player)
+	public GuiBusFluidIO(PartFluidIO _terminal, EntityPlayer _player)
 	{
-		super(new ContainerBusIOFluid(_terminal, _player));
-		((ContainerBusIOFluid) inventorySlots).setGui(this);
+		super(new ContainerBusFluidIO(_terminal, _player));
+		((ContainerBusFluidIO) inventorySlots).setGui(this);
 		part = _terminal;
 		player = _player;
 
@@ -49,7 +50,7 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 		fluidSlotList.add(new WidgetFluidSlot(player, part, 7, 79, 57, this, (byte) 1));
 		fluidSlotList.add(new WidgetFluidSlot(player, part, 8, 97, 57, this, (byte) 2));
 
-		new PacketBusIOFluid(player, part).sendPacketToServer();
+		new PacketBusFluidIO(player, part).sendPacketToServer();
 		hasNetworkTool = inventorySlots.getInventory().size() > 40;
 		xSize = hasNetworkTool ? 246 : 211;
 		ySize = 184;
@@ -120,6 +121,7 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 		return false;
 	}
 
+	@Override
 	public void updateFluids(List<Fluid> fluidList)
 	{
 		for (int i = 0; i < fluidSlotList.size() && i < fluidList.size(); i++)
@@ -154,7 +156,7 @@ public class GuiBusIOFluid extends GuiContainer implements WidgetFluidSlot.IConf
 	public void actionPerformed(GuiButton button)
 	{
 		super.actionPerformed(button);
-		new PacketBusIOFluid(player, (byte) button.id, part).sendPacketToServer();
+		new PacketBusFluidIO(player, (byte) button.id, part).sendPacketToServer();
 	}
 
 	protected boolean isPointInRegion(int top, int left, int height, int width, int pointX, int pointY)

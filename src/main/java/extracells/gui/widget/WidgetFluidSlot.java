@@ -1,7 +1,6 @@
 package extracells.gui.widget;
 
-import extracells.network.packet.PacketBusIOFluid;
-import extracells.part.PartFluidIO;
+import extracells.network.packet.PacketFluidSlot;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -24,12 +23,12 @@ public class WidgetFluidSlot extends Gui
 	private int posX, posY;
 	private Fluid fluid;
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
-	private PartFluidIO part;
+	private PacketFluidSlot.IFluidSlotPart part;
 	private EntityPlayer player;
 	private IConfigurable configurable;
 	private byte configOption;
 
-	public WidgetFluidSlot(EntityPlayer _player, PartFluidIO _part, int _id, int _posX, int _posY, IConfigurable _configurable, byte _configOption)
+	public WidgetFluidSlot(EntityPlayer _player, PacketFluidSlot.IFluidSlotPart _part, int _id, int _posX, int _posY, IConfigurable _configurable, byte _configOption)
 	{
 		player = _player;
 		part = _part;
@@ -40,7 +39,7 @@ public class WidgetFluidSlot extends Gui
 		configOption = _configOption;
 	}
 
-	public WidgetFluidSlot(EntityPlayer _player, PartFluidIO _part, int _id, int _posX, int _posY)
+	public WidgetFluidSlot(EntityPlayer _player, PacketFluidSlot.IFluidSlotPart _part, int _id, int _posX, int _posY)
 	{
 		this(_player, _part, _id, _posX, _posY, null, (byte) 0);
 	}
@@ -110,7 +109,7 @@ public class WidgetFluidSlot extends Gui
 	{
 		FluidStack fluidStack = FluidUtil.getFluidFromContainer(stack);
 		fluid = fluidStack == null ? null : fluidStack.getFluid();
-		new PacketBusIOFluid(player, (byte) id, fluid, part).sendPacketToServer();
+		new PacketFluidSlot(part, id, fluid, player).sendPacketToServer();
 	}
 
 	@SuppressWarnings("rawtypes")

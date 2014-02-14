@@ -1,5 +1,6 @@
 package extracells.part;
 
+import appeng.api.AEApi;
 import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
@@ -7,22 +8,43 @@ import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.util.AEColor;
+import extracells.container.ContainerBusFluidStorage;
+import extracells.gui.GuiBusFluidStorage;
 import extracells.inventoryHandler.HandlerPartStorageFluid;
+import extracells.network.packet.PacketFluidSlot;
 import extracells.render.TextureManager;
+import extracells.util.ECPrivateInventory;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer
+public class PartFluidStorage extends PartECBase implements ICellContainer, ECPrivateInventory.IInventoryUpdateReceiver, PacketFluidSlot.IFluidSlotPart
 {
-	int priority = 0;
-	HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
+	private int priority = 0;
+	private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
+	private Fluid[] filterFluids = new Fluid[54];
+	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this)
+	{
+		public boolean isItemValidForSlot(int i, ItemStack itemStack)
+		{
+			if (itemStack == null)
+				return false;
+			if (AEApi.instance().materials().materialCardInverter.sameAs(itemStack))
+				return true;
+			return false;
+		}
+	};
 
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
@@ -69,6 +91,15 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	{
 		super.writeToNBT(data);
 		data.setInteger("priority", priority);
+		for (int i = 0; i < filterFluids.length; i++)
+		{
+			Fluid fluid = filterFluids[i];
+			if (fluid != null)
+				data.setString("FilterFluid#" + i, fluid.getName());
+			else
+				data.setString("FilterFluid#" + i, "");
+		}
+		data.setTag("upgradeInventory", upgradeInventory.writeToNBT());
 	}
 
 	@Override
@@ -76,6 +107,12 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 	{
 		super.readFromNBT(data);
 		priority = data.getInteger("priority");
+		for (int i = 0; i < 9; i++)
+		{
+			filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
+		}
+		upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
+		onInventoryChanged();
 	}
 
 	@Override
@@ -133,4 +170,36 @@ public class PartFluidStorage extends PartECBase implements ICellContainer
 		return hostTile;
 	}
 
+	public ECPrivateInventory getUpgradeInventory()
+	{
+		return upgradeInventory;
+	}
+
+	@Override
+	public void onInventoryChanged()
+	{
+		handler.setInverted(AEApi.instance().materials().materialCardInverter.sameAs(upgradeInventory.getStackInSlot(0)));
+	}
+
+	public void sendInformation(EntityPlayer player)
+	{
+		new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
+	}
+
+	public Object getServerGuiElement(EntityPlayer player)
+	{
+		return new ContainerBusFluidStorage(this, player);
+	}
+
+	public Object getClientGuiElement(EntityPlayer player)
+	{
+		return new GuiBusFluidStorage(this, player);
+	}
+
+	@Override
+	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player)
+	{
+		filterFluids[_index] = _fluid;
+		sendInformation(_player);
+	}
 }

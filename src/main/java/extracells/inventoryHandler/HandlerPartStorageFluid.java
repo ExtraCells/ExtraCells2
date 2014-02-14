@@ -25,6 +25,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	private IFluidHandler tank;
 	private AccessRestriction access;
 	private List<Fluid> prioritizedFluids = new ArrayList<Fluid>();
+	private boolean inverted;
 
 	public HandlerPartStorageFluid(PartFluidStorage _node)
 	{
@@ -134,5 +135,10 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		tank = null;
 		if (tileEntity instanceof IFluidHandler)
 			tank = (IFluidHandler) tileEntity;
+	}
+
+	public void setInverted(boolean _inverted)
+	{
+		inverted = _inverted;
 	}
 }

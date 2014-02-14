@@ -155,11 +155,11 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 			itemstack = itemstack1.copy();
 			if (terminal.getInventory().isItemValidForSlot(0, itemstack1))
 			{
-				if (slotnumber == 1 || slotnumber == 0)
+				if (slotnumber == 0)
 				{
-					if (!mergeItemStack(itemstack1, 3, 38, false))
+					if (!mergeItemStack(itemstack1, 1, 36, false))
 						return null;
-				} else if (!mergeItemStack(itemstack1, 0, 1, false))
+				} else if (!mergeItemStack(itemstack1, 0, 0, false))
 				{
 					return null;
 				}

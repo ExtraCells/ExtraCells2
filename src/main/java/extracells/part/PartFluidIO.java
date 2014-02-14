@@ -8,9 +8,10 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import extracells.container.ContainerBusIOFluid;
-import extracells.gui.GuiBusIOFluid;
-import extracells.network.packet.PacketBusIOFluid;
+import extracells.container.ContainerBusFluidIO;
+import extracells.gui.GuiBusFluidIO;
+import extracells.network.packet.PacketBusFluidIO;
+import extracells.network.packet.PacketFluidSlot;
 import extracells.util.ECPrivateInventory;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -23,7 +24,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import java.io.IOException;
 import java.util.Arrays;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable, ECPrivateInventory.IInventoryUpdateReceiver
+public abstract class PartFluidIO extends PartECBase implements IGridTickable, ECPrivateInventory.IInventoryUpdateReceiver, PacketFluidSlot.IFluidSlotPart
 {
 	protected Fluid[] filterFluids = new Fluid[9];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -33,15 +34,15 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 	private boolean lastRedstone;
 	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4, 1, this)
 	{
-		public boolean isItemValidForSlot(int i, ItemStack itemstack)
+		public boolean isItemValidForSlot(int i, ItemStack itemStack)
 		{
-			if (itemstack == null)
+			if (itemStack == null)
 				return false;
-			if (itemstack.isItemEqual(AEApi.instance().materials().materialCardCapacity.stack(1)))
+			if (AEApi.instance().materials().materialCardCapacity.sameAs(itemStack))
 				return true;
-			else if (itemstack.isItemEqual(AEApi.instance().materials().materialCardSpeed.stack(1)))
+			else if (AEApi.instance().materials().materialCardSpeed.sameAs(itemStack))
 				return true;
-			else if (itemstack.isItemEqual(AEApi.instance().materials().materialCardRedstone.stack(1)))
+			else if (AEApi.instance().materials().materialCardRedstone.sameAs(itemStack))
 				return true;
 			return false;
 		}
@@ -135,10 +136,10 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 
 	public abstract boolean doWork(int rate, int TicksSinceLastCall);
 
-	public final void setFilterFluid(int index, Fluid fluid, EntityPlayer player)
+	public final void setFluid(int index, Fluid fluid, EntityPlayer player)
 	{
 		filterFluids[index] = fluid;
-		new PacketBusIOFluid(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
+		new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
 	}
 
 	public RedstoneMode getRedstoneMode()
@@ -152,24 +153,24 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 			redstoneMode = RedstoneMode.values()[redstoneMode.ordinal() + 1];
 		else
 			redstoneMode = RedstoneMode.values()[0];
-		new PacketBusIOFluid(redstoneMode).sendPacketToPlayer(player);
+		new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
 	}
 
 	public Object getServerGuiElement(EntityPlayer player)
 	{
-		return new ContainerBusIOFluid(this, player);
+		return new ContainerBusFluidIO(this, player);
 	}
 
 	public Object getClientGuiElement(EntityPlayer player)
 	{
-		return new GuiBusIOFluid(this, player);
+		return new GuiBusFluidIO(this, player);
 	}
 
 	public void sendInformation(EntityPlayer player)
 	{
-		new PacketBusIOFluid(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
-		new PacketBusIOFluid(redstoneMode).sendPacketToPlayer(player);
-		new PacketBusIOFluid(filterSize).sendPacketToPlayer(player);
+		new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
+		new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
+		new PacketBusFluidIO(filterSize).sendPacketToPlayer(player);
 	}
 
 	@Override
@@ -202,16 +203,16 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, E
 			ItemStack currentStack = upgradeInventory.getStackInSlot(i);
 			if (currentStack != null)
 			{
-				if (currentStack.isItemEqual(AEApi.instance().materials().materialCardCapacity.stack(1)))
+				if (AEApi.instance().materials().materialCardCapacity.sameAs(currentStack))
 					filterSize++;
-				if (currentStack.isItemEqual(AEApi.instance().materials().materialCardRedstone.stack(1)))
+				if (AEApi.instance().materials().materialCardRedstone.sameAs(currentStack))
 					redstoneControlled = true;
-				if (currentStack.isItemEqual(AEApi.instance().materials().materialCardSpeed.stack(1)))
+				if (AEApi.instance().materials().materialCardSpeed.sameAs(currentStack))
 					speedState++;
 			}
 		}
-		new PacketBusIOFluid(filterSize).sendPacketToAllPlayers();
-		new PacketBusIOFluid(redstoneControlled).sendPacketToAllPlayers();
+		new PacketBusFluidIO(filterSize).sendPacketToAllPlayers();
+		new PacketBusFluidIO(redstoneControlled).sendPacketToAllPlayers();
 	}
 
 	private boolean canDoWork()

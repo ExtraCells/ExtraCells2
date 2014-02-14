@@ -35,7 +35,7 @@ public enum PartEnum
 	{
 		unlocalizedName = "extracells.part." + _unlocalizedName;
 		partClass = _partClass;
-		groupName = "extracells." + _groupName;
+		groupName = _groupName == null || _groupName.isEmpty() ? "" : "extracells." + _groupName;
 	}
 
 	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass)
