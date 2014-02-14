@@ -3,7 +3,9 @@ jdk:
    - oraclejdk7
    - openjdk6
    - openjdk7
+before_script:
+   - chmod +x gradlew
 script: 
-   - gradle setupCIWorkspace build
+   - ./gradlew clean setupCIWorkSpace build
 notifications:
   email: true
