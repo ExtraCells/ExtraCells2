@@ -41,34 +41,51 @@ public class ECPrivateInventory implements IInventory
 	@Override
 	public ItemStack decrStackSize(int slotId, int amount)
 	{
-		if (slots[slotId] != null)
+		if (slots[slotId] == null)
+			return null;
+		ItemStack itemstack;
+		if (slots[slotId].stackSize <= amount)
 		{
-			ItemStack itemstack;
-			if (slots[slotId].stackSize <= amount)
-			{
-				itemstack = slots[slotId];
-				slots[slotId] = null;
-				markDirty();
-				return itemstack;
-			} else
-			{
-				ItemStack temp = slots[slotId];
-				itemstack = temp.splitStack(amount);
-				slots[slotId] = temp;
-				if (temp.stackSize == 0)
-				{
-					slots[slotId] = null;
-				} else
-				{
-					slots[slotId] = temp;
-				}
-				markDirty();
-				return itemstack;
-			}
+			itemstack = slots[slotId];
+			slots[slotId] = null;
+			markDirty();
+			return itemstack;
 		} else
 		{
-			return null;
+			ItemStack temp = slots[slotId];
+			itemstack = temp.splitStack(amount);
+			slots[slotId] = temp;
+			if (temp.stackSize == 0)
+			{
+				slots[slotId] = null;
+			} else
+			{
+				slots[slotId] = temp;
+			}
+			markDirty();
+			return itemstack;
 		}
+	}
+
+	/**
+	 * Increases the stack size of a slot.
+	 * 
+	 * @param slotId ID of the slot
+	 * @param amount amount to be drained
+	 * @return the added Stack
+	 */
+	public ItemStack incrStackSize(int slotId, int amount)
+	{
+		ItemStack slot = slots[slotId];
+		if (slot == null)
+			return null;
+		int stackLimit = getInventoryStackLimit();
+		if (stackLimit > slot.getMaxStackSize())
+			stackLimit = slot.getMaxStackSize();
+		ItemStack added = slot.copy();
+		added.stackSize = slot.stackSize + amount > stackLimit ? stackLimit : amount;
+		slot.stackSize += added.stackSize;
+		return added;
 	}
 
 	@Override

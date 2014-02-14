@@ -1,13 +1,19 @@
 package extracells.part;
 
+import appeng.api.config.Actionable;
+import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.PacketFluidTerminal;
 import extracells.render.TextureManager;
 import extracells.util.ECPrivateInventory;
+import extracells.util.FluidUtil;
+import javafx.util.Pair;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,21 +23,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartFluidTerminal extends PartECBase
+public class PartFluidTerminal extends PartECBase implements ECPrivateInventory.IInventoryUpdateReceiver
 {
 	private Fluid currentFluid;
 	private List<ContainerFluidTerminal> containers = new ArrayList<ContainerFluidTerminal>();
 	private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.fluid.terminal", 2, 64)
 	{
-		public boolean isItemValidForSlot(int i, ItemStack itemstack)
+		public boolean isItemValidForSlot(int i, ItemStack itemStack)
 		{
-			return FluidContainerRegistry.isContainer(itemstack) || (itemstack != null && itemstack.getItem() instanceof IFluidContainerItem);
+			return FluidUtil.isFluidContainer(itemStack);
 		}
 	};
 
@@ -157,4 +162,60 @@ public class PartFluidTerminal extends PartECBase
 		return inventory;
 	}
 
+	@Override
+	public void onInventoryChanged()
+	{
+		ItemStack container = inventory.getStackInSlot(0);
+		if (!FluidUtil.isFluidContainer(container))
+			return;
+
+		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
+		if (monitor == null)
+			return;
+
+		FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
+		if (containerFluid != null)
+		{
+			IAEFluidStack notAdded = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, new MachineSource(this));
+			FluidStack toDrain;
+			if (notAdded != null)
+			{
+				if (notAdded.getStackSize() == containerFluid.amount)
+					return;
+				toDrain = new FluidStack(containerFluid.fluidID, (int) (containerFluid.amount - notAdded.getStackSize()));
+			} else
+			{
+				toDrain = containerFluid.copy();
+			}
+			Pair<Integer, ItemStack> result = FluidUtil.drainStack(container, toDrain, false);
+			if (result != null)
+			{
+				int drained = result.getKey();
+				if (drained <= 0)
+					return;
+				toDrain.amount = drained;
+				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, new MachineSource(this));
+				fillSecondSlot(FluidUtil.drainStack(container, toDrain, false).getValue());
+				inventory.decrStackSize(0, 1);
+			}
+		} else
+		{
+			// TODO fill container
+		}
+	}
+
+	public ItemStack fillSecondSlot(ItemStack itemStack)
+	{
+		ItemStack secondSlot = inventory.getStackInSlot(1);
+		if (secondSlot == null)
+		{
+			inventory.setInventorySlotContents(1, itemStack);
+			return itemStack;
+		} else
+		{
+			if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot))
+				return null;
+			return inventory.incrStackSize(1, itemStack.stackSize);
+		}
+	}
 }
