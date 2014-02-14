@@ -3,5 +3,6 @@ jdk:
    - openjdk6
 before_install:
    - chmod +x gradlew
+   - git submodule update --init --recursive
 script: 
    - ./gradlew clean setupCIWorkSpace build
