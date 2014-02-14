@@ -1,7 +1,0 @@
-language: java
-jdk:
-   - oraclejdk7
-before_install:
-   - chmod +x gradlew
-script: 
-   - ./gradlew clean setupCIWorkSpace build
