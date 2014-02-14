@@ -2,14 +2,13 @@ package extracells.util;
 
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
-import javafx.util.Pair;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class FluidUtil
 {
@@ -42,7 +41,7 @@ public class FluidUtil
 		return false;
 	}
 
-	public static Pair<Integer, ItemStack> fillStack(ItemStack itemStack, FluidStack fluid, boolean doFill)
+	public static MutablePair<Integer, ItemStack> fillStack(ItemStack itemStack, FluidStack fluid, boolean doFill)
 	{
 		if (itemStack == null)
 			return null;
@@ -53,18 +52,18 @@ public class FluidUtil
 		if (item instanceof IFluidContainerItem)
 		{
 			int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, doFill);
-			return new Pair<Integer, ItemStack>(filled, itemStack);
+			return new MutablePair<Integer, ItemStack>(filled, itemStack);
 		} else if (FluidContainerRegistry.isContainer(itemStack))
 		{
 			FluidContainerRegistry.fillFluidContainer(fluid, itemStack);
 			FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(itemStack);
-			return new Pair<Integer, ItemStack>(filled != null ? filled.amount : 0, itemStack);
+			return new MutablePair<Integer, ItemStack>(filled != null ? filled.amount : 0, itemStack);
 		}
 
 		return null;
 	}
 
-	public static Pair<Integer, ItemStack> drainStack(ItemStack itemStack, FluidStack fluid, boolean doDrain)
+	public static MutablePair<Integer, ItemStack> drainStack(ItemStack itemStack, FluidStack fluid, boolean doDrain)
 	{
 		if (itemStack == null)
 			return null;
@@ -76,12 +75,12 @@ public class FluidUtil
 		{
 			FluidStack drained = ((IFluidContainerItem) item).drain(itemStack, fluid.amount, doDrain);
 			int amountDrained = drained != null && drained.getFluid() == fluid.getFluid() ? drained.amount : 0;
-			return new Pair<Integer, ItemStack>(amountDrained, itemStack);
+			return new MutablePair<Integer, ItemStack>(amountDrained, itemStack);
 		} else if (FluidContainerRegistry.isContainer(itemStack))
 		{
 			FluidStack content = FluidContainerRegistry.getFluidForFilledItem(itemStack);
 			int amountDrained = content != null && content.getFluid() == fluid.getFluid() ? content.amount : 0;
-			return new Pair<Integer, ItemStack>(amountDrained, itemStack.getItem().getContainerItem(itemStack));
+			return new MutablePair<Integer, ItemStack>(amountDrained, itemStack.getItem().getContainerItem(itemStack));
 		}
 
 		return null;

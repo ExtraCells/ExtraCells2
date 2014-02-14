@@ -13,7 +13,6 @@ import extracells.network.packet.PacketFluidTerminal;
 import extracells.render.TextureManager;
 import extracells.util.ECPrivateInventory;
 import extracells.util.FluidUtil;
-import javafx.util.Pair;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +23,7 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,7 +187,7 @@ public class PartFluidTerminal extends PartECBase implements ECPrivateInventory.
 			{
 				toDrain = containerFluid.copy();
 			}
-			Pair<Integer, ItemStack> result = FluidUtil.drainStack(container, toDrain, false);
+			MutablePair<Integer, ItemStack> result = FluidUtil.drainStack(container, toDrain, false);
 			if (result != null)
 			{
 				int drained = result.getKey();

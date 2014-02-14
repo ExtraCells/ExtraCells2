@@ -2,9 +2,10 @@ package extracells.registries;
 
 import appeng.api.config.Upgrades;
 import extracells.part.*;
-import javafx.util.Pair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -93,6 +94,6 @@ public enum PartEnum
 
 	private static Pair<Upgrades, Integer> generatePair(Upgrades _upgrade, int integer)
 	{
-		return new Pair<Upgrades, Integer>(_upgrade, integer);
+		return new MutablePair<Upgrades, Integer>(_upgrade, integer);
 	}
 }
