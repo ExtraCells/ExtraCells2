@@ -200,6 +200,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, ECPr
 	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player)
 	{
 		filterFluids[_index] = _fluid;
+		handler.setPrioritizedFluids(filterFluids);
 		sendInformation(_player);
 	}
 }

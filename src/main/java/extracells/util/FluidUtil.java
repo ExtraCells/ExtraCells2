@@ -93,6 +93,11 @@ public class FluidUtil
 
 	public static IAEFluidStack createAEFluidStack(Fluid fluid, long amount)
 	{
-		return createAEFluidStack(new FluidStack(fluid, 1)).setStackSize(amount);
+		return createAEFluidStack(fluid.getID(), amount);
+	}
+
+	public static IAEFluidStack createAEFluidStack(int fluidId, long amount)
+	{
+		return createAEFluidStack(new FluidStack(fluidId, 1)).setStackSize(amount);
 	}
 }

@@ -16,7 +16,8 @@ public enum PartEnum
 	FLUIDIMPORT("fluid.import", PartFluidImport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
 	FLUIDSTORAGE("fluid.storage", PartFluidStorage.class, null, generatePair(Upgrades.INVERTER, 1)),
 	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
-	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class);
+	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class),
+	FLUIDANNIHILATIONPANE("fluid.pane.annihilation", PartFluidPaneAnnihilation.class);
 
 	private String unlocalizedName;
 	private Class<? extends PartECBase> partClass;

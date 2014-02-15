@@ -9,6 +9,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.part.PartFluidStorage;
+import extracells.util.FluidUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -17,6 +18,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStack>
@@ -52,14 +54,17 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	@Override
 	public boolean canAccept(IAEFluidStack input)
 	{
-		if (tank == null)
+		if (tank == null || access == AccessRestriction.WRITE || access == AccessRestriction.NO_ACCESS)
 			return false;
 		FluidTankInfo[] infoArray = tank.getTankInfo(node.getSide().getOpposite());
 		if (infoArray != null && infoArray.length > 0)
 		{
 			FluidTankInfo info = infoArray[0];
 			if (info.fluid == null || info.fluid.amount == 0 || info.fluid.fluidID == input.getFluidStack().fluidID)
-				return prioritizedFluids.isEmpty() || isPrioritized(input);
+				if (inverted)
+					return !prioritizedFluids.isEmpty() || !isPrioritized(input);
+				else
+					return prioritizedFluids.isEmpty() || isPrioritized(input);
 		}
 		return false;
 	}
@@ -79,19 +84,19 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	@Override
 	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src)
 	{
-		if (tank == null || input == null)
+		if (tank == null || input == null || !canAccept(input))
 			return input;
 		FluidStack toFill = input.getFluidStack();
 		int filled = tank.fill(node.getSide().getOpposite(), toFill.copy(), mode == Actionable.MODULATE);
 		if (filled == toFill.amount)
 			return null;
-		return AEApi.instance().storage().createFluidStack(new FluidStack(toFill.fluidID, toFill.amount - filled));
+		return FluidUtil.createAEFluidStack(toFill.fluidID, toFill.amount - filled);
 	}
 
 	@Override
 	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src)
 	{
-		if (tank == null || request == null)
+		if (tank == null || request == null || access == AccessRestriction.WRITE || access == AccessRestriction.NO_ACCESS)
 			return null;
 		FluidStack toDrain = request.getFluidStack();
 		FluidStack drained = tank.drain(node.getSide().getOpposite(), toDrain.copy(), mode == Actionable.MODULATE);
@@ -101,7 +106,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			int amount = drained.amount;
 			if (amount == toDrain.amount)
 				return request;
-			return AEApi.instance().storage().createFluidStack(new FluidStack(toDrain.fluidID, amount));
+			return FluidUtil.createAEFluidStack(toDrain.fluidID, amount);
 		} else
 		{
 			return null;
@@ -140,5 +145,10 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	public void setInverted(boolean _inverted)
 	{
 		inverted = _inverted;
+	}
+
+	public void setPrioritizedFluids(Fluid[] _fluids)
+	{
+		prioritizedFluids = Arrays.asList(_fluids);
 	}
 }

@@ -355,7 +355,9 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		}
 		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.UP, renderer);
 		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.DOWN, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.NORTH, renderer);
 		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.EAST, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.SOUTH, renderer);
 		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
 	}
 
@@ -372,7 +374,9 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		rh.setInvColor(AEColor.Transparent.blackVariant);
 		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.UP, renderer);
 		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.DOWN, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.NORTH, renderer);
 		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.EAST, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.SOUTH, renderer);
 		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
 	}
 }
