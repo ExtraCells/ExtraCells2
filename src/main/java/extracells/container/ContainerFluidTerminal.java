@@ -3,7 +3,7 @@ package extracells.container;
 import appeng.api.AEApi;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.IMEMonitorHandlerReciever;
+import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.container.slot.SlotRespective;
@@ -18,7 +18,7 @@ import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
-public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReciever<IAEFluidStack>
+public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>
 {
 	private PartFluidTerminal terminal;
 	private IMEMonitor<IAEFluidStack> monitor;
