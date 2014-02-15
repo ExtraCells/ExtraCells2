@@ -77,7 +77,8 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, ECPr
 		rh.renderBlock(x, y, z, renderer);
 
 		ts.setColorOpaque_I(host.getColor().blackVariant);
-		ts.setBrightness(15 << 20 | 15 << 4);
+		if (isActive())
+			ts.setBrightness(15 << 20 | 15 << 4);
 		rh.renderFace(x, y, z, TextureManager.STORAGE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 		rh.setBounds(4, 4, 14, 12, 12, 15);
 		rh.renderBlock(x, y, z, renderer);

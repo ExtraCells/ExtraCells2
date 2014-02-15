@@ -59,7 +59,8 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 		rh.renderBlock(x, y, z, renderer);
 
 		ts.setColorOpaque_I(host.getColor().blackVariant);
-		ts.setBrightness(15 << 20 | 15 << 4);
+		if (isActive())
+			ts.setBrightness(15 << 20 | 15 << 4);
 		rh.renderFace(x, y, z, TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 
 		rh.setTexture(TextureManager.BUS_SIDE.getTexture());

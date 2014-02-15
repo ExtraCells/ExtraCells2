@@ -67,7 +67,8 @@ public class PartFluidExport extends PartFluidIO
 		rh.renderBlock(x, y, z, renderer);
 
 		ts.setColorOpaque_I(host.getColor().blackVariant);
-		ts.setBrightness(15 << 20 | 15 << 4);
+		if (isActive())
+			ts.setBrightness(15 << 20 | 15 << 4);
 		rh.renderFace(x, y, z, TextureManager.EXPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 
 		rh.setBounds(6, 6, 11, 10, 10, 12);
