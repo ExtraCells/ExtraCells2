@@ -37,11 +37,11 @@ public class GuiFluidTerminal extends GuiContainer
 		super(new ContainerFluidTerminal(_terminal, _player));
 		containerTerminalFluid = (ContainerFluidTerminal) inventorySlots;
 		containerTerminalFluid.setGui(this);
-		new PacketFluidTerminal(player, containerTerminalFluid.getTerminal()).sendPacketToServer();
 		terminal = _terminal;
 		player = _player;
 		xSize = 176;
 		ySize = 204;
+		new PacketFluidTerminal(player, terminal).sendPacketToServer();
 	}
 
 	public void updateFluids()

@@ -24,6 +24,8 @@ extracells.part.fluid.export.name=ME Fluid Export Bus
 extracells.part.fluid.import.name=ME Fluid Import Bus
 extracells.part.fluid.storage.name=ME Fluid Storage
 extracells.part.fluid.terminal.name=ME Fluid Terminal
+extracells.part.fluid.pane.annihilation=ME Fluid Annihilation Pane
+extracells.part.fluid.pane.formation=ME Fluid Formation Pane
 
 //Blocks
 extracells.block.certustank.name=ME Certus Tank

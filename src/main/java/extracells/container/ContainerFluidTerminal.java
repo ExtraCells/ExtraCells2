@@ -107,7 +107,7 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 	public void forceFluidUpdate()
 	{
 		if (monitor != null)
-			updateFluidList(monitor.getStorageList());
+			new PacketFluidTerminal(player, monitor.getStorageList()).sendPacketToPlayer(player);
 	}
 
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList)

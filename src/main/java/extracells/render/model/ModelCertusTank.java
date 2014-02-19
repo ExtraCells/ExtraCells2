@@ -40,8 +40,10 @@ public class ModelCertusTank extends ModelBase
 
 	public void renderOuterBlock(Block block, int x, int y, int z, RenderBlocks renderer, IBlockAccess world)
 	{
-
 		Tessellator tessellator = Tessellator.instance;
+		GL11.glPushMatrix();
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		boolean tankUp = world.getTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
 		boolean tankDown = world.getTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
 		int meta = 0;
@@ -71,12 +73,15 @@ public class ModelCertusTank extends ModelBase
 		renderer.renderFaceXNeg(block, x, y, z, sideIcon);
 		tessellator.setNormal(1.0F, 0.0F, 0.0F);
 		renderer.renderFaceXPos(block, x, y, z, sideIcon);
-
+		GL11.glPopMatrix();
 	}
 
 	public void renderInnerBlock(Block block, int x, int y, int z, RenderBlocks renderer, IBlockAccess world)
 	{
 		Tessellator tessellator = Tessellator.instance;
+		GL11.glPushMatrix();
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		boolean tankUp = world.getTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
 		boolean tankDown = world.getTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
 		int meta = 0;
@@ -105,7 +110,7 @@ public class ModelCertusTank extends ModelBase
 		renderer.renderFaceXNeg(block, x + 0.001D, y, z, sideIcon);
 		tessellator.setNormal(1.0F, 0.0F, 0.0F);
 		renderer.renderFaceXPos(block, x - 0.001D, y, z, sideIcon);
-
+		GL11.glPopMatrix();
 	}
 
 	public void renderFluid(TileEntity tileEntity, double x, double y, double z, RenderBlocks renderer)
