@@ -1,22 +1,22 @@
 package extracells.network.packet;
 
 import extracells.network.AbstractPacket;
-import extracells.part.PartFluidPaneFormation;
+import extracells.part.PartFluidPlaneFormation;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.IOException;
 
-public class PacketFluidPaneFormation extends AbstractPacket
+public class PacketFluidPlaneFormation extends AbstractPacket
 {
-	private PartFluidPaneFormation part;
+	private PartFluidPlaneFormation part;
 
 	@SuppressWarnings("unused")
-	public PacketFluidPaneFormation()
+	public PacketFluidPlaneFormation()
 	{
 	}
 
-	public PacketFluidPaneFormation(EntityPlayer _player, PartFluidPaneFormation _part)
+	public PacketFluidPlaneFormation(EntityPlayer _player, PartFluidPlaneFormation _part)
 	{
 		super(_player);
 		mode = 0;
@@ -42,7 +42,7 @@ public class PacketFluidPaneFormation extends AbstractPacket
 		switch (mode)
 		{
 			case 0:
-				part = (PartFluidPaneFormation) readPart(in);
+				part = (PartFluidPlaneFormation) readPart(in);
 				break;
 		}
 	}

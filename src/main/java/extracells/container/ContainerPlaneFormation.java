@@ -6,21 +6,21 @@ import appeng.api.implementations.guiobjects.INetworkTool;
 import appeng.api.util.DimensionalCoord;
 import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
-import extracells.gui.GuiFluidPaneFormation;
-import extracells.part.PartFluidPaneFormation;
+import extracells.gui.GuiFluidPlaneFormation;
+import extracells.part.PartFluidPlaneFormation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerPaneFormation extends Container
+public class ContainerPlaneFormation extends Container
 {
-	private PartFluidPaneFormation part;
+	private PartFluidPlaneFormation part;
 	private EntityPlayer player;
-	private GuiFluidPaneFormation gui;
+	private GuiFluidPlaneFormation gui;
 
-	public ContainerPaneFormation(PartFluidPaneFormation _part, EntityPlayer _player)
+	public ContainerPlaneFormation(PartFluidPlaneFormation _part, EntityPlayer _player)
 	{
 		part = _part;
 		player = _player;
@@ -107,7 +107,7 @@ public class ContainerPaneFormation extends Container
 		return true;
 	}
 
-	public void setGui(GuiFluidPaneFormation _gui)
+	public void setGui(GuiFluidPlaneFormation _gui)
 	{
 		gui = _gui;
 	}

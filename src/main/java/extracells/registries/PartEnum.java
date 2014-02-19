@@ -17,8 +17,8 @@ public enum PartEnum
 	FLUIDSTORAGE("fluid.storage", PartFluidStorage.class, null, generatePair(Upgrades.INVERTER, 1)),
 	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
 	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class),
-	FLUIDPANEANNIHILATION("fluid.pane.annihilation", PartFluidPaneAnnihilation.class),
-	FLUIDPANECREATION("fluid.pane.creation", PartFluidPaneFormation.class);
+	FLUIDPANEANNIHILATION("fluid.plane.annihilation", PartFluidPlaneAnnihilation.class, "fluid.plane"),
+	FLUIDPANECREATION("fluid.plane.creation", PartFluidPlaneFormation.class, "fluid.plane");
 
 	private String unlocalizedName;
 	private Class<? extends PartECBase> partClass;

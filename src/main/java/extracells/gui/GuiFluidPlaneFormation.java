@@ -1,12 +1,12 @@
 package extracells.gui;
 
 import appeng.api.AEApi;
-import extracells.container.ContainerPaneFormation;
+import extracells.container.ContainerPlaneFormation;
 import extracells.gui.widget.WidgetFluidSlot;
 import extracells.gui.widget.WidgetRedstoneModes;
-import extracells.network.packet.PacketFluidPaneFormation;
+import extracells.network.packet.PacketFluidPlaneFormation;
 import extracells.network.packet.PacketFluidSlot;
-import extracells.part.PartFluidPaneFormation;
+import extracells.part.PartFluidPlaneFormation;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -20,22 +20,22 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class GuiFluidPaneFormation extends GuiContainer implements PacketFluidSlot.IFluidSlotGui
+public class GuiFluidPlaneFormation extends GuiContainer implements PacketFluidSlot.IFluidSlotGui
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/paneformation.png");
-	private PartFluidPaneFormation part;
+	private PartFluidPlaneFormation part;
 	private EntityPlayer player;
 	private WidgetFluidSlot fluidSlot;
 	private boolean hasNetworkTool;
 
-	public GuiFluidPaneFormation(PartFluidPaneFormation _part, EntityPlayer _player)
+	public GuiFluidPlaneFormation(PartFluidPlaneFormation _part, EntityPlayer _player)
 	{
-		super(new ContainerPaneFormation(_part, _player));
-		((ContainerPaneFormation) inventorySlots).setGui(this);
+		super(new ContainerPlaneFormation(_part, _player));
+		((ContainerPlaneFormation) inventorySlots).setGui(this);
 		part = _part;
 		player = _player;
 		fluidSlot = new WidgetFluidSlot(player, part, 0, 79, 39);
-		new PacketFluidPaneFormation(player, part).sendPacketToServer();
+		new PacketFluidPlaneFormation(player, part).sendPacketToServer();
 		hasNetworkTool = inventorySlots.getInventory().size() > 40;
 		xSize = hasNetworkTool ? 246 : 211;
 		ySize = 184;
