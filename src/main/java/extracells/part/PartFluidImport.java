@@ -31,12 +31,9 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 		rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTexture(), side, side);
 		rh.setBounds(4, 4, 14, 12, 12, 16);
 		rh.renderInventoryBox(renderer);
-
-		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
+		rh.setTexture(side);
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		rh.renderInventoryBox(renderer);
-
-		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(6, 6, 12, 10, 10, 13);
 		rh.renderInventoryBox(renderer);
 
@@ -63,11 +60,9 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 			ts.setBrightness(15 << 20 | 15 << 4);
 		rh.renderFace(x, y, z, TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 
-		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
+		rh.setTexture(side);
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		rh.renderBlock(x, y, z, renderer);
-
-		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
 		rh.setBounds(6, 6, 12, 10, 10, 13);
 		rh.renderBlock(x, y, z, renderer);
 

@@ -63,25 +63,25 @@ public class PacketFluidTerminal extends AbstractPacket
 		super.writePacketData(out);
 		switch (mode)
 		{
-		case 0:
-			out.writeInt(fluidStackList.size());
-			for (IAEFluidStack stack : fluidStackList)
-			{
-				FluidStack fluidStack = stack.getFluidStack();
-				writeFluid(fluidStack.getFluid(), out);
-				out.writeLong(fluidStack.amount);
-			}
-			break;
-		case 1:
-			writePart(terminalFluid, out);
-			out.writeInt(currentFluid.getID());
-			break;
-		case 2:
-			out.writeInt(currentFluid != null ? currentFluid.getID() : -1);
-			break;
-		case 3:
-			writePart(terminalFluid, out);
-			break;
+			case 0:
+				out.writeInt(fluidStackList.size());
+				for (IAEFluidStack stack : fluidStackList)
+				{
+					FluidStack fluidStack = stack.getFluidStack();
+					writeFluid(fluidStack.getFluid(), out);
+					out.writeLong(fluidStack.amount);
+				}
+				break;
+			case 1:
+				writePart(terminalFluid, out);
+				out.writeInt(currentFluid.getID());
+				break;
+			case 2:
+				out.writeInt(currentFluid != null ? currentFluid.getID() : -1);
+				break;
+			case 3:
+				writePart(terminalFluid, out);
+				break;
 		}
 	}
 
@@ -91,32 +91,32 @@ public class PacketFluidTerminal extends AbstractPacket
 		super.readPacketData(in);
 		switch (mode)
 		{
-		case 0:
-			fluidStackList = AEApi.instance().storage().createItemList();
-			int length = in.readInt();
-			for (int i = 0; i < length; i++)
-			{
-				Fluid fluid = readFluid(in);
-				long fluidAmount = in.readLong();
-				if (fluid != null)
+			case 0:
+				fluidStackList = AEApi.instance().storage().createItemList();
+				int length = in.readInt();
+				for (int i = 0; i < length; i++)
 				{
-					IAEFluidStack stack = AEApi.instance().storage().createFluidStack(new FluidStack(fluid, 1));
-					stack.setStackSize(fluidAmount);
-					fluidStackList.add(stack);
+					Fluid fluid = readFluid(in);
+					long fluidAmount = in.readLong();
+					if (fluid != null)
+					{
+						IAEFluidStack stack = AEApi.instance().storage().createFluidStack(new FluidStack(fluid, 1));
+						stack.setStackSize(fluidAmount);
+						fluidStackList.add(stack);
+					}
 				}
-			}
-			break;
-		case 1:
-			terminalFluid = (PartFluidTerminal) readPart(in);
-			currentFluid = FluidRegistry.getFluid(in.readInt());
-			break;
-		case 2:
-			int fluidID = in.readInt();
-			currentFluid = fluidID > 0 ? FluidRegistry.getFluid(fluidID) : null;
-			break;
-		case 3:
-			terminalFluid = (PartFluidTerminal) readPart(in);
-			break;
+				break;
+			case 1:
+				terminalFluid = (PartFluidTerminal) readPart(in);
+				currentFluid = FluidRegistry.getFluid(in.readInt());
+				break;
+			case 2:
+				int fluidID = in.readInt();
+				currentFluid = fluidID > 0 ? FluidRegistry.getFluid(fluidID) : null;
+				break;
+			case 3:
+				terminalFluid = (PartFluidTerminal) readPart(in);
+				break;
 		}
 	}
 
@@ -125,35 +125,35 @@ public class PacketFluidTerminal extends AbstractPacket
 	{
 		switch (mode)
 		{
-		case 0:
-			if (player != null && player.worldObj.isRemote)
-			{
-				Gui gui = Minecraft.getMinecraft().currentScreen;
-				if (gui instanceof GuiFluidTerminal)
+			case 0:
+				if (player != null && player.isClientWorld())
 				{
-					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
-					container.updateFluidList(fluidStackList);
+					Gui gui = Minecraft.getMinecraft().currentScreen;
+					if (gui instanceof GuiFluidTerminal)
+					{
+						ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
+						container.updateFluidList(fluidStackList);
+					}
 				}
-			}
-			break;
-		case 1:
-			terminalFluid.setCurrentFluid(currentFluid);
-			break;
-		case 2:
-			if (player != null && player.worldObj.isRemote)
-			{
-				Gui gui = Minecraft.getMinecraft().currentScreen;
-				if (gui instanceof GuiFluidTerminal)
+				break;
+			case 1:
+				terminalFluid.setCurrentFluid(currentFluid);
+				break;
+			case 2:
+				if (player != null && player.isClientWorld())
 				{
-					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
-					container.setSelectedFluid(currentFluid);
+					Gui gui = Minecraft.getMinecraft().currentScreen;
+					if (gui instanceof GuiFluidTerminal)
+					{
+						ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
+						container.setSelectedFluid(currentFluid);
+					}
 				}
-			}
-			break;
-		case 3:
-			if (player != null && player.openContainer instanceof ContainerFluidTerminal)
-				((ContainerFluidTerminal) player.openContainer).forceFluidUpdate();
-			break;
+				break;
+			case 3:
+				if (player != null && player.openContainer instanceof ContainerFluidTerminal)
+					((ContainerFluidTerminal) player.openContainer).forceFluidUpdate();
+				break;
 		}
 	}
 }

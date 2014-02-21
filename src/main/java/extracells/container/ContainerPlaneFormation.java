@@ -6,21 +6,20 @@ import appeng.api.implementations.guiobjects.INetworkTool;
 import appeng.api.util.DimensionalCoord;
 import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
-import extracells.gui.GuiBusFluidStorage;
-import extracells.part.PartFluidStorage;
+import extracells.gui.GuiFluidPlaneFormation;
+import extracells.part.PartFluidPlaneFormation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerBusFluidStorage extends Container
+public class ContainerPlaneFormation extends Container
 {
-	private GuiBusFluidStorage guiBusFluidStorage;
+	private GuiFluidPlaneFormation gui;
 
-	public ContainerBusFluidStorage(PartFluidStorage part, EntityPlayer player)
+	public ContainerPlaneFormation(PartFluidPlaneFormation part, EntityPlayer player)
 	{
-
 		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
 		bindPlayerInventory(player.inventory);
 
@@ -50,21 +49,21 @@ public class ContainerBusFluidStorage extends Container
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 140));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 102));
 			}
 		}
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 198));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 160));
 		}
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber)
 	{
-		if (guiBusFluidStorage != null)
-			guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
+		if (gui != null)
+			gui.shiftClick(getSlot(slotnumber).getStack());
 
 		ItemStack itemstack = null;
 		Slot slot = (Slot) inventorySlots.get(slotnumber);
@@ -103,8 +102,8 @@ public class ContainerBusFluidStorage extends Container
 		return true;
 	}
 
-	public void setGui(GuiBusFluidStorage _guiBusFluidStorage)
+	public void setGui(GuiFluidPlaneFormation _gui)
 	{
-		guiBusFluidStorage = _guiBusFluidStorage;
+		gui = _gui;
 	}
 }

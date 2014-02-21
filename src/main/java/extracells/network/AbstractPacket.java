@@ -24,6 +24,7 @@ public abstract class AbstractPacket
 		player = _player;
 	}
 
+	@SuppressWarnings("unused")
 	public AbstractPacket()
 	{
 		player = null;

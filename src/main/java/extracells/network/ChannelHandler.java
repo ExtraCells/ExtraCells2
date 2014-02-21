@@ -4,10 +4,7 @@ import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.relauncher.Side;
-import extracells.network.packet.PacketBusFluidIO;
-import extracells.network.packet.PacketBusFluidStorage;
-import extracells.network.packet.PacketFluidSlot;
-import extracells.network.packet.PacketFluidTerminal;
+import extracells.network.packet.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +26,7 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<AbstractPack
 		addDiscriminator(1, PacketFluidTerminal.class);
 		addDiscriminator(2, PacketBusFluidIO.class);
 		addDiscriminator(3, PacketBusFluidStorage.class);
+		addDiscriminator(4, PacketFluidPlaneFormation.class);
 	}
 
 	@Override

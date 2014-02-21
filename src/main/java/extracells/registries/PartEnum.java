@@ -17,7 +17,8 @@ public enum PartEnum
 	FLUIDSTORAGE("fluid.storage", PartFluidStorage.class, null, generatePair(Upgrades.INVERTER, 1)),
 	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
 	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class),
-	FLUIDANNIHILATIONPANE("fluid.pane.annihilation", PartFluidPaneAnnihilation.class);
+	FLUIDPANEANNIHILATION("fluid.plane.annihilation", PartFluidPlaneAnnihilation.class, "fluid.plane"),
+	FLUIDPANECREATION("fluid.plane.creation", PartFluidPlaneFormation.class, "fluid.plane");
 
 	private String unlocalizedName;
 	private Class<? extends PartECBase> partClass;
@@ -37,7 +38,7 @@ public enum PartEnum
 	{
 		unlocalizedName = "extracells.part." + _unlocalizedName;
 		partClass = _partClass;
-		groupName = _groupName == null || _groupName.isEmpty() ? "" : "extracells." + _groupName;
+		groupName = _groupName == null || _groupName.isEmpty() ? null : "extracells." + _groupName;
 	}
 
 	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass)

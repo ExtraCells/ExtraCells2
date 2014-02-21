@@ -88,7 +88,12 @@ public class FluidUtil
 
 	public static IAEFluidStack createAEFluidStack(FluidStack fluid)
 	{
-		return AEApi.instance().storage().createFluidStack(new FluidStack(fluid, 1));
+		return AEApi.instance().storage().createFluidStack(fluid);
+	}
+
+	public static IAEFluidStack createAEFluidStack(Fluid fluid)
+	{
+		return createAEFluidStack(new FluidStack(fluid.getID(), FluidContainerRegistry.BUCKET_VOLUME));
 	}
 
 	public static IAEFluidStack createAEFluidStack(Fluid fluid, long amount)
