@@ -28,12 +28,9 @@ public class ClientProxy extends CommonProxy
 	public void registerTextures(TextureStitchEvent.Pre textureStitchEvent)
 	{
 		TextureMap map = textureStitchEvent.map;
-		if (map.getTextureType() == 0)
+		for (TextureManager currentTexture : TextureManager.values())
 		{
-			for (TextureManager currentTexture : TextureManager.values())
-			{
-				currentTexture.registerTexture(map);
-			}
+			currentTexture.registerTexture(map);
 		}
 	}
 }

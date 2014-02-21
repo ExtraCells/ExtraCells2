@@ -22,7 +22,7 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 {
 	private PartFluidTerminal terminal;
 	private IMEMonitor<IAEFluidStack> monitor;
-	private IItemList<IAEFluidStack> fluidStackList = AEApi.instance().storage().createItemList();
+	private IItemList<IAEFluidStack> fluidStackList = AEApi.instance().storage().createFluidList();
 	private Fluid selectedFluid;
 	private EntityPlayer player;
 	private GuiFluidTerminal guiFluidTerminal;

@@ -1,6 +1,9 @@
 package extracells.part;
 
 import appeng.api.config.Actionable;
+import appeng.api.networking.events.MENetworkChannelChanged;
+import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
@@ -79,6 +82,23 @@ public class PartFluidPlaneAnnihilation extends PartECBase
 	public int getLightLevel()
 	{
 		return 0;
+	}
+
+	@SuppressWarnings("unused")
+	@MENetworkEventSubscribe
+	public void channelChanged(MENetworkChannelChanged e)
+	{
+		System.out.println("ss");
+		if (e.node == node)
+			onNeighborChanged();
+	}
+
+	@SuppressWarnings("unused")
+	@MENetworkEventSubscribe
+	public void setPower(MENetworkPowerStatusChange notUsed)
+	{
+		super.setPower(notUsed);
+		onNeighborChanged();
 	}
 
 	@Override

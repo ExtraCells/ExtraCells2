@@ -10,6 +10,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.inventoryHandler.HandlerItemStorageFluid;
+import extracells.render.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,7 +31,6 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	public static final int[] spaces =
 	{ 1024, 4096, 16348, 65536, 262144, 1048576, 4194304, 16777216 };
 
-	@SideOnly(Side.CLIENT)
 	private IIcon[] icons;
 
 	public ItemStorageFluid()
@@ -93,7 +93,7 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	@Override
 	public IIcon getTopTexture()
 	{
-		return null; // TODO
+		return TextureManager.ITEM_STORAGE_FLUID.getTexture();
 	}
 
 	@Override
@@ -105,7 +105,16 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	@Override
 	public int getStatusForCell(ItemStack is, IMEInventory handler)
 	{
-		return 0;
+		if (handler == null)
+			return 0;
+
+		HandlerItemStorageFluid inventory = (HandlerItemStorageFluid) handler;
+		if (inventory.freeBytes() == 0)
+			return 3;
+		if (inventory.isPreformatted() || inventory.usedTypes() == inventory.totalBytes())
+			return 2;
+
+		return 1;
 	}
 
 	@Override

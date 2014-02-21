@@ -35,7 +35,7 @@ public class ItemBlockCertusTank extends ItemBlock
 					{
 						return StatCollector.translateToLocal(getUnlocalizedName(itemstack)) + " - " + fluidInTank.getFluid().getLocalizedName();
 					}
-				} catch (Throwable e)
+				} catch (Throwable ignored)
 				{
 				}
 			}
