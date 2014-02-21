@@ -16,15 +16,10 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerPlaneFormation extends Container
 {
-	private PartFluidPlaneFormation part;
-	private EntityPlayer player;
 	private GuiFluidPlaneFormation gui;
 
-	public ContainerPlaneFormation(PartFluidPlaneFormation _part, EntityPlayer _player)
+	public ContainerPlaneFormation(PartFluidPlaneFormation part, EntityPlayer player)
 	{
-		part = _part;
-		player = _player;
-
 		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
 		bindPlayerInventory(player.inventory);
 

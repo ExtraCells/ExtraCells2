@@ -16,15 +16,10 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerBusFluidIO extends Container
 {
-	private PartFluidIO part;
-	private EntityPlayer player;
 	private GuiBusFluidIO guiBusFluidIO;
 
-	public ContainerBusFluidIO(PartFluidIO _terminal, EntityPlayer _player)
+	public ContainerBusFluidIO(PartFluidIO part, EntityPlayer player)
 	{
-		part = _terminal;
-		player = _player;
-
 		for (int i = 0; i < 4; i++)
 			addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), i, 187, i * 18 + 8));
 		bindPlayerInventory(player.inventory);

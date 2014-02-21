@@ -8,6 +8,7 @@ import appeng.api.parts.IPartItem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.registries.PartEnum;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,14 +16,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ItemPartECBase extends Item implements IPartItem, IItemGroup
 {
-	private static List<Class<? extends IPart>> ecParts = new ArrayList<Class<? extends IPart>>();
-
 	public ItemPartECBase()
 	{
 		AEApi.instance().partHelper().setItemBusRenderer(this);
@@ -35,6 +33,11 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup
 				upgrade.registerItem(new ItemStack(this, 1, part.ordinal()), possibleUpgradesList.get(upgrade));
 			}
 		}
+	}
+
+	@Override
+	public void registerIcons(IIconRegister _iconRegister)
+	{
 	}
 
 	@Override

@@ -16,14 +16,10 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerBusFluidStorage extends Container
 {
-	private PartFluidStorage part;
-	private EntityPlayer player;
 	private GuiBusFluidStorage guiBusFluidStorage;
 
-	public ContainerBusFluidStorage(PartFluidStorage _terminal, EntityPlayer _player)
+	public ContainerBusFluidStorage(PartFluidStorage part, EntityPlayer player)
 	{
-		part = _terminal;
-		player = _player;
 
 		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
 		bindPlayerInventory(player.inventory);

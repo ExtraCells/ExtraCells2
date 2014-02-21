@@ -24,18 +24,15 @@ import java.util.List;
 public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.IConfigurable, PacketFluidSlot.IFluidSlotGui
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/storagebusfluid.png");
-	private PartFluidStorage part;
 	private EntityPlayer player;
 	private byte filterSize;
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
-	private boolean redstoneControlled;
 	private boolean hasNetworkTool;
 
-	public GuiBusFluidStorage(PartFluidStorage _terminal, EntityPlayer _player)
+	public GuiBusFluidStorage(PartFluidStorage part, EntityPlayer _player)
 	{
-		super(new ContainerBusFluidStorage(_terminal, _player));
+		super(new ContainerBusFluidStorage(part, _player));
 		((ContainerBusFluidStorage) inventorySlots).setGui(this);
-		part = _terminal;
 		player = _player;
 
 		for (int i = 0; i < 9; i++)
