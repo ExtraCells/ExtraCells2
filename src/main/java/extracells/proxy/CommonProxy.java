@@ -30,7 +30,7 @@ public class CommonProxy implements IGuiHandler
 
 	public void addRecipes(File configFolder)
 	{
-		IRecipeHandler recipeHandler = AEApi.instance().createNewRecipeHandler();
+		IRecipeHandler recipeHandler = AEApi.instance().registries().recipes().createNewRecipehandler();
 		File externalRecipe = new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.recipe");
 		if (externalRecipe.exists())
 		{
