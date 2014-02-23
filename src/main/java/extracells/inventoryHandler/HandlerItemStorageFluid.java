@@ -9,8 +9,9 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import com.google.common.collect.Lists;
-import extracells.registries.ItemEnum;
+import extracells.container.ContainerFluidStorage;
 import extracells.item.ItemStorageFluid;
+import extracells.registries.ItemEnum;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
@@ -27,6 +28,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	private ArrayList<Fluid> prioritizedFluids = new ArrayList<Fluid>();
 	private int totalTypes;
 	private int totalBytes;
+	private List<ContainerFluidStorage> containers = new ArrayList<ContainerFluidStorage>();
 
 	public HandlerItemStorageFluid(ItemStack _storageStack)
 	{

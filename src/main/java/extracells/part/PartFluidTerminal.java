@@ -11,8 +11,9 @@ import extracells.container.ContainerFluidTerminal;
 import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.PacketFluidTerminal;
 import extracells.render.TextureManager;
-import extracells.util.ECPrivateInventory;
 import extracells.util.FluidUtil;
+import extracells.util.inventory.ECPrivateInventory;
+import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartFluidTerminal extends PartECBase implements ECPrivateInventory.IInventoryUpdateReceiver
+public class PartFluidTerminal extends PartECBase implements IInventoryUpdateReceiver
 {
 	private Fluid currentFluid;
 	private List<ContainerFluidTerminal> containers = new ArrayList<ContainerFluidTerminal>();
@@ -130,16 +131,26 @@ public class PartFluidTerminal extends PartECBase implements ECPrivateInventory.
 	public void setCurrentFluid(Fluid _currentFluid)
 	{
 		currentFluid = _currentFluid;
-		for (ContainerFluidTerminal containerTerminalFluid : containers)
+		sendCurrentFluid();
+	}
+
+	public void sendCurrentFluid()
+	{
+		for (ContainerFluidTerminal containerFluidTerminal : containers)
 		{
-			new PacketFluidTerminal(containerTerminalFluid.getPlayer(), currentFluid).sendPacketToPlayer(containerTerminalFluid.getPlayer());
+			sendCurrentFluid(containerFluidTerminal);
 		}
+	}
+
+	public void sendCurrentFluid(ContainerFluidTerminal containerFluidTerminal)
+	{
+		new PacketFluidTerminal(containerFluidTerminal.getPlayer(), currentFluid).sendPacketToPlayer(containerFluidTerminal.getPlayer());
 	}
 
 	public void addContainer(ContainerFluidTerminal containerTerminalFluid)
 	{
 		containers.add(containerTerminalFluid);
-		new PacketFluidTerminal(containerTerminalFluid.getPlayer(), currentFluid).sendPacketToPlayer(containerTerminalFluid.getPlayer());
+		sendCurrentFluid();
 	}
 
 	public void removeContainer(ContainerFluidTerminal containerTerminalFluid)

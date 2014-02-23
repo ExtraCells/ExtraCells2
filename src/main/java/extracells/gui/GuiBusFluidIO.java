@@ -3,7 +3,7 @@ package extracells.gui;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import extracells.container.ContainerBusFluidIO;
-import extracells.gui.widget.WidgetFluidSlot;
+import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketBusFluidIO;
 import extracells.network.packet.PacketFluidSlot;

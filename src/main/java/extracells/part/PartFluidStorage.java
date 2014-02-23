@@ -13,7 +13,8 @@ import extracells.gui.GuiBusFluidStorage;
 import extracells.inventoryHandler.HandlerPartStorageFluid;
 import extracells.network.packet.PacketFluidSlot;
 import extracells.render.TextureManager;
-import extracells.util.ECPrivateInventory;
+import extracells.util.inventory.ECPrivateInventory;
+import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer, ECPrivateInventory.IInventoryUpdateReceiver, PacketFluidSlot.IFluidSlotPart
+public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, PacketFluidSlot.IFluidSlotPart
 {
 	private int priority = 0;
 	private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);

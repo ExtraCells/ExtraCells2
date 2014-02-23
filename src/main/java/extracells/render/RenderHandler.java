@@ -11,7 +11,7 @@ import net.minecraft.world.IBlockAccess;
 
 public class RenderHandler implements ISimpleBlockRenderingHandler
 {
-	int renderID = 0;
+	private static int renderID = 0;
 	ModelCertusTank tank = new ModelCertusTank();
 	public static int renderPass;
 
@@ -58,6 +58,11 @@ public class RenderHandler implements ISimpleBlockRenderingHandler
 
 	@Override
 	public int getRenderId()
+	{
+		return getId();
+	}
+
+	public static int getId()
 	{
 		return renderID;
 	}

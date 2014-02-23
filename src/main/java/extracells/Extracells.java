@@ -25,7 +25,12 @@ public class Extracells
 {
 	@Instance("extracells")
 	public static Extracells instance;
+
+	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
+	public static CommonProxy proxy;
+
 	private static File configFolder;
+	public static boolean shortenedBuckets;
 	public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells")
 	{
 		public ItemStack getIconItemStack()
@@ -40,11 +45,6 @@ public class Extracells
 		}
 	};
 
-	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
-	public static CommonProxy proxy;
-
-	public static int renderID;
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -56,7 +56,7 @@ public class Extracells
 		// Config
 		Configuration config = new Configuration(new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"));
 		config.load();
-		// DO something
+		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true);
 		config.save();
 
 		proxy.RegisterItems();
@@ -70,7 +70,7 @@ public class Extracells
 		proxy.registerTileEntities();
 		proxy.addRecipes(configFolder);
 		ChannelHandler.setChannels(NetworkRegistry.INSTANCE.newChannel("ExtraCells", new ChannelHandler()));
-		RenderingRegistry.registerBlockHandler(new RenderHandler(renderID = RenderingRegistry.getNextAvailableRenderId()));
+		RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId()));
 	}
 
 	@EventHandler

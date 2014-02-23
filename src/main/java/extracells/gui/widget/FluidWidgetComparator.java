@@ -1,5 +1,7 @@
 package extracells.gui.widget;
 
+import extracells.gui.widget.fluid.AbstractFluidWidget;
+
 import java.util.Comparator;
 
 public class FluidWidgetComparator implements Comparator<AbstractFluidWidget>

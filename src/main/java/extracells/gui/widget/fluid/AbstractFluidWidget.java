@@ -1,6 +1,5 @@
-package extracells.gui.widget;
+package extracells.gui.widget.fluid;
 
-import extracells.gui.GuiFluidTerminal;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
@@ -15,9 +14,9 @@ public abstract class AbstractFluidWidget extends Gui
 {
 	protected int height = 0, width = 0;
 	protected Fluid fluid;
-	protected GuiFluidTerminal guiFluidTerminal;
+	protected IFluidWidgetGui guiFluidTerminal;
 
-	public AbstractFluidWidget(GuiFluidTerminal guiFluidTerminal, int height, int width, Fluid fluid)
+	public AbstractFluidWidget(IFluidWidgetGui guiFluidTerminal, int height, int width, Fluid fluid)
 	{
 		this.guiFluidTerminal = guiFluidTerminal;
 		this.height = height;

@@ -1,4 +1,4 @@
-package extracells.gui.widget;
+package extracells.gui.widget.fluid;
 
 import extracells.network.packet.PacketFluidSlot;
 import extracells.util.FluidUtil;

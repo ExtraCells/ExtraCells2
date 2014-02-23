@@ -27,6 +27,7 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<AbstractPack
 		addDiscriminator(2, PacketBusFluidIO.class);
 		addDiscriminator(3, PacketBusFluidStorage.class);
 		addDiscriminator(4, PacketFluidPlaneFormation.class);
+		addDiscriminator(5, PacketFluidStorage.class);
 	}
 
 	@Override

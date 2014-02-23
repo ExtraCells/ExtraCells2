@@ -1,7 +1,6 @@
-package extracells.gui.widget;
+package extracells.gui.widget.fluid;
 
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.gui.GuiFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.fluids.Fluid;
@@ -16,7 +15,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 	private int color;
 	private int borderThickness;
 
-	public WidgetFluidSelector(GuiFluidTerminal guiFluidTerminal, IAEFluidStack stack)
+	public WidgetFluidSelector(IFluidSelectorGui guiFluidTerminal, IAEFluidStack stack)
 	{
 		super(guiFluidTerminal, 18, 18, stack.getFluidStack().getFluid());
 		amount = stack.getStackSize();
@@ -28,10 +27,9 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 	public void drawWidget(int posX, int posY)
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		Fluid currentFluid = guiFluidTerminal.currentFluid != null ? guiFluidTerminal.currentFluid.getFluid() : null;
+		IAEFluidStack terminalFluid = ((IFluidSelectorGui) guiFluidTerminal).getCurrentFluid();
+		Fluid currentFluid = terminalFluid != null ? terminalFluid.getFluid() : null;
 		if (fluid != null && fluid.getIcon() != null)
 			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), height - 2, width - 2);
 		if (fluid == currentFluid)
@@ -72,7 +70,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 	{
 		if (fluid != null && isPointInRegion(posX, posY, height, width, mouseX, mouseY))
 		{
-			guiFluidTerminal.containerTerminalFluid().setSelectedFluid(fluid);
+			((IFluidSelectorGui) guiFluidTerminal).getContainer().setSelectedFluid(fluid);
 		}
 	}
 

@@ -1,14 +1,14 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.container.ContainerFluidTerminal;
+import extracells.Extracells;
+import extracells.container.ContainerFluidStorage;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.fluid.AbstractFluidWidget;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
-import extracells.network.packet.PacketFluidTerminal;
-import extracells.part.PartFluidTerminal;
+import extracells.network.packet.PacketFluidStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -23,33 +23,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui
+public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui
 {
-	private PartFluidTerminal terminal;
 	private EntityPlayer player;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
-	private ContainerFluidTerminal containerTerminalFluid;
+	private ContainerFluidStorage containerFluidStorage;
 
-	public GuiFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player)
+	public GuiFluidStorage(EntityPlayer _player)
 	{
-		super(new ContainerFluidTerminal(_terminal, _player));
-		containerTerminalFluid = (ContainerFluidTerminal) inventorySlots;
-		containerTerminalFluid.setGui(this);
-		terminal = _terminal;
+		super(new ContainerFluidStorage(_player));
+		containerFluidStorage = (ContainerFluidStorage) inventorySlots;
+		containerFluidStorage.setGui(this);
 		player = _player;
 		xSize = 176;
 		ySize = 204;
-		new PacketFluidTerminal(player, terminal).sendPacketToServer();
+		new PacketFluidStorage(player).sendPacketToServer();
 	}
 
 	public void updateFluids()
 	{
 		fluidWidgets = new ArrayList<AbstractFluidWidget>();
-		for (IAEFluidStack fluidStack : containerTerminalFluid.getFluidStackList())
+		for (IAEFluidStack fluidStack : containerFluidStorage.getFluidStackList())
 		{
 			fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
 		}
@@ -59,9 +57,9 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui
 	public void updateSelectedFluid()
 	{
 		currentFluid = null;
-		for (IAEFluidStack stack : containerTerminalFluid.getFluidStackList())
+		for (IAEFluidStack stack : containerFluidStorage.getFluidStackList())
 		{
-			if (stack.getFluid() == containerTerminalFluid.getSelectedFluid())
+			if (stack.getFluid() == containerFluidStorage.getSelectedFluid())
 				currentFluid = stack;
 		}
 	}
@@ -111,7 +109,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui
 		{
 			long currentFluidAmount = currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
-			if (true)// TODO Extracells.shortenedBuckets)
+			if (Extracells.shortenedBuckets)
 			{
 				if (currentFluidAmount > 1000000000L)
 					amountToText = Long.toString(currentFluidAmount / 1000000000L) + "MegaB";
@@ -131,7 +129,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui
 	public void drawWidgets(int mouseX, int mouseY)
 	{
 		int listSize = fluidWidgets.size();
-		if (!containerTerminalFluid.getFluidStackList().isEmpty())
+		if (!containerFluidStorage.getFluidStackList().isEmpty())
 		{
 			outerLoop: for (int y = 0; y < 4; y++)
 			{
@@ -217,20 +215,15 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui
 		return guiTop;
 	}
 
-	public PartFluidTerminal getTerminal()
-	{
-		return terminal;
-	}
-
 	@Override
 	public IFluidSelectorContainer getContainer()
 	{
-		return containerTerminalFluid;
+		return containerFluidStorage;
 	}
 
 	@Override
 	public IAEFluidStack getCurrentFluid()
 	{
-		return currentFluid;
+		return containerFluidStorage.getSelectedFluidStack();
 	}
 }

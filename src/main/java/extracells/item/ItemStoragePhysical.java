@@ -4,7 +4,7 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.data.IAEItemStack;
 import extracells.Extracells;
-import extracells.util.ECCellInventory;
+import extracells.util.inventory.ECCellInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.inventory.IInventory;

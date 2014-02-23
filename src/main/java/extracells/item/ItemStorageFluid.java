@@ -9,7 +9,9 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
 import extracells.inventoryHandler.HandlerItemStorageFluid;
+import extracells.proxy.CommonProxy;
 import extracells.render.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
@@ -96,10 +99,14 @@ public class ItemStorageFluid extends Item implements ICellHandler
 		return TextureManager.ITEM_STORAGE_FLUID.getTexture();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler, IMEInventoryHandler inv, ItemStack is, StorageChannel chan)
 	{
-		// TODO
+		if (chan != StorageChannel.FLUIDS)
+			return;
+		TileEntity meChestTe = (TileEntity) chest;
+		player.openGui(Extracells.instance, CommonProxy.getGuiId(0), meChestTe.getWorldObj(), meChestTe.xCoord, meChestTe.yCoord, meChestTe.zCoord);
 	}
 
 	@Override
@@ -123,7 +130,7 @@ public class ItemStorageFluid extends Item implements ICellHandler
 		return 0;
 	}
 
-	public int maxTypes(ItemStack is)
+	public int maxTypes(ItemStack unused)
 	{
 		return 5;
 	}

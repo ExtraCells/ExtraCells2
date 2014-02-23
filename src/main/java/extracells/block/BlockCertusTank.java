@@ -1,5 +1,10 @@
 package extracells.block;
 
+import extracells.Extracells;
+import extracells.network.ChannelHandler;
+import extracells.registries.BlockEnum;
+import extracells.render.RenderHandler;
+import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -14,11 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import extracells.registries.BlockEnum;
-import extracells.Extracells;
-import extracells.network.ChannelHandler;
-import extracells.render.RenderHandler;
-import extracells.tileentity.TileEntityCertusTank;
 
 public class BlockCertusTank extends BlockContainer
 {
@@ -189,7 +189,7 @@ public class BlockCertusTank extends BlockContainer
 	@Override
 	public int getRenderType()
 	{
-		return Extracells.renderID;
+		return RenderHandler.getId();
 	}
 
 	@Override

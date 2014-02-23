@@ -2,7 +2,7 @@ package extracells.gui;
 
 import appeng.api.AEApi;
 import extracells.container.ContainerBusFluidStorage;
-import extracells.gui.widget.WidgetFluidSlot;
+import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.network.packet.PacketBusFluidStorage;
 import extracells.network.packet.PacketFluidSlot;

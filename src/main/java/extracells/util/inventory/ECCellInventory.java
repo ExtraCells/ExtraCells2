@@ -1,4 +1,4 @@
-package extracells.util;
+package extracells.util.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

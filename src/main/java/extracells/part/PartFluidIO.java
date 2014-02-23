@@ -12,7 +12,8 @@ import extracells.container.ContainerBusFluidIO;
 import extracells.gui.GuiBusFluidIO;
 import extracells.network.packet.PacketBusFluidIO;
 import extracells.network.packet.PacketFluidSlot;
-import extracells.util.ECPrivateInventory;
+import extracells.util.inventory.ECPrivateInventory;
+import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +25,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import java.io.IOException;
 import java.util.Arrays;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable, ECPrivateInventory.IInventoryUpdateReceiver, PacketFluidSlot.IFluidSlotPart
+public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryUpdateReceiver, PacketFluidSlot.IFluidSlotPart
 {
 	protected Fluid[] filterFluids = new Fluid[9];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;

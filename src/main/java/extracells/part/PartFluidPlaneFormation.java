@@ -15,7 +15,7 @@ import extracells.gui.GuiFluidPlaneFormation;
 import extracells.network.packet.PacketFluidSlot;
 import extracells.render.TextureManager;
 import extracells.util.ColorUtil;
-import extracells.util.ECPrivateInventory;
+import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.FluidUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
