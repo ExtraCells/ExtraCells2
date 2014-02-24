@@ -18,7 +18,8 @@ public enum PartEnum
 	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
 	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class),
 	FLUIDPANEANNIHILATION("fluid.plane.annihilation", PartFluidPlaneAnnihilation.class, "fluid.plane"),
-	FLUIDPANECREATION("fluid.plane.creation", PartFluidPlaneFormation.class, "fluid.plane");
+	FLUIDPANECREATION("fluid.plane.creation", PartFluidPlaneFormation.class, "fluid.plane"),
+	DRIVE("drive", PartDrive.class);
 
 	private String unlocalizedName;
 	private Class<? extends PartECBase> partClass;

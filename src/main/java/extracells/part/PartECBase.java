@@ -94,6 +94,13 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	@Override
 	public abstract void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer);
 
+
+	@Override
+	public boolean requireDynamicRender()
+	{
+		return false;
+	}
+
 	@Override
 	public void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
@@ -318,12 +325,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		if (monitor == null)
 			return null;
 		return monitor.extractItems(toExtract, action, new MachineSource(this));
-	}
-
-	@Override
-	public boolean requireDynamicRender()
-	{
-		return false;
 	}
 
 	public Object getServerGuiElement(EntityPlayer player)

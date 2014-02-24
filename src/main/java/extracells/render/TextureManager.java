@@ -13,7 +13,8 @@ public enum TextureManager
 	IMPORT_FRONT(TextureType.PART, "import_front_1", "import_front_2"),
 	STORAGE_FRONT(TextureType.PART, "storage_front_1", "storage_front_2"),
 	TERMINAL_FRONT(TextureType.PART, "terminal_front_1", "terminal_front_2", "terminal_front_3"),
-	PANE_FRONT(TextureType.PART, "pane_front_1", "pane_front_2", "pane_front_3");
+	PANE_FRONT(TextureType.PART, "pane_front_1", "pane_front_2", "pane_front_3"),
+	DRIVE_FRONT(TextureType.PART, "drive_front_1", "drive_front_2", "drive_front_3");
 
 	private TextureType textureType;
 	private String[] textureNames;

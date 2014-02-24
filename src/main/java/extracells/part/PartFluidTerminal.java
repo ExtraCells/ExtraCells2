@@ -106,12 +106,14 @@ public class PartFluidTerminal extends PartECBase implements IInventoryUpdateRec
 	public void writeToNBT(NBTTagCompound data)
 	{
 		super.writeToNBT(data);
+		data.setTag("inventory", inventory.writeToNBT());
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound data)
 	{
 		super.readFromNBT(data);
+		inventory.readFromNBT(data.getTagList("inventory", 10));
 	}
 
 	@Override
