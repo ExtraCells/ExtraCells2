@@ -1,6 +1,7 @@
 package extracells.gui.widget.fluid;
 
 import appeng.api.storage.data.IAEFluidStack;
+import extracells.Extracells;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.fluids.Fluid;
@@ -45,7 +46,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 			if (amount > 0 && fluid != null)
 			{
 				String amountToText = Long.toString(amount) + "mB";
-				if (true)// Extracells.shortenedBuckets)
+				if (Extracells.shortenedBuckets)
 				{
 					if (amount > 1000000000L)
 						amountToText = Long.toString(amount / 1000000000L) + "MegaB";

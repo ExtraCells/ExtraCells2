@@ -1,6 +1,7 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
+import extracells.Extracells;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.fluid.AbstractFluidWidget;
@@ -111,7 +112,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui
 		{
 			long currentFluidAmount = currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
-			if (true)// TODO Extracells.shortenedBuckets)
+			if (Extracells.shortenedBuckets)
 			{
 				if (currentFluidAmount > 1000000000L)
 					amountToText = Long.toString(currentFluidAmount / 1000000000L) + "MegaB";

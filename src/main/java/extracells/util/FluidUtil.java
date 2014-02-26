@@ -14,7 +14,6 @@ public class FluidUtil
 {
 	public static FluidStack getFluidFromContainer(ItemStack itemStack)
 	{
-		FluidStack fluid = null;
 		if (itemStack == null)
 			return null;
 

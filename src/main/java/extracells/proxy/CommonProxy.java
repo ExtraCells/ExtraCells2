@@ -75,8 +75,8 @@ public class CommonProxy implements IGuiHandler
 	@Override
 	public Object getServerGuiElement(int Id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		int partId = Id >> 4;
-		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x4F);
+		int partId = Id >> 7;
+		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
 		if (side != ForgeDirection.UNKNOWN)
 		{
 			PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
@@ -97,8 +97,8 @@ public class CommonProxy implements IGuiHandler
 	@Override
 	public Object getClientGuiElement(int Id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		int partId = Id >> 4;
-		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x4F);
+		int partId = Id >> 7;
+		ForgeDirection side = ForgeDirection.getOrientation(Id & 0x7F);
 		if (side != ForgeDirection.UNKNOWN)
 		{
 			PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
@@ -115,12 +115,12 @@ public class CommonProxy implements IGuiHandler
 
 	public static int getGuiId(PartECBase part)
 	{
-		return PartEnum.getPartID(part) << 4 | part.getSide().ordinal();
+		return PartEnum.getPartID(part) << 7 | part.getSide().ordinal();
 	}
 
 	public static int getGuiId(int neutralId)
 	{
-		return neutralId << 4 | ForgeDirection.UNKNOWN.ordinal();
+		return neutralId << 7 | ForgeDirection.UNKNOWN.ordinal();
 	}
 
 	private class InternalRecipeLoader implements IRecipeLoader
