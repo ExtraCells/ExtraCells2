@@ -24,9 +24,10 @@ public class WidgetFluidRequest extends AbstractFluidWidget
 	public void drawWidget(int posX, int posY)
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor3f(1,1,1);
 		if (fluid != null && fluid.getIcon() != null)
 		{
 			drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), height - 2, width - 2);
@@ -36,7 +37,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget
 			Minecraft.getMinecraft().fontRenderer.drawString(EnumChatFormatting.WHITE + str, 52 + posX - str.length(), posY + 24, 0);
 		}
 		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glPopMatrix();
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	@Override

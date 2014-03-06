@@ -94,7 +94,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	@Override
 	public abstract void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer);
 
-
 	@Override
 	public boolean requireDynamicRender()
 	{

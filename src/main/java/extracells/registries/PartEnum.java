@@ -19,7 +19,8 @@ public enum PartEnum
 	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class),
 	FLUIDPANEANNIHILATION("fluid.plane.annihilation", PartFluidPlaneAnnihilation.class, "fluid.plane"),
 	FLUIDPANECREATION("fluid.plane.creation", PartFluidPlaneFormation.class, "fluid.plane"),
-	DRIVE("drive", PartDrive.class);
+	DRIVE("drive", PartDrive.class),
+	BATTERY("battery", PartBattery.class);
 
 	private String unlocalizedName;
 	private Class<? extends PartECBase> partClass;

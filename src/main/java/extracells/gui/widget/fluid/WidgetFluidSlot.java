@@ -66,30 +66,31 @@ public class WidgetFluidSlot extends Gui
 
 	public void drawWidget()
 	{
-		if (canRender())
-		{
-			GL11.glPushMatrix();
-			boolean lighting_enabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glColor3f(1.0F, 1.0F, 1.0F);
-			Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
-			drawTexturedModalRect(posX, posY, 79, 39, 18, 18);
-			if (lighting_enabled)
-				GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glPopMatrix();
-			if (fluid != null && fluid.getIcon() != null)
-			{
-				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-				GL11.glPushMatrix();
-				GL11.glDisable(GL11.GL_LIGHTING);
-				GL11.glColor3f(1.0F, 1.0F, 1.0F);
-				drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), 16, 16);
-				GL11.glScalef(0.5F, 0.5F, 0.5F);
-				if (lighting_enabled)
-					GL11.glEnable(GL11.GL_LIGHTING);
-				GL11.glPopMatrix();
-			}
-		}
+		if (!canRender())
+			return;
+
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor3f(1, 1, 1);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
+		drawTexturedModalRect(posX, posY, 79, 39, 18, 18);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glPopMatrix();
+
+		if (fluid == null || fluid.getIcon() == null)
+			return;
+
+		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), 16, 16);
+		GL11.glScalef(0.5F, 0.5F, 0.5F);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	public void drawTooltip()

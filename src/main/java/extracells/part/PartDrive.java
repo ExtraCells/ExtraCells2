@@ -12,6 +12,7 @@ import extracells.gui.GuiDrive;
 import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,13 +21,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PartDrive extends PartECBase implements ICellContainer, IInventoryUpdateReceiver
 {
 	private int priority = 0; // TODO
-	private short[] blinkTimers;
+	private short[] blinkTimers; // TODO
+	private byte[] cellStati = new byte[6];
 	List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();
 	List<IMEInventoryHandler> itemHandlers = new ArrayList<IMEInventoryHandler>();
 	private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.drive", 6, 1, this)
@@ -66,12 +69,12 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 		rh.setTexture(side, side, side, front[0], side, side);
 		rh.renderBlock(x, y, z, renderer);
 
+		ts.setColorOpaque_I(0xFFFFFF);
 		for (int i = 0; i < 2; i++)
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				ICellHandler cellHandler = AEApi.instance().registries().cell().getHander(inventory.getStackInSlot(j + i * 3));
-				if (cellHandler != null)
+				if (cellStati[j + i * 3] > 0)
 				{
 					rh.setBounds(4 + i * 5, 12 - j * 3, 14, 7 + i * 5, 10 - j * 3, 16);
 					rh.renderFace(x, y, z, front[1], ForgeDirection.SOUTH, renderer);
@@ -83,14 +86,10 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				ICellHandler cellHandler = AEApi.instance().registries().cell().getHander(inventory.getStackInSlot(j + i * 3));
-				if (cellHandler != null)
-				{
-					rh.setBounds(4 + i * 5, 12 - j * 3, 14, 7 + i * 5, 10 - j * 3, 16);
-					ts.setColorOpaque_I(0x00FF00);
-					ts.setBrightness(13 << 20 | 13 << 4);
-					rh.renderFace(x, y, z, front[2], ForgeDirection.SOUTH, renderer);
-				}
+				rh.setBounds(4 + i * 5, 12 - j * 3, 14, 7 + i * 5, 10 - j * 3, 16);
+				ts.setColorOpaque_I(getColorByStatus(cellStati[j + i * 3]));
+				ts.setBrightness(13 << 20 | 13 << 4);
+				rh.renderFace(x, y, z, front[2], ForgeDirection.SOUTH, renderer);
 			}
 		}
 		rh.setBounds(5, 5, 13, 11, 11, 14);
@@ -98,10 +97,42 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 	}
 
 	@Override
+	public void writeToStream(ByteBuf data) throws IOException
+	{
+		super.writeToStream(data);
+		for (int i = 0; i < cellStati.length; i++)
+			data.writeByte(cellStati[i]);
+	}
+
+	@Override
+	public boolean readFromStream(ByteBuf data) throws IOException
+	{
+		super.readFromStream(data);
+		for (int i = 0; i < cellStati.length; i++)
+			cellStati[i] = data.readByte();
+		return true;
+	}
+
+	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
 		bch.addBox(2, 2, 14, 14, 14, 16);
 		bch.addBox(5, 5, 13, 11, 11, 14);
+	}
+
+	public int getColorByStatus(int status)
+	{
+		switch (status)
+		{
+		case 1:
+			return 0x00FF00;
+		case 2:
+			return 0xFFFF00;
+		case 3:
+			return 0xFF0000;
+		default:
+			return 0x000000;
+		}
 	}
 
 	@Override
@@ -150,6 +181,22 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 		itemHandlers = updateHandlers(StorageChannel.ITEMS);
 		fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
 		IGridNode node = getGridNode();
+		for (int i = 0; i < cellStati.length; i++)
+		{
+			ItemStack stackInSlot = inventory.getStackInSlot(i);
+			IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, StorageChannel.ITEMS);
+			if (inventoryHandler == null)
+				inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, StorageChannel.FLUIDS);
+
+			ICellHandler cellHandler = AEApi.instance().registries().cell().getHander(stackInSlot);
+			if (cellHandler == null || inventoryHandler == null)
+			{
+				cellStati[i] = 0;
+			} else
+			{
+				cellStati[i] = (byte) cellHandler.getStatusForCell(stackInSlot, inventoryHandler);
+			}
+		}
 		if (node != null)
 		{
 			IGrid grid = node.getGrid();

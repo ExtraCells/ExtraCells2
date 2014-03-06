@@ -29,6 +29,9 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor3f(1,1,1);
 		IAEFluidStack terminalFluid = ((IFluidSelectorGui) guiFluidTerminal).getCurrentFluid();
 		Fluid currentFluid = terminalFluid != null ? terminalFluid.getFluid() : null;
 		if (fluid != null && fluid.getIcon() != null)
@@ -36,6 +39,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget
 		if (fluid == currentFluid)
 			drawHollowRectWithCorners(posX, posY, height, width, color, borderThickness);
 		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	@Override

@@ -44,14 +44,14 @@ public abstract class AbstractPacket
 
 	public abstract void execute();
 
-	public String readString(ByteBuf in)
+	public static String readString(ByteBuf in)
 	{
 		byte[] stringBytes = new byte[in.readInt()];
 		in.readBytes(stringBytes);
 		return new String(stringBytes, Charsets.UTF_8);
 	}
 
-	public void writeString(String string, ByteBuf out)
+	public static void writeString(String string, ByteBuf out)
 	{
 		byte[] stringBytes;
 		stringBytes = string.getBytes(Charsets.UTF_8);
@@ -59,17 +59,17 @@ public abstract class AbstractPacket
 		out.writeBytes(stringBytes);
 	}
 
-	public World readWorld(ByteBuf in)
+	public static World readWorld(ByteBuf in)
 	{
 		return DimensionManager.getWorld(in.readInt());
 	}
 
-	public void writeWorld(World world, ByteBuf out)
+	public static void writeWorld(World world, ByteBuf out)
 	{
 		out.writeInt(world.provider.dimensionId);
 	}
 
-	public EntityPlayer readPlayer(ByteBuf in)
+	public static EntityPlayer readPlayer(ByteBuf in)
 	{
 		if (!in.readBoolean())
 			return null;
@@ -77,7 +77,7 @@ public abstract class AbstractPacket
 		return playerWorld.getPlayerEntityByName(readString(in));
 	}
 
-	public void writePlayer(EntityPlayer player, ByteBuf out)
+	public static void writePlayer(EntityPlayer player, ByteBuf out)
 	{
 		if (player == null)
 		{
@@ -89,12 +89,12 @@ public abstract class AbstractPacket
 		writeString(player.getCommandSenderName(), out);
 	}
 
-	public TileEntity readTileEntity(ByteBuf in)
+	public static TileEntity readTileEntity(ByteBuf in)
 	{
 		return readWorld(in).getTileEntity(in.readInt(), in.readInt(), in.readInt());
 	}
 
-	public void writeTileEntity(TileEntity tileEntity, ByteBuf out)
+	public static void writeTileEntity(TileEntity tileEntity, ByteBuf out)
 	{
 		writeWorld(tileEntity.getWorldObj(), out);
 		out.writeInt(tileEntity.xCoord);
@@ -102,23 +102,23 @@ public abstract class AbstractPacket
 		out.writeInt(tileEntity.zCoord);
 	}
 
-	public PartECBase readPart(ByteBuf in)
+	public static PartECBase readPart(ByteBuf in)
 	{
 		return (PartECBase) ((IPartHost) readTileEntity(in)).getPart(ForgeDirection.getOrientation(in.readByte()));
 	}
 
-	public void writePart(PartECBase part, ByteBuf out)
+	public static void writePart(PartECBase part, ByteBuf out)
 	{
 		writeTileEntity(part.getHost().getTile(), out);
 		out.writeByte(part.getSide().ordinal());
 	}
 
-	public Fluid readFluid(ByteBuf in)
+	public static Fluid readFluid(ByteBuf in)
 	{
 		return FluidRegistry.getFluid(readString(in));
 	}
 
-	public void writeFluid(Fluid fluid, ByteBuf out)
+	public static void writeFluid(Fluid fluid, ByteBuf out)
 	{
 		if (fluid == null)
 		{
