@@ -1,6 +1,5 @@
 package extracells.part;
 
-import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -113,8 +112,8 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 	@Override
 	public void onInventoryChanged()
 	{
-		battery = AEApi.instance().blocks().blockEnergyCellDense.stack(1);// TODO inventory.getStackInSlot(0);
-		if (battery != null)
+		battery = inventory.getStackInSlot(0);
+		if (battery != null && battery.getItem() instanceof IAEItemPowerStorage)
 		{
 			batteryIcon = battery.getIconIndex();
 			handler = (IAEItemPowerStorage) battery.getItem();
@@ -129,7 +128,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 			IGrid grid = node.getGrid();
 			if (grid != null)
 			{
-				grid.postEvent(new MENetworkPowerStorage(this, MENetworkPowerStorage.PowerEventType.PROVIDE_POWER));
+				grid.postEvent(new MENetworkPowerStorage(this, MENetworkPowerStorage.PowerEventType.REQUEST_POWER));
 			}
 			host.markForUpdate();
 		}
@@ -138,7 +137,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 	@Override
 	public double injectAEPower(double amt, Actionable mode)
 	{
-		System.out.println("lol");
+		System.out.println("injectAEPower" + battery + " " + handler);
 		if (handler == null || battery == null)
 			return 0;
 		System.out.println("asdsasd");
@@ -148,7 +147,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 	@Override
 	public double getAEMaxPower()
 	{
-		System.out.println("lol");
+		System.out.println("getAEMaxPower" + battery + " " + handler);
 		if (handler == null || battery == null)
 			return 0;
 		System.out.println("asdsasd");
@@ -158,7 +157,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 	@Override
 	public double getAECurrentPower()
 	{
-		System.out.println("lol");
+		System.out.println("getAECurrentPower" + battery + " " + handler);
 		if (handler == null || battery == null)
 			return 0;
 		System.out.println("asdsasd");
@@ -182,7 +181,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 	@Override
 	public double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier)
 	{
-		System.out.println("lol");
+		System.out.println("extractAEPower" + battery + " " + handler);
 		if (handler == null || battery == null)
 			return 0;
 		System.out.println("asdsasd");
