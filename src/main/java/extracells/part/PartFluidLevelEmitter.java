@@ -1,5 +1,12 @@
 package extracells.part;
 
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.security.BaseActionSource;
@@ -11,15 +18,13 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+import extracells.container.ContainerFluidEmitter;
+import extracells.gui.GuiFluidEmitter;
+import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.render.TextureManager;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
-public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost
+public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPart
 {
 	private Fluid fluid;
 	private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;
@@ -30,16 +35,24 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
-		rh.setBounds(7, 7, 11, 9, 9, 17);
+		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[0]);
+		rh.setBounds(7, 7, 11, 9, 9, 14);
+		rh.renderInventoryBox(renderer);
+
+		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[1]);
+		rh.setBounds(7, 7, 14, 9, 9, 16);
 		rh.renderInventoryBox(renderer);
 	}
 
 	@Override
 	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
 	{
-		rh.setTexture(TextureManager.BUS_SIDE.getTexture());
-		rh.setBounds(7, 7, 11, 9, 9, 17);
+		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[0]);
+		rh.setBounds(7, 7, 11, 9, 9, 14);
+		rh.renderBlock(x, y, z, renderer);
+
+		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[2]);
+		rh.setBounds(7, 7, 14, 9, 9, 16);
 		rh.renderBlock(x, y, z, renderer);
 	}
 
@@ -52,6 +65,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		else
 			data.removeTag("fluid");
 		data.setInteger("mode", mode.ordinal());
+		data.setLong("wantedAmount", wantedAmount);
 	}
 
 	@Override
@@ -60,12 +74,13 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		super.readFromNBT(data);
 		fluid = FluidRegistry.getFluid(data.getString("fluid"));
 		mode = RedstoneMode.values()[data.getInteger("mode")];
+		wantedAmount = data.getLong("wantedAmount");
 	}
 
 	@Override
 	public void getBoxes(IPartCollsionHelper bch)
 	{
-		bch.addBox(7, 7, 11, 9, 9, 17);
+		bch.addBox(7, 7, 11, 9, 9, 16);
 	}
 
 	@Override
@@ -116,14 +131,15 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		}
 	}
 
-	public void changeFluid(Fluid _fluid)
+	@Override
+	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player)
 	{
 		fluid = _fluid;
 		watcher.clear();
 		updateWatcher(watcher);
 	}
 
-	public void toggleMode()
+	public void toggleMode(EntityPlayer player)
 	{
 		switch (mode)
 		{
@@ -137,6 +153,33 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 		tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air);
 		tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, Blocks.air);
+		new PacketFluidEmitter(mode, player).sendPacketToPlayer(player);
 	}
 
+	public void setWantedAmount(long _wantedAmount, EntityPlayer player)
+	{
+		wantedAmount = _wantedAmount;
+		new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
+	}
+
+	public void changeWantedAmount(int modifier, EntityPlayer player)
+	{
+		setWantedAmount(wantedAmount + modifier, player);
+	}
+
+	public void syncClientGui(EntityPlayer player)
+	{
+		new PacketFluidEmitter(mode, player).sendPacketToPlayer(player);
+		new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
+	}
+
+	public Object getServerGuiElement(EntityPlayer player)
+	{
+		return new ContainerFluidEmitter(this, player);
+	}
+
+	public Object getClientGuiElement(EntityPlayer player)
+	{
+		return new GuiFluidEmitter(this, player);
+	}
 }

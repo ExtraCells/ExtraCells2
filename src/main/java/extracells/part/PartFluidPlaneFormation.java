@@ -1,22 +1,5 @@
 package extracells.part;
 
-import appeng.api.AEApi;
-import appeng.api.config.Actionable;
-import appeng.api.config.RedstoneMode;
-import appeng.api.networking.security.MachineSource;
-import appeng.api.parts.IPartCollsionHelper;
-import appeng.api.parts.IPartRenderHelper;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.AEColor;
-import com.google.common.collect.Lists;
-import extracells.container.ContainerPlaneFormation;
-import extracells.gui.GuiFluidPlaneFormation;
-import extracells.network.packet.PacketFluidSlot;
-import extracells.render.TextureManager;
-import extracells.util.ColorUtil;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.FluidUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -27,8 +10,28 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import appeng.api.AEApi;
+import appeng.api.config.Actionable;
+import appeng.api.config.RedstoneMode;
+import appeng.api.networking.security.MachineSource;
+import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartRenderHelper;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.AEColor;
 
-public class PartFluidPlaneFormation extends PartECBase implements PacketFluidSlot.IFluidSlotPart
+import com.google.common.collect.Lists;
+
+import extracells.container.ContainerPlaneFormation;
+import extracells.gui.GuiFluidPlaneFormation;
+import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.PacketFluidSlot;
+import extracells.render.TextureManager;
+import extracells.util.ColorUtil;
+import extracells.util.FluidUtil;
+import extracells.util.inventory.ECPrivateInventory;
+
+public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPart
 {
 
 	private Fluid fluid;

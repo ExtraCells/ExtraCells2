@@ -1,6 +1,7 @@
 package extracells.gui.widget.fluid;
 
-import extracells.network.packet.PacketFluidSlot;
+import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.PacketFluidSlot;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -23,12 +24,12 @@ public class WidgetFluidSlot extends Gui
 	private int posX, posY;
 	private Fluid fluid;
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
-	private PacketFluidSlot.IFluidSlotPart part;
+	private IFluidSlotPart part;
 	private EntityPlayer player;
 	private IConfigurable configurable;
 	private byte configOption;
 
-	public WidgetFluidSlot(EntityPlayer _player, PacketFluidSlot.IFluidSlotPart _part, int _id, int _posX, int _posY, IConfigurable _configurable, byte _configOption)
+	public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPart _part, int _id, int _posX, int _posY, IConfigurable _configurable, byte _configOption)
 	{
 		player = _player;
 		part = _part;
@@ -39,7 +40,7 @@ public class WidgetFluidSlot extends Gui
 		configOption = _configOption;
 	}
 
-	public WidgetFluidSlot(EntityPlayer _player, PacketFluidSlot.IFluidSlotPart _part, int _id, int _posX, int _posY)
+	public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPart _part, int _id, int _posX, int _posY)
 	{
 		this(_player, _part, _id, _posX, _posY, null, (byte) 0);
 	}
@@ -78,17 +79,14 @@ public class WidgetFluidSlot extends Gui
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(posX, posY, 79, 39, 18, 18);
 		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glPopMatrix();
 
 		if (fluid == null || fluid.getIcon() == null)
 			return;
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), 16, 16);
-		GL11.glScalef(0.5F, 0.5F, 0.5F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 	}

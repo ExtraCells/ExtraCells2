@@ -34,13 +34,19 @@ public abstract class AbstractPacket
 	{
 		out.writeByte(mode);
 		writePlayer(player, out);
+		writeData(out);
 	}
+
+	public abstract void writeData(ByteBuf out) throws IOException;
 
 	public void readPacketData(ByteBuf in) throws IOException
 	{
 		mode = in.readByte();
 		player = readPlayer(in);
+		readData(in);
 	}
+
+	public abstract void readData(ByteBuf in) throws IOException;
 
 	public abstract void execute();
 

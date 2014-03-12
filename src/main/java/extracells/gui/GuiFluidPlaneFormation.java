@@ -1,13 +1,7 @@
 package extracells.gui;
 
-import appeng.api.AEApi;
-import extracells.container.ContainerPlaneFormation;
-import extracells.gui.widget.fluid.WidgetFluidSlot;
-import extracells.gui.widget.WidgetRedstoneModes;
-import extracells.network.packet.PacketFluidPlaneFormation;
-import extracells.network.packet.PacketFluidSlot;
-import extracells.part.PartFluidPlaneFormation;
-import extracells.util.FluidUtil;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,11 +10,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
 
-import java.util.List;
+import appeng.api.AEApi;
+import extracells.container.ContainerPlaneFormation;
+import extracells.gui.widget.WidgetRedstoneModes;
+import extracells.gui.widget.fluid.WidgetFluidSlot;
+import extracells.network.packet.other.IFluidSlotGui;
+import extracells.network.packet.part.PacketFluidPlaneFormation;
+import extracells.part.PartFluidPlaneFormation;
+import extracells.util.FluidUtil;
 
-public class GuiFluidPlaneFormation extends GuiContainer implements PacketFluidSlot.IFluidSlotGui
+public class GuiFluidPlaneFormation extends GuiContainer implements IFluidSlotGui
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/paneformation.png");
 	private PartFluidPlaneFormation part;

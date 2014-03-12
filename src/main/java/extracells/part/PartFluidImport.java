@@ -31,15 +31,18 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 		rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTexture(), side, side);
 		rh.setBounds(4, 4, 14, 12, 12, 16);
 		rh.renderInventoryBox(renderer);
+
 		rh.setTexture(side);
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		rh.renderInventoryBox(renderer);
 		rh.setBounds(6, 6, 12, 10, 10, 13);
 		rh.renderInventoryBox(renderer);
 
+		rh.setBounds(4, 4, 14, 12, 12, 16);
 		rh.setInvColor(AEColor.Cyan.blackVariant);
 		ts.setBrightness(15 << 20 | 15 << 4);
 		rh.renderInventoryFace(TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
+
 
 		rh.setBounds(6, 6, 11, 10, 10, 12);
 		renderInventoryBusLights(rh, renderer);
@@ -137,9 +140,12 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler
 	{
 		FluidStack drained;
 		if (fluid == null)
-			drained = facingTank.drain(ForgeDirection.DOWN, toDrain, false);
-		else
-			drained = facingTank.drain(ForgeDirection.DOWN, new FluidStack(fluid, toDrain), false);
+		{
+			drained = facingTank.drain(side.getOpposite(), toDrain, false);
+		} else
+		{
+			drained = facingTank.drain(side.getOpposite(), new FluidStack(fluid, toDrain), false);
+		}
 
 		if (drained == null || drained.amount <= 0 || drained.fluidID <= 0)
 			return false;

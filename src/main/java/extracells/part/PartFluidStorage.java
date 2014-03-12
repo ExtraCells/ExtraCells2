@@ -1,6 +1,8 @@
 package extracells.part;
 
 import appeng.api.AEApi;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
@@ -11,7 +13,8 @@ import appeng.api.util.AEColor;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.inventoryHandler.HandlerPartStorageFluid;
-import extracells.network.packet.PacketFluidSlot;
+import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.PacketFluidSlot;
 import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
@@ -30,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, PacketFluidSlot.IFluidSlotPart
+public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPart
 {
 	private int priority = 0;
 	private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
@@ -57,11 +60,12 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		rh.setBounds(2, 2, 15, 14, 14, 16);
 		rh.renderInventoryBox(renderer);
 
+		rh.setBounds(4, 4, 14, 12, 12, 15);
+		rh.renderInventoryBox(renderer);
+		rh.setBounds(2, 2, 15, 14, 14, 16);
 		rh.setInvColor(AEColor.Cyan.blackVariant);
 		ts.setBrightness(15 << 20 | 15 << 4);
 		rh.renderInventoryFace(TextureManager.STORAGE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
-		rh.setBounds(4, 4, 14, 12, 12, 15);
-		rh.renderInventoryBox(renderer);
 
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		renderInventoryBusLights(rh, renderer);
@@ -115,6 +119,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		}
 		upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
 		onInventoryChanged();
+		onNeighborChanged();
 	}
 
 	@Override
@@ -163,8 +168,17 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	public void onNeighborChanged()
 	{
 		handler.onNeighborChange();
-		if (node != null && node.getGrid() != null && gridBlock != null)
-			node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getFluidMonitor(), StorageChannel.FLUIDS));
+
+		if (node != null)
+		{
+			IGrid grid = node.getGrid();
+			if (grid != null)
+			{
+				grid.postEvent(new MENetworkCellArrayUpdate());
+				node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getFluidMonitor(), StorageChannel.FLUIDS));
+			}
+			host.markForUpdate();
+		}
 	}
 
 	public TileEntity getHostTile()

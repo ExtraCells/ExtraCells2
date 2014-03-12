@@ -1,4 +1,4 @@
-package extracells.network.packet;
+package extracells.network.packet.part;
 
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidStorage;
@@ -23,15 +23,13 @@ public class PacketBusFluidStorage extends AbstractPacket
 		part = _part;
 	}
 
-	public void writePacketData(ByteBuf out) throws IOException
+	public void writeData(ByteBuf out) throws IOException
 	{
-		super.writePacketData(out);
 		writePart(part, out);
 	}
 
-	public void readPacketData(ByteBuf in) throws IOException
+	public void readData(ByteBuf in) throws IOException
 	{
-		super.readPacketData(in);
 		part = (PartFluidStorage) readPart(in);
 	}
 

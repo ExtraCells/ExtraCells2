@@ -10,7 +10,7 @@ import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidStorage;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.inventoryHandler.HandlerItemStorageFluid;
-import extracells.network.packet.PacketFluidStorage;
+import extracells.network.packet.part.PacketFluidStorage;
 import extracells.util.FluidUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;

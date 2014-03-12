@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import extracells.container.ContainerDrive;
-import extracells.network.packet.PacketFluidStorage;
+import extracells.network.packet.part.PacketFluidStorage;
 import extracells.part.PartDrive;
 
 public class GuiDrive extends GuiContainer

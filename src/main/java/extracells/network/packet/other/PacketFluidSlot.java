@@ -1,4 +1,4 @@
-package extracells.network.packet;
+package extracells.network.packet.other;
 
 import extracells.network.AbstractPacket;
 import extracells.part.PartECBase;
@@ -38,10 +38,8 @@ public class PacketFluidSlot extends AbstractPacket
 		filterFluids = _filterFluids;
 	}
 
-	public void writePacketData(ByteBuf out) throws IOException
+	public void writeData(ByteBuf out) throws IOException
 	{
-		super.writePacketData(out);
-
 		switch (mode)
 		{
 		case 0:
@@ -57,9 +55,8 @@ public class PacketFluidSlot extends AbstractPacket
 		}
 	}
 
-	public void readPacketData(ByteBuf in) throws IOException
+	public void readData(ByteBuf in) throws IOException
 	{
-		super.readPacketData(in);
 		switch (mode)
 		{
 		case 0:
@@ -93,15 +90,5 @@ public class PacketFluidSlot extends AbstractPacket
 			}
 			break;
 		}
-	}
-
-	public interface IFluidSlotPart
-	{
-		public void setFluid(int _index, Fluid _fluid, EntityPlayer _player);
-	}
-
-	public interface IFluidSlotGui
-	{
-		public void updateFluids(List<Fluid> _fluids);
 	}
 }

@@ -8,7 +8,7 @@ import extracells.gui.widget.fluid.AbstractFluidWidget;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
-import extracells.network.packet.PacketFluidTerminal;
+import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;

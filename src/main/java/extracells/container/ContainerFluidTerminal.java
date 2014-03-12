@@ -16,7 +16,7 @@ import appeng.api.storage.data.IItemList;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidTerminal;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
-import extracells.network.packet.PacketFluidTerminal;
+import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 
 public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer

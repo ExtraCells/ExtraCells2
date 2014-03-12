@@ -15,7 +15,8 @@ public enum TextureManager
 	TERMINAL_FRONT(TextureType.PART, "terminal_front_1", "terminal_front_2", "terminal_front_3"),
 	PANE_FRONT(TextureType.PART, "pane_front_1", "pane_front_2", "pane_front_3"),
 	DRIVE_FRONT(TextureType.PART, "drive_front_1", "drive_front_2", "drive_front_3", "drive_front_4"),
-	BATTERY_FRONT(TextureType.PART, "battery_front_1");
+	BATTERY_FRONT(TextureType.PART, "battery_front_1"),
+	LEVEL_FRONT(TextureType.PART, "level_front_1", "level_front_2", "level_front_3");
 
 	private TextureType textureType;
 	private String[] textureNames;

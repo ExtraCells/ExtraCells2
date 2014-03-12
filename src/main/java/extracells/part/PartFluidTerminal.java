@@ -9,7 +9,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.GuiFluidTerminal;
-import extracells.network.packet.PacketFluidTerminal;
+import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import extracells.util.inventory.ECPrivateInventory;

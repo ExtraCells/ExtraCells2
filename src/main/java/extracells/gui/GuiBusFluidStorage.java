@@ -2,10 +2,10 @@ package extracells.gui;
 
 import appeng.api.AEApi;
 import extracells.container.ContainerBusFluidStorage;
-import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.gui.widget.WidgetRedstoneModes;
-import extracells.network.packet.PacketBusFluidStorage;
-import extracells.network.packet.PacketFluidSlot;
+import extracells.gui.widget.fluid.WidgetFluidSlot;
+import extracells.network.packet.other.IFluidSlotGui;
+import extracells.network.packet.part.PacketBusFluidStorage;
 import extracells.part.PartFluidStorage;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.IConfigurable, PacketFluidSlot.IFluidSlotGui
+public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.IConfigurable, IFluidSlotGui
 {
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/storagebusfluid.png");
 	private EntityPlayer player;

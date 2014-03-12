@@ -1,4 +1,4 @@
-package extracells.network.packet;
+package extracells.network.packet.part;
 
 import appeng.api.config.RedstoneMode;
 import extracells.gui.GuiBusFluidIO;
@@ -64,9 +64,8 @@ public class PacketBusFluidIO extends AbstractPacket
 	}
 
 	@Override
-	public void writePacketData(ByteBuf out) throws IOException
+	public void writeData(ByteBuf out) throws IOException
 	{
-		super.writePacketData(out);
 		switch (mode)
 		{
 		case 0:
@@ -89,9 +88,8 @@ public class PacketBusFluidIO extends AbstractPacket
 	}
 
 	@Override
-	public void readPacketData(ByteBuf in) throws IOException
+	public void readData(ByteBuf in) throws IOException
 	{
-		super.readPacketData(in);
 		switch (mode)
 		{
 		case 0:

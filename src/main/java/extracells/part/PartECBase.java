@@ -365,6 +365,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	{
 		Tessellator ts = Tessellator.instance;
 
+		rh.setInvColor(0xFFFFFF);
 		IIcon otherIcon = TextureManager.BUS_COLOR.getTextures()[0];
 		IIcon side = TextureManager.BUS_SIDE.getTexture();
 		rh.setTexture(otherIcon, otherIcon, side, side, otherIcon, otherIcon);

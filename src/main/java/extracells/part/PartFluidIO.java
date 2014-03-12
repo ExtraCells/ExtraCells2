@@ -10,8 +10,9 @@ import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import extracells.container.ContainerBusFluidIO;
 import extracells.gui.GuiBusFluidIO;
-import extracells.network.packet.PacketBusFluidIO;
-import extracells.network.packet.PacketFluidSlot;
+import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.part.PacketBusFluidIO;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
@@ -25,7 +26,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import java.io.IOException;
 import java.util.Arrays;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryUpdateReceiver, PacketFluidSlot.IFluidSlotPart
+public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPart
 {
 	protected Fluid[] filterFluids = new Fluid[9];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -131,7 +132,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 	public final TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall)
 	{
 		if (canDoWork())
-			return doWork(speedState * 125, TicksSinceLastCall) ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
+			return doWork(125 + speedState * 125, TicksSinceLastCall) ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
 		return TickRateModulation.SLOWER;
 	}
 
@@ -183,11 +184,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 		{
 			if (!lastRedstone)
 			{
-				doWork(speedState * 125, 1);
+				doWork(125 + speedState + speedState * 125, 1);
 			} else
 			{
 				lastRedstone = true;
-				doWork(speedState * 125, 1);
+				doWork(125 + speedState + speedState * 125, 1);
 			}
 		}
 		lastRedstone = redstonePowered;
