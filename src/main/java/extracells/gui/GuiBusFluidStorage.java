@@ -8,6 +8,7 @@ import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketBusFluidStorage;
 import extracells.part.PartFluidStorage;
 import extracells.util.FluidUtil;
+import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -85,7 +86,7 @@ public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.
 		{
 			fluidSlotList.get(i).drawWidget();
 			if (!overlayRendered && fluidSlotList.get(i).canRender())
-				overlayRendered = renderOverlay(fluidSlotList.get(i), mouseX, mouseY);
+				overlayRendered = GuiUtil.renderOverlay(zLevel, guiLeft, guiTop, fluidSlotList.get(i), mouseX, mouseY);
 		}
 
 		for (Object button : buttonList)
@@ -98,20 +99,6 @@ public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.
 	public void changeConfig(byte _filterSize)
 	{
 		filterSize = _filterSize;
-	}
-
-	public boolean renderOverlay(WidgetFluidSlot fluidSlot, int mouseX, int mouseY)
-	{
-		if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
-		{
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1, fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17, -0x7F000001, -0x7F000001);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-			return true;
-		}
-		return false;
 	}
 
 	public void updateFluids(List<Fluid> fluidList)
@@ -131,21 +118,12 @@ public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		for (WidgetFluidSlot fluidSlot : fluidSlotList)
 		{
-			if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
+			if (GuiUtil.isPointInRegion(guiLeft, guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
 			{
 				fluidSlot.mouseClicked(player.inventory.getItemStack());
 				break;
 			}
 		}
-	}
-
-	protected boolean isPointInRegion(int top, int left, int height, int width, int pointX, int pointY)
-	{
-		int k1 = guiLeft;
-		int l1 = guiTop;
-		pointX -= k1;
-		pointY -= l1;
-		return pointX >= top - 1 && pointX < top + height + 1 && pointY >= left - 1 && pointY < left + width + 1;
 	}
 
 	@Override

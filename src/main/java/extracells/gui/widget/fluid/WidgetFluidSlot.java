@@ -45,6 +45,11 @@ public class WidgetFluidSlot extends Gui
 		this(_player, _part, _id, _posX, _posY, null, (byte) 0);
 	}
 
+	public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPart _part, int _posX, int _posY)
+	{
+		this(_player, _part, 0, _posX, _posY, null, (byte) 0);
+	}
+
 	public int getPosX()
 	{
 		return posX;

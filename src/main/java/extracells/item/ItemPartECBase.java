@@ -5,6 +5,7 @@ import appeng.api.config.Upgrades;
 import appeng.api.implementations.items.IItemGroup;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.registries.PartEnum;
@@ -48,7 +49,7 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup
 			return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].newInstance(itemStack);
 		} catch (Throwable e)
 		{
-			System.out.println("SHOULD NOT HAPPEN!");
+			FMLLog.severe("SHOULD NOT HAPPEN! Contact Leonelf/M3gaFr3ak with the folowing stacktrace!");
 			e.printStackTrace();
 			return null;
 		}

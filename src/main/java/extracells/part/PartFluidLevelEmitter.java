@@ -1,12 +1,5 @@
 package extracells.part;
 
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.security.BaseActionSource;
@@ -18,11 +11,20 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+import com.google.common.collect.Lists;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.GuiFluidEmitter;
 import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.render.TextureManager;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPart
 {
@@ -103,6 +105,11 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		if (chan == StorageChannel.FLUIDS && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == fluid)
 		{
 			currentAmount = fullStack != null ? fullStack.getStackSize() : 0;
+			if (node != null)
+			{
+				isActive = node.isActive();
+				host.markForUpdate();
+			}
 		}
 	}
 
@@ -115,7 +122,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	@Override
 	public int isProvidingWeakPower()
 	{
-		return isPowering() ? 15 : 0;
+		return isProvidingStrongPower();
 	}
 
 	private boolean isPowering()
@@ -137,6 +144,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		fluid = _fluid;
 		watcher.clear();
 		updateWatcher(watcher);
+		new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(_player);
 	}
 
 	public void toggleMode(EntityPlayer player)
@@ -171,6 +179,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	{
 		new PacketFluidEmitter(mode, player).sendPacketToPlayer(player);
 		new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
+		new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(player);
 	}
 
 	public Object getServerGuiElement(EntityPlayer player)

@@ -4,18 +4,24 @@ import appeng.api.config.RedstoneMode;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.widget.DigitTextField;
 import extracells.gui.widget.WidgetRedstoneModes;
+import extracells.gui.widget.fluid.WidgetFluidSlot;
+import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.part.PartFluidLevelEmitter;
 import extracells.registries.PartEnum;
+import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-public class GuiFluidEmitter extends GuiContainer
+import java.util.List;
+
+public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui
 {
 
 	public static final int xSize = 176;
@@ -24,12 +30,14 @@ public class GuiFluidEmitter extends GuiContainer
 	private PartFluidLevelEmitter part;
 	private EntityPlayer player;
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png");
+	private WidgetFluidSlot fluidSlot;
 
 	public GuiFluidEmitter(PartFluidLevelEmitter _part, EntityPlayer _player)
 	{
 		super(new ContainerFluidEmitter(_part, _player));
 		player = _player;
 		part = _part;
+		fluidSlot = new WidgetFluidSlot(player, part, 79, 36);
 		new PacketFluidEmitter(false, part, player).sendPacketToServer();
 	}
 
@@ -42,6 +50,13 @@ public class GuiFluidEmitter extends GuiContainer
 		int posX = (width - xSize) / 2;
 		int posY = (height - ySize) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
+	}
+
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn)
+	{
+		super.mouseClicked(mouseX, mouseY, mouseBtn);
+		if (GuiUtil.isPointInRegion(guiLeft, guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
+			fluidSlot.mouseClicked(player.inventory.getItemStack());
 	}
 
 	@Override
@@ -84,9 +99,11 @@ public class GuiFluidEmitter extends GuiContainer
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int i, int j)
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		fontRendererObj.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
+		fluidSlot.drawWidget();
+		GuiUtil.renderOverlay(zLevel, guiLeft, guiTop, fluidSlot, mouseX, mouseY);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -156,5 +173,16 @@ public class GuiFluidEmitter extends GuiContainer
 	public void setRedstoneMode(RedstoneMode mode)
 	{
 		((WidgetRedstoneModes) buttonList.get(6)).setRedstoneMode(mode);
+	}
+
+	@Override
+	public void updateFluids(List<Fluid> _fluids)
+	{
+		if (_fluids == null || _fluids.isEmpty())
+		{
+			fluidSlot.setFluid(null);
+			return;
+		}
+		fluidSlot.setFluid(_fluids.get(0));
 	}
 }
