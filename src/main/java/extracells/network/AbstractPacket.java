@@ -50,14 +50,14 @@ public abstract class AbstractPacket
 
 	public abstract void execute();
 
-	public static String readString(ByteBuf in)
+	public static String readString(ByteBuf in) throws IOException
 	{
 		byte[] stringBytes = new byte[in.readInt()];
 		in.readBytes(stringBytes);
 		return new String(stringBytes, Charsets.UTF_8);
 	}
 
-	public static void writeString(String string, ByteBuf out)
+	public static void writeString(String string, ByteBuf out) throws IOException
 	{
 		byte[] stringBytes;
 		stringBytes = string.getBytes(Charsets.UTF_8);
@@ -65,17 +65,17 @@ public abstract class AbstractPacket
 		out.writeBytes(stringBytes);
 	}
 
-	public static World readWorld(ByteBuf in)
+	public static World readWorld(ByteBuf in) throws IOException
 	{
 		return DimensionManager.getWorld(in.readInt());
 	}
 
-	public static void writeWorld(World world, ByteBuf out)
+	public static void writeWorld(World world, ByteBuf out) throws IOException
 	{
 		out.writeInt(world.provider.dimensionId);
 	}
 
-	public static EntityPlayer readPlayer(ByteBuf in)
+	public static EntityPlayer readPlayer(ByteBuf in) throws IOException
 	{
 		if (!in.readBoolean())
 			return null;
@@ -83,7 +83,7 @@ public abstract class AbstractPacket
 		return playerWorld.getPlayerEntityByName(readString(in));
 	}
 
-	public static void writePlayer(EntityPlayer player, ByteBuf out)
+	public static void writePlayer(EntityPlayer player, ByteBuf out) throws IOException
 	{
 		if (player == null)
 		{
@@ -95,12 +95,12 @@ public abstract class AbstractPacket
 		writeString(player.getCommandSenderName(), out);
 	}
 
-	public static TileEntity readTileEntity(ByteBuf in)
+	public static TileEntity readTileEntity(ByteBuf in) throws IOException
 	{
 		return readWorld(in).getTileEntity(in.readInt(), in.readInt(), in.readInt());
 	}
 
-	public static void writeTileEntity(TileEntity tileEntity, ByteBuf out)
+	public static void writeTileEntity(TileEntity tileEntity, ByteBuf out) throws IOException
 	{
 		writeWorld(tileEntity.getWorldObj(), out);
 		out.writeInt(tileEntity.xCoord);
@@ -108,23 +108,23 @@ public abstract class AbstractPacket
 		out.writeInt(tileEntity.zCoord);
 	}
 
-	public static PartECBase readPart(ByteBuf in)
+	public static PartECBase readPart(ByteBuf in) throws IOException
 	{
 		return (PartECBase) ((IPartHost) readTileEntity(in)).getPart(ForgeDirection.getOrientation(in.readByte()));
 	}
 
-	public static void writePart(PartECBase part, ByteBuf out)
+	public static void writePart(PartECBase part, ByteBuf out) throws IOException
 	{
 		writeTileEntity(part.getHost().getTile(), out);
 		out.writeByte(part.getSide().ordinal());
 	}
 
-	public static Fluid readFluid(ByteBuf in)
+	public static Fluid readFluid(ByteBuf in) throws IOException
 	{
 		return FluidRegistry.getFluid(readString(in));
 	}
 
-	public static void writeFluid(Fluid fluid, ByteBuf out)
+	public static void writeFluid(Fluid fluid, ByteBuf out) throws IOException
 	{
 		if (fluid == null)
 		{

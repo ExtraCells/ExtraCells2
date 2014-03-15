@@ -51,7 +51,6 @@ public class PacketFluidStorage extends AbstractPacket
 		switch (mode)
 		{
 		case 0:
-			out.writeInt(fluidStackList.size());
 			for (IAEFluidStack stack : fluidStackList)
 			{
 				FluidStack fluidStack = stack.getFluidStack();
@@ -74,8 +73,7 @@ public class PacketFluidStorage extends AbstractPacket
 		{
 		case 0:
 			fluidStackList = AEApi.instance().storage().createFluidList();
-			int length = in.readInt();
-			for (int i = 0; i < length; i++)
+			while (in.readableBytes() > 0)
 			{
 				Fluid fluid = readFluid(in);
 				long fluidAmount = in.readLong();
