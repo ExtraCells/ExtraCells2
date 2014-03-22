@@ -1,12 +1,5 @@
 package extracells.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import appeng.api.AEApi;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEMonitor;
@@ -18,6 +11,13 @@ import extracells.gui.GuiFluidTerminal;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 
 public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer
 {
@@ -73,7 +73,8 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 
 	public void setGui(GuiFluidTerminal _guiFluidTerminal)
 	{
-		guiFluidTerminal = _guiFluidTerminal;
+		if (_guiFluidTerminal != null)
+			guiFluidTerminal = _guiFluidTerminal;
 	}
 
 	@Override
@@ -127,14 +128,14 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 
 	public void setSelectedFluid(Fluid _selectedFluid)
 	{
-		if (player.worldObj.isRemote)
-		{
-			selectedFluid = _selectedFluid;
+		new PacketFluidTerminal(player, _selectedFluid, terminal).sendPacketToServer();
+	}
+
+	public void receiveSelectedFluid(Fluid _selectedFluid)
+	{
+		selectedFluid = _selectedFluid;
+		if (guiFluidTerminal != null)
 			guiFluidTerminal.updateSelectedFluid();
-		} else
-		{
-			new PacketFluidTerminal(player, selectedFluid, terminal).sendPacketToServer();
-		}
 	}
 
 	public IItemList<IAEFluidStack> getFluidStackList()

@@ -2,6 +2,8 @@ package extracells.util;
 
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
+import extracells.item.ItemFluidPattern;
+import extracells.registries.ItemEnum;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -22,6 +24,9 @@ public class FluidUtil
 		if (item instanceof IFluidContainerItem)
 		{
 			return ((IFluidContainerItem) item).getFluid(container);
+		} else if (item == ItemEnum.FLUIDPATTERN.getItem())
+		{
+			return new FluidStack(ItemFluidPattern.getFluid(itemStack), 0);
 		} else
 		{
 			return FluidContainerRegistry.getFluidForFilledItem(container);
@@ -33,24 +38,69 @@ public class FluidUtil
 		if (itemStack == null)
 			return false;
 		Item item = itemStack.getItem();
-		if (item instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(itemStack))
+		if (item instanceof IFluidContainerItem || item == ItemEnum.FLUIDPATTERN.getItem() || FluidContainerRegistry.isContainer(itemStack))
 		{
 			return true;
 		}
 		return false;
 	}
 
-	public static MutablePair<Integer, ItemStack> fillStack(ItemStack itemStack, FluidStack fluid, boolean doFill)
+	public static boolean isEmpty(ItemStack itemStack)
 	{
 		if (itemStack == null)
-			return null;
-		if (doFill)
-			itemStack = itemStack.copy();
-
+			return false;
 		Item item = itemStack.getItem();
 		if (item instanceof IFluidContainerItem)
 		{
-			int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, doFill);
+			FluidStack content = ((IFluidContainerItem) item).getFluid(itemStack);
+			return content == null || content.amount <= 0;
+		}
+		return item == ItemEnum.FLUIDPATTERN.getItem() || FluidContainerRegistry.isEmptyContainer(itemStack);
+	}
+
+	public static boolean isFilled(ItemStack itemStack)
+	{
+		if (itemStack == null)
+			return false;
+		Item item = itemStack.getItem();
+		if (item instanceof IFluidContainerItem)
+		{
+			FluidStack content = ((IFluidContainerItem) item).getFluid(itemStack);
+			return content != null && content.amount <= 0;
+		}
+		return FluidContainerRegistry.isFilledContainer(itemStack);
+	}
+
+	public static int getCapacity(ItemStack itemStack)
+	{
+		if (itemStack == null)
+			return 0;
+		Item item = itemStack.getItem();
+		if (item instanceof IFluidContainerItem)
+		{
+			return ((IFluidContainerItem) item).getCapacity(itemStack);
+		} else if (FluidContainerRegistry.isEmptyContainer(itemStack))
+		{
+			for (FluidContainerRegistry.FluidContainerData data : FluidContainerRegistry.getRegisteredFluidContainerData())
+			{
+				if (data != null && data.emptyContainer.isItemEqual(itemStack))
+				{
+					FluidStack interior = data.fluid;
+					return interior != null ? interior.amount : 0;
+				}
+			}
+		}
+		return 0;
+	}
+
+	public static MutablePair<Integer, ItemStack> fillStack(ItemStack itemStack, FluidStack fluid)
+	{
+		if (itemStack == null)
+			return null;
+		Item item = itemStack.getItem();
+		if (item instanceof IFluidContainerItem)
+		{
+			int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, true);
 			return new MutablePair<Integer, ItemStack>(filled, itemStack);
 		} else if (FluidContainerRegistry.isContainer(itemStack))
 		{
@@ -62,17 +112,14 @@ public class FluidUtil
 		return null;
 	}
 
-	public static MutablePair<Integer, ItemStack> drainStack(ItemStack itemStack, FluidStack fluid, boolean doDrain)
+	public static MutablePair<Integer, ItemStack> drainStack(ItemStack itemStack, FluidStack fluid)
 	{
 		if (itemStack == null)
 			return null;
-		if (doDrain)
-			itemStack = itemStack.copy();
-
 		Item item = itemStack.getItem();
 		if (item instanceof IFluidContainerItem)
 		{
-			FluidStack drained = ((IFluidContainerItem) item).drain(itemStack, fluid.amount, doDrain);
+			FluidStack drained = ((IFluidContainerItem) item).drain(itemStack, fluid.amount, true);
 			int amountDrained = drained != null && drained.getFluid() == fluid.getFluid() ? drained.amount : 0;
 			return new MutablePair<Integer, ItemStack>(amountDrained, itemStack);
 		} else if (FluidContainerRegistry.isContainer(itemStack))

@@ -112,7 +112,7 @@ public class PacketFluidStorage extends AbstractPacket
 		case 1:
 			if (player != null && player.inventoryContainer instanceof ContainerFluidStorage)
 			{
-				((ContainerFluidStorage) player.inventoryContainer).setSelectedFluid(currentFluid);
+				((ContainerFluidStorage) player.inventoryContainer).receiveSelectedFluid(currentFluid);
 			}
 			break;
 		case 2:

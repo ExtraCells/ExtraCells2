@@ -133,10 +133,10 @@ public class PacketFluidTerminal extends AbstractPacket
 			terminalFluid.setCurrentFluid(currentFluid);
 			break;
 		case 2:
-			if (player != null && player.isClientWorld() && player.openContainer instanceof ContainerFluidTerminal)
+			if (player != null && Minecraft.getMinecraft().currentScreen instanceof GuiFluidTerminal)
 			{
-				ContainerFluidTerminal container = (ContainerFluidTerminal) player.openContainer;
-				container.setSelectedFluid(currentFluid);
+				GuiFluidTerminal gui = (GuiFluidTerminal) Minecraft.getMinecraft().currentScreen;
+				((ContainerFluidTerminal) gui.getContainer()).receiveSelectedFluid(currentFluid);
 			}
 			break;
 		case 3:

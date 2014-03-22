@@ -1,6 +1,7 @@
 package extracells.registries;
 
 import extracells.Extracells;
+import extracells.item.ItemFluidPattern;
 import extracells.item.ItemPartECBase;
 import extracells.item.ItemStorageFluid;
 import extracells.item.ItemStoragePhysical;
@@ -11,7 +12,8 @@ public enum ItemEnum
 {
 	PARTITEM("part.base", new ItemPartECBase()),
 	FLUIDSTORAGE("storage.fluid", new ItemStorageFluid()),
-	FLUIDPHYSICAL("storage.physical", new ItemStoragePhysical());
+	FLUIDPHYSICAL("storage.physical", new ItemStoragePhysical()),
+	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern());
 
 	private final String internalName;
 	private Item item;

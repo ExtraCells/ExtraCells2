@@ -1,7 +1,11 @@
 package extracells.part;
 
 import appeng.api.config.Actionable;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.MachineSource;
+import appeng.api.networking.ticking.IGridTickable;
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
@@ -13,7 +17,6 @@ import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +32,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartFluidTerminal extends PartECBase implements IInventoryUpdateReceiver
+public class PartFluidTerminal extends PartECBase implements IGridTickable
 {
 	private Fluid currentFluid;
 	private List<ContainerFluidTerminal> containers = new ArrayList<ContainerFluidTerminal>();
@@ -175,60 +178,64 @@ public class PartFluidTerminal extends PartECBase implements IInventoryUpdateRec
 		return inventory;
 	}
 
-	@Override
-	public void onInventoryChanged()
+	public void doWork()
 	{
+		ItemStack secondSlot = inventory.getStackInSlot(1);
+		if (secondSlot != null && secondSlot.stackSize > 64)
+			return;
 		ItemStack container = inventory.getStackInSlot(0);
 		if (!FluidUtil.isFluidContainer(container))
 			return;
-
+		container = container.copy();
+		if (gridBlock == null)
+			return;
 		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
 		if (monitor == null)
 			return;
 
-		FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
-		if (containerFluid != null)
+		if (FluidUtil.isEmpty(container))
 		{
-			IAEFluidStack notAdded = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, new MachineSource(this));
-			FluidStack toDrain;
-			if (notAdded != null)
-			{
-				if (notAdded.getStackSize() == containerFluid.amount)
-					return;
-				toDrain = new FluidStack(containerFluid.fluidID, (int) (containerFluid.amount - notAdded.getStackSize()));
-			} else
-			{
-				toDrain = containerFluid.copy();
-			}
-			MutablePair<Integer, ItemStack> result = FluidUtil.drainStack(container, toDrain, false);
-			if (result != null)
-			{
-				int drained = result.getKey();
-				if (drained <= 0)
-					return;
-				toDrain.amount = drained;
-				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, new MachineSource(this));
-				fillSecondSlot(FluidUtil.drainStack(container, toDrain, false).getValue());
-				inventory.decrStackSize(0, 1);
-			}
-		} else
+			if (currentFluid == null)
+				return;
+			int capacity = FluidUtil.getCapacity(container);
+			IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, capacity), Actionable.SIMULATE, new MachineSource(this));
+			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
+			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(currentFluid, proposedAmount));
+			if (fillSecondSlot(filledContainer.getRight()))
+				monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, filledContainer.getLeft()), Actionable.MODULATE, new MachineSource(this));
+		} else if (FluidUtil.isFilled(container))
 		{
-			// TODO fill container
+			FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
+
 		}
 	}
 
-	public ItemStack fillSecondSlot(ItemStack itemStack)
+	public boolean fillSecondSlot(ItemStack itemStack)
 	{
 		ItemStack secondSlot = inventory.getStackInSlot(1);
 		if (secondSlot == null)
 		{
 			inventory.setInventorySlotContents(1, itemStack);
-			return itemStack;
+			return true;
 		} else
 		{
 			if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot))
-				return null;
-			return inventory.incrStackSize(1, itemStack.stackSize);
+				return false;
+			inventory.incrStackSize(1, itemStack.stackSize);
+			return true;
 		}
+	}
+
+	@Override
+	public TickingRequest getTickingRequest(IGridNode node)
+	{
+		return new TickingRequest(1, 20, false, false);
+	}
+
+	@Override
+	public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall)
+	{
+		doWork();
+		return TickRateModulation.FASTER;
 	}
 }

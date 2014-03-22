@@ -135,35 +135,33 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList)
 	{
 		fluidStackList = _fluidStackList;
-		setSelectedFluid(selectedFluid);
 		if (guiFluidStorage != null)
 			guiFluidStorage.updateFluids();
 	}
 
 	public void setSelectedFluid(Fluid _selectedFluid)
 	{
-		if (player.isClientWorld())
+		new PacketFluidStorage(player, _selectedFluid).sendPacketToServer();
+	}
+
+	public void receiveSelectedFluid(Fluid _selectedFluid)
+	{
+		selectedFluid = _selectedFluid;
+		if (selectedFluid != null)
 		{
-			selectedFluid = _selectedFluid;
-			if (selectedFluid != null)
+			for (IAEFluidStack stack : fluidStackList)
 			{
-				for (IAEFluidStack stack : fluidStackList)
+				if (stack != null && stack.getFluid() == selectedFluid)
 				{
-					if (stack != null && stack.getFluid() == selectedFluid)
-					{
-						selectedFluidStack = stack;
-						break;
-					}
+					selectedFluidStack = stack;
+					break;
 				}
-			} else
-			{
-				selectedFluidStack = null;
 			}
-			guiFluidStorage.updateSelectedFluid();
 		} else
 		{
-			new PacketFluidStorage(player, selectedFluid).sendPacketToServer();
+			selectedFluidStack = null;
 		}
+		guiFluidStorage.updateSelectedFluid();
 	}
 
 	public IAEFluidStack getSelectedFluidStack()

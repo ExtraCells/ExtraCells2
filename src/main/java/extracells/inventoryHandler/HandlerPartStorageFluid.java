@@ -137,6 +137,8 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	{
 		ForgeDirection orientation = node.getSide();
 		TileEntity hostTile = node.getHostTile();
+		if (hostTile == null)
+			return;
 		TileEntity tileEntity = hostTile.getWorldObj().getTileEntity(hostTile.xCoord + orientation.offsetX, hostTile.yCoord + orientation.offsetY, hostTile.zCoord + orientation.offsetZ);
 		tank = null;
 		if (tileEntity instanceof IFluidHandler)
