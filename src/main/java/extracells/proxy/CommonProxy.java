@@ -19,10 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStreamReader;
+import java.io.*;
 
 @SuppressWarnings("unused")
 public class CommonProxy implements IGuiHandler
@@ -41,7 +38,7 @@ public class CommonProxy implements IGuiHandler
 			recipeHandler.parseRecipes(new ExternalRecipeLoader(), externalRecipe.getPath());
 		} else
 		{
-			recipeHandler.parseRecipes(new InternalRecipeLoader(), "/assets/extracells/extracells.recipe");
+			recipeHandler.parseRecipes(new InternalRecipeLoader(), "/assets/extracells/recipes/main.recipe");
 		}
 		recipeHandler.registerHandlers();
 	}
@@ -51,12 +48,12 @@ public class CommonProxy implements IGuiHandler
 		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
 	}
 
-	public void RegisterRenderers()
+	public void registerRenderers()
 	{
 		// Only Clientside
 	}
 
-	public void RegisterItems()
+	public void registerItems()
 	{
 		for (ItemEnum current : ItemEnum.values())
 		{
@@ -64,7 +61,7 @@ public class CommonProxy implements IGuiHandler
 		}
 	}
 
-	public void RegisterBlocks()
+	public void registerBlocks()
 	{
 		for (BlockEnum current : BlockEnum.values())
 		{
@@ -129,7 +126,9 @@ public class CommonProxy implements IGuiHandler
 		@Override
 		public BufferedReader getFile(String path) throws Exception
 		{
-			return new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(path)));
+			InputStream resourceAsStream = getClass().getResourceAsStream(path);
+			InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
+			return new BufferedReader(reader);
 		}
 	}
 

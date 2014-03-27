@@ -202,16 +202,29 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
 			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(currentFluid, proposedAmount));
 			if (fillSecondSlot(filledContainer.getRight()))
+			{
 				monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, filledContainer.getLeft()), Actionable.MODULATE, new MachineSource(this));
+				decreaseFirstSlot();
+			}
 		} else if (FluidUtil.isFilled(container))
 		{
 			FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
-
+			IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, new MachineSource(this));
+			if (notInjected != null)
+				return;
+			MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
+			if (fillSecondSlot(drainedContainer.getRight()))
+			{
+				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, new MachineSource(this));
+				decreaseFirstSlot();
+			}
 		}
 	}
 
 	public boolean fillSecondSlot(ItemStack itemStack)
 	{
+		if (itemStack == null)
+			return false;
 		ItemStack secondSlot = inventory.getStackInSlot(1);
 		if (secondSlot == null)
 		{
@@ -224,6 +237,14 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable
 			inventory.incrStackSize(1, itemStack.stackSize);
 			return true;
 		}
+	}
+
+	public void decreaseFirstSlot()
+	{
+		ItemStack slot = inventory.getStackInSlot(0);
+		slot.stackSize--;
+		if (slot.stackSize <= 0)
+			inventory.setInventorySlotContents(0, null);
 	}
 
 	@Override

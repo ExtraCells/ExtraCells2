@@ -1,4 +1,4 @@
-package extracells.inventoryHandler;
+package extracells.inventory;
 
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
@@ -135,9 +135,12 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
 	public void onNeighborChange()
 	{
+		tank = null;
 		ForgeDirection orientation = node.getSide();
 		TileEntity hostTile = node.getHostTile();
 		if (hostTile == null)
+			return;
+		if (hostTile.getWorldObj() == null)
 			return;
 		TileEntity tileEntity = hostTile.getWorldObj().getTileEntity(hostTile.xCoord + orientation.offsetX, hostTile.yCoord + orientation.offsetY, hostTile.zCoord + orientation.offsetZ);
 		tank = null;

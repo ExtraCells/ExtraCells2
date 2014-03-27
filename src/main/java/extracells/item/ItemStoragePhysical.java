@@ -3,10 +3,10 @@ package extracells.item;
 import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.data.IAEItemStack;
-import extracells.Extracells;
 import extracells.util.inventory.ECCellInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,11 +23,10 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		setMaxStackSize(1);
 		setMaxDamage(0);
 		setHasSubtypes(true);
-		setCreativeTab(Extracells.ModTab);
 	}
 
 	public static final String[] suffixes =
-	{ "256k", "1024k", "4096k", "16348k" };
+	{ "256k", "1024k", "4096k", "16384k" };
 	public static final int[] bytes_cell =
 	{ 262144, 1048576, 4194304, 16777216 };
 	public static final int[] types_cell =
@@ -61,7 +60,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return "item.storage.physical." + suffixes[itemStack.getItemDamage()];
+		return "extracells.item.storage.physical." + suffixes[itemStack.getItemDamage()];
 	}
 
 	@Override
@@ -138,5 +137,13 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		if (!is.hasTagCompound())
 			is.setTagCompound(new NBTTagCompound());
 		is.getTagCompound().setInteger("fuzzyMode", fzMode.ordinal());
+	}
+
+	@SuppressWarnings(
+	{ "rawtypes", "unchecked" })
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+	{
+		// TODO
 	}
 }

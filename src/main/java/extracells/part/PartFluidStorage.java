@@ -12,7 +12,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.util.AEColor;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.GuiBusFluidStorage;
-import extracells.inventoryHandler.HandlerPartStorageFluid;
+import extracells.inventory.HandlerPartStorageFluid;
 import extracells.network.packet.other.IFluidSlotPart;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.render.TextureManager;

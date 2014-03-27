@@ -1,6 +1,6 @@
 package extracells.render.item;
 
-import extracells.render.model.ModelCertusTank;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,7 +11,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
+
+import extracells.render.model.ModelCertusTank;
 
 public class ItemRendererCertusTank implements IItemRenderer
 {
@@ -34,10 +37,16 @@ public class ItemRendererCertusTank implements IItemRenderer
 	{
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_tank.png"));
 		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-		GL11.glScalef(1.0F, -1F, -1F);
+		GL11.glScalef(1, -1, -1);
 		model.render(0.0625f);
-		GL11.glScalef(1.0F, -1F, 1.0F);
+		GL11.glScalef(1, -1, 1);
 		model.render(0.0625f);
 
 		if (item != null && item.hasTagCompound())
@@ -52,46 +61,29 @@ public class ItemRendererCertusTank implements IItemRenderer
 				Tessellator tessellator = Tessellator.instance;
 				RenderBlocks renderer = new RenderBlocks();
 
-				GL11.glScalef(1.0F, 1.0F, -1.0F);
+				GL11.glScalef(1, 1, -1);
 				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92, (float) storedFluid.amount / (float) tankCapacity * 0.999F, 0.92F);
 				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 				GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-
-				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-				GL11.glEnable(GL11.GL_CULL_FACE);
-				GL11.glDisable(GL11.GL_LIGHTING);
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				Block waterBlock = FluidRegistry.WATER.getBlock();
 
 				tessellator.startDrawingQuads();
 				tessellator.setNormal(0.0F, -1F, 0.0F);
-				renderer.renderFaceYNeg(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceYNeg(waterBlock, 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.setNormal(0.0F, 1.0F, 0.0F);
-				renderer.renderFaceYPos(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceYPos(waterBlock, 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.setNormal(0.0F, 0.0F, -1F);
-				renderer.renderFaceZNeg(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceZNeg(waterBlock, 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.setNormal(0.0F, 0.0F, 1.0F);
-				renderer.renderFaceZPos(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceZPos(waterBlock, 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.setNormal(-1F, 0.0F, 0.0F);
-				renderer.renderFaceXNeg(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
-				tessellator.draw();
-				tessellator.startDrawingQuads();
+				renderer.renderFaceXNeg(waterBlock, 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.setNormal(1.0F, 0.0F, 0.0F);
-				renderer.renderFaceXPos(FluidRegistry.WATER.getBlock(), 0.0D, 0.0D, 0.0D, fluidIcon);
+				renderer.renderFaceXPos(waterBlock, 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.draw();
-
-				GL11.glPopAttrib();
 			}
 		}
-
+		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
 }

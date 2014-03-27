@@ -1,5 +1,6 @@
 package extracells;
 
+import appeng.api.AEApi;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -13,6 +14,7 @@ import extracells.network.ChannelHandler;
 import extracells.proxy.CommonProxy;
 import extracells.registries.ItemEnum;
 import extracells.render.RenderHandler;
+import extracells.util.NameHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -59,14 +61,15 @@ public class Extracells
 		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true);
 		config.save();
 
-		proxy.RegisterItems();
-		proxy.RegisterBlocks();
+		proxy.registerItems();
+		proxy.registerBlocks();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		proxy.RegisterRenderers();
+		AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
+		proxy.registerRenderers();
 		proxy.registerTileEntities();
 		proxy.addRecipes(configFolder);
 		ChannelHandler.setChannels(NetworkRegistry.INSTANCE.newChannel("ExtraCells", new ChannelHandler()));

@@ -19,7 +19,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	public void RegisterRenderers()
+	public void registerRenderers()
 	{
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()), new ItemRendererCertusTank());
 	}

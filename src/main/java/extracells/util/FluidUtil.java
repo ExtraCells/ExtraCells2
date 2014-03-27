@@ -104,9 +104,12 @@ public class FluidUtil
 			return new MutablePair<Integer, ItemStack>(filled, itemStack);
 		} else if (FluidContainerRegistry.isContainer(itemStack))
 		{
-			FluidContainerRegistry.fillFluidContainer(fluid, itemStack);
-			FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(itemStack);
-			return new MutablePair<Integer, ItemStack>(filled != null ? filled.amount : 0, itemStack);
+			ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluid, itemStack);
+			FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
+			return new MutablePair<Integer, ItemStack>(filled != null ? filled.amount : 0, filledContainer);
+		} else if (item == ItemEnum.FLUIDPATTERN.getItem())
+		{
+			return new MutablePair<Integer, ItemStack>(0, ItemFluidPattern.getPatternForFluid(fluid.getFluid()));
 		}
 
 		return null;

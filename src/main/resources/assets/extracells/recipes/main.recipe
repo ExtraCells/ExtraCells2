@@ -1,0 +1,6 @@
+alias=mc -> minecraft
+alias=ec -> extracells
+
+shapeless=
+	mc:iron_ingot mc:iron_ingot -> ec:fluidCell1k
+	

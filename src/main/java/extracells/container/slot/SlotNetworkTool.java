@@ -1,11 +1,11 @@
 package extracells.container.slot;
 
-import appeng.api.AEApi;
-import appeng.api.definitions.Materials;
-import appeng.api.implementations.guiobjects.INetworkTool;
+import appeng.api.implementations.items.IUpgradeModule;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import appeng.api.implementations.guiobjects.INetworkTool;
 
 public class SlotNetworkTool extends Slot
 {
@@ -18,21 +18,14 @@ public class SlotNetworkTool extends Slot
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemstack)
+	public boolean isItemValid(ItemStack itemStack)
 	{
-		if (itemstack == null)
+		if (itemStack == null)
 			return false;
-		Materials materials = AEApi.instance().materials();
-		if (materials.materialCardRedstone.sameAs(itemstack))
-			return true;
-		else if (materials.materialCardSpeed.sameAs(itemstack))
-			return true;
-		else if (materials.materialCardFuzzy.sameAs(itemstack))
-			return true;
-		else if (materials.materialCardCapacity.sameAs(itemstack))
-			return true;
-		else if (materials.materialCardInverter.sameAs(itemstack))
-			return true;
-		return false;
+		Item item = itemStack.getItem();
+		if (!(item instanceof IUpgradeModule))
+			return false;
+		IUpgradeModule upgradeModule = (IUpgradeModule) item;
+		return upgradeModule.getType(itemStack) != null;
 	}
 }

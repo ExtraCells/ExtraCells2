@@ -3,18 +3,31 @@
 //**********//
 
 //Items
-item.storage.physical.256k.name=ME 256k Storage
-item.storage.physical.1024k.name.name=ME 1M Storage
-item.storage.physical.4096k.name=ME 4M Storage
-item.storage.physical.16348k.name=ME 16M Storage
-item.storage.fluid.1k.name=ME 1k Fluid Storage
-item.storage.fluid.4k.name=ME 4k Fluid Storage
-item.storage.fluid.16k.name=ME 16k Fluid Storage
-item.storage.fluid.64k.name=ME 64k Fluid Storage
-item.storage.fluid.256k.name=ME 256k Fluid Storage
-item.storage.fluid.1024k.name=ME 1M Fluid Storage
-item.storage.fluid.4096k.name=ME 4M Fluid Storage
-item.storage.fluid.16384k.name=ME 16M Fluid Storage
+extracells.item.storage.physical.256k.name=ME 256k Storage
+extracells.item.storage.physical.1024k.name=ME 1M Storage
+extracells.item.storage.physical.4096k.name=ME 4M Storage
+extracells.item.storage.physical.16348k.name=ME 16M Storage
+extracells.item.storage.fluid.1k.name=ME 1k Fluid Storage
+extracells.item.storage.fluid.4k.name=ME 4k Fluid Storage
+extracells.item.storage.fluid.16k.name=ME 16k Fluid Storage
+extracells.item.storage.fluid.64k.name=ME 64k Fluid Storage
+extracells.item.storage.fluid.256k.name=ME 256k Fluid Storage
+extracells.item.storage.fluid.1024k.name=ME 1M Fluid Storage
+extracells.item.storage.fluid.4096k.name=ME 4M Fluid Storage
+extracells.item.storage.component.physical.kilo.name=Kilo Storage Cluster
+extracells.item.storage.component.physical.mega.name=Mega Storage Cluster
+extracells.item.storage.component.physical.giga.name=Giga Storage Cluster
+extracells.item.storage.component.physical.tera.name=Tera Storage Cluster
+extracells.item.storage.component.fluid.cell.name=Fluid Storage Cell
+extracells.item.storage.component.fluid.segment.name=Fluid Storage Segment
+extracells.item.storage.component.fluid.block.name=Fluid Storage Block
+extracells.item.storage.component.fluid.cluster.name=Fluid Storage Cluster
+extracells.item.storage.component.fluid.kilo.name=Kilo Fluid Cluster
+extracells.item.storage.component.fluid.mega.name=Mega Fluid Cluster
+extracells.item.storage.component.fluid.giga.name=Giga Fluid Cluster
+extracells.item.storage.casing.physical.name=Advanced Storage Cell Housing
+extracells.item.storage.casing.fluid.name=Advanced Fluid Storage Cell Housing
+extracells.item.terminal.fluid.wireless.name=Wireless ME Fluid Terminal
 
 //Creative Tab
 itemGroup.Extra_Cells=Extra Cells
@@ -34,8 +47,10 @@ extracells.part.fluid.plane.formation.name=ME Fluid Formation Plane
 extracells.block.certustank.name=ME Certus Tank
 
 //Tooltips and Chat-Messages
-tooltip.amount=Amount
-tooltip.fluid=Fluid
-tooltip.fluidmode=Moving-Mode
-tooltip.fluidmode.move=Move %d mb/t (%d mb/s)!
-tooltip.fluidmode.cost=Costs %d ae/t
+extracells.tooltip.amount=Amount
+extracells.tooltip.fluid=Fluid
+extracells.tooltip.storage.physical.types=%s of %s item types used.
+extracells.tooltip.storage.fluid.types=%s of %s fluid types used.
+extracells.tooltip.storage.physical.bytes=%s of %s item bytes used.
+extracells.tooltip.storage.fluid.bytes=%s of %s fluid bytes used.
+extracells.tooltip.storage.fluid.content=contains %s mB of fluid.

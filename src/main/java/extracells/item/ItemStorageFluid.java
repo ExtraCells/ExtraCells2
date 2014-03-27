@@ -7,10 +7,8 @@ import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
-import extracells.inventoryHandler.HandlerItemStorageFluid;
+import extracells.inventory.HandlerItemStorageFluid;
 import extracells.proxy.CommonProxy;
 import extracells.render.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -29,10 +27,10 @@ import java.util.List;
 public class ItemStorageFluid extends Item implements ICellHandler
 {
 	public static final String[] suffixes =
-	{ "1k", "4k", "16k", "64k", "256k", "1024k", "4096k", "16348k" };
+	{ "1k", "4k", "16k", "64k", "256k", "1024k", "4096k" };
 
 	public static final int[] spaces =
-	{ 1024, 4096, 16348, 65536, 262144, 1048576, 4194304, 16777216 };
+	{ 1024, 4096, 16348, 65536, 262144, 1048576, 4194304 };
 
 	private IIcon[] icons;
 
@@ -44,7 +42,7 @@ public class ItemStorageFluid extends Item implements ICellHandler
 		setHasSubtypes(true);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@Override
 	public IIcon getIconFromDamage(int dmg)
 	{
 		int j = MathHelper.clamp_int(dmg, 0, suffixes.length);
@@ -64,7 +62,6 @@ public class ItemStorageFluid extends Item implements ICellHandler
 
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
-	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List listSubItems)
 	{
@@ -74,9 +71,10 @@ public class ItemStorageFluid extends Item implements ICellHandler
 		}
 	}
 
+	@Override
 	public String getUnlocalizedName(ItemStack itemStack)
 	{
-		return "item.storage.fluid." + suffixes[itemStack.getItemDamage()];
+		return "extracells.item.storage.fluid." + suffixes[itemStack.getItemDamage()];
 	}
 
 	@Override
@@ -155,10 +153,10 @@ public class ItemStorageFluid extends Item implements ICellHandler
 		long used_types = cellHandler.usedTypes();
 		long total_types = cellHandler.totalTypes();
 
-		list.add((used_bytes / 250) + " of " + total_bytes / 250 + " bytes used");
-		list.add(used_types + " of " + total_types + " fluid types used");
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), used_bytes / 250, total_bytes / 250));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), used_types, total_types));
 		if (used_bytes != 0)
-			list.add("contains " + used_bytes + "mB of fluid");
+			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), used_bytes));
 
 		if (partitioned)
 		{
@@ -166,6 +164,7 @@ public class ItemStorageFluid extends Item implements ICellHandler
 		}
 	}
 
+	@Override
 	public EnumRarity getRarity(ItemStack par1)
 	{
 		return EnumRarity.epic;

@@ -1,4 +1,4 @@
-package extracells.inventoryHandler;
+package extracells.inventory;
 
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
@@ -35,7 +35,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (!_storageStack.hasTagCompound())
 			_storageStack.setTagCompound(new NBTTagCompound());
 		stackTag = _storageStack.getTagCompound();
-		totalTypes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItem()).maxTypes(_storageStack) * 250;
+		totalTypes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItem()).maxTypes(_storageStack);
 		totalBytes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItem()).maxStorage(_storageStack) * 250;
 
 		for (int i = 0; i < totalTypes; i++)

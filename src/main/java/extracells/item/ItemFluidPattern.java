@@ -24,6 +24,12 @@ public class ItemFluidPattern extends Item
 		return fluid.getIcon();
 	}
 
+	@Override
+	public int getSpriteNumber()
+	{
+		return 0;
+	}
+
 	public static Fluid getFluid(ItemStack itemStack)
 	{
 		if (!itemStack.hasTagCompound())

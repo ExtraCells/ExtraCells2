@@ -1,19 +1,19 @@
 package extracells.registries;
 
-import extracells.Extracells;
-import extracells.item.ItemFluidPattern;
-import extracells.item.ItemPartECBase;
-import extracells.item.ItemStorageFluid;
-import extracells.item.ItemStoragePhysical;
 import net.minecraft.item.Item;
 import net.minecraft.util.StatCollector;
+import extracells.Extracells;
+import extracells.item.*;
 
 public enum ItemEnum
 {
 	PARTITEM("part.base", new ItemPartECBase()),
 	FLUIDSTORAGE("storage.fluid", new ItemStorageFluid()),
-	FLUIDPHYSICAL("storage.physical", new ItemStoragePhysical()),
-	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern());
+	PHYSICALSTORAGE("storage.physical", new ItemStoragePhysical()),
+	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern()),
+	FLUIDWIRELESSTERMINAL("terminal.fluid.wireless", new ItemWirelessTerminalFluid()),
+	STORAGECOMPONET("storage.component", new ItemStorageComponent()),
+	STORAGECASING("storage.casing", new ItemStorageCasing());
 
 	private final String internalName;
 	private Item item;
