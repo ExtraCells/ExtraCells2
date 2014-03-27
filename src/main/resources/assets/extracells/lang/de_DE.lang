@@ -1,91 +1,56 @@
-
 //**********//
 //EXTRACELLS//
 //**********//
 
 //Items
-item.storage.physical.256k=256k ME-Speicher
-item.storage.physical.1024k=1M ME-Speicher
-item.storage.physical.4096k=4M ME-Speicher
-item.storage.physical.16348k=16M ME-Speicher
-item.storage.physical.container=ME-Block-Container
-item.storage.physical.adjustable=Regulierbarer ME-Speicher
-item.storage.fluid.1k=1k ME-Flüssigkeitsspeicher
-item.storage.fluid.4k=4kME-Flüssigkeitsspeicher
-item.storage.fluid.16k=16k ME-Flüssigkeitsspeicher
-item.storage.fluid.64k=64k ME-Flüssigkeitsspeicher
-item.storage.fluid.256k=256k ME-Flüssigkeitsspeicher
-item.storage.fluid.1m=1M ME-Flüssigkeitsspeicher
-item.storage.fluid.4m=4M ME-Flüssigkeitsspeicher
-item.storage.fluid.16m=16M ME-Flüssigkeitsspeicher
-item.storagecomponent.physical.kilo=Kilo-Speichercluster
-item.storagecomponent.physical.mega=Mega-Speichercluster
-item.storagecomponent.physical.giga=Giga-Speichercluster
-item.storagecomponent.physical.tera=Tera-Speichercluster
-item.storagecomponent.fluid.cell=Flüssigkeiten-Speicherzelle
-item.storagecomponent.fluid.segment=Flüssigkeiten-Speichersegment
-item.storagecomponent.fluid.block=Flüssigkeiten-Speicherblock
-item.storagecomponent.fluid.cluster=Flüssigkeiten-Speichercluster
-item.storage.physical_secure.encrypted=Verschlüsselbare Zelle - Verschlüsselt
-item.storage.physical_secure.decrypted=Verschlüsselbare Zelle - Entschlüsselt
-item.casing.advanced.physical=Erweitertes Speichergehäuse
-item.casing.advanced.fluid=Erweitertes Flüssigkeiten-Speichergehäuse
+extracells.item.storage.physical.256k.name=256k ME-Speicher
+extracells.item.storage.physical.1024k.name=1M ME-Speicher
+extracells.item.storage.physical.4096k.name=4M ME-Speicher
+extracells.item.storage.physical.16348k.name=16M ME-Speicher
+extracells.item.storage.fluid.1k.name=1k ME-FlÃ¼ssigkeitsspeicher
+extracells.item.storage.fluid.4k.name=4k ME-FlÃ¼ssigkeitsspeicher
+extracells.item.storage.fluid.16k.name=16k ME-FlÃ¼ssigkeitsspeicher
+extracells.item.storage.fluid.64k.name=64k ME-FlÃ¼ssigkeitsspeicher
+extracells.item.storage.fluid.256k.name=256k ME-FlÃ¼ssigkeitsspeicher
+extracells.item.storage.fluid.1024k.name=1M ME-FlÃ¼ssigkeitsspeicher
+extracells.item.storage.fluid.4096k.name=4M ME-FlÃ¼ssigkeitsspeicher
+extracells.item.storage.component.physical.kilo.name=Kilo-Speichercluster
+extracells.item.storage.component.physical.mega.name=Mega-Speichercluster
+extracells.item.storage.component.physical.giga.name=Giga-Speichercluster
+extracells.item.storage.component.physical.tera.name=Tera-Speichercluster
+extracells.item.storage.component.fluid.cell.name=FlÃ¼ssigkeits-Speicherzelle
+extracells.item.storage.component.fluid.segment.name=FlÃ¼ssigkeits-Speichersegment
+extracells.item.storage.component.fluid.block.name=FlÃ¼ssigkeits-Speicherblock
+extracells.item.storage.component.fluid.cluster.name=FlÃ¼ssigkeits-Speichercluster
+extracells.item.storage.component.fluid.kilo.name=Kilo-FlÃ¼ssigkeitscluster
+extracells.item.storage.component.fluid.mega.name=Mega-FlÃ¼ssigkeitscluster
+extracells.item.storage.component.fluid.giga.name=Giga-FlÃ¼ssigkeitscluster
+extracells.item.storage.casing.physical.name=Erweitertes SpeichergehÃ¤use
+extracells.item.storage.casing.fluid.name=Erweitertes FlÃ¼ssigkeits-SpeichergehÃ¤use
+extracells.item.terminal.fluid.wireless.name=Drahtlose FlÃ¼ssigkeits-Zugangskonsole
+
+//Creative Tab
+itemGroup.Extra_Cells=Extra Cells
+
+//Item Groups
+extracells.fluid.IO=ME-FlÃ¼ssigkeits-Export-/Importbus
+extracells.fluid.plane=ME-FlÃ¼ssigkeits-Annihilations-/Formationsfeld
+//Parts
+extracells.part.fluid.export.name=ME-FlÃ¼ssigkeits-Exportbus
+extracells.part.fluid.import.name=ME-FlÃ¼ssigkeits-Importbus
+extracells.part.fluid.storage.name=ME-FlÃ¼ssigkeits-Speicherbus
+extracells.part.fluid.terminal.name=ME-FlÃ¼ssigkeits-Terminal
+extracells.part.fluid.plane.annihilation.name=ME-FlÃ¼ssigkeits-Annihilationsfeld
+extracells.part.fluid.plane.formation.name=ME-FlÃ¼ssigkeits-Formationsfeld
 
 //Blocks
-tile.block.solderingstation.name=Lötstation
-tile.block.mebattery.name=ME-Reservebatterie
-tile.block.medropper.name=ME-Item-Dropper
-tile.block.hardmedrive.name=Explosionssicheres ME-Laufwerk
-tile.block.fluid.bus.import.name=ME-Flüssigkeits-Importbus
-tile.block.fluid.bus.export.name=ME-Flüssigkeits-Exportbus
-tile.block.fluid.bus.storage.name=ME-Flüssigkeits-Speicherbus
-tile.block.bus.supplier.name=ME-Item-Versorgungsbus
-tile.block.fluid.terminal.name=ME-Flüssigkeits-Terminal
-tile.block.fluid.transitionplane.name=ME-Flüssigkeits-Übergangsmembran
-tile.block.certustank.name=ME-Certus-Tank
-tile.block.walrus.name=Walross
-tile.block.fluid.levelemitter.name=ME-Flüssigkeits-Füllstands-Emitter
-tile.block.fluid.interface.name=ME-Flüssigkeits-Schnittstelle
-tile.block.fluid.void.name=Flüssigkeits-Leerraum
-tile.block.fluid.crafter.name=ME-Flüssigkeits-Fertigungskammer
-tile.block.fluid.monitor.storage.name=ME-Flüssigkeits-Speichermonitor
+extracells.block.certustank.name=ME-Certus-Tank
 
 //Tooltips and Chat-Messages
-tooltip.belongsto=Dieser Speicher gehört
-tooltip.notyours=Du bist nicht der Besitzer dieses Speichers!
-tooltip.accessgranted=Zugriff erlaubt!
-tooltip.storageencrypted=Speicher verschlüsselt!
-tooltip.empty1=Leerer
-tooltip.empty2=Leerer
-tooltip.block=Block
-tooltip.equaltrade1=Gleicher-Handel-Modus (1*1)
-tooltip.equaltrade3=Gleicher-Handel-Modus (3*3)
-tooltip.placement=Placement Mode
-tooltip.mode=Modus
-tooltip.onlyblocks=Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container
-tooltip.item=Item 
-tooltip.fluidmode=Transport-Modus
-tooltip.fluidmode.move=%d mb/t (d mb/s) bewegen!
-tooltip.fluidmode.cost=Kostet %d ae/t 
-tooltip.dropperlocked=Dropper Gesperrt
-tooltip.dropperunlocked=Dropper Entsperrt 
-tooltip.dropset=Drop verstellt zu 
-tooltip.amount=Menge 
-tooltip.fluid=Flüssigkeit 
-tooltip.solderingwarning.tutorial=Packe einen Regulierbaren ME-Speicher in deine Hotbar und halte ihn beim Benutzen der Lötstation!
-tooltip.solderingwarning.nospacestoragecell=Sorge für Platz in deinem Inventar, um den ME-Speicher wiederzubekommen!
-tooltip.solderingwarning.nospaceconversionmatrix=Sorge für Platz in deinem Inventar, um die Umrechnungs-Matrix wiederzubekommen!
-tooltip.solderingwarning.needstoragecell=Um die Größe deines Speichers zu upgraden, brauchst du einen ME-Speicher je 2048 Bytes!
-tooltip.solderingwarning.needconversionmatrix=Um die Zahl der Typen deines Speichers zu upgraden, brauchst du eine Umrechnungs-Matrix pro Typ!
-tooltip.solderingwarning.cellnotempty=Diese Zelle ist nicht leer!
-tooltip.direction.0=Unten
-tooltip.direction.1=Oben
-tooltip.direction.2=Norden
-tooltip.direction.3=Süden
-tooltip.direction.4=Westen
-tooltip.direction.5=Osten
-tooltip.direction.6=Unbekannt
-
-//Fluid API Fix
-fluid.tile.water=Wasser
-fluid.tile.lava=Lava
+extracells.tooltip.amount=Menge
+extracells.tooltip.fluid=FlÃ¼ssigkeit
+extracells.tooltip.storage.physical.types=%s von %s Item-Typen verwendet.
+extracells.tooltip.storage.fluid.types=%s von %s FlÃ¼ssigkeits-Typen verwendet.
+extracells.tooltip.storage.physical.bytes=%s von %s Item-Bytes verwendet.
+extracells.tooltip.storage.fluid.bytes=%s von %s FlÃ¼ssigkeits-Bytes verwendet.
+extracells.tooltip.storage.fluid.content=EnthÃ¤lt %s mB FlÃ¼ssigkeit.
