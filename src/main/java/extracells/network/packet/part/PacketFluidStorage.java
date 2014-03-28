@@ -17,8 +17,8 @@ import java.io.IOException;
 
 public class PacketFluidStorage extends AbstractPacket
 {
-	IItemList<IAEFluidStack> fluidStackList;
-	Fluid currentFluid;
+	private IItemList<IAEFluidStack> fluidStackList;
+	private Fluid currentFluid;
 
 	@SuppressWarnings("unused")
 	public PacketFluidStorage()
@@ -116,11 +116,17 @@ public class PacketFluidStorage extends AbstractPacket
 			}
 			break;
 		case 2:
-			if (player != null && player.isClientWorld())
+			if (player != null)
 			{
-				if (player.inventoryContainer instanceof ContainerFluidStorage)
+				if (player.isClientWorld())
 				{
-					((ContainerFluidStorage) player.inventoryContainer).forceFluidUpdate();
+					if (player.inventoryContainer instanceof ContainerFluidStorage)
+					{
+						((ContainerFluidStorage) player.inventoryContainer).forceFluidUpdate();
+					}
+				} else if (player.inventoryContainer instanceof ContainerFluidStorage)
+				{
+					((ContainerFluidStorage) player.inventoryContainer).doWork();
 				}
 			}
 			break;

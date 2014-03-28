@@ -98,6 +98,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(guiLeft, guiTop - 18, 0, 0, xSize, ySize);
 		searchbar.drawTextBox();
+		new PacketFluidStorage(player).sendPacketToServer();
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		rh.setBounds(7, 7, 11, 9, 9, 14);
 		rh.renderBlock(x, y, z, renderer);
 
-		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[2]);
+		rh.setTexture(isPowering() ? TextureManager.LEVEL_FRONT.getTextures()[2] : TextureManager.LEVEL_FRONT.getTextures()[1]);
 		rh.setBounds(7, 7, 14, 9, 9, 16);
 		rh.renderBlock(x, y, z, renderer);
 	}

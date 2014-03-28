@@ -6,7 +6,7 @@
 extracells.item.storage.physical.256k.name=ME 256k Storage
 extracells.item.storage.physical.1024k.name=ME 1M Storage
 extracells.item.storage.physical.4096k.name=ME 4M Storage
-extracells.item.storage.physical.16348k.name=ME 16M Storage
+extracells.item.storage.physical.16384k.name=ME 16M Storage
 extracells.item.storage.fluid.1k.name=ME 1k Fluid Storage
 extracells.item.storage.fluid.4k.name=ME 4k Fluid Storage
 extracells.item.storage.fluid.16k.name=ME 16k Fluid Storage
@@ -54,3 +54,4 @@ extracells.tooltip.storage.fluid.types=%s of %s fluid types used.
 extracells.tooltip.storage.physical.bytes=%s of %s item bytes used.
 extracells.tooltip.storage.fluid.bytes=%s of %s fluid bytes used.
 extracells.tooltip.storage.fluid.content=contains %s mB of fluid.
+extracells.tooltip.storage.physical.content=contains %s items.

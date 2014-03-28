@@ -148,15 +148,12 @@ public class ItemStorageFluid extends Item implements ICellHandler
 			return;
 		HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
 		Boolean partitioned = cellHandler.isPreformatted();
-		long used_bytes = cellHandler.usedBytes();
-		long total_bytes = cellHandler.totalBytes();
-		long used_types = cellHandler.usedTypes();
-		long total_types = cellHandler.totalTypes();
+		long usedBytes = cellHandler.usedBytes();
 
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), used_bytes / 250, total_bytes / 250));
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), used_types, total_types));
-		if (used_bytes != 0)
-			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), used_bytes));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
+		if (usedBytes != 0)
+			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes));
 
 		if (partitioned)
 		{

@@ -161,9 +161,9 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 			{
 				if (slotnumber == 0)
 				{
-					if (!mergeItemStack(itemstack1, 1, 36, false))
+					if (!mergeItemStack(itemstack1, 2, 36, false))
 						return null;
-				} else if (!mergeItemStack(itemstack1, 0, 0, false))
+				} else if (!mergeItemStack(itemstack1, 0, 1, false))
 				{
 					return null;
 				}

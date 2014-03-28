@@ -1,7 +1,9 @@
 package extracells.container;
 
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
 import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
@@ -21,6 +23,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class ContainerFluidStorage extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer, IInventoryUpdateReceiver
 {
@@ -187,9 +191,9 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
 			{
 				if (slotnumber == 0)
 				{
-					if (!mergeItemStack(itemstack1, 1, 36, false))
+					if (!mergeItemStack(itemstack1, 2, 36, false))
 						return null;
-				} else if (!mergeItemStack(itemstack1, 0, 0, false))
+				} else if (!mergeItemStack(itemstack1, 0, 1, false))
 				{
 					return null;
 				}
@@ -212,5 +216,72 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
 	public void onInventoryChanged()
 	{
 
+	}
+
+	public void doWork()
+	{
+		ItemStack secondSlot = inventory.getStackInSlot(1);
+		if (secondSlot != null && secondSlot.stackSize > 64)
+			return;
+		ItemStack container = inventory.getStackInSlot(0);
+		if (!FluidUtil.isFluidContainer(container))
+			return;
+		if (monitor == null)
+			return;
+
+		if (FluidUtil.isEmpty(container))
+		{
+			if (selectedFluid == null)
+				return;
+			int capacity = FluidUtil.getCapacity(container);
+			IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(player, null));
+			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
+			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(selectedFluid, proposedAmount));
+			if (fillSecondSlot(filledContainer.getRight()))
+			{
+				monitor.extractItems(FluidUtil.createAEFluidStack(selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(player, null));
+				decreaseFirstSlot();
+			}
+		} else if (FluidUtil.isFilled(container))
+		{
+			FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
+			IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, new PlayerSource(player, null));
+			if (notInjected != null)
+				return;
+			MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
+			if (fillSecondSlot(drainedContainer.getRight()))
+			{
+				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, new PlayerSource(player, null));
+				decreaseFirstSlot();
+			}
+		}
+	}
+
+	public boolean fillSecondSlot(ItemStack itemStack)
+	{
+		if (itemStack == null)
+			return false;
+		ItemStack secondSlot = inventory.getStackInSlot(1);
+		if (secondSlot == null)
+		{
+			inventory.setInventorySlotContents(1, itemStack);
+			return true;
+		} else
+		{
+			if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot))
+				return false;
+			inventory.incrStackSize(1, itemStack.stackSize);
+			return true;
+		}
+	}
+
+	public void decreaseFirstSlot()
+	{
+		ItemStack slot = inventory.getStackInSlot(0);
+		if (slot == null)
+			return;
+		slot.stackSize--;
+		if (slot.stackSize <= 0)
+			inventory.setInventorySlotContents(0, null);
 	}
 }

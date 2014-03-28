@@ -43,6 +43,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable
 			return FluidUtil.isFluidContainer(itemStack);
 		}
 	};
+	private MachineSource machineSource = new MachineSource(this);
 
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
@@ -198,24 +199,24 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable
 			if (currentFluid == null)
 				return;
 			int capacity = FluidUtil.getCapacity(container);
-			IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, capacity), Actionable.SIMULATE, new MachineSource(this));
+			IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, capacity), Actionable.SIMULATE, machineSource);
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
 			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(currentFluid, proposedAmount));
 			if (fillSecondSlot(filledContainer.getRight()))
 			{
-				monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, filledContainer.getLeft()), Actionable.MODULATE, new MachineSource(this));
+				monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, filledContainer.getLeft()), Actionable.MODULATE, machineSource);
 				decreaseFirstSlot();
 			}
 		} else if (FluidUtil.isFilled(container))
 		{
 			FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
-			IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, new MachineSource(this));
+			IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, machineSource);
 			if (notInjected != null)
 				return;
 			MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
 			if (fillSecondSlot(drainedContainer.getRight()))
 			{
-				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, new MachineSource(this));
+				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, machineSource);
 				decreaseFirstSlot();
 			}
 		}

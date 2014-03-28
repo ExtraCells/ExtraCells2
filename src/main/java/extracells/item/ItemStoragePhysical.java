@@ -1,7 +1,9 @@
 package extracells.item;
 
+import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
+import appeng.api.storage.*;
 import appeng.api.storage.data.IAEItemStack;
 import extracells.util.inventory.ECCellInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -13,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
@@ -144,6 +147,15 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
 	{
-		// TODO
+		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
+		IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry.getCellInventory(stack, StorageChannel.ITEMS);
+		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
+		ICellInventory cellInv = inventoryHandler.getCellInv();
+		long usedBytes = cellInv.usedBytes();
+
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.bytes"), usedBytes, cellInv.totalBytes()));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.types"), cellInv.storedItemTypes(), cellInv.getTotalItemTypes()));
+		if (usedBytes > 0)
+			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.content"), cellInv.storedItemCount()));
 	}
 }
