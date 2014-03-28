@@ -130,6 +130,11 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
 		new PacketFluidStorage(player, fluidStackList).sendPacketToPlayer(player);
 	}
 
+	@Override
+	public void onListUpdate()
+	{
+	}
+
 	public void forceFluidUpdate()
 	{
 		if (monitor != null)

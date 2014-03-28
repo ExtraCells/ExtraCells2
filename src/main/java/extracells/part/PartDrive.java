@@ -188,7 +188,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 			if (inventoryHandler == null)
 				inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, StorageChannel.FLUIDS);
 
-			ICellHandler cellHandler = AEApi.instance().registries().cell().getHander(stackInSlot);
+			ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stackInSlot);
 			if (cellHandler == null || inventoryHandler == null)
 			{
 				cellStati[i] = 0;

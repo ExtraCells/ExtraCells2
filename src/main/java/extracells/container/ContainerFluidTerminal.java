@@ -106,6 +106,11 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 		new PacketFluidTerminal(player, fluidStackList).sendPacketToPlayer(player);
 	}
 
+	@Override
+	public void onListUpdate() {
+
+	}
+
 	public void forceFluidUpdate()
 	{
 		if (monitor != null)
