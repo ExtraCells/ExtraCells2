@@ -151,11 +151,11 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry.getCellInventory(stack, StorageChannel.ITEMS);
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
-		long usedBytes = cellInv.usedBytes();
+		long usedBytes = cellInv.getUsedBytes();
 
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.bytes"), usedBytes, cellInv.totalBytes()));
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.types"), cellInv.storedItemTypes(), cellInv.getTotalItemTypes()));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.bytes"), usedBytes, cellInv.getTotalBytes()));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.types"), cellInv.getStoredItemTypes(), cellInv.getTotalItemTypes()));
 		if (usedBytes > 0)
-			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.content"), cellInv.storedItemCount()));
+			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.content"), cellInv.getStoredItemCount()));
 	}
 }
