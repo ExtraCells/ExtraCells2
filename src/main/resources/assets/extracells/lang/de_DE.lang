@@ -54,3 +54,4 @@ extracells.tooltip.storage.fluid.types=%s von %s Flüssigkeits-Typen verwendet.
 extracells.tooltip.storage.physical.bytes=%s von %s Item-Bytes verwendet.
 extracells.tooltip.storage.fluid.bytes=%s von %s Flüssigkeits-Bytes verwendet.
 extracells.tooltip.storage.fluid.content=Enthält %s mB Flüssigkeit.
+extracells.tooltip.storage.physical.content=Enthält %s Items.
