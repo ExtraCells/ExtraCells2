@@ -18,9 +18,11 @@ import extracells.network.packet.other.PacketFluidSlot;
 import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -202,12 +204,12 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
 	}
 
-	public Object getServerGuiElement(EntityPlayer player)
+	public Container getServerGuiElement(EntityPlayer player)
 	{
 		return new ContainerBusFluidStorage(this, player);
 	}
 
-	public Object getClientGuiElement(EntityPlayer player)
+	public Gui getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiBusFluidStorage(this, player);
 	}

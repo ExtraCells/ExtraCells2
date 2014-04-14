@@ -18,7 +18,7 @@ public class GuiDrive extends GuiContainer
 
 	public GuiDrive(PartDrive _part, EntityPlayer _player)
 	{
-		super(new ContainerDrive(_part, _player));// TODO
+		super(new ContainerDrive(_part, _player));
 		player = _player;
 		xSize = 176;
 		ySize = 163;

@@ -118,7 +118,7 @@ public class PacketFluidStorage extends AbstractPacket
 		case 2:
 			if (player != null)
 			{
-				if (player.isClientWorld())
+				if (!player.worldObj.isRemote)
 				{
 					if (player.inventoryContainer instanceof ContainerFluidStorage)
 					{

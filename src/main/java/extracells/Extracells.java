@@ -11,6 +11,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import extracells.network.ChannelHandler;
+import extracells.network.GuiHandler;
 import extracells.proxy.CommonProxy;
 import extracells.registries.ItemEnum;
 import extracells.render.RenderHandler;
@@ -31,6 +32,8 @@ public class Extracells
 	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
+	public static GuiHandler guiHandler = new GuiHandler();
+
 	private static File configFolder;
 	public static boolean shortenedBuckets;
 	public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells")
@@ -50,9 +53,7 @@ public class Extracells
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 		instance = this;
-
 		configFolder = event.getModConfigurationDirectory();
 
 		// Config

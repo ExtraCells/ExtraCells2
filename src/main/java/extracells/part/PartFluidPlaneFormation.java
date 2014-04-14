@@ -1,9 +1,11 @@
 package extracells.part;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -145,12 +147,12 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
 		new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(_player);
 	}
 
-	public Object getServerGuiElement(EntityPlayer player)
+	public Container getServerGuiElement(EntityPlayer player)
 	{
 		return new ContainerPlaneFormation(this, player);
 	}
 
-	public Object getClientGuiElement(EntityPlayer player)
+	public Gui getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiFluidPlaneFormation(this, player);
 	}

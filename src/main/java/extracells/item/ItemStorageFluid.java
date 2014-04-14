@@ -2,14 +2,14 @@ package extracells.item;
 
 import appeng.api.AEApi;
 import appeng.api.implementations.tiles.IChestOrDrive;
+import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.storage.ICellHandler;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.Extracells;
 import extracells.inventory.HandlerItemStorageFluid;
-import extracells.proxy.CommonProxy;
+import extracells.network.GuiHandler;
 import extracells.render.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,10 +17,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -103,8 +103,7 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	{
 		if (chan != StorageChannel.FLUIDS)
 			return;
-		TileEntity meChestTe = (TileEntity) chest;
-		player.openGui(Extracells.instance, CommonProxy.getGuiId(0), meChestTe.getWorldObj(), meChestTe.xCoord, meChestTe.yCoord, meChestTe.zCoord);
+		GuiHandler.launchGui(0, player, ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN).getFluidInventory());
 	}
 
 	@Override

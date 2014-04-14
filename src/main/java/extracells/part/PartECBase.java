@@ -13,18 +13,20 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
-import extracells.Extracells;
 import extracells.gridblock.ECBaseGridBlock;
-import extracells.proxy.CommonProxy;
+import extracells.network.GuiHandler;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -216,7 +218,8 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 pos)
 	{
-		player.openGui(Extracells.instance, CommonProxy.getGuiId(this), hostTile.getWorldObj(), hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
+		if (player != null && player instanceof EntityPlayerMP)
+			GuiHandler.launchGui(GuiHandler.getGuiId(this), player, hostTile.getWorldObj(), hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
 		return true;
 	}
 
@@ -326,12 +329,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		return monitor.extractItems(toExtract, action, new MachineSource(this));
 	}
 
-	public Object getServerGuiElement(EntityPlayer player)
+	public Container getServerGuiElement(EntityPlayer player)
 	{
 		return null;
 	}
 
-	public Object getClientGuiElement(EntityPlayer player)
+	public Gui getClientGuiElement(EntityPlayer player)
 	{
 		return null;
 	}

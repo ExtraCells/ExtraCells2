@@ -13,9 +13,11 @@ import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
@@ -230,12 +232,12 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 		return inventory;
 	}
 
-	public Object getServerGuiElement(EntityPlayer player)
+	public Container getServerGuiElement(EntityPlayer player)
 	{
 		return new ContainerDrive(this, player);
 	}
 
-	public Object getClientGuiElement(EntityPlayer player)
+	public Gui getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiDrive(this, player);
 	}

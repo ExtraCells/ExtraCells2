@@ -17,9 +17,11 @@ import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import extracells.util.inventory.ECPrivateInventory;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -164,12 +166,12 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable
 		containers.remove(containerTerminalFluid);
 	}
 
-	public Object getServerGuiElement(EntityPlayer player)
+	public Container getServerGuiElement(EntityPlayer player)
 	{
 		return new ContainerFluidTerminal(this, player);
 	}
 
-	public Object getClientGuiElement(EntityPlayer player)
+	public Gui getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiFluidTerminal(this, player);
 	}

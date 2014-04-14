@@ -18,7 +18,7 @@ public class ContainerDrive extends Container
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				addSlotToContainer(new SlotRespective(part.getInventory(), j + i * 3, i * 18 + 71, j * 18 - 4));
+				addSlotToContainer(new SlotRespective(part.getInventory(), j + i * 3, 18 + 71 - i * 18, j * 18 - 4));
 			}
 		}
 		bindPlayerInventory(player.inventory);

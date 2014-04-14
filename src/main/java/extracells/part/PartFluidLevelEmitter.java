@@ -1,5 +1,14 @@
 package extracells.part;
 
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Container;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.security.BaseActionSource;
@@ -11,20 +20,15 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+
 import com.google.common.collect.Lists;
+
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.GuiFluidEmitter;
 import extracells.network.packet.other.IFluidSlotPart;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.render.TextureManager;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPart
 {
@@ -182,12 +186,12 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(player);
 	}
 
-	public Object getServerGuiElement(EntityPlayer player)
+	public Container getServerGuiElement(EntityPlayer player)
 	{
 		return new ContainerFluidEmitter(this, player);
 	}
 
-	public Object getClientGuiElement(EntityPlayer player)
+	public Gui getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiFluidEmitter(this, player);
 	}

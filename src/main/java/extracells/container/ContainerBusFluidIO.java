@@ -63,8 +63,8 @@ public class ContainerBusFluidIO extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber)
 	{
-		if (guiBusFluidIO != null)
-			guiBusFluidIO.shiftClick(getSlot(slotnumber).getStack());
+		if (guiBusFluidIO != null && guiBusFluidIO.shiftClick(getSlot(slotnumber).getStack()))
+			return ((Slot) inventorySlots.get(slotnumber)).getStack();
 
 		ItemStack itemstack = null;
 		Slot slot = (Slot) inventorySlots.get(slotnumber);
@@ -82,7 +82,7 @@ public class ContainerBusFluidIO extends Container
 				}
 			} else if (!mergeItemStack(itemstack1, 0, 36, false))
 			{
-				return null;
+				return itemstack1;
 			}
 
 			if (itemstack1.stackSize == 0)
@@ -95,6 +95,11 @@ public class ContainerBusFluidIO extends Container
 		}
 
 		return itemstack;
+	}
+
+	protected void retrySlotClick(int par1, int par2, boolean par3, EntityPlayer par4EntityPlayer)
+	{
+		// NOPE
 	}
 
 	@Override

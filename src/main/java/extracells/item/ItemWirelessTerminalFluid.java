@@ -6,7 +6,11 @@ import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
+import extracells.network.GuiHandler;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -33,13 +37,26 @@ public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable
 		if (!itemStack.hasTagCompound())
 			itemStack.setTagCompound(new NBTTagCompound());
 
-		String key = itemStack.getTagCompound().getString("key");
+		Long key;
+		try
+		{
+			key = Long.parseLong(itemStack.getTagCompound().getString("key"));
+		} catch (Throwable ignored)
+		{
+			return itemStack;
+		}
 		int x = (int) entityPlayer.posX;
 		int y = (int) entityPlayer.posY;
 		int z = (int) entityPlayer.posZ;
-		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locateable().findLocateableBySerial(Long.parseLong(key));
+		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locateable().findLocateableBySerial(key);
+		if (securityTerminal == null)
+			return itemStack;
 		IGridNode gridNode = securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
+		if (gridNode == null)
+			return itemStack;
 		IGrid grid = gridNode.getGrid();
+		if (grid == null)
+			return itemStack;
 		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().blocks().blockWireless.entity()))
 		{
 			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
@@ -47,8 +64,15 @@ public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable
 			int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange())
 			{
-				System.out.println("sadad");
-				// OpenGUI
+				IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
+				if (gridCache != null)
+				{
+					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
+					if (fluidInventory != null)
+					{
+						GuiHandler.launchGui(1, entityPlayer, fluidInventory);
+					}
+				}
 			}
 		}
 		return itemStack;

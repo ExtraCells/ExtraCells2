@@ -69,18 +69,19 @@ public class GuiBusFluidIO extends GuiContainer implements WidgetFluidSlot.IConf
 
 	}
 
-	public void shiftClick(ItemStack itemStack)
+	public boolean shiftClick(ItemStack itemStack)
 	{
 		FluidStack containerFluid = FluidUtil.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 		for (WidgetFluidSlot fluidSlot : fluidSlotList)
 		{
-			if (fluidSlot.getFluid() == null || (fluid != null && fluidSlot.getFluid() == fluid))
+			if (fluidSlot.canRender() && fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid))
 			{
 				fluidSlot.mouseClicked(itemStack);
-				return;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@Override
