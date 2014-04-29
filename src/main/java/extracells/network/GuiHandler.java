@@ -3,46 +3,36 @@ package extracells.network;
 import appeng.api.parts.IPartHost;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
+import cpw.mods.fml.common.network.IGuiHandler;
+import extracells.Extracells;
 import extracells.container.ContainerFluidStorage;
 import extracells.gui.GuiFluidStorage;
-import extracells.network.packet.other.PacketGui;
 import extracells.part.PartECBase;
-import extracells.registries.PartEnum;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class GuiHandler
+public class GuiHandler implements IGuiHandler
 {
+	private static Object[] temp;
 
-	private static Container getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	private static Container getPartContainer(ForgeDirection side, EntityPlayer player, World world, int x, int y, int z)
 	{
-		ForgeDirection side = ForgeDirection.getOrientation(ID & 0x7F);
-		if (side != ForgeDirection.UNKNOWN)
-		{
-			PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
-			return part.getServerGuiElement(player);
-		}
-		return null;
+		PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
+		return part.getServerGuiElement(player);
 	}
 
-	public static Gui getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	public static Gui getPartGui(ForgeDirection side, EntityPlayer player, World world, int x, int y, int z)
 	{
-		ForgeDirection side = ForgeDirection.getOrientation(ID & 0x7F);
-		if (side != ForgeDirection.UNKNOWN)
-		{
-			IPartHost tileEntity = (IPartHost) world.getTileEntity(x, y, z);
-			PartECBase part = (PartECBase) tileEntity.getPart(side);
-			return part.getClientGuiElement(player);
-		}
-		return null;
+		IPartHost tileEntity = (IPartHost) world.getTileEntity(x, y, z);
+		PartECBase part = (PartECBase) tileEntity.getPart(side);
+		return part.getClientGuiElement(player);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Container getServerGuiElement(int ID, EntityPlayer player, Object[] args)
+	private static Container getContainer(int ID, EntityPlayer player, Object[] args)
 	{
 		switch (ID)
 		{
@@ -55,7 +45,7 @@ public class GuiHandler
 		}
 	}
 
-	public static Gui getClientGuiElement(int ID, EntityPlayer player)
+	public static Gui getGui(int ID, EntityPlayer player)
 	{
 		switch (ID)
 		{
@@ -70,29 +60,40 @@ public class GuiHandler
 
 	public static int getGuiId(PartECBase part)
 	{
-		return PartEnum.getPartID(part) << 7 | part.getSide().ordinal();
+		return part.getSide().ordinal();
+	}
+
+	public static int getGuiId(int guiId)
+	{
+		return guiId + 6;
 	}
 
 	public static void launchGui(int ID, EntityPlayer player, Object... args)
 	{
-		new PacketGui(ID, player).sendPacketToPlayer(player);
-		openContainer(getServerGuiElement(ID, player, args), player);
+		temp = args;
+		player.openGui(Extracells.instance, ID, null, 0, 0, 0);
 	}
 
 	public static void launchGui(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		new PacketGui(ID, player, world, x, y, z).sendPacketToPlayer(player);
-		openContainer(getServerGuiElement(ID, player, world, x, y, z), player);
+		player.openGui(Extracells.instance, ID, world, x, y, z);
 	}
 
-	private static void openContainer(Container container, EntityPlayer player)
+	@Override
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		EntityPlayerMP entityPlayerMP = (EntityPlayerMP) player;
-		entityPlayerMP.getNextWindowId();
-		entityPlayerMP.closeContainer();
-		int windowId = entityPlayerMP.currentWindowId;
-		entityPlayerMP.openContainer = container;
-		entityPlayerMP.openContainer.windowId = windowId;
-		entityPlayerMP.openContainer.addCraftingToCrafters(entityPlayerMP);
+		ForgeDirection side = ForgeDirection.getOrientation(ID);
+		if (world != null && side != ForgeDirection.UNKNOWN)
+			return getPartContainer(side, player, world, x, y, z);
+		return getContainer(ID - 6, player, temp);
+	}
+
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		ForgeDirection side = ForgeDirection.getOrientation(ID);
+		if (world != null && side != ForgeDirection.UNKNOWN)
+			return getPartGui(side, player, world, x, y, z);
+		return getGui(ID - 6, player);
 	}
 }

@@ -5,7 +5,6 @@ import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.packet.other.PacketFluidSlot;
-import extracells.network.packet.other.PacketGui;
 import extracells.network.packet.part.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,7 +30,6 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<AbstractPack
 		addDiscriminator(4, PacketFluidPlaneFormation.class);
 		addDiscriminator(5, PacketFluidStorage.class);
 		addDiscriminator(6, PacketFluidEmitter.class);
-		addDiscriminator(7, PacketGui.class);
 	}
 
 	@Override

@@ -55,6 +55,7 @@ public class Extracells
 	{
 		instance = this;
 		configFolder = event.getModConfigurationDirectory();
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
 		// Config
 		Configuration config = new Configuration(new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"));

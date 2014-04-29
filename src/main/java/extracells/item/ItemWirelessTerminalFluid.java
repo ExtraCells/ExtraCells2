@@ -70,7 +70,7 @@ public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable
 					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
 					if (fluidInventory != null)
 					{
-						GuiHandler.launchGui(1, entityPlayer, fluidInventory);
+						GuiHandler.launchGui(GuiHandler.getGuiId(1), entityPlayer, fluidInventory);
 					}
 				}
 			}
