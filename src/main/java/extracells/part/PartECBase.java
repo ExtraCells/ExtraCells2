@@ -19,14 +19,12 @@ import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -329,12 +327,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost
 		return monitor.extractItems(toExtract, action, new MachineSource(this));
 	}
 
-	public Container getServerGuiElement(EntityPlayer player)
+	public Object getServerGuiElement(EntityPlayer player)
 	{
 		return null;
 	}
 
-	public Gui getClientGuiElement(EntityPlayer player)
+	public Object getClientGuiElement(EntityPlayer player)
 	{
 		return null;
 	}

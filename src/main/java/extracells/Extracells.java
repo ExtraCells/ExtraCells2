@@ -55,6 +55,7 @@ public class Extracells
 	{
 		instance = this;
 		configFolder = event.getModConfigurationDirectory();
+
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
 		// Config

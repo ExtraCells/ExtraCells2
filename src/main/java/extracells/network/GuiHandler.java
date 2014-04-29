@@ -8,9 +8,7 @@ import extracells.Extracells;
 import extracells.container.ContainerFluidStorage;
 import extracells.gui.GuiFluidStorage;
 import extracells.part.PartECBase;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -18,13 +16,13 @@ public class GuiHandler implements IGuiHandler
 {
 	private static Object[] temp;
 
-	private static Container getPartContainer(ForgeDirection side, EntityPlayer player, World world, int x, int y, int z)
+	private static Object getPartContainer(ForgeDirection side, EntityPlayer player, World world, int x, int y, int z)
 	{
 		PartECBase part = (PartECBase) ((IPartHost) world.getTileEntity(x, y, z)).getPart(side);
 		return part.getServerGuiElement(player);
 	}
 
-	public static Gui getPartGui(ForgeDirection side, EntityPlayer player, World world, int x, int y, int z)
+	public static Object getPartGui(ForgeDirection side, EntityPlayer player, World world, int x, int y, int z)
 	{
 		IPartHost tileEntity = (IPartHost) world.getTileEntity(x, y, z);
 		PartECBase part = (PartECBase) tileEntity.getPart(side);
@@ -32,7 +30,7 @@ public class GuiHandler implements IGuiHandler
 	}
 
 	@SuppressWarnings("unchecked")
-	private static Container getContainer(int ID, EntityPlayer player, Object[] args)
+	private static Object getContainer(int ID, EntityPlayer player, Object[] args)
 	{
 		switch (ID)
 		{
@@ -45,7 +43,7 @@ public class GuiHandler implements IGuiHandler
 		}
 	}
 
-	public static Gui getGui(int ID, EntityPlayer player)
+	public static Object getGui(int ID, EntityPlayer player)
 	{
 		switch (ID)
 		{

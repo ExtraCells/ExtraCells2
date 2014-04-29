@@ -16,10 +16,8 @@ import extracells.network.packet.part.PacketBusFluidIO;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
@@ -160,12 +158,12 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 		new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
 	}
 
-	public Container getServerGuiElement(EntityPlayer player)
+	public Object getServerGuiElement(EntityPlayer player)
 	{
 		return new ContainerBusFluidIO(this, player);
 	}
 
-	public Gui getClientGuiElement(EntityPlayer player)
+	public Object getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiBusFluidIO(this, player);
 	}

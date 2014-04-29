@@ -1,10 +1,8 @@
 package extracells.part;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -186,12 +184,12 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(player);
 	}
 
-	public Container getServerGuiElement(EntityPlayer player)
+	public Object getServerGuiElement(EntityPlayer player)
 	{
 		return new ContainerFluidEmitter(this, player);
 	}
 
-	public Gui getClientGuiElement(EntityPlayer player)
+	public Object getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiFluidEmitter(this, player);
 	}
