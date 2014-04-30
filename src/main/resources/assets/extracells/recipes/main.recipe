@@ -1,6 +1,7 @@
 alias=mc -> minecraft
 alias=ec -> extracells
+alias=ae2 -> appliedenergistics2
 
-shapeless=
-	mc:iron_ingot mc:iron_ingot -> ec:fluidCell1k
-	
+import=parts.recipe
+import=misc.recipe
+import=storage.recipe

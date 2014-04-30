@@ -27,7 +27,7 @@ public class CommonProxy
 			recipeHandler.parseRecipes(new ExternalRecipeLoader(), externalRecipe.getPath());
 		} else
 		{
-			recipeHandler.parseRecipes(new InternalRecipeLoader(), "/assets/extracells/recipes/main.recipe");
+			recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
 		}
 		recipeHandler.registerHandlers();
 	}
@@ -64,7 +64,7 @@ public class CommonProxy
 		@Override
 		public BufferedReader getFile(String path) throws Exception
 		{
-			InputStream resourceAsStream = getClass().getResourceAsStream(path);
+			InputStream resourceAsStream = getClass().getResourceAsStream("/assets/extracells/recipes/" + path);
 			InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
 			return new BufferedReader(reader);
 		}

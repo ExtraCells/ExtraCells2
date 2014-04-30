@@ -2,7 +2,9 @@ package extracells.util;
 
 import appeng.api.recipes.ISubItemResolver;
 import appeng.api.recipes.ResolverResult;
+import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
+import extracells.registries.PartEnum;
 
 public class NameHandler implements ISubItemResolver
 {
@@ -27,8 +29,6 @@ public class NameHandler implements ISubItemResolver
 			return new ResolverResult(ItemEnum.FLUIDSTORAGE.getInternalName(), 5);
 		if (fullName.equals("fluidCell4096k"))
 			return new ResolverResult(ItemEnum.FLUIDSTORAGE.getInternalName(), 6);
-		if (fullName.equals("fluidCell16384k"))
-			return new ResolverResult(ItemEnum.FLUIDSTORAGE.getInternalName(), 7);
 
 		// Physical Cells
 		if (fullName.equals("physCell256k"))
@@ -39,6 +39,66 @@ public class NameHandler implements ISubItemResolver
 			return new ResolverResult(ItemEnum.PHYSICALSTORAGE.getInternalName(), 2);
 		if (fullName.equals("physCell16384k"))
 			return new ResolverResult(ItemEnum.PHYSICALSTORAGE.getInternalName(), 3);
+
+		//Fluid Storage Components
+		if (fullName.equals("fluidComponentCell"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 4);
+		if (fullName.equals("fluidComponentSegment"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 5);
+		if (fullName.equals("fluidComponentBlock"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 6);
+		if (fullName.equals("fluidComponentCluster"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 7);
+		if (fullName.equals("fluidComponentKilo"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 8);
+		if (fullName.equals("fluidComponentMega"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 9);
+		if (fullName.equals("fluidComponentGiga"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 10);
+
+		//Physical Storage Components
+		if (fullName.equals("physComponentKilo"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 0);
+		if (fullName.equals("physComponentMega"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 1);
+		if (fullName.equals("physComponentGiga"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 2);
+		if (fullName.equals("physComponentTera"))
+			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 3);
+
+		//Fluid Storage Casing
+		if (fullName.equals("physCasing"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), 0);
+
+		//Physical Storage Casing
+		if (fullName.equals("fluidCasing"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), 1);
+
+		//Parts
+		if (fullName.equals("partFluidImportBus"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDIMPORT.ordinal());
+		if (fullName.equals("partFluidExportBus"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDEXPORT.ordinal());
+		if (fullName.equals("partFluidStorageBus"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDSTORAGE.ordinal());
+		if (fullName.equals("partFluidTerminal"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDTERMINAL.ordinal());
+		if (fullName.equals("partFluidLevelEmitter"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDLEVELEMITTER.ordinal());
+		if (fullName.equals("partFluidAnnihilationPlane"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDPANEANNIHILATION.ordinal());
+		if (fullName.equals("partFluidFormationPlane"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDPANEFORMATION.ordinal());
+		if (fullName.equals("partBattery"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.BATTERY.ordinal());
+		if (fullName.equals("partDrive"))
+			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.DRIVE.ordinal());
+
+		//MISC
+		if (fullName.equals("certusTank"))
+			return new ResolverResult(BlockEnum.CERTUSTANK.getInternalName(), 0);
+		if (fullName.equals("fluidPattern"))
+			return new ResolverResult(ItemEnum.FLUIDPATTERN.getInternalName(), 0);
 
 		return null;
 	}

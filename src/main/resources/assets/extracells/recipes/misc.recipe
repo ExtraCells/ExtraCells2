@@ -1,0 +1,9 @@
+shaped=
+	ae2:BlockQuartzGlass ae2:BlockQuartzGlass ae2:BlockQuartzGlass,
+	ae2:BlockQuartzGlass _ ae2:BlockQuartzGlass,
+	ae2:BlockQuartzGlass ae2:BlockQuartzGlass ae2:BlockQuartzGlass
+	-> ec:certusTank
+
+shaped=
+	ae2:BlockQuartzGlass mc:bucket ae2:BlockQuartzGlass
+	-> ec:fluidPattern

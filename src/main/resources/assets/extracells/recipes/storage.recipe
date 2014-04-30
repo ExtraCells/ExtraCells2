@@ -1,0 +1,104 @@
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix _ oredictionary:dustFluix,
+	oredictionary:gemDiamond oredictionary:gemDiamond oredictionary:gemDiamond
+	-> ec:physCasing
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix _ oredictionary:dustFluix,
+	ec:certusTank ec:certusTank ec:certusTank
+	-> ec:fluidCasing
+
+
+shapeless=
+	ec:physCasing ec:physComponentKilo
+	-> ec:physCell256k
+shapeless=
+	ec:physCasing ec:physComponentMega
+	-> ec:physCell1024k
+shapeless=
+	ec:physCasing ec:physComponentGiga
+	-> ec:physCell4096k
+shapeless=
+	ec:physCasing ec:physComponentTera
+	-> ec:physCell16384k
+
+shaped=
+    ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+    oredictionary:dustFluix  ec:physComponentKilo oredictionary:dustFluix,
+    oredictionary:gemDiamond oredictionary:gemDiamond oredictionary:gemDiamond
+    -> ec:physCell256k
+shaped=
+    ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+    oredictionary:dustFluix  ec:physComponentMega oredictionary:dustFluix,
+    oredictionary:gemDiamond oredictionary:gemDiamond oredictionary:gemDiamond
+    -> ec:physCell1024k
+shaped=
+    ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+    oredictionary:dustFluix  ec:physComponentGiga oredictionary:dustFluix,
+    oredictionary:gemDiamond oredictionary:gemDiamond oredictionary:gemDiamond
+    -> ec:physCell4096k
+shaped=
+    ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+    oredictionary:dustFluix  ec:physComponentTera oredictionary:dustFluix,
+    oredictionary:gemDiamond oredictionary:gemDiamond oredictionary:gemDiamond
+    -> ec:physCell16384k
+
+
+shapeless=
+	ec:fluidCasing ec:fluidComponentCell
+	-> ec:fluidCell1k
+shapeless=
+	ec:fluidCasing ec:fluidComponentSegment
+	-> ec:fluidCell4k
+shapeless=
+	ec:fluidCasing ec:fluidComponentBlock
+	-> ec:fluidCell16k
+shapeless=
+	ec:fluidCasing ec:fluidComponentCluster
+	-> ec:fluidCell64k
+shapeless=
+	ec:fluidCasing ec:fluidComponentKilo
+	-> ec:fluidCell256k
+shapeless=
+	ec:fluidCasing ec:fluidComponentMega
+	-> ec:fluidCell1024k
+shapeless=
+	ec:fluidCasing ec:fluidComponentGiga
+	-> ec:fluidCell4096k
+
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:fluidComponentCell oredictionary:dustFluix,
+	ec:certusTank ec:certusTank ec:certusTank
+	-> ec:fluidCell1k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:fluidComponentSegment oredictionary:dustFluix,
+	ec:certusTank ec:certusTank ec:certusTank
+	-> ec:fluidCell4k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:fluidComponentBlock oredictionary:dustFluix,
+	ec:certusTank ec:certusTank ec:certusTank
+	-> ec:fluidCell16k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:fluidComponentCluster oredictionary:dustFluix,
+	ec:certusTank ec:certusTank ec:certusTank
+	-> ec:fluidCell64k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:fluidComponentKilo oredictionary:dustFluix,
+	ec:certusTank ec:certusTank ec:certusTank
+	-> ec:fluidCell256k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:fluidComponentMega oredictionary:dustFluix,
+	ec:certusTank ec:certusTank ec:certusTank
+	-> ec:fluidCell1024k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:fluidComponentGiga oredictionary:dustFluix,
+	ec:certusTank ec:certusTank ec:certusTank
+	-> ec:fluidCell4096k

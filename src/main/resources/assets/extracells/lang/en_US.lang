@@ -28,6 +28,7 @@ extracells.item.storage.component.fluid.giga.name=Giga Fluid Cluster
 extracells.item.storage.casing.physical.name=Advanced Storage Cell Housing
 extracells.item.storage.casing.fluid.name=Advanced Fluid Storage Cell Housing
 extracells.item.terminal.fluid.wireless.name=Wireless ME Fluid Terminal
+extracells.item.fluid.pattern=ME Fluid Pattern
 
 //Creative Tab
 itemGroup.Extra_Cells=Extra Cells

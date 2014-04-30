@@ -18,7 +18,7 @@ public enum PartEnum
 	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
 	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class),
 	FLUIDPANEANNIHILATION("fluid.plane.annihilation", PartFluidPlaneAnnihilation.class, "fluid.plane"),
-	FLUIDPANECREATION("fluid.plane.creation", PartFluidPlaneFormation.class, "fluid.plane"),
+	FLUIDPANEFORMATION("fluid.plane.formation", PartFluidPlaneFormation.class, "fluid.plane"),
 	DRIVE("drive", PartDrive.class),
 	BATTERY("battery", PartBattery.class);
 

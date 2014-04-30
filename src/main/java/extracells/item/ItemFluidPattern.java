@@ -2,26 +2,40 @@ package extracells.item;
 
 import extracells.registries.ItemEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import java.util.List;
+
 public class ItemFluidPattern extends Item
 {
+	IIcon icon;
+
 	@Override
-	public void registerIcons(IIconRegister _iconRegister)
+	public void registerIcons(IIconRegister iconRegister)
 	{
+		icon = iconRegister.registerIcon("extracells:fluid.pattern");
 	}
 
-	public IIcon getIconIndex(ItemStack itemStack)
+	@Override
+	public String getItemStackDisplayName(ItemStack itemStack)
 	{
 		Fluid fluid = getFluid(itemStack);
 		if (fluid == null)
-			return net.minecraft.init.Blocks.stone.getIcon(0, 0);
-		return fluid.getIcon();
+			return getUnlocalizedName(itemStack);
+		return StatCollector.translateToLocal(getUnlocalizedName(itemStack)) + ": " + fluid.getLocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack itemStack)
+	{
+		return "extracells.item.fluid.pattern";
 	}
 
 	@Override
@@ -45,5 +59,39 @@ public class ItemFluidPattern extends Item
 		if (fluid != null)
 			itemStack.getTagCompound().setString("fluidID", fluid.getName());
 		return itemStack;
+	}
+
+	@SuppressWarnings(
+	{ "unchecked", "rawtypes" })
+	@Override
+	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList)
+	{
+		for (String fluidID : FluidRegistry.getRegisteredFluidIDs().keySet())
+		{
+			ItemStack itemStack = new ItemStack(this, 1);
+			itemStack.setTagCompound(new NBTTagCompound());
+			itemStack.getTagCompound().setString("fluidID", fluidID);
+			itemList.add(itemStack);
+		}
+	}
+
+	@Override
+	public boolean requiresMultipleRenderPasses()
+	{
+		return true;
+	}
+
+	public IIcon getIcon(ItemStack itemStack, int pass)
+	{
+		switch (pass)
+		{
+		case 0:
+			Fluid fluid = getFluid(itemStack);
+			if (fluid == null)
+				return icon;
+			return fluid.getIcon();
+		default:
+			return icon;
+		}
 	}
 }
