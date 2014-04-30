@@ -94,7 +94,8 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 		super.onContainerClosed(entityPlayer);
 		if (!entityPlayer.worldObj.isRemote)
 		{
-			monitor.removeListener(this);
+			if (monitor != null)
+				monitor.removeListener(this);
 			terminal.removeContainer(this);
 		}
 	}
@@ -107,7 +108,8 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
 	}
 
 	@Override
-	public void onListUpdate() {
+	public void onListUpdate()
+	{
 
 	}
 
