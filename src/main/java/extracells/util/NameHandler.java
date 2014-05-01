@@ -41,29 +41,29 @@ public class NameHandler implements ISubItemResolver
 			return new ResolverResult(ItemEnum.PHYSICALSTORAGE.getInternalName(), 3);
 
 		//Fluid Storage Components
-		if (fullName.equals("fluidComponentCell"))
+		if (fullName.equals("cell1kPartFluid"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 4);
-		if (fullName.equals("fluidComponentSegment"))
+		if (fullName.equals("cell4kPartFluid"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 5);
-		if (fullName.equals("fluidComponentBlock"))
+		if (fullName.equals("cell16kPartFluid"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 6);
-		if (fullName.equals("fluidComponentCluster"))
+		if (fullName.equals("cell64kPartFluid"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 7);
-		if (fullName.equals("fluidComponentKilo"))
+		if (fullName.equals("cell256kPartFluid"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 8);
-		if (fullName.equals("fluidComponentMega"))
+		if (fullName.equals("cell1024kPartFluid"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 9);
-		if (fullName.equals("fluidComponentGiga"))
+		if (fullName.equals("cell4096kPartFluid"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 10);
 
 		//Physical Storage Components
-		if (fullName.equals("physComponentKilo"))
+		if (fullName.equals("cell256kPart"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 0);
-		if (fullName.equals("physComponentMega"))
+		if (fullName.equals("cell1024kPart"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 1);
-		if (fullName.equals("physComponentGiga"))
+		if (fullName.equals("cell4096kPart"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 2);
-		if (fullName.equals("physComponentTera"))
+		if (fullName.equals("cell16384kPart"))
 			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 3);
 
 		//Fluid Storage Casing

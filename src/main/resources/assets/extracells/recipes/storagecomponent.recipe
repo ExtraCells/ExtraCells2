@@ -1,0 +1,64 @@
+group=ae2:ItemMaterial.EngProcessor -> engProcessor
+group=ae2:ItemMaterial.LogicProcessor -> logProcessor
+group=ae2:ItemMaterial.CalcProcessor -> calcProcessor
+group=oredictionary:dustGlowstone -> dustGlowstone
+group=oredictionary:dyeBlue -> lapis
+group=ae2:BlockQuartzGlass -> glassQuartz
+group=oredictionary:crystalCertusQuartz ae2:ItemMaterial.CertusQuartzCrystalCharged ae2:ItemMaterial.PureifiedCertusQuartzCrystal -> certusCrystal
+
+shaped=
+	dustGlowstone engProcessor dustGlowstone,
+	ae2:ItemMaterial.Cell16kPart logProcessor ae2:ItemMaterial.Cell16kPart,
+	dustGlowstone ae2:ItemMaterial.Cell16kPart dustGlowstone
+	-> ec:cell256kPart
+shaped=
+	dustGlowstone engProcessor dustGlowstone,
+	ec:cell256kPart logProcessor ec:cell256kPart,
+	dustGlowstone ec:cell256kPart dustGlowstone
+	-> ec:cell1024kPart
+shaped=
+	dustGlowstone engProcessor dustGlowstone,
+	ec:cell1024kPart logProcessor ec:cell1024kPart,
+	dustGlowstone ec:cell1024kPart dustGlowstone
+	-> ec:cell4096kPart
+shaped=
+	dustGlowstone engProcessor dustGlowstone,
+	ec:cell4096kPart logProcessor ec:cell4096kPart,
+	dustGlowstone ec:cell4096kPart dustGlowstone
+	-> ec:cell16384kPart
+
+shaped=
+	lapis certusCrystal lapis,
+	certusCrystal logProcessor certusCrystal,
+	lapis certusCrystal lapis
+	-> ec:cell1kPartFluid
+shaped=
+	lapis calcProcessor lapis,
+	ec:cell1kPartFluid glassQuartz ec:cell1kPartFluid,
+	lapis ec:cell1kPartFluid lapis
+	-> ec:cell4kPartFluid
+shaped=
+	lapis engProcessor lapis,
+	ec:cell4kPartFluid glassQuartz ec:cell4kPartFluid,
+	lapis ec:cell4kPartFluid lapis
+	-> ec:cell16kPartFluid
+shaped=
+	lapis engProcessor lapis,
+	ec:cell16kPartFluid glassQuartz ec:cell16kPartFluid,
+	lapis ec:cell16kPartFluid lapis
+	-> ec:cell64kPartFluid
+shaped=
+	lapis engProcessor lapis,
+	ec:cell64kPartFluid logProcessor ec:cell64kPartFluid,
+	lapis ec:cell64kPartFluid lapis
+	-> ec:cell256kPartFluid
+shaped=
+	lapis engProcessor lapis,
+	ec:cell256kPartFluid logProcessor ec:cell256kPartFluid,
+	lapis ec:cell256kPartFluid lapis
+	-> ec:cell1024kPartFluid
+shaped=
+	lapis engProcessor lapis,
+	ec:cell1024kPartFluid logProcessor ec:cell1024kPartFluid,
+	lapis ec:cell1024kPartFluid lapis
+	-> ec:cell4096kPartFluid

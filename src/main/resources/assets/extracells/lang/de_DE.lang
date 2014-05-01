@@ -14,20 +14,21 @@ extracells.item.storage.fluid.64k.name=64k ME-Flüssigkeitsspeicher
 extracells.item.storage.fluid.256k.name=256k ME-Flüssigkeitsspeicher
 extracells.item.storage.fluid.1024k.name=1M ME-Flüssigkeitsspeicher
 extracells.item.storage.fluid.4096k.name=4M ME-Flüssigkeitsspeicher
-extracells.item.storage.component.physical.kilo.name=Kilo-Speichercluster
-extracells.item.storage.component.physical.mega.name=Mega-Speichercluster
-extracells.item.storage.component.physical.giga.name=Giga-Speichercluster
-extracells.item.storage.component.physical.tera.name=Tera-Speichercluster
-extracells.item.storage.component.fluid.cell.name=Flüssigkeits-Speicherzelle
-extracells.item.storage.component.fluid.segment.name=Flüssigkeits-Speichersegment
-extracells.item.storage.component.fluid.block.name=Flüssigkeits-Speicherblock
-extracells.item.storage.component.fluid.cluster.name=Flüssigkeits-Speichercluster
-extracells.item.storage.component.fluid.kilo.name=Kilo-Flüssigkeitscluster
-extracells.item.storage.component.fluid.mega.name=Mega-Flüssigkeitscluster
-extracells.item.storage.component.fluid.giga.name=Giga-Flüssigkeitscluster
+extracells.item.storage.component.physical.256k.name=256k-ME-Speicherkomponente
+extracells.item.storage.component.physical.1024k.name=1M-ME-Speicherkomponente
+extracells.item.storage.component.physical.4096k.name=4M-ME-Speicherkomponente
+extracells.item.storage.component.physical.16384.name=16M-ME-Speicherkomponente
+extracells.item.storage.component.fluid.1k.name=1k-ME-Flüssigkeitsspeicherkomponente
+extracells.item.storage.component.fluid.4k.name=4k-ME-Flüssigkeitsspeicherkomponente
+extracells.item.storage.component.fluid.16k.name=16k-ME-Flüssigkeitsspeicherkomponente
+extracells.item.storage.component.fluid.64k.name=64k-ME-Flüssigkeitsspeicherkomponente
+extracells.item.storage.component.fluid.256k.name=256k-ME-Flüssigkeitsspeicherkomponente
+extracells.item.storage.component.fluid.1024k.name=1M-ME-Flüssigkeitsspeicherkomponente
+extracells.item.storage.component.fluid.4096k.name=4M-ME-Flüssigkeitsspeicherkomponente
 extracells.item.storage.casing.physical.name=Erweitertes Speichergehäuse
-extracells.item.storage.casing.fluid.name=Erweitertes Flüssigkeits-Speichergehäuse
+extracells.item.storage.casing.fluid.name=Flüssigkeits-Speichergehäuse
 extracells.item.terminal.fluid.wireless.name=Drahtlose Flüssigkeits-Zugangskonsole
+extracells.item.fluid.pattern=ME Flüssigkeitsmuster
 
 //Creative Tab
 itemGroup.Extra_Cells=Extra Cells
@@ -42,6 +43,9 @@ extracells.part.fluid.storage.name=ME-Flüssigkeits-Speicherbus
 extracells.part.fluid.terminal.name=ME-Flüssigkeits-Terminal
 extracells.part.fluid.plane.annihilation.name=ME-Flüssigkeits-Annihilationsfeld
 extracells.part.fluid.plane.formation.name=ME-Flüssigkeits-Formationsfeld
+extracells.part.fluid.levelemitter.name=ME Flüssigkeiten-Füllstandemitter
+extracells.part.drive.name=ME Laufwerkshalterung
+extracells.part.battery.name=ME Energiezellenhalterung
 
 //Blocks
 extracells.block.certustank.name=ME-Certus-Tank

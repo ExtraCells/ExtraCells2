@@ -4,4 +4,5 @@ alias=ae2 -> appliedenergistics2
 
 import=parts.recipe
 import=misc.recipe
-import=storage.recipe
+import=storagecell.recipe
+import=storagecomponent.recipe
