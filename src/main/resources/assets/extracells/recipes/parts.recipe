@@ -1,0 +1,36 @@
+group=oredictionary:dyeBlue -> lapis
+group= ae2:ItemPart.SemiDarkMonitor ae2:ItemPart.Monitor ae2:ItemPart.DarkMonitor -> monitor
+
+shapeless=
+	ae2:ItemMaterial.CalcProcessor mc:redstone_torch lapis
+	-> ec:partFluidLevelEmitter
+
+shaped=
+	mc:iron_ingot ae2:ItemMaterial.FormationCore mc:iron_ingot,
+	lapis mc:piston lapis
+	-> ec:partFluidExportBus
+
+shaped=
+	lapis ae2:ItemMaterial.AnnihilationCore lapis,
+	mc:iron_ingot mc:sticky_piston mc:iron_ingot
+	-> ec:partFluidImportBus
+
+shaped=
+	mc:iron_ingot lapis oredictionary:dustFluix,
+	ae2:ItemMaterial.AnnihilationCore lapis oredictionary:dustFluix,
+	mc:iron_ingot lapis oredictionary:dustFluix
+	-> ec:partFluidAnnihilationPlane
+
+shaped=
+	mc:iron_ingot lapis oredictionary:dustFluix,
+	ae2:ItemMaterial.FormationCore lapis oredictionary:dustFluix,
+	mc:iron_ingot lapis oredictionary:dustFluix
+	-> ec:partFluidFormationPlane
+
+shapeless=
+	monitor ae2:ItemMaterial.FormationCore ae2:ItemMaterial.AnnihilationCore ae2:ItemMaterial.LogicProcessor lapis lapis
+	-> ec:partFluidTerminal
+
+shapeless=
+	ae2:BlockDrive mc:iron_ingot mc:iron_ingot
+	-> ec:partDrive

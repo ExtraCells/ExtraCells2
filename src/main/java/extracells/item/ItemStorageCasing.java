@@ -32,7 +32,7 @@ public class ItemStorageCasing extends Item
 	@Override
 	public IIcon getIconFromDamage(int dmg)
 	{
-		int j = MathHelper.clamp_int(dmg, 0, suffixes.length);
+		int j = MathHelper.clamp_int(dmg, 0, icons.length - 1);
 		return icons[j];
 	}
 

@@ -76,23 +76,23 @@ public class NameHandler implements ISubItemResolver
 
 		//Parts
 		if (fullName.equals("partFluidImportBus"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDIMPORT.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDIMPORT.ordinal());
 		if (fullName.equals("partFluidExportBus"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDEXPORT.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDEXPORT.ordinal());
 		if (fullName.equals("partFluidStorageBus"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDSTORAGE.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDSTORAGE.ordinal());
 		if (fullName.equals("partFluidTerminal"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDTERMINAL.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDTERMINAL.ordinal());
 		if (fullName.equals("partFluidLevelEmitter"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDLEVELEMITTER.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDLEVELEMITTER.ordinal());
 		if (fullName.equals("partFluidAnnihilationPlane"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDPANEANNIHILATION.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDPANEANNIHILATION.ordinal());
 		if (fullName.equals("partFluidFormationPlane"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.FLUIDPANEFORMATION.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDPANEFORMATION.ordinal());
 		if (fullName.equals("partBattery"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.BATTERY.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.BATTERY.ordinal());
 		if (fullName.equals("partDrive"))
-			return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), PartEnum.DRIVE.ordinal());
+			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.DRIVE.ordinal());
 
 		//MISC
 		if (fullName.equals("certusTank"))
