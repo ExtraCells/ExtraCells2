@@ -28,7 +28,7 @@ extracells.item.storage.component.fluid.4096k.name=4M-ME-Flüssigkeitsspeicherko
 extracells.item.storage.casing.physical.name=Erweitertes Speichergehäuse
 extracells.item.storage.casing.fluid.name=Flüssigkeits-Speichergehäuse
 extracells.item.terminal.fluid.wireless.name=Drahtlose Flüssigkeits-Zugangskonsole
-extracells.item.fluid.pattern=ME Flüssigkeitsmuster
+extracells.item.fluid.pattern=ME Flüssigkeitsschablone
 
 //Creative Tab
 itemGroup.Extra_Cells=Extra Cells
@@ -43,9 +43,9 @@ extracells.part.fluid.storage.name=ME-Flüssigkeits-Speicherbus
 extracells.part.fluid.terminal.name=ME-Flüssigkeits-Terminal
 extracells.part.fluid.plane.annihilation.name=ME-Flüssigkeits-Annihilationsfeld
 extracells.part.fluid.plane.formation.name=ME-Flüssigkeits-Formationsfeld
-extracells.part.fluid.levelemitter.name=ME Flüssigkeiten-Füllstandemitter
-extracells.part.drive.name=ME Laufwerkshalterung
-extracells.part.battery.name=ME Energiezellenhalterung
+extracells.part.fluid.levelemitter.name=ME Flüssigkeits-Füllstandemitter
+extracells.part.drive.name=ME-Laufwerkhalterung
+extracells.part.battery.name=ME-Energiezellenhalterung
 
 //Blocks
 extracells.block.certustank.name=ME-Certus-Tank
