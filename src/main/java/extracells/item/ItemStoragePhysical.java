@@ -5,6 +5,7 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEItemStack;
+import extracells.registries.ItemEnum;
 import extracells.util.inventory.ECCellInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -145,10 +147,10 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
 	{
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
-		IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry.getCellInventory(stack, StorageChannel.ITEMS);
+		IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry.getCellInventory(itemStack, StorageChannel.ITEMS);
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
 		long usedBytes = cellInv.getUsedBytes();
@@ -157,5 +159,20 @@ public class ItemStoragePhysical extends Item implements IStorageCell
 		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.types"), cellInv.getStoredItemTypes(), cellInv.getTotalItemTypes()));
 		if (usedBytes > 0)
 			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.content"), cellInv.getStoredItemCount()));
+	}
+
+	@SuppressWarnings(
+	{ "rawtypes", "unchecked" })
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
+	{
+		if (!entityPlayer.isSneaking())
+			return itemStack;
+		IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.ITEMS);
+		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
+		ICellInventory cellInv = inventoryHandler.getCellInv();
+		if (cellInv.getUsedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
+			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage());
+		return itemStack;
 	}
 }

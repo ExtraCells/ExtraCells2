@@ -2,8 +2,10 @@ package extracells.proxy;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import extracells.registries.BlockEnum;
+import extracells.registries.ItemEnum;
 import extracells.render.TextureManager;
 import extracells.render.item.ItemRendererCertusTank;
+import extracells.render.item.ItemRendererFluidPattern;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -22,6 +24,7 @@ public class ClientProxy extends CommonProxy
 	public void registerRenderers()
 	{
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()), new ItemRendererCertusTank());
+		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDPATTERN.getItem(), new ItemRendererFluidPattern());
 	}
 
 	@SubscribeEvent

@@ -8,6 +8,7 @@ import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
+import extracells.registries.ItemEnum;
 import extracells.render.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
@@ -142,9 +144,9 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4)
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
 	{
-		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(stack, StorageChannel.FLUIDS);
+		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
 		if (!(handler instanceof HandlerItemStorageFluid))
 			return;
 		HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
@@ -166,5 +168,21 @@ public class ItemStorageFluid extends Item implements ICellHandler
 	public EnumRarity getRarity(ItemStack par1)
 	{
 		return EnumRarity.epic;
+	}
+
+	@SuppressWarnings(
+	{ "rawtypes", "unchecked" })
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
+	{
+		if (!entityPlayer.isSneaking())
+			return itemStack;
+		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
+		if (!(handler instanceof HandlerItemStorageFluid))
+			return itemStack;
+		HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
+		if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1)))
+			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
+		return itemStack;
 	}
 }

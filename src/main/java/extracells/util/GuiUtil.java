@@ -3,6 +3,7 @@ package extracells.util;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.IIcon;
 import org.lwjgl.opengl.GL11;
 
 public class GuiUtil
@@ -57,5 +58,16 @@ public class GuiUtil
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	public static void drawIcon(IIcon icon, int x, int y, int z, float width, float height)
+	{
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV((double) (x), (double) (y + height), (double) z, (double) icon.getMinU(), (double) icon.getMaxV());
+		tessellator.addVertexWithUV((double) (x + width), (double) (y + height), (double) z, (double) icon.getMaxU(), (double) icon.getMaxV());
+		tessellator.addVertexWithUV((double) (x + width), (double) (y), (double) z, (double) icon.getMaxU(), (double) icon.getMinV());
+		tessellator.addVertexWithUV((double) (x), (double) (y), (double) z, (double) icon.getMinU(), (double) icon.getMinV());
+		tessellator.draw();
 	}
 }

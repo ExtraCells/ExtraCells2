@@ -58,7 +58,7 @@ public class ModelCertusTank extends ModelBase
 			tessellator.setNormal(0.0F, -1F, 0.0F);
 			renderer.renderFaceYNeg(block, x, y, z, block.getIcon(0, 0));
 		}
-		if (!(tankUp))
+		if (!tankUp)
 		{
 			tessellator.setNormal(0.0F, 1.0F, 0.0F);
 			renderer.renderFaceYPos(block, x, y, z, block.getIcon(1, 0));
@@ -82,6 +82,7 @@ public class ModelCertusTank extends ModelBase
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		tessellator.setBrightness(15728640);
 		boolean tankUp = world.getTileEntity(x, y + 1, z) instanceof TileEntityCertusTank;
 		boolean tankDown = world.getTileEntity(x, y - 1, z) instanceof TileEntityCertusTank;
 		int meta = 0;
@@ -91,25 +92,25 @@ public class ModelCertusTank extends ModelBase
 			meta = 2;
 		else if (tankDown)
 			meta = 1;
+		if (!tankUp)
+		{
+			tessellator.setNormal(0, -1, 0);
+			renderer.renderFaceYNeg(block, x, y + 0.99F, z, block.getIcon(1, 0));
+		}
 		if (!tankDown)
 		{
-			tessellator.setNormal(0.0F, -1F, 0.0F);
-			renderer.renderFaceYNeg(block, x, y + 0.001D, z, block.getIcon(0, 0));
-		}
-		if (!(tankUp))
-		{
-			tessellator.setNormal(0.0F, 1.0F, 0.0F);
-			renderer.renderFaceYPos(block, x, y - 0.001D, z, block.getIcon(1, 0));
+			tessellator.setNormal(0, 1, 0);
+			renderer.renderFaceYPos(block, x, y - 0.99F, z, block.getIcon(0, 0));
 		}
 		IIcon sideIcon = block.getIcon(3, meta);
-		tessellator.setNormal(0.0F, 0.0F, -1F);
-		renderer.renderFaceZNeg(block, x, y, z + 0.001D, sideIcon);
-		tessellator.setNormal(0.0F, 0.0F, 1.0F);
-		renderer.renderFaceZPos(block, x, y, z - 0.001D, sideIcon);
-		tessellator.setNormal(-1F, 0.0F, 0.0F);
-		renderer.renderFaceXNeg(block, x + 0.001D, y, z, sideIcon);
-		tessellator.setNormal(1.0F, 0.0F, 0.0F);
-		renderer.renderFaceXPos(block, x - 0.001D, y, z, sideIcon);
+		tessellator.setNormal(0, 0, -1);
+		renderer.renderFaceZNeg(block, x, y, z + 0.875F, sideIcon);
+		tessellator.setNormal(0, 0, 1);
+		renderer.renderFaceZPos(block, x, y, z - 0.875F, sideIcon);
+		tessellator.setNormal(-1, 0, 0);
+		renderer.renderFaceXNeg(block, x + 0.875F, y, z, sideIcon);
+		tessellator.setNormal(1, 0, 0);
+		renderer.renderFaceXPos(block, x - 0.875F, y, z, sideIcon);
 		GL11.glPopMatrix();
 	}
 
@@ -122,7 +123,6 @@ public class ModelCertusTank extends ModelBase
 			float scale = ((TileEntityCertusTank) tileEntity).getRenderScale();
 			if (storedFluid != null && scale > 0)
 			{
-				GL11.glPushMatrix();
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				Block id = Block.getBlockById(FluidRegistry.WATER.getID());
@@ -142,7 +142,6 @@ public class ModelCertusTank extends ModelBase
 				renderer.renderFaceXNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(1.0F, 0.0F, 0.0F);
 				renderer.renderFaceXPos(id, x, y, z, fluidIcon);
-				GL11.glPopMatrix();
 			}
 		}
 	}

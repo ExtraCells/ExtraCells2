@@ -3,11 +3,13 @@ package extracells.item;
 import extracells.registries.ItemEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -16,6 +18,11 @@ import java.util.List;
 public class ItemFluidPattern extends Item
 {
 	IIcon icon;
+
+	public ItemFluidPattern()
+	{
+		setMaxStackSize(1);
+	}
 
 	@Override
 	public void registerIcons(IIconRegister iconRegister)
@@ -93,5 +100,13 @@ public class ItemFluidPattern extends Item
 		default:
 			return icon;
 		}
+	}
+
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
+	{
+		if (entityPlayer.isSneaking())
+			return ItemEnum.FLUIDPATTERN.getSizedStack(itemStack.stackSize);
+		return itemStack;
 	}
 }

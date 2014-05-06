@@ -1,6 +1,7 @@
 package extracells.registries;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import extracells.Extracells;
 import extracells.item.*;
@@ -39,5 +40,15 @@ public enum ItemEnum
 	public Item getItem()
 	{
 		return item;
+	}
+
+	public ItemStack getDamagedStack(int damage)
+	{
+		return new ItemStack(item, 1, damage);
+	}
+
+	public ItemStack getSizedStack(int size)
+	{
+		return new ItemStack(item, size);
 	}
 }
