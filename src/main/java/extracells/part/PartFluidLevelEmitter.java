@@ -169,6 +169,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	public void setWantedAmount(long _wantedAmount, EntityPlayer player)
 	{
 		wantedAmount = _wantedAmount;
+		if (wantedAmount < 0)
+			wantedAmount = 0;
 		new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
 	}
 

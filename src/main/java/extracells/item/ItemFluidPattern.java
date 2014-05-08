@@ -48,7 +48,7 @@ public class ItemFluidPattern extends Item
 	@Override
 	public int getSpriteNumber()
 	{
-		return 0;
+		return 1;
 	}
 
 	public static Fluid getFluid(ItemStack itemStack)

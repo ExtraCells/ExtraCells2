@@ -1,9 +1,12 @@
 package extracells.render.item;
 
+import extracells.registries.ItemEnum;
 import extracells.util.GuiUtil;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.init.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
@@ -13,7 +16,7 @@ public class ItemRendererFluidPattern implements IItemRenderer
 	@Override
 	public boolean handleRenderType(ItemStack itemStack, ItemRenderType type)
 	{
-		return true;
+		return type != ItemRenderType.ENTITY;
 	}
 
 	@Override
@@ -25,22 +28,16 @@ public class ItemRendererFluidPattern implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack itemStack, Object... data)
 	{
+		Item item = ItemEnum.FLUIDPATTERN.getItem();
+		IIcon fluid = item.getIcon(itemStack, 0);
+		IIcon texture = item.getIcon(itemStack, 1);
 		GL11.glEnable(GL11.GL_BLEND);
-
-		if (type == ItemRenderType.ENTITY)
-		{
-			if (RenderItem.renderInFrame)
-			{
-				GL11.glScaled(1 / 16, 1 / 16, 1 / 16);
-				GL11.glRotatef(-90, 0, 1, 0);
-				GL11.glTranslated(-.5, -.42, 0);
-			} else
-			{
-				GL11.glTranslated(-.5, -.42, 0);
-			}
-		}
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor3f(1, 1, 1);
-		GuiUtil.drawIcon(Blocks.stone.getIcon(0, 0), 0, 0, 0, 1, 1);
-
+		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+		GuiUtil.drawIcon(fluid, 5, 5, 0, 6, 6);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
+		GL11.glTranslated(0, 0, 0.001F);
+		GuiUtil.drawIcon(texture, 0, 0, 0, 16, 16);
 	}
 }
