@@ -31,34 +31,30 @@ minecraft {
     assetDir = "../../MinecraftDebug/run_client/assets"
 }
 
-sourceSets
-        {
-            api
-                    {
-                        java
-                                {
-                                    exclude '**/layers/**'
-                                    exclude '**/integration/**'
-                                }
-                    }
+sourceSets {
+    api {
+        java {
+            exclude '**/layers/**'
+            exclude '**/integration/**'
         }
+    }
+}
 
-processResources
-        {
-            from(sourceSets.main.resources.srcDirs) {
-                include '**/*.lang'
-                include '**/*.info'
-                include '**/*.properties'
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.lang'
+        include '**/*.info'
+        include '**/*.properties'
 
-                expand 'version': project.version, 'mcversion': project.minecraft.version
-            }
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
 
-            from(sourceSets.main.resources.srcDirs) {
-                exclude '**/*.lang'
-                exclude '**/*.info'
-                exclude '**/*.properties'
-            }
-        }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.lang'
+        exclude '**/*.info'
+        exclude '**/*.properties'
+    }
+}
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
