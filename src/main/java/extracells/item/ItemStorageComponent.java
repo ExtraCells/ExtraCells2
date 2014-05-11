@@ -11,70 +11,58 @@ import net.minecraft.util.MathHelper;
 
 import java.util.List;
 
-public class ItemStorageComponent extends Item implements IStorageComponent
-{
-	private IIcon[] icons;
-	public final String[] suffixes =
-	{ "physical.256k", "physical.1024k", "physical.4096k", "physical.16384k", "fluid.1k", "fluid.4k", "fluid.16k", "fluid.64k", "fluid.256k", "fluid.1024k", "fluid.4096k" };
-	public final int[] size = new int[]
-	{ 262144, 1048576, 4194304, 16777216, 1024, 4096, 16384, 65536, 262144, 1048576, 4194304 };
+public class ItemStorageComponent extends Item implements IStorageComponent {
 
-	public ItemStorageComponent()
-	{
-		setMaxDamage(0);
-		setHasSubtypes(true);
-	}
+    private IIcon[] icons;
+    public final String[] suffixes = {"physical.256k", "physical.1024k", "physical.4096k", "physical.16384k", "fluid.1k", "fluid.4k", "fluid.16k", "fluid.64k", "fluid.256k", "fluid.1024k", "fluid.4096k"};
+    public final int[] size = new int[]{262144, 1048576, 4194304, 16777216, 1024, 4096, 16384, 65536, 262144, 1048576, 4194304};
 
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack)
-	{
-		return "extracells.item.storage.component." + suffixes[itemStack.getItemDamage()];
-	}
+    public ItemStorageComponent() {
+        setMaxDamage(0);
+        setHasSubtypes(true);
+    }
 
-	@Override
-	public IIcon getIconFromDamage(int dmg)
-	{
-		int j = MathHelper.clamp_int(dmg, 0, suffixes.length);
-		return icons[j];
-	}
+    @Override
+    public String getUnlocalizedName(ItemStack itemStack) {
+        return "extracells.item.storage.component." + suffixes[itemStack.getItemDamage()];
+    }
 
-	@Override
-	public void registerIcons(IIconRegister iconRegister)
-	{
-		icons = new IIcon[suffixes.length];
+    @Override
+    public IIcon getIconFromDamage(int dmg) {
+        int j = MathHelper.clamp_int(dmg, 0, suffixes.length);
+        return icons[j];
+    }
 
-		for (int i = 0; i < suffixes.length; ++i)
-		{
-			icons[i] = iconRegister.registerIcon("extracells:" + "storage.component." + suffixes[i]);
-		}
-	}
+    @Override
+    public void registerIcons(IIconRegister iconRegister) {
+        icons = new IIcon[suffixes.length];
 
-	@SuppressWarnings(
-	{ "unchecked", "rawtypes" })
-	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList)
-	{
-		for (int j = 0; j < suffixes.length; ++j)
-		{
-			itemList.add(new ItemStack(item, 1, j));
-		}
-	}
+        for (int i = 0; i < suffixes.length; ++i) {
+            icons[i] = iconRegister.registerIcon("extracells:" + "storage.component." + suffixes[i]);
+        }
+    }
 
-	@Override
-	public int getBytes(ItemStack is)
-	{
-		return size[is.getItemDamage()];
-	}
+    @SuppressWarnings(
+            {"unchecked", "rawtypes"})
+    @Override
+    public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
+        for (int j = 0; j < suffixes.length; ++j) {
+            itemList.add(new ItemStack(item, 1, j));
+        }
+    }
 
-	@Override
-	public boolean isStorageComponent(ItemStack is)
-	{
-		return is.getItem() == this;
-	}
+    @Override
+    public int getBytes(ItemStack is) {
+        return size[is.getItemDamage()];
+    }
 
-	@Override
-	public EnumRarity getRarity(ItemStack par1)
-	{
-		return EnumRarity.epic;
-	}
+    @Override
+    public boolean isStorageComponent(ItemStack is) {
+        return is.getItem() == this;
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack par1) {
+        return EnumRarity.epic;
+    }
 }

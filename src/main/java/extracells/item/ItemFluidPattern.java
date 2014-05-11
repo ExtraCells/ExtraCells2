@@ -15,98 +15,85 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import java.util.List;
 
-public class ItemFluidPattern extends Item
-{
-	IIcon icon;
+public class ItemFluidPattern extends Item {
 
-	public ItemFluidPattern()
-	{
-		setMaxStackSize(1);
-	}
+    IIcon icon;
 
-	@Override
-	public void registerIcons(IIconRegister iconRegister)
-	{
-		icon = iconRegister.registerIcon("extracells:fluid.pattern");
-	}
+    public ItemFluidPattern() {
+        setMaxStackSize(1);
+    }
 
-	@Override
-	public String getItemStackDisplayName(ItemStack itemStack)
-	{
-		Fluid fluid = getFluid(itemStack);
-		if (fluid == null)
-			return getUnlocalizedName(itemStack);
-		return StatCollector.translateToLocal(getUnlocalizedName(itemStack)) + ": " + fluid.getLocalizedName();
-	}
+    @Override
+    public void registerIcons(IIconRegister iconRegister) {
+        icon = iconRegister.registerIcon("extracells:fluid.pattern");
+    }
 
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack)
-	{
-		return "extracells.item.fluid.pattern";
-	}
+    @Override
+    public String getItemStackDisplayName(ItemStack itemStack) {
+        Fluid fluid = getFluid(itemStack);
+        if (fluid == null)
+            return getUnlocalizedName(itemStack);
+        return StatCollector.translateToLocal(getUnlocalizedName(itemStack)) + ": " + fluid.getLocalizedName();
+    }
 
-	@Override
-	public int getSpriteNumber()
-	{
-		return 1;
-	}
+    @Override
+    public String getUnlocalizedName(ItemStack itemStack) {
+        return "extracells.item.fluid.pattern";
+    }
 
-	public static Fluid getFluid(ItemStack itemStack)
-	{
-		if (!itemStack.hasTagCompound())
-			itemStack.setTagCompound(new NBTTagCompound());
+    @Override
+    public int getSpriteNumber() {
+        return 1;
+    }
 
-		return FluidRegistry.getFluid(itemStack.getTagCompound().getString("fluidID"));
-	}
+    public static Fluid getFluid(ItemStack itemStack) {
+        if (!itemStack.hasTagCompound())
+            itemStack.setTagCompound(new NBTTagCompound());
 
-	public static ItemStack getPatternForFluid(Fluid fluid)
-	{
-		ItemStack itemStack = new ItemStack(ItemEnum.FLUIDPATTERN.getItem(), 1);
-		itemStack.setTagCompound(new NBTTagCompound());
-		if (fluid != null)
-			itemStack.getTagCompound().setString("fluidID", fluid.getName());
-		return itemStack;
-	}
+        return FluidRegistry.getFluid(itemStack.getTagCompound().getString("fluidID"));
+    }
 
-	@SuppressWarnings(
-	{ "unchecked", "rawtypes" })
-	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList)
-	{
-		for (String fluidID : FluidRegistry.getRegisteredFluidIDs().keySet())
-		{
-			ItemStack itemStack = new ItemStack(this, 1);
-			itemStack.setTagCompound(new NBTTagCompound());
-			itemStack.getTagCompound().setString("fluidID", fluidID);
-			itemList.add(itemStack);
-		}
-	}
+    public static ItemStack getPatternForFluid(Fluid fluid) {
+        ItemStack itemStack = new ItemStack(ItemEnum.FLUIDPATTERN.getItem(), 1);
+        itemStack.setTagCompound(new NBTTagCompound());
+        if (fluid != null)
+            itemStack.getTagCompound().setString("fluidID", fluid.getName());
+        return itemStack;
+    }
 
-	@Override
-	public boolean requiresMultipleRenderPasses()
-	{
-		return true;
-	}
+    @SuppressWarnings(
+            {"unchecked", "rawtypes"})
+    @Override
+    public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
+        for (String fluidID : FluidRegistry.getRegisteredFluidIDs().keySet()) {
+            ItemStack itemStack = new ItemStack(this, 1);
+            itemStack.setTagCompound(new NBTTagCompound());
+            itemStack.getTagCompound().setString("fluidID", fluidID);
+            itemList.add(itemStack);
+        }
+    }
 
-	public IIcon getIcon(ItemStack itemStack, int pass)
-	{
-		switch (pass)
-		{
-		case 0:
-			Fluid fluid = getFluid(itemStack);
-			if (fluid == null)
-				return icon;
-			return fluid.getIcon();
-		default:
-			return icon;
-		}
-	}
+    @Override
+    public boolean requiresMultipleRenderPasses() {
+        return true;
+    }
 
-	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
-	{
-		if (entityPlayer.isSneaking())
-			return ItemEnum.FLUIDPATTERN.getSizedStack(itemStack.stackSize);
-		return itemStack;
-	}
+    public IIcon getIcon(ItemStack itemStack, int pass) {
+        switch (pass) {
+            case 0:
+                Fluid fluid = getFluid(itemStack);
+                if (fluid == null)
+                    return icon;
+                return fluid.getIcon();
+            default:
+                return icon;
+        }
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        if (entityPlayer.isSneaking())
+            return ItemEnum.FLUIDPATTERN.getSizedStack(itemStack.stackSize);
+        return itemStack;
+    }
 }

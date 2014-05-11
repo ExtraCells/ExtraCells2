@@ -19,173 +19,142 @@ import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
-public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer
-{
-	private PartFluidTerminal terminal;
-	private IMEMonitor<IAEFluidStack> monitor;
-	private IItemList<IAEFluidStack> fluidStackList = AEApi.instance().storage().createFluidList();
-	private Fluid selectedFluid;
-	private EntityPlayer player;
-	private GuiFluidTerminal guiFluidTerminal;
+public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
 
-	public ContainerFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player)
-	{
-		terminal = _terminal;
-		player = _player;
-		if (!player.worldObj.isRemote)
-		{
-			monitor = terminal.getGridBlock().getFluidMonitor();
-			if (monitor != null)
-			{
-				monitor.addListener(this, null);
-				fluidStackList = monitor.getStorageList();
-			}
-			terminal.addContainer(this);
-		}
+    private PartFluidTerminal terminal;
+    private IMEMonitor<IAEFluidStack> monitor;
+    private IItemList<IAEFluidStack> fluidStackList = AEApi.instance().storage().createFluidList();
+    private Fluid selectedFluid;
+    private EntityPlayer player;
+    private GuiFluidTerminal guiFluidTerminal;
 
-		// Input Slot accepts all FluidContainers
-		addSlotToContainer(new SlotRespective(terminal.getInventory(), 0, 8, 74));
-		// Input Slot accepts nothing
-		addSlotToContainer(new SlotFurnace(player, terminal.getInventory(), 1, 26, 74));
-		bindPlayerInventory(player.inventory);
-	}
+    public ContainerFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player) {
+        terminal = _terminal;
+        player = _player;
+        if (!player.worldObj.isRemote) {
+            monitor = terminal.getGridBlock().getFluidMonitor();
+            if (monitor != null) {
+                monitor.addListener(this, null);
+                fluidStackList = monitor.getStorageList();
+            }
+            terminal.addContainer(this);
+        }
 
-	public PartFluidTerminal getTerminal()
-	{
-		return terminal;
-	}
+        // Input Slot accepts all FluidContainers
+        addSlotToContainer(new SlotRespective(terminal.getInventory(), 0, 8, 74));
+        // Input Slot accepts nothing
+        addSlotToContainer(new SlotFurnace(player, terminal.getInventory(), 1, 26, 74));
+        bindPlayerInventory(player.inventory);
+    }
 
-	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			for (int j = 0; j < 9; j++)
-			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 104));
-			}
-		}
+    public PartFluidTerminal getTerminal() {
+        return terminal;
+    }
 
-		for (int i = 0; i < 9; i++)
-		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 162));
-		}
-	}
+    protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 104));
+            }
+        }
 
-	public void setGui(GuiFluidTerminal _guiFluidTerminal)
-	{
-		if (_guiFluidTerminal != null)
-			guiFluidTerminal = _guiFluidTerminal;
-	}
+        for (int i = 0; i < 9; i++) {
+            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 162));
+        }
+    }
 
-	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer)
-	{
-		return true;
-	}
+    public void setGui(GuiFluidTerminal _guiFluidTerminal) {
+        if (_guiFluidTerminal != null)
+            guiFluidTerminal = _guiFluidTerminal;
+    }
 
-	@Override
-	public boolean isValid(Object verificationToken)
-	{
-		return true;
-	}
+    @Override
+    public boolean canInteractWith(EntityPlayer entityplayer) {
+        return true;
+    }
 
-	public void onContainerClosed(EntityPlayer entityPlayer)
-	{
-		super.onContainerClosed(entityPlayer);
-		if (!entityPlayer.worldObj.isRemote)
-		{
-			if (monitor != null)
-				monitor.removeListener(this);
-			terminal.removeContainer(this);
-		}
-	}
+    @Override
+    public boolean isValid(Object verificationToken) {
+        return true;
+    }
 
-	@Override
-	public void postChange(IMEMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource)
-	{
-		fluidStackList = monitor.getStorageList();
-		new PacketFluidTerminal(player, fluidStackList).sendPacketToPlayer(player);
-	}
+    public void onContainerClosed(EntityPlayer entityPlayer) {
+        super.onContainerClosed(entityPlayer);
+        if (!entityPlayer.worldObj.isRemote) {
+            if (monitor != null)
+                monitor.removeListener(this);
+            terminal.removeContainer(this);
+        }
+    }
 
-	@Override
-	public void onListUpdate()
-	{
+    @Override
+    public void postChange(IMEMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource) {
+        fluidStackList = monitor.getStorageList();
+        new PacketFluidTerminal(player, fluidStackList).sendPacketToPlayer(player);
+    }
 
-	}
+    @Override
+    public void onListUpdate() {
 
-	public void forceFluidUpdate()
-	{
-		if (monitor != null)
-		{
-			new PacketFluidTerminal(player, monitor.getStorageList()).sendPacketToPlayer(player);
-		}
-	}
+    }
 
-	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList)
-	{
-		fluidStackList = _fluidStackList;
-		if (guiFluidTerminal != null)
-			guiFluidTerminal.updateFluids();
-	}
+    public void forceFluidUpdate() {
+        if (monitor != null) {
+            new PacketFluidTerminal(player, monitor.getStorageList()).sendPacketToPlayer(player);
+        }
+    }
 
-	public Fluid getSelectedFluid()
-	{
-		return selectedFluid;
-	}
+    public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList) {
+        fluidStackList = _fluidStackList;
+        if (guiFluidTerminal != null)
+            guiFluidTerminal.updateFluids();
+    }
 
-	public void setSelectedFluid(Fluid _selectedFluid)
-	{
-		new PacketFluidTerminal(player, _selectedFluid, terminal).sendPacketToServer();
-	}
+    public Fluid getSelectedFluid() {
+        return selectedFluid;
+    }
 
-	public void receiveSelectedFluid(Fluid _selectedFluid)
-	{
-		selectedFluid = _selectedFluid;
-		if (guiFluidTerminal != null)
-			guiFluidTerminal.updateSelectedFluid();
-	}
+    public void setSelectedFluid(Fluid _selectedFluid) {
+        new PacketFluidTerminal(player, _selectedFluid, terminal).sendPacketToServer();
+    }
 
-	public IItemList<IAEFluidStack> getFluidStackList()
-	{
-		return fluidStackList;
-	}
+    public void receiveSelectedFluid(Fluid _selectedFluid) {
+        selectedFluid = _selectedFluid;
+        if (guiFluidTerminal != null)
+            guiFluidTerminal.updateSelectedFluid();
+    }
 
-	public EntityPlayer getPlayer()
-	{
-		return player;
-	}
+    public IItemList<IAEFluidStack> getFluidStackList() {
+        return fluidStackList;
+    }
 
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber)
-	{
-		ItemStack itemstack = null;
-		Slot slot = (Slot) inventorySlots.get(slotnumber);
-		if (slot != null && slot.getHasStack())
-		{
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
-			if (terminal.getInventory().isItemValidForSlot(0, itemstack1))
-			{
-				if (slotnumber == 0)
-				{
-					if (!mergeItemStack(itemstack1, 2, 36, false))
-						return null;
-				} else if (!mergeItemStack(itemstack1, 0, 1, false))
-				{
-					return null;
-				}
-				if (itemstack1.stackSize == 0)
-				{
-					slot.putStack(null);
-				} else
-				{
-					slot.onSlotChanged();
-				}
-			} else
-			{
-				return null;
-			}
-		}
-		return itemstack;
-	}
+    public EntityPlayer getPlayer() {
+        return player;
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
+        ItemStack itemstack = null;
+        Slot slot = (Slot) inventorySlots.get(slotnumber);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+            if (terminal.getInventory().isItemValidForSlot(0, itemstack1)) {
+                if (slotnumber == 0) {
+                    if (!mergeItemStack(itemstack1, 2, 36, false))
+                        return null;
+                } else if (!mergeItemStack(itemstack1, 0, 1, false)) {
+                    return null;
+                }
+                if (itemstack1.stackSize == 0) {
+                    slot.putStack(null);
+                } else {
+                    slot.onSlotChanged();
+                }
+            } else {
+                return null;
+            }
+        }
+        return itemstack;
+    }
 }

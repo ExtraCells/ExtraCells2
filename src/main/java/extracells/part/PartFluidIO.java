@@ -26,212 +26,184 @@ import net.minecraftforge.fluids.FluidRegistry;
 import java.io.IOException;
 import java.util.Arrays;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPart
-{
-	protected Fluid[] filterFluids = new Fluid[9];
-	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
-	protected byte filterSize;
-	protected byte speedState;
-	protected boolean redstoneControlled;
-	private boolean lastRedstone;
-	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4, 1, this)
-	{
-		public boolean isItemValidForSlot(int i, ItemStack itemStack)
-		{
-			if (itemStack == null)
-				return false;
-			if (AEApi.instance().materials().materialCardCapacity.sameAs(itemStack))
-				return true;
-			else if (AEApi.instance().materials().materialCardSpeed.sameAs(itemStack))
-				return true;
-			else if (AEApi.instance().materials().materialCardRedstone.sameAs(itemStack))
-				return true;
-			return false;
-		}
-	};
+public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPart {
 
-	@Override
-	public abstract void renderInventory(IPartRenderHelper rh, RenderBlocks renderer);
+    protected Fluid[] filterFluids = new Fluid[9];
+    private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    protected byte filterSize;
+    protected byte speedState;
+    protected boolean redstoneControlled;
+    private boolean lastRedstone;
+    private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4, 1, this) {
 
-	@Override
-	public abstract void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer);
+        public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+            if (itemStack == null)
+                return false;
+            if (AEApi.instance().materials().materialCardCapacity.sameAs(itemStack))
+                return true;
+            else if (AEApi.instance().materials().materialCardSpeed.sameAs(itemStack))
+                return true;
+            else if (AEApi.instance().materials().materialCardRedstone.sameAs(itemStack))
+                return true;
+            return false;
+        }
+    };
 
-	@Override
-	public final void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer)
-	{
-	}
+    @Override
+    public abstract void renderInventory(IPartRenderHelper rh, RenderBlocks renderer);
 
-	public ECPrivateInventory getUpgradeInventory()
-	{
-		return upgradeInventory;
-	}
+    @Override
+    public abstract void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer);
 
-	@Override
-	public final void writeToNBT(NBTTagCompound data)
-	{
-		super.writeToNBT(data);
-		data.setInteger("redstoneMode", redstoneMode.ordinal());
-		for (int i = 0; i < filterFluids.length; i++)
-		{
-			Fluid fluid = filterFluids[i];
-			if (fluid != null)
-				data.setString("FilterFluid#" + i, fluid.getName());
-			else
-				data.setString("FilterFluid#" + i, "");
-		}
-		data.setTag("upgradeInventory", upgradeInventory.writeToNBT());
-	}
+    @Override
+    public final void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer) {
+    }
 
-	@Override
-	public int getLightLevel()
-	{
-		return 0;
-	}
+    public ECPrivateInventory getUpgradeInventory() {
+        return upgradeInventory;
+    }
 
-	@Override
-	public final void readFromNBT(NBTTagCompound data)
-	{
-		super.readFromNBT(data);
-		redstoneMode = RedstoneMode.values()[data.getInteger("redstoneMode")];
-		for (int i = 0; i < 9; i++)
-		{
-			filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
-		}
-		upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
-		onInventoryChanged();
-	}
+    @Override
+    public final void writeToNBT(NBTTagCompound data) {
+        super.writeToNBT(data);
+        data.setInteger("redstoneMode", redstoneMode.ordinal());
+        for (int i = 0; i < filterFluids.length; i++) {
+            Fluid fluid = filterFluids[i];
+            if (fluid != null)
+                data.setString("FilterFluid#" + i, fluid.getName());
+            else
+                data.setString("FilterFluid#" + i, "");
+        }
+        data.setTag("upgradeInventory", upgradeInventory.writeToNBT());
+    }
 
-	@Override
-	public final void writeToStream(ByteBuf data) throws IOException
-	{
-		super.writeToStream(data);
-	}
+    @Override
+    public int getLightLevel() {
+        return 0;
+    }
 
-	@Override
-	public final boolean readFromStream(ByteBuf data) throws IOException
-	{
-		return super.readFromStream(data);
-	}
+    @Override
+    public final void readFromNBT(NBTTagCompound data) {
+        super.readFromNBT(data);
+        redstoneMode = RedstoneMode.values()[data.getInteger("redstoneMode")];
+        for (int i = 0; i < 9; i++) {
+            filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
+        }
+        upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
+        onInventoryChanged();
+    }
 
-	@Override
-	public abstract void getBoxes(IPartCollsionHelper bch);
+    @Override
+    public final void writeToStream(ByteBuf data) throws IOException {
+        super.writeToStream(data);
+    }
 
-	@Override
-	public int cableConnectionRenderTo()
-	{
-		return 5;
-	}
+    @Override
+    public final boolean readFromStream(ByteBuf data) throws IOException {
+        return super.readFromStream(data);
+    }
 
-	@Override
-	public final TickingRequest getTickingRequest(IGridNode node)
-	{
-		return new TickingRequest(1, 20, false, false);
-	}
+    @Override
+    public abstract void getBoxes(IPartCollsionHelper bch);
 
-	@Override
-	public final TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall)
-	{
-		if (canDoWork())
-			return doWork(125 + speedState * 125, TicksSinceLastCall) ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
-		return TickRateModulation.SLOWER;
-	}
+    @Override
+    public int cableConnectionRenderTo() {
+        return 5;
+    }
 
-	public abstract boolean doWork(int rate, int TicksSinceLastCall);
+    @Override
+    public final TickingRequest getTickingRequest(IGridNode node) {
+        return new TickingRequest(1, 20, false, false);
+    }
 
-	public final void setFluid(int index, Fluid fluid, EntityPlayer player)
-	{
-		filterFluids[index] = fluid;
-		new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
-	}
+    @Override
+    public final TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall) {
+        if (canDoWork())
+            return doWork(125 + speedState * 125, TicksSinceLastCall) ? TickRateModulation.FASTER : TickRateModulation.SLOWER;
+        return TickRateModulation.SLOWER;
+    }
 
-	public RedstoneMode getRedstoneMode()
-	{
-		return redstoneMode;
-	}
+    public abstract boolean doWork(int rate, int TicksSinceLastCall);
 
-	public void loopRedstoneMode(EntityPlayer player)
-	{
-		if (redstoneMode.ordinal() + 1 < RedstoneMode.values().length)
-			redstoneMode = RedstoneMode.values()[redstoneMode.ordinal() + 1];
-		else
-			redstoneMode = RedstoneMode.values()[0];
-		new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
-	}
+    public final void setFluid(int index, Fluid fluid, EntityPlayer player) {
+        filterFluids[index] = fluid;
+        new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
+    }
 
-	public Object getServerGuiElement(EntityPlayer player)
-	{
-		return new ContainerBusFluidIO(this, player);
-	}
+    public RedstoneMode getRedstoneMode() {
+        return redstoneMode;
+    }
 
-	public Object getClientGuiElement(EntityPlayer player)
-	{
-		return new GuiBusFluidIO(this, player);
-	}
+    public void loopRedstoneMode(EntityPlayer player) {
+        if (redstoneMode.ordinal() + 1 < RedstoneMode.values().length)
+            redstoneMode = RedstoneMode.values()[redstoneMode.ordinal() + 1];
+        else
+            redstoneMode = RedstoneMode.values()[0];
+        new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
+    }
 
-	public void sendInformation(EntityPlayer player)
-	{
-		new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
-		new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
-		new PacketBusFluidIO(filterSize).sendPacketToPlayer(player);
-	}
+    public Object getServerGuiElement(EntityPlayer player) {
+        return new ContainerBusFluidIO(this, player);
+    }
 
-	@Override
-	public void onNeighborChanged()
-	{
-		super.onNeighborChanged();
+    public Object getClientGuiElement(EntityPlayer player) {
+        return new GuiBusFluidIO(this, player);
+    }
 
-		if (redstonePowered)
-		{
-			if (!lastRedstone)
-			{
-				doWork(125 + speedState + speedState * 125, 1);
-			} else
-			{
-				lastRedstone = true;
-				doWork(125 + speedState + speedState * 125, 1);
-			}
-		}
-		lastRedstone = redstonePowered;
-	}
+    public void sendInformation(EntityPlayer player) {
+        new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
+        new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
+        new PacketBusFluidIO(filterSize).sendPacketToPlayer(player);
+    }
 
-	@Override
-	public void onInventoryChanged()
-	{
-		filterSize = 0;
-		redstoneControlled = false;
-		speedState = 0;
-		for (int i = 0; i < upgradeInventory.getSizeInventory(); i++)
-		{
-			ItemStack currentStack = upgradeInventory.getStackInSlot(i);
-			if (currentStack != null)
-			{
-				if (AEApi.instance().materials().materialCardCapacity.sameAs(currentStack))
-					filterSize++;
-				if (AEApi.instance().materials().materialCardRedstone.sameAs(currentStack))
-					redstoneControlled = true;
-				if (AEApi.instance().materials().materialCardSpeed.sameAs(currentStack))
-					speedState++;
-			}
-		}
-		new PacketBusFluidIO(filterSize).sendPacketToAllPlayers();
-		new PacketBusFluidIO(redstoneControlled).sendPacketToAllPlayers();
-	}
+    @Override
+    public void onNeighborChanged() {
+        super.onNeighborChanged();
 
-	private boolean canDoWork()
-	{
-		if (!redstoneControlled)
-			return true;
-		switch (getRedstoneMode())
-		{
-		case IGNORE:
-			return true;
-		case LOW_SIGNAL:
-			return !redstonePowered;
-		case HIGH_SIGNAL:
-			return redstonePowered;
-		case SIGNAL_PULSE:
-			return false;
-		}
-		return false;
-	}
+        if (redstonePowered) {
+            if (!lastRedstone) {
+                doWork(125 + speedState + speedState * 125, 1);
+            } else {
+                lastRedstone = true;
+                doWork(125 + speedState + speedState * 125, 1);
+            }
+        }
+        lastRedstone = redstonePowered;
+    }
+
+    @Override
+    public void onInventoryChanged() {
+        filterSize = 0;
+        redstoneControlled = false;
+        speedState = 0;
+        for (int i = 0; i < upgradeInventory.getSizeInventory(); i++) {
+            ItemStack currentStack = upgradeInventory.getStackInSlot(i);
+            if (currentStack != null) {
+                if (AEApi.instance().materials().materialCardCapacity.sameAs(currentStack))
+                    filterSize++;
+                if (AEApi.instance().materials().materialCardRedstone.sameAs(currentStack))
+                    redstoneControlled = true;
+                if (AEApi.instance().materials().materialCardSpeed.sameAs(currentStack))
+                    speedState++;
+            }
+        }
+        new PacketBusFluidIO(filterSize).sendPacketToAllPlayers();
+        new PacketBusFluidIO(redstoneControlled).sendPacketToAllPlayers();
+    }
+
+    private boolean canDoWork() {
+        if (!redstoneControlled)
+            return true;
+        switch (getRedstoneMode()) {
+            case IGNORE:
+                return true;
+            case LOW_SIGNAL:
+                return !redstonePowered;
+            case HIGH_SIGNAL:
+                return redstonePowered;
+            case SIGNAL_PULSE:
+                return false;
+        }
+        return false;
+    }
 }

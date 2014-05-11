@@ -19,199 +19,171 @@ import net.minecraftforge.fluids.IFluidHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartFluidImport extends PartFluidIO implements IFluidHandler
-{
+public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
-	@Override
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer)
-	{
-		Tessellator ts = Tessellator.instance;
+    @Override
+    public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
+        Tessellator ts = Tessellator.instance;
 
-		IIcon side = TextureManager.BUS_SIDE.getTexture();
-		rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTexture(), side, side);
-		rh.setBounds(4, 4, 14, 12, 12, 16);
-		rh.renderInventoryBox(renderer);
+        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTexture(), side, side);
+        rh.setBounds(4, 4, 14, 12, 12, 16);
+        rh.renderInventoryBox(renderer);
 
-		rh.setTexture(side);
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		rh.renderInventoryBox(renderer);
-		rh.setBounds(6, 6, 12, 10, 10, 13);
-		rh.renderInventoryBox(renderer);
+        rh.setTexture(side);
+        rh.setBounds(5, 5, 13, 11, 11, 14);
+        rh.renderInventoryBox(renderer);
+        rh.setBounds(6, 6, 12, 10, 10, 13);
+        rh.renderInventoryBox(renderer);
 
-		rh.setBounds(4, 4, 14, 12, 12, 16);
-		rh.setInvColor(AEColor.Cyan.blackVariant);
-		ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderInventoryFace(TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
+        rh.setBounds(4, 4, 14, 12, 12, 16);
+        rh.setInvColor(AEColor.Cyan.blackVariant);
+        ts.setBrightness(15 << 20 | 15 << 4);
+        rh.renderInventoryFace(TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 
 
-		rh.setBounds(6, 6, 11, 10, 10, 12);
-		renderInventoryBusLights(rh, renderer);
-	}
+        rh.setBounds(6, 6, 11, 10, 10, 12);
+        renderInventoryBusLights(rh, renderer);
+    }
 
-	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer)
-	{
-		Tessellator ts = Tessellator.instance;
+    @Override
+    public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
+        Tessellator ts = Tessellator.instance;
 
-		IIcon side = TextureManager.BUS_SIDE.getTexture();
-		rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTextures()[0], side, side);
-		rh.setBounds(4, 4, 14, 12, 12, 16);
-		rh.renderBlock(x, y, z, renderer);
+        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTextures()[0], side, side);
+        rh.setBounds(4, 4, 14, 12, 12, 16);
+        rh.renderBlock(x, y, z, renderer);
 
-		ts.setColorOpaque_I(host.getColor().blackVariant);
-		if (isActive())
-			ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderFace(x, y, z, TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
+        ts.setColorOpaque_I(host.getColor().blackVariant);
+        if (isActive())
+            ts.setBrightness(15 << 20 | 15 << 4);
+        rh.renderFace(x, y, z, TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 
-		rh.setTexture(side);
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		rh.renderBlock(x, y, z, renderer);
-		rh.setBounds(6, 6, 12, 10, 10, 13);
-		rh.renderBlock(x, y, z, renderer);
+        rh.setTexture(side);
+        rh.setBounds(5, 5, 13, 11, 11, 14);
+        rh.renderBlock(x, y, z, renderer);
+        rh.setBounds(6, 6, 12, 10, 10, 13);
+        rh.renderBlock(x, y, z, renderer);
 
-		rh.setBounds(6, 6, 11, 10, 10, 12);
-		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+        rh.setBounds(6, 6, 11, 10, 10, 12);
+        renderStaticBusLights(x, y, z, rh, renderer);
+    }
 
-	@Override
-	public void getBoxes(IPartCollsionHelper bch)
-	{
-		bch.addBox(4, 4, 14, 12, 12, 16);
-		bch.addBox(5, 5, 13, 11, 11, 14);
-		bch.addBox(6, 6, 12, 10, 10, 13);
-		bch.addBox(6, 6, 11, 10, 10, 12);
-	}
+    @Override
+    public void getBoxes(IPartCollsionHelper bch) {
+        bch.addBox(4, 4, 14, 12, 12, 16);
+        bch.addBox(5, 5, 13, 11, 11, 14);
+        bch.addBox(6, 6, 12, 10, 10, 13);
+        bch.addBox(6, 6, 11, 10, 10, 12);
+    }
 
-	@Override
-	public int cableConnectionRenderTo()
-	{
-		return 5;
-	}
+    @Override
+    public int cableConnectionRenderTo() {
+        return 5;
+    }
 
-	public boolean doWork(int rate, int TicksSinceLastCall)
-	{
-		if (facingTank == null)
-			return false;
-		boolean empty = true;
+    public boolean doWork(int rate, int TicksSinceLastCall) {
+        if (facingTank == null)
+            return false;
+        boolean empty = true;
 
-		List<Fluid> filter = new ArrayList<Fluid>();
-		filter.add(filterFluids[4]);
+        List<Fluid> filter = new ArrayList<Fluid>();
+        filter.add(filterFluids[4]);
 
-		if (filterSize >= 1)
-		{
-			for (byte i = 1; i < 9; i += 2)
-			{
-				if (i != 4)
-				{
-					filter.add(filterFluids[i]);
-				}
-			}
-		}
+        if (filterSize >= 1) {
+            for (byte i = 1; i < 9; i += 2) {
+                if (i != 4) {
+                    filter.add(filterFluids[i]);
+                }
+            }
+        }
 
-		if (filterSize >= 2)
-		{
-			for (byte i = 0; i < 9; i += 2)
-			{
-				if (i != 4)
-				{
-					filter.add(filterFluids[i]);
-				}
-			}
-		}
+        if (filterSize >= 2) {
+            for (byte i = 0; i < 9; i += 2) {
+                if (i != 4) {
+                    filter.add(filterFluids[i]);
+                }
+            }
+        }
 
-		for (Fluid fluid : filter)
-		{
-			if (fluid != null)
-			{
-				empty = false;
+        for (Fluid fluid : filter) {
+            if (fluid != null) {
+                empty = false;
 
-				if (fillToNetwork(fluid, rate * TicksSinceLastCall))
-				{
-					return true;
-				}
-			}
-		}
-		if (empty)
-			return fillToNetwork(null, rate * TicksSinceLastCall);
-		return false;
-	}
+                if (fillToNetwork(fluid, rate * TicksSinceLastCall)) {
+                    return true;
+                }
+            }
+        }
+        if (empty)
+            return fillToNetwork(null, rate * TicksSinceLastCall);
+        return false;
+    }
 
-	private boolean fillToNetwork(Fluid fluid, int toDrain)
-	{
-		FluidStack drained;
-		if (fluid == null)
-		{
-			drained = facingTank.drain(side.getOpposite(), toDrain, false);
-		} else
-		{
-			drained = facingTank.drain(side.getOpposite(), new FluidStack(fluid, toDrain), false);
-		}
+    private boolean fillToNetwork(Fluid fluid, int toDrain) {
+        FluidStack drained;
+        if (fluid == null) {
+            drained = facingTank.drain(side.getOpposite(), toDrain, false);
+        } else {
+            drained = facingTank.drain(side.getOpposite(), new FluidStack(fluid, toDrain), false);
+        }
 
-		if (drained == null || drained.amount <= 0 || drained.fluidID <= 0)
-			return false;
+        if (drained == null || drained.amount <= 0 || drained.fluidID <= 0)
+            return false;
 
-		IAEFluidStack toFill = AEApi.instance().storage().createFluidStack(drained);
-		IAEFluidStack notInjected = injectFluid(toFill, Actionable.MODULATE);
+        IAEFluidStack toFill = AEApi.instance().storage().createFluidStack(drained);
+        IAEFluidStack notInjected = injectFluid(toFill, Actionable.MODULATE);
 
-		if (notInjected != null)
-		{
-			int amount = (int) (toFill.getStackSize() - notInjected.getStackSize());
-			if (amount > 0)
-			{
-				facingTank.drain(side.getOpposite(), amount, true);
-				return true;
-			} else
-			{
-				return false;
-			}
-		} else
-		{
-			facingTank.drain(side.getOpposite(), toFill.getFluidStack(), true);
-			return true;
-		}
-	}
+        if (notInjected != null) {
+            int amount = (int) (toFill.getStackSize() - notInjected.getStackSize());
+            if (amount > 0) {
+                facingTank.drain(side.getOpposite(), amount, true);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            facingTank.drain(side.getOpposite(), toFill.getFluidStack(), true);
+            return true;
+        }
+    }
 
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
-	{
-		if (resource == null)
-			return 0;
+    @Override
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+        if (resource == null)
+            return 0;
 
-		FluidStack toFill = new FluidStack(resource.fluidID, 20);// TODO mb/t
-		IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), Actionable.MODULATE);
+        FluidStack toFill = new FluidStack(resource.fluidID, 20);// TODO mb/t
+        IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), Actionable.MODULATE);
 
-		if (filled == null)
-			return 20;
-		return toFill.amount - (int) filled.getStackSize();
-	}
+        if (filled == null)
+            return 20;
+        return toFill.amount - (int) filled.getStackSize();
+    }
 
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
-	{
-		return null;
-	}
+    @Override
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+        return null;
+    }
 
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
-	{
-		return null;
-	}
+    @Override
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+        return null;
+    }
 
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid)
-	{
-		return true;
-	}
+    @Override
+    public boolean canFill(ForgeDirection from, Fluid fluid) {
+        return true;
+    }
 
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid)
-	{
-		return false;
-	}
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid) {
+        return false;
+    }
 
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from)
-	{
-		return new FluidTankInfo[0];
-	}
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+        return new FluidTankInfo[0];
+    }
 }

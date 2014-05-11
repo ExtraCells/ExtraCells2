@@ -24,165 +24,144 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
-public class ItemStorageFluid extends Item implements ICellHandler
-{
-	public static final String[] suffixes =
-	{ "1k", "4k", "16k", "64k", "256k", "1024k", "4096k" };
+public class ItemStorageFluid extends Item implements ICellHandler {
 
-	public static final int[] spaces =
-	{ 1024, 4096, 16348, 65536, 262144, 1048576, 4194304 };
+    public static final String[] suffixes = {"1k", "4k", "16k", "64k", "256k", "1024k", "4096k"};
 
-	private IIcon[] icons;
+    public static final int[] spaces = {1024, 4096, 16348, 65536, 262144, 1048576, 4194304};
 
-	public ItemStorageFluid()
-	{
-		AEApi.instance().registries().cell().addCellHandler(this);
-		setMaxStackSize(1);
-		setMaxDamage(0);
-		setHasSubtypes(true);
-	}
+    private IIcon[] icons;
 
-	@Override
-	public IIcon getIconFromDamage(int dmg)
-	{
-		int j = MathHelper.clamp_int(dmg, 0, suffixes.length);
-		return icons[j];
-	}
+    public ItemStorageFluid() {
+        AEApi.instance().registries().cell().addCellHandler(this);
+        setMaxStackSize(1);
+        setMaxDamage(0);
+        setHasSubtypes(true);
+    }
 
-	@Override
-	public void registerIcons(IIconRegister iconRegister)
-	{
-		icons = new IIcon[suffixes.length];
+    @Override
+    public IIcon getIconFromDamage(int dmg) {
+        int j = MathHelper.clamp_int(dmg, 0, suffixes.length);
+        return icons[j];
+    }
 
-		for (int i = 0; i < suffixes.length; ++i)
-		{
-			icons[i] = iconRegister.registerIcon("extracells:" + "storage.fluid." + suffixes[i]);
-		}
-	}
+    @Override
+    public void registerIcons(IIconRegister iconRegister) {
+        icons = new IIcon[suffixes.length];
 
-	@SuppressWarnings(
-	{ "rawtypes", "unchecked" })
-	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTab, List listSubItems)
-	{
-		for (int i = 0; i < suffixes.length; ++i)
-		{
-			listSubItems.add(new ItemStack(item, 1, i));
-		}
-	}
+        for (int i = 0; i < suffixes.length; ++i) {
+            icons[i] = iconRegister.registerIcon("extracells:" + "storage.fluid." + suffixes[i]);
+        }
+    }
 
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack)
-	{
-		return "extracells.item.storage.fluid." + suffixes[itemStack.getItemDamage()];
-	}
+    @SuppressWarnings(
+            {"rawtypes", "unchecked"})
+    @Override
+    public void getSubItems(Item item, CreativeTabs creativeTab, List listSubItems) {
+        for (int i = 0; i < suffixes.length; ++i) {
+            listSubItems.add(new ItemStack(item, 1, i));
+        }
+    }
 
-	@Override
-	public boolean isCell(ItemStack is)
-	{
-		return is.getItem() == this;
-	}
+    @Override
+    public String getUnlocalizedName(ItemStack itemStack) {
+        return "extracells.item.storage.fluid." + suffixes[itemStack.getItemDamage()];
+    }
 
-	@Override
-	public IMEInventoryHandler getCellInventory(ItemStack is, StorageChannel channel)
-	{
-		if (channel == StorageChannel.ITEMS || is.getItem() != this)
-			return null;
-		return new HandlerItemStorageFluid(is);
-	}
+    @Override
+    public boolean isCell(ItemStack is) {
+        return is.getItem() == this;
+    }
 
-	@Override
-	public IIcon getTopTexture()
-	{
-		return TextureManager.ITEM_STORAGE_FLUID.getTexture();
-	}
+    @Override
+    public IMEInventoryHandler getCellInventory(ItemStack is, StorageChannel channel) {
+        if (channel == StorageChannel.ITEMS || is.getItem() != this)
+            return null;
+        return new HandlerItemStorageFluid(is);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler, IMEInventoryHandler inv, ItemStack is, StorageChannel chan)
-	{
-		if (chan != StorageChannel.FLUIDS)
-			return;
-		IStorageMonitorable monitorable = null;
-		if (chest != null)
-			monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new BaseActionSource());
-		if (monitorable != null)
-			GuiHandler.launchGui(GuiHandler.getGuiId(0), player, monitorable.getFluidInventory());
-	}
+    @Override
+    public IIcon getTopTexture() {
+        return TextureManager.ITEM_STORAGE_FLUID.getTexture();
+    }
 
-	@Override
-	public int getStatusForCell(ItemStack is, IMEInventory handler)
-	{
-		if (handler == null)
-			return 0;
+    @SuppressWarnings("unchecked")
+    @Override
+    public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler, IMEInventoryHandler inv, ItemStack is, StorageChannel chan) {
+        if (chan != StorageChannel.FLUIDS)
+            return;
+        IStorageMonitorable monitorable = null;
+        if (chest != null)
+            monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new BaseActionSource());
+        if (monitorable != null)
+            GuiHandler.launchGui(GuiHandler.getGuiId(0), player, monitorable.getFluidInventory());
+    }
 
-		HandlerItemStorageFluid inventory = (HandlerItemStorageFluid) handler;
-		if (inventory.freeBytes() == 0)
-			return 3;
-		if (inventory.isPreformatted() || inventory.usedTypes() == inventory.totalBytes())
-			return 2;
+    @Override
+    public int getStatusForCell(ItemStack is, IMEInventory handler) {
+        if (handler == null)
+            return 0;
 
-		return 1;
-	}
+        HandlerItemStorageFluid inventory = (HandlerItemStorageFluid) handler;
+        if (inventory.freeBytes() == 0)
+            return 3;
+        if (inventory.isPreformatted() || inventory.usedTypes() == inventory.totalBytes())
+            return 2;
 
-	@Override
-	public double cellIdleDrain(ItemStack is, IMEInventory handler)
-	{
-		return 0;
-	}
+        return 1;
+    }
 
-	public int maxTypes(ItemStack unused)
-	{
-		return 5;
-	}
+    @Override
+    public double cellIdleDrain(ItemStack is, IMEInventory handler) {
+        return 0;
+    }
 
-	public int maxStorage(ItemStack is)
-	{
-		return spaces[Math.max(0, is.getItemDamage())];
-	}
+    public int maxTypes(ItemStack unused) {
+        return 5;
+    }
 
-	@SuppressWarnings(
-	{ "rawtypes", "unchecked" })
-	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
-	{
-		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
-		if (!(handler instanceof HandlerItemStorageFluid))
-			return;
-		HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
-		Boolean partitioned = cellHandler.isPreformatted();
-		long usedBytes = cellHandler.usedBytes();
+    public int maxStorage(ItemStack is) {
+        return spaces[Math.max(0, is.getItemDamage())];
+    }
 
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
-		if (usedBytes != 0)
-			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes));
+    @SuppressWarnings(
+            {"rawtypes", "unchecked"})
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
+        if (!(handler instanceof HandlerItemStorageFluid))
+            return;
+        HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
+        Boolean partitioned = cellHandler.isPreformatted();
+        long usedBytes = cellHandler.usedBytes();
 
-		if (partitioned)
-		{
-			list.add(StatCollector.translateToLocal("Appeng.GuiITooltip.Partitioned") + " - " + StatCollector.translateToLocal("Appeng.GuiITooltip.Precise"));
-		}
-	}
+        list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
+        list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
+        if (usedBytes != 0)
+            list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes));
 
-	@Override
-	public EnumRarity getRarity(ItemStack par1)
-	{
-		return EnumRarity.epic;
-	}
+        if (partitioned) {
+            list.add(StatCollector.translateToLocal("Appeng.GuiITooltip.Partitioned") + " - " + StatCollector.translateToLocal("Appeng.GuiITooltip.Precise"));
+        }
+    }
 
-	@SuppressWarnings(
-	{ "rawtypes", "unchecked" })
-	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
-	{
-		if (!entityPlayer.isSneaking())
-			return itemStack;
-		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
-		if (!(handler instanceof HandlerItemStorageFluid))
-			return itemStack;
-		HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
-		if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1)))
-			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
-		return itemStack;
-	}
+    @Override
+    public EnumRarity getRarity(ItemStack par1) {
+        return EnumRarity.epic;
+    }
+
+    @SuppressWarnings(
+            {"rawtypes", "unchecked"})
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        if (!entityPlayer.isSneaking())
+            return itemStack;
+        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
+        if (!(handler instanceof HandlerItemStorageFluid))
+            return itemStack;
+        HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
+        if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1)))
+            return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
+        return itemStack;
+    }
 }

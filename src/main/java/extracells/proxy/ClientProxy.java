@@ -13,27 +13,23 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 @SuppressWarnings("unused")
-public class ClientProxy extends CommonProxy
-{
-	public ClientProxy()
-	{
-		super();
-		MinecraftForge.EVENT_BUS.register(this);
-	}
+public class ClientProxy extends CommonProxy {
 
-	public void registerRenderers()
-	{
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()), new ItemRendererCertusTank());
-		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDPATTERN.getItem(), new ItemRendererFluidPattern());
-	}
+    public ClientProxy() {
+        super();
+        MinecraftForge.EVENT_BUS.register(this);
+    }
 
-	@SubscribeEvent
-	public void registerTextures(TextureStitchEvent.Pre textureStitchEvent)
-	{
-		TextureMap map = textureStitchEvent.map;
-		for (TextureManager currentTexture : TextureManager.values())
-		{
-			currentTexture.registerTexture(map);
-		}
-	}
+    public void registerRenderers() {
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()), new ItemRendererCertusTank());
+        MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDPATTERN.getItem(), new ItemRendererFluidPattern());
+    }
+
+    @SubscribeEvent
+    public void registerTextures(TextureStitchEvent.Pre textureStitchEvent) {
+        TextureMap map = textureStitchEvent.map;
+        for (TextureManager currentTexture : TextureManager.values()) {
+            currentTexture.registerTexture(map);
+        }
+    }
 }

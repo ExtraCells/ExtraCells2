@@ -17,75 +17,63 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.logging.Logger;
 
-public class ChannelHandler extends FMLIndexedMessageToMessageCodec<AbstractPacket>
-{
-	private static EnumMap<Side, FMLEmbeddedChannel> channels;
+public class ChannelHandler extends FMLIndexedMessageToMessageCodec<AbstractPacket> {
 
-	public ChannelHandler()
-	{
-		addDiscriminator(0, PacketFluidSlot.class);
-		addDiscriminator(1, PacketFluidTerminal.class);
-		addDiscriminator(2, PacketBusFluidIO.class);
-		addDiscriminator(3, PacketBusFluidStorage.class);
-		addDiscriminator(4, PacketFluidPlaneFormation.class);
-		addDiscriminator(5, PacketFluidStorage.class);
-		addDiscriminator(6, PacketFluidEmitter.class);
-	}
+    private static EnumMap<Side, FMLEmbeddedChannel> channels;
 
-	@Override
-	public void encodeInto(ChannelHandlerContext ctx, AbstractPacket msg, ByteBuf target) throws Exception
-	{
-		msg.writePacketData(target);
-	}
+    public ChannelHandler() {
+        addDiscriminator(0, PacketFluidSlot.class);
+        addDiscriminator(1, PacketFluidTerminal.class);
+        addDiscriminator(2, PacketBusFluidIO.class);
+        addDiscriminator(3, PacketBusFluidStorage.class);
+        addDiscriminator(4, PacketFluidPlaneFormation.class);
+        addDiscriminator(5, PacketFluidStorage.class);
+        addDiscriminator(6, PacketFluidEmitter.class);
+    }
 
-	@Override
-	public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, AbstractPacket msg)
-	{
-		try
-		{
-			msg.readPacketData(source);
-			msg.execute();
-		} catch (IOException e)
-		{
-			Logger.getLogger("ExtraCells").warning("Something caused a Protocol Exception!");
-		}
-	}
+    @Override
+    public void encodeInto(ChannelHandlerContext ctx, AbstractPacket msg, ByteBuf target) throws Exception {
+        msg.writePacketData(target);
+    }
 
-	public static void setChannels(EnumMap<Side, FMLEmbeddedChannel> _channels)
-	{
-		channels = _channels;
-	}
+    @Override
+    public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, AbstractPacket msg) {
+        try {
+            msg.readPacketData(source);
+            msg.execute();
+        } catch (IOException e) {
+            Logger.getLogger("ExtraCells").warning("Something caused a Protocol Exception!");
+        }
+    }
 
-	public static EnumMap<Side, FMLEmbeddedChannel> getChannels()
-	{
-		return channels;
-	}
+    public static void setChannels(EnumMap<Side, FMLEmbeddedChannel> _channels) {
+        channels = _channels;
+    }
 
-	public static void sendPacketToServer(AbstractPacket packet)
-	{
-		ChannelHandler.getChannels().get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
-		ChannelHandler.getChannels().get(Side.CLIENT).writeOutbound(packet);
-	}
+    public static EnumMap<Side, FMLEmbeddedChannel> getChannels() {
+        return channels;
+    }
 
-	public static void sendPacketToPlayer(AbstractPacket packet, EntityPlayer player)
-	{
-		ChannelHandler.getChannels().get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-		ChannelHandler.getChannels().get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-		ChannelHandler.getChannels().get(Side.SERVER).writeOutbound(packet);
-	}
+    public static void sendPacketToServer(AbstractPacket packet) {
+        ChannelHandler.getChannels().get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+        ChannelHandler.getChannels().get(Side.CLIENT).writeOutbound(packet);
+    }
 
-	public static void sendPacketToAllPlayers(AbstractPacket packet)
-	{
-		ChannelHandler.getChannels().get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
-		ChannelHandler.getChannels().get(Side.SERVER).writeOutbound(packet);
-	}
+    public static void sendPacketToPlayer(AbstractPacket packet, EntityPlayer player) {
+        ChannelHandler.getChannels().get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+        ChannelHandler.getChannels().get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+        ChannelHandler.getChannels().get(Side.SERVER).writeOutbound(packet);
+    }
 
-	public static void sendPacketToAllPlayers(Packet packet, World world)
-	{
-		for (Object player : world.playerEntities)
-		{
-			if (player instanceof EntityPlayerMP)
-				((EntityPlayerMP) player).playerNetServerHandler.sendPacket(packet);
-		}
-	}
+    public static void sendPacketToAllPlayers(AbstractPacket packet) {
+        ChannelHandler.getChannels().get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+        ChannelHandler.getChannels().get(Side.SERVER).writeOutbound(packet);
+    }
+
+    public static void sendPacketToAllPlayers(Packet packet, World world) {
+        for (Object player : world.playerEntities) {
+            if (player instanceof EntityPlayerMP)
+                ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(packet);
+        }
+    }
 }

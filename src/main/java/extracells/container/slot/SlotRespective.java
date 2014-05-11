@@ -4,19 +4,17 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SlotRespective extends Slot
-{
-	IInventory inventory;
+public class SlotRespective extends Slot {
 
-	public SlotRespective(IInventory inventory, int index, int x, int y)
-	{
-		super(inventory, index, x, y);
-		this.inventory = inventory;
-	}
+    IInventory inventory;
 
-	@Override
-	public boolean isItemValid(ItemStack itemstack)
-	{
-		return inventory.isItemValidForSlot(this.slotNumber, itemstack);
-	}
+    public SlotRespective(IInventory inventory, int index, int x, int y) {
+        super(inventory, index, x, y);
+        this.inventory = inventory;
+    }
+
+    @Override
+    public boolean isItemValid(ItemStack itemstack) {
+        return inventory.isItemValidForSlot(this.slotNumber, itemstack);
+    }
 }

@@ -20,95 +20,82 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable
-{
-	IIcon icon;
+public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable {
 
-	public ItemWirelessTerminalFluid()
-	{
-		setMaxStackSize(1);
-	}
+    IIcon icon;
 
-	@SuppressWarnings("unchecked")
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
-	{
-		if (world.isRemote)
-			return itemStack;
-		if (!itemStack.hasTagCompound())
-			itemStack.setTagCompound(new NBTTagCompound());
+    public ItemWirelessTerminalFluid() {
+        setMaxStackSize(1);
+    }
 
-		Long key;
-		try
-		{
-			key = Long.parseLong(itemStack.getTagCompound().getString("key"));
-		} catch (Throwable ignored)
-		{
-			return itemStack;
-		}
-		int x = (int) entityPlayer.posX;
-		int y = (int) entityPlayer.posY;
-		int z = (int) entityPlayer.posZ;
-		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locateable().findLocateableBySerial(key);
-		if (securityTerminal == null)
-			return itemStack;
-		IGridNode gridNode = securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
-		if (gridNode == null)
-			return itemStack;
-		IGrid grid = gridNode.getGrid();
-		if (grid == null)
-			return itemStack;
-		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().blocks().blockWireless.entity()))
-		{
-			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
-			WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
-			int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
-			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange())
-			{
-				IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
-				if (gridCache != null)
-				{
-					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
-					if (fluidInventory != null)
-					{
-						GuiHandler.launchGui(GuiHandler.getGuiId(1), entityPlayer, fluidInventory);
-					}
-				}
-			}
-		}
-		return itemStack;
-	}
+    @SuppressWarnings("unchecked")
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        if (world.isRemote)
+            return itemStack;
+        if (!itemStack.hasTagCompound())
+            itemStack.setTagCompound(new NBTTagCompound());
 
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack)
-	{
-		return super.getUnlocalizedName(itemStack).replace("item.extracells", "extracells.item");
-	}
+        Long key;
+        try {
+            key = Long.parseLong(itemStack.getTagCompound().getString("key"));
+        } catch (Throwable ignored) {
+            return itemStack;
+        }
+        int x = (int) entityPlayer.posX;
+        int y = (int) entityPlayer.posY;
+        int z = (int) entityPlayer.posZ;
+        IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locateable().findLocateableBySerial(key);
+        if (securityTerminal == null)
+            return itemStack;
+        IGridNode gridNode = securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
+        if (gridNode == null)
+            return itemStack;
+        IGrid grid = gridNode.getGrid();
+        if (grid == null)
+            return itemStack;
+        for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().blocks().blockWireless.entity())) {
+            IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
+            WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
+            int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+            if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
+                IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
+                if (gridCache != null) {
+                    IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
+                    if (fluidInventory != null) {
+                        GuiHandler.launchGui(GuiHandler.getGuiId(1), entityPlayer, fluidInventory);
+                    }
+                }
+            }
+        }
+        return itemStack;
+    }
 
-	public IIcon getIconFromDamage(int dmg)
-	{
-		return icon;
-	}
+    @Override
+    public String getUnlocalizedName(ItemStack itemStack) {
+        return super.getUnlocalizedName(itemStack).replace("item.extracells", "extracells.item");
+    }
 
-	@Override
-	public void registerIcons(IIconRegister iconRegister)
-	{
-		icon = iconRegister.registerIcon("extracells:" + "terminal.fluid.wireless");
-	}
+    public IIcon getIconFromDamage(int dmg) {
+        return icon;
+    }
 
-	@Override
-	public String getEncryptionKey(ItemStack itemStack)
-	{
-		if (!itemStack.hasTagCompound())
-			itemStack.setTagCompound(new NBTTagCompound());
-		return itemStack.getTagCompound().getString("key");
-	}
+    @Override
+    public void registerIcons(IIconRegister iconRegister) {
+        icon = iconRegister.registerIcon("extracells:" + "terminal.fluid.wireless");
+    }
 
-	@Override
-	public void setEncryptionKey(ItemStack itemStack, String encKey, String name)
-	{
-		if (!itemStack.hasTagCompound())
-			itemStack.setTagCompound(new NBTTagCompound());
-		NBTTagCompound tagCompound = itemStack.getTagCompound();
-		tagCompound.setString("key", encKey);
-	}
+    @Override
+    public String getEncryptionKey(ItemStack itemStack) {
+        if (!itemStack.hasTagCompound())
+            itemStack.setTagCompound(new NBTTagCompound());
+        return itemStack.getTagCompound().getString("key");
+    }
+
+    @Override
+    public void setEncryptionKey(ItemStack itemStack, String encKey, String name) {
+        if (!itemStack.hasTagCompound())
+            itemStack.setTagCompound(new NBTTagCompound());
+        NBTTagCompound tagCompound = itemStack.getTagCompound();
+        tagCompound.setString("key", encKey);
+    }
 }

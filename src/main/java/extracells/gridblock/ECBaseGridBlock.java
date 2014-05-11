@@ -13,98 +13,85 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
 
-public class ECBaseGridBlock implements IGridBlock
-{
-	protected World world;
-	protected int x, y, z;
-	protected AEColor color;
-	protected IGrid grid;
-	protected int usedChannels;
-	protected PartECBase host;
+public class ECBaseGridBlock implements IGridBlock {
 
-	public ECBaseGridBlock(PartECBase _host)
-	{
-		host = _host;
-	}
+    protected World world;
+    protected int x, y, z;
+    protected AEColor color;
+    protected IGrid grid;
+    protected int usedChannels;
+    protected PartECBase host;
 
-	@Override
-	public double getIdlePowerUsage()
-	{
-		return host.getPowerUsage();
-	}
+    public ECBaseGridBlock(PartECBase _host) {
+        host = _host;
+    }
 
-	@Override
-	public EnumSet<GridFlags> getFlags()
-	{
-		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
-	}
+    @Override
+    public double getIdlePowerUsage() {
+        return host.getPowerUsage();
+    }
 
-	@Override
-	public final boolean isWorldAccessable()
-	{
-		return false;
-	}
+    @Override
+    public EnumSet<GridFlags> getFlags() {
+        return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+    }
 
-	@Override
-	public final DimensionalCoord getLocation()
-	{
-		return new DimensionalCoord(world, x, y, z);
-	}
+    @Override
+    public final boolean isWorldAccessable() {
+        return false;
+    }
 
-	@Override
-	public final AEColor getGridColor()
-	{
-		return color;
-	}
+    @Override
+    public final DimensionalCoord getLocation() {
+        return new DimensionalCoord(world, x, y, z);
+    }
 
-	@Override
-	public void onGridNotification(GridNotification notification)
-	{
-	}
+    @Override
+    public final AEColor getGridColor() {
+        return color;
+    }
 
-	@Override
-	public final void setNetworkStatus(IGrid _grid, int _usedChannels)
-	{
-		grid = _grid;
-		usedChannels = _usedChannels;
-	}
+    @Override
+    public void onGridNotification(GridNotification notification) {
+    }
 
-	@Override
-	public final EnumSet<ForgeDirection> getConnectableSides()
-	{
-		return null;
-	}
+    @Override
+    public final void setNetworkStatus(IGrid _grid, int _usedChannels) {
+        grid = _grid;
+        usedChannels = _usedChannels;
+    }
 
-	@Override
-	public IGridHost getMachine()
-	{
-		return host;
-	}
+    @Override
+    public final EnumSet<ForgeDirection> getConnectableSides() {
+        return null;
+    }
 
-	@Override
-	public void gridChanged()
-	{
-	}
+    @Override
+    public IGridHost getMachine() {
+        return host;
+    }
 
-	@Override
-	public ItemStack getMachineRepresentation()
-	{
-		return null;// TODO
-	}
+    @Override
+    public void gridChanged() {
+    }
 
-	public IMEMonitor<IAEFluidStack> getFluidMonitor()
-	{
-		IGridNode node = host.getGridNode();
-		if (node == null)
-			return null;
-		IGrid grid = node.getGrid();
-		if (grid == null)
-			return null;
-		IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-		if (storageGrid == null)
-			return null;
-		IMEMonitor<IAEFluidStack> fluidInventory = storageGrid.getFluidInventory();
-		return fluidInventory;
+    @Override
+    public ItemStack getMachineRepresentation() {
+        return null;// TODO
+    }
 
-	}
+    public IMEMonitor<IAEFluidStack> getFluidMonitor() {
+        IGridNode node = host.getGridNode();
+        if (node == null)
+            return null;
+        IGrid grid = node.getGrid();
+        if (grid == null)
+            return null;
+        IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+        if (storageGrid == null)
+            return null;
+        IMEMonitor<IAEFluidStack> fluidInventory = storageGrid.getFluidInventory();
+        return fluidInventory;
+
+    }
 }

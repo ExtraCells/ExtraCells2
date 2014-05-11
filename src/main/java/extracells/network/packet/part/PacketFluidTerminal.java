@@ -16,137 +16,120 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.io.IOException;
 
-public class PacketFluidTerminal extends AbstractPacket
-{
-	IItemList<IAEFluidStack> fluidStackList;
-	Fluid currentFluid;
-	PartFluidTerminal terminalFluid;
+public class PacketFluidTerminal extends AbstractPacket {
 
-	@SuppressWarnings("unused")
-	public PacketFluidTerminal()
-	{
-	}
+    IItemList<IAEFluidStack> fluidStackList;
+    Fluid currentFluid;
+    PartFluidTerminal terminalFluid;
 
-	public PacketFluidTerminal(EntityPlayer _player, IItemList<IAEFluidStack> _list)
-	{
-		super(_player);
-		mode = 0;
-		fluidStackList = _list;
-	}
+    @SuppressWarnings("unused")
+    public PacketFluidTerminal() {
+    }
 
-	public PacketFluidTerminal(EntityPlayer _player, Fluid _currentFluid, PartFluidTerminal _terminalFluid)
-	{
-		super(_player);
-		mode = 1;
-		currentFluid = _currentFluid;
-		terminalFluid = _terminalFluid;
-	}
+    public PacketFluidTerminal(EntityPlayer _player, IItemList<IAEFluidStack> _list) {
+        super(_player);
+        mode = 0;
+        fluidStackList = _list;
+    }
 
-	public PacketFluidTerminal(EntityPlayer _player, Fluid _currentFluid)
-	{
-		super(_player);
-		mode = 2;
-		currentFluid = _currentFluid;
-	}
+    public PacketFluidTerminal(EntityPlayer _player, Fluid _currentFluid, PartFluidTerminal _terminalFluid) {
+        super(_player);
+        mode = 1;
+        currentFluid = _currentFluid;
+        terminalFluid = _terminalFluid;
+    }
 
-	public PacketFluidTerminal(EntityPlayer _player, PartFluidTerminal _terminalFluid)
-	{
-		super(_player);
-		mode = 3;
-		terminalFluid = _terminalFluid;
-	}
+    public PacketFluidTerminal(EntityPlayer _player, Fluid _currentFluid) {
+        super(_player);
+        mode = 2;
+        currentFluid = _currentFluid;
+    }
 
-	@Override
-	public void writeData(ByteBuf out) throws IOException
-	{
-		switch (mode)
-		{
-		case 0:
-			for (IAEFluidStack stack : fluidStackList)
-			{
-				FluidStack fluidStack = stack.getFluidStack();
-				writeFluid(fluidStack.getFluid(), out);
-				out.writeLong(fluidStack.amount);
-			}
-			break;
-		case 1:
-			writePart(terminalFluid, out);
-			writeFluid(currentFluid, out);
-			break;
-		case 2:
-			writeFluid(currentFluid, out);
-			break;
-		case 3:
-			writePart(terminalFluid, out);
-			break;
-		}
-	}
+    public PacketFluidTerminal(EntityPlayer _player, PartFluidTerminal _terminalFluid) {
+        super(_player);
+        mode = 3;
+        terminalFluid = _terminalFluid;
+    }
 
-	@Override
-	public void readData(ByteBuf in) throws IOException
-	{
-		switch (mode)
-		{
-		case 0:
-			fluidStackList = AEApi.instance().storage().createFluidList();
-			while (in.readableBytes() > 0)
-			{
-				Fluid fluid = readFluid(in);
-				long fluidAmount = in.readLong();
-				if (fluid == null || fluidAmount <= 0)
-					continue;
-				IAEFluidStack stack = AEApi.instance().storage().createFluidStack(new FluidStack(fluid, 1));
-				stack.setStackSize(fluidAmount);
-				fluidStackList.add(stack);
-			}
-			break;
-		case 1:
-			terminalFluid = (PartFluidTerminal) readPart(in);
-			currentFluid = readFluid(in);
-			break;
-		case 2:
-			currentFluid = readFluid(in);
-			break;
-		case 3:
-			terminalFluid = (PartFluidTerminal) readPart(in);
-			break;
-		}
-	}
+    @Override
+    public void writeData(ByteBuf out) throws IOException {
+        switch (mode) {
+            case 0:
+                for (IAEFluidStack stack : fluidStackList) {
+                    FluidStack fluidStack = stack.getFluidStack();
+                    writeFluid(fluidStack.getFluid(), out);
+                    out.writeLong(fluidStack.amount);
+                }
+                break;
+            case 1:
+                writePart(terminalFluid, out);
+                writeFluid(currentFluid, out);
+                break;
+            case 2:
+                writeFluid(currentFluid, out);
+                break;
+            case 3:
+                writePart(terminalFluid, out);
+                break;
+        }
+    }
 
-	@Override
-	public void execute()
-	{
-		switch (mode)
-		{
-		case 0:
-			if (player != null && player.isClientWorld())
-			{
-				Gui gui = Minecraft.getMinecraft().currentScreen;
-				if (gui instanceof GuiFluidTerminal)
-				{
-					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
-					container.updateFluidList(fluidStackList);
-				}
-			}
-			break;
-		case 1:
-			terminalFluid.setCurrentFluid(currentFluid);
-			break;
-		case 2:
-			if (player != null && Minecraft.getMinecraft().currentScreen instanceof GuiFluidTerminal)
-			{
-				GuiFluidTerminal gui = (GuiFluidTerminal) Minecraft.getMinecraft().currentScreen;
-				((ContainerFluidTerminal) gui.getContainer()).receiveSelectedFluid(currentFluid);
-			}
-			break;
-		case 3:
-			if (player != null && player.openContainer instanceof ContainerFluidTerminal)
-			{
-				ContainerFluidTerminal fluidContainer = (ContainerFluidTerminal) player.openContainer;
-				fluidContainer.forceFluidUpdate();
-				terminalFluid.sendCurrentFluid(fluidContainer);
-			}
-			break;
-		}
-	}
+    @Override
+    public void readData(ByteBuf in) throws IOException {
+        switch (mode) {
+            case 0:
+                fluidStackList = AEApi.instance().storage().createFluidList();
+                while (in.readableBytes() > 0) {
+                    Fluid fluid = readFluid(in);
+                    long fluidAmount = in.readLong();
+                    if (fluid == null || fluidAmount <= 0)
+                        continue;
+                    IAEFluidStack stack = AEApi.instance().storage().createFluidStack(new FluidStack(fluid, 1));
+                    stack.setStackSize(fluidAmount);
+                    fluidStackList.add(stack);
+                }
+                break;
+            case 1:
+                terminalFluid = (PartFluidTerminal) readPart(in);
+                currentFluid = readFluid(in);
+                break;
+            case 2:
+                currentFluid = readFluid(in);
+                break;
+            case 3:
+                terminalFluid = (PartFluidTerminal) readPart(in);
+                break;
+        }
+    }
+
+    @Override
+    public void execute() {
+        switch (mode) {
+            case 0:
+                if (player != null && player.isClientWorld()) {
+                    Gui gui = Minecraft.getMinecraft().currentScreen;
+                    if (gui instanceof GuiFluidTerminal) {
+                        ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
+                        container.updateFluidList(fluidStackList);
+                    }
+                }
+                break;
+            case 1:
+                terminalFluid.setCurrentFluid(currentFluid);
+                break;
+            case 2:
+                if (player != null && Minecraft.getMinecraft().currentScreen instanceof GuiFluidTerminal) {
+                    GuiFluidTerminal gui = (GuiFluidTerminal) Minecraft.getMinecraft().currentScreen;
+                    ((ContainerFluidTerminal) gui.getContainer()).receiveSelectedFluid(currentFluid);
+                }
+                break;
+            case 3:
+                if (player != null && player.openContainer instanceof ContainerFluidTerminal) {
+                    ContainerFluidTerminal fluidContainer = (ContainerFluidTerminal) player.openContainer;
+                    fluidContainer.forceFluidUpdate();
+                    terminalFluid.sendCurrentFluid(fluidContainer);
+                }
+                break;
+        }
+    }
 }

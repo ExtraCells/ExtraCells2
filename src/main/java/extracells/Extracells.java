@@ -24,63 +24,56 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.File;
 
 @Mod(modid = "extracells", name = "Extra Cells", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
-public class Extracells
-{
-	@Instance("extracells")
-	public static Extracells instance;
+public class Extracells {
 
-	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
-	public static CommonProxy proxy;
+    @Instance("extracells")
+    public static Extracells instance;
 
-	public static GuiHandler guiHandler = new GuiHandler();
+    @SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
+    public static CommonProxy proxy;
 
-	private static File configFolder;
-	public static boolean shortenedBuckets;
-	public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells")
-	{
-		public ItemStack getIconItemStack()
-		{
-			return new ItemStack(ItemEnum.FLUIDSTORAGE.getItem());
-		}
+    private static File configFolder;
+    public static boolean shortenedBuckets;
+    public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells") {
 
-		@Override
-		public Item getTabIconItem()
-		{
-			return ItemEnum.FLUIDSTORAGE.getItem();
-		}
-	};
+        public ItemStack getIconItemStack() {
+            return new ItemStack(ItemEnum.FLUIDSTORAGE.getItem());
+        }
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		instance = this;
-		configFolder = event.getModConfigurationDirectory();
+        @Override
+        public Item getTabIconItem() {
+            return ItemEnum.FLUIDSTORAGE.getItem();
+        }
+    };
 
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        instance = this;
+        configFolder = event.getModConfigurationDirectory();
 
-		// Config
-		Configuration config = new Configuration(new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"));
-		config.load();
-		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true);
-		config.save();
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
-		proxy.registerItems();
-		proxy.registerBlocks();
-	}
+        // Config
+        Configuration config = new Configuration(new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"));
+        config.load();
+        shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true);
+        config.save();
 
-	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-		AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
-		proxy.registerRenderers();
-		proxy.registerTileEntities();
-		proxy.addRecipes(configFolder);
-		ChannelHandler.setChannels(NetworkRegistry.INSTANCE.newChannel("ExtraCells", new ChannelHandler()));
-		RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId()));
-	}
+        proxy.registerItems();
+        proxy.registerBlocks();
+    }
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
-	}
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
+        proxy.registerRenderers();
+        proxy.registerTileEntities();
+        proxy.addRecipes(configFolder);
+        ChannelHandler.setChannels(NetworkRegistry.INSTANCE.newChannel("ExtraCells", new ChannelHandler()));
+        RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId()));
+    }
+
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+    }
 }

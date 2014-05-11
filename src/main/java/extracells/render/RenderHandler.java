@@ -9,61 +9,52 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 
-public class RenderHandler implements ISimpleBlockRenderingHandler
-{
-	private static int renderID = 0;
-	ModelCertusTank tank = new ModelCertusTank();
-	public static int renderPass;
+public class RenderHandler implements ISimpleBlockRenderingHandler {
 
-	public RenderHandler(int id)
-	{
-		RenderHandler.renderPass = 0;
-		renderID = id;
-	}
+    private static int renderID = 0;
+    ModelCertusTank tank = new ModelCertusTank();
+    public static int renderPass;
 
-	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
-	{
-	}
+    public RenderHandler(int id) {
+        RenderHandler.renderPass = 0;
+        renderID = id;
+    }
 
-	@Override
-	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
-	{
-		if (block instanceof BlockCertusTank)
-		{
-			Tessellator tessellator = Tessellator.instance;
-			tessellator.setColorOpaque_F(1, 1, 1);
-			boolean oldAO = renderer.enableAO;
-			renderer.enableAO = false;
-			if (RenderHandler.renderPass == 0)
-			{
-				tank.renderOuterBlock(block, x, y, z, renderer, world);
-			} else
-			{
-				tank.renderInnerBlock(block, x, y, z, renderer, world);
-				TileEntity tileEntity = world.getTileEntity(x, y, z);
-				tank.renderFluid(tileEntity, x, y, z, renderer);
-			}
-			renderer.enableAO = oldAO;
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {
+    }
 
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return true;
-	}
+    @Override
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+        if (block instanceof BlockCertusTank) {
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.setColorOpaque_F(1, 1, 1);
+            boolean oldAO = renderer.enableAO;
+            renderer.enableAO = false;
+            if (RenderHandler.renderPass == 0) {
+                tank.renderOuterBlock(block, x, y, z, renderer, world);
+            } else {
+                tank.renderInnerBlock(block, x, y, z, renderer, world);
+                TileEntity tileEntity = world.getTileEntity(x, y, z);
+                tank.renderFluid(tileEntity, x, y, z, renderer);
+            }
+            renderer.enableAO = oldAO;
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public int getRenderId()
-	{
-		return getId();
-	}
+    @Override
+    public boolean shouldRender3DInInventory(int modelId) {
+        return true;
+    }
 
-	public static int getId()
-	{
-		return renderID;
-	}
+    @Override
+    public int getRenderId() {
+        return getId();
+    }
+
+    public static int getId() {
+        return renderID;
+    }
 }
