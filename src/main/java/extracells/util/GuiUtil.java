@@ -59,6 +59,7 @@ public class GuiUtil {
         if (icon == null)
             return;
         Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
         tessellator.addVertexWithUV((double) (x), (double) (y + height), (double) z, (double) icon.getMinU(), (double) icon.getMaxV());
         tessellator.addVertexWithUV((double) (x + width), (double) (y + height), (double) z, (double) icon.getMaxU(), (double) icon.getMaxV());
         tessellator.addVertexWithUV((double) (x + width), (double) (y), (double) z, (double) icon.getMaxU(), (double) icon.getMinV());
