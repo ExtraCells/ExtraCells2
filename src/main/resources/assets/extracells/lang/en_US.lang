@@ -35,7 +35,7 @@ itemGroup.Extra_Cells=Extra Cells
 
 //Item Groups
 extracells.fluid.IO=ME Fluid Export/Import Bus
-extracells.fluid.plane=ME Fluid Annihilation/Formation Pane
+extracells.fluid.plane=ME Fluid Annihilation/Formation Plane
 //Parts
 extracells.part.fluid.export.name=ME Fluid Export Bus
 extracells.part.fluid.import.name=ME Fluid Import Bus
