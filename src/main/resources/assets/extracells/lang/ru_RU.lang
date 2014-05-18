@@ -34,7 +34,7 @@ extracells.item.fluid.pattern=МЭ жидкостный шаблон
 itemGroup.Extra_Cells=Extra Cells
 
 //Item Groups
-extracells.fluid.IO=МЭ жидкостная шина экспорта\импорта
+extracells.fluid.IO=МЭ жидкостная шина экспорта/импорта
 extracells.fluid.plane=МЭ жидкостная плоскость уничтожения/формирования
 //Parts
 extracells.part.fluid.export.name=МЭ жидкостная шина экспорта
