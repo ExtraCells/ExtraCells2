@@ -30,8 +30,12 @@ public class ItemRendererFluidPattern implements IItemRenderer {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor3f(1, 1, 1);
+
+        if (type == ItemRenderType.EQUIPPED_FIRST_PERSON)
+            GL11.glTranslated(0, -10, 5);
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-        GuiUtil.drawIcon(fluid, 5, 5, 0, 6, 6);
+        if (fluid != null)
+            GuiUtil.drawIcon(fluid, 5, 5, 0, 6, 6);
         Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
         GL11.glTranslated(0, 0, 0.001F);
         GuiUtil.drawIcon(texture, 0, 0, 0, 16, 16);

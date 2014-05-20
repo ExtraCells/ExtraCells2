@@ -13,6 +13,8 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.network.GuiHandler;
 import extracells.registries.ItemEnum;
@@ -82,9 +84,11 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public abstract void renderInventory(IPartRenderHelper rh, RenderBlocks renderer);
 
     @Override
+    @SideOnly(Side.CLIENT)
     public abstract void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer);
 
     @Override
@@ -93,6 +97,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer) {
     }
 
@@ -293,6 +298,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     public void renderStaticBusLights(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
@@ -315,6 +321,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
         rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
     }
 
+    @SideOnly(Side.CLIENT)
     public void renderInventoryBusLights(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 

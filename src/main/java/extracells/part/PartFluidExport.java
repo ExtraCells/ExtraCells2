@@ -120,11 +120,7 @@ public class PartFluidExport extends PartFluidIO {
                 if (filled > 0) {
                     extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE);
                     return true;
-                } else {
-                    continue;
                 }
-            } else {
-                continue;
             }
         }
         return false;

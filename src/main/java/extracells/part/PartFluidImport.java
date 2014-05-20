@@ -11,10 +11,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,11 +151,11 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
         if (resource == null)
             return 0;
 
-        FluidStack toFill = new FluidStack(resource.fluidID, 20);// TODO mb/t
+        FluidStack toFill = new FluidStack(resource.fluidID, 125 + speedState * 125);
         IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), Actionable.MODULATE);
 
         if (filled == null)
-            return 20;
+            return 125 + speedState * 125;
         return toFill.amount - (int) filled.getStackSize();
     }
 

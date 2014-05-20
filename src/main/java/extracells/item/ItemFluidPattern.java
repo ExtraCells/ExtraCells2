@@ -83,7 +83,7 @@ public class ItemFluidPattern extends Item {
             case 0:
                 Fluid fluid = getFluid(itemStack);
                 if (fluid == null)
-                    return icon;
+                    return null;
                 return fluid.getIcon();
             default:
                 return icon;
