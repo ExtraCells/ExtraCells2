@@ -20,7 +20,7 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = "2.0.2"
+version = "2.0.3"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
 
@@ -35,7 +35,7 @@ if (System.getenv("BUILD_NUMBER") != null) {
 else if (new File(projectDir, '.git').exists()) {
 	//def repo = grgit.repo('.')
     version = "MC${minecraft.version}-$version"
-    actualVersion += "2.0.2"
+    actualVersion += "2.0.3"
 } else {
     version = "MC${minecraft.version}-$version-DEV"
     actualVersion += "-DEV"
