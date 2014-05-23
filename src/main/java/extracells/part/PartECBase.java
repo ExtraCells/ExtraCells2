@@ -13,6 +13,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
+import appeng.api.util.DimensionalCoord;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.gridblock.ECBaseGridBlock;
@@ -339,5 +340,9 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
         rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.EAST, renderer);
         rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.SOUTH, renderer);
         rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
+    }
+
+    public final DimensionalCoord getLocation() {
+        return new DimensionalCoord(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
     }
 }

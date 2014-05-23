@@ -2,21 +2,19 @@ package extracells.gridblock;
 
 import appeng.api.networking.*;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import extracells.part.PartECBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
 
 public class ECBaseGridBlock implements IGridBlock {
 
-    protected World world;
-    protected int x, y, z;
     protected AEColor color;
     protected IGrid grid;
     protected int usedChannels;
@@ -43,7 +41,7 @@ public class ECBaseGridBlock implements IGridBlock {
 
     @Override
     public final DimensionalCoord getLocation() {
-        return new DimensionalCoord(world, x, y, z);
+        return host.getLocation();
     }
 
     @Override
@@ -77,7 +75,7 @@ public class ECBaseGridBlock implements IGridBlock {
 
     @Override
     public ItemStack getMachineRepresentation() {
-        return null;// TODO
+        return host.getItemStack(PartItemStack.Network);
     }
 
     public IMEMonitor<IAEFluidStack> getFluidMonitor() {
@@ -90,8 +88,7 @@ public class ECBaseGridBlock implements IGridBlock {
         IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
         if (storageGrid == null)
             return null;
-        IMEMonitor<IAEFluidStack> fluidInventory = storageGrid.getFluidInventory();
-        return fluidInventory;
+        return storageGrid.getFluidInventory();
 
     }
 }
