@@ -2,6 +2,7 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.config.RedstoneMode;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
@@ -11,7 +12,10 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,7 +152,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-        if (resource == null)
+        if (resource == null || (redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL))
             return 0;
 
         FluidStack toFill = new FluidStack(resource.fluidID, 125 + speedState * 125);
