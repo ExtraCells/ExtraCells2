@@ -20,41 +20,64 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-group = 'extracells'
 version = "2.0.2"
+group = 'extracells'
 archivesBaseName = 'ExtraCells'
+def actualVersion = version
+
+minecraft { version = "1.7.2-10.12.0.1063" }
+
+logger.lifecycle "$archivesBaseName-$version"
+
+if (System.getenv("BUILD_NUMBER") != null) {
+    version = "MC${minecraft.version}-$version." + System.getenv("BUILD_NUMBER");
+    actualVersion += "." + System.getenv("BUILD_NUMBER");
+} else if (new File(projectDir, '.git').exists()) {
+    //def repo = grgit.repo('.')
+    version = "MC${minecraft.version}-$version"
+    actualVersion += "2.0.2"
+} else {
+    version = "MC${minecraft.version}-$version-DEV"
+    actualVersion += "-DEV"
+}
+
+group = 'extracells'
 
 logger.lifecycle "" + version
 
 minecraft {
-    version = "1.7.2-10.12.1.1063"
+    version = "1.7.2-10.12.0.1063"
     assetDir = "../../MinecraftDebug/run_client/assets"
 }
 
-sourceSets {
-    api {
-        java {
-            exclude '**/layers/**'
-            exclude '**/integration/**'
+sourceSets
+        {
+            api
+                    {
+                        java
+                                {
+                                    exclude '**/layers/**'
+                                    exclude '**/integration/**'
+                                }
+                    }
         }
-    }
-}
 
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.lang'
-        include '**/*.info'
-        include '**/*.properties'
+processResources
+        {
+            from(sourceSets.main.resources.srcDirs) {
+                include '**/*.lang'
+                include '**/*.info'
+                include '**/*.properties'
 
-        expand 'version': project.version, 'mcversion': project.minecraft.version
-    }
+                expand 'version': project.version, 'mcversion': project.minecraft.version
+            }
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.lang'
-        exclude '**/*.info'
-        exclude '**/*.properties'
-    }
-}
+            from(sourceSets.main.resources.srcDirs) {
+                exclude '**/*.lang'
+                exclude '**/*.info'
+                exclude '**/*.properties'
+            }
+        }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
