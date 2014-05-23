@@ -20,9 +20,28 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
+version = "2.0.2"
+archivesBaseName = "ExtraCells"
+def actualVersion = version
+
+minecraft {version = "1.7.2-10.12.0.1057"}
+
+logger.lifecycle "$archivesBaseName-$version"
+ 
+if (System.getenv("BUILD_NUMBER") != null) {
+    version = "MC${minecraft.version}-$version." + System.getenv("BUILD_NUMBER");
+    actualVersion += "." + System.getenv("BUILD_NUMBER");
+}
+else if (new File(projectDir, '.git').exists()) {
+	//def repo = grgit.repo('.')
+    version = "MC${minecraft.version}-$version"
+    actualVersion += "2.0.2"
+} else {
+    version = "MC${minecraft.version}-$version-DEV"
+    actualVersion += "-DEV"
+}
+
 group = 'extracells'
-version = "2.0.0"
-archivesBaseName = 'ExtraCells'
  
 logger.lifecycle ""+version
  
