@@ -62,7 +62,9 @@ public class ItemStorageComponent extends Item implements IStorageComponent {
     }
 
     @Override
-    public EnumRarity getRarity(ItemStack par1) {
+    public EnumRarity getRarity(ItemStack itemStack) {
+        if (itemStack.getItemDamage() >= 4)
+            return EnumRarity.rare;
         return EnumRarity.epic;
     }
 }

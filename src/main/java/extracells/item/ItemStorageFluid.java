@@ -54,8 +54,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
         }
     }
 
-    @SuppressWarnings(
-            {"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void getSubItems(Item item, CreativeTabs creativeTab, List listSubItems) {
         for (int i = 0; i < suffixes.length; ++i) {
@@ -124,8 +123,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
         return spaces[Math.max(0, is.getItemDamage())];
     }
 
-    @SuppressWarnings(
-            {"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
@@ -145,13 +143,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
         }
     }
 
-    @Override
-    public EnumRarity getRarity(ItemStack par1) {
-        return EnumRarity.epic;
-    }
-
-    @SuppressWarnings(
-            {"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         if (!entityPlayer.isSneaking())
@@ -163,5 +155,10 @@ public class ItemStorageFluid extends Item implements ICellHandler {
         if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1)))
             return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
         return itemStack;
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return EnumRarity.rare;
     }
 }

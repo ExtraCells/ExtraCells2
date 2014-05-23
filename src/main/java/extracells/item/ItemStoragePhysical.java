@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -122,8 +123,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell {
         is.getTagCompound().setInteger("fuzzyMode", fzMode.ordinal());
     }
 
-    @SuppressWarnings(
-            {"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
@@ -150,5 +150,10 @@ public class ItemStoragePhysical extends Item implements IStorageCell {
         if (cellInv.getUsedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
             return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage());
         return itemStack;
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return EnumRarity.epic;
     }
 }

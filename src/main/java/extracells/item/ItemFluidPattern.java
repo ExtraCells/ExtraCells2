@@ -4,6 +4,7 @@ import extracells.registries.ItemEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,7 +33,7 @@ public class ItemFluidPattern extends Item {
     public String getItemStackDisplayName(ItemStack itemStack) {
         Fluid fluid = getFluid(itemStack);
         if (fluid == null)
-            return getUnlocalizedName(itemStack);
+            return StatCollector.translateToLocal(getUnlocalizedName(itemStack));
         return StatCollector.translateToLocal(getUnlocalizedName(itemStack)) + ": " + fluid.getLocalizedName();
     }
 
@@ -61,8 +62,7 @@ public class ItemFluidPattern extends Item {
         return itemStack;
     }
 
-    @SuppressWarnings(
-            {"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
         for (String fluidID : FluidRegistry.getRegisteredFluidIDs().keySet()) {
@@ -95,5 +95,10 @@ public class ItemFluidPattern extends Item {
         if (entityPlayer.isSneaking())
             return ItemEnum.FLUIDPATTERN.getSizedStack(itemStack.stackSize);
         return itemStack;
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return EnumRarity.uncommon;
     }
 }

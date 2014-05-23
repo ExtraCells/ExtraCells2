@@ -12,6 +12,7 @@ import extracells.registries.PartEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -74,5 +75,10 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
     @Override
     public String getUnlocalizedGroupName(ItemStack itemStack) {
         return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].getGroupName();
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return EnumRarity.rare;
     }
 }
