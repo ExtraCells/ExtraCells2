@@ -11,6 +11,8 @@ import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.part.PacketFluidTerminal;
@@ -44,6 +46,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
     };
     private MachineSource machineSource = new MachineSource(this);
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
@@ -73,6 +76,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
         renderInventoryBusLights(rh, renderer);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;

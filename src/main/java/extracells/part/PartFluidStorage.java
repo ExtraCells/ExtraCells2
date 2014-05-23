@@ -10,6 +10,8 @@ import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.util.AEColor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.inventory.HandlerPartStorageFluid;
@@ -49,6 +51,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
         }
     };
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
@@ -69,6 +72,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
         renderInventoryBusLights(rh, renderer);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;

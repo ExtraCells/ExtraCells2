@@ -12,6 +12,8 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import com.google.common.collect.Lists;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.GuiFluidEmitter;
 import extracells.network.packet.other.IFluidSlotPart;
@@ -34,6 +36,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     private long wantedAmount;
     private long currentAmount;
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[0]);
@@ -45,6 +48,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
         rh.renderInventoryBox(renderer);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[0]);

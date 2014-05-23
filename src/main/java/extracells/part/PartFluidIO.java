@@ -8,6 +8,8 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidIO;
 import extracells.gui.GuiBusFluidIO;
 import extracells.network.packet.other.IFluidSlotPart;
@@ -49,12 +51,15 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
         }
     };
 
+    @SideOnly(Side.CLIENT)
     @Override
     public abstract void renderInventory(IPartRenderHelper rh, RenderBlocks renderer);
 
+    @SideOnly(Side.CLIENT)
     @Override
     public abstract void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer);
 
+    @SideOnly(Side.CLIENT)
     @Override
     public final void renderDynamic(double x, double y, double z, IPartRenderHelper rh, RenderBlocks renderer) {
     }

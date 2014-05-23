@@ -7,6 +7,8 @@ import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerDrive;
 import extracells.gui.GuiDrive;
 import extracells.render.TextureManager;
@@ -41,6 +43,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         }
     };
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         IIcon side = TextureManager.BUS_SIDE.getTexture();
@@ -55,6 +58,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         renderInventoryBusLights(rh, renderer);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;

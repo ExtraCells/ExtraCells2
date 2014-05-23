@@ -9,6 +9,8 @@ import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.networking.events.MENetworkPowerStorage;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.network.AbstractPacket;
 import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
@@ -35,6 +37,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
         }
     };
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         IIcon side = TextureManager.BUS_SIDE.getTexture();
@@ -46,6 +49,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
         renderInventoryBusLights(rh, renderer);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         IIcon side = TextureManager.BUS_SIDE.getTexture();

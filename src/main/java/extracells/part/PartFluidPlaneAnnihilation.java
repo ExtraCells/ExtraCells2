@@ -10,6 +10,8 @@ import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import net.minecraft.block.Block;
@@ -25,6 +27,7 @@ import net.minecraftforge.fluids.IFluidBlock;
 
 public class PartFluidPlaneAnnihilation extends PartECBase {
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         IIcon side = TextureManager.BUS_SIDE.getTexture();
@@ -44,6 +47,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
         renderInventoryBusLights(rh, renderer);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
