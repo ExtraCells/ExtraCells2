@@ -20,7 +20,8 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = "2.0.4"
+def versionNumber = "2.0.4"
+version = versionnumber
 group= "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
@@ -66,7 +67,7 @@ processResources {
         include '**/*.info'
         include '**/*.properties'
 
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+        expand 'version': project.versionNumber, 'mcversion': project.minecraft.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
