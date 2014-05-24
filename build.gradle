@@ -30,7 +30,7 @@ minecraft {version = "1.7.2-10.12.0.1057"}
 logger.lifecycle "$archivesBaseName-$version"
  
 if (System.getenv("BUILD_NUMBER") != null) {
-    version = "MC${minecraft.version}-$version.b" + System.getenv("BUILD_NUMBER");
+    version = "MC${minecraft.version}-${version}.b" + System.getenv("BUILD_NUMBER");
     actualVersion += "-" + System.getenv("BUILD_NUMBER");
 }
 else if (new File(projectDir, '.git').exists()) {
