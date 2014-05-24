@@ -24,6 +24,8 @@ import java.util.Map;
 public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 
     public ItemPartECBase() {
+        setMaxDamage(0);
+        setHasSubtypes(true);
         AEApi.instance().partHelper().setItemBusRenderer(this);
 
         for (PartEnum part : PartEnum.values()) {
