@@ -41,8 +41,7 @@ public class ItemStorageCasing extends Item {
         }
     }
 
-    @SuppressWarnings(
-            {"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
         for (int j = 0; j < suffixes.length; ++j) {

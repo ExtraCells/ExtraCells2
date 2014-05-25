@@ -3,7 +3,7 @@ package extracells.item;
 import appeng.api.AEApi;
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.implementations.tiles.IMEChest;
-import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.inventory.HandlerItemStorageFluid;
@@ -91,7 +91,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
             return;
         IStorageMonitorable monitorable = null;
         if (chest != null)
-            monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource( player, chest ) );
+            monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
         if (monitorable != null)
             GuiHandler.launchGui(GuiHandler.getGuiId(0), player, monitorable.getFluidInventory());
     }
