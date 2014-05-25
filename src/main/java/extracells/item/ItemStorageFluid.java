@@ -91,7 +91,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
             return;
         IStorageMonitorable monitorable = null;
         if (chest != null)
-            monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new BaseActionSource());
+            monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource( player, chest ) );
         if (monitorable != null)
             GuiHandler.launchGui(GuiHandler.getGuiId(0), player, monitorable.getFluidInventory());
     }
