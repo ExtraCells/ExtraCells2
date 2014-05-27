@@ -163,7 +163,7 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
             if (inventory.isItemValidForSlot(0, itemstack1)) {
-                if (slotnumber == 0) {
+                if (slotnumber == 0 || slotnumber == 1) {
                     if (!mergeItemStack(itemstack1, 2, 36, false))
                         return null;
                 } else if (!mergeItemStack(itemstack1, 0, 1, false)) {

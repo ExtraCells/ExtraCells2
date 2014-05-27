@@ -26,6 +26,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -153,6 +154,13 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
 
     public void removeContainer(ContainerFluidTerminal containerTerminalFluid) {
         containers.remove(containerTerminalFluid);
+    }
+
+    @Override
+    public boolean onActivate(EntityPlayer player, Vec3 pos) {
+        if (isActive())
+            return super.onActivate(player, pos);
+        return false;
     }
 
     public Object getServerGuiElement(EntityPlayer player) {
