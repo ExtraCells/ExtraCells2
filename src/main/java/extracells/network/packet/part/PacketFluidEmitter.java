@@ -63,6 +63,7 @@ public class PacketFluidEmitter extends AbstractPacket {
                 break;
             case 1:
                 out.writeLong(wantedAmount);
+                writePart(part, out);
                 break;
             case 2:
                 out.writeLong(wantedAmount);
@@ -86,6 +87,7 @@ public class PacketFluidEmitter extends AbstractPacket {
                 break;
             case 1:
                 wantedAmount = in.readLong();
+                part = (PartFluidLevelEmitter) readPart(in);
                 break;
             case 2:
                 wantedAmount = in.readLong();
