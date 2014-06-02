@@ -103,6 +103,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
             if (node != null) {
                 isActive = node.isActive();
                 host.markForUpdate();
+                tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air);
+                tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, Blocks.air);
             }
         }
     }
