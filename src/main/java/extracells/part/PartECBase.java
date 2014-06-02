@@ -204,7 +204,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
 
     @Override
     public void writeToStream(ByteBuf data) throws IOException {
-        data.writeBoolean(node.isActive());
+        data.writeBoolean(node != null && node.isActive());
     }
 
     @Override

@@ -20,7 +20,7 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = "2.0.6"
+version = "2.0.7"
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
@@ -30,15 +30,12 @@ minecraft {version = "1.7.2-10.12.0.1057"}
 logger.lifecycle "$archivesBaseName-$version"
  
 if (System.getenv("BUILD_NUMBER") != null) {
-    version = "${version}.b" + System.getenv("BUILD_NUMBER");
-    actualVersion += "-" + System.getenv("BUILD_NUMBER");
+    version = "${version}.b"// + System.getenv("BUILD_NUMBER");
+    //actualVersion += "-" + System.getenv("BUILD_NUMBER");
 }
 else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
-    version = "${version}.b" + System.getenv("DRONE_BUILD_NUMBER");
-    actualVersion += "-" + System.getenv("DRONE_BUILD_NUMBER");
-}
-else if (new File(projectDir, '.git').exists()) {
-    version = "$version"
+    version = "${version}.b"// + System.getenv("DRONE_BUILD_NUMBER");
+    //actualVersion += "-" + System.getenv("DRONE_BUILD_NUMBER");
 } else {
     version = "$version-DEV"
     actualVersion += "-DEV"
