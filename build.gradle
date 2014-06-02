@@ -28,19 +28,6 @@ def actualVersion = version
 minecraft {version = "1.7.2-10.12.0.1057"}
 
 logger.lifecycle "$archivesBaseName-$version"
- 
-if (System.getenv("BUILD_NUMBER") != null) {
-    version = "${version}.b"// + System.getenv("BUILD_NUMBER");
-    //actualVersion += "-" + System.getenv("BUILD_NUMBER");
-}
-else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
-    version = "${version}.b"// + System.getenv("DRONE_BUILD_NUMBER");
-    //actualVersion += "-" + System.getenv("DRONE_BUILD_NUMBER");
-} else {
-    version = "$version-DEV"
-    actualVersion += "-DEV"
-}
-
 logger.lifecycle "" + version
 
 minecraft {
