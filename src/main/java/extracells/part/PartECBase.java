@@ -219,7 +219,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     }
 
     @Override
-    public final void getDrops(List<ItemStack> drops, boolean wrenched) {
+    public void getDrops(List<ItemStack> drops, boolean wrenched) {
     }
 
     @Override

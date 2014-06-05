@@ -95,8 +95,9 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     @Override
     public void writeToStream(ByteBuf data) throws IOException {
         super.writeToStream(data);
-        for (int i = 0; i < cellStati.length; i++)
-            data.writeByte(cellStati[i]);
+        for (byte aCellStati : cellStati) {
+            data.writeByte(aCellStati);
+        }
     }
 
     @Override
@@ -199,6 +200,16 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
             }
         }
         return handlers;
+    }
+
+    @Override
+    public void getDrops(List<ItemStack> drops, boolean wrenched) {
+        if (!wrenched)
+            for (int i = 0; i < inventory.getSizeInventory(); i++) {
+                ItemStack cell = inventory.getStackInSlot(i);
+                if (cell != null)
+                    drops.add(cell);
+            }
     }
 
     public ECPrivateInventory getInventory() {
