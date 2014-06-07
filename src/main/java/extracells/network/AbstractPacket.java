@@ -2,12 +2,15 @@ package extracells.network;
 
 import appeng.api.parts.IPartHost;
 import com.google.common.base.Charsets;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.part.PartECBase;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -61,8 +64,16 @@ public abstract class AbstractPacket {
     }
 
     public static World readWorld(ByteBuf in) throws IOException {
-        World world = DimensionManager.getWorld(in.readInt());
-        return world != null ? world : Minecraft.getMinecraft().theWorld;
+        WorldServer world = DimensionManager.getWorld(in.readInt());
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            return world != null ? world : getClientWorld();
+        }
+        return world;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static World getClientWorld() {
+        return net.minecraft.client.Minecraft.getMinecraft().theWorld;
     }
 
     public static void writeWorld(World world, ByteBuf out) throws IOException {
@@ -70,8 +81,9 @@ public abstract class AbstractPacket {
     }
 
     public static EntityPlayer readPlayer(ByteBuf in) throws IOException {
-        if (!in.readBoolean())
+        if (!in.readBoolean()) {
             return null;
+        }
         World playerWorld = readWorld(in);
         return playerWorld.getPlayerEntityByName(readString(in));
     }

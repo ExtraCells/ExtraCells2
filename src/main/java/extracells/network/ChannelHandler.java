@@ -41,6 +41,7 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<AbstractPack
         try {
             msg.readPacketData(source);
             msg.execute();
+            source.clear();
         } catch (IOException e) {
             Logger.getLogger("ExtraCells").warning("Something caused a Protocol Exception!");
         }
