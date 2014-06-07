@@ -124,28 +124,22 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 
     @Override
     public double injectAEPower(double amt, Actionable mode) {
-        System.out.println("injectAEPower" + battery + " " + handler);
         if (handler == null || battery == null)
             return 0;
-        System.out.println("asdsasd");
         return handler.injectAEPower(mode == Actionable.MODULATE ? battery : battery.copy(), amt);
     }
 
     @Override
     public double getAEMaxPower() {
-        System.out.println("getAEMaxPower" + battery + " " + handler);
         if (handler == null || battery == null)
             return 0;
-        System.out.println("asdsasd");
         return handler.getAEMaxPower(battery);
     }
 
     @Override
     public double getAECurrentPower() {
-        System.out.println("getAECurrentPower" + battery + " " + handler);
         if (handler == null || battery == null)
             return 0;
-        System.out.println("asdsasd");
         return handler.getAECurrentPower(battery);
     }
 
@@ -163,10 +157,8 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 
     @Override
     public double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
-        System.out.println("extractAEPower" + battery + " " + handler);
         if (handler == null || battery == null)
             return 0;
-        System.out.println("asdsasd");
         return handler.extractAEPower(mode == Actionable.MODULATE ? battery : battery.copy(), usePowerMultiplier.multiply(amt));
     }
 }

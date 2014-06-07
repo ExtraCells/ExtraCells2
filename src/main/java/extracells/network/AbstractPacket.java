@@ -4,6 +4,7 @@ import appeng.api.parts.IPartHost;
 import com.google.common.base.Charsets;
 import extracells.part.PartECBase;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -60,7 +61,8 @@ public abstract class AbstractPacket {
     }
 
     public static World readWorld(ByteBuf in) throws IOException {
-        return DimensionManager.getWorld(in.readInt());
+        World world = DimensionManager.getWorld(in.readInt());
+        return world != null ? world : Minecraft.getMinecraft().theWorld;
     }
 
     public static void writeWorld(World world, ByteBuf out) throws IOException {
