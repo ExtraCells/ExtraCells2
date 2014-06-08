@@ -9,7 +9,6 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.util.DimensionalCoord;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidIO;
@@ -25,7 +24,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -189,14 +187,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
     @Override
     public void onInventoryChanged() {
-        if (host == null)
-            return;
-        DimensionalCoord location = host.getLocation();
-        if (location == null)
-            return;
-        World world = location.getWorld();
-        if (world.isRemote)
-            return;
+        try {
+            if (host.getLocation().getWorld().isRemote)
+                return;
+        } catch (Throwable ignored) {
+        }
 
         filterSize = 0;
         redstoneControlled = false;
