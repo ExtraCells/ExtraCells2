@@ -7,7 +7,9 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
+import appeng.api.util.DimensionalCoord;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidIO;
@@ -22,7 +24,9 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -67,6 +71,12 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
     public ECPrivateInventory getUpgradeInventory() {
         return upgradeInventory;
+    }
+
+    @Override
+    public void setPartHostInfo(ForgeDirection _side, IPartHost _host, TileEntity _tile) {
+        super.setPartHostInfo(_side, _host, _tile);
+        onInventoryChanged();
     }
 
     @Override
@@ -179,7 +189,12 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
     @Override
     public void onInventoryChanged() {
-        World world = getHost().getLocation().getWorld();
+        if (host == null)
+            return;
+        DimensionalCoord location = host.getLocation();
+        if (location == null)
+            return;
+        World world = location.getWorld();
         if (world.isRemote)
             return;
 

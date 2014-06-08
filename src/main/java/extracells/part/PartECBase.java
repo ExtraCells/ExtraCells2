@@ -184,7 +184,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     }
 
     @Override
-    public final void setPartHostInfo(ForgeDirection _side, IPartHost _host, TileEntity _tile) {
+    public void setPartHostInfo(ForgeDirection _side, IPartHost _host, TileEntity _tile) {
         side = _side;
         host = _host;
         tile = _tile;
