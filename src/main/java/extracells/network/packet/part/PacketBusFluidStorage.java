@@ -5,8 +5,6 @@ import extracells.part.PartFluidStorage;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.io.IOException;
-
 public class PacketBusFluidStorage extends AbstractPacket {
 
     PartFluidStorage part;
@@ -21,11 +19,11 @@ public class PacketBusFluidStorage extends AbstractPacket {
         part = _part;
     }
 
-    public void writeData(ByteBuf out) throws IOException {
+    public void writeData(ByteBuf out) {
         writePart(part, out);
     }
 
-    public void readData(ByteBuf in) throws IOException {
+    public void readData(ByteBuf in) {
         part = (PartFluidStorage) readPart(in);
     }
 

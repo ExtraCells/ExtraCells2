@@ -10,7 +10,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.Fluid;
 
-import java.io.IOException;
 import java.util.List;
 
 public class PacketBusFluidIO extends AbstractPacket {
@@ -58,7 +57,7 @@ public class PacketBusFluidIO extends AbstractPacket {
     }
 
     @Override
-    public void writeData(ByteBuf out) throws IOException {
+    public void writeData(ByteBuf out) {
         switch (mode) {
             case 0:
                 writePart(part, out);
@@ -80,7 +79,7 @@ public class PacketBusFluidIO extends AbstractPacket {
     }
 
     @Override
-    public void readData(ByteBuf in) throws IOException {
+    public void readData(ByteBuf in) {
         switch (mode) {
             case 0:
                 part = (PartFluidIO) readPart(in);

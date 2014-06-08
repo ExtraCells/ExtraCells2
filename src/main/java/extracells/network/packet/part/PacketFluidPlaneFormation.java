@@ -5,8 +5,6 @@ import extracells.part.PartFluidPlaneFormation;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.io.IOException;
-
 public class PacketFluidPlaneFormation extends AbstractPacket {
 
     private PartFluidPlaneFormation part;
@@ -22,7 +20,7 @@ public class PacketFluidPlaneFormation extends AbstractPacket {
     }
 
     @Override
-    public void writeData(ByteBuf out) throws IOException {
+    public void writeData(ByteBuf out) {
         switch (mode) {
             case 0:
                 writePart(part, out);
@@ -31,7 +29,7 @@ public class PacketFluidPlaneFormation extends AbstractPacket {
     }
 
     @Override
-    public void readData(ByteBuf in) throws IOException {
+    public void readData(ByteBuf in) {
         switch (mode) {
             case 0:
                 part = (PartFluidPlaneFormation) readPart(in);

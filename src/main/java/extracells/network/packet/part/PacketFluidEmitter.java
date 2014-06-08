@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.io.IOException;
-
 public class PacketFluidEmitter extends AbstractPacket {
 
     private long wantedAmount;
@@ -55,7 +53,7 @@ public class PacketFluidEmitter extends AbstractPacket {
     }
 
     @Override
-    public void writeData(ByteBuf out) throws IOException {
+    public void writeData(ByteBuf out) {
         switch (mode) {
             case 0:
                 out.writeLong(wantedAmount);
@@ -79,7 +77,7 @@ public class PacketFluidEmitter extends AbstractPacket {
     }
 
     @Override
-    public void readData(ByteBuf in) throws IOException {
+    public void readData(ByteBuf in) {
         switch (mode) {
             case 0:
                 wantedAmount = in.readLong();

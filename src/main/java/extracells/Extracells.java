@@ -69,7 +69,7 @@ public class Extracells {
         proxy.registerRenderers();
         proxy.registerTileEntities();
         proxy.addRecipes(configFolder);
-        ChannelHandler.setChannels(NetworkRegistry.INSTANCE.newChannel("ExtraCells", new ChannelHandler()));
+        ChannelHandler.registerMessages();
         RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId()));
     }
 

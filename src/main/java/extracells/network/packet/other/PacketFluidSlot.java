@@ -8,7 +8,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.Fluid;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class PacketFluidSlot extends AbstractPacket {
         filterFluids = _filterFluids;
     }
 
-    public void writeData(ByteBuf out) throws IOException {
+    public void writeData(ByteBuf out) {
         switch (mode) {
             case 0:
                 writePart((PartECBase) part, out);
@@ -44,13 +43,14 @@ public class PacketFluidSlot extends AbstractPacket {
                 break;
             case 1:
                 out.writeInt(filterFluids.size());
-                for (int i = 0; i < filterFluids.size(); i++)
+                for (int i = 0; i < filterFluids.size(); i++) {
                     writeFluid(filterFluids.get(i), out);
+                }
                 break;
         }
     }
 
-    public void readData(ByteBuf in) throws IOException {
+    public void readData(ByteBuf in) {
         switch (mode) {
             case 0:
                 part = (IFluidSlotPart) readPart(in);
@@ -60,8 +60,9 @@ public class PacketFluidSlot extends AbstractPacket {
             case 1:
                 filterFluids = new ArrayList<Fluid>();
                 int size = in.readInt();
-                for (int i = 0; i < size; i++)
+                for (int i = 0; i < size; i++) {
                     filterFluids.add(readFluid(in));
+                }
                 break;
         }
     }

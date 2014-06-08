@@ -14,8 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.io.IOException;
-
 public class PacketFluidTerminal extends AbstractPacket {
 
     IItemList<IAEFluidStack> fluidStackList;
@@ -52,7 +50,7 @@ public class PacketFluidTerminal extends AbstractPacket {
     }
 
     @Override
-    public void writeData(ByteBuf out) throws IOException {
+    public void writeData(ByteBuf out) {
         switch (mode) {
             case 0:
                 for (IAEFluidStack stack : fluidStackList) {
@@ -75,15 +73,16 @@ public class PacketFluidTerminal extends AbstractPacket {
     }
 
     @Override
-    public void readData(ByteBuf in) throws IOException {
+    public void readData(ByteBuf in) {
         switch (mode) {
             case 0:
                 fluidStackList = AEApi.instance().storage().createFluidList();
                 while (in.readableBytes() > 0) {
                     Fluid fluid = readFluid(in);
                     long fluidAmount = in.readLong();
-                    if (fluid == null || fluidAmount <= 0)
+                    if (fluid == null || fluidAmount <= 0) {
                         continue;
+                    }
                     IAEFluidStack stack = AEApi.instance().storage().createFluidStack(new FluidStack(fluid, 1));
                     stack.setStackSize(fluidAmount);
                     fluidStackList.add(stack);

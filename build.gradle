@@ -20,7 +20,7 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = "2.0.11"
+version = "2.0.12"
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
@@ -29,7 +29,7 @@ logger.lifecycle "$archivesBaseName-$version"
 logger.lifecycle "" + version
 
 minecraft {
-    version = "1.7.2-10.12.1.1112"
+    version = "1.7.2-10.12.1.1110"
     assetDir = "../../MinecraftDebug/run_client/assets"
 }
 
