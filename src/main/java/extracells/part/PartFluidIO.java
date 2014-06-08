@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -178,6 +179,10 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
     @Override
     public void onInventoryChanged() {
+        World world = getHost().getLocation().getWorld();
+        if (world.isRemote)
+            return;
+
         filterSize = 0;
         redstoneControlled = false;
         speedState = 0;
