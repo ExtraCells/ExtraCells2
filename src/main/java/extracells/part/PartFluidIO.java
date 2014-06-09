@@ -24,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -171,6 +172,13 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
     }
 
     @Override
+    public boolean onActivate(EntityPlayer player, Vec3 pos) {
+        boolean activate = super.onActivate(player, pos);
+        onInventoryChanged();
+        return activate;
+    }
+
+    @Override
     public void onNeighborChanged() {
         super.onNeighborChanged();
 
@@ -187,12 +195,6 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
     @Override
     public void onInventoryChanged() {
-        try {
-            if (host.getLocation().getWorld().isRemote)
-                return;
-        } catch (Throwable ignored) {
-        }
-
         filterSize = 0;
         redstoneControlled = false;
         speedState = 0;
@@ -206,6 +208,12 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
                 if (AEApi.instance().materials().materialCardSpeed.sameAs(currentStack))
                     speedState++;
             }
+        }
+        
+        try {
+            if (host.getLocation().getWorld().isRemote)
+                return;
+        } catch (Throwable ignored) {
         }
         new PacketBusFluidIO(filterSize).sendPacketToAllPlayers();
         new PacketBusFluidIO(redstoneControlled).sendPacketToAllPlayers();
