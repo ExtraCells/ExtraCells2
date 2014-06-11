@@ -42,14 +42,14 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
     }
 
     @Override
-    public void drawTooltip(int posX, int posY, int mouseX, int mouseY) {
-        if (fluid != null && isPointInRegion(posX, posY, height, width, mouseX, mouseY)) {
-            if (fluid != null) {
-                List<String> description = new ArrayList<String>();
-                description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.Craftable"));
-                description.add(fluid.getLocalizedName());
-                drawHoveringText(description, mouseX - guiFluidTerminal.guiLeft(), mouseY - guiFluidTerminal.guiTop(), Minecraft.getMinecraft().fontRenderer);
-            }
-        }
+    public boolean drawTooltip(int posX, int posY, int mouseX, int mouseY) {
+        if (fluid == null || !isPointInRegion(posX, posY, height, width, mouseX, mouseY))
+            return false;
+
+        List<String> description = new ArrayList<String>();
+        description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.Craftable"));
+        description.add(fluid.getLocalizedName());
+        drawHoveringText(description, mouseX - guiFluidTerminal.guiLeft(), mouseY - guiFluidTerminal.guiTop(), Minecraft.getMinecraft().fontRenderer);
+        return true;
     }
 }

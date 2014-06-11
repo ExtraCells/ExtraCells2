@@ -137,7 +137,8 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
                 for (int y = 0; y < 4; y++) {
                     int widgetIndex = y * 9 + x;
                     if (0 <= widgetIndex && widgetIndex < listSize) {
-                        fluidWidgets.get(widgetIndex).drawTooltip(x * 18 + 7, y * 18 - 1, mouseX, mouseY);
+                        if (fluidWidgets.get(widgetIndex).drawTooltip(x * 18 + 7, y * 18 - 1, mouseX, mouseY))
+                            break;
                     } else {
                         break;
                     }

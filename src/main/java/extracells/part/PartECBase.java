@@ -69,6 +69,11 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
         }
     }
 
+    @Override
+    public IIcon getBreakingTexture() {
+        return TextureManager.BUS_SIDE.getTexture();
+    }
+
     protected boolean isActive() {
         return node != null ? node.isActive() : isActive;
     }

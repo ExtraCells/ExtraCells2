@@ -27,7 +27,7 @@ public abstract class AbstractFluidWidget extends Gui {
 
     public abstract void mouseClicked(int posX, int posY, int mouseX, int mouseY);
 
-    public abstract void drawTooltip(int posX, int posY, int mouseX, int mouseY);
+    public abstract boolean drawTooltip(int posX, int posY, int mouseX, int mouseY);
 
     public void setFluid(int fluidID) {
         this.fluid = FluidRegistry.getFluid(fluidID);

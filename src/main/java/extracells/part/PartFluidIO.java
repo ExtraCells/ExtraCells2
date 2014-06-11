@@ -209,7 +209,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
                     speedState++;
             }
         }
-        
+
         try {
             if (host.getLocation().getWorld().isRemote)
                 return;

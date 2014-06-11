@@ -2,9 +2,9 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.*;
 import cpw.mods.fml.relauncher.Side;
@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -151,6 +152,12 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     }
 
     @Override
+    public void setPartHostInfo(ForgeDirection _side, IPartHost _host, TileEntity _tile) {
+        super.setPartHostInfo(_side, _host, _tile);
+        onInventoryChanged();
+    }
+
+    @Override
     public int getPriority() {
         return priority;
     }
@@ -162,10 +169,15 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     }
 
     @Override
+    public void addToWorld() {
+        super.addToWorld();
+        onInventoryChanged();
+    }
+
+    @Override
     public void onInventoryChanged() {
         itemHandlers = updateHandlers(StorageChannel.ITEMS);
         fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
-        IGridNode node = getGridNode();
         for (int i = 0; i < cellStati.length; i++) {
             ItemStack stackInSlot = inventory.getStackInSlot(i);
             IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, StorageChannel.ITEMS);

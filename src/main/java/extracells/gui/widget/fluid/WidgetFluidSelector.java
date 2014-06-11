@@ -41,26 +41,26 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
     }
 
     @Override
-    public void drawTooltip(int posX, int posY, int mouseX, int mouseY) {
-        if (fluid != null && isPointInRegion(posX, posY, height, width, mouseX, mouseY)) {
-            if (amount > 0 && fluid != null) {
-                String amountToText = Long.toString(amount) + "mB";
-                if (Extracells.shortenedBuckets) {
-                    if (amount > 1000000000L)
-                        amountToText = Long.toString(amount / 1000000000L) + "MegaB";
-                    else if (amount > 1000000L)
-                        amountToText = Long.toString(amount / 1000000L) + "KiloB";
-                    else if (amount > 9999L) {
-                        amountToText = Long.toString(amount / 1000L) + "B";
-                    }
-                }
+    public boolean drawTooltip(int posX, int posY, int mouseX, int mouseY) {
+        if (fluid == null || amount <= 0 || !isPointInRegion(posX, posY, height, width, mouseX, mouseY))
+            return false;
 
-                List<String> description = new ArrayList<String>();
-                description.add(fluid.getLocalizedName());
-                description.add(amountToText);
-                drawHoveringText(description, mouseX - guiFluidTerminal.guiLeft(), mouseY - guiFluidTerminal.guiTop(), Minecraft.getMinecraft().fontRenderer);
+        String amountToText = Long.toString(amount) + "mB";
+        if (Extracells.shortenedBuckets) {
+            if (amount > 1000000000L)
+                amountToText = Long.toString(amount / 1000000000L) + "MegaB";
+            else if (amount > 1000000L)
+                amountToText = Long.toString(amount / 1000000L) + "KiloB";
+            else if (amount > 9999L) {
+                amountToText = Long.toString(amount / 1000L) + "B";
             }
         }
+
+        List<String> description = new ArrayList<String>();
+        description.add(fluid.getLocalizedName());
+        description.add(amountToText);
+        drawHoveringText(description, mouseX - guiFluidTerminal.guiLeft(), mouseY - guiFluidTerminal.guiTop(), Minecraft.getMinecraft().fontRenderer);
+        return true;
     }
 
     @Override
