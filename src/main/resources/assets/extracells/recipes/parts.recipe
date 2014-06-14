@@ -1,5 +1,6 @@
 group=oredictionary:dyeBlue -> lapis
 group= ae2:ItemPart.SemiDarkMonitor ae2:ItemPart.Monitor ae2:ItemPart.DarkMonitor -> monitor
+group= ae2:BlockInterface ae2:ItemPart.Interface -> interface
 
 shapeless=
 	ae2:ItemMaterial.CalcProcessor mc:redstone_torch lapis
@@ -34,3 +35,7 @@ shapeless=
 shapeless=
 	ae2:BlockDrive mc:iron_ingot mc:iron_ingot
 	-> ec:partDrive
+
+shapeless=
+	interface mc:sticky_piston mc:piston lapis lapis
+	-> ec:partFluidStorageBus
