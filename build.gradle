@@ -20,7 +20,7 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = "2.0.17"
+version = "2.0.18"
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version

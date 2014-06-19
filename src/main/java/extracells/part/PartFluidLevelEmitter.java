@@ -133,6 +133,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     @Override
     public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
         fluid = _fluid;
+        if (watcher == null)
+            return;
         watcher.clear();
         updateWatcher(watcher);
         new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(_player);
