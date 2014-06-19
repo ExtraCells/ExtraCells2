@@ -14,6 +14,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.gridblock.ECBaseGridBlock;
@@ -137,6 +138,8 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
 
     @Override
     public void addToWorld() {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+            return;
         gridBlock = new ECBaseGridBlock(this);
         node = AEApi.instance().createGridNode(gridBlock);
         setPower(null);
