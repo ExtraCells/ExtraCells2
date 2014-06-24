@@ -8,8 +8,8 @@ group=oredictionary:crystalCertusQuartz ae2:ItemMaterial.CertusQuartzCrystalChar
 
 shaped=
 	dustGlowstone engProcessor dustGlowstone,
-	ae2:ItemMaterial.Cell16kPart logProcessor ae2:ItemMaterial.Cell16kPart,
-	dustGlowstone ae2:ItemMaterial.Cell16kPart dustGlowstone
+	ae2:ItemMaterial.Cell64kPart logProcessor ae2:ItemMaterial.Cell64kPart,
+	dustGlowstone ae2:ItemMaterial.Cell64kPart dustGlowstone
 	-> ec:cell256kPart
 shaped=
 	dustGlowstone engProcessor dustGlowstone,
