@@ -91,7 +91,7 @@ public class GuiBusFluidIO extends GuiContainer implements WidgetFluidSlot.IConf
 
         for (Object button : buttonList) {
             if (button instanceof WidgetRedstoneModes)
-                ((WidgetRedstoneModes) button).drawTooltip(guiLeft, guiTop);
+                ((WidgetRedstoneModes) button).drawTooltip(mouseX, mouseY);
         }
     }
 

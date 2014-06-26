@@ -5,12 +5,10 @@ import com.google.common.base.Splitter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -61,7 +59,7 @@ public class WidgetRedstoneModes extends GuiButton {
         }
     }
 
-    public void drawTooltip(int guiLeft, int guiTop) {
+    public void drawTooltip(int mouseX, int mouseY) {
         List<String> description = new ArrayList<String>();
         description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.RedstoneMode"));
         String explanation = "";
@@ -87,13 +85,9 @@ public class WidgetRedstoneModes extends GuiButton {
         }
 
         Minecraft mc = Minecraft.getMinecraft();
-        ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
-
-        int mouseX = Mouse.getX() * scaledresolution.getScaledWidth() / mc.displayWidth;
-        int mouseY = scaledresolution.getScaledHeight() - Mouse.getY() * scaledresolution.getScaledHeight() / mc.displayHeight - 1;
 
         if (mouseX >= xPosition && mouseX <= xPosition + width && mouseY >= yPosition && mouseY <= yPosition + height) {
-            drawHoveringText(description, mouseX - guiLeft, mouseY - guiTop, mc.fontRenderer);
+            drawHoveringText(description, mouseX, mouseY, mc.fontRenderer);
         }
     }
 
