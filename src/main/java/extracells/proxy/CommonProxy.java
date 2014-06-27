@@ -1,12 +1,14 @@
 package extracells.proxy;
 
 import appeng.api.AEApi;
+import appeng.api.IAppEngApi;
 import appeng.api.recipes.IRecipeHandler;
 import appeng.api.recipes.IRecipeLoader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.TileEntityCertusTank;
+import extracells.tileentity.TileEntityWalrus;
 
 import java.io.*;
 
@@ -14,6 +16,9 @@ import java.io.*;
 public class CommonProxy {
 
     public void registerMovables() {
+        IAppEngApi api = AEApi.instance();
+        api.registries().moveable().whiteListTileEntity(TileEntityCertusTank.class);
+        api.registries().moveable().whiteListTileEntity(TileEntityWalrus.class);
     }
 
     public void addRecipes(File configFolder) {
@@ -29,6 +34,7 @@ public class CommonProxy {
 
     public void registerTileEntities() {
         GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
+        GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
     }
 
     public void registerRenderers() {

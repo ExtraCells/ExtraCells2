@@ -36,6 +36,7 @@ itemGroup.Extra_Cells=Extra Cells
 //Item Groups
 extracells.fluid.IO=ME Fluid Export/Import Bus
 extracells.fluid.plane=ME Fluid Annihilation/Formation Plane
+
 //Parts
 extracells.part.fluid.export.name=ME Fluid Export Bus
 extracells.part.fluid.import.name=ME Fluid Import Bus
@@ -48,7 +49,8 @@ extracells.part.drive.name=ME Drive Fixture
 extracells.part.battery.name=ME Energy Cell Fixture
 
 //Blocks
-extracells.block.certustank.name=ME Certus Tank
+extracells.block.certustank.name=ME Certus
+extracells.block.certustank.name=Walrus
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Amount

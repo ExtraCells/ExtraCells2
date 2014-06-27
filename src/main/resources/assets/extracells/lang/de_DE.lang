@@ -49,6 +49,7 @@ extracells.part.battery.name=ME-Energiezellenhalterung
 
 //Blocks
 extracells.block.certustank.name=ME-Certus-Tank
+extracells.block.certustank.name=Walross
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Menge

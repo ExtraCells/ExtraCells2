@@ -66,6 +66,7 @@ public class Extracells {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
+        proxy.registerMovables();
         proxy.registerRenderers();
         proxy.registerTileEntities();
         proxy.addRecipes(configFolder);

@@ -6,7 +6,7 @@ import extracells.registries.BlockEnum;
 import extracells.render.RenderHandler;
 import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +20,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class BlockCertusTank extends BlockContainer {
+public class BlockCertusTank extends Block implements ITileEntityProvider {
 
     IIcon breakIcon;
     IIcon topIcon;
