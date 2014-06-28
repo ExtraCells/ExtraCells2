@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -33,7 +34,6 @@ public class BlockCertusTank extends Block implements ITileEntityProvider {
     public BlockCertusTank() {
         super(Material.glass);
         setCreativeTab(Extracells.ModTab);
-        setBlockName("extracells.block.certustank");
         setHardness(2.0F);
         setResistance(10.0F);
         setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 1.0F, 0.9375F);
@@ -182,7 +182,12 @@ public class BlockCertusTank extends Block implements ITileEntityProvider {
         }
     }
 
+    @Override
+    public String getLocalizedName() {
+        return StatCollector.translateToLocal(getUnlocalizedName() + ".name");
+    }
+
     public String getUnlocalizedName() {
-        return super.getUnlocalizedName().replace("tile.extracells.", "extracells.block.");
+        return super.getUnlocalizedName().replace("tile.", "");
     }
 }

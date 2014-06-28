@@ -8,8 +8,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
 
 public enum BlockEnum {
-    CERTUSTANK("certustank.name", new BlockCertusTank(), ItemBlockCertusTank.class),
-    WALRUS("walrus.name", new BlockWalrus());
+    CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),
+    WALRUS("walrus", new BlockWalrus());
 
     private final String internalName;
     private Block block;
@@ -22,7 +22,7 @@ public enum BlockEnum {
     BlockEnum(String _internalName, Block _block, Class<? extends ItemBlock> _itemBlockClass) {
         internalName = _internalName;
         block = _block;
-        block.setBlockName("extracells." + internalName);
+        block.setBlockName("extracells.block." + internalName);
         itemBlockClass = _itemBlockClass;
     }
 

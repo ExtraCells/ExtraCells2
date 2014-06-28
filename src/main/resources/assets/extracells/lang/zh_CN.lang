@@ -29,12 +29,14 @@ extracells.item.storage.casing.physical.name=高级存储单元仓
 extracells.item.storage.casing.fluid.name=流体存储单元仓
 extracells.item.terminal.fluid.wireless.name=无线ME流体访问终端
 extracells.item.fluid.pattern=ME流体模板
+
 //Creative Tab
 itemGroup.Extra_Cells=更多存储器
 
 //Item Groups
 extracells.fluid.IO=ME流体导入/导出总线
 extracells.fluid.plane=ME流体创造/毁灭刨工机
+
 //Parts
 extracells.part.fluid.export.name=ME流体导出总线
 extracells.part.fluid.import.name=ME流体导出总线

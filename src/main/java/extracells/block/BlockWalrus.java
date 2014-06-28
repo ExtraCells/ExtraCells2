@@ -18,7 +18,6 @@ public class BlockWalrus extends Block implements ITileEntityProvider {
     public BlockWalrus() {
         super(Material.clay);
         setCreativeTab(Extracells.ModTab);
-        setBlockName("extracells.block.walrus");
         setHardness(2.0F);
         setResistance(10.0F);
     }
@@ -83,5 +82,9 @@ public class BlockWalrus extends Block implements ITileEntityProvider {
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityWalrus();
+    }
+
+    public String getUnlocalizedName() {
+        return super.getUnlocalizedName().replace("tile.", "");
     }
 }

@@ -49,8 +49,8 @@ extracells.part.drive.name=ME Drive Fixture
 extracells.part.battery.name=ME Energy Cell Fixture
 
 //Blocks
-extracells.block.certustank.name=ME Certus
-extracells.block.certustank.name=Walrus
+extracells.block.certustank=Certus Quartz Tank
+extracells.block.walrus.name=Walrus
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Amount
