@@ -160,6 +160,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
         if (wantedAmount < 0)
             wantedAmount = 0;
         new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
+        tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air);
+        tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, Blocks.air);
     }
 
     public void changeWantedAmount(int modifier, EntityPlayer player) {
