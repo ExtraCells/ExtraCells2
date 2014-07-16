@@ -2,6 +2,7 @@ package extracells.container;
 
 import appeng.api.AEApi;
 import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
@@ -78,6 +79,12 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
         return true;
     }
 
+    @Override
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource) {
+        fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
+        new PacketFluidTerminal(player, fluidStackList).sendPacketToPlayer(player);
+    }
+
     public void onContainerClosed(EntityPlayer entityPlayer) {
         super.onContainerClosed(entityPlayer);
         if (!entityPlayer.worldObj.isRemote) {
@@ -85,12 +92,6 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
                 monitor.removeListener(this);
             terminal.removeContainer(this);
         }
-    }
-
-    @Override
-    public void postChange(IMEMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource) {
-        fluidStackList = monitor.getStorageList();
-        new PacketFluidTerminal(player, fluidStackList).sendPacketToPlayer(player);
     }
 
     @Override

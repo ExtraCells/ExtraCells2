@@ -45,11 +45,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
             if (itemStack == null)
                 return false;
-            if (AEApi.instance().materials().materialCardCapacity.sameAs(itemStack))
+            if (AEApi.instance().materials().materialCardCapacity.sameAsStack(itemStack))
                 return true;
-            else if (AEApi.instance().materials().materialCardSpeed.sameAs(itemStack))
+            else if (AEApi.instance().materials().materialCardSpeed.sameAsStack(itemStack))
                 return true;
-            else if (AEApi.instance().materials().materialCardRedstone.sameAs(itemStack))
+            else if (AEApi.instance().materials().materialCardRedstone.sameAsStack(itemStack))
                 return true;
             return false;
         }
@@ -201,11 +201,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
         for (int i = 0; i < upgradeInventory.getSizeInventory(); i++) {
             ItemStack currentStack = upgradeInventory.getStackInSlot(i);
             if (currentStack != null) {
-                if (AEApi.instance().materials().materialCardCapacity.sameAs(currentStack))
+                if (AEApi.instance().materials().materialCardCapacity.sameAsStack(currentStack))
                     filterSize++;
-                if (AEApi.instance().materials().materialCardRedstone.sameAs(currentStack))
+                if (AEApi.instance().materials().materialCardRedstone.sameAsStack(currentStack))
                     redstoneControlled = true;
-                if (AEApi.instance().materials().materialCardSpeed.sameAs(currentStack))
+                if (AEApi.instance().materials().materialCardSpeed.sameAsStack(currentStack))
                     speedState++;
             }
         }

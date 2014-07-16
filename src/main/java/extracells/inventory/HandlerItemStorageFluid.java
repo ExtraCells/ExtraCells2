@@ -79,6 +79,11 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
     }
 
     @Override
+    public boolean validForPass(int i) {
+        return true; //TODO
+    }
+
+    @Override
     public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
         if (input == null || !preformattedOrContainsFluid(input.getFluid()))
             return input;

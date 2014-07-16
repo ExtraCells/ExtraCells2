@@ -47,7 +47,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
             if (itemStack == null)
                 return false;
-            if (AEApi.instance().materials().materialCardInverter.sameAs(itemStack))
+            if (AEApi.instance().materials().materialCardInverter.sameAsStack(itemStack))
                 return true;
             return false;
         }
@@ -180,7 +180,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
     @Override
     public void onInventoryChanged() {
-        handler.setInverted(AEApi.instance().materials().materialCardInverter.sameAs(upgradeInventory.getStackInSlot(0)));
+        handler.setInverted(AEApi.instance().materials().materialCardInverter.sameAsStack(upgradeInventory.getStackInSlot(0)));
     }
 
     public void sendInformation(EntityPlayer player) {

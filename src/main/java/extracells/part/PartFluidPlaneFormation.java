@@ -39,7 +39,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
     private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1) {
 
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-            return AEApi.instance().materials().materialCardRedstone.sameAs(itemStack);
+            return AEApi.instance().materials().materialCardRedstone.sameAsStack(itemStack);
         }
     };
 

@@ -75,6 +75,11 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
     }
 
     @Override
+    public boolean validForPass(int i) {
+        return true; //TODO
+    }
+
+    @Override
     public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
         if (tank == null || input == null || !canAccept(input))
             return input;
