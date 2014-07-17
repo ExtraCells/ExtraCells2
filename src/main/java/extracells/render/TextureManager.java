@@ -7,7 +7,6 @@ public enum TextureManager {
     BUS_SIDE(TextureType.PART, "bus_side"),
     BUS_BORDER(TextureType.PART, "bus_border"),
     BUS_COLOR(TextureType.PART, "bus_color_border", "bus_color_point"),
-    ITEM_STORAGE_FLUID(TextureType.BLOCK, "storage.fluid.gui"),
     EXPORT_FRONT(TextureType.PART, "export_front_1", "export_front_2"),
     IMPORT_FRONT(TextureType.PART, "import_front_1", "import_front_2"),
     STORAGE_FRONT(TextureType.PART, "storage_front_1", "storage_front_2"),
