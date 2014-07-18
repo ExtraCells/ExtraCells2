@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -48,7 +49,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 
         List<String> description = new ArrayList<String>();
         description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.Craftable"));
-        description.add(fluid.getLocalizedName());
+        description.add(fluid.getLocalizedName(new FluidStack(fluid, 1)));
         drawHoveringText(description, mouseX - guiFluidTerminal.guiLeft(), mouseY - guiFluidTerminal.guiTop(), Minecraft.getMinecraft().fontRenderer);
         return true;
     }

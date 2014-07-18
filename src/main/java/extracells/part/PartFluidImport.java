@@ -29,7 +29,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.IMPORT_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTexture(), side, side);
         rh.setBounds(4, 4, 14, 12, 12, 16);
         rh.renderInventoryBox(renderer);
@@ -55,7 +55,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.IMPORT_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTextures()[0], side, side);
         rh.setBounds(4, 4, 14, 12, 12, 16);
         rh.renderBlock(x, y, z, renderer);

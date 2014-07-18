@@ -3,9 +3,9 @@ package extracells.part;
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
-import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
@@ -58,7 +58,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.STORAGE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTextures()[0], side, side);
         rh.setBounds(2, 2, 15, 14, 14, 16);
         rh.renderInventoryBox(renderer);
@@ -79,7 +79,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.STORAGE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
         rh.setBounds(2, 2, 15, 14, 14, 16);
         rh.renderBlock(x, y, z, renderer);
@@ -201,26 +201,23 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
         handler.setPrioritizedFluids(filterFluids);
         sendInformation(_player);
     }
-    
+
     // Receive events for when the network channel changes
     @MENetworkEventSubscribe
-    public void updateChannels( MENetworkChannelsChanged channel )
-    {
+    public void updateChannels(MENetworkChannelsChanged channel) {
         // Ensure we have a grid node.
-        if ( this.node != null )
-        {
+        if (this.node != null) {
             // Is the grid node active?
             boolean isNowActive = this.node.isActive();
-            
+
             // Does our active level differ from the grid node?
-            if ( isNowActive != this.isActive )
-            {
+            if (isNowActive != this.isActive) {
                 // Set our active level to the same as the grid node.
                 this.isActive = isNowActive;
-                
+
                 // Fire the neighbor changed event.
                 this.onNeighborChanged();
-                
+
                 // Mark our host tile for an update.
                 this.host.markForUpdate();
             }

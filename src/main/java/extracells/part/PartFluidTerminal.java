@@ -52,7 +52,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
         rh.setTexture(side);
         rh.setBounds(4, 4, 13, 12, 12, 14);
         rh.renderInventoryBox(renderer);
@@ -82,7 +82,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
         rh.setTexture(side);
         rh.setBounds(4, 4, 13, 12, 12, 14);
         rh.renderBlock(x, y, z, renderer);

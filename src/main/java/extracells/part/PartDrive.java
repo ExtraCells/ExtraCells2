@@ -47,7 +47,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.DRIVE_SIDE.getTexture();
         IIcon[] front = TextureManager.DRIVE_FRONT.getTextures();
         rh.setBounds(2, 2, 14, 14, 14, 15.999F);
         rh.renderInventoryFace(front[3], ForgeDirection.SOUTH, renderer);
@@ -63,7 +63,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.DRIVE_SIDE.getTexture();
         IIcon[] front = TextureManager.DRIVE_FRONT.getTextures();
         rh.setBounds(2, 2, 14, 14, 14, 15.999F);
         rh.renderFace(x, y, z, front[3], ForgeDirection.SOUTH, renderer);

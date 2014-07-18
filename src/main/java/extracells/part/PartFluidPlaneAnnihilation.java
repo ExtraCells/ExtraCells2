@@ -30,7 +30,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
     @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.PANE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
         rh.setBounds(2, 2, 14, 14, 14, 16);
         rh.renderInventoryBox(renderer);
@@ -51,7 +51,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.PANE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
         rh.setBounds(2, 2, 14, 14, 14, 16);
         rh.renderBlock(x, y, z, renderer);

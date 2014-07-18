@@ -25,7 +25,7 @@ public class PartFluidExport extends PartFluidIO {
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        rh.setTexture(TextureManager.BUS_SIDE.getTexture());
+        rh.setTexture(TextureManager.EXPORT_SIDE.getTexture());
         rh.setBounds(6, 6, 12, 10, 10, 13);
         rh.renderInventoryBox(renderer);
 
@@ -35,7 +35,7 @@ public class PartFluidExport extends PartFluidIO {
         rh.setBounds(5, 5, 14, 11, 11, 15);
         rh.renderInventoryBox(renderer);
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.EXPORT_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.EXPORT_FRONT.getTexture(), side, side);
         rh.setBounds(6, 6, 15, 10, 10, 16);
         rh.renderInventoryBox(renderer);
@@ -52,7 +52,7 @@ public class PartFluidExport extends PartFluidIO {
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        rh.setTexture(TextureManager.BUS_SIDE.getTexture());
+        rh.setTexture(TextureManager.EXPORT_SIDE.getTexture());
         rh.setBounds(6, 6, 12, 10, 10, 13);
         rh.renderBlock(x, y, z, renderer);
 
@@ -62,7 +62,7 @@ public class PartFluidExport extends PartFluidIO {
         rh.setBounds(5, 5, 14, 11, 11, 15);
         rh.renderBlock(x, y, z, renderer);
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.EXPORT_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.EXPORT_FRONT.getTextures()[0], side, side);
         rh.setBounds(6, 6, 15, 10, 10, 16);
         rh.renderBlock(x, y, z, renderer);

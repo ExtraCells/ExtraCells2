@@ -27,7 +27,7 @@ public class ItemBlockCertusTank extends ItemBlock {
                     FluidStack fluidInTank = FluidStack.loadFluidStackFromNBT(itemstack.getTagCompound().getCompoundTag("tileEntity"));
 
                     if (fluidInTank != null && fluidInTank.getFluid() != null) {
-                        return StatCollector.translateToLocal(getUnlocalizedName(itemstack)) + " - " + fluidInTank.getFluid().getLocalizedName();
+                        return StatCollector.translateToLocal(getUnlocalizedName(itemstack)) + " - " + fluidInTank.getFluid().getLocalizedName(fluidInTank);
                     }
                 } catch (Throwable ignored) {
                 }
