@@ -29,7 +29,7 @@ public class CommonProxy {
         } else {
             recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
         }
-        recipeHandler.registerHandlers();
+        recipeHandler.injectRecipes();
     }
 
     public void registerTileEntities() {

@@ -75,7 +75,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 if (cellStati[j + i * 3] > 0) {
-                    rh.setBounds(4 + i * 5, 12 - j * 3, 14, 7 + i * 5, 10 - j * 3, 16);
+                    rh.setBounds(i * 9, 12 - j * 3, 14, 8 + i * 8, 10 - j * 3, 16);
                     rh.renderFace(x, y, z, front[1], ForgeDirection.SOUTH, renderer);
                 }
             }
@@ -83,7 +83,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                rh.setBounds(4 + i * 5, 12 - j * 3, 14, 7 + i * 5, 10 - j * 3, 16);
+                rh.setBounds(i * 9, 12 - j * 3, 14, 8 + i * 8, 10 - j * 3, 16);
                 ts.setColorOpaque_I(getColorByStatus(cellStati[j + i * 3]));
                 ts.setBrightness(13 << 20 | 13 << 4);
                 rh.renderFace(x, y, z, front[2], ForgeDirection.SOUTH, renderer);
@@ -180,9 +180,9 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
         for (int i = 0; i < cellStati.length; i++) {
             ItemStack stackInSlot = inventory.getStackInSlot(i);
-            IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, StorageChannel.ITEMS);
+            IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
             if (inventoryHandler == null)
-                inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, StorageChannel.FLUIDS);
+                inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.FLUIDS);
 
             ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stackInSlot);
             if (cellHandler == null || inventoryHandler == null) {
@@ -206,7 +206,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack cell = inventory.getStackInSlot(i);
             if (cellRegistry.isCellHandled(cell)) {
-                IMEInventoryHandler cellInventory = cellRegistry.getCellInventory(cell, channel);
+                IMEInventoryHandler cellInventory = cellRegistry.getCellInventory(cell, null, channel);
                 if (cellInventory != null)
                     handlers.add(cellInventory);
             }
@@ -234,5 +234,10 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
     public Object getClientGuiElement(EntityPlayer player) {
         return new GuiDrive(this, player);
+    }
+
+    @Override
+    public void saveChanges(IMEInventory cellInventory) {
+        //TODO!!!
     }
 }

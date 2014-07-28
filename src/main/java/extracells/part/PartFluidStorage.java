@@ -9,6 +9,7 @@ import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
+import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.util.AEColor;
@@ -222,5 +223,10 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
                 this.host.markForUpdate();
             }
         }
+    }
+
+    @Override
+    public void saveChanges(IMEInventory cellInventory) {
+        //do nothing, since storage bus changes tanks directly.
     }
 }

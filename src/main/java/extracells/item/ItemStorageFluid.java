@@ -75,7 +75,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
     }
 
     @Override
-    public IMEInventoryHandler getCellInventory(ItemStack is, StorageChannel channel) {
+    public IMEInventoryHandler getCellInventory(ItemStack is, ISaveProvider saveProvider, StorageChannel channel) {
         if (channel == StorageChannel.ITEMS || is.getItem() != this) {
             return null;
         }
@@ -145,7 +145,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
+        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
         if (!(handler instanceof HandlerItemStorageFluid)) {
             return;
         }
@@ -170,7 +170,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
         if (!entityPlayer.isSneaking()) {
             return itemStack;
         }
-        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
+        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
         if (!(handler instanceof HandlerItemStorageFluid)) {
             return itemStack;
         }
