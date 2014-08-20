@@ -2,6 +2,7 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartHost;
@@ -191,13 +192,15 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
                 cellStati[i] = (byte) cellHandler.getStatusForCell(stackInSlot, inventoryHandler);
             }
         }
+        IGridNode node = getGridNode();
         if (node != null) {
             IGrid grid = node.getGrid();
             if (grid != null) {
                 grid.postEvent(new MENetworkCellArrayUpdate());
             }
-            host.markForUpdate();
+            getHost().markForUpdate();
         }
+        saveData();
     }
 
     private List<IMEInventoryHandler> updateHandlers(StorageChannel channel) {
@@ -238,6 +241,6 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
     @Override
     public void saveChanges(IMEInventory cellInventory) {
-        //TODO!!!
+        getHost().markForSave();
     }
 }

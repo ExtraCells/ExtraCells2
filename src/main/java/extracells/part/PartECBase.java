@@ -44,16 +44,16 @@ import java.util.Random;
 
 public abstract class PartECBase implements IPart, IGridHost, IActionHost {
 
-    protected IGridNode node;
-    protected ForgeDirection side;
-    protected IPartHost host;
-    protected TileEntity tile;
-    protected ECBaseGridBlock gridBlock;
-    protected double powerUsage;
-    protected TileEntity hostTile;
-    protected IFluidHandler facingTank;
-    protected boolean redstonePowered;
-    protected boolean isActive;
+    private IGridNode node;
+    private ForgeDirection side;
+    private IPartHost host;
+    private TileEntity tile;
+    private ECBaseGridBlock gridBlock;
+    private double powerUsage;
+    private TileEntity hostTile;
+    private IFluidHandler facingTank;
+    private boolean redstonePowered;
+    private boolean isActive;
 
     public void initializePart(ItemStack partStack) {
         if (partStack.hasTagCompound()) {
@@ -352,5 +352,26 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
 
     public final DimensionalCoord getLocation() {
         return new DimensionalCoord(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord);
+    }
+
+    public TileEntity getHostTile() {
+        return hostTile;
+    }
+
+    protected IFluidHandler getFacingTank() {
+        return facingTank;
+    }
+
+    protected void setActive(boolean _active) {
+        isActive = _active;
+    }
+
+    protected boolean isRedstonePowered() {
+        return redstonePowered;
+    }
+
+    protected final void saveData() {
+        if (host != null)
+            host.markForSave();
     }
 }

@@ -5,6 +5,7 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.networking.events.MENetworkPowerStorage;
 import appeng.api.parts.IPartCollsionHelper;
@@ -112,13 +113,13 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
             batteryIcon = null;
             handler = null;
         }
-
+        IGridNode node = getGridNode();
         if (node != null) {
             IGrid grid = node.getGrid();
             if (grid != null) {
                 grid.postEvent(new MENetworkPowerStorage(this, MENetworkPowerStorage.PowerEventType.REQUEST_POWER));
             }
-            host.markForUpdate();
+            getHost().markForUpdate();
         }
     }
 

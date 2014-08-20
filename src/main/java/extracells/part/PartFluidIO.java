@@ -143,6 +143,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
     public final void setFluid(int index, Fluid fluid, EntityPlayer player) {
         filterFluids[index] = fluid;
         new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
+        saveData();
     }
 
     public RedstoneMode getRedstoneMode() {
@@ -155,6 +156,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
         else
             redstoneMode = RedstoneMode.values()[0];
         new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
+        saveData();
     }
 
     public Object getServerGuiElement(EntityPlayer player) {
@@ -181,7 +183,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
     @Override
     public void onNeighborChanged() {
         super.onNeighborChanged();
-
+        boolean redstonePowered = isRedstonePowered();
         if (redstonePowered) {
             if (!lastRedstone) {
                 doWork(125 + speedState + speedState * 125, 1);
@@ -211,15 +213,17 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
         }
 
         try {
-            if (host.getLocation().getWorld().isRemote)
+            if (getHost().getLocation().getWorld().isRemote)
                 return;
         } catch (Throwable ignored) {
         }
         new PacketBusFluidIO(filterSize).sendPacketToAllPlayers();
         new PacketBusFluidIO(redstoneControlled).sendPacketToAllPlayers();
+        saveData();
     }
 
     private boolean canDoWork() {
+        boolean redstonePowered = isRedstonePowered();
         if (!redstoneControlled)
             return true;
         switch (getRedstoneMode()) {

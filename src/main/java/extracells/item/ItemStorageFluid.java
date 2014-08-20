@@ -75,11 +75,11 @@ public class ItemStorageFluid extends Item implements ICellHandler {
     }
 
     @Override
-    public IMEInventoryHandler getCellInventory(ItemStack is, ISaveProvider saveProvider, StorageChannel channel) {
-        if (channel == StorageChannel.ITEMS || is.getItem() != this) {
+    public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, StorageChannel channel) {
+        if (channel == StorageChannel.ITEMS || itemStack.getItem() != this) {
             return null;
         }
-        return new HandlerItemStorageFluid(is);
+        return new HandlerItemStorageFluid(itemStack, saveProvider);
     }
 
     @Override

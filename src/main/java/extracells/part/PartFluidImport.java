@@ -60,7 +60,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
         rh.setBounds(4, 4, 14, 12, 12, 16);
         rh.renderBlock(x, y, z, renderer);
 
-        ts.setColorOpaque_I(host.getColor().blackVariant);
+        ts.setColorOpaque_I(getHost().getColor().blackVariant);
         if (isActive())
             ts.setBrightness(15 << 20 | 15 << 4);
         rh.renderFace(x, y, z, TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
@@ -89,7 +89,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     }
 
     public boolean doWork(int rate, int TicksSinceLastCall) {
-        if (facingTank == null)
+        if (getFacingTank() == null)
             return false;
         boolean empty = true;
 
@@ -128,6 +128,8 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
     private boolean fillToNetwork(Fluid fluid, int toDrain) {
         FluidStack drained;
+        IFluidHandler facingTank = getFacingTank();
+        ForgeDirection side = getSide();
         if (fluid == null) {
             drained = facingTank.drain(side.getOpposite(), toDrain, false);
         } else {
@@ -156,6 +158,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+        boolean redstonePowered = isRedstonePowered();
         if (resource == null || (redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL))
             return 0;
 

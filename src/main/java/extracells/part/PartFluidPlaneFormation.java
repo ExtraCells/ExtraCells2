@@ -5,6 +5,7 @@ import appeng.api.config.Actionable;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
@@ -13,6 +14,7 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerPlaneFormation;
+import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiFluidPlaneFormation;
 import extracells.network.packet.other.IFluidSlotPart;
 import extracells.network.packet.other.PacketFluidSlot;
@@ -25,6 +27,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -72,6 +75,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
         rh.setBounds(2, 2, 14, 14, 14, 16);
         rh.renderBlock(x, y, z, renderer);
         rh.setBounds(3, 3, 14, 13, 13, 16);
+        IPartHost host = getHost();
         if (host != null) {
             ts.setColorOpaque_I(host.getColor().blackVariant);
             rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
@@ -104,6 +108,9 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
 
     @Override
     public void onNeighborChanged() {
+        TileEntity hostTile = getHostTile();
+        ECBaseGridBlock gridBlock = getGridBlock();
+        ForgeDirection side = getSide();
         if (fluid == null || hostTile == null || gridBlock == null)
             return;
         IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();

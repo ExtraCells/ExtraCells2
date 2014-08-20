@@ -5,6 +5,7 @@ import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
@@ -29,8 +30,9 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
     private int totalTypes;
     private int totalBytes;
     private List<ContainerFluidStorage> containers = new ArrayList<ContainerFluidStorage>();
+    private ISaveProvider saveProvider;
 
-    public HandlerItemStorageFluid(ItemStack _storageStack) {
+    public HandlerItemStorageFluid(ItemStack _storageStack, ISaveProvider _saveProvider) {
         if (!_storageStack.hasTagCompound())
             _storageStack.setTagCompound(new NBTTagCompound());
         stackTag = _storageStack.getTagCompound();
@@ -45,6 +47,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
             if (fluid != null)
                 prioritizedFluids.add(fluid);
         }
+        saveProvider = _saveProvider;
     }
 
     @Override
@@ -129,6 +132,8 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
                 }
             }
         }
+        if (notAdded == null || !notAdded.equals(input))
+            requestSave();
         return notAdded;
     }
 
@@ -156,7 +161,8 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
                         writeFluidToSlot(i, null);
                     }
                 }
-
+                if (removedStack != null && removedStack.getStackSize() > 0)
+                    requestSave();
                 return removedStack;
             }
         }
@@ -166,8 +172,9 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
     @Override
     public IItemList<IAEFluidStack> getAvailableItems(IItemList<IAEFluidStack> out) {
-        for (FluidStack fluidStack : fluidStacks) if (fluidStack != null)
-            out.add(AEApi.instance().storage().createFluidStack(fluidStack));
+        for (FluidStack fluidStack : fluidStacks)
+            if (fluidStack != null)
+                out.add(AEApi.instance().storage().createFluidStack(fluidStack));
         return out;
     }
 
@@ -229,5 +236,10 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
             stackTag.removeTag("Fluid#" + i);
         }
         fluidStacks.set(i, fluidStack);
+    }
+
+    private void requestSave() {
+        if (saveProvider != null)
+            saveProvider.saveChanges(this);
     }
 }

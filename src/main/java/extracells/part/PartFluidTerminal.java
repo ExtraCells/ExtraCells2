@@ -7,6 +7,7 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
@@ -14,11 +15,13 @@ import appeng.api.util.AEColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidTerminal;
+import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import extracells.util.inventory.ECPrivateInventory;
+import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,11 +38,11 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartFluidTerminal extends PartECBase implements IGridTickable {
+public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryUpdateReceiver {
 
     private Fluid currentFluid;
     private List<ContainerFluidTerminal> containers = new ArrayList<ContainerFluidTerminal>();
-    private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.fluid.terminal", 2, 64) {
+    private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.fluid.terminal", 2, 64, this) {
 
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
             return FluidUtil.isFluidContainer(itemStack);
@@ -96,6 +99,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
         ts.setColorOpaque_I(0xFFFFFF);
         rh.renderFace(x, y, z, TextureManager.BUS_BORDER.getTexture(), ForgeDirection.SOUTH, renderer);
 
+        IPartHost host = getHost();
         rh.setBounds(3, 3, 15, 13, 13, 16);
         ts.setColorOpaque_I(host.getColor().blackVariant);
         rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
@@ -183,6 +187,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
         if (!FluidUtil.isFluidContainer(container))
             return;
         container = container.copy();
+
+        ECBaseGridBlock gridBlock = getGridBlock();
         if (gridBlock == null)
             return;
         IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
@@ -244,5 +250,10 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
     public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall) {
         doWork();
         return TickRateModulation.FASTER;
+    }
+
+    @Override
+    public void onInventoryChanged() {
+        saveData();
     }
 }

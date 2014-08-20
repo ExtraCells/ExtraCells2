@@ -15,6 +15,7 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class PartFluidExport extends PartFluidIO {
         rh.setBounds(6, 6, 15, 10, 10, 16);
         rh.renderBlock(x, y, z, renderer);
 
-        ts.setColorOpaque_I(host.getColor().blackVariant);
+        ts.setColorOpaque_I(getHost().getColor().blackVariant);
         if (isActive())
             ts.setBrightness(15 << 20 | 15 << 4);
         rh.renderFace(x, y, z, TextureManager.EXPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
@@ -92,6 +93,7 @@ public class PartFluidExport extends PartFluidIO {
 
     @Override
     public boolean doWork(int rate, int TicksSinceLastCall) {
+        IFluidHandler facingTank = getFacingTank();
         if (facingTank == null)
             return false;
         List<Fluid> filter = new ArrayList<Fluid>();
@@ -119,7 +121,7 @@ public class PartFluidExport extends PartFluidIO {
 
                 if (stack == null)
                     continue;
-                int filled = facingTank.fill(side.getOpposite(), stack.getFluidStack(), true);
+                int filled = facingTank.fill(getSide().getOpposite(), stack.getFluidStack(), true);
 
                 if (filled > 0) {
                     extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE);

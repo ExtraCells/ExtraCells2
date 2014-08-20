@@ -2,6 +2,7 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
@@ -24,6 +25,8 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -100,11 +103,12 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, BaseActionSource src, StorageChannel chan) {
         if (chan == StorageChannel.FLUIDS && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == fluid) {
             currentAmount = fullStack != null ? fullStack.getStackSize() : 0;
+
+            IGridNode node = getGridNode();
             if (node != null) {
-                isActive = node.isActive();
-                host.markForUpdate();
-                tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air);
-                tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, Blocks.air);
+                setActive(node.isActive());
+                getHost().markForUpdate();
+                notifyBlocky(getHostTile(), getSide());
             }
         }
     }
@@ -138,6 +142,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
         watcher.clear();
         updateWatcher(watcher);
         new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(_player);
+        saveData();
     }
 
     public void toggleMode(EntityPlayer player) {
@@ -150,18 +155,22 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
                 break;
         }
 
-        tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air);
-        tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, Blocks.air);
+        notifyBlocky(getHostTile(), getSide());
         new PacketFluidEmitter(mode, player).sendPacketToPlayer(player);
+        saveData();
     }
 
     public void setWantedAmount(long _wantedAmount, EntityPlayer player) {
         wantedAmount = _wantedAmount;
         if (wantedAmount < 0)
-            wantedAmount = 0;
-        new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
-        tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord, tile.yCoord, tile.zCoord, Blocks.air);
-        tile.getWorldObj().notifyBlocksOfNeighborChange(tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, Blocks.air);
+            new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
+        notifyBlocky(getHostTile(), getSide());
+        saveData();
+    }
+
+    private void notifyBlocky(TileEntity _tile, ForgeDirection _side) {
+        _tile.getWorldObj().notifyBlocksOfNeighborChange(_tile.xCoord, _tile.yCoord, _tile.zCoord, Blocks.air);
+        _tile.getWorldObj().notifyBlocksOfNeighborChange(_tile.xCoord + _side.offsetX, _tile.yCoord + _side.offsetY, _tile.zCoord + _side.offsetZ, Blocks.air);
     }
 
     public void changeWantedAmount(int modifier, EntityPlayer player) {
