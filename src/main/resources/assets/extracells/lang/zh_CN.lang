@@ -31,7 +31,7 @@ extracells.item.terminal.fluid.wireless.name=无线ME流体访问终端
 extracells.item.fluid.pattern=ME流体模板
 
 //Creative Tab
-itemGroup.Extra_Cells=更多存储器
+itemGroup.Extra_Cells=更多存储单元
 
 //Item Groups
 extracells.fluid.IO=ME流体导入/导出总线
@@ -50,6 +50,7 @@ extracells.part.battery.name=ME能量单元固定器
 
 //Blocks
 extracells.block.certustank.name=ME赛特斯水槽
+extracells.block.certustank.name=海象
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=总量
