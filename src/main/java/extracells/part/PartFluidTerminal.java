@@ -187,6 +187,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
         if (!FluidUtil.isFluidContainer(container))
             return;
         container = container.copy();
+        container.stackSize = 1;
 
         ECBaseGridBlock gridBlock = getGridBlock();
         if (gridBlock == null)
@@ -206,13 +207,14 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
                 monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, filledContainer.getLeft()), Actionable.MODULATE, machineSource);
                 decreaseFirstSlot();
             }
-        } else if (FluidUtil.isFilled(container)) {
+        } else  {
             FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
             IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, machineSource);
             if (notInjected != null)
                 return;
             MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
-            if (fillSecondSlot(drainedContainer.getRight())) {
+            ItemStack emptyContainer = drainedContainer.getRight();
+            if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
                 monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, machineSource);
                 decreaseFirstSlot();
             }
