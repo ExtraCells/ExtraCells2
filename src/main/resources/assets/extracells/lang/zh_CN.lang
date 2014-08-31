@@ -4,16 +4,16 @@
 
 //Items
 extracells.item.storage.physical.256k.name=ME 256k存储器
-extracells.item.storage.physical.1024k.name=ME 1M存储器
-extracells.item.storage.physical.4096k.name=ME 4M存储器
-extracells.item.storage.physical.16384k.name=ME 16M存储器
+extracells.item.storage.physical.1024k.name=ME 1024k存储器
+extracells.item.storage.physical.4096k.name=ME 4096k存储器
+extracells.item.storage.physical.16384k.name=ME 16384k存储器
 extracells.item.storage.fluid.1k.name=ME 1k流体存储器
 extracells.item.storage.fluid.4k.name=ME 4k流体存储器
 extracells.item.storage.fluid.16k.name=ME 16k流体存储器
 extracells.item.storage.fluid.64k.name=ME 64k流体存储器
 extracells.item.storage.fluid.256k.name=ME 256k流体存储器
-extracells.item.storage.fluid.1024k.name=ME 1M流体存储器
-extracells.item.storage.fluid.4096k.name=ME 4M流体存储器
+extracells.item.storage.fluid.1024k.name=ME 1024k流体存储器
+extracells.item.storage.fluid.4096k.name=ME 4096k流体存储器
 extracells.item.storage.component.physical.256k.name=256k ME存储簇
 extracells.item.storage.component.physical.1024k.name=1024k ME存储簇
 extracells.item.storage.component.physical.4096k.name=4096k ME存储簇
@@ -23,8 +23,8 @@ extracells.item.storage.component.fluid.4k.name=4k ME流体存储簇
 extracells.item.storage.component.fluid.16k.name=16k ME流体存储簇
 extracells.item.storage.component.fluid.64k.name=64k ME流体存储簇
 extracells.item.storage.component.fluid.256k.name=256k ME流体存储簇
-extracells.item.storage.component.fluid.1024k.name=1M ME流体存储簇
-extracells.item.storage.component.fluid.4096k.name=4M ME流体存储簇
+extracells.item.storage.component.fluid.1024k.name=1024k ME流体存储簇
+extracells.item.storage.component.fluid.4096k.name=4096k ME流体存储簇
 extracells.item.storage.casing.physical.name=高级存储单元仓
 extracells.item.storage.casing.fluid.name=流体存储单元仓
 extracells.item.terminal.fluid.wireless.name=无线ME流体访问终端
