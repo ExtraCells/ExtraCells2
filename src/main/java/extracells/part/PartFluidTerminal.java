@@ -181,7 +181,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
     public void doWork() {
         ItemStack secondSlot = inventory.getStackInSlot(1);
-        if (secondSlot != null && secondSlot.stackSize > 64)
+        if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize())
             return;
         ItemStack container = inventory.getStackInSlot(0);
         if (!FluidUtil.isFluidContainer(container))
