@@ -145,13 +145,19 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
         if (notInjected != null) {
             int amount = (int) (toFill.getStackSize() - notInjected.getStackSize());
             if (amount > 0) {
-                facingTank.drain(side.getOpposite(), amount, true);
+                if (fluid == null)
+                    facingTank.drain(side.getOpposite(), amount, true);
+                else
+                    facingTank.drain(side.getOpposite(), new FluidStack(toFill.getFluid(), amount), true);
                 return true;
             } else {
                 return false;
             }
         } else {
-            facingTank.drain(side.getOpposite(), toFill.getFluidStack(), true);
+            if (fluid == null)
+                facingTank.drain(side.getOpposite(), toFill.getFluidStack().amount, true);
+            else
+                facingTank.drain(side.getOpposite(), toFill.getFluidStack(), true);
             return true;
         }
     }

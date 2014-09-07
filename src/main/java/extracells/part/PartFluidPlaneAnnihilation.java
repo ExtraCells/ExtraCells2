@@ -89,7 +89,6 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
     @SuppressWarnings("unused")
     @MENetworkEventSubscribe
     public void channelChanged(MENetworkChannelChanged e) {
-        System.out.println("ss");
         if (e.node == getGridNode())
             onNeighborChanged();
     }
