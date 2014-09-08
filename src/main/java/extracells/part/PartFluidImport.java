@@ -170,7 +170,6 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
         FluidStack toFill = new FluidStack(resource.fluidID, 125 + speedState * 125);
         IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), Actionable.MODULATE);
-
         if (filled == null)
             return 125 + speedState * 125;
         return toFill.amount - (int) filled.getStackSize();
