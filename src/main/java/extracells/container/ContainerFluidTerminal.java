@@ -80,7 +80,7 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
     }
 
     @Override
-    public void postChange(IBaseMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
         fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
         new PacketFluidTerminal(player, fluidStackList).sendPacketToPlayer(player);
     }

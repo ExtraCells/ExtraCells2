@@ -100,7 +100,7 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
     }
 
     @Override
-    public void postChange(IBaseMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
         fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
         new PacketFluidStorage(player, fluidStackList).sendPacketToPlayer(player);
     }
