@@ -20,7 +20,22 @@ apply plugin: 'java'
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
-version = "2.1.12"
+ext.buildProps = file "build.properties"
+
+if (System.getenv("BUILD_NUMBER") != null) {
+	version = "${System.getenv("BUILD_NUMBER")}"
+}
+ else {
+	version = "NIGHTLY"
+}
+
+buildProps.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}.${System.getenv().BUILD_NUMBER}"
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
@@ -29,7 +44,7 @@ logger.lifecycle "$archivesBaseName-$version"
 logger.lifecycle "" + version
 
 minecraft {
-    version = "1.7.10-10.13.0.1207"
+    version = "${config.version.minecraft}-${config.version.forge}"
     assetDir = "../../MinecraftDebug/run_client/assets"
 }
 
@@ -52,9 +67,11 @@ processResources {
     }
 
     from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.lang'
-        exclude '**/*.info'
-        exclude '**/*.properties'
+        include '**/*.lang'
+        include '**/*.info'
+        include '**/*.properties'
+
+        expand 'version': "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}", 'mcversion': project.minecraft.version
     }
 }
 
