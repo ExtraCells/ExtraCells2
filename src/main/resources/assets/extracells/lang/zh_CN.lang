@@ -49,15 +49,15 @@ extracells.part.drive.name=ME驱动固定器
 extracells.part.battery.name=ME能量单元固定器
 
 //Blocks
-extracells.block.certustank.name=ME赛特斯水槽
-extracells.block.certustank.name=海象
+extracells.block.certustank=赛特斯石英水槽
+extracells.block.walrus.name=海象
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=总量
 extracells.tooltip.fluid=流体
-extracells.tooltip.storage.physical.types=%s 中的 %s 个物品类型已使用.
-extracells.tooltip.storage.fluid.types=%s 中的 %s 个流体类型已使用.
-extracells.tooltip.storage.physical.bytes=%s 中的 %s 物品字节已使用.
-extracells.tooltip.storage.fluid.bytes=%s 中的 %s 流体字节已使用.
-extracells.tooltip.storage.fluid.content=存有 %s mB 的流体.
-extracells.tooltip.storage.physical.content=存有 %s 个物品.
+extracells.tooltip.storage.physical.types=%s中的%s个物品类型已使用.
+extracells.tooltip.storage.fluid.types=%s中的%s个流体类型已使用.
+extracells.tooltip.storage.physical.bytes=%s中的%s物品字节已使用.
+extracells.tooltip.storage.fluid.bytes=%s中的%s流体字节已使用.
+extracells.tooltip.storage.fluid.content=存有%smB的流体.
+extracells.tooltip.storage.physical.content=存有%s个物品.
