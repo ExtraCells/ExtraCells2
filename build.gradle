@@ -35,7 +35,7 @@ buildProps.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}.${System.getenv().BUILD_NUMBER}"
+version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}b${System.getenv().BUILD_NUMBER}"
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
