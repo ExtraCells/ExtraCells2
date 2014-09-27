@@ -201,7 +201,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     }
 
     @Override
-    public abstract void getBoxes(IPartCollsionHelper bch);
+    public abstract void getBoxes(IPartCollisionHelper bch);
 
     @Override
     public boolean onActivate(EntityPlayer player, Vec3 pos) {

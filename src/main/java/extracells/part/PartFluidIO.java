@@ -6,7 +6,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -119,7 +119,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
     }
 
     @Override
-    public abstract void getBoxes(IPartCollsionHelper bch);
+    public abstract void getBoxes(IPartCollisionHelper bch);
 
     @Override
     public int cableConnectionRenderTo() {

@@ -35,7 +35,7 @@ public class ECBaseGridBlock implements IGridBlock {
     }
 
     @Override
-    public final boolean isWorldAccessable() {
+    public final boolean isWorldAccessible() {
         return false;
     }
 

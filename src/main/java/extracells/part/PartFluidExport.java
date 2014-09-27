@@ -2,7 +2,7 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
@@ -78,7 +78,7 @@ public class PartFluidExport extends PartFluidIO {
     }
 
     @Override
-    public void getBoxes(IPartCollsionHelper bch) {
+    public void getBoxes(IPartCollisionHelper bch) {
         bch.addBox(6, 6, 12, 10, 10, 13);
         bch.addBox(4, 4, 13, 12, 12, 14);
         bch.addBox(5, 5, 14, 11, 11, 15);

@@ -7,7 +7,7 @@ import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkStorageEvent;
-import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
@@ -123,7 +123,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     }
 
     @Override
-    public void getBoxes(IPartCollsionHelper bch) {
+    public void getBoxes(IPartCollisionHelper bch) {
         bch.addBox(2, 2, 15, 14, 14, 16);
         bch.addBox(4, 4, 14, 12, 12, 15);
         bch.addBox(5, 5, 13, 11, 11, 14);
