@@ -38,8 +38,8 @@ extracells.fluid.IO=ME流体导入/导出总线
 extracells.fluid.plane=ME流体创造/毁灭刨工机
 
 //Parts
-extracells.part.fluid.export.name=ME流体导出总线
-extracells.part.fluid.import.name=ME流体导出总线
+extracells.part.fluid.export.name=ME流体输出总线
+extracells.part.fluid.import.name=ME流体输入总线
 extracells.part.fluid.storage.name=ME流体存储总线
 extracells.part.fluid.terminal.name=ME流体访问终端
 extracells.part.fluid.plane.annihilation.name=ME流体毁灭刨工机
