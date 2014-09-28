@@ -49,7 +49,8 @@ extracells.part.drive.name=Крепление МЭ накопителя
 extracells.part.battery.name=Крепление МЭ энергетической ячейки
 
 //Blocks
-extracells.block.certustank.name=МЭ истинный бак
+extracells.block.certustank=Резервуар из истинного кварца
+extracells.block.walrus.name=Морж
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Количество
