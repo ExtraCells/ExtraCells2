@@ -1,0 +1,63 @@
+//**********// 
+//EXTRACELLS// 
+//**********// 
+
+//Items 
+extracells.item.storage.physical.256k.name=Magasin de 256k ME
+extracells.item.storage.physical.1024k.name=Magasin de 1M ME
+extracells.item.storage.physical.4096k.name=Magasin de 4M ME 
+extracells.item.storage.physical.16384k.name=Magasin de 16M ME 
+extracells.item.storage.fluid.1k.name=Magasin de fluide de 1k ME 
+extracells.item.storage.fluid.4k.name=Magasin de fluide de 4k ME 
+extracells.item.storage.fluid.16k.name=Magasin de fluide de 16k ME 
+extracells.item.storage.fluid.64k.name=Magasin de fluide de 64k ME 
+extracells.item.storage.fluid.256k.name=Magasin de fluide de 256k ME 
+extracells.item.storage.fluid.1024k.name=Magasin de fluide de 1M ME 
+extracells.item.storage.fluid.4096k.name=Magasin de fluide de 4M ME 
+extracells.item.storage.component.physical.256k.name=Composant de magasin de 256k ME
+extracells.item.storage.component.physical.1024k.name=Composant de magasin de 1M ME 
+extracells.item.storage.component.physical.4096k.name=Composant de magasin de 4M ME 
+extracells.item.storage.component.physical.16384k.name=Composant de magasin de 16M ME 
+extracells.item.storage.component.fluid.1k.name=Composant de magasin de fluide de 1k ME 
+extracells.item.storage.component.fluid.4k.name=Composant de magasin de fluide de 4k ME 
+extracells.item.storage.component.fluid.16k.name=Composant de magasin de fluide de 16k ME 
+extracells.item.storage.component.fluid.64k.name=Composant de magasin de fluide de 64k ME 
+extracells.item.storage.component.fluid.256k.name=Composant de magasin de fluide de 256k ME 
+extracells.item.storage.component.fluid.1024k.name=Composant de magasin de fluide de 1M ME 
+extracells.item.storage.component.fluid.4096k.name=Composant de magasin de fluide de 4M ME 
+extracells.item.storage.casing.physical.name=Logement avancé de magasin 
+extracells.item.storage.casing.fluid.name=Logement de magasin de fluide 
+extracells.item.terminal.fluid.wireless.name=Terminal de fluide sans-fil ME 
+extracells.item.fluid.pattern=Modèle de fluide ME 
+
+//Creative Tab 
+itemGroup.Extra_Cells=Extra cellule
+ 
+//Item Groups 
+extracells.fluid.IO=Bus d'import/export de fluide ME
+extracells.fluid.plane=Plan de formation/d'annihilation de fluide ME
+
+//Parts 
+extracells.part.fluid.export.name=Bus d'export de fluide ME
+extracells.part.fluid.import.name=Bus d'import de fluide ME 
+extracells.part.fluid.storage.name=Bus de magasin de fluide ME
+extracells.part.fluid.terminal.name=Terminal des fluides ME
+extracells.part.fluid.plane.annihilation.name=Plan d'annihilation de fluide ME 
+extracells.part.fluid.plane.formation.name=Plan de formation de fluide ME 
+extracells.part.fluid.levelemitter.name=Emetteur de niveau de fluide ME 
+extracells.part.drive.name=Installation énergétique ME
+extracells.part.battery.name=Cellule d'installation énergétique ME 
+
+//Blocks 
+extracells.block.certustank=Réservoire de Quartz Certus 
+extracells.block.walrus.name=Morse 
+
+//Tooltips and Chat-Messages 
+extracells.tooltip.amount=Quantité 
+extracells.tooltip.fluid=Fluide 
+extracells.tooltip.storage.physical.types=%s de %s type d'éléments utilisés. 
+extracells.tooltip.storage.fluid.types=%s de %s type de fluides utilisé. 
+extracells.tooltip.storage.physical.bytes=%s de %s octets d'éléments utilisés. 
+extracells.tooltip.storage.fluid.bytes=%s de %s octets de fluides utilisés. 
+extracells.tooltip.storage.fluid.content=Contient %s mB de fluides. 
+extracells.tooltip.storage.physical.content=Contient %s Eléments. 
