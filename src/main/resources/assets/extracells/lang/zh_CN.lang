@@ -55,9 +55,9 @@ extracells.block.walrus.name=海象
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=总量
 extracells.tooltip.fluid=流体
-extracells.tooltip.storage.physical.types=%s中的%s个物品类型已使用.
-extracells.tooltip.storage.fluid.types=%s中的%s个流体类型已使用.
-extracells.tooltip.storage.physical.bytes=%s中的%s物品字节已使用.
-extracells.tooltip.storage.fluid.bytes=%s中的%s流体字节已使用.
+extracells.tooltip.storage.physical.types=%s of %s个物品类型已使用.
+extracells.tooltip.storage.fluid.types=%s of %s个流体类型已使用.
+extracells.tooltip.storage.physical.bytes=%s of %s物品字节已使用.
+extracells.tooltip.storage.fluid.bytes=%s of %s个流体字节已使用.
 extracells.tooltip.storage.fluid.content=存有%smB的流体.
 extracells.tooltip.storage.physical.content=存有%s个物品.
