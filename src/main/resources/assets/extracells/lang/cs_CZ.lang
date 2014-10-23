@@ -1,0 +1,63 @@
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+extracells.item.storage.physical.256k.name=ME 256k úložiště
+extracells.item.storage.physical.1024k.name=ME 1M úložiště
+extracells.item.storage.physical.4096k.name=ME 4M úložiště
+extracells.item.storage.physical.16384k.name=ME 16M úložiště
+extracells.item.storage.fluid.1k.name=ME 1k tekutinové úložiště
+extracells.item.storage.fluid.4k.name=ME 4k tekutinové úložiště
+extracells.item.storage.fluid.16k.name=ME 16k tekutinové úložiště
+extracells.item.storage.fluid.64k.name=ME 64k tekutinové úložiště
+extracells.item.storage.fluid.256k.name=ME 256k tekutinové úložiště
+extracells.item.storage.fluid.1024k.name=ME 1M tekutinové úložiště
+extracells.item.storage.fluid.4096k.name=ME 4M tekutinové úložiště
+extracells.item.storage.component.physical.256k.name=256k ME součástka úložiště
+extracells.item.storage.component.physical.1024k.name=1024k ME součástka úložiště
+extracells.item.storage.component.physical.4096k.name=4096k ME součástka úložiště
+extracells.item.storage.component.physical.16384k.name=16384k ME součástka úložiště
+extracells.item.storage.component.fluid.1k.name=1k ME tekutinová součástka úložiště
+extracells.item.storage.component.fluid.4k.name=4k ME tekutinová součástka úložiště
+extracells.item.storage.component.fluid.16k.name=16k ME tekutinová součástka úložiště
+extracells.item.storage.component.fluid.64k.name=64k ME tekutinová součástka úložiště
+extracells.item.storage.component.fluid.256k.name=256k ME tekutinová součástka úložiště
+extracells.item.storage.component.fluid.1024k.name=1M ME tekutinová součástka úložiště
+extracells.item.storage.component.fluid.4096k.name=4M ME tekutinová součástka úložiště
+extracells.item.storage.casing.physical.name=Pokročilé úložné pouzdro
+extracells.item.storage.casing.fluid.name=Tekutinové úložné pouzdro
+extracells.item.terminal.fluid.wireless.name=Bezdrátový ME tekutinový terminál
+extracells.item.fluid.pattern=ME tekutinové schéma
+
+//Creative Tab
+itemGroup.Extra_Cells=Extra články
+
+//Item Groups
+extracells.fluid.IO=ME tekutinová exportní/importní sběrnice
+extracells.fluid.plane=ME tekutinová sací/vylévací plocha
+
+//Parts
+extracells.part.fluid.export.name=ME tekutinová exportní sběrnice
+extracells.part.fluid.import.name=ME tekutinová importní sběrnice
+extracells.part.fluid.storage.name=ME tekutinová úložní sběrnice
+extracells.part.fluid.terminal.name=ME tekutinový terminál
+extracells.part.fluid.plane.annihilation.name=ME tekutinová sací plocha
+extracells.part.fluid.plane.formation.name=ME tekutinová vylévací plocha
+extracells.part.fluid.levelemitter.name=ME tekutinový úrovňový vysílač
+extracells.part.drive.name=ME připínač jednotek
+extracells.part.battery.name=ME připínač energetických článků
+
+//Blocks
+extracells.block.certustank=Nádrž z nakloněného křemenne
+extracells.block.walrus.name=Mrož
+
+//Tooltips and Chat-Messages
+extracells.tooltip.amount=Množství
+extracells.tooltip.fluid=Tekutina
+extracells.tooltip.storage.physical.types=%s z %s typů předmětů využito.
+extracells.tooltip.storage.fluid.types=%s z %s typů tekutin využito.
+extracells.tooltip.storage.physical.bytes=%s z %s bitů itemů využito.
+extracells.tooltip.storage.fluid.bytes=%s z %s bitů tekutik využito.
+extracells.tooltip.storage.fluid.content=obsahuje %s mB tekutiny.
+extracells.tooltip.storage.physical.content=obsahuje %s předmětů.
