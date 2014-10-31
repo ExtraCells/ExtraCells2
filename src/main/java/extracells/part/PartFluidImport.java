@@ -167,11 +167,11 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
         boolean redstonePowered = isRedstonePowered();
         if (resource == null || (redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL))
             return 0;
-
-        FluidStack toFill = new FluidStack(resource.fluidID, 125 + speedState * 125);
+        int drainAmount = Math.min(125 + speedState * 125, resource.amount);
+        FluidStack toFill = new FluidStack(resource.fluidID, drainAmount);
         IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), Actionable.MODULATE);
         if (filled == null)
-            return 125 + speedState * 125;
+            return toFill.amount;
         return toFill.amount - (int) filled.getStackSize();
     }
 
