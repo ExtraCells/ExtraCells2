@@ -282,11 +282,13 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     }
 
     protected final IAEFluidStack injectFluid(IAEFluidStack toInject, Actionable action) {
-        if (gridBlock == null || facingTank == null)
-            return null;
+        if (gridBlock == null || facingTank == null){
+            return toInject;
+        }
         IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
-        if (monitor == null)
-            return null;
+        if (monitor == null){
+            return toInject;
+        }
         return monitor.injectItems(toInject, action, new MachineSource(this));
     }
 
