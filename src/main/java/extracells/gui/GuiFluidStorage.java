@@ -95,7 +95,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        fontRendererObj.drawString("extracells.part.fluid.terminal".replace("ME ", ""), 5, -12, 0x000000);
+        fontRendererObj.drawString(StatCollector.translateToLocal("extracells.part.fluid.terminal.name").replace("ME ", ""), 5, -12, 0x000000);
         drawWidgets(mouseX, mouseY);
         if (currentFluid != null) {
             long currentFluidAmount = currentFluid.getStackSize();
