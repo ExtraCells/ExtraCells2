@@ -93,18 +93,17 @@ public class PacketFluidStorage extends AbstractPacket {
                 }
                 break;
             case 1:
-                if (player != null && player.inventoryContainer instanceof ContainerFluidStorage) {
-                    ((ContainerFluidStorage) player.inventoryContainer).receiveSelectedFluid(currentFluid);
+                if (player != null && player.openContainer instanceof ContainerFluidStorage) {
+                    ((ContainerFluidStorage) player.openContainer).receiveSelectedFluid(currentFluid);
                 }
                 break;
             case 2:
                 if (player != null) {
                     if (!player.worldObj.isRemote) {
-                        if (player.inventoryContainer instanceof ContainerFluidStorage) {
-                            ((ContainerFluidStorage) player.inventoryContainer).forceFluidUpdate();
+                        if (player.openContainer instanceof ContainerFluidStorage) {
+                            ((ContainerFluidStorage) player.openContainer).forceFluidUpdate();
+                            ((ContainerFluidStorage) player.openContainer).doWork();
                         }
-                    } else if (player.inventoryContainer instanceof ContainerFluidStorage) {
-                        ((ContainerFluidStorage) player.inventoryContainer).doWork();
                     }
                 }
                 break;
