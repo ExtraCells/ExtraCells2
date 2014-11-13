@@ -4,7 +4,7 @@ group=ae2:ItemMaterial.CalcProcessor -> calcProcessor
 group=oredictionary:dustGlowstone -> dustGlowstone
 group=oredictionary:dyeBlue -> lapis
 group=ae2:BlockQuartzGlass -> glassQuartz
-group=oredictionary:crystalCertusQuartz ae2:ItemMaterial.CertusQuartzCrystalCharged ae2:ItemMaterial.PureifiedCertusQuartzCrystal -> certusCrystal
+group=oredictionary:crystalCertusQuartz ae2:ItemMaterial.CertusQuartzCrystalCharged ae2:ItemMaterial.PurifiedCertusQuartzCrystal -> certusCrystal
 
 shaped=
 	dustGlowstone engProcessor dustGlowstone,
