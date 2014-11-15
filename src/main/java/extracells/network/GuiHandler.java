@@ -5,10 +5,15 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import cpw.mods.fml.common.network.IGuiHandler;
 import extracells.Extracells;
+import extracells.container.ContainerFluidCrafter;
 import extracells.container.ContainerFluidStorage;
+import extracells.gui.GuiFluidCrafter;
 import extracells.gui.GuiFluidStorage;
 import extracells.part.PartECBase;
+import extracells.registries.BlockEnum;
+import extracells.tileentity.TileEntityFluidCrafter;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -70,6 +75,12 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         ForgeDirection side = ForgeDirection.getOrientation(ID);
+        if (world != null && world.getBlock(x, y, z) == BlockEnum.FLUIDCRAFTER.getBlock()){
+        	TileEntity tileEntity = world.getTileEntity(x, y, z);
+        	if(tileEntity == null || !(tileEntity instanceof TileEntityFluidCrafter))
+        		return null;
+        	return new ContainerFluidCrafter(player.inventory, ((TileEntityFluidCrafter) tileEntity).getInventory());
+        }
         if (world != null && side != ForgeDirection.UNKNOWN)
             return getPartContainer(side, player, world, x, y, z);
         return getContainer(ID - 6, player, temp);
@@ -77,7 +88,13 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        ForgeDirection side = ForgeDirection.getOrientation(ID);
+    	ForgeDirection side = ForgeDirection.getOrientation(ID);
+        if (world.getBlock(x, y, z) == BlockEnum.FLUIDCRAFTER.getBlock()){
+        	TileEntity tileEntity = world.getTileEntity(x, y, z);
+        	if(tileEntity == null || !(tileEntity instanceof TileEntityFluidCrafter))
+        		return null;
+        	return new GuiFluidCrafter(player.inventory, ((TileEntityFluidCrafter) tileEntity).getInventory());
+        }
         if (world != null && side != ForgeDirection.UNKNOWN)
             return getPartGui(side, player, world, x, y, z);
         return getGui(ID - 6, player);

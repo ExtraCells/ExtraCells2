@@ -98,6 +98,8 @@ public class NameHandler implements ISubItemResolver {
             return new ResolverResult(BlockEnum.CERTUSTANK.getInternalName(), 0);
         if (fullName.equals("fluidPattern"))
             return new ResolverResult(ItemEnum.FLUIDPATTERN.getInternalName(), 0);
+        if (fullName.equals("fluidCrafter"))
+        	return new ResolverResult(BlockEnum.CERTUSTANK.getInternalName(), 0);
 
         return null;
     }
