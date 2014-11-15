@@ -2,6 +2,7 @@ package extracells;
 
 import appeng.api.AEApi;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -32,6 +33,8 @@ public class Extracells {
     @SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
     public static CommonProxy proxy;
 
+    public static String VERSION;
+    
     private static File configFolder;
     public static boolean shortenedBuckets;
     public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells") {
@@ -49,6 +52,7 @@ public class Extracells {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         instance = this;
+        VERSION = Loader.instance().activeModContainer().getVersion();
         configFolder = event.getModConfigurationDirectory();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());

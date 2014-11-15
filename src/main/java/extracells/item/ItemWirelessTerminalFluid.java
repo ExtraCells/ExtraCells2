@@ -12,6 +12,7 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
+import extracells.api.ECApi;
 import extracells.network.GuiHandler;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -61,30 +62,7 @@ public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable
         int x = (int) entityPlayer.posX;
         int y = (int) entityPlayer.posY;
         int z = (int) entityPlayer.posZ;
-        IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locateable().findLocateableBySerial(key);
-        if (securityTerminal == null)
-            return itemStack;
-        IGridNode gridNode = securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
-        if (gridNode == null)
-            return itemStack;
-        IGrid grid = gridNode.getGrid();
-        if (grid == null)
-            return itemStack;
-        for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().blocks().blockWireless.entity())) {
-            IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
-            WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
-            int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
-            if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
-                IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
-                if (gridCache != null) {
-                    IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
-                    if (fluidInventory != null) {
-                        GuiHandler.launchGui(GuiHandler.getGuiId(1), entityPlayer, fluidInventory);
-                    }
-                }
-            }
-        }
-        return itemStack;
+        return ECApi.instance().openWirelessTerminal(entityPlayer, itemStack, world, x, y, z, key);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
