@@ -258,6 +258,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
 
     @Override
     public void securityBreak() {
+        getHost().removePart(side, false); //TODO drop item
     }
 
     public IPartHost getHost() {
@@ -282,12 +283,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     }
 
     protected final IAEFluidStack injectFluid(IAEFluidStack toInject, Actionable action) {
-        if (gridBlock == null || facingTank == null){
-        	return toInject;
+        if (gridBlock == null || facingTank == null) {
+            return toInject;
         }
         IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
-        if (monitor == null){
-        	return toInject;
+        if (monitor == null) {
+            return toInject;
         }
         return monitor.injectItems(toInject, action, new MachineSource(this));
     }

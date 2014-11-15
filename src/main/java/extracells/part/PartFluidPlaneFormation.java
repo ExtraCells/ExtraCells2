@@ -14,9 +14,7 @@ import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
-
 import com.google.common.collect.Lists;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerPlaneFormation;
@@ -34,12 +32,14 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 
 public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPart, IGridTickable {
 
@@ -136,6 +136,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
         monitor.extractItems(FluidUtil.createAEFluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE, new MachineSource(this));
         Block fluidWorldBlock = fluid.getBlock();
         world.setBlock(x, y, z, fluidWorldBlock);
+        world.markBlockForUpdate(x, y, z);
     }
 
     @Override
@@ -147,6 +148,17 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
     public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
         fluid = _fluid;
         new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(_player);
+        saveData();
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound data) {
+        data.setString("fluid", fluid == null ? "" : fluid.getName());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound data) {
+        fluid = FluidRegistry.getFluid(data.getString("fluid"));
     }
 
     public Object getServerGuiElement(EntityPlayer player) {

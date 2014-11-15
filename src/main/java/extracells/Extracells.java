@@ -32,7 +32,7 @@ public class Extracells {
 
     @SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
     public static CommonProxy proxy;
-    
+
     public static String VERSION;
 
     private static File configFolder;
