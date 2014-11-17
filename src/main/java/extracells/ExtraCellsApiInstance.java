@@ -15,6 +15,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import extracells.api.ExtraCellsApi;
+import extracells.api.definitions.IBlockDefinition;
+import extracells.api.definitions.IItemDefinition;
+import extracells.api.definitions.IPartDefinition;
+import extracells.definitions.BlockDefinition;
+import extracells.definitions.ItemDefinition;
+import extracells.definitions.PartDefinition;
 import extracells.network.GuiHandler;
 
 public class ExtraCellsApiInstance implements ExtraCellsApi {
@@ -55,6 +61,21 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
             }
         }
 		return itemStack;
+	}
+	
+	@Override
+	public IItemDefinition items() {
+		return ItemDefinition.instance;
+	}
+
+	@Override
+	public IBlockDefinition blocks() {
+		return BlockDefinition.instance;
+	}
+
+	@Override
+	public IPartDefinition parts() {
+		return PartDefinition.instance;
 	}
 
 }
