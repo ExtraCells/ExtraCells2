@@ -102,6 +102,8 @@ public class NameHandler implements ISubItemResolver {
         	return new ResolverResult(BlockEnum.CERTUSTANK.getInternalName(), 0);
         if (fullName.equals("wirelessFluidTerminal")){
         	return new ResolverResult(ItemEnum.FLUIDWIRELESSTERMINAL.getInternalName(), 0);
+        }if (fullName.equals("walrus")){
+        	return new ResolverResult(BlockEnum.WALRUS.getInternalName(), 0);
         }
 
         return null;
