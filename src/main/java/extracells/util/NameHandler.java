@@ -65,11 +65,11 @@ public class NameHandler implements ISubItemResolver {
         if (fullName.equals("cell16384kPart"))
             return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 3);
 
-        //Fluid Storage Casing
+        //Physical Storage Casing
         if (fullName.equals("physCasing"))
             return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), 0);
 
-        //Physical Storage Casing
+        //Fluid Storage Casing
         if (fullName.equals("fluidCasing"))
             return new ResolverResult(ItemEnum.STORAGECASING.getInternalName(), 1);
 
@@ -98,6 +98,13 @@ public class NameHandler implements ISubItemResolver {
             return new ResolverResult(BlockEnum.CERTUSTANK.getInternalName(), 0);
         if (fullName.equals("fluidPattern"))
             return new ResolverResult(ItemEnum.FLUIDPATTERN.getInternalName(), 0);
+        if (fullName.equals("fluidCrafter"))
+        	return new ResolverResult(BlockEnum.CERTUSTANK.getInternalName(), 0);
+        if (fullName.equals("wirelessFluidTerminal")){
+        	return new ResolverResult(ItemEnum.FLUIDWIRELESSTERMINAL.getInternalName(), 0);
+        }if(fullName.equals("walrus")){
+        	return new ResolverResult(BlockEnum.WALRUS.getInternalName(), 0);
+        }
 
         return null;
     }

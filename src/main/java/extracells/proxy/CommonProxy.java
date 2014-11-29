@@ -8,6 +8,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.TileEntityCertusTank;
+import extracells.tileentity.TileEntityFluidCrafter;
 import extracells.tileentity.TileEntityWalrus;
 
 import java.io.*;
@@ -19,6 +20,7 @@ public class CommonProxy {
         IAppEngApi api = AEApi.instance();
         api.registries().moveable().whiteListTileEntity(TileEntityCertusTank.class);
         api.registries().moveable().whiteListTileEntity(TileEntityWalrus.class);
+        api.registries().moveable().whiteListTileEntity(TileEntityFluidCrafter.class);
     }
 
     public void addRecipes(File configFolder) {
@@ -35,6 +37,7 @@ public class CommonProxy {
     public void registerTileEntities() {
         GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
         GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
+        GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
     }
 
     public void registerRenderers() {
