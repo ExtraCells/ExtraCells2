@@ -124,7 +124,7 @@ public class CraftingPatter implements IFluidCraftingPatternDetails {
 					fluidStacks[i] = AEApi.instance().storage().createFluidStack(new FluidStack(FluidContainerRegistry.getFluidForFilledItem(currentRequirement.getItemStack()), (int) (FluidContainerRegistry.BUCKET_VOLUME * currentRequirement.getStackSize())));
 				}
 			}
-			i = i++;
+			i++;
 		}
 		
 		if(isCondenced){
@@ -133,7 +133,7 @@ public class CraftingPatter implements IFluidCraftingPatternDetails {
 			for(IAEFluidStack fluid : fluidStacks){
 				if(fluid != null){
 					fluids[i2] = fluid;
-					i2 ++;
+					i2++;
 				}
 			}
 			int i3 = 0;
