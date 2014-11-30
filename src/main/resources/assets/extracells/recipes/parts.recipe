@@ -59,3 +59,7 @@ shapeless=
 shapeless=
 	interface mc:sticky_piston mc:piston lapis lapis
 	-> ec:partFluidStorageBus
+
+shaped=
+    ae2:BlockDenseEnergyCell mc:iron mc:iron
+    -> ec:partBattery
