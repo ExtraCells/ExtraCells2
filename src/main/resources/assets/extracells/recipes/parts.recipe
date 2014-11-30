@@ -61,5 +61,5 @@ shapeless=
 	-> ec:partFluidStorageBus
 
 shaped=
-    ae2:BlockDenseEnergyCell mc:iron mc:iron
-    -> ec:partBattery
+	ae2:BlockEnergyCell mc:iron_ingot mc:iron_ingot
+	-> ec:partBattery

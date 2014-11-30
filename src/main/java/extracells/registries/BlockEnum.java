@@ -1,6 +1,7 @@
 package extracells.registries;
 
 import extracells.block.BlockCertusTank;
+import extracells.block.BlockFluidCrafter;
 import extracells.block.BlockWalrus;
 import extracells.item.ItemBlockCertusTank;
 import net.minecraft.block.Block;
@@ -9,7 +10,8 @@ import net.minecraft.util.StatCollector;
 
 public enum BlockEnum {
     CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),
-    WALRUS("walrus", new BlockWalrus());
+    WALRUS("walrus", new BlockWalrus()),
+    FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter());
 
     private final String internalName;
     private Block block;
@@ -31,7 +33,7 @@ public enum BlockEnum {
     }
 
     public String getStatName() {
-        return StatCollector.translateToLocal(block.getUnlocalizedName().replace("tile.", "block."));
+        return StatCollector.translateToLocal(block.getUnlocalizedName()+".name");
     }
 
     public Block getBlock() {

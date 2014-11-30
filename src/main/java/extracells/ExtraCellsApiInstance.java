@@ -10,6 +10,12 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
 import extracells.api.ExtraCellsApi;
+import extracells.api.definitions.IBlockDefinition;
+import extracells.api.definitions.IItemDefinition;
+import extracells.api.definitions.IPartDefinition;
+import extracells.definitions.BlockDefinition;
+import extracells.definitions.ItemDefinition;
+import extracells.definitions.PartDefinition;
 import extracells.network.GuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -54,5 +60,20 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
         }
         return itemStack;
     }
+
+	@Override
+	public IItemDefinition items() {
+		return ItemDefinition.instance;
+	}
+
+	@Override
+	public IBlockDefinition blocks() {
+		return BlockDefinition.instance;
+	}
+
+	@Override
+	public IPartDefinition parts() {
+		return PartDefinition.instance;
+	}
 
 }
