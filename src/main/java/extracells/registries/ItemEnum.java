@@ -13,7 +13,8 @@ public enum ItemEnum {
     FLUIDPATTERN("pattern.fluid", new ItemFluidPattern()),
     FLUIDWIRELESSTERMINAL("terminal.fluid.wireless", new ItemWirelessTerminalFluid()),
     STORAGECOMPONET("storage.component", new ItemStorageComponent()),
-    STORAGECASING("storage.casing", new ItemStorageCasing());
+    STORAGECASING("storage.casing", new ItemStorageCasing()),
+    FLUIDITEM("fluid.item", new ItemFluid());//Internal EC Item
 
     private final String internalName;
     private Item item;

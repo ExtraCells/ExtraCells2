@@ -11,6 +11,8 @@ import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
 import extracells.registries.ItemEnum;
 import extracells.render.TextureManager;
+import extracells.util.inventory.ECFluidFilterInventory;
+import extracells.util.inventory.ECPrivateInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +20,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
@@ -26,7 +29,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
-public class ItemStorageFluid extends Item implements ICellHandler {
+public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkbenchItem {
 
     public static final String[] suffixes = {"1k", "4k", "16k", "64k", "256k", "1024k", "4096k"};
 
@@ -79,7 +82,7 @@ public class ItemStorageFluid extends Item implements ICellHandler {
         if (channel == StorageChannel.ITEMS || itemStack.getItem() != this) {
             return null;
         }
-        return new HandlerItemStorageFluid(itemStack, saveProvider);
+        return new HandlerItemStorageFluid(itemStack, saveProvider, getFilter(itemStack));
     }
 
     @Override
@@ -185,4 +188,52 @@ public class ItemStorageFluid extends Item implements ICellHandler {
     public EnumRarity getRarity(ItemStack itemStack) {
         return EnumRarity.rare;
     }
+    
+    @Override
+	public boolean isEditable(ItemStack is) {
+		if(is == null)
+			return false;
+		return is.getItem() == this;
+	}
+
+	@Override
+	public IInventory getUpgradesInventory(ItemStack is) {
+		return new ECPrivateInventory("configInventory", 0, 64);
+	}
+
+	@Override
+	public IInventory getConfigInventory(ItemStack is) {
+		return new ECFluidFilterInventory("configFluidCell", 64, is);
+	}
+
+	@Override
+	public FuzzyMode getFuzzyMode(ItemStack is) {
+		if(is == null)
+			return null;
+		if(!is.hasTagCompound())
+			is.setTagCompound(new NBTTagCompound());
+		if(is.getTagCompound().hasKey("fuzzyMode"))
+			return FuzzyMode.valueOf(is.getTagCompound().getString("fuzzyMode"));
+		is.getTagCompound().setString("fuzzyMode", FuzzyMode.IGNORE_ALL.name());
+		return FuzzyMode.IGNORE_ALL;
+	}
+
+	@Override
+	public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
+		if(is == null)
+			return;
+		NBTTagCompound tag;
+		if(is.hasTagCompound())
+			tag = is.getTagCompound();
+		else
+			tag = new NBTTagCompound();
+		tag.setString("fuzzyMode", fzMode.name());
+		is.setTagCompound(tag);
+		
+	}
+	
+	private ItemStack[] getFilter(ItemStack stack){
+		ECFluidFilterInventory inventory = new ECFluidFilterInventory("", 63, stack);
+		return inventory.slots;
+	}
 }

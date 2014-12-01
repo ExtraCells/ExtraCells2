@@ -42,12 +42,20 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
         for (int i = 0; i < totalTypes; i++)
             fluidStacks.add(FluidStack.loadFluidStackFromNBT(stackTag.getCompoundTag("Fluid#" + i)));
 
-        for (int i = 0; i < 63; i++) {
-            Fluid fluid = FluidRegistry.getFluid(stackTag.getString("PreformattedFluidName#" + i));
-            if (fluid != null)
-                prioritizedFluids.add(fluid);
-        }
         saveProvider = _saveProvider;
+    }
+    
+    public HandlerItemStorageFluid(ItemStack _storageStack, ISaveProvider _saveProvider, ItemStack[] _filter) {
+    	this(_storageStack, _saveProvider);
+    	if(_filter.length == 0)
+    		return;
+    	for(ItemStack s : _filter){
+    		if(s == null)
+    			continue;
+    		Fluid f = FluidRegistry.getFluid(s.getItemDamage());
+    		if(f != null)
+    			prioritizedFluids.add(f);
+    	}
     }
 
     @Override
