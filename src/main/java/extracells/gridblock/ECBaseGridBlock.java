@@ -31,7 +31,7 @@ public class ECBaseGridBlock implements IGridBlock {
 
     @Override
     public EnumSet<GridFlags> getFlags() {
-        return EnumSet.noneOf(GridFlags.class); //TODO temporary fix
+        return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
     }
 
     @Override
