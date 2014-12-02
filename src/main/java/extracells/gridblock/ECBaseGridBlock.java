@@ -46,7 +46,7 @@ public class ECBaseGridBlock implements IGridBlock {
 
     @Override
     public final AEColor getGridColor() {
-        return color;
+        return color == null ? AEColor.Transparent : color;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ECBaseGridBlock implements IGridBlock {
 
     @Override
     public final EnumSet<ForgeDirection> getConnectableSides() {
-        return null;
+        return EnumSet.noneOf(ForgeDirection.class);
     }
 
     @Override
