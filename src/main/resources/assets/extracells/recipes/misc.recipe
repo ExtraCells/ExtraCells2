@@ -4,6 +4,10 @@ shaped=
 	ae2:BlockQuartzGlass ae2:BlockQuartzGlass ae2:BlockQuartzGlass
 	-> ec:certusTank
 
+shapeless=
+	ae2:BlockMolecularAssembler ec:cell1kPartFluid
+	-> ec:fluidCrafter
+
 shaped=
 	ae2:BlockQuartzGlass mc:bucket ae2:BlockQuartzGlass
 	-> ec:fluidPattern
