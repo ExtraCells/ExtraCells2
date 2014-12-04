@@ -5,6 +5,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import cpw.mods.fml.common.network.IGuiHandler;
 import extracells.Extracells;
+import extracells.api.IWirelessFluidTermHandler;
 import extracells.container.ContainerFluidCrafter;
 import extracells.container.ContainerFluidStorage;
 import extracells.gui.GuiFluidCrafter;
@@ -35,10 +36,13 @@ public class GuiHandler implements IGuiHandler {
     @SuppressWarnings("unchecked")
     private static Object getContainer(int ID, EntityPlayer player, Object[] args) {
         switch (ID) {
-            case 0: // Fallthrough intentional.
-            case 1:
-                IMEMonitor<IAEFluidStack> fluidInventory = (IMEMonitor<IAEFluidStack>) args[0];
+            case 0:
+            	IMEMonitor<IAEFluidStack> fluidInventory = (IMEMonitor<IAEFluidStack>) args[0];
                 return new ContainerFluidStorage(fluidInventory, player);
+            case 1:
+                IMEMonitor<IAEFluidStack> fluidInventory2 = (IMEMonitor<IAEFluidStack>) args[0];
+                IWirelessFluidTermHandler handler = (IWirelessFluidTermHandler) args[1];
+                return new ContainerFluidStorage(fluidInventory2, player, handler);
             default:
                 return null;
         }
