@@ -2,6 +2,7 @@ package extracells;
 
 import appeng.api.AEApi;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -18,6 +19,8 @@ import extracells.proxy.CommonProxy;
 import extracells.registries.ItemEnum;
 import extracells.render.RenderHandler;
 import extracells.util.NameHandler;
+import extracells.wireless.AEWirelessTermHandler;
+import extracells.wireless.TickHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -72,6 +75,8 @@ public class Extracells {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
+        AEApi.instance().registries().wireless().registerWirelessHandler(new AEWirelessTermHandler());
+        FMLCommonHandler.instance().bus().register(new TickHandler());
         proxy.registerMovables();
         proxy.registerRenderers();
         proxy.registerTileEntities();
