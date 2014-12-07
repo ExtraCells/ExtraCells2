@@ -22,6 +22,8 @@ public interface ExtraCellsApi {
 	
 	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);
 	
+	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
+	
 	public IItemDefinition items();
 	
 	public IBlockDefinition blocks();

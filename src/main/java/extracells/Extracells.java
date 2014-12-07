@@ -17,9 +17,10 @@ import extracells.network.GuiHandler;
 import extracells.proxy.CommonProxy;
 import extracells.registries.ItemEnum;
 import extracells.render.RenderHandler;
+import extracells.util.FluidCellHandler;
 import extracells.util.NameHandler;
+import extracells.util.TickHandler;
 import extracells.wireless.AEWirelessTermHandler;
-import extracells.wireless.TickHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -74,6 +75,7 @@ public class Extracells {
     public void init(FMLInitializationEvent event) {
         AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
         AEApi.instance().registries().wireless().registerWirelessHandler(new AEWirelessTermHandler());
+        AEApi.instance().registries().cell().addCellHandler(new FluidCellHandler());
         FMLCommonHandler.instance().bus().register(new TickHandler());
         proxy.registerMovables();
         proxy.registerRenderers();

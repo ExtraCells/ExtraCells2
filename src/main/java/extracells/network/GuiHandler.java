@@ -5,6 +5,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import cpw.mods.fml.common.network.IGuiHandler;
 import extracells.Extracells;
+import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
 import extracells.container.ContainerFluidCrafter;
 import extracells.container.ContainerFluidStorage;
@@ -36,27 +37,33 @@ public class GuiHandler implements IGuiHandler {
     @SuppressWarnings("unchecked")
     private static Object getContainer(int ID, EntityPlayer player, Object[] args) {
         switch (ID) {
-            case 0:
-            	IMEMonitor<IAEFluidStack> fluidInventory = (IMEMonitor<IAEFluidStack>) args[0];
-                return new ContainerFluidStorage(fluidInventory, player);
-            case 1:
-                IMEMonitor<IAEFluidStack> fluidInventory2 = (IMEMonitor<IAEFluidStack>) args[0];
-                IWirelessFluidTermHandler handler = (IWirelessFluidTermHandler) args[1];
-                return new ContainerFluidStorage(fluidInventory2, player, handler);
-            default:
-                return null;
+        case 0:
+        	IMEMonitor<IAEFluidStack> fluidInventory = (IMEMonitor<IAEFluidStack>) args[0];
+        	return new ContainerFluidStorage(fluidInventory, player);
+        case 1:
+            IMEMonitor<IAEFluidStack> fluidInventory2 = (IMEMonitor<IAEFluidStack>) args[0];
+            IWirelessFluidTermHandler handler = (IWirelessFluidTermHandler) args[1];
+            return new ContainerFluidStorage(fluidInventory2, player, handler);
+        case 3:
+        	IMEMonitor<IAEFluidStack> fluidInventory3 = (IMEMonitor<IAEFluidStack>) args[0];
+        	IPortableFluidStorageCell storageCell = (IPortableFluidStorageCell) args[1];
+        	return new ContainerFluidStorage(fluidInventory3, player, storageCell);
+        default:
+        	return null;
         }
     }
 
     public static Object getGui(int ID, EntityPlayer player) {
-        switch (ID) {
-            case 0:
-                return new GuiFluidStorage(player);
-            case 1:
-                return new GuiFluidStorage(player);
-            default:
-                return null;
-        }
+    	switch (ID) {
+        case 0:
+            return new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+        case 1:
+            return new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+        case 3:
+        	return new GuiFluidStorage(player, "extracells.item.storage.fluid.portable.name");
+        default:
+            return null;
+    }
     }
 
     public static int getGuiId(PartECBase part) {

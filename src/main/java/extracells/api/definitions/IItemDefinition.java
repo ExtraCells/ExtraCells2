@@ -20,6 +20,8 @@ public interface IItemDefinition {
 	
 	AEItemDefinition fluidCell4096k();
 	
+	AEItemDefinition fluidCellPortable();
+	
 	
 	//Physical Cells
 	AEItemDefinition physCell256k();
