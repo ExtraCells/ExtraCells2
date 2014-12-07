@@ -142,6 +142,8 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
             return;
         gridBlock = new ECBaseGridBlock(this);
         node = AEApi.instance().createGridNode(gridBlock);
+        if(node != null)
+            node.updateState();
         setPower(null);
         onNeighborChanged();
     }
