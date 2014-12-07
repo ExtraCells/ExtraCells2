@@ -7,7 +7,8 @@ import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.inventory.HandlerItemStorageFluid;
+import extracells.api.IFluidStorageCell;
+import extracells.api.IHandlerFluidStorage;
 import extracells.network.GuiHandler;
 import extracells.registries.ItemEnum;
 import extracells.render.TextureManager;
@@ -26,10 +27,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkbenchItem {
+public class ItemStorageFluid extends Item implements IFluidStorageCell {
 
     public static final String[] suffixes = {"1k", "4k", "16k", "64k", "256k", "1024k", "4096k"};
 
@@ -38,7 +42,6 @@ public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkben
     private IIcon[] icons;
 
     public ItemStorageFluid() {
-        AEApi.instance().registries().cell().addCellHandler(this);
         setMaxStackSize(1);
         setMaxDamage(0);
         setHasSubtypes(true);
@@ -73,75 +76,12 @@ public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkben
     }
 
     @Override
-    public boolean isCell(ItemStack is) {
-        return is.getItem() == this;
-    }
-
-    @Override
-    public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, StorageChannel channel) {
-        if (channel == StorageChannel.ITEMS || itemStack.getItem() != this) {
-            return null;
-        }
-        return new HandlerItemStorageFluid(itemStack, saveProvider, getFilter(itemStack));
-    }
-
-    @Override
-    public IIcon getTopTexture_Light() {
-        return TextureManager.TERMINAL_FRONT.getTextures()[2];
-    }
-
-    @Override
-    public IIcon getTopTexture_Medium() {
-        return TextureManager.TERMINAL_FRONT.getTextures()[1];
-    }
-
-    @Override
-    public IIcon getTopTexture_Dark() {
-        return TextureManager.TERMINAL_FRONT.getTextures()[0];
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler, IMEInventoryHandler inv, ItemStack is, StorageChannel chan) {
-        if (chan != StorageChannel.FLUIDS) {
-            return;
-        }
-        IStorageMonitorable monitorable = null;
-        if (chest != null) {
-            monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
-        }
-        if (monitorable != null) {
-            GuiHandler.launchGui(GuiHandler.getGuiId(0), player, monitorable.getFluidInventory());
-        }
-    }
-
-    @Override
-    public int getStatusForCell(ItemStack is, IMEInventory handler) {
-        if (handler == null) {
-            return 0;
-        }
-
-        HandlerItemStorageFluid inventory = (HandlerItemStorageFluid) handler;
-        if (inventory.freeBytes() == 0) {
-            return 3;
-        }
-        if (inventory.isPreformatted() || inventory.usedTypes() == inventory.totalBytes()) {
-            return 2;
-        }
-
-        return 1;
-    }
-
-    @Override
-    public double cellIdleDrain(ItemStack is, IMEInventory handler) {
-        return 0;
-    }
-
-    public int maxTypes(ItemStack unused) {
+    public int getMaxTypes(ItemStack unused) {
         return 5;
     }
 
-    public int maxStorage(ItemStack is) {
+    @Override
+    public int getMaxBytes(ItemStack is) {
         return spaces[Math.max(0, is.getItemDamage())];
     }
 
@@ -149,10 +89,10 @@ public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkben
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
-        if (!(handler instanceof HandlerItemStorageFluid)) {
+        if (!(handler instanceof IHandlerFluidStorage)) {
             return;
         }
-        HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
+        IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
         Boolean partitioned = cellHandler.isPreformatted();
         long usedBytes = cellHandler.usedBytes();
 
@@ -163,7 +103,7 @@ public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkben
         }
 
         if (partitioned) {
-            list.add(StatCollector.translateToLocal("Appeng.GuiITooltip.Partitioned") + " - " + StatCollector.translateToLocal("Appeng.GuiITooltip.Precise"));
+        	list.add(StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + StatCollector.translateToLocal("gui.appliedenergistics2.Precise"));
         }
     }
 
@@ -174,10 +114,10 @@ public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkben
             return itemStack;
         }
         IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
-        if (!(handler instanceof HandlerItemStorageFluid)) {
+        if (!(handler instanceof IHandlerFluidStorage)) {
             return itemStack;
         }
-        HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
+        IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
         if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1))) {
             return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
         }
@@ -203,7 +143,7 @@ public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkben
 
 	@Override
 	public IInventory getConfigInventory(ItemStack is) {
-		return new ECFluidFilterInventory("configFluidCell", 64, is);
+		return new ECFluidFilterInventory("configFluidCell", 63, is);
 	}
 
 	@Override
@@ -232,8 +172,20 @@ public class ItemStorageFluid extends Item implements ICellHandler, ICellWorkben
 		
 	}
 	
-	private ItemStack[] getFilter(ItemStack stack){
+	@Override
+	public ArrayList<Fluid> getFilter(ItemStack stack){
 		ECFluidFilterInventory inventory = new ECFluidFilterInventory("", 63, stack);
-		return inventory.slots;
+		ItemStack[] stacks = inventory.slots;
+		ArrayList<Fluid> filter = new ArrayList<Fluid>();
+		if(stacks.length == 0)
+			return null;
+		for(ItemStack s : stacks){
+			if(s == null)
+				continue;
+			Fluid f = FluidRegistry.getFluid(s.getItemDamage());
+			if(f != null)
+				filter.add(f);
+		}
+		return filter;
 	}
 }

@@ -7,8 +7,10 @@ import appeng.api.networking.security.PlayerSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
+import appeng.api.storage.MEMonitorHandler;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
+import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
 import extracells.container.slot.SlotPlayerInventory;
 import extracells.container.slot.SlotRespective;
@@ -40,6 +42,7 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
     private IMEMonitor<IAEFluidStack> monitor;
     private HandlerItemStorageFluid storageFluid;
     private IWirelessFluidTermHandler handler = null;
+    private IPortableFluidStorageCell storageCell = null;
     public boolean hasWirelessTermHandler = false;
     private ECPrivateInventory inventory = new ECPrivateInventory("extracells.item.fluid.storage", 2, 64, this) {
 
@@ -81,6 +84,27 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
         } else {
             fluidStackList = AEApi.instance().storage().createFluidList();
         }
+
+        // Input Slot accepts all FluidContainers
+        addSlotToContainer(new SlotRespective(inventory, 0, 8, 74));
+        // Input Slot accepts nothing
+        addSlotToContainer(new SlotFurnace(player, inventory, 1, 26, 74));
+
+        bindPlayerInventory(player.inventory);
+	}
+    
+    public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player, IPortableFluidStorageCell _storageCell) {
+    	hasWirelessTermHandler = _storageCell != null;
+    	storageCell = _storageCell;
+    	monitor = _monitor;
+        player = _player;
+        if (!player.worldObj.isRemote && monitor != null) {
+            monitor.addListener(this, null);
+            fluidStackList = monitor.getStorageList();
+        } else {
+            fluidStackList = AEApi.instance().storage().createFluidList();
+        }
+        
 
         // Input Slot accepts all FluidContainers
         addSlotToContainer(new SlotRespective(inventory, 0, 8, 74));
@@ -247,6 +271,11 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
         			return;
         		}
         		handler.usePower(player, 20.0D, player.getCurrentEquippedItem());
+        	}else if(storageCell != null){
+        		if(!storageCell.hasPower(player, 20.0D, player.getCurrentEquippedItem())){
+        			return;
+        		}
+        		storageCell.usePower(player, 20.0D, player.getCurrentEquippedItem());
         	}
             MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
             if (fillSecondSlot(drainedContainer.getRight())) {
@@ -266,6 +295,11 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
         			return false;
         		}
         		handler.usePower(player, 20.0D, player.getCurrentEquippedItem());
+        	}else if(storageCell != null){
+        		if(!storageCell.hasPower(player, 20.0D, player.getCurrentEquippedItem())){
+        			return false;
+        		}
+        		storageCell.usePower(player, 20.0D, player.getCurrentEquippedItem());
         	}
             inventory.setInventorySlotContents(1, itemStack);
             return true;
@@ -277,6 +311,11 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
         			return false;
         		}
         		handler.usePower(player, 20.0D, player.getCurrentEquippedItem());
+        	}else if(storageCell != null){
+        		if(!storageCell.hasPower(player, 20.0D, player.getCurrentEquippedItem())){
+        			return false;
+        		}
+        		storageCell.usePower(player, 20.0D, player.getCurrentEquippedItem());
         	}
             inventory.incrStackSize(1, itemStack.stackSize);
             return true;
@@ -300,6 +339,10 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
     	if(handler != null){
     		if(handler.hasPower(player, 1.0D, player.getCurrentEquippedItem())){
     			handler.usePower(player, 1.0D, player.getCurrentEquippedItem());
+    		}
+    	}else if(storageCell != null){
+    		if(storageCell.hasPower(player, 0.5D, player.getCurrentEquippedItem())){
+    			storageCell.usePower(player, 0.5D, player.getCurrentEquippedItem());
     		}
     	}
     }

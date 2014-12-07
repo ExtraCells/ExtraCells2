@@ -32,14 +32,16 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
     private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
     public IAEFluidStack currentFluid;
     private ContainerFluidStorage containerFluidStorage;
+    private final String guiName;
 
-    public GuiFluidStorage(EntityPlayer _player) {
+    public GuiFluidStorage(EntityPlayer _player, String _guiName) {
         super(new ContainerFluidStorage(_player));
         containerFluidStorage = (ContainerFluidStorage) inventorySlots;
         containerFluidStorage.setGui(this);
         player = _player;
         xSize = 176;
         ySize = 204;
+        guiName = _guiName;
         new PacketFluidStorage(player).sendPacketToServer();
     }
 
@@ -95,7 +97,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        fontRendererObj.drawString(StatCollector.translateToLocal("extracells.part.fluid.terminal.name").replace("ME ", ""), 5, -12, 0x000000);
+        fontRendererObj.drawString(StatCollector.translateToLocal(guiName).replace("ME ", ""), 5, -12, 0x000000);
         drawWidgets(mouseX, mouseY);
         if (currentFluid != null) {
             long currentFluidAmount = currentFluid.getStackSize();

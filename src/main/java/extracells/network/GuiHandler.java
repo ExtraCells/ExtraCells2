@@ -5,6 +5,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import cpw.mods.fml.common.network.IGuiHandler;
 import extracells.Extracells;
+import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
 import extracells.container.ContainerFluidCrafter;
 import extracells.container.ContainerFluidStorage;
@@ -43,6 +44,10 @@ public class GuiHandler implements IGuiHandler {
                 IMEMonitor<IAEFluidStack> fluidInventory2 = (IMEMonitor<IAEFluidStack>) args[0];
                 IWirelessFluidTermHandler handler = (IWirelessFluidTermHandler) args[1];
                 return new ContainerFluidStorage(fluidInventory2, player, handler);
+            case 3:
+            	IMEMonitor<IAEFluidStack> fluidInventory3 = (IMEMonitor<IAEFluidStack>) args[0];
+            	IPortableFluidStorageCell storageCell = (IPortableFluidStorageCell) args[1];
+            	return new ContainerFluidStorage(fluidInventory3, player, storageCell);
             default:
                 return null;
         }
@@ -51,9 +56,11 @@ public class GuiHandler implements IGuiHandler {
     public static Object getGui(int ID, EntityPlayer player) {
         switch (ID) {
             case 0:
-                return new GuiFluidStorage(player);
+                return new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
             case 1:
-                return new GuiFluidStorage(player);
+                return new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+            case 3:
+            	return new GuiFluidStorage(player, "extracells.item.storage.fluid.portable.name");
             default:
                 return null;
         }

@@ -1,4 +1,4 @@
-package extracells.wireless;
+package extracells.util;
 
 import net.minecraft.inventory.Container;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

@@ -14,7 +14,6 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
 import extracells.api.ECApi;
 import extracells.api.IWirelessFluidTermHandler;
-import extracells.network.GuiHandler;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +46,6 @@ public class ItemWirelessTerminalFluid extends Item implements IWirelessFluidTer
         itemList.add(itemStack);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         return ECApi.instance().openWirelessTerminal(entityPlayer, itemStack, world);

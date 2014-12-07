@@ -6,15 +6,21 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.ICellHandler;
+import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.MEMonitorHandler;
+import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
 import cpw.mods.fml.common.Loader;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import extracells.api.ExtraCellsApi;
+import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
@@ -22,7 +28,9 @@ import extracells.api.definitions.IPartDefinition;
 import extracells.definitions.BlockDefinition;
 import extracells.definitions.ItemDefinition;
 import extracells.definitions.PartDefinition;
+import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
+import extracells.util.FluidCellHandler;
 import extracells.wireless.WirelessTermRegistry;
 
 public class ExtraCellsApiInstance implements ExtraCellsApi {
@@ -97,6 +105,25 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
             }
         }
 		return itemStack;
+	}
+	
+	@Override
+	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world) {
+		if(world.isRemote || stack == null || stack.getItem() == null)
+			return stack;
+		Item item = stack.getItem();
+		if(!(item instanceof IPortableFluidStorageCell))
+			return stack;
+		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
+		if(!(cellHandler instanceof FluidCellHandler))
+			return stack;
+		IMEInventoryHandler<IAEFluidStack> handler = ((FluidCellHandler)cellHandler).getCellInventoryPlayer(stack, player);
+		if(!(handler instanceof HandlerItemStorageFluid)){
+			return stack;
+		}
+		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannel.FLUIDS);
+		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, fluidInventory, item);
+		return stack;
 	}
 	
 	@Override

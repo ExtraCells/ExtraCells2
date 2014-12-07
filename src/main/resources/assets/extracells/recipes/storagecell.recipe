@@ -102,3 +102,7 @@ shaped=
 	oredictionary:dustFluix  ec:cell4096kPartFluid oredictionary:dustFluix,
 	ec:certusTank ec:certusTank ec:certusTank
 	-> ec:fluidCell4096k
+
+shapeless=
+	ae2:BlockChest ec:cell1kPartFluid ae2:BlockEnergyCell
+	-> ec:fluidCellPortable
