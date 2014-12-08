@@ -11,7 +11,18 @@ public interface ExtraCellsApi {
 	
 	public String getVerion();
 	
+	public void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
+	
+	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is);
+	
+	public boolean isWirelessFluidTerminal(ItemStack is);
+	
+	@Deprecated
 	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, Long key);
+	
+	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);
+	
+	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
 	
 	public IItemDefinition items();
 	

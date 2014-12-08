@@ -17,6 +17,7 @@ public class PacketFluidStorage extends AbstractPacket {
 
     private IItemList<IAEFluidStack> fluidStackList;
     private Fluid currentFluid;
+    private boolean hasTermHandler;
 
     @SuppressWarnings("unused")
     public PacketFluidStorage() {
@@ -38,6 +39,12 @@ public class PacketFluidStorage extends AbstractPacket {
         super(_player);
         mode = 2;
     }
+    
+    public PacketFluidStorage(EntityPlayer _player, boolean _hasTermHandler){
+    	super(_player);
+    	mode = 3;
+    	hasTermHandler = _hasTermHandler;
+    }
 
     @Override
     public void writeData(ByteBuf out) {
@@ -54,6 +61,9 @@ public class PacketFluidStorage extends AbstractPacket {
                 break;
             case 2:
                 break;
+            case 3:
+            	out.writeBoolean(hasTermHandler);
+            	break;
         }
     }
 
@@ -77,6 +87,9 @@ public class PacketFluidStorage extends AbstractPacket {
                 break;
             case 2:
                 break;
+            case 3:
+            	hasTermHandler = in.readBoolean();
+            	break;
         }
     }
 
@@ -107,6 +120,15 @@ public class PacketFluidStorage extends AbstractPacket {
                     }
                 }
                 break;
+            case 3:
+            	if (player != null && player.isClientWorld()) {
+                    Gui gui = Minecraft.getMinecraft().currentScreen;
+                    if (gui instanceof GuiFluidStorage) {
+                        ContainerFluidStorage container = (ContainerFluidStorage) ((GuiFluidStorage) gui).inventorySlots;
+                        container.hasWirelessTermHandler = hasTermHandler;
+                    }
+                }
+            	break;
         }
     }
 }
