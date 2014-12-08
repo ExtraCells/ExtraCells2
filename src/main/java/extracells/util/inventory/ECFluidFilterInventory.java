@@ -24,19 +24,25 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		if(itemstack == null)
 			return false;
-		FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemstack);
-		if(fluidStack == null)
-			return false;
-		Fluid fluid = fluidStack.getFluid();
-		if(fluid == null)
-			return false;
+		int fluidID;
+		System.out.println(itemstack.getItem());
+		if(itemstack.getItem() == ItemEnum.FLUIDITEM.getItem()){
+			fluidID = itemstack.getItemDamage();
+			System.out.println(fluidID);
+		}else{
+			FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemstack);
+			if(fluidStack == null)
+				return false;
+			Fluid fluid = fluidStack.getFluid();
+			if(fluid == null)
+				return false;
+			fluidID = fluid.getID();
+		}
+		
 		for(ItemStack s : slots){
 			if(s == null)
 				continue;
-			Fluid f = FluidRegistry.getFluid(s.getItemDamage());
-			if(f == null)
-				continue;
-			if(f == fluid)
+			if(s.getItemDamage() == fluidID)
 				return false;
 		}
         return true;
@@ -48,17 +54,24 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
 			super.setInventorySlotContents(slotId, null);
 			return;
 		}
-		if(!isItemValidForSlot(slotId, itemstack))
-			return;
-		FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemstack);
-		if(fluidStack == null){
-			super.setInventorySlotContents(slotId, null);
-			return;
-		}
-		Fluid fluid = fluidStack.getFluid();
-		if(fluid == null){
-			super.setInventorySlotContents(slotId, null);
-			return;
+		Fluid fluid;
+		if(itemstack.getItem() == ItemEnum.FLUIDITEM.getItem()){
+			fluid = FluidRegistry.getFluid(itemstack.getItemDamage());
+			if(fluid == null)
+				return;
+		}else{
+			if(!isItemValidForSlot(slotId, itemstack))
+				return;
+			FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemstack);
+			if(fluidStack == null){
+				super.setInventorySlotContents(slotId, null);
+				return;
+			}
+			fluid = fluidStack.getFluid();
+			if(fluid == null){
+				super.setInventorySlotContents(slotId, null);
+				return;
+			}
 		}
 		super.setInventorySlotContents(slotId, new ItemStack(ItemEnum.FLUIDITEM.getItem(), 1, fluid.getID()));
 	}

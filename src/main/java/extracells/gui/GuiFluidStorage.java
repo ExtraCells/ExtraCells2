@@ -48,7 +48,9 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
     public void updateFluids() {
         fluidWidgets = new ArrayList<AbstractFluidWidget>();
         for (IAEFluidStack fluidStack : containerFluidStorage.getFluidStackList()) {
-            fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
+        	if(fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(searchbar.getText().toLowerCase())){
+        		fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
+        	}
         }
         updateSelectedFluid();
     }
@@ -178,6 +180,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
         if (keyID == Keyboard.KEY_ESCAPE)
             mc.thePlayer.closeScreen();
         searchbar.textboxKeyTyped(key, keyID);
+        updateFluids();
     }
 
     public int guiLeft() {
