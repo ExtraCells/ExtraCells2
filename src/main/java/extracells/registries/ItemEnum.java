@@ -13,7 +13,9 @@ public enum ItemEnum {
     FLUIDPATTERN("pattern.fluid", new ItemFluidPattern()),
     FLUIDWIRELESSTERMINAL("terminal.fluid.wireless", new ItemWirelessTerminalFluid()),
     STORAGECOMPONET("storage.component", new ItemStorageComponent()),
-    STORAGECASING("storage.casing", new ItemStorageCasing());
+    STORAGECASING("storage.casing", new ItemStorageCasing()),
+    FLUIDITEM("fluid.item", new ItemFluid()),//Internal EC Item
+    FLUIDSTORAGEPORTABLE("storage.fluid.portable", new ItemStoragePortableCell());
 
     private final String internalName;
     private Item item;
@@ -22,7 +24,8 @@ public enum ItemEnum {
         internalName = _internalName;
         item = _item;
         item.setUnlocalizedName("extracells." + internalName);
-        item.setCreativeTab(Extracells.ModTab);
+        if(!internalName.equals("fluid.item"))
+        	item.setCreativeTab(Extracells.ModTab);
     }
 
     public String getStatName() {

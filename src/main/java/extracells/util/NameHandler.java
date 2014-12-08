@@ -28,6 +28,8 @@ public class NameHandler implements ISubItemResolver {
             return new ResolverResult(ItemEnum.FLUIDSTORAGE.getInternalName(), 5);
         if (fullName.equals("fluidCell4096k"))
             return new ResolverResult(ItemEnum.FLUIDSTORAGE.getInternalName(), 6);
+        if (fullName.equals("fluidCellPortable"))
+        	return new ResolverResult(ItemEnum.FLUIDSTORAGEPORTABLE.getInternalName(), 0);
 
         // Physical Cells
         if (fullName.equals("physCell256k"))
@@ -99,7 +101,7 @@ public class NameHandler implements ISubItemResolver {
         if (fullName.equals("fluidPattern"))
             return new ResolverResult(ItemEnum.FLUIDPATTERN.getInternalName(), 0);
         if (fullName.equals("fluidCrafter"))
-        	return new ResolverResult(BlockEnum.CERTUSTANK.getInternalName(), 0);
+        	return new ResolverResult(BlockEnum.FLUIDCRAFTER.getInternalName(), 0);
         if (fullName.equals("wirelessFluidTerminal")){
         	return new ResolverResult(ItemEnum.FLUIDWIRELESSTERMINAL.getInternalName(), 0);
         }if(fullName.equals("walrus")){

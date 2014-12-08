@@ -13,7 +13,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
 import extracells.api.ECApi;
-import extracells.network.GuiHandler;
+import extracells.api.IWirelessFluidTermHandler;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,13 +27,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
-public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable, IAEItemPowerStorage {
+public class ItemWirelessTerminalFluid extends Item implements IWirelessFluidTermHandler, IAEItemPowerStorage {
 
     IIcon icon;
     private final int MAX_POWER = 3200000;
 
     public ItemWirelessTerminalFluid() {
         setMaxStackSize(1);
+        ECApi.instance().registryWirelessFluidTermHandler(this);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -45,24 +46,9 @@ public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable
         itemList.add(itemStack);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
-        if (world.isRemote)
-            return itemStack;
-        NBTTagCompound nbtTagCompound = ensureTagCompound(itemStack);
-        if (getAECurrentPower(itemStack) <= 0)
-            return itemStack;
-        Long key;
-        try {
-            key = Long.parseLong(nbtTagCompound.getString("key"));
-        } catch (Throwable ignored) {
-            return itemStack;
-        }
-        int x = (int) entityPlayer.posX;
-        int y = (int) entityPlayer.posY;
-        int z = (int) entityPlayer.posZ;
-        return ECApi.instance().openWirelessTerminal(entityPlayer, itemStack, world, x, y, z, key);
+        return ECApi.instance().openWirelessTerminal(entityPlayer, itemStack, world);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -164,4 +150,27 @@ public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable
     public boolean showDurabilityBar(ItemStack itemStack) {
         return true;
     }
+    
+    @Override
+	public boolean canHandle(ItemStack is) {
+		if(is == null)
+			return false;
+		return is.getItem() == this;
+	}
+
+	@Override
+	public boolean usePower(EntityPlayer player, double amount, ItemStack is) {
+		extractAEPower(is, amount);
+		return true;
+	}
+
+	@Override
+	public boolean hasPower(EntityPlayer player, double amount, ItemStack is) {
+		return getAECurrentPower(is) >= amount;
+	}
+
+	@Override
+	public boolean isItemNormalWirelessTermToo(ItemStack is) {
+		return false;
+	}
 }

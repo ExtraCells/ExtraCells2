@@ -14,6 +14,7 @@ extracells.item.storage.fluid.64k.name=ME 64k Fluid Storage
 extracells.item.storage.fluid.256k.name=ME 256k Fluid Storage
 extracells.item.storage.fluid.1024k.name=ME 1024k Fluid Storage
 extracells.item.storage.fluid.4096k.name=ME 4096k Fluid Storage
+extracells.item.storage.fluid.portable.name=ME Portable Fluid Storage
 extracells.item.storage.component.physical.256k.name=256k ME Storage Component
 extracells.item.storage.component.physical.1024k.name=1024k ME Storage Component
 extracells.item.storage.component.physical.4096k.name=4096k ME Storage Component
@@ -51,7 +52,7 @@ extracells.part.battery.name=ME Energy Cell Fixture
 //Blocks
 extracells.block.certustank=Certus Quartz Tank
 extracells.block.walrus.name=Walrus
-extracells.block.fluidcrafter.name=ME Fluid Craftingchamber
+extracells.block.fluidcrafter.name=ME Fluid Assembler
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Amount

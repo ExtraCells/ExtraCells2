@@ -43,6 +43,11 @@ public class ItemDefinition implements IItemDefinition {
 	public AEItemDefinition fluidCell4096k() {
 		return new ItemItemDefinitions(ItemEnum.FLUIDSTORAGE.getItem(), 6);
 	}
+	
+	@Override
+	public AEItemDefinition fluidCellPortable() {
+		return new ItemItemDefinitions(ItemEnum.FLUIDSTORAGEPORTABLE.getItem());
+	}
 
 	
 	

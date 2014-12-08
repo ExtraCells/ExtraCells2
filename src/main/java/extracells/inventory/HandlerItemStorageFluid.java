@@ -9,10 +9,13 @@ import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
+
 import com.google.common.collect.Lists;
+
+import extracells.api.IFluidStorageCell;
+import extracells.api.IHandlerFluidStorage;
 import extracells.container.ContainerFluidStorage;
 import extracells.item.ItemStorageFluid;
-import extracells.registries.ItemEnum;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
@@ -22,10 +25,10 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStack> {
+public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 
     private NBTTagCompound stackTag;
-    private ArrayList<FluidStack> fluidStacks = new ArrayList<FluidStack>();
+    protected ArrayList<FluidStack> fluidStacks = new ArrayList<FluidStack>();
     private ArrayList<Fluid> prioritizedFluids = new ArrayList<Fluid>();
     private int totalTypes;
     private int totalBytes;
@@ -36,18 +39,19 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
         if (!_storageStack.hasTagCompound())
             _storageStack.setTagCompound(new NBTTagCompound());
         stackTag = _storageStack.getTagCompound();
-        totalTypes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItem()).maxTypes(_storageStack);
-        totalBytes = ((ItemStorageFluid) ItemEnum.FLUIDSTORAGE.getItem()).maxStorage(_storageStack) * 250;
+        totalTypes = ((IFluidStorageCell) _storageStack.getItem()).getMaxTypes(_storageStack);
+        totalBytes = ((IFluidStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack) * 250;
 
         for (int i = 0; i < totalTypes; i++)
             fluidStacks.add(FluidStack.loadFluidStackFromNBT(stackTag.getCompoundTag("Fluid#" + i)));
 
-        for (int i = 0; i < 63; i++) {
-            Fluid fluid = FluidRegistry.getFluid(stackTag.getString("PreformattedFluidName#" + i));
-            if (fluid != null)
-                prioritizedFluids.add(fluid);
-        }
         saveProvider = _saveProvider;
+    }
+    
+    public HandlerItemStorageFluid(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Fluid> _filter) {
+    	this(_storageStack, _saveProvider);
+    	if(_filter != null)
+    		prioritizedFluids = _filter;
     }
 
     @Override
@@ -227,7 +231,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
         return false;
     }
 
-    private void writeFluidToSlot(int i, FluidStack fluidStack) {
+    protected void writeFluidToSlot(int i, FluidStack fluidStack) {
         NBTTagCompound fluidTag = new NBTTagCompound();
         if (fluidStack != null && fluidStack.fluidID > 0 && fluidStack.amount > 0) {
             fluidStack.writeToNBT(fluidTag);
