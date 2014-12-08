@@ -51,7 +51,7 @@ extracells.part.battery.name=ME Energy Cell Fixture
 //Blocks
 extracells.block.certustank=Certus Quartz Tank
 extracells.block.walrus.name=Walrus
-extracells.block.fluidcrafter.name=ME Fluid Craftingchamber
+extracells.block.fluidcrafter.name=ME Fluid Assembler
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Amount
