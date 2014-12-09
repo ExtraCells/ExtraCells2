@@ -90,6 +90,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         fontRendererObj.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
         fluidSlot.drawWidget();
+        ((WidgetRedstoneModes) buttonList.get(6)).drawTooltip(mouseX, mouseY);
         GuiUtil.renderOverlay(zLevel, guiLeft, guiTop, fluidSlot, mouseX, mouseY);
     }
 
@@ -143,9 +144,15 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
     }
 
     private void modifyAmount(int amount) {
+        long currentAmount = Long.valueOf(amountField.getText()).longValue();
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
             amount *= 100;
+        long newAmount = currentAmount + amount;
+        if (newAmount < 0L)
+            amount = (int)currentAmount * -1;
+            newAmount = currentAmount + amount;
         new PacketFluidEmitter(amount, part, player).sendPacketToServer();
+        setAmountField(newAmount);
     }
 
     public void setAmountField(long amount) {
