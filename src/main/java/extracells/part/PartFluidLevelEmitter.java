@@ -80,6 +80,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
         fluid = FluidRegistry.getFluid(data.getString("fluid"));
         mode = RedstoneMode.values()[data.getInteger("mode")];
         wantedAmount = data.getLong("wantedAmount");
+        if (wantedAmount < 0)
+            wantedAmount = 0;
     }
 
     @Override
@@ -163,7 +165,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     public void setWantedAmount(long _wantedAmount, EntityPlayer player) {
         wantedAmount = _wantedAmount;
         if (wantedAmount < 0)
-            new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
+            wantedAmount = 0;
+        new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
         notifyBlocky(getHostTile(), getSide());
         saveData();
     }
