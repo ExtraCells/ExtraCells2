@@ -59,25 +59,25 @@ public class WidgetRedstoneModes extends GuiButton {
         }
     }
 
-    public void drawTooltip(int mouseX, int mouseY) {
+    public void drawTooltip(int mouseX, int mouseY, int guiXPos, int guiYPos) {
         List<String> description = new ArrayList<String>();
-        description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.RedstoneMode"));
+        description.add(StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.RedstoneMode"));
         String explanation = "";
         switch (redstoneMode) {
-            case HIGH_SIGNAL:
-                explanation = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelAbove" : "AppEng.GuiITooltip.ActiveWithSignal");
-                break;
-            case LOW_SIGNAL:
-                explanation = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelsBelow" : "AppEng.GuiITooltip.ActiveWithoutSignal");
-                break;
-            case SIGNAL_PULSE:
-                explanation = StatCollector.translateToLocal("AppEng.GuiITooltip.ActiveOnPulse");
-                break;
-            case IGNORE:
-                explanation = StatCollector.translateToLocal("AppEng.GuiITooltip.AlwaysActive");
-                break;
-            default:
-                break;
+        case HIGH_SIGNAL:
+        	explanation = StatCollector.translateToLocal(emitter ? "gui.tooltips.appliedenergistics2.EmitLevelAbove" : "gui.tooltips.appliedenergistics2.ActiveWithSignal");
+        	break;
+        case LOW_SIGNAL:
+        	explanation = StatCollector.translateToLocal(emitter ? "gui.tooltips.appliedenergistics2.EmitLevelsBelow" : "gui.tooltips.appliedenergistics2.ActiveWithoutSignal");
+        	break;
+        case SIGNAL_PULSE:
+        	explanation = StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.ActiveOnPulse");
+        	break;
+        case IGNORE:
+        	explanation = StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.AlwaysActive");
+        	break;
+        default:
+        	break;
         }
 
         for (String current : Splitter.fixedLength(30).split(explanation)) {
@@ -87,7 +87,7 @@ public class WidgetRedstoneModes extends GuiButton {
         Minecraft mc = Minecraft.getMinecraft();
 
         if (mouseX >= xPosition && mouseX <= xPosition + width && mouseY >= yPosition && mouseY <= yPosition + height) {
-            drawHoveringText(description, mouseX, mouseY, mc.fontRenderer);
+            drawHoveringText(description, mouseX - guiXPos, mouseY - guiYPos, mc.fontRenderer);
         }
     }
 

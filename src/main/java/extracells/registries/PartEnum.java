@@ -54,7 +54,7 @@ public enum PartEnum {
     }
 
     public String getStatName() {
-        return StatCollector.translateToLocal(unlocalizedName);
+        return StatCollector.translateToLocal(unlocalizedName + ".name");
     }
 
     public String getGroupName() {

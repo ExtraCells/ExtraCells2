@@ -68,7 +68,7 @@ public class GuiFluidPlaneFormation extends GuiContainer implements IFluidSlotGu
 
         for (Object button : buttonList) {
             if (button instanceof WidgetRedstoneModes)
-                ((WidgetRedstoneModes) button).drawTooltip(guiLeft, guiTop);
+            	((WidgetRedstoneModes) buttonList.get(6)).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
         }
     }
 

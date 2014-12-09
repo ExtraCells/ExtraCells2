@@ -82,7 +82,7 @@ public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.
 
         for (Object button : buttonList) {
             if (button instanceof WidgetRedstoneModes)
-                ((WidgetRedstoneModes) button).drawTooltip(guiLeft, guiTop);
+                ((WidgetRedstoneModes) button).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
         }
     }
 
