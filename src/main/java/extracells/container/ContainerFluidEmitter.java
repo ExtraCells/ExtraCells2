@@ -1,6 +1,8 @@
 package extracells.container;
 
 import extracells.part.PartFluidLevelEmitter;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -36,19 +38,14 @@ public class ContainerFluidEmitter extends Container {
         ItemStack itemstack = null;
         Slot slot = (Slot) inventorySlots.get(slotnumber);
         if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-            itemstack.stackSize = 1;
-            if (true)//tileentity.isItemValidForSlot(0, itemstack1))
-            {
-                if (slotnumber == 0) {
-                    ((Slot) inventorySlots.get(0)).putStack(null);
-                    return null;
-                } else if (slotnumber >= 1 && slotnumber <= 36) {
-                    ((Slot) inventorySlots.get(0)).putStack(itemstack);
-                    return null;
-                }
+            ItemStack fluidItem = slot.getStack().copy();
+            fluidItem.stackSize = 1;
+            FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(fluidItem);
+            if(fluidStack == null) {
+                return null;
             }
+            part.setFluid(0,fluidStack.getFluid(),player);
+            return null;
         }
         return null;
     }
