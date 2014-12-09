@@ -90,7 +90,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         fontRendererObj.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
         fluidSlot.drawWidget();
-        ((WidgetRedstoneModes) buttonList.get(6)).drawTooltip(mouseX, mouseY);
+        ((WidgetRedstoneModes) buttonList.get(6)).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
         GuiUtil.renderOverlay(zLevel, guiLeft, guiTop, fluidSlot, mouseX, mouseY);
     }
 

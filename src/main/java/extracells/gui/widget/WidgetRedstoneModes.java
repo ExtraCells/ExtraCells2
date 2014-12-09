@@ -59,7 +59,7 @@ public class WidgetRedstoneModes extends GuiButton {
         }
     }
 
-    public void drawTooltip(int mouseX, int mouseY) {
+    public void drawTooltip(int mouseX, int mouseY, int guiXPos, int guiYPos) {
         List<String> description = new ArrayList<String>();
         description.add(StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.RedstoneMode"));
         String explanation = "";
@@ -87,7 +87,7 @@ public class WidgetRedstoneModes extends GuiButton {
         Minecraft mc = Minecraft.getMinecraft();
 
         if (mouseX >= xPosition && mouseX <= xPosition + width && mouseY >= yPosition && mouseY <= yPosition + height) {
-            drawHoveringText(description, mouseX, mouseY, mc.fontRenderer);
+            drawHoveringText(description, mouseX - guiXPos, mouseY - guiYPos, mc.fontRenderer);
         }
     }
 
