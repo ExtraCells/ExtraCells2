@@ -63,3 +63,6 @@ extracells.tooltip.storage.physical.bytes=%s of %s item bytes used.
 extracells.tooltip.storage.fluid.bytes=%s of %s fluid bytes used.
 extracells.tooltip.storage.fluid.content=contains %s mB of fluid.
 extracells.tooltip.storage.physical.content=contains %s items.
+
+//Buttons
+extracells.gui.craft=Craft

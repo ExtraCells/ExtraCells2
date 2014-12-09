@@ -61,20 +61,20 @@ public class WidgetRedstoneModes extends GuiButton {
 
     public void drawTooltip(int mouseX, int mouseY) {
         List<String> description = new ArrayList<String>();
-        description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.RedstoneMode"));
+        description.add(StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.RedstoneMode"));
         String explanation = "";
         switch (redstoneMode) {
             case HIGH_SIGNAL:
-                explanation = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelAbove" : "AppEng.GuiITooltip.ActiveWithSignal");
+                explanation = StatCollector.translateToLocal(emitter ? "gui.tooltips.appliedenergistics2.EmitLevelAbove" : "gui.tooltips.appliedenergistics2.ActiveWithSignal");
                 break;
             case LOW_SIGNAL:
-                explanation = StatCollector.translateToLocal(emitter ? "AppEng.GuiITooltip.EmitLevelsBelow" : "AppEng.GuiITooltip.ActiveWithoutSignal");
+                explanation = StatCollector.translateToLocal(emitter ? "gui.tooltips.appliedenergistics2.EmitLevelsBelow" : "gui.tooltips.appliedenergistics2.ActiveWithoutSignal");
                 break;
             case SIGNAL_PULSE:
-                explanation = StatCollector.translateToLocal("AppEng.GuiITooltip.ActiveOnPulse");
+                explanation = StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.ActiveOnPulse");
                 break;
             case IGNORE:
-                explanation = StatCollector.translateToLocal("AppEng.GuiITooltip.AlwaysActive");
+                explanation = StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.AlwaysActive");
                 break;
             default:
                 break;

@@ -29,7 +29,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
         if (fluid != null && fluid.getIcon() != null) {
             drawTexturedModelRectFromIcon(posX + 1, posY + 1, fluid.getIcon(), height - 2, width - 2);
             GL11.glScalef(0.5F, 0.5F, 0.5F);
-            String str = StatCollector.translateToLocal("AppEng.Terminal.Craft");
+            String str = StatCollector.translateToLocal("extracells.gui.craft");
             str = WordUtils.capitalize(str.toLowerCase());
             Minecraft.getMinecraft().fontRenderer.drawString(EnumChatFormatting.WHITE + str, 52 + posX - str.length(), posY + 24, 0);
         }
@@ -48,7 +48,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
             return false;
 
         List<String> description = new ArrayList<String>();
-        description.add(StatCollector.translateToLocal("AppEng.GuiITooltip.Craftable"));
+        description.add(StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.Craftable"));
         description.add(fluid.getLocalizedName(new FluidStack(fluid, 1)));
         drawHoveringText(description, mouseX - guiFluidTerminal.guiLeft(), mouseY - guiFluidTerminal.guiTop(), Minecraft.getMinecraft().fontRenderer);
         return true;
