@@ -1,3 +1,5 @@
+group= oredictionary:dyeBlue -> lapis
+
 shaped=
 	ae2:BlockQuartzGlass ae2:BlockQuartzGlass ae2:BlockQuartzGlass,
 	ae2:BlockQuartzGlass _ ae2:BlockQuartzGlass,
@@ -11,6 +13,12 @@ shapeless=
 shaped=
 	ae2:BlockQuartzGlass mc:bucket ae2:BlockQuartzGlass
 	-> ec:fluidPattern
+
+shaped=
+	mc:iron_ingot lapis mc:iron_ingot,
+	ae2:ItemMaterial.AnnihilationCore _ ae2:ItemMaterial.FormationCore,
+	mc:iron_ingot lapis mc:iron_ingot
+	-> ec:interface
 
 shaped=
 	ae2:ItemMaterial.Wireless,

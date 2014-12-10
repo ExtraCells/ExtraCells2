@@ -64,20 +64,20 @@ public class WidgetRedstoneModes extends GuiButton {
         description.add(StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.RedstoneMode"));
         String explanation = "";
         switch (redstoneMode) {
-        case HIGH_SIGNAL:
-        	explanation = StatCollector.translateToLocal(emitter ? "gui.tooltips.appliedenergistics2.EmitLevelAbove" : "gui.tooltips.appliedenergistics2.ActiveWithSignal");
-        	break;
-        case LOW_SIGNAL:
-        	explanation = StatCollector.translateToLocal(emitter ? "gui.tooltips.appliedenergistics2.EmitLevelsBelow" : "gui.tooltips.appliedenergistics2.ActiveWithoutSignal");
-        	break;
-        case SIGNAL_PULSE:
-        	explanation = StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.ActiveOnPulse");
-        	break;
-        case IGNORE:
-        	explanation = StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.AlwaysActive");
-        	break;
-        default:
-        	break;
+        	case HIGH_SIGNAL:
+        		explanation = StatCollector.translateToLocal(emitter ? "gui.tooltips.appliedenergistics2.EmitLevelAbove" : "gui.tooltips.appliedenergistics2.ActiveWithSignal");
+        		break;
+        	case LOW_SIGNAL:
+        		explanation = StatCollector.translateToLocal(emitter ? "gui.tooltips.appliedenergistics2.EmitLevelsBelow" : "gui.tooltips.appliedenergistics2.ActiveWithoutSignal");
+        		break;
+        	case SIGNAL_PULSE:
+        		explanation = StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.ActiveOnPulse");
+        		break;
+        	case IGNORE:
+        		explanation = StatCollector.translateToLocal("gui.tooltips.appliedenergistics2.AlwaysActive");
+        		break;
+        	default:
+        		break;
         }
 
         for (String current : Splitter.fixedLength(30).split(explanation)) {

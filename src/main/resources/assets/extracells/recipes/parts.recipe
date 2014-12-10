@@ -1,4 +1,4 @@
-group=oredictionary:dyeBlue -> lapis
+group= oredictionary:dyeBlue -> lapis
 group= ae2:ItemPart.SemiDarkMonitor ae2:ItemPart.Monitor ae2:ItemPart.DarkMonitor -> monitor
 group= ae2:BlockInterface ae2:ItemPart.Interface -> interface
 

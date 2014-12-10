@@ -6,6 +6,8 @@ public interface IBlockDefinition {
 
 	AEItemDefinition certusTank();
 	
+	AEItemDefinition blockInterface();
+	
 	AEItemDefinition walrus();
 	
 	AEItemDefinition fluidCrafter();

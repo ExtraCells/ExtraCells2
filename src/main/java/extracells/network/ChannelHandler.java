@@ -41,6 +41,9 @@ public class ChannelHandler {
 
         wrapper.registerMessage(HandlerFluidTerminal.class, PacketFluidTerminal.class, 6, Side.CLIENT);
         wrapper.registerMessage(HandlerFluidTerminal.class, PacketFluidTerminal.class, 6, Side.SERVER);
+        
+        wrapper.registerMessage(HandlerFluidInterface.class, PacketFluidInterface.class, 7, Side.CLIENT);
+        wrapper.registerMessage(HandlerFluidInterface.class, PacketFluidInterface.class, 7, Side.SERVER);
 
     }
 

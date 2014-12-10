@@ -57,6 +57,10 @@ sourceSets {
     }
 }
 
+dependencies {
+    compile 'com.mod-buildcraft:buildcraft:6.2.2:api'
+}
+
 processResources {
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.lang'

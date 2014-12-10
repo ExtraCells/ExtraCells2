@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerPlaneFormation;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiFluidPlaneFormation;
-import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.render.TextureManager;
 import extracells.util.ColorUtil;
@@ -41,7 +41,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 
-public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPart, IGridTickable {
+public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPartOrBlock, IGridTickable {
 
     private Fluid fluid;
     //TODO redstone control

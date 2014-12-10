@@ -25,10 +25,8 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
 		if(itemstack == null)
 			return false;
 		int fluidID;
-		System.out.println(itemstack.getItem());
 		if(itemstack.getItem() == ItemEnum.FLUIDITEM.getItem()){
 			fluidID = itemstack.getItemDamage();
-			System.out.println(fluidID);
 		}else{
 			FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemstack);
 			if(fluidStack == null)

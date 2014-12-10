@@ -53,6 +53,7 @@ extracells.part.battery.name=ME Energy Cell Fixture
 extracells.block.certustank=Certus Quartz Tank
 extracells.block.walrus.name=Walrus
 extracells.block.fluidcrafter.name=ME Fluid Assembler
+extracells.block.fluidinterface.name=ME Fluid Interface
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Amount
@@ -63,6 +64,13 @@ extracells.tooltip.storage.physical.bytes=%s of %s item bytes used.
 extracells.tooltip.storage.fluid.bytes=%s of %s fluid bytes used.
 extracells.tooltip.storage.fluid.content=contains %s mB of fluid.
 extracells.tooltip.storage.physical.content=contains %s items.
+extracells.tooltip.direction.0=Down
+extracells.tooltip.direction.1=Up
+extracells.tooltip.direction.2=North
+extracells.tooltip.direction.3=South
+extracells.tooltip.direction.4=West
+extracells.tooltip.direction.5=East
+extracells.tooltip.empty1=Empty
 
 //Buttons
 extracells.gui.craft=Craft
