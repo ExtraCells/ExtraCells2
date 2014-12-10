@@ -1,6 +1,6 @@
 package extracells.gui.widget.fluid;
 
-import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
@@ -24,12 +24,12 @@ public class WidgetFluidSlot extends Gui {
     private int posX, posY;
     private Fluid fluid;
     private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
-    private IFluidSlotPart part;
+    private IFluidSlotPartOrBlock part;
     private EntityPlayer player;
     private IConfigurable configurable;
     private byte configOption;
 
-    public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPart _part, int _id, int _posX, int _posY, IConfigurable _configurable, byte _configOption) {
+    public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPartOrBlock _part, int _id, int _posX, int _posY, IConfigurable _configurable, byte _configOption) {
         player = _player;
         part = _part;
         id = _id;
@@ -39,11 +39,11 @@ public class WidgetFluidSlot extends Gui {
         configOption = _configOption;
     }
 
-    public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPart _part, int _id, int _posX, int _posY) {
+    public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPartOrBlock _part, int _id, int _posX, int _posY) {
         this(_player, _part, _id, _posX, _posY, null, (byte) 0);
     }
 
-    public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPart _part, int _posX, int _posY) {
+    public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPartOrBlock _part, int _posX, int _posY) {
         this(_player, _part, 0, _posX, _posY, null, (byte) 0);
     }
 

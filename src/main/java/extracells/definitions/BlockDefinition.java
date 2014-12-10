@@ -5,6 +5,7 @@ import extracells.api.definitions.IBlockDefinition;
 import extracells.registries.BlockEnum;
 import extracells.tileentity.TileEntityCertusTank;
 import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.tileentity.TileEntityFluidInterface;
 import extracells.tileentity.TileEntityWalrus;
 
 public class BlockDefinition implements IBlockDefinition {
@@ -14,6 +15,11 @@ public class BlockDefinition implements IBlockDefinition {
 	@Override
 	public AEItemDefinition certusTank() {
 		return new BlockItemDefinitions(BlockEnum.CERTUSTANK.getBlock(), TileEntityCertusTank.class);
+	}
+	
+	@Override
+	public AEItemDefinition blockInterface() {
+		return new BlockItemDefinitions(BlockEnum.ECBASEBLOCK.getBlock(), TileEntityFluidInterface.class);
 	}
 
 	@Override

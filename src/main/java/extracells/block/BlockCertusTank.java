@@ -1,5 +1,7 @@
 package extracells.block;
 
+import appeng.api.implementations.items.IAEWrench;
+import buildcraft.api.tools.IToolWrench;
 import extracells.Extracells;
 import extracells.network.ChannelHandler;
 import extracells.registries.BlockEnum;
@@ -84,10 +86,23 @@ public class BlockCertusTank extends Block implements ITileEntityProvider {
     public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer entityplayer, int blockID, float offsetX, float offsetY, float offsetZ) {
         ItemStack current = entityplayer.inventory.getCurrentItem();
 
-        if (entityplayer.isSneaking() && current == null) {
-            dropBlockAsItem(worldObj, x, y, z, getDropWithNBT(worldObj, x, y, z));
-            worldObj.setBlockToAir(x, y, z);
-            return true;
+        if (entityplayer.isSneaking() && current != null) {
+        	try{
+        		if(current.getItem() instanceof IToolWrench && ((IToolWrench)current.getItem()).canWrench(entityplayer, x, y, z)){
+        			dropBlockAsItem(worldObj, x, y, z, getDropWithNBT(worldObj, x, y, z));
+                    worldObj.setBlockToAir(x, y, z);
+                    ((IToolWrench)current.getItem()).wrenchUsed(entityplayer, x, y, z);
+                    return true;
+        		}
+        	}catch(Exception e){
+        		//No IToolWrench
+        	}
+        	if(current.getItem() instanceof IAEWrench && ((IAEWrench)current.getItem()).canWrench(current, entityplayer, x, y, z)){
+        		dropBlockAsItem(worldObj, x, y, z, getDropWithNBT(worldObj, x, y, z));
+                worldObj.setBlockToAir(x, y, z);
+                return true;
+        	}
+            
         }
         if (current != null) {
             FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(current);

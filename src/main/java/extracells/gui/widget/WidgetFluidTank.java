@@ -73,15 +73,15 @@ public class WidgetFluidTank extends Gui {
     public void drawTooltip(int x, int y) {
 
         List<String> description = new ArrayList<String>();
-        description.add(StatCollector.translateToLocal("tooltip.direction." + direction.ordinal()));
+        description.add(StatCollector.translateToLocal("extracells.tooltip.direction." + direction.ordinal()));
 
         if (tank == null || tank.getFluid() == null) {
-            description.add(StatCollector.translateToLocal("tooltip.empty1"));
+            description.add(StatCollector.translateToLocal("extracells.tooltip.empty1"));
         } else {
             if (tank.getFluid().amount > 0 && tank.getFluid().getFluid() != null) {
                 String amountToText = tank.getFluid().amount + "mB";
 
-                description.add(tank.getFluid().getFluid().getLocalizedName());
+                description.add(tank.getFluid().getFluid().getLocalizedName(tank.getFluid()));
                 description.add(amountToText);
             }
         }

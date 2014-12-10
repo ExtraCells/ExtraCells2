@@ -62,3 +62,13 @@ extracells.tooltip.storage.physical.bytes=%s von %s Item-Bytes verwendet.
 extracells.tooltip.storage.fluid.bytes=%s von %s Flüssigkeits-Bytes verwendet.
 extracells.tooltip.storage.fluid.content=Enthält %s mB Flüssigkeit.
 extracells.tooltip.storage.physical.content=Enthält %s Items.
+extracells.tooltip.direction.0=Unten
+extracells.tooltip.direction.1=Oben
+extracells.tooltip.direction.2=Norden
+extracells.tooltip.direction.3=Süden
+extracells.tooltip.direction.4=Westen
+extracells.tooltip.direction.5=Osten
+extracells.tooltip.empty1=Leer
+
+/Buttons
+extracells.gui.craft=Herstellen

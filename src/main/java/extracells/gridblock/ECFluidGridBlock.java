@@ -7,9 +7,9 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
+import extracells.api.IECTileEntity;
 import extracells.part.PartECBase;
 import extracells.registries.BlockEnum;
-import extracells.tileentity.TileEntityFluidCrafter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -19,9 +19,9 @@ public class ECFluidGridBlock implements IGridBlock {
 
     protected IGrid grid;
     protected int usedChannels;
-    protected TileEntityFluidCrafter host;
+    protected IECTileEntity host;
 
-    public ECFluidGridBlock(TileEntityFluidCrafter _host) {
+    public ECFluidGridBlock(IECTileEntity _host) {
         host = _host;
     }
 

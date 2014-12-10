@@ -9,11 +9,11 @@ import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.TileEntityCertusTank;
 import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.tileentity.TileEntityFluidInterface;
 import extracells.tileentity.TileEntityWalrus;
 
 import java.io.*;
 
-@SuppressWarnings("unused")
 public class CommonProxy {
 
     public void registerMovables() {
@@ -21,6 +21,7 @@ public class CommonProxy {
         api.registries().movable().whiteListTileEntity(TileEntityCertusTank.class);
         api.registries().movable().whiteListTileEntity(TileEntityWalrus.class);
         api.registries().movable().whiteListTileEntity(TileEntityFluidCrafter.class);
+        api.registries().movable().whiteListTileEntity(TileEntityFluidInterface.class);
     }
 
     public void addRecipes(File configFolder) {
@@ -38,6 +39,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
         GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
         GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
+        GameRegistry.registerTileEntity(TileEntityFluidInterface.class, "tileEntityFluidInterface");
     }
 
     public void registerRenderers() {

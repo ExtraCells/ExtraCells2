@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.inventory.HandlerPartStorageFluid;
-import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPart {
+public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
     private int priority = 0;
     private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);

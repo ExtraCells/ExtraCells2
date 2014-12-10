@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableSet;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import extracells.api.IECTileEntity;
 import extracells.crafting.CraftingPatter;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gridblock.ECFluidGridBlock;
@@ -44,7 +45,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
-public class TileEntityFluidCrafter extends TileEntity implements IActionHost, ICraftingProvider, ICraftingWatcherHost{
+public class TileEntityFluidCrafter extends TileEntity implements IActionHost, ICraftingProvider, ICraftingWatcherHost, IECTileEntity {
 
 	private ECFluidGridBlock gridBlock;
 	private IGridNode node = null;
@@ -55,7 +56,7 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	
 	private boolean isFirstGetGridNode = true;
 	
-	private final FluidCrafterInventory inventory;
+	public final FluidCrafterInventory inventory;
 	
 	private Long finishCraftingTime = 0L;
 	private ItemStack returnStack = null;

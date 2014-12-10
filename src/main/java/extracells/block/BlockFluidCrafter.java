@@ -2,6 +2,8 @@ package extracells.block;
 
 import java.util.Random;
 
+import buildcraft.api.tools.IToolWrench;
+import appeng.api.implementations.items.IAEWrench;
 import appeng.api.networking.IGridNode;
 import extracells.Extracells;
 import extracells.network.GuiHandler;
@@ -70,6 +72,25 @@ public class BlockFluidCrafter extends BlockContainer{
     {
 		if(world.isRemote)
 			return false;
+		ItemStack current = player.inventory.getCurrentItem();
+
+        if (player.isSneaking() && current != null) {
+        	try{
+        		if(current.getItem() instanceof IToolWrench && ((IToolWrench)current.getItem()).canWrench(player, x, y, z)){
+        			dropBlockAsItem(world, x, y, z, new ItemStack(this));
+                    world.setBlockToAir(x, y, z);
+                    ((IToolWrench)current.getItem()).wrenchUsed(player, x, y, z);
+                    return true;
+        		}
+        	}catch(Exception e){
+        		//No IToolWrench
+        	}
+        	if(current.getItem() instanceof IAEWrench && ((IAEWrench)current.getItem()).canWrench(current, player, x, y, z)){
+        		dropBlockAsItem(world, x, y, z, new ItemStack(this));
+                world.setBlockToAir(x, y, z);
+                return true;
+        	}
+        }
 		GuiHandler.launchGui(0, player, world, x, y, z);
 		return true;
     }
@@ -84,10 +105,10 @@ public class BlockFluidCrafter extends BlockContainer{
             Random rand = new Random();
 
             TileEntity tileEntity = world.getTileEntity(x, y, z);
-            if (!(tileEntity instanceof IInventory)) {
+            if (!(tileEntity instanceof TileEntityFluidCrafter)) {
                     return;
             }
-            IInventory inventory = (IInventory) tileEntity;
+            IInventory inventory = (IInventory) ((TileEntityFluidCrafter)tileEntity).inventory;
 
             for (int i = 0; i < inventory.getSizeInventory(); i++) {
                     ItemStack item = inventory.getStackInSlot(i);
@@ -99,7 +120,7 @@ public class BlockFluidCrafter extends BlockContainer{
 
                             EntityItem entityItem = new EntityItem(world,
                                             x + rx, y + ry, z + rz,
-                                            item);
+                                            item.copy());
 
                             if (item.hasTagCompound()) {
                                     entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());

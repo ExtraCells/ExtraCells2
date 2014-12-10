@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidIO;
 import extracells.gui.GuiBusFluidIO;
-import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketBusFluidIO;
 import extracells.util.inventory.ECPrivateInventory;
@@ -32,7 +32,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import java.io.IOException;
 import java.util.Arrays;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPart {
+public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
     protected Fluid[] filterFluids = new Fluid[9];
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;

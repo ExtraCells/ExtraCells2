@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.GuiFluidEmitter;
-import extracells.network.packet.other.IFluidSlotPart;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.render.TextureManager;
@@ -31,7 +31,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPart {
+public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPartOrBlock {
 
     private Fluid fluid;
     private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;

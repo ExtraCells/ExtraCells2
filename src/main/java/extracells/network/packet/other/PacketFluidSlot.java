@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 
 import java.util.ArrayList;
@@ -15,13 +16,13 @@ public class PacketFluidSlot extends AbstractPacket {
 
     private int index;
     private Fluid fluid;
-    private IFluidSlotPart part;
+    private IFluidSlotPartOrBlock part;
     private List<Fluid> filterFluids;
 
     public PacketFluidSlot() {
     }
 
-    public PacketFluidSlot(IFluidSlotPart _part, int _index, Fluid _fluid, EntityPlayer _player) {
+    public PacketFluidSlot(IFluidSlotPartOrBlock _part, int _index, Fluid _fluid, EntityPlayer _player) {
         super(_player);
         mode = 0;
         part = _part;
@@ -37,7 +38,13 @@ public class PacketFluidSlot extends AbstractPacket {
     public void writeData(ByteBuf out) {
         switch (mode) {
             case 0:
-                writePart((PartECBase) part, out);
+            	if(part instanceof PartECBase){
+            		out.writeBoolean(true);
+            		writePart((PartECBase) part, out);
+            	}else{
+            		out.writeBoolean(false);
+            		writeTileEntity((TileEntity) part, out);
+            	}
                 out.writeInt(index);
                 writeFluid(fluid, out);
                 break;
@@ -53,7 +60,10 @@ public class PacketFluidSlot extends AbstractPacket {
     public void readData(ByteBuf in) {
         switch (mode) {
             case 0:
-                part = (IFluidSlotPart) readPart(in);
+            	if(in.readBoolean())
+            		part = (IFluidSlotPartOrBlock) readPart(in);
+            	else
+            		part = (IFluidSlotPartOrBlock) readTileEntity(in);
                 index = in.readInt();
                 fluid = readFluid(in);
                 break;
