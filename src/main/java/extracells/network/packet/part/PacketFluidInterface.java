@@ -1,6 +1,8 @@
 package extracells.network.packet.part;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -98,19 +100,7 @@ public class PacketFluidInterface extends AbstractPacket {
 	public void execute() {
 		switch(mode){
 		case 0:
-			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-			if(p.openContainer != null && p.openContainer instanceof ContainerFluidInterface){
-				ContainerFluidInterface container = (ContainerFluidInterface) p.openContainer;
-				if(Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen instanceof GuiFluidInterface){
-					GuiFluidInterface gui = (GuiFluidInterface) Minecraft.getMinecraft().currentScreen;
-					for (int i = 0; i < tank.length; i++){
-						container.fluidInterface.setFluidTank(ForgeDirection.getOrientation(i), tank[i]);
-					}
-					for (int i = 0; i < filter.length; i++){
-						gui.filter[i].setFluid(FluidRegistry.getFluid(filter[i]));
-					}
-				}
-			}
+			mode0();
 			break;
 		case 1:
 			if(player.openContainer != null && player.openContainer instanceof ContainerFluidInterface){
@@ -121,6 +111,23 @@ public class PacketFluidInterface extends AbstractPacket {
 		default:
 	}
 
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private void mode0(){
+		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+		if(p.openContainer != null && p.openContainer instanceof ContainerFluidInterface){
+			ContainerFluidInterface container = (ContainerFluidInterface) p.openContainer;
+			if(Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen instanceof GuiFluidInterface){
+				GuiFluidInterface gui = (GuiFluidInterface) Minecraft.getMinecraft().currentScreen;
+				for (int i = 0; i < tank.length; i++){
+					container.fluidInterface.setFluidTank(ForgeDirection.getOrientation(i), tank[i]);
+				}
+				for (int i = 0; i < filter.length; i++){
+					gui.filter[i].setFluid(FluidRegistry.getFluid(filter[i]));
+				}
+			}
+		}
 	}
 
 }
