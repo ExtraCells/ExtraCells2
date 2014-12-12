@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 
 import java.util.EnumMap;
 
@@ -58,6 +59,10 @@ public class ChannelHandler {
     public static void sendPacketToAllPlayers(AbstractPacket packet) {
         wrapper.sendToAll(packet);
     }
+    
+    public static void sendPacketToPlayersAround(AbstractPacket abstractPacket, NetworkRegistry.TargetPoint point){
+    	wrapper.sendToAllAround(abstractPacket, point);
+    }
 
     public static void sendPacketToAllPlayers(Packet packet, World world) {
         for (Object player : world.playerEntities) {
@@ -66,4 +71,5 @@ public class ChannelHandler {
             }
         }
     }
+    
 }

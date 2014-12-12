@@ -131,4 +131,9 @@ public class PartFluidExport extends PartFluidIO {
         }
         return false;
     }
+    
+    @Override
+    public double getPowerUsage() {
+    	return 1.0D;
+    }
 }

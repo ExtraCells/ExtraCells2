@@ -258,4 +258,9 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
     public void onInventoryChanged() {
         saveData();
     }
+    
+    @Override
+    public double getPowerUsage() {
+    	return 0.5D;
+    }
 }

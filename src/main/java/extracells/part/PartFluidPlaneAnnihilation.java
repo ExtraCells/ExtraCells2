@@ -151,4 +151,9 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
     public int cableConnectionRenderTo() {
         return 2;
     }
+    
+    @Override
+    public double getPowerUsage() {
+    	return 1.0D;
+    }
 }

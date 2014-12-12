@@ -7,12 +7,16 @@ import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkStorageEvent;
+import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -217,5 +221,24 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     @Override
     public void saveChanges(IMEInventory cellInventory) {
         saveData();
+    }
+    
+    @Override
+    public void removeFromWorld() {
+    	super.removeFromWorld();
+    	if(handler.externalSystem != null){
+    		IStorageMonitorable monitor = handler.externalSystem.getMonitorable(getSide().getOpposite(), new MachineSource(this));
+    		if(monitor != null){
+    			IMEMonitor<IAEFluidStack> fluidInventory = monitor.getFluidInventory();
+    			if(fluidInventory != null){
+    				fluidInventory.removeListener(handler);
+    			}
+    		}
+    	}
+    }
+    
+    @Override
+    public double getPowerUsage() {
+    	return 1.0D;
     }
 }

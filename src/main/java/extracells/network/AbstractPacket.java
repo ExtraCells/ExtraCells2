@@ -1,8 +1,11 @@
 package extracells.network;
 
 import appeng.api.parts.IPartHost;
+
 import com.google.common.base.Charsets;
+
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -139,5 +142,9 @@ public abstract class AbstractPacket implements IMessage {
 
     public void sendPacketToAllPlayers() {
         ChannelHandler.sendPacketToAllPlayers(this);
+    }
+    
+    public void sendPacketToPlayersAround(NetworkRegistry.TargetPoint point){
+    	ChannelHandler.sendPacketToPlayersAround(this, point);
     }
 }

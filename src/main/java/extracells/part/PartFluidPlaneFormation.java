@@ -171,4 +171,9 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
         doWork();
         return TickRateModulation.SAME;
     }
+    
+    @Override
+    public double getPowerUsage() {
+    	return 1.0D;
+    }
 }

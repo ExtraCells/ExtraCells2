@@ -1,5 +1,10 @@
 package extracells.part;
 
+import io.netty.buffer.ByteBuf;
+
+import java.io.IOException;
+import java.util.Random;
+
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.IGridNode;
@@ -12,7 +17,9 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+
 import com.google.common.collect.Lists;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidEmitter;
@@ -26,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -38,6 +46,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     private IStackWatcher watcher;
     private long wantedAmount;
     private long currentAmount;
+    private boolean clientRedstoneOutput = false;
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -58,7 +67,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
         rh.setBounds(7, 7, 11, 9, 9, 14);
         rh.renderBlock(x, y, z, renderer);
 
-        rh.setTexture(isPowering() ? TextureManager.LEVEL_FRONT.getTextures()[2] : TextureManager.LEVEL_FRONT.getTextures()[1]);
+        rh.setTexture(clientRedstoneOutput ? TextureManager.LEVEL_FRONT.getTextures()[2] : TextureManager.LEVEL_FRONT.getTextures()[1]);
         rh.setBounds(7, 7, 14, 9, 9, 16);
         rh.renderBlock(x, y, z, renderer);
     }
@@ -105,7 +114,6 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, BaseActionSource src, StorageChannel chan) {
         if (chan == StorageChannel.FLUIDS && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == fluid) {
             currentAmount = fullStack != null ? fullStack.getStackSize() : 0;
-
             IGridNode node = getGridNode();
             if (node != null) {
                 setActive(node.isActive());
@@ -193,4 +201,34 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     public Object getClientGuiElement(EntityPlayer player) {
         return new GuiFluidEmitter(this, player);
     }
+    
+    @Override
+    public void writeToStream(ByteBuf data) throws IOException {
+        super.writeToStream(data);
+        data.writeBoolean(isPowering());
+    }
+
+    @Override
+    public boolean readFromStream(ByteBuf data) throws IOException {
+    	super.readFromStream(data);
+    	clientRedstoneOutput = data.readBoolean();
+        return true;
+    }
+    
+    @Override
+	public void randomDisplayTick(World world, int x, int y, int z, Random r){
+		if (clientRedstoneOutput){
+			ForgeDirection d = getSide();
+			double d0 = d.offsetX * 0.45F + (r.nextFloat() - 0.5F) * 0.2D;
+			double d1 = d.offsetY * 0.45F + (r.nextFloat() - 0.5F) * 0.2D;
+			double d2 = d.offsetZ * 0.45F + (r.nextFloat() - 0.5F) * 0.2D;
+			world.spawnParticle( "reddust", 0.5 + x + d0, 0.5 + y + d1, 0.5 + z + d2, 0.0D, 0.0D, 0.0D );
+		}
+	}
+    
+    @Override
+    public double getPowerUsage() {
+    	return 1.0D;
+    }
+    
 }
