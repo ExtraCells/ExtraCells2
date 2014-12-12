@@ -118,7 +118,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
             if (node != null) {
                 setActive(node.isActive());
                 getHost().markForUpdate();
-                notifyBlocky(getHostTile(), getSide());
+                notifyTargetBlock(getHostTile(), getSide());
             }
         }
     }
@@ -165,7 +165,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
                 break;
         }
 
-        notifyBlocky(getHostTile(), getSide());
+        notifyTargetBlock(getHostTile(), getSide());
         new PacketFluidEmitter(mode, player).sendPacketToPlayer(player);
         saveData();
     }
@@ -175,11 +175,12 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
         if (wantedAmount < 0)
             wantedAmount = 0;
         new PacketFluidEmitter(wantedAmount, player).sendPacketToPlayer(player);
-        notifyBlocky(getHostTile(), getSide());
+        notifyTargetBlock(getHostTile(), getSide());
         saveData();
     }
 
-    private void notifyBlocky(TileEntity _tile, ForgeDirection _side) {
+    private void notifyTargetBlock(TileEntity _tile, ForgeDirection _side) {
+        // note - params are always the same
         _tile.getWorldObj().notifyBlocksOfNeighborChange(_tile.xCoord, _tile.yCoord, _tile.zCoord, Blocks.air);
         _tile.getWorldObj().notifyBlocksOfNeighborChange(_tile.xCoord + _side.offsetX, _tile.yCoord + _side.offsetY, _tile.zCoord + _side.offsetZ, Blocks.air);
     }

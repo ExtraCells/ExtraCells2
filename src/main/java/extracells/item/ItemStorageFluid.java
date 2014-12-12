@@ -2,16 +2,11 @@ package extracells.item;
 
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
-import appeng.api.implementations.tiles.IChestOrDrive;
-import appeng.api.implementations.tiles.IMEChest;
-import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.api.IFluidStorageCell;
 import extracells.api.IHandlerFluidStorage;
-import extracells.network.GuiHandler;
 import extracells.registries.ItemEnum;
-import extracells.render.TextureManager;
 import extracells.util.inventory.ECFluidFilterInventory;
 import extracells.util.inventory.ECPrivateInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -26,7 +21,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
@@ -93,7 +87,7 @@ public class ItemStorageFluid extends Item implements IFluidStorageCell {
             return;
         }
         IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
-        Boolean partitioned = cellHandler.isPreformatted();
+        boolean partitioned = cellHandler.isFormatted();
         long usedBytes = cellHandler.usedBytes();
 
         list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));

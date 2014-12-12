@@ -5,7 +5,6 @@ import extracells.inventory.HandlerItemPlayerStorageFluid;
 import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
 import extracells.render.TextureManager;
-import extracells.util.inventory.ECFluidFilterInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -82,7 +81,7 @@ public class FluidCellHandler implements ICellHandler {
         if (inventory.freeBytes() == 0) {
             return 3;
         }
-        if (inventory.isPreformatted() || inventory.usedTypes() == inventory.totalBytes()) {
+        if (inventory.isFormatted() || inventory.usedTypes() == inventory.totalBytes()) {
             return 2;
         }
 

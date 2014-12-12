@@ -8,10 +8,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public interface ExtraCellsApi {
-	
+
+	/**
+	 * @deprecated incorrect spelling
+	 */
+	@Deprecated
 	public String getVerion();
-	
+
+	public String getVersion();
+
+	/**
+	 * @deprecated incorrect spelling
+	 */
+	@Deprecated
 	public void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
+
+	public void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
 	
 	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is);
 	

@@ -5,9 +5,7 @@ import java.util.List;
 
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
@@ -21,16 +19,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import extracells.api.ECApi;
-import extracells.api.IFluidStorageCell;
 import extracells.api.IHandlerFluidStorage;
 import extracells.api.IPortableFluidStorageCell;
-import extracells.registries.ItemEnum;
 import extracells.util.inventory.ECFluidFilterInventory;
 import extracells.util.inventory.ECPrivateInventory;
 
@@ -87,7 +82,7 @@ public class ItemStoragePortableCell extends Item implements IPortableFluidStora
             return;
         }
         IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
-        Boolean partitioned = cellHandler.isPreformatted();
+        boolean partitioned = cellHandler.isFormatted();
         long usedBytes = cellHandler.usedBytes();
         double aeCurrentPower = getAECurrentPower(itemStack);
 

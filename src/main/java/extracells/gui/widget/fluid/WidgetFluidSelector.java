@@ -78,15 +78,15 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
         return amount;
     }
 
-    private void drawHollowRectWithCorners(int posX, int posY, int heigth, int width, int color, int thickness) {
-        drawRect(posX, posY, posX + heigth, posY + thickness, color);
-        drawRect(posX, posY + width - thickness, posX + heigth, posY + width, color);
+    private void drawHollowRectWithCorners(int posX, int posY, int height, int width, int color, int thickness) {
+        drawRect(posX, posY, posX + height, posY + thickness, color);
+        drawRect(posX, posY + width - thickness, posX + height, posY + width, color);
         drawRect(posX, posY, posX + thickness, posY + width, color);
-        drawRect(posX + heigth - thickness, posY, posX + heigth, posY + width, color);
+        drawRect(posX + height - thickness, posY, posX + height, posY + width, color);
 
         drawRect(posX, posY, posX + thickness + 1, posY + thickness + 1, color);
-        drawRect(posX + heigth, posY + width, posX + heigth - thickness - 1, posY + width - thickness - 1, color);
-        drawRect(posX + heigth, posY, posX + heigth - thickness - 1, posY + thickness + 1, color);
+        drawRect(posX + height, posY + width, posX + height - thickness - 1, posY + width - thickness - 1, color);
+        drawRect(posX + height, posY, posX + height - thickness - 1, posY + thickness + 1, color);
         drawRect(posX, posY + width, posX + thickness + 1, posY + width - thickness - 1, color);
     }
 }

@@ -10,7 +10,7 @@ public class WirelessTermRegistry {
 	
 	static List<IWirelessFluidTermHandler> handlers = new ArrayList<IWirelessFluidTermHandler>();
 	
-	public static void registerWirelesFluidTermHandler(IWirelessFluidTermHandler handler){
+	public static void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler){
 		if(!handlers.contains(handler))
 			handlers.add(handler);
 	}

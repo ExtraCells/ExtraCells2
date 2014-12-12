@@ -1,17 +1,7 @@
 package extracells.item;
 
-import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
-import appeng.api.features.INetworkEncodable;
 import appeng.api.implementations.items.IAEItemPowerStorage;
-import appeng.api.implementations.tiles.IWirelessAccessPoint;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridHost;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.WorldCoord;
 import extracells.api.ECApi;
 import extracells.api.IWirelessFluidTermHandler;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -23,7 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
@@ -34,7 +23,7 @@ public class ItemWirelessTerminalFluid extends Item implements IWirelessFluidTer
 
     public ItemWirelessTerminalFluid() {
         setMaxStackSize(1);
-        ECApi.instance().registryWirelessFluidTermHandler(this);
+        ECApi.instance().registerWirelessFluidTermHandler(this);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
 
 import java.util.List;
 import java.util.Map;
@@ -45,9 +46,11 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
     public IPart createPartFromItemStack(ItemStack itemStack) {
         try {
             return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].newInstance(itemStack);
-        } catch (Throwable e) {
-            FMLLog.severe("SHOULD NOT HAPPEN! Contact Leonelf/M3gaFr3ak with the folowing stacktrace!");
-            e.printStackTrace();
+        } catch (Throwable ex) {
+            FMLLog.log(Level.ERROR, ex,
+                    "ExtraCells2 severe error - could not create AE2 Part from ItemStack! This should not happen!\n" +
+                            "[ExtraCells2 SEVERE] Contact Leonelf/M3gaFr3ak with the following stack trace.\n" +
+                            "[ExtraCells2 SEVERE] Offending item: '%s'", itemStack.toString());
             return null;
         }
     }

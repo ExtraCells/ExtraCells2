@@ -33,7 +33,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
     private int priority = 0; // TODO
     private short[] blinkTimers; // TODO
-    private byte[] cellStati = new byte[6];
+    private byte[] cellStatuses = new byte[6];
     List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();
     List<IMEInventoryHandler> itemHandlers = new ArrayList<IMEInventoryHandler>();
     private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.drive", 6, 1, this) {
@@ -75,7 +75,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         ts.setColorOpaque_I(0xFFFFFF);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                if (cellStati[j + i * 3] > 0) {
+                if (cellStatuses[j + i * 3] > 0) {
                     rh.setBounds(i * 9, 12 - j * 3, 14, 8 + i * 8, 10 - j * 3, 16);
                     rh.renderFace(x, y, z, front[1], ForgeDirection.SOUTH, renderer);
                 }
@@ -85,7 +85,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 rh.setBounds(i * 9, 12 - j * 3, 14, 8 + i * 8, 10 - j * 3, 16);
-                ts.setColorOpaque_I(getColorByStatus(cellStati[j + i * 3]));
+                ts.setColorOpaque_I(getColorByStatus(cellStatuses[j + i * 3]));
                 ts.setBrightness(13 << 20 | 13 << 4);
                 rh.renderFace(x, y, z, front[2], ForgeDirection.SOUTH, renderer);
             }
@@ -97,7 +97,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     @Override
     public void writeToStream(ByteBuf data) throws IOException {
         super.writeToStream(data);
-        for (byte aCellStati : cellStati) {
+        for (byte aCellStati : cellStatuses) {
             data.writeByte(aCellStati);
         }
     }
@@ -105,8 +105,8 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     @Override
     public boolean readFromStream(ByteBuf data) throws IOException {
         super.readFromStream(data);
-        for (int i = 0; i < cellStati.length; i++)
-            cellStati[i] = data.readByte();
+        for (int i = 0; i < cellStatuses.length; i++)
+            cellStatuses[i] = data.readByte();
         return true;
     }
 
@@ -179,7 +179,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     public void onInventoryChanged() {
         itemHandlers = updateHandlers(StorageChannel.ITEMS);
         fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
-        for (int i = 0; i < cellStati.length; i++) {
+        for (int i = 0; i < cellStatuses.length; i++) {
             ItemStack stackInSlot = inventory.getStackInSlot(i);
             IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
             if (inventoryHandler == null)
@@ -187,9 +187,9 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
             ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stackInSlot);
             if (cellHandler == null || inventoryHandler == null) {
-                cellStati[i] = 0;
+                cellStatuses[i] = 0;
             } else {
-                cellStati[i] = (byte) cellHandler.getStatusForCell(stackInSlot, inventoryHandler);
+                cellStatuses[i] = (byte) cellHandler.getStatusForCell(stackInSlot, inventoryHandler);
             }
         }
         IGridNode node = getGridNode();

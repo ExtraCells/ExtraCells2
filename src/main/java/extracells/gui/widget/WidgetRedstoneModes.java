@@ -21,14 +21,14 @@ public class WidgetRedstoneModes extends GuiButton {
     private RedstoneMode redstoneMode;
     private boolean emitter = false;
 
-    public WidgetRedstoneModes(int ID, int xPos, int yPos, int width, int heigth, RedstoneMode mode, boolean emitter) {
-        super(ID, xPos, yPos, width, heigth, "ScrewStrings :D");
+    public WidgetRedstoneModes(int ID, int xPos, int yPos, int width, int height, RedstoneMode mode, boolean emitter) {
+        super(ID, xPos, yPos, width, height, "ScrewStrings :D");
         this.emitter = emitter;
         redstoneMode = mode;
     }
 
-    public WidgetRedstoneModes(int ID, int xPos, int yPos, int width, int heigth, RedstoneMode mode) {
-        super(ID, xPos, yPos, width, heigth, "ScrewStrings :D");
+    public WidgetRedstoneModes(int ID, int xPos, int yPos, int width, int height, RedstoneMode mode) {
+        super(ID, xPos, yPos, width, height, "ScrewStrings :D");
         this.emitter = false;
         redstoneMode = mode;
     }

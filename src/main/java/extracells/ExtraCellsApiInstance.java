@@ -36,17 +36,35 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
     public static final ExtraCellsApi instance = new ExtraCellsApiInstance();
 
+    /**
+     * @deprecated Incorrect spelling
+     */
     @Override
+    @Deprecated
     public String getVerion() {
         return Extracells.VERSION;
     }
-    
+
     @Override
+    public String getVersion() {
+        return Extracells.VERSION;
+    }
+
+	/**
+	 * @deprecated Incorrect spelling
+	 */
+	@Override
+	@Deprecated
 	public void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler) {
-    	WirelessTermRegistry.registerWirelesFluidTermHandler(handler);
+		WirelessTermRegistry.registerWirelessFluidTermHandler(handler);
 	}
-    
-    @Override
+
+	@Override
+	public void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler) {
+		WirelessTermRegistry.registerWirelessFluidTermHandler(handler);
+	}
+
+	@Override
 	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is) {
 		return WirelessTermRegistry.getWirelessTermHandler(is);
 	}

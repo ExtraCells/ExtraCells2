@@ -90,6 +90,6 @@ public class ContainerFluidCrafter extends Container
 
 	protected void retrySlotClick(int par1, int par2, boolean par3, EntityPlayer par4EntityPlayer)
 	{
-		// DONT DO ANYTHING YOU SHITTY METHOD!
+		// DON'T DO ANYTHING, YOU SHITTY METHOD!
 	}
 }

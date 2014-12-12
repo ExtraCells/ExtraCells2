@@ -1,8 +1,5 @@
 package extracells.crafting;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import extracells.api.crafting.IFluidCraftingPatternDetails;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -11,19 +8,18 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import appeng.api.AEApi;
-import appeng.api.IAppEngApi;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 
-public class CraftingPatter implements IFluidCraftingPatternDetails {
+public class CraftingPattern implements IFluidCraftingPatternDetails {
 	
 	private final ICraftingPatternDetails pattern;
 	
-	private IAEFluidStack[] fluidsCondenced = null;
+	private IAEFluidStack[] fluidsCondensed = null;
 	private IAEFluidStack[] fluids = null;
 	
-	public CraftingPatter(ICraftingPatternDetails _pattern){
+	public CraftingPattern(ICraftingPatternDetails _pattern){
 		pattern = _pattern;
 	}
 	
@@ -45,12 +41,12 @@ public class CraftingPatter implements IFluidCraftingPatternDetails {
 
 	@Override
 	public IAEItemStack[] getInputs() {
-		return removFluidContainers(pattern.getInputs(), false);
+		return removeFluidContainers(pattern.getInputs(), false);
 	}
 
 	@Override
 	public IAEItemStack[] getCondensedInputs() {
-		return removFluidContainers(pattern.getCondensedInputs(), true);
+		return removeFluidContainers(pattern.getCondensedInputs(), true);
 	}
 
 	@Override
@@ -79,11 +75,11 @@ public class CraftingPatter implements IFluidCraftingPatternDetails {
 	}
 
 	@Override
-	public IAEFluidStack[] getCondencedFluidInputs(){
-		if(fluidsCondenced ==  null){
+	public IAEFluidStack[] getCondensedFluidInputs(){
+		if(fluidsCondensed ==  null){
 			getCondensedInputs();
 		}
-		return fluidsCondenced;
+		return fluidsCondensed;
 	}
 
 	@Override
@@ -94,7 +90,7 @@ public class CraftingPatter implements IFluidCraftingPatternDetails {
 		return fluids;
 	}
 	
-	public IAEItemStack[] removFluidContainers(IAEItemStack[] requirements, boolean isCondenced)
+	public IAEItemStack[] removeFluidContainers(IAEItemStack[] requirements, boolean isCondenced)
 	{
 
 		IAEItemStack[] returnStack = new IAEItemStack[requirements.length];
@@ -145,7 +141,7 @@ public class CraftingPatter implements IFluidCraftingPatternDetails {
 				}
 			}
 			returnStack = items;
-			fluidsCondenced = fluids;
+			fluidsCondensed = fluids;
 		}else{
 			this.fluids = fluidStacks;
 		}

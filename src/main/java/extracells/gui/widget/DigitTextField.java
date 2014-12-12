@@ -7,8 +7,8 @@ import org.lwjgl.input.Keyboard;
 
 public class DigitTextField extends GuiTextField {
 
-    public DigitTextField(FontRenderer fontRenderer, int x, int y, int lenth, int heigth) {
-        super(fontRenderer, x, y, lenth, heigth);
+    public DigitTextField(FontRenderer fontRenderer, int x, int y, int length, int height) {
+        super(fontRenderer, x, y, length, height);
     }
 
     @Override

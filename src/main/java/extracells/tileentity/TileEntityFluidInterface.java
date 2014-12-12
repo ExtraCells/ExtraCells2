@@ -9,7 +9,6 @@ import extracells.api.IFluidInterface;
 import extracells.container.IContainerListener;
 import extracells.gridblock.ECFluidGridBlock;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.part.PacketFluidInterface;
 import extracells.util.EmptyMeItemMonitor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,7 +49,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	public FluidTank[] tanks = new FluidTank[6];
 	public Integer[] fluidFilter = new Integer[tanks.length];
 	public boolean doNextUpdate = false;
-	private boolean needBreake = false;
+	private boolean wasIdle = false;
 	private int tickCount = 0;
 	
 	private boolean isFirstGetGridNode = true;
@@ -317,9 +316,9 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
     }
 	
 	private void tick(){
-		if(tickCount >= 40 || !needBreake){
+		if(tickCount >= 40 || !wasIdle){
 			tickCount = 0;
-			needBreake = true;
+			wasIdle = true;
 		}else{
 			tickCount++;
 			return;
@@ -341,11 +340,11 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 						int toAdd = (int) (s.amount - notAdded.getStackSize());
 						storage.getFluidInventory().injectItems(AEApi.instance().storage().createFluidStack(tanks[i].drain(toAdd, true)), Actionable.MODULATE, new MachineSource(this));
 						doNextUpdate = true;
-						needBreake = false;
+						wasIdle = false;
 					}else{
 						storage.getFluidInventory().injectItems(AEApi.instance().storage().createFluidStack(tanks[i].drain(s.amount, true)), Actionable.MODULATE, new MachineSource(this));
 						doNextUpdate = true;
-						needBreake = false;
+						wasIdle = false;
 					}
 				}
 			}
@@ -358,7 +357,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 					continue;
 				tanks[i].fill(storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.getFluid(fluidFilter[i]), accepted)), Actionable.MODULATE, new MachineSource(this)).getFluidStack(), true);
 				doNextUpdate = true;
-				needBreake = false;
+				wasIdle = false;
 			}
 		}
 	}

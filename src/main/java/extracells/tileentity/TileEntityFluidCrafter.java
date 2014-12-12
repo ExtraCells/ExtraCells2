@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.google.common.collect.ImmutableSet;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.api.IECTileEntity;
-import extracells.crafting.CraftingPatter;
-import extracells.gridblock.ECBaseGridBlock;
+import extracells.crafting.CraftingPattern;
 import extracells.gridblock.ECFluidGridBlock;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -17,11 +14,9 @@ import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingGrid;
-import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
-import appeng.api.networking.crafting.ICraftingRequester;
 import appeng.api.networking.crafting.ICraftingWatcher;
 import appeng.api.networking.crafting.ICraftingWatcherHost;
 import appeng.api.networking.events.MENetworkCraftingPatternChange;
@@ -41,16 +36,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 public class TileEntityFluidCrafter extends TileEntity implements IActionHost, ICraftingProvider, ICraftingWatcherHost, IECTileEntity {
 
 	private ECFluidGridBlock gridBlock;
 	private IGridNode node = null;
 	private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
-	private List<IAEItemStack> requestetItems = new ArrayList<IAEItemStack>();
+	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
 	private boolean isBusy = false;
 	private ICraftingWatcher watcher = null;
 	
@@ -120,10 +113,10 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 			InventoryCrafting table) {
 		if(isBusy)
 			return false;
-		if(patternDetails instanceof CraftingPatter){
-			CraftingPatter patter = (CraftingPatter) patternDetails;
+		if(patternDetails instanceof CraftingPattern){
+			CraftingPattern patter = (CraftingPattern) patternDetails;
 			HashMap<Fluid, Long> fluids = new HashMap<Fluid, Long>();
-			for(IAEFluidStack stack : patter.getCondencedFluidInputs()){
+			for(IAEFluidStack stack : patter.getCondensedFluidInputs()){
 				if(fluids.containsKey(stack.getFluid())){
 					Long amount = fluids.get(stack.getFluid()) + stack.getStackSize();
 					fluids.remove(stack.getFluid());
@@ -174,7 +167,7 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 
 				if (currentPattern != null && currentPattern.getPatternForItem(currentPatternStack, getWorldObj()) != null && currentPattern.getPatternForItem(currentPatternStack, getWorldObj()).isCraftable())
 				{
-					ICraftingPatternDetails pattern = new CraftingPatter(currentPattern.getPatternForItem(currentPatternStack, getWorldObj()));
+					ICraftingPatternDetails pattern = new CraftingPattern(currentPattern.getPatternForItem(currentPatternStack, getWorldObj()));
 					patternHandlers.add(pattern);
 					if(pattern.getCondensedInputs().length == 0){
 						craftingTracker.setEmitable(pattern.getCondensedOutputs()[0]);
@@ -221,13 +214,13 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 			returnStack = null;
 		}
 		if(!isBusy && getWorldObj() != null && !getWorldObj().isRemote){
-			if(!requestetItems.isEmpty()){
-				for(IAEItemStack s : requestetItems){
+			if(!requestedItems.isEmpty()){
+				for(IAEItemStack s : requestedItems){
 					for(ICraftingPatternDetails details : patternHandlers){
 						if(details.getCondensedOutputs()[0].equals(s)){
-							CraftingPatter patter = (CraftingPatter) details;
+							CraftingPattern patter = (CraftingPattern) details;
 							HashMap<Fluid, Long> fluids = new HashMap<Fluid, Long>();
-							for(IAEFluidStack stack : patter.getCondencedFluidInputs()){
+							for(IAEFluidStack stack : patter.getCondensedFluidInputs()){
 								if(fluids.containsKey(stack.getFluid())){
 									Long amount = fluids.get(stack.getFluid()) + stack.getStackSize();
 									fluids.remove(stack.getFluid());
@@ -395,17 +388,17 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	@Override
 	public void onRequestChange(ICraftingGrid craftingGrid, IAEItemStack what) {
 		if(craftingGrid.isRequesting(what)){
-			if(!requestetItems.contains(what)){
-				requestetItems.add(what);
+			if(!requestedItems.contains(what)){
+				requestedItems.add(what);
 			}
-		}else if(requestetItems.contains(what)){
-			requestetItems.remove(what);
+		}else if(requestedItems.contains(what)){
+			requestedItems.remove(what);
 		}
 		
 	}
 	
 	private void updateWatcher(){
-		requestetItems = new ArrayList<IAEItemStack>();
+		requestedItems = new ArrayList<IAEItemStack>();
 		IGrid grid = null;
 		IGridNode node = getGridNode();
 		ICraftingGrid crafting = null;
@@ -422,7 +415,7 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 				
 				if(crafting != null){
 					if(crafting.isRequesting(patter.getCondensedOutputs()[0])){
-						requestetItems.add(patter.getCondensedOutputs()[0]);
+						requestedItems.add(patter.getCondensedOutputs()[0]);
 					}
 				}
 			}

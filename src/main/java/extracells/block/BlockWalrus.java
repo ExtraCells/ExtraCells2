@@ -59,8 +59,8 @@ public class BlockWalrus extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess blockAcces, int x, int y, int z) {
-        switch (ForgeDirection.getOrientation(blockAcces.getBlockMetadata(x, y, z))) {
+    public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z) {
+        switch (ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z))) {
             case NORTH:
                 setBlockBounds(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 1.0F);
                 break;
