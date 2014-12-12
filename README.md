@@ -13,7 +13,14 @@ The master branch is a placeholder for people arriving at this page.
 
 As AE2 is currently a slightly volatile dependency, and we don't need any of the recursive dependencies, it is not declared in build.gradle. Download the correct API jar for AE2 and place it in libs/.
 
+Then, to build using Gradle:
 
+```
+./gradlew setupDevWorkspace
+./gradlew build
+```
+
+Follow up with `./gradlew eclipse` or `./gradlew idea` if necessary.
 
 ---
 
