@@ -3,7 +3,17 @@ ExtraCells 2
 
 A mighty Add-On for Applied Energistics 2
 
-To build this, download the project (ZIP or fork or whatever) and execute the build.bat/build.sh. The build files will be in /build/lib/
+The code lives in one of two branches depending on your version of Applied Energistics. If you are using rv1, check out the rv1 branch. If you are using rv2, use the rv2 branch.
+
+The master branch is a placeholder for people arriving at this page.
+
+### Build Instructions
+
+As AE2 is currently a slightly volatile dependency, and we don't need any of the recursive dependencies, it is not declared in build.gradle. Download the correct API jar for AE2 and place it in libs/.
+
+
+
+---
 
 Thanks to arbrarsyed for ForgeGradle, to AlgorithmX2 for his massive support and his *amazing* API, cyntain and tgame14 for some very cool textures and Vexatos, crafteverywhere, SSCXM and VeryBigBro for the cool localizations! 
 

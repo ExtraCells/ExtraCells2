@@ -1,8 +1,0 @@
-alias=mc -> minecraft
-alias=ec -> extracells
-alias=ae2 -> appliedenergistics2
-
-import=parts.recipe
-import=misc.recipe
-import=storagecell.recipe
-import=storagecomponent.recipe
