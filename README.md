@@ -4,8 +4,10 @@ ExtraCells 2
 A mighty Add-On for Applied Energistics 2
 
 The code lives in one of two branches depending on your version of Applied Energistics. If you are using rv1, check out the rv1 branch. If you are using rv2, use the rv2 branch.
-
 The master branch is a placeholder for people arriving at this page.
+
+[Explore rv1 code here.](https://github.com/M3gaFr3ak/ExtraCells2/tree/rv1)  
+[Explore rv2 code here.](https://github.com/M3gaFr3ak/ExtraCells2/tree/rv2)
 
 ### Build Instructions
 
