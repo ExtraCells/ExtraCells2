@@ -10,6 +10,7 @@ import extracells.container.IContainerListener;
 import extracells.gridblock.ECFluidGridBlock;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.part.PacketFluidInterface;
+import extracells.util.EmptyMeItemMonitor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -26,16 +27,21 @@ import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.implementations.tiles.ITileStorageMonitorable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 
-public class TileEntityFluidInterface extends TileEntity implements IActionHost, IFluidHandler, IECTileEntity, IFluidInterface, IFluidSlotPartOrBlock {
+public class TileEntityFluidInterface extends TileEntity implements IActionHost, IFluidHandler, IECTileEntity, IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable, IStorageMonitorable {
 	
 	List<IContainerListener> listeners = new ArrayList<IContainerListener>();
 	
@@ -371,4 +377,26 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 		}
 	}
 
+	@Override
+	public IStorageMonitorable getMonitorable(ForgeDirection side, BaseActionSource src) {
+		return this;
+	}
+
+	@Override
+	public IMEMonitor<IAEItemStack> getItemInventory() {
+		return new EmptyMeItemMonitor();
+	}
+
+	@Override
+	public IMEMonitor<IAEFluidStack> getFluidInventory() {
+		if(getGridNode(ForgeDirection.UNKNOWN) == null)
+			return null;
+		IGrid grid = getGridNode(ForgeDirection.UNKNOWN).getGrid();
+		if(grid == null)
+			return null;
+		IStorageGrid storage = grid.getCache(IStorageGrid.class);
+		if(storage == null)
+			return null;
+		return storage.getFluidInventory();
+	}
 }

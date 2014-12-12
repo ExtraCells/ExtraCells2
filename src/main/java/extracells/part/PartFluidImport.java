@@ -200,4 +200,9 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
         return new FluidTankInfo[0];
     }
+    
+    @Override
+    public double getPowerUsage(){
+    	return 1.0D;
+    }
 }

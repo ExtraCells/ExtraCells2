@@ -16,16 +16,16 @@ public class PacketFluidSlot extends AbstractPacket {
 
     private int index;
     private Fluid fluid;
-    private IFluidSlotPartOrBlock part;
+    private IFluidSlotPartOrBlock partOrBlock;
     private List<Fluid> filterFluids;
 
     public PacketFluidSlot() {
     }
 
-    public PacketFluidSlot(IFluidSlotPartOrBlock _part, int _index, Fluid _fluid, EntityPlayer _player) {
+    public PacketFluidSlot(IFluidSlotPartOrBlock _partOrBlock, int _index, Fluid _fluid, EntityPlayer _player) {
         super(_player);
         mode = 0;
-        part = _part;
+        partOrBlock = _partOrBlock;
         index = _index;
         fluid = _fluid;
     }
@@ -38,12 +38,12 @@ public class PacketFluidSlot extends AbstractPacket {
     public void writeData(ByteBuf out) {
         switch (mode) {
             case 0:
-            	if(part instanceof PartECBase){
+            	if(partOrBlock instanceof PartECBase){
             		out.writeBoolean(true);
-            		writePart((PartECBase) part, out);
+            		writePart((PartECBase) partOrBlock, out);
             	}else{
             		out.writeBoolean(false);
-            		writeTileEntity((TileEntity) part, out);
+            		writeTileEntity((TileEntity) partOrBlock, out);
             	}
                 out.writeInt(index);
                 writeFluid(fluid, out);
@@ -61,9 +61,9 @@ public class PacketFluidSlot extends AbstractPacket {
         switch (mode) {
             case 0:
             	if(in.readBoolean())
-            		part = (IFluidSlotPartOrBlock) readPart(in);
+            		partOrBlock = (IFluidSlotPartOrBlock) readPart(in);
             	else
-            		part = (IFluidSlotPartOrBlock) readTileEntity(in);
+            		partOrBlock = (IFluidSlotPartOrBlock) readTileEntity(in);
                 index = in.readInt();
                 fluid = readFluid(in);
                 break;
@@ -81,7 +81,7 @@ public class PacketFluidSlot extends AbstractPacket {
     public void execute() {
         switch (mode) {
             case 0:
-                part.setFluid(index, fluid, player);
+                partOrBlock.setFluid(index, fluid, player);
                 break;
             case 1:
                 Gui gui = Minecraft.getMinecraft().currentScreen;

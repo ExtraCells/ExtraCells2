@@ -14,7 +14,9 @@ import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+
 import com.google.common.collect.Lists;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerPlaneFormation;
@@ -182,5 +184,10 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
     public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall) {
         doWork();
         return TickRateModulation.SAME;
+    }
+    
+    @Override
+    public double getPowerUsage(){
+    	return 1.0D;
     }
 }

@@ -218,4 +218,9 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     public void saveChanges(IMEInventory cellInventory) {
         saveData();
     }
+    
+    @Override
+    public double getPowerUsage(){
+    	return 1.0D;
+    }
 }

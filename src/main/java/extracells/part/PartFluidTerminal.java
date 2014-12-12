@@ -33,6 +33,7 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.ArrayList;
@@ -257,5 +258,10 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
     @Override
     public void onInventoryChanged() {
         saveData();
+    }
+    
+    @Override
+    public double getPowerUsage(){
+    	return 0.5D;
     }
 }
