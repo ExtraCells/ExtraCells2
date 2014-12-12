@@ -15,11 +15,9 @@ import com.google.common.collect.Lists;
 import extracells.api.IFluidStorageCell;
 import extracells.api.IHandlerFluidStorage;
 import extracells.container.ContainerFluidStorage;
-import extracells.item.ItemStorageFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
@@ -70,7 +68,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
             return false;
         for (FluidStack fluidStack : fluidStacks) {
             if (fluidStack == null || fluidStack.getFluid().getID() == input.getFluid().getID())
-                return preformattedOrContainsFluid(input.getFluid());
+                return allowedByFormat(input.getFluid());
         }
         return false;
     }
@@ -92,7 +90,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
     @Override
     public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
-        if (input == null || !preformattedOrContainsFluid(input.getFluid()))
+        if (input == null || !allowedByFormat(input.getFluid()))
             return input;
         IAEFluidStack notAdded = input.copy();
         List<FluidStack> currentFluids = Lists.newArrayList(fluidStacks);
@@ -143,7 +141,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
     @Override
     public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src) {
-        if (request == null || !preformattedOrContainsFluid(request.getFluid()))
+        if (request == null || !allowedByFormat(request.getFluid()))
             return null;
 
         IAEFluidStack removedStack;
@@ -187,12 +185,8 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
         return StorageChannel.FLUIDS;
     }
 
-    private boolean preformattedOrContainsFluid(Fluid fluid) {
-        for (Fluid currentFluid : prioritizedFluids) {
-            if (currentFluid != null)
-                return prioritizedFluids.contains(fluid);
-        }
-        return true;
+    private boolean allowedByFormat(Fluid fluid) {
+        return !isFormatted() || prioritizedFluids.contains(fluid);
     }
 
     public int freeBytes() {
@@ -223,11 +217,17 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
         return totalTypes;
     }
 
-    public boolean isPreformatted() {
+    public boolean isFormatted() {
+        // Common case
+        if (prioritizedFluids.isEmpty()) {
+            return false;
+        }
+
         for (Fluid currentFluid : prioritizedFluids) {
             if (currentFluid != null)
                 return true;
         }
+
         return false;
     }
 
