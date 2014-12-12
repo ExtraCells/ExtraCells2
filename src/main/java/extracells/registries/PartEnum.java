@@ -19,7 +19,8 @@ public enum PartEnum {
     FLUIDPANEANNIHILATION("fluid.plane.annihilation", PartFluidPlaneAnnihilation.class, "fluid.plane"),
     FLUIDPANEFORMATION("fluid.plane.formation", PartFluidPlaneFormation.class, "fluid.plane"),
     DRIVE("drive", PartDrive.class),
-    BATTERY("battery", PartBattery.class);
+    BATTERY("battery", PartBattery.class),
+    INTERFACE("interface", PartInterface.class);
 
     private String unlocalizedName;
     private Class<? extends PartECBase> partClass;

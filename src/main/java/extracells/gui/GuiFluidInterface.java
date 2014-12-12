@@ -32,6 +32,7 @@ public class GuiFluidInterface extends GuiContainer
 	public WidgetFluidSlot[] filter = new WidgetFluidSlot[6];
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/interfacefluid.png");
 	private EntityPlayer player;
+	private ForgeDirection partSide = ForgeDirection.UNKNOWN;
 
 	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface)
 	{
@@ -40,6 +41,11 @@ public class GuiFluidInterface extends GuiContainer
 		this.fluidInterface = fluidInterface;
 		this.player = player;
 		((ContainerFluidInterface) inventorySlots).gui = this;
+	}
+	
+	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface, ForgeDirection side){
+		this(player, fluidInterface);
+		partSide = side;
 	}
 
 	@Override
@@ -50,6 +56,8 @@ public class GuiFluidInterface extends GuiContainer
 		guiTop = (height - ySize) / 2;
 		for (int i = 0; i < tanks.length; i++)
 		{
+			if(partSide != null && partSide != ForgeDirection.UNKNOWN &&partSide.ordinal() != i)
+				continue;
 			tanks[i] = new WidgetFluidTank(fluidInterface.getFluidTank(ForgeDirection.getOrientation(i)), i * 20 + 30, 16, ForgeDirection.getOrientation(i));
 			if(fluidInterface instanceof IFluidSlotPartOrBlock){
 				filter[i] = new WidgetFluidSlot(player, (IFluidSlotPartOrBlock) fluidInterface, i, i * 20 + 30, 93);
@@ -74,17 +82,20 @@ public class GuiFluidInterface extends GuiContainer
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, 116, 0x000000);
 		for (WidgetFluidTank tank : tanks)
 		{
-			tank.draw(guiLeft, guiTop, mouseX, mouseY);
+			if(tank != null)
+				tank.draw(guiLeft, guiTop, mouseX, mouseY);
 		}
 		for (WidgetFluidSlot slot : filter){
-			slot.drawWidget();
+			if(slot != null)
+				slot.drawWidget();
 		}
 		for (WidgetFluidTank tank : tanks)
 		{
-			if (func_146978_c(tank.posX, tank.posY, 18, 73, mouseX, mouseY))
-			{
-				tank.drawTooltip(mouseX - guiLeft, mouseY - guiTop);
-			}
+			if(tank != null)
+				if (func_146978_c(tank.posX, tank.posY, 18, 73, mouseX, mouseY))
+				{
+					tank.drawTooltip(mouseX - guiLeft, mouseY - guiTop);
+				}
 		}
 	}
 	
@@ -92,10 +103,11 @@ public class GuiFluidInterface extends GuiContainer
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
         super.mouseClicked(mouseX, mouseY, mouseBtn);
         for (WidgetFluidSlot fluidSlot : filter) {
-            if (GuiUtil.isPointInRegion(guiLeft, guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
-                fluidSlot.mouseClicked(player.inventory.getItemStack());
-                break;
-            }
+        	if(fluidSlot != null)
+        		if (GuiUtil.isPointInRegion(guiLeft, guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
+        			fluidSlot.mouseClicked(player.inventory.getItemStack());
+        			break;
+        		}
         }
     }
 	

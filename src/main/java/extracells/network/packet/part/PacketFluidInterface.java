@@ -124,7 +124,8 @@ public class PacketFluidInterface extends AbstractPacket {
 					container.fluidInterface.setFluidTank(ForgeDirection.getOrientation(i), tank[i]);
 				}
 				for (int i = 0; i < filter.length; i++){
-					gui.filter[i].setFluid(FluidRegistry.getFluid(filter[i]));
+					if(gui.filter[i] != null)
+						gui.filter[i].setFluid(FluidRegistry.getFluid(filter[i]));
 				}
 			}
 		}
