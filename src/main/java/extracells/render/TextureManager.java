@@ -22,7 +22,8 @@ public enum TextureManager {
     BATTERY_FRONT(TextureType.PART, "battery_front_1"),
     BATTERY_SIDE(TextureType.PART, "battery_side"),
     LEVEL_FRONT(TextureType.PART, "level_front_1", "level_front_2", "level_front_3"),
-    LEVEL_SIDE(TextureType.PART, "level_side");
+    LEVEL_SIDE(TextureType.PART, "level_side"),
+    INTERFACE(TextureType.PART, "fluid_interface");
 
     private TextureType textureType;
     private String[] textureNames;

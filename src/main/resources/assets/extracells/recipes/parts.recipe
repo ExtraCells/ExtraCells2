@@ -63,3 +63,7 @@ shapeless=
 shaped=
 	ae2:BlockEnergyCell mc:iron_ingot mc:iron_ingot
 	-> ec:partBattery
+
+shapeless=
+	ec:interface
+	-> ec:partInterface

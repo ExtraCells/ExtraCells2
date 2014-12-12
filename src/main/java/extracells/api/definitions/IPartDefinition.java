@@ -21,4 +21,6 @@ public interface IPartDefinition {
 	AEItemDefinition partBattery();
 	
 	AEItemDefinition partDrive();
+	
+	AEItemDefinition partInterface();
 }

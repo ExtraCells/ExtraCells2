@@ -20,6 +20,10 @@ shaped=
 	mc:iron_ingot lapis mc:iron_ingot
 	-> ec:interface
 
+shapeless=
+	ec:partInterface
+	-> ec:interface
+
 shaped=
 	ae2:ItemMaterial.Wireless,
 	ec:partFluidTerminal,

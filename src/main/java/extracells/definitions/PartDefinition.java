@@ -54,4 +54,9 @@ public class PartDefinition implements IPartDefinition {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(), PartEnum.DRIVE.ordinal());
 	}
 
+	@Override
+	public AEItemDefinition partInterface() {
+		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(), PartEnum.INTERFACE.ordinal());
+	}
+
 }

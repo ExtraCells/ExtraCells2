@@ -8,6 +8,7 @@ import appeng.api.parts.IPartItem;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.api.ECApi;
 import extracells.registries.PartEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -83,5 +84,14 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
     @Override
     public String getUnlocalizedGroupName(Set<ItemStack> otherItems, ItemStack itemStack) {
         return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].getGroupName();
+    }
+    
+    @Override
+    public String getItemStackDisplayName(ItemStack stack){
+    	if(stack == null)
+    		return super.getItemStackDisplayName(stack);
+    	if(stack.getItemDamage() == PartEnum.INTERFACE.ordinal())
+    		return ECApi.instance().blocks().blockInterface().item().getItemStackDisplayName(ECApi.instance().blocks().blockInterface().stack(1));
+    	return super.getItemStackDisplayName(stack);
     }
 }
