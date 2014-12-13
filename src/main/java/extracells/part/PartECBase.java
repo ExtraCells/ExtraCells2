@@ -54,6 +54,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     private IFluidHandler facingTank;
     private boolean redstonePowered;
     private boolean isActive;
+    private EntityPlayer owner;
 
     public void initializePart(ItemStack partStack) {
         if (partStack.hasTagCompound()) {
@@ -85,6 +86,8 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
         if (type != PartItemStack.Break) {
             NBTTagCompound itemNbt = new NBTTagCompound();
             writeToNBT(itemNbt);
+			if(itemNbt.hasKey("node"))
+            	itemNbt.removeTag("node");
             is.setTagCompound(itemNbt);
         }
         return is;
@@ -120,10 +123,19 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
 
     @Override
     public void writeToNBT(NBTTagCompound data) {
+    	if(node != null){
+    		NBTTagCompound nodeTag = new NBTTagCompound();
+    		node.saveToNBT("node0", nodeTag);
+    		data.setTag("node", nodeTag);
+    	}
     }
 
     @Override
     public void readFromNBT(NBTTagCompound data) {
+    	if(data.hasKey("node") && node != null){
+    		node.loadFromNBT("node0", data.getCompoundTag("node"));
+    		node.updateState();
+    	}
     }
 
     @Override
@@ -142,6 +154,10 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
             return;
         gridBlock = new ECBaseGridBlock(this);
         node = AEApi.instance().createGridNode(gridBlock);
+        if(owner != null){
+        	node.setPlayerID(AEApi.instance().registries().players().getID(owner));
+        	node.updateState();
+        }
         setPower(null);
         onNeighborChanged();
     }
@@ -239,6 +255,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
 
     @Override
     public void onPlacement(EntityPlayer player, ItemStack held, ForgeDirection side) {
+    	owner = player;
     }
 
     @Override
