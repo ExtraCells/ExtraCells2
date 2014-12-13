@@ -1,6 +1,7 @@
 package extracells.item;
 
 import appeng.api.config.AccessRestriction;
+import appeng.api.config.PowerUnits;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import extracells.api.ECApi;
 import extracells.api.IWirelessFluidTermHandler;
@@ -16,7 +17,11 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemWirelessTerminalFluid extends Item implements IWirelessFluidTermHandler, IAEItemPowerStorage {
+import cofh.api.energy.IEnergyContainerItem;
+import cpw.mods.fml.common.Optional;
+
+@Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
+public class ItemWirelessTerminalFluid extends Item implements IWirelessFluidTermHandler, IAEItemPowerStorage, IEnergyContainerItem {
 
     IIcon icon;
     private final int MAX_POWER = 3200000;
@@ -161,5 +166,47 @@ public class ItemWirelessTerminalFluid extends Item implements IWirelessFluidTer
 	@Override
 	public boolean isItemNormalWirelessTermToo(ItemStack is) {
 		return false;
+	}
+	
+	@Override
+	@Optional.Method(modid = "CoFHAPI|energy")
+	public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
+		if(container == null)
+			return 0;
+		if(simulate){
+			return (int) (getEnergyStored(container) >= maxExtract ? maxExtract : getEnergyStored(container));
+		}else{
+			return (int) PowerUnits.AE.convertTo(PowerUnits.RF, (extractAEPower(container, (PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract)))));
+		}
+	}
+
+	@Override
+	@Optional.Method(modid = "CoFHAPI|energy")
+	public int getEnergyStored(ItemStack arg0) {
+		return (int) PowerUnits.AE.convertTo(PowerUnits.RF, (getAECurrentPower(arg0)));
+	}
+
+	@Override
+	@Optional.Method(modid = "CoFHAPI|energy")
+	public int getMaxEnergyStored(ItemStack arg0) {
+		return (int) PowerUnits.AE.convertTo(PowerUnits.RF, (getAEMaxPower(arg0)));
+	}
+
+	@Override
+	@Optional.Method(modid = "CoFHAPI|energy")
+	public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
+		if(container == null)
+			return 0;
+		if(simulate){
+			double current = PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(container));
+			double max = PowerUnits.AE.convertTo(PowerUnits.RF, getAEMaxPower(container));
+			if(max - current >= maxReceive)
+				return maxReceive;
+			else
+				return (int) (max - current);
+		}else{
+			int notStored = (int) (PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive))));
+			return maxReceive - notStored;
+		}
 	}
 }
