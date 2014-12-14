@@ -191,12 +191,23 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		inventory.writeToNBT(tagCompound);
+		IGridNode node = getGridNode();
+		if(node != null){
+			NBTTagCompound nodeTag = new NBTTagCompound();
+			node.saveToNBT("node0", nodeTag);
+			tagCompound.setTag("nodes", nodeTag);
+		}
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 		inventory.readFromNBT(tagCompound);
+		IGridNode node = getGridNode();
+		if(tagCompound.hasKey("nodes") && node != null){
+			node.loadFromNBT("node0", tagCompound.getCompoundTag("nodes"));
+			node.updateState();
+		}
 	}
 	
 	@Override

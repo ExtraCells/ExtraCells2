@@ -3,6 +3,7 @@ package extracells.block;
 import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import appeng.api.AEApi;
 import appeng.api.implementations.items.IAEWrench;
 import appeng.api.networking.IGridNode;
 import extracells.Extracells;
@@ -13,6 +14,7 @@ import extracells.tileentity.TileEntityFluidInterface;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,15 +46,20 @@ public class ECBaseBlock extends BlockContainer {
 	}
 	
 	@Override
-	public void onPostBlockPlaced(World world, int x, int y, int z, int meta) {
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
 		if(world.isRemote)
 			return;
-		switch(meta){
+		switch(world.getBlockMetadata(x, y, z)){
 			case 0:
 				TileEntity tile = world.getTileEntity(x, y, z);
 				if(tile != null){
 					if(tile instanceof IECTileEntity){
-						((IECTileEntity) tile).getGridNode(ForgeDirection.UNKNOWN).updateState();
+						IGridNode node = ((IECTileEntity) tile).getGridNode(ForgeDirection.UNKNOWN);
+						if(entity != null && entity instanceof EntityPlayer){
+							EntityPlayer player = (EntityPlayer) entity;
+							node.setPlayerID(AEApi.instance().registries().players().getID(player));
+						}
+						node.updateState();
 					}
 				}
 				return;

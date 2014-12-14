@@ -3,7 +3,7 @@ package extracells.container;
 import extracells.api.IFluidInterface;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.packet.part.PacketFluidInterface;
-import extracells.part.PartInterface;
+import extracells.part.PartFluidInterface;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.TileEntityFluidInterface;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,13 +31,13 @@ public class ContainerFluidInterface extends Container implements IContainerList
 		bindPlayerInventory(player.inventory);
 		if(fluidInterface instanceof TileEntityFluidInterface){
 			((TileEntityFluidInterface) fluidInterface).registerListener(this);
-		}else if(fluidInterface instanceof PartInterface){
-			((PartInterface) fluidInterface).registerListener(this);
+		}else if(fluidInterface instanceof PartFluidInterface){
+			((PartFluidInterface) fluidInterface).registerListener(this);
 		}
 		if(fluidInterface instanceof TileEntityFluidInterface){
 			((TileEntityFluidInterface) fluidInterface).doNextUpdate = true;
-		}else if(fluidInterface instanceof PartInterface){
-			((PartInterface) fluidInterface).doNextUpdate = true;
+		}else if(fluidInterface instanceof PartFluidInterface){
+			((PartFluidInterface) fluidInterface).doNextUpdate = true;
 		}
 	}
 
@@ -68,8 +68,8 @@ public class ContainerFluidInterface extends Container implements IContainerList
 		super.onContainerClosed(player);
 		if(fluidInterface instanceof TileEntityFluidInterface){
 			((TileEntityFluidInterface) fluidInterface).removeListener(this);
-		}else if(fluidInterface instanceof PartInterface){
-			((PartInterface) fluidInterface).removeListener(this);
+		}else if(fluidInterface instanceof PartFluidInterface){
+			((PartFluidInterface) fluidInterface).removeListener(this);
 		}
     }
 

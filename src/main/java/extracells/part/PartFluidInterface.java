@@ -53,7 +53,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
-public class PartInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable, IStorageMonitorable, IGridTickable {
+public class PartFluidInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable, IStorageMonitorable, IGridTickable {
 
 	List<IContainerListener> listeners = new ArrayList<IContainerListener>();
 	
@@ -373,6 +373,22 @@ public class PartInterface extends PartECBase implements IFluidHandler, IFluidIn
             is.setTagCompound(writeFilter(new NBTTagCompound()));
         }
         return is;
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound data){
+    	super.writeToNBT(data);
+    	data.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
+    	data.setInteger("filter", fluidFilter);
+    }
+    
+    @Override
+    public void readFromNBT(NBTTagCompound data){
+    	super.readFromNBT(data);
+    	if(data.hasKey("tank"))
+    		tank.readFromNBT(data.getCompoundTag("tank"));
+    	if(data.hasKey("filter"))
+    		fluidFilter = data.getInteger("filter");
     }
     
     public NBTTagCompound writeFilter(NBTTagCompound tag){
