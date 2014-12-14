@@ -3,6 +3,7 @@ package extracells.block;
 import java.util.Random;
 
 import buildcraft.api.tools.IToolWrench;
+import appeng.api.AEApi;
 import appeng.api.implementations.items.IAEWrench;
 import appeng.api.networking.IGridNode;
 import extracells.Extracells;
@@ -13,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -41,13 +43,18 @@ public class BlockFluidCrafter extends BlockContainer{
 	}
 	
 	@Override
-	public void onPostBlockPlaced(World world, int x, int y, int z, int p_149714_5_) {
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
 		if(world.isRemote)
 			return;
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile != null){
 			if(tile instanceof TileEntityFluidCrafter){
-				((TileEntityFluidCrafter) tile).getGridNode().updateState();
+				IGridNode node = ((TileEntityFluidCrafter) tile).getGridNode();
+				if(entity != null && entity instanceof EntityPlayer){
+					EntityPlayer player = (EntityPlayer) entity;
+					node.setPlayerID(AEApi.instance().registries().players().getID(player));
+				}
+				node.updateState();
 			}
 		}
 	}
