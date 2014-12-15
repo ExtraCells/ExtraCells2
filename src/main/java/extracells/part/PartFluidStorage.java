@@ -1,6 +1,7 @@
 package extracells.part;
 
 import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
@@ -8,6 +9,7 @@ import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.networking.security.MachineSource;
+import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
@@ -26,6 +28,7 @@ import extracells.inventory.HandlerPartStorageFluid;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.render.TextureManager;
+import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -34,6 +37,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -240,5 +244,13 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     @Override
     public double getPowerUsage() {
     	return 1.0D;
+    }
+    
+    @Override
+    public boolean onActivate(EntityPlayer player, Vec3 pos) {
+    	if(PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)){
+    		return super.onActivate(player, pos);
+    	}
+    	return false;
     }
 }

@@ -1,8 +1,10 @@
 package extracells.container;
 
 import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
+import appeng.api.parts.IPart;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
@@ -12,13 +14,16 @@ import extracells.gui.GuiFluidTerminal;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
+import extracells.util.PermissionUtil;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 
 public class ContainerFluidTerminal extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
 
@@ -157,5 +162,35 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
             }
         }
         return itemstack;
+    }
+    
+    @Override
+    public ItemStack slotClick(int slotNumber, int p_75144_2_, int p_75144_3_, EntityPlayer player){
+    	ItemStack returnStack = null;
+    	boolean hasPermission = true;
+    	if((slotNumber == 0 || slotNumber == 1)){
+    		ItemStack stack = player.inventory.getItemStack();
+    		if(stack == null){
+    		}else{
+    			if(FluidContainerRegistry.isFilledContainer(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())){
+    			}else if(FluidContainerRegistry.isEmptyContainer(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())){
+    			}else{
+    				ItemStack slotStack = ((Slot) inventorySlots.get(slotNumber)).getStack();
+    				if(slotStack == null)
+    					returnStack = null;
+    				else
+    					returnStack = slotStack.copy();
+    				hasPermission = false;
+    			}
+    		}
+    	}
+    	if(hasPermission)
+    		returnStack = super.slotClick(slotNumber, p_75144_2_, p_75144_3_, player);
+    	if(player instanceof EntityPlayerMP){
+    		EntityPlayerMP p = (EntityPlayerMP) player;
+    		p.sendContainerToPlayer(this);
+    	}
+    	return returnStack;
+    	
     }
 }

@@ -2,6 +2,8 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
@@ -9,9 +11,12 @@ import appeng.api.util.AEColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.render.TextureManager;
+import extracells.util.PermissionUtil;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -135,5 +140,13 @@ public class PartFluidExport extends PartFluidIO {
     @Override
     public double getPowerUsage() {
     	return 1.0D;
+    }
+    
+    @Override
+    public boolean onActivate(EntityPlayer player, Vec3 pos) {
+    	if(PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)){
+    		return super.onActivate(player, pos);
+    	}
+    	return false;
     }
 }

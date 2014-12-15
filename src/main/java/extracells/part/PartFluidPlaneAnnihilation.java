@@ -1,10 +1,12 @@
 package extracells.part;
 
 import appeng.api.config.Actionable;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.events.MENetworkChannelChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.MachineSource;
+import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
@@ -16,12 +18,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
+import extracells.util.PermissionUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -155,5 +160,13 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
     @Override
     public double getPowerUsage() {
     	return 1.0D;
+    }
+    
+    @Override
+    public boolean onActivate(EntityPlayer player, Vec3 pos) {
+    	if(PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)){
+    		return super.onActivate(player, pos);
+    	}
+    	return false;
     }
 }

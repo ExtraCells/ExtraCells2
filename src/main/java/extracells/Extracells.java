@@ -20,12 +20,13 @@ import extracells.registries.ItemEnum;
 import extracells.render.RenderHandler;
 import extracells.util.FluidCellHandler;
 import extracells.util.NameHandler;
-import extracells.util.TickHandler;
+import extracells.util.ExtraCellsEventHandler;
 import extracells.wireless.AEWirelessTermHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
@@ -78,7 +79,9 @@ public class Extracells {
         AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
         AEApi.instance().registries().wireless().registerWirelessHandler(new AEWirelessTermHandler());
         AEApi.instance().registries().cell().addCellHandler(new FluidCellHandler());
-        FMLCommonHandler.instance().bus().register(new TickHandler());
+        ExtraCellsEventHandler handler = new ExtraCellsEventHandler();
+        FMLCommonHandler.instance().bus().register(handler);
+        MinecraftForge.EVENT_BUS.register(handler);
         proxy.registerMovables();
         proxy.registerRenderers();
         proxy.registerTileEntities();

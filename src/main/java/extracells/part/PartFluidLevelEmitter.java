@@ -7,10 +7,12 @@ import java.util.Random;
 
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
+import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollsionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.StorageChannel;
@@ -28,11 +30,13 @@ import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.render.TextureManager;
+import extracells.util.PermissionUtil;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -231,4 +235,11 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     	return 1.0D;
     }
     
+    @Override
+    public boolean onActivate(EntityPlayer player, Vec3 pos) {
+    	if(PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)){
+    		return super.onActivate(player, pos);
+    	}
+    	return false;
+    }
 }
