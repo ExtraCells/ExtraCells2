@@ -4,12 +4,14 @@ import java.util.Random;
 
 import buildcraft.api.tools.IToolWrench;
 import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.items.IAEWrench;
 import appeng.api.networking.IGridNode;
 import extracells.Extracells;
 import extracells.network.GuiHandler;
 import extracells.registries.BlockEnum;
 import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.util.PermissionUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -79,8 +81,11 @@ public class BlockFluidCrafter extends BlockContainer{
     {
 		if(world.isRemote)
 			return false;
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if(tile instanceof TileEntityFluidCrafter)
+			if(!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, ((TileEntityFluidCrafter) tile).getGridNode()))
+				return false;
 		ItemStack current = player.inventory.getCurrentItem();
-
         if (player.isSneaking() && current != null) {
         	try{
         		if(current.getItem() instanceof IToolWrench && ((IToolWrench)current.getItem()).canWrench(player, x, y, z)){

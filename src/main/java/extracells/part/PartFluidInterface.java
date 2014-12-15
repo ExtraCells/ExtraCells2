@@ -18,9 +18,11 @@ import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.EmptyMeItemMonitor;
+import extracells.util.PermissionUtil;
 import akka.dispatch.Filter;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.tiles.ITileStorageMonitorable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -30,6 +32,7 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
+import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
@@ -44,6 +47,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -403,4 +407,11 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			fluidFilter = tag.getInteger("filter");
 	}
 
+	@Override
+    public boolean onActivate(EntityPlayer player, Vec3 pos) {
+    	if(PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)){
+    		return super.onActivate(player, pos);
+    	}
+    	return false;
+    }
 }

@@ -4,6 +4,7 @@ import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.items.IAEWrench;
 import appeng.api.networking.IGridNode;
 import extracells.Extracells;
@@ -11,6 +12,7 @@ import extracells.api.IECTileEntity;
 import extracells.network.GuiHandler;
 import extracells.tileentity.TileEntityFluidCrafter;
 import extracells.tileentity.TileEntityFluidInterface;
+import extracells.util.PermissionUtil;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -95,37 +97,39 @@ public class ECBaseBlock extends BlockContainer {
     {
 		if(world.isRemote)
 			return false;
-		ItemStack current = player.getCurrentEquippedItem();
-		if (player.isSneaking() && current != null) {
-        	try{
-        		if(current.getItem() instanceof IToolWrench && ((IToolWrench)current.getItem()).canWrench(player, x, y, z)){
-        			ItemStack block = new ItemStack(this);
-        			TileEntity tile = world.getTileEntity(x, y, z);
-        			if(tile != null && tile instanceof TileEntityFluidInterface){
-        				block.setTagCompound(((TileEntityFluidInterface)tile).writeFilter(new NBTTagCompound()));
-        			}
-        			dropBlockAsItem(world, x, y, z, block);
-                    world.setBlockToAir(x, y, z);
-                    ((IToolWrench)current.getItem()).wrenchUsed(player, x, y, z);
-                    return true;
-        		}
-        	}catch(Exception e){
-        		//No IToolWrench
-        	}
-        	if(current.getItem() instanceof IAEWrench && ((IAEWrench)current.getItem()).canWrench(current, player, x, y, z)){
-        		ItemStack block = new ItemStack(this);
-    			TileEntity tile = world.getTileEntity(x, y, z);
-    			if(tile != null && tile instanceof TileEntityFluidInterface){
-    				block.setTagCompound(((TileEntityFluidInterface)tile).writeFilter(new NBTTagCompound()));
-    			}
-    			dropBlockAsItem(world, x, y, z, block);
-                world.setBlockToAir(x, y, z);
-                return true;
-        	}
-            
-        }
 		switch(world.getBlockMetadata(x, y, z)){
 			case 0:
+				TileEntity tile = world.getTileEntity(x, y, z);
+				if(tile instanceof TileEntityFluidInterface)
+					if(!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, ((TileEntityFluidInterface) tile).getGridNode(ForgeDirection.UNKNOWN)))
+						return false;
+				ItemStack current = player.getCurrentEquippedItem();
+				if (player.isSneaking() && current != null) {
+		        	try{
+		        		if(current.getItem() instanceof IToolWrench && ((IToolWrench)current.getItem()).canWrench(player, x, y, z)){
+		        			ItemStack block = new ItemStack(this);
+		        			if(tile != null && tile instanceof TileEntityFluidInterface){
+		        				block.setTagCompound(((TileEntityFluidInterface)tile).writeFilter(new NBTTagCompound()));
+		        			}
+		        			dropBlockAsItem(world, x, y, z, block);
+		                    world.setBlockToAir(x, y, z);
+		                    ((IToolWrench)current.getItem()).wrenchUsed(player, x, y, z);
+		                    return true;
+		        		}
+		        	}catch(Exception e){
+		        		//No IToolWrench
+		        	}
+		        	if(current.getItem() instanceof IAEWrench && ((IAEWrench)current.getItem()).canWrench(current, player, x, y, z)){
+		        		ItemStack block = new ItemStack(this);
+		    			if(tile != null && tile instanceof TileEntityFluidInterface){
+		    				block.setTagCompound(((TileEntityFluidInterface)tile).writeFilter(new NBTTagCompound()));
+		    			}
+		    			dropBlockAsItem(world, x, y, z, block);
+		                world.setBlockToAir(x, y, z);
+		                return true;
+		        	}
+		            
+		        }
 				GuiHandler.launchGui(0, player, world, x, y, z);
 				return true;
 			default:
