@@ -41,7 +41,6 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-        drawDefaultBackground();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
         int posX = (width - xSize) / 2;
@@ -65,7 +64,6 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
     }
 
     public void drawScreen(int x, int y, float f) {
-        drawDefaultBackground();
 
         String[] buttonNames = {"-1", "-10", "-100", "+1", "+10", "+100"};
         String[] shiftNames = {"-100", "-1000", "-10000", "+100", "+1000", "+10000"};
