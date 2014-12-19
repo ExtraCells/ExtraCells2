@@ -44,6 +44,7 @@ public class Extracells {
     
     private static File configFolder;
     public static boolean shortenedBuckets;
+    public static boolean dynamicTypes;
     public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells") {
 
         public ItemStack getIconItemStack() {
@@ -68,6 +69,7 @@ public class Extracells {
         Configuration config = new Configuration(new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"));
         config.load();
         shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true);
+        dynamicTypes = config.get("Storage Cells", "dynamicTypes", true, "Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true);
         config.save();
 
         proxy.registerItems();

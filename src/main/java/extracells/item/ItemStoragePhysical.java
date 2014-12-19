@@ -66,7 +66,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell {
 
     @Override
     public int BytePerType(ItemStack cellItem) {
-        return bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128;
+        return Extracells.dynamicTypes ? bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
     }
 
     @Override
