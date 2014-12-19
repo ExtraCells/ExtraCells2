@@ -5,6 +5,7 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEItemStack;
+import extracells.Extracells;
 import extracells.registries.ItemEnum;
 import extracells.util.inventory.ECCellInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -66,7 +67,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell {
 
     @Override
     public int BytePerType(ItemStack cellItem) {
-        return bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128;
+        return Extracells.dynamicTypes ? bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
     }
 
     @Override
