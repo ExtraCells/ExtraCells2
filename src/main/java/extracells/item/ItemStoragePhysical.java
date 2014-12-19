@@ -5,6 +5,7 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEItemStack;
+import extracells.Extracells;
 import extracells.registries.ItemEnum;
 import extracells.util.inventory.ECCellInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
