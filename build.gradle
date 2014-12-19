@@ -25,7 +25,10 @@ ext.buildProps = file "build.properties"
 if (System.getenv("BUILD_NUMBER") != null) {
 	version = "${System.getenv("BUILD_NUMBER")}"
 }
- else {
+else if (System.getenv("DRONE_BUILD_NUMBER") != null{
+	version = "${System.getenv("DRONE_BUILD_NUMBER")}"
+}
+else {
 	version = "NIGHTLY"
 }
 
