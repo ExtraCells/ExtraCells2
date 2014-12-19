@@ -22,14 +22,12 @@ targetCompatibility = JavaVersion.VERSION_1_6
 
 ext.buildProps = file "build.properties"
 
+version = "NIGHTLY"
 if (System.getenv("BUILD_NUMBER") != null) {
 	version = "${System.getenv("BUILD_NUMBER")}"
 }
-else if (System.getenv("DRONE_BUILD_NUMBER") != null{
+else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
 	version = "${System.getenv("DRONE_BUILD_NUMBER")}"
-}
-else {
-	version = "NIGHTLY"
 }
 
 buildProps.withReader {
