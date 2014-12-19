@@ -116,7 +116,7 @@ public class ECBaseBlock extends BlockContainer {
 		                    ((IToolWrench)current.getItem()).wrenchUsed(player, x, y, z);
 		                    return true;
 		        		}
-		        	}catch(Exception e){
+		        	}catch(Throwable e){
 		        		//No IToolWrench
 		        	}
 		        	if(current.getItem() instanceof IAEWrench && ((IAEWrench)current.getItem()).canWrench(current, player, x, y, z)){
