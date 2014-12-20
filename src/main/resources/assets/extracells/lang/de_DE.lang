@@ -7,6 +7,7 @@ extracells.item.storage.physical.256k.name=256k ME-Speicher
 extracells.item.storage.physical.1024k.name=1024k ME-Speicher
 extracells.item.storage.physical.4096k.name=4096k ME-Speicher
 extracells.item.storage.physical.16348k.name=16348k ME-Speicher
+extracells.item.storage.physical.container.name=ME-Block-Speicher
 extracells.item.storage.fluid.1k.name=1k ME-Flüssigkeitsspeicher
 extracells.item.storage.fluid.4k.name=4k ME-Flüssigkeitsspeicher
 extracells.item.storage.fluid.16k.name=16k ME-Flüssigkeitsspeicher
@@ -69,6 +70,10 @@ extracells.tooltip.direction.3=Süden
 extracells.tooltip.direction.4=Westen
 extracells.tooltip.direction.5=Osten
 extracells.tooltip.empty1=Leer
+extracells.tooltip.storage.container.0=Modus: Plazier-Modus
+extracells.tooltip.storage.container.1=Modus: Gleicher-Handel-Modus (1*1)
+extracells.tooltip.storage.container.2=Modus: Gleicher-Handel-Modus (3*3)
+extracells.tooltip.onlyblocks=Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container
 
-/Buttons
+//Buttons
 extracells.gui.craft=Herstellen

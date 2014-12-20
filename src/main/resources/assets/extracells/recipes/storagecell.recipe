@@ -9,6 +9,10 @@ shaped=
 	ec:certusTank ec:certusTank ec:certusTank
 	-> ec:fluidCasing
 
+shapeless=
+	ae2:ItemBasicStorageCell.1k mc:chest
+	-> ec:physCellContainer
+
 
 shapeless=
 	ec:physCasing ec:cell256kPart

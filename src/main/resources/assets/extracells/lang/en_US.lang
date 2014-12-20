@@ -7,6 +7,7 @@ extracells.item.storage.physical.256k.name=ME 256k Storage
 extracells.item.storage.physical.1024k.name=ME 1024k Storage
 extracells.item.storage.physical.4096k.name=ME 4096k Storage
 extracells.item.storage.physical.16384k.name=ME 16384k Storage
+extracells.item.storage.physical.container.name=ME Block Container
 extracells.item.storage.fluid.1k.name=ME 1k Fluid Storage
 extracells.item.storage.fluid.4k.name=ME 4k Fluid Storage
 extracells.item.storage.fluid.16k.name=ME 16k Fluid Storage
@@ -71,6 +72,10 @@ extracells.tooltip.direction.3=South
 extracells.tooltip.direction.4=West
 extracells.tooltip.direction.5=East
 extracells.tooltip.empty1=Empty
+extracells.tooltip.storage.container.0=Mode: Placement Mode
+extracells.tooltip.storage.container.1=Mode: Equal Trade Mode (1*1)
+extracells.tooltip.storage.container.2=Mode: Equal Trade Mode (3*3)
+extracells.tooltip.onlyblocks=You can't place Items! Put a Block into the BLOCK-Container
 
 //Buttons
 extracells.gui.craft=Craft

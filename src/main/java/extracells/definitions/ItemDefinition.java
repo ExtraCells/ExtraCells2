@@ -71,6 +71,11 @@ public class ItemDefinition implements IItemDefinition {
 	public AEItemDefinition physCell16384k() {
 		return new ItemItemDefinitions(ItemEnum.PHYSICALSTORAGE.getItem(), 3);
 	}
+	
+	@Override
+	public AEItemDefinition physCellContainer() {
+		return new ItemItemDefinitions(ItemEnum.PHYSICALSTORAGE.getItem(), 4);
+	}
 
 	
 	
@@ -153,5 +158,4 @@ public class ItemDefinition implements IItemDefinition {
 	public AEItemDefinition wirelessFluidTerminal() {
 		return new ItemItemDefinitions(ItemEnum.FLUIDWIRELESSTERMINAL.getItem());
 	}
-
 }

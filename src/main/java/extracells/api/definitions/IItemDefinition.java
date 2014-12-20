@@ -32,6 +32,8 @@ public interface IItemDefinition {
 	
 	AEItemDefinition physCell16384k();
 	
+	AEItemDefinition physCellContainer();
+	
 	
 	//Fluid Storage Components
 	AEItemDefinition cell1kPartFluid();
