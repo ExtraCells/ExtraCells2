@@ -44,6 +44,10 @@ shaped=
     oredictionary:gemDiamond oredictionary:gemDiamond oredictionary:gemDiamond
     -> ec:physCell16384k
 
+shapeless=
+	ae2:ItemBasicStorageCell.1k mc:chest
+	-> ec:physCellContainer
+
 
 shapeless=
 	ec:fluidCasing ec:cell1kPartFluid
