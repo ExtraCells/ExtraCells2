@@ -62,7 +62,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
     @Override
     public boolean canAccept(IAEFluidStack input) {
     	
-        if ((tank == null && externalSystem == null) || access == AccessRestriction.WRITE || access == AccessRestriction.NO_ACCESS)
+    	if ((tank == null && externalSystem == null) || access == AccessRestriction.WRITE || access == AccessRestriction.NO_ACCESS || input == null)
             return false;
         if(externalSystem != null){
         	IStorageMonitorable monitor = externalSystem.getMonitorable(node.getSide().getOpposite(), new MachineSource(node));
@@ -114,7 +114,12 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
         if (tank == null || input == null || !canAccept(input))
             return input;
         FluidStack toFill = input.getFluidStack();
-        int filled = tank.fill(node.getSide().getOpposite(), toFill.copy(), mode == Actionable.MODULATE);
+        int filled = 0;
+        int filled2 = 0;
+        do {
+			filled2 = tank.fill(node.getSide().getOpposite(), new FluidStack(toFill.fluidID, toFill.amount - filled), mode == Actionable.MODULATE);
+			filled = filled + filled2;
+		} while (filled2 != 0 && filled != toFill.amount);
         if (filled == toFill.amount)
             return null;
         return FluidUtil.createAEFluidStack(toFill.fluidID, toFill.amount - filled);
@@ -134,18 +139,22 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
     	}
     	if (tank == null || request == null || access == AccessRestriction.WRITE || access == AccessRestriction.NO_ACCESS)
             return null;
-        FluidStack toDrain = request.getFluidStack();
-        FluidStack drained = tank.drain(node.getSide().getOpposite(), toDrain.copy(), mode == Actionable.MODULATE);
-
-        if (drained != null) {
-            int amount = drained.amount;
-            if (amount == toDrain.amount)
-                return request;
-            return FluidUtil.createAEFluidStack(toDrain.fluidID, amount);
-        } else {
-            return null;
-        }
-
+    	FluidStack toDrain = request.getFluidStack();
+        int drained = 0;
+        int drained2 = 0;
+        do {
+        	FluidStack drain = tank.drain(node.getSide().getOpposite(), new FluidStack(toDrain.fluidID, toDrain.amount - drained), mode == Actionable.MODULATE);
+        	if(drain == null)
+        		drained2 = 0;
+        	else
+        		drained2 = drain.amount;
+        	drained = drained + drained2;
+		} while (toDrain.amount != drained && drained2 != 0);
+        if(drained == 0)
+        	return null;
+        if (drained == toDrain.amount)
+        	return request;
+        return FluidUtil.createAEFluidStack(toDrain.fluidID, drained);
     }
 
     @Override
@@ -214,7 +223,11 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
     }
 
     public void setPrioritizedFluids(Fluid[] _fluids) {
-        prioritizedFluids = Arrays.asList(_fluids);
+    	prioritizedFluids.clear();
+    	for(Fluid fluid : _fluids){
+    		if(fluid != null)
+    			prioritizedFluids.add(fluid);
+    	}
     }
 
 	@Override
