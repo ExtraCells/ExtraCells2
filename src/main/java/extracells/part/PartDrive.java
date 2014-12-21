@@ -80,7 +80,10 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 if (cellStati[j + i * 3] > 0) {
-                    rh.setBounds(i * 9, 12 - j * 3, 14, 8 + i * 8, 10 - j * 3, 16);
+                	if((getSide() == ForgeDirection.EAST || getSide() == ForgeDirection.WEST) ? i == 1 : i == 0)
+                		rh.setBounds(8, 12 - j * 3, 14, 13, 10 - j * 3, 16);
+                	else
+                		rh.setBounds(3, 12 - j * 3, 14, 8, 10 - j * 3, 16);
                     rh.renderFace(x, y, z, front[1], ForgeDirection.SOUTH, renderer);
                 }
             }
@@ -88,7 +91,10 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                rh.setBounds(i * 9, 12 - j * 3, 14, 8 + i * 8, 10 - j * 3, 16);
+            	if((getSide() == ForgeDirection.EAST || getSide() == ForgeDirection.WEST) ? i == 1 : i == 0)
+            		rh.setBounds(8, 12 - j * 3, 14, 13, 10 - j * 3, 16);
+            	else
+            		rh.setBounds(3, 12 - j * 3, 14, 8, 10 - j * 3, 16);
                 ts.setColorOpaque_I(getColorByStatus(cellStati[j + i * 3]));
                 ts.setBrightness(13 << 20 | 13 << 4);
                 rh.renderFace(x, y, z, front[2], ForgeDirection.SOUTH, renderer);
