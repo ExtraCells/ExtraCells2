@@ -30,6 +30,8 @@ public class ItemBlockECBase extends ItemBlock {
 		switch(stack.getItemDamage()){
 			case 0:
 				return "extracells.block.fluidinterface";
+			case 1:
+				return "extracells.block.fluidfiller";
 			default:
 				return super.getUnlocalizedName(stack);
 		}
@@ -54,6 +56,7 @@ public class ItemBlockECBase extends ItemBlock {
     public void getSubItems(Item item, CreativeTabs tab, List list)
     {
         list.add(new ItemStack(item));
+        list.add(new ItemStack(item, 1, 1));
     }
     
     @Override

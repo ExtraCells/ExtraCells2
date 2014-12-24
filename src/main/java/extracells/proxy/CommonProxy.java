@@ -9,6 +9,7 @@ import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.TileEntityCertusTank;
 import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.tileentity.TileEntityFluidFiller;
 import extracells.tileentity.TileEntityFluidInterface;
 import extracells.tileentity.TileEntityWalrus;
 
@@ -22,6 +23,7 @@ public class CommonProxy {
         api.registries().movable().whiteListTileEntity(TileEntityWalrus.class);
         api.registries().movable().whiteListTileEntity(TileEntityFluidCrafter.class);
         api.registries().movable().whiteListTileEntity(TileEntityFluidInterface.class);
+        api.registries().movable().whiteListTileEntity(TileEntityFluidFiller.class);
     }
 
     public void addRecipes(File configFolder) {
@@ -40,6 +42,7 @@ public class CommonProxy {
         GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
         GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
         GameRegistry.registerTileEntity(TileEntityFluidInterface.class, "tileEntityFluidInterface");
+        GameRegistry.registerTileEntity(TileEntityFluidFiller.class, "tileEntityFluidFiller");
     }
 
     public void registerRenderers() {

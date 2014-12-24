@@ -10,7 +10,9 @@ import appeng.api.networking.IGridNode;
 import extracells.Extracells;
 import extracells.api.IECTileEntity;
 import extracells.network.GuiHandler;
+import extracells.tileentity.IListenerTile;
 import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.tileentity.TileEntityFluidFiller;
 import extracells.tileentity.TileEntityFluidInterface;
 import extracells.util.PermissionUtil;
 import net.minecraft.block.BlockContainer;
@@ -34,13 +36,15 @@ public class ECBaseBlock extends BlockContainer {
         setResistance(10.0F);
 	}
 	
-	private IIcon[] icons = new IIcon[1];
+	private IIcon[] icons = new IIcon[2];
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		switch(meta){
 			case 0:
 				return new TileEntityFluidInterface();
+			case 1:
+				return new TileEntityFluidFiller();
 			default:
 				return null;
 		}
@@ -53,6 +57,7 @@ public class ECBaseBlock extends BlockContainer {
 			return;
 		switch(world.getBlockMetadata(x, y, z)){
 			case 0:
+			case 1:
 				TileEntity tile = world.getTileEntity(x, y, z);
 				if(tile != null){
 					if(tile instanceof IECTileEntity){
@@ -63,6 +68,8 @@ public class ECBaseBlock extends BlockContainer {
 						}
 						node.updateState();
 					}
+					if(tile instanceof IListenerTile)
+						((IListenerTile) tile).registerListener();
 				}
 				return;
 			default:
@@ -76,6 +83,7 @@ public class ECBaseBlock extends BlockContainer {
 			return;
 		switch(meta){
 			case 0:
+			case 1:
 				TileEntity tile  = world.getTileEntity(x, y, z);
 				if(tile != null){
 					if(tile instanceof IECTileEntity){
@@ -84,6 +92,8 @@ public class ECBaseBlock extends BlockContainer {
 							node.destroy();
 						}
 					}
+					if(tile instanceof IListenerTile)
+						((IListenerTile) tile).removeListener();
 				}
 				return;
 			default:
@@ -99,15 +109,16 @@ public class ECBaseBlock extends BlockContainer {
 			return false;
 		switch(world.getBlockMetadata(x, y, z)){
 			case 0:
+			case 1:
 				TileEntity tile = world.getTileEntity(x, y, z);
-				if(tile instanceof TileEntityFluidInterface)
-					if(!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, ((TileEntityFluidInterface) tile).getGridNode(ForgeDirection.UNKNOWN)))
+				if(tile instanceof IECTileEntity)
+					if(!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, ((IECTileEntity) tile).getGridNode(ForgeDirection.UNKNOWN)))
 						return false;
 				ItemStack current = player.getCurrentEquippedItem();
 				if (player.isSneaking() && current != null) {
 		        	try{
 		        		if(current.getItem() instanceof IToolWrench && ((IToolWrench)current.getItem()).canWrench(player, x, y, z)){
-		        			ItemStack block = new ItemStack(this);
+		        			ItemStack block = new ItemStack(this, 1, world.getBlockMetadata(y, y, z));
 		        			if(tile != null && tile instanceof TileEntityFluidInterface){
 		        				block.setTagCompound(((TileEntityFluidInterface)tile).writeFilter(new NBTTagCompound()));
 		        			}
@@ -120,7 +131,7 @@ public class ECBaseBlock extends BlockContainer {
 		        		//No IToolWrench
 		        	}
 		        	if(current.getItem() instanceof IAEWrench && ((IAEWrench)current.getItem()).canWrench(current, player, x, y, z)){
-		        		ItemStack block = new ItemStack(this);
+		        		ItemStack block = new ItemStack(this, 1, world.getBlockMetadata(y, y, z));;
 		    			if(tile != null && tile instanceof TileEntityFluidInterface){
 		    				block.setTagCompound(((TileEntityFluidInterface)tile).writeFilter(new NBTTagCompound()));
 		    			}
@@ -142,6 +153,7 @@ public class ECBaseBlock extends BlockContainer {
     public void registerBlockIcons(IIconRegister register)
     {
     	icons[0] = register.registerIcon("extracells:fluid.interface");
+    	icons[1] = register.registerIcon("extracells:fluid.filler");
     }
 	
 	@Override
@@ -152,5 +164,8 @@ public class ECBaseBlock extends BlockContainer {
 		}
         return null;
 	}
-
+	
+	public int damageDropped(int p_149692_1_){
+        return p_149692_1_;
+    }
 }

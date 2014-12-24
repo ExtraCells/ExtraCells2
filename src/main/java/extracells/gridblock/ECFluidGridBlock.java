@@ -10,6 +10,8 @@ import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
 import extracells.part.PartECBase;
 import extracells.registries.BlockEnum;
+import extracells.tileentity.IListenerTile;
+import extracells.tileentity.TileEntityFluidFiller;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -56,8 +58,16 @@ public class ECFluidGridBlock implements IGridBlock {
 
     @Override
     public final void setNetworkStatus(IGrid _grid, int _usedChannels) {
-        grid = _grid;
-        usedChannels = _usedChannels;
+    	if(grid != null && host instanceof IListenerTile && grid != _grid){
+    		((IListenerTile)host).updateGrid(grid, _grid);
+    		grid = _grid;
+    		usedChannels = _usedChannels;
+    		if(host instanceof TileEntityFluidFiller && grid.getCache(IStorageGrid.class) != null)
+    			((TileEntityFluidFiller) host).postChange(((IStorageGrid)grid.getCache(IStorageGrid.class)).getFluidInventory(), null, null);
+    	}else{
+    		grid = _grid;
+    		usedChannels = _usedChannels;
+    	}
     }
 
     @Override
@@ -76,7 +86,9 @@ public class ECFluidGridBlock implements IGridBlock {
 
     @Override
     public ItemStack getMachineRepresentation() {
-        return new ItemStack(BlockEnum.FLUIDCRAFTER.getBlock());
+    	DimensionalCoord loc = getLocation();
+    	if(loc == null)
+    		return null;
+        return new ItemStack(loc.getWorld().getBlock(loc.x, loc.y, loc.z), 1, loc.getWorld().getBlockMetadata(loc.x, loc.y, loc.z));
     }
-
 }
