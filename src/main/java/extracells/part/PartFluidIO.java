@@ -184,14 +184,6 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
     public void onNeighborChanged() {
         super.onNeighborChanged();
         boolean redstonePowered = isRedstonePowered();
-        if (redstonePowered) {
-            if (!lastRedstone) {
-                doWork(125 + speedState + speedState * 125, 1);
-            } else {
-                lastRedstone = true;
-                doWork(125 + speedState + speedState * 125, 1);
-            }
-        }
         lastRedstone = redstonePowered;
     }
 
