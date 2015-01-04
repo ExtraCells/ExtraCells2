@@ -2,6 +2,7 @@ package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.Extracells;
+import extracells.api.ECApi;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.fluid.AbstractFluidWidget;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -49,7 +51,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
     public void updateFluids() {
         fluidWidgets = new ArrayList<AbstractFluidWidget>();
         for (IAEFluidStack fluidStack : containerTerminalFluid.getFluidStackList()) {
-        	if(fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(searchbar.getText().toLowerCase())){
+        	if(fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(searchbar.getText().toLowerCase()) && ECApi.instance().canFluidSeeInTerminal(fluidStack.getFluid())){
         		fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
         	}
         }

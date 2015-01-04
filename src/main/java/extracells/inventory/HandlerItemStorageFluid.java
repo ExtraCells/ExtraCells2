@@ -12,6 +12,7 @@ import appeng.api.storage.data.IItemList;
 
 import com.google.common.collect.Lists;
 
+import extracells.api.ECApi;
 import extracells.api.IFluidStorageCell;
 import extracells.api.IHandlerFluidStorage;
 import extracells.container.ContainerFluidStorage;
@@ -68,6 +69,8 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
     public boolean canAccept(IAEFluidStack input) {
         if (input == null)
             return false;
+        if(!ECApi.instance().canStoreFluid(input.getFluid()))
+        	return false;
         for (FluidStack fluidStack : fluidStacks) {
             if (fluidStack == null || fluidStack.getFluid().getID() == input.getFluid().getID())
                 return preformattedOrContainsFluid(input.getFluid());
