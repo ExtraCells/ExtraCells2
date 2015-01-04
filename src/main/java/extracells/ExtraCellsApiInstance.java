@@ -1,5 +1,8 @@
 package extracells;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import appeng.api.AEApi;
 import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
@@ -31,10 +34,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 
 public class ExtraCellsApiInstance implements ExtraCellsApi {
 
     public static final ExtraCellsApi instance = new ExtraCellsApiInstance();
+    
+    private final List<Class<? extends Fluid>> blacklistShowClass = new ArrayList<Class<? extends Fluid>>();
+	private final List<Fluid> blacklistShowFluid = new ArrayList<Fluid>();
+	private final List<Class<? extends Fluid>> blacklistStorageClass = new ArrayList<Class<? extends Fluid>>();
+	private final List<Fluid> blacklistStorageFluid = new ArrayList<Fluid>();
 
     /**
      * @deprecated Incorrect spelling
@@ -157,4 +166,57 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		return PartDefinition.instance;
 	}
 
+	@Override
+	public void addFluidToShowBlacklist(Class<? extends Fluid> clazz) {
+		if(clazz == null || clazz == Fluid.class)
+			return;
+		blacklistShowClass.add(clazz);
+	}
+
+	@Override
+	public void addFluidToShowBlacklist(Fluid fluid) {
+		if(fluid == null)
+			return;
+		blacklistShowFluid.add(fluid);
+	}
+
+	@Override
+	public void addFluidToStorageBlacklist(Class<? extends Fluid> clazz) {
+		if(clazz == null || clazz == Fluid.class)
+			return;
+		blacklistStorageClass.add(clazz);
+	}
+
+	@Override
+	public void addFluidToStorageBlacklist(Fluid fluid) {
+		if(fluid == null)
+			return;
+		blacklistStorageFluid.add(fluid);
+	}
+
+	@Override
+	public boolean canFluidSeeInTerminal(Fluid fluid) {
+		if(fluid == null)
+			return false;
+		if(blacklistShowFluid.contains(fluid))
+			return false;
+		for(Class<? extends Fluid> clazz : blacklistShowClass){
+			if(clazz.isInstance(fluid))
+				return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean canStoreFluid(Fluid fluid) {
+		if(fluid == null)
+			return false;
+		if(blacklistStorageFluid.contains(fluid))
+			return false;
+		for(Class<? extends Fluid> clazz : blacklistStorageClass){
+			if(clazz.isInstance(fluid))
+				return false;
+		}
+		return true;
+	}
 }

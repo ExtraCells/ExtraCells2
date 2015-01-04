@@ -6,6 +6,7 @@ import extracells.api.definitions.IPartDefinition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 
 public interface ExtraCellsApi {
 
@@ -41,4 +42,16 @@ public interface ExtraCellsApi {
 	public IBlockDefinition blocks();
 	
 	public IPartDefinition parts();
+	
+	public void addFluidToShowBlacklist(Class<? extends Fluid> clazz);
+	
+	public void addFluidToShowBlacklist(Fluid fluid);
+	
+	public void addFluidToStorageBlacklist(Class<? extends Fluid> clazz);
+	
+	public void addFluidToStorageBlacklist(Fluid fluid);
+	
+	public boolean canFluidSeeInTerminal(Fluid fluid);
+	
+	public boolean canStoreFluid(Fluid fluid);
 }
