@@ -54,13 +54,19 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	private Long finishCraftingTime = 0L;
 	private ItemStack returnStack = null;
 	
+	boolean mustLoad = false;
+	
 	private boolean update = false;
 	
 	private final TileEntityFluidCrafter instance;
 	
 	public TileEntityFluidCrafter(){
 		super();
-		gridBlock = new ECFluidGridBlock(this);
+		try{
+			gridBlock = new ECFluidGridBlock(this);
+		}catch(Throwable e){
+			mustLoad = true;
+		}
 		inventory = new FluidCrafterInventory();
 		instance = this;
 	}
@@ -195,6 +201,14 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
+		if(mustLoad){
+			mustLoad = false;
+			try{
+				gridBlock = new ECFluidGridBlock(this);
+			}catch(Throwable e){
+				mustLoad = true;
+			}
+		}
 		inventory.readFromNBT(tagCompound);
 		IGridNode node = getGridNode();
 		if(tagCompound.hasKey("nodes") && node != null){
