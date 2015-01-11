@@ -310,6 +310,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	public void readFromNBT(NBTTagCompound tag){
 		super.readFromNBT(tag);
 		if(mustLoad){
+			mustLoad = false;
 			try{
 				gridBlock = new ECFluidGridBlock(this);
 			}catch(Throwable e){
