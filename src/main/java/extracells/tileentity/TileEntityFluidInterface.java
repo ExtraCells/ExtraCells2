@@ -52,18 +52,11 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	private boolean wasIdle = false;
 	private int tickCount = 0;
 	
-	boolean mustLoad = false;
-	
 	private boolean isFirstGetGridNode = true;
 	
 	public TileEntityFluidInterface(){
 		super();
-		try{
-			gridBlock = new ECFluidGridBlock(this);
-		}catch(Throwable e){
-			mustLoad = true;
-		}
-		
+		gridBlock = new ECFluidGridBlock(this);
 		for (int i = 0; i < tanks.length; i++)
 		{
 			tanks[i] = new FluidTank(10000)
@@ -283,7 +276,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	
 	@Override
 	public void updateEntity(){
-		if(getWorldObj() == null || getWorldObj().isRemote)
+		if(getWorldObj() == null || getWorldObj().provider == null || getWorldObj().isRemote)
 			return;
 		if(doNextUpdate)
 			forceUpdate();
@@ -309,14 +302,6 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	@Override
 	public void readFromNBT(NBTTagCompound tag){
 		super.readFromNBT(tag);
-		if(mustLoad){
-			mustLoad = false;
-			try{
-				gridBlock = new ECFluidGridBlock(this);
-			}catch(Throwable e){
-				mustLoad = true;
-			}
-		}
 		for (int i = 0; i < tanks.length; i++)
 		{
 			if(tag.hasKey("tank#"+i))
