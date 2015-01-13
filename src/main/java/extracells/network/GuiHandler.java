@@ -133,12 +133,6 @@ public class GuiHandler implements IGuiHandler {
         		return new GuiFluidFiller(player, ((TileEntityFluidFiller)tileEntity));
         	return null;
         }
-        if(world != null && world.getBlock(x, y, z) == BlockEnum.ECBASEBLOCK.getBlock()){
-        	TileEntity tileEntity = world.getTileEntity(x, y, z);
-        	if(tileEntity == null || !(tileEntity instanceof TileEntityFluidFiller))
-        		return null;
-        	return new GuiFluidFiller(player, ((TileEntityFluidFiller)tileEntity));
-        }
         if (world != null && side != ForgeDirection.UNKNOWN)
             return getPartGui(side, player, world, x, y, z);
         return getGui(ID - 6, player);
