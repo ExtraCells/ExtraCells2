@@ -59,7 +59,8 @@ sourceSets {
 }
 
 dependencies {
-    compile 'com.mod-buildcraft:buildcraft:6.2.2:api'
+	compile "appeng:appliedenergistics2:rv2-beta-7:dev"
+    compile 'com.mod-buildcraft:buildcraft:6.3.1:api'
 }
 
 processResources {

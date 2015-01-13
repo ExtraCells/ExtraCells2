@@ -53,6 +53,7 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	
 	private Long finishCraftingTime = 0L;
 	private ItemStack returnStack = null;
+	private ItemStack[] optionalReturnStack = new ItemStack[0];
 	
 	private boolean update = false;
 	
@@ -144,7 +145,16 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 			}
 			finishCraftingTime = System.currentTimeMillis() + 1000;
 			
-			returnStack = patter.getCondensedOutputs()[0].getItemStack();
+			returnStack = patter.getOutput(table, getWorldObj());
+			
+			optionalReturnStack = new ItemStack[9];
+			for(int i = 0; i < 9; i++){
+				ItemStack s = table.getStackInSlot(i);
+				if(s != null && s.getItem() != null){
+					optionalReturnStack[i] = s.getItem().getContainerItem(s.copy());
+				}
+			}
+			
 			isBusy = true;
 		}
 		return true;
@@ -223,6 +233,12 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 			if(storage == null)
 				return;
 			storage.getItemInventory().injectItems(AEApi.instance().storage().createItemStack(returnStack), Actionable.MODULATE, new MachineSource(this));
+			for(ItemStack s : optionalReturnStack){
+				if(s == null)
+					continue;
+				storage.getItemInventory().injectItems(AEApi.instance().storage().createItemStack(s), Actionable.MODULATE, new MachineSource(this));
+			}
+			optionalReturnStack = new ItemStack[0];
 			isBusy = false;
 			returnStack = null;
 		}

@@ -36,7 +36,7 @@ public class CraftingPattern implements IFluidCraftingPatternDetails {
 
 	@Override
 	public boolean isCraftable() {
-		return false;
+		return pattern.isCraftable();
 	}
 
 	@Override
@@ -66,7 +66,23 @@ public class CraftingPattern implements IFluidCraftingPatternDetails {
 
 	@Override
 	public ItemStack getOutput(InventoryCrafting craftingInv, World world) {
-		return pattern.getOutput(craftingInv, world);
+		IAEItemStack[] input = pattern.getInputs();
+		for(int i = 0; i < input.length; i++){
+			IAEItemStack stack = input[i];
+			if(stack != null && FluidContainerRegistry.isFilledContainer(stack.getItemStack())){
+				try{
+				craftingInv.setInventorySlotContents(i, input[i].getItemStack());
+				}catch(Throwable e){}
+			}
+		}
+		ItemStack returnStack = pattern.getOutput(craftingInv, world);
+		for(int i = 0; i < input.length; i++){
+			IAEItemStack stack = input[i];
+			if(stack != null && FluidContainerRegistry.isFilledContainer(stack.getItemStack())){
+				craftingInv.setInventorySlotContents(i, null);
+			}
+		}
+		return returnStack;
 	}
 
 	@Override
