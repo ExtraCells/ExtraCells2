@@ -59,7 +59,27 @@ sourceSets {
 }
 
 dependencies {
-	compile "appeng:appliedenergistics2:rv2-beta-7:dev"
+	compile ("appeng:appliedenergistics2:rv2-beta-7:dev"){
+		exclude group: "net.industrial-craft", module: "industrialcraft-2"
+        exclude group: "mcp.mobius.waila", module: "Waila"
+        exclude group: "codechicken", module: "ForgeMultipart"
+		exclude group: "codechicken", module: "CodeChickenCore"
+		exclude group: "codechicken", module: "NotEnoughItems"
+		exclude group: "api", module: "rf"
+		exclude group: "api", module: "mfr"
+		exclude group: "api", module: "railcraft"
+		exclude group: "api", module: "mekansim"
+		exclude group: "api", module: "betterstorage"
+		exclude group: "api", module: "ic2"
+		exclude group: "mcp.mobius.waila", module: "Waila"
+		exclude group: "api", module: "immibis"
+		exclude group: "api", module: "coloredlightscore"
+		exclude group: "dev", module: "buildcraft"
+		exclude group: "api", module: "craftguide"
+		exclude group: "api", module: "rblocks"
+		exclude group: "api", module: "invtweaks"
+		exclude group: "api", module: "rotarycraft"
+	}
     compile 'com.mod-buildcraft:buildcraft:6.3.1:api'
 }
 
