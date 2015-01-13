@@ -316,12 +316,14 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 		}
 	}
 	
+	@Override
 	public Packet getDescriptionPacket() {
         NBTTagCompound nbtTag = new NBTTagCompound();
         writeToNBT(nbtTag);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
     }
 	
+	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
 		readFromNBT(pkt.func_148857_g());
     }

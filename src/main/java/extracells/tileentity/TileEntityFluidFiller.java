@@ -10,6 +10,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -26,6 +29,7 @@ import appeng.api.networking.crafting.ICraftingProviderHelper;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
@@ -45,7 +49,7 @@ public class TileEntityFluidFiller extends TileEntity implements IActionHost, IC
 	private ECFluidGridBlock gridBlock;
 	private IGridNode node = null;
 	List<Fluid> fluids = new ArrayList<Fluid>();
-	ItemStack containerItem = new ItemStack(Items.bucket);
+	public ItemStack containerItem = new ItemStack(Items.bucket);
 	ItemStack returnStack = null;
 	int ticksToFinish = 0;
 	
@@ -199,6 +203,8 @@ public class TileEntityFluidFiller extends TileEntity implements IActionHost, IC
 	
 	@Override
 	public void updateEntity(){
+		if(getWorldObj() == null || getWorldObj().provider == null)
+			return;
 		if(ticksToFinish > 0)
 			ticksToFinish = ticksToFinish -1;
 		if(ticksToFinish <= 0 && returnStack != null){
@@ -292,5 +298,30 @@ public class TileEntityFluidFiller extends TileEntity implements IActionHost, IC
 		IStorageGrid storage = getStorageGrid();
 		if(storage != null)
 			postChange(storage.getFluidInventory(), null, null);
+	}
+	
+	@MENetworkEventSubscribe
+	public void powerUpdate(MENetworkPowerStatusChange event){
+		IStorageGrid storage = getStorageGrid();
+		if(storage != null)
+			postChange(storage.getFluidInventory(), null, null);
+	}
+	
+	@Override
+	public Packet getDescriptionPacket() {
+        NBTTagCompound nbtTag = new NBTTagCompound();
+        writeToNBT(nbtTag);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+    }
+	
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
+		readFromNBT(pkt.func_148857_g());
+    }
+	
+	public void postUpdateEvent(){
+		if(getGridNode(ForgeDirection.UNKNOWN) != null && getGridNode(ForgeDirection.UNKNOWN).getGrid() !=  null){
+        	getGridNode(ForgeDirection.UNKNOWN).getGrid().postEvent(new MENetworkCraftingPatternChange(this, getGridNode(ForgeDirection.UNKNOWN)));
+        }
 	}
 }

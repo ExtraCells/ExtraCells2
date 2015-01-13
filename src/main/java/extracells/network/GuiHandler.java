@@ -9,14 +9,17 @@ import extracells.api.IFluidInterface;
 import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
 import extracells.container.ContainerFluidCrafter;
+import extracells.container.ContainerFluidFiller;
 import extracells.container.ContainerFluidInterface;
 import extracells.container.ContainerFluidStorage;
 import extracells.gui.GuiFluidCrafter;
+import extracells.gui.GuiFluidFiller;
 import extracells.gui.GuiFluidInterface;
 import extracells.gui.GuiFluidStorage;
 import extracells.part.PartECBase;
 import extracells.registries.BlockEnum;
 import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.tileentity.TileEntityFluidFiller;
 import extracells.tileentity.TileEntityFluidInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -98,9 +101,13 @@ public class GuiHandler implements IGuiHandler {
         }
         if(world != null && world.getBlock(x, y, z) == BlockEnum.ECBASEBLOCK.getBlock()){
         	TileEntity tileEntity = world.getTileEntity(x, y, z);
-        	if(tileEntity == null || !(tileEntity instanceof TileEntityFluidInterface))
+        	if(tileEntity == null)
         		return null;
-        	return new ContainerFluidInterface(player, ((IFluidInterface)tileEntity));
+        	if(tileEntity instanceof TileEntityFluidInterface)
+        		return new ContainerFluidInterface(player, ((IFluidInterface)tileEntity));
+        	else if(tileEntity instanceof TileEntityFluidFiller)
+        		return new ContainerFluidFiller(player.inventory, ((TileEntityFluidFiller)tileEntity));
+        	return null;
         }
         if (world != null && side != ForgeDirection.UNKNOWN)
             return getPartContainer(side, player, world, x, y, z);
@@ -118,9 +125,19 @@ public class GuiHandler implements IGuiHandler {
         }
         if(world != null && world.getBlock(x, y, z) == BlockEnum.ECBASEBLOCK.getBlock()){
         	TileEntity tileEntity = world.getTileEntity(x, y, z);
-        	if(tileEntity == null || !(tileEntity instanceof TileEntityFluidInterface))
+        	if(tileEntity == null)
         		return null;
-        	return new GuiFluidInterface(player, ((IFluidInterface)tileEntity));
+        	if(tileEntity instanceof TileEntityFluidInterface)
+        		return new GuiFluidInterface(player, ((IFluidInterface)tileEntity));
+        	else if(tileEntity instanceof TileEntityFluidFiller)
+        		return new GuiFluidFiller(player, ((TileEntityFluidFiller)tileEntity));
+        	return null;
+        }
+        if(world != null && world.getBlock(x, y, z) == BlockEnum.ECBASEBLOCK.getBlock()){
+        	TileEntity tileEntity = world.getTileEntity(x, y, z);
+        	if(tileEntity == null || !(tileEntity instanceof TileEntityFluidFiller))
+        		return null;
+        	return new GuiFluidFiller(player, ((TileEntityFluidFiller)tileEntity));
         }
         if (world != null && side != ForgeDirection.UNKNOWN)
             return getPartGui(side, player, world, x, y, z);
