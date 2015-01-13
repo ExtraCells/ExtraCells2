@@ -60,10 +60,10 @@ sourceSets {
 
 dependencies {
 	compile ("appeng:appliedenergistics2:rv2-beta-7:dev"){
-		exclude group: "net.industrial-craft", module: "industrialcraft-2"
         exclude group: "mcp.mobius.waila", module: "Waila"
         exclude group: "codechicken", module: "ForgeMultipart"
 		exclude group: "codechicken", module: "CodeChickenCore"
+		exclude group: "codechicken", module: "CodeChickenLib"
 		exclude group: "codechicken", module: "NotEnoughItems"
 		exclude group: "api", module: "rf"
 		exclude group: "api", module: "mfr"
