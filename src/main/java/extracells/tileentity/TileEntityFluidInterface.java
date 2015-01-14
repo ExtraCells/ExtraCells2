@@ -291,6 +291,8 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 			tag.setTag("tank#"+i, tanks[i].writeToNBT(new NBTTagCompound()));
 			tag.setInteger("filter#"+i, fluidFilter[i]);
 		}
+		if(!hasWorldObj())
+			return;
 		IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
 		if(node != null){
 			NBTTagCompound nodeTag = new NBTTagCompound();
@@ -309,10 +311,12 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 			if(tag.hasKey("filter#"+i))
 				fluidFilter[i] = tag.getInteger("filter#"+i);
 		}
-		IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
-		if(tag.hasKey("nodes") && node != null){
-			node.loadFromNBT("node0", tag.getCompoundTag("nodes"));
-			node.updateState();
+		if(hasWorldObj()){
+			IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
+			if(tag.hasKey("nodes") && node != null){
+				node.loadFromNBT("node0", tag.getCompoundTag("nodes"));
+				node.updateState();
+			}
 		}
 	}
 	

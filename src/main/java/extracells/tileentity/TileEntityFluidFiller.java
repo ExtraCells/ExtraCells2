@@ -234,6 +234,8 @@ public class TileEntityFluidFiller extends TileEntity implements IActionHost, IC
 		else
 			tagCompound.setBoolean("isReturnEmpty", true);
 		tagCompound.setInteger("time", ticksToFinish);
+		if(!hasWorldObj())
+			return;
 		IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
 		if(node != null){
 			NBTTagCompound nodeTag = new NBTTagCompound();
@@ -255,10 +257,12 @@ public class TileEntityFluidFiller extends TileEntity implements IActionHost, IC
 			returnStack = null;
 		if(tagCompound.hasKey("time"))
 			ticksToFinish = tagCompound.getInteger("time");
-		IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
-		if(tagCompound.hasKey("nodes") && node != null){
-			node.loadFromNBT("node0", tagCompound.getCompoundTag("nodes"));
-			node.updateState();
+		if(hasWorldObj()){
+			IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
+			if(tagCompound.hasKey("nodes") && node != null){
+				node.loadFromNBT("node0", tagCompound.getCompoundTag("nodes"));
+				node.updateState();
+			}
 		}
 	}
 

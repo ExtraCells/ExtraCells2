@@ -194,6 +194,8 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		inventory.writeToNBT(tagCompound);
+		if(!hasWorldObj())
+			return;
 		IGridNode node = getGridNode();
 		if(node != null){
 			NBTTagCompound nodeTag = new NBTTagCompound();
@@ -206,10 +208,12 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 		inventory.readFromNBT(tagCompound);
-		IGridNode node = getGridNode();
-		if(tagCompound.hasKey("nodes") && node != null){
-			node.loadFromNBT("node0", tagCompound.getCompoundTag("nodes"));
-			node.updateState();
+		if(hasWorldObj()){
+			IGridNode node = getGridNode();
+			if(tagCompound.hasKey("nodes") && node != null){
+				node.loadFromNBT("node0", tagCompound.getCompoundTag("nodes"));
+				node.updateState();
+			}
 		}
 	}
 	
