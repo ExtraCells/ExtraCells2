@@ -44,6 +44,7 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 	private IGridNode node = null;
 	private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
 	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
+	private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
 	private boolean isBusy = false;
 	private ICraftingWatcher watcher = null;
 	
@@ -247,8 +248,22 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 			returnStack = null;
 		}
 		if(!isBusy && getWorldObj() != null && !getWorldObj().isRemote){
+			for(IAEItemStack stack : removeList){
+				requestedItems.remove(stack);
+			}
+			removeList.clear();
 			if(!requestedItems.isEmpty()){
 				for(IAEItemStack s : requestedItems){
+					IGrid grid = node.getGrid();
+					if(grid == null)
+						break;
+					ICraftingGrid crafting = grid.getCache(ICraftingGrid.class);
+					if(crafting == null)
+						break;
+					if(!crafting.isRequesting(s)){
+						removeList.add(s);
+						continue;
+					}
 					for(ICraftingPatternDetails details : patternHandlers){
 						if(details.getCondensedOutputs()[0].equals(s)){
 							CraftingPattern patter = (CraftingPattern) details;
@@ -262,9 +277,6 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost, I
 									fluids.put(stack.getFluid(), stack.getStackSize());
 								}
 							}
-							IGrid grid = node.getGrid();
-							if(grid == null)
-								break;
 							IStorageGrid storage = grid.getCache(IStorageGrid.class);
 							if(storage == null)
 								break;

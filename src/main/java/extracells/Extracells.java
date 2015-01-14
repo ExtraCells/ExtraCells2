@@ -22,7 +22,7 @@ import extracells.util.NameHandler;
 import extracells.util.ExtraCellsEventHandler;
 import extracells.wireless.AEWirelessTermHandler;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.init.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
