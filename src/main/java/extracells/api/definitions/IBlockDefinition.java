@@ -11,4 +11,6 @@ public interface IBlockDefinition {
 	AEItemDefinition walrus();
 	
 	AEItemDefinition fluidCrafter();
+	
+	AEItemDefinition fluidFiller();
 }

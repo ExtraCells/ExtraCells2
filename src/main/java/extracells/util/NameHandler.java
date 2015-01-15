@@ -112,6 +112,8 @@ public class NameHandler implements ISubItemResolver {
         	return new ResolverResult(BlockEnum.WALRUS.getInternalName(), 0);
 		if(fullName.equals("interface"))
         	return new ResolverResult(BlockEnum.ECBASEBLOCK.getInternalName(), 0);
+		if(fullName.equals("fluidFiller"))
+			return new ResolverResult(BlockEnum.ECBASEBLOCK.getInternalName(), 1);
 
         return null;
     }

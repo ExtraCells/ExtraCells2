@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
@@ -21,7 +22,7 @@ public class GuiFluidFiller extends GuiContainer
 {
 	public static final int xSize = 176;
 	public static final int ySize = 166;
-	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/fluidcrafter.png");
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/fluidfiller.png");
 	private WidgetSlotFluidContainer fluidContainerSlot;
 	private EntityPlayer player;
 	public GuiFluidFiller(EntityPlayer player, TileEntityFluidFiller tileentity)
@@ -45,7 +46,7 @@ public class GuiFluidFiller extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j)
 	{
-		this.fontRendererObj.drawString(BlockEnum.FLUIDCRAFTER.getStatName(), 5, 5, 0x000000);
+		this.fontRendererObj.drawString(StatCollector.translateToLocal("extracells.block.fluidfiller.name").replace("ME ", ""), 5, 5, 0x000000);
 		fluidContainerSlot.drawWidget();
 	}
 	

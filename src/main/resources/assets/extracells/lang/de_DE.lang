@@ -53,6 +53,7 @@ extracells.part.battery.name=ME-Energiezellenhalterung
 extracells.block.certustank=Certus-Quarz-Tank
 extracells.block.walrus.name=Walross
 extracells.block.fluidcrafter.name=ME-Flüssigkeits-Fertigungskammer
+extracells.block.fluidfiller.name=ME-Flüssigkeitsfüller
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Menge
