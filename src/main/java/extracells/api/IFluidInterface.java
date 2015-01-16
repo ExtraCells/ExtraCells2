@@ -1,5 +1,6 @@
 package extracells.api;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,5 +15,7 @@ public interface IFluidInterface {
 	public IFluidTank getFluidTank(ForgeDirection side);
 	
 	public void setFluidTank(ForgeDirection side, FluidStack fluid);
+	
+	public IInventory getPatternInventory();
 	
 }

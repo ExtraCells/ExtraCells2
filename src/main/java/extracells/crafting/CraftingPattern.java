@@ -73,12 +73,18 @@ public class CraftingPattern implements IFluidCraftingPatternDetails {
 				try{
 				craftingInv.setInventorySlotContents(i, input[i].getItemStack());
 				}catch(Throwable e){}
+			}else if(stack != null && stack.getItem() instanceof IFluidContainerItem){
+				try{
+					craftingInv.setInventorySlotContents(i, input[i].getItemStack());
+					}catch(Throwable e){}
 			}
 		}
 		ItemStack returnStack = pattern.getOutput(craftingInv, world);
 		for(int i = 0; i < input.length; i++){
 			IAEItemStack stack = input[i];
 			if(stack != null && FluidContainerRegistry.isFilledContainer(stack.getItemStack())){
+				craftingInv.setInventorySlotContents(i, null);
+			}else if(stack != null && stack.getItem() instanceof IFluidContainerItem){
 				craftingInv.setInventorySlotContents(i, null);
 			}
 		}
@@ -120,20 +126,22 @@ public class CraftingPattern implements IFluidCraftingPatternDetails {
 			
 			if (currentRequirement != null)
 			{
+				ItemStack current = currentRequirement.getItemStack();
+				current.stackSize = 1;
 				FluidStack fluid = null;
-				if (FluidContainerRegistry.isFilledContainer(currentRequirement.getItemStack()))
+				if (FluidContainerRegistry.isFilledContainer(current))
 				{
-					fluid = FluidContainerRegistry.getFluidForFilledItem(currentRequirement.getItemStack());
+					fluid = FluidContainerRegistry.getFluidForFilledItem(current);
 				} else if (currentRequirement.getItem() instanceof IFluidContainerItem)
 				{
-					fluid = ((IFluidContainerItem) currentRequirement.getItem()).getFluid(currentRequirement.getItemStack());
+					fluid = ((IFluidContainerItem) currentRequirement.getItem()).getFluid(current);
 				}
 				if (fluid == null)
 				{
 					returnStack[i] = currentRequirement;
 				}else{
 					removed ++;
-					fluidStacks[i] = AEApi.instance().storage().createFluidStack(new FluidStack(FluidContainerRegistry.getFluidForFilledItem(currentRequirement.getItemStack()), (int) (FluidContainerRegistry.BUCKET_VOLUME * currentRequirement.getStackSize())));
+					fluidStacks[i] = AEApi.instance().storage().createFluidStack(new FluidStack(fluid.getFluid(), (int) (fluid.amount * currentRequirement.getStackSize())));
 				}
 			}
 			i++;

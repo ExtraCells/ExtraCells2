@@ -37,7 +37,7 @@ public class GuiFluidInterface extends GuiContainer
 	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface)
 	{
 		super(new ContainerFluidInterface(player, fluidInterface));
-		ySize = 210;
+		ySize = 230;
 		this.fluidInterface = fluidInterface;
 		this.player = player;
 		((ContainerFluidInterface) inventorySlots).gui = this;
@@ -79,7 +79,7 @@ public class GuiFluidInterface extends GuiContainer
 	{
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		this.fontRendererObj.drawString(Item.getItemFromBlock(BlockEnum.ECBASEBLOCK.getBlock()).getItemStackDisplayName(new ItemStack(BlockEnum.ECBASEBLOCK.getBlock(), 1, 0)).replace("ME ", ""), 8, 5, 0x000000);
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, 116, 0x000000);
+		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, 136, 0x000000);
 		for (WidgetFluidTank tank : tanks)
 		{
 			if(tank != null)

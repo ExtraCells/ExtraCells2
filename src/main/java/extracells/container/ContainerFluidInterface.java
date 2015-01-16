@@ -1,6 +1,7 @@
 package extracells.container;
 
 import extracells.api.IFluidInterface;
+import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.packet.part.PacketFluidInterface;
 import extracells.part.PartFluidInterface;
@@ -28,6 +29,9 @@ public class ContainerFluidInterface extends Container implements IContainerList
 	{
 		this.player = player;
 		this.fluidInterface = fluidInterface;
+		for (int j = 0; j < 9; j++){
+			addSlotToContainer(new SlotRespective(fluidInterface.getPatternInventory(), j, 8 + j * 18, 115));
+		}
 		bindPlayerInventory(player.inventory);
 		if(fluidInterface instanceof TileEntityFluidInterface){
 			((TileEntityFluidInterface) fluidInterface).registerListener(this);
@@ -47,13 +51,13 @@ public class ContainerFluidInterface extends Container implements IContainerList
 		{
 			for (int j = 0; j < 9; j++)
 			{
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 129));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 149));
 			}
 		}
 
 		for (int i = 0; i < 9; i++)
 		{
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 187));//173
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 207));//173
 		}
 	}
 

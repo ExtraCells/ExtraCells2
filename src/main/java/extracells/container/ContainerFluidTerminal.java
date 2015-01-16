@@ -14,6 +14,7 @@ import extracells.gui.GuiFluidTerminal;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
+import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -172,8 +173,8 @@ public class ContainerFluidTerminal extends Container implements IMEMonitorHandl
     		ItemStack stack = player.inventory.getItemStack();
     		if(stack == null){
     		}else{
-    			if(FluidContainerRegistry.isFilledContainer(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())){
-    			}else if(FluidContainerRegistry.isEmptyContainer(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())){
+    			if(FluidUtil.isEmpty(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())){
+    			}else if(FluidUtil.isFilled(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())){
     			}else{
     				ItemStack slotStack = ((Slot) inventorySlots.get(slotNumber)).getStack();
     				if(slotStack == null)

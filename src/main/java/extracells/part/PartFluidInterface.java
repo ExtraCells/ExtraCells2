@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -12,6 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.api.IFluidInterface;
 import extracells.container.ContainerFluidInterface;
 import extracells.container.IContainerListener;
+import extracells.crafting.CraftingPattern;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
@@ -23,9 +25,14 @@ import akka.dispatch.Filter;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.implementations.tiles.ITileStorageMonitorable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.networking.crafting.ICraftingProvider;
+import appeng.api.networking.crafting.ICraftingProviderHelper;
+import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
@@ -41,13 +48,21 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -57,9 +72,21 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
 
-public class PartFluidInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable, IStorageMonitorable, IGridTickable {
+public class PartFluidInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable, IStorageMonitorable, IGridTickable, ICraftingProvider {
 
 	List<IContainerListener> listeners = new ArrayList<IContainerListener>();
+	
+	private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
+	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
+	private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
+	public final FluidInterfaceInventory inventory = new FluidInterfaceInventory();
+	private boolean update = false;
+	
+	private List<IAEStack> export = new ArrayList<IAEStack>();
+	private List<IAEStack> removeFromExport = new ArrayList<IAEStack>();
+	private List<IAEStack> addToExport = new ArrayList<IAEStack>();
+	
+	private IAEItemStack toExport = null;
 	
 	private FluidTank tank = new FluidTank(10000)
 			{
@@ -293,6 +320,16 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 		if(storage == null)
 			return TickRateModulation.URGENT;
+		if(toExport != null){
+			storage.getItemInventory().injectItems(toExport, Actionable.MODULATE, new MachineSource(this));
+			toExport = null;
+		}
+		if(update){
+			update = false;
+			if(getGridNode() != null && getGridNode().getGrid() !=  null){
+            	getGridNode().getGrid().postEvent(new MENetworkCraftingPatternChange(this, getGridNode()));
+            }
+		}
 		if(tank.getFluid() != null && FluidRegistry.getFluid(fluidFilter) != tank.getFluid().getFluid()){
 			FluidStack s = tank.drain(20, false);
 			if(s != null){
@@ -346,6 +383,9 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
         NBTTagCompound tag = new NBTTagCompound();
         tag.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
         tag.setInteger("filter", fluidFilter);
+        NBTTagCompound inventory = new NBTTagCompound();
+    	this.inventory.writeToNBT(inventory);
+    	tag.setTag("inventory", inventory);
         ByteBufUtils.writeTag(data, tag);
     }
 
@@ -357,6 +397,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			tank.readFromNBT(tag.getCompoundTag("tank"));
 		if(tag.hasKey("filter"))
 			fluidFilter = tag.getInteger("filter");
+		if(tag.hasKey("inventory"))
+    		this.inventory.readFromNBT(tag.getCompoundTag("inventory"));
         return true;
     }
     
@@ -384,6 +426,9 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
     	super.writeToNBT(data);
     	data.setTag("tank", tank.writeToNBT(new NBTTagCompound()));
     	data.setInteger("filter", fluidFilter);
+    	NBTTagCompound inventory = new NBTTagCompound();
+    	this.inventory.writeToNBT(inventory);
+    	data.setTag("inventory", inventory);
     }
     
     @Override
@@ -393,6 +438,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
     		tank.readFromNBT(data.getCompoundTag("tank"));
     	if(data.hasKey("filter"))
     		fluidFilter = data.getInteger("filter");
+    	if(data.hasKey("inventory"))
+    		this.inventory.readFromNBT(data.getCompoundTag("inventory"));
     }
     
     public NBTTagCompound writeFilter(NBTTagCompound tag){
@@ -414,4 +461,319 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
     	}
     	return false;
     }
+	
+	@Override
+	public boolean pushPattern(ICraftingPatternDetails patternDetails,
+			InventoryCrafting table) {
+		if(isBusy())
+			return false;
+		if(patternDetails instanceof CraftingPattern){
+			CraftingPattern patter = (CraftingPattern) patternDetails;
+			HashMap<Fluid, Long> fluids = new HashMap<Fluid, Long>();
+			for(IAEFluidStack stack : patter.getCondensedFluidInputs()){
+				if(fluids.containsKey(stack.getFluid())){
+					Long amount = fluids.get(stack.getFluid()) + stack.getStackSize();
+					fluids.remove(stack.getFluid());
+					fluids.put(stack.getFluid(), amount);
+				}else{
+					fluids.put(stack.getFluid(), stack.getStackSize());
+				}
+			}
+			IGrid grid = getGridNode().getGrid();
+			if(grid == null)
+				return false;
+			IStorageGrid storage = grid.getCache(IStorageGrid.class);
+			if(storage == null)
+				return false;
+			for(Fluid fluid : fluids.keySet()){
+				Long amount = fluids.get(fluid);
+				IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(fluid,  (int) (amount+0))), Actionable.SIMULATE, new MachineSource(this));
+				if(extractFluid == null || extractFluid.getStackSize() != amount){
+					return false;
+				}
+			}
+			for(Fluid fluid : fluids.keySet()){
+				Long amount = fluids.get(fluid);
+				IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(fluid,  (int) (amount+0))), Actionable.MODULATE, new MachineSource(this));
+				export.add(extractFluid);
+			}
+			for(IAEItemStack s : patter.getCondensedInputs()){
+				if(s == null)
+					continue;
+				if(s.getItem() == ItemEnum.FLUIDPATTERN.getItem()){
+					toExport = s.copy();
+					continue;
+				}
+				export.add(s);
+			}
+			
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isBusy() {
+		return !export.isEmpty();
+	}
+
+	@Override
+	public void provideCrafting(ICraftingProviderHelper craftingTracker) {
+		patternHandlers = new ArrayList<ICraftingPatternDetails>();
+		
+		for (ItemStack currentPatternStack : inventory.inv)
+		{
+			if (currentPatternStack != null && currentPatternStack.getItem() != null && currentPatternStack.getItem() instanceof ICraftingPatternItem)
+			{
+				ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack.getItem();
+
+				if (currentPattern != null && currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld()) != null && currentPattern.getPatternForItem(currentPatternStack,getGridNode().getWorld()).isCraftable())
+				{
+					ICraftingPatternDetails pattern = new CraftingPattern(currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld()));
+					patternHandlers.add(pattern);
+					if(pattern.getCondensedInputs().length == 0){
+						craftingTracker.setEmitable(pattern.getCondensedOutputs()[0]);
+					}else{
+						craftingTracker.addCraftingOption(this, pattern);
+					}
+				}
+			}
+		}
+	}
+	
+	private class FluidInterfaceInventory implements IInventory{
+
+		private ItemStack[] inv = new ItemStack[9];
+
+        @Override
+        public int getSizeInventory() {
+                return inv.length;
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+                return inv[slot];
+        }
+        
+        @Override
+        public void setInventorySlotContents(int slot, ItemStack stack) {
+                inv[slot] = stack;
+                if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+                        stack.stackSize = getInventoryStackLimit();
+                }
+                update = true;
+        }
+
+        @Override
+        public ItemStack decrStackSize(int slot, int amt) {
+                ItemStack stack = getStackInSlot(slot);
+                if (stack != null) {
+                        if (stack.stackSize <= amt) {
+                                setInventorySlotContents(slot, null);
+                        } else {
+                                stack = stack.splitStack(amt);
+                                if (stack.stackSize == 0) {
+                                        setInventorySlotContents(slot, null);
+                                }
+                        }
+                }
+                update = true;
+                return stack;
+        }
+
+        @Override
+        public ItemStack getStackInSlotOnClosing(int slot) {
+                return null;
+        }
+        
+        @Override
+        public int getInventoryStackLimit() {
+                return 1;
+        }
+
+        @Override
+        public boolean isUseableByPlayer(EntityPlayer player) {
+                return true;
+        }
+
+        @Override
+        public void openInventory() {}
+
+        @Override
+        public void closeInventory() {}
+        
+        public void readFromNBT(NBTTagCompound tagCompound) {
+                
+                NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
+                for (int i = 0; i < tagList.tagCount(); i++) {
+                        NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+                        byte slot = tag.getByte("Slot");
+                        if (slot >= 0 && slot < inv.length) {
+                                inv[slot] = ItemStack.loadItemStackFromNBT(tag);
+                        }
+                }
+        }
+
+        public void writeToNBT(NBTTagCompound tagCompound) {
+                                
+                NBTTagList itemList = new NBTTagList();
+                for (int i = 0; i < inv.length; i++) {
+                        ItemStack stack = inv[i];
+                        if (stack != null) {
+                                NBTTagCompound tag = new NBTTagCompound();
+                                tag.setByte("Slot", (byte) i);
+                                stack.writeToNBT(tag);
+                                itemList.appendTag(tag);
+                        }
+                }
+                tagCompound.setTag("Inventory", itemList);
+        }
+
+		@Override
+		public String getInventoryName() {
+			return "inventory.fluidInterface";
+		}
+
+		@Override
+		public boolean hasCustomInventoryName() {
+			return false;
+		}
+
+		@Override
+		public void markDirty() {}
+
+		@Override
+		public boolean isItemValidForSlot(int slot, ItemStack stack) {
+			if(stack.getItem() instanceof ICraftingPatternItem){
+				IGridNode n = getGridNode();
+				World w;
+				if(n == null){
+					w = getClientWorld();
+				}else{
+					w = n.getWorld();
+				}
+				if(w == null)
+					return false;
+				ICraftingPatternDetails details =  ((ICraftingPatternItem) stack.getItem()).getPatternForItem(stack, w);
+				return (details != null);
+			}
+			return false;
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private World getClientWorld(){
+		return Minecraft.getMinecraft().theWorld;
+	}
+	
+	private void pushItems(){
+		for(IAEStack s : removeFromExport){
+			export.remove(s);
+		}
+		removeFromExport.clear();
+		for(IAEStack s : addToExport){
+			export.add(s);
+		}
+		addToExport.clear();
+		if(getGridNode().getWorld() != null || export.isEmpty())
+			return;
+		ForgeDirection dir = getSide();
+		TileEntity tile = getGridNode().getWorld().getTileEntity(getGridNode().getGridBlock().getLocation().x + dir.offsetX, getGridNode().getGridBlock().getLocation().y + dir.offsetY, getGridNode().getGridBlock().getLocation().z + dir.offsetZ);
+		if(tile != null){
+			IAEStack stack0 = export.iterator().next();
+			IAEStack stack = stack0.copy();
+			if(stack instanceof IAEItemStack && tile instanceof IInventory){
+				if(tile instanceof ISidedInventory){
+					ISidedInventory inv = (ISidedInventory) tile;
+					for(int i : inv.getAccessibleSlotsFromSide(dir.getOpposite().ordinal())){
+						if(inv.canInsertItem(i, ((IAEItemStack)stack).getItemStack(), dir.getOpposite().ordinal())){
+							if(inv.getStackInSlot(i) == null){
+								inv.setInventorySlotContents(i, ((IAEItemStack)stack).getItemStack());
+								removeFromExport.add(stack0);
+								return;
+							}else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(i), ((IAEItemStack)stack).getItemStack())){
+								int max = inv.getInventoryStackLimit();
+								int current = inv.getStackInSlot(i).stackSize;
+								int outStack = (int) stack.getStackSize();
+								if(max == current)
+									continue;
+								if(current + outStack >= max){
+									ItemStack s = inv.getStackInSlot(i).copy();
+									s.stackSize = s.stackSize + outStack;
+									inv.setInventorySlotContents(i, s);
+									removeFromExport.add(stack0);
+									return;
+								}else{
+									ItemStack s = inv.getStackInSlot(i).copy();
+									s.stackSize = max - current;
+									inv.setInventorySlotContents(i, s);
+									removeFromExport.add(stack0);
+									stack.setStackSize(max - s.stackSize);
+									addToExport.add(stack);
+									return;
+								}
+							}
+						}
+					}
+				}else{
+					IInventory inv = (IInventory) tile;
+					for(int i = 0; i < inv.getSizeInventory(); i++){
+						if(inv.isItemValidForSlot(i, ((IAEItemStack)stack).getItemStack())){
+							if(inv.getStackInSlot(i) == null){
+								inv.setInventorySlotContents(i, ((IAEItemStack)stack).getItemStack());
+								removeFromExport.add(stack0);
+								return;
+							}else if(ItemStack.areItemStackTagsEqual(inv.getStackInSlot(i), ((IAEItemStack)stack).getItemStack())){
+								int max = inv.getInventoryStackLimit();
+								int current = inv.getStackInSlot(i).stackSize;
+								int outStack = (int) stack.getStackSize();
+								if(max == current)
+									continue;
+								if(current + outStack >= max){
+									ItemStack s = inv.getStackInSlot(i).copy();
+									s.stackSize = s.stackSize + outStack;
+									inv.setInventorySlotContents(i, s);
+									removeFromExport.add(stack0);
+									return;
+								}else{
+									ItemStack s = inv.getStackInSlot(i).copy();
+									s.stackSize = max - current;
+									inv.setInventorySlotContents(i, s);
+									removeFromExport.add(stack0);
+									stack.setStackSize(max - s.stackSize);
+									addToExport.add(stack);
+									return;
+								}
+							}
+						}
+					}
+				}
+			}else if(stack instanceof IAEFluidStack && tile instanceof IFluidHandler){
+				IFluidHandler handler = (IFluidHandler) tile;
+				IAEFluidStack fluid = (IAEFluidStack) stack;
+				if(handler.canFill(dir.getOpposite(), fluid.copy().getFluid())){
+					int amount = handler.fill(dir.getOpposite(), fluid.getFluidStack().copy(), false);
+					if(amount == 0)
+						return;
+					if(amount == fluid.getStackSize()){
+						handler.fill(dir.getOpposite(), fluid.getFluidStack().copy(), true);
+						removeFromExport.add(stack0);
+					}else{
+						IAEFluidStack f = fluid.copy();
+						f.setStackSize(f.getStackSize() - amount);
+						FluidStack fl = fluid.getFluidStack().copy();
+						fl.amount = amount;
+						handler.fill(dir.getOpposite(), fl, true);
+						removeFromExport.add(stack0);
+						addToExport.add(f);
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public IInventory getPatternInventory() {
+		return inventory;
+	}
 }
