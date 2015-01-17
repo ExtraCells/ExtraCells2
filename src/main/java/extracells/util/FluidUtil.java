@@ -53,7 +53,7 @@ public class FluidUtil {
         Item item = itemStack.getItem();
         if (item instanceof IFluidContainerItem) {
             FluidStack content = ((IFluidContainerItem) item).getFluid(itemStack);
-            return content != null && content.amount <= 0;
+            return content != null && content.amount > 0;
         }
         return FluidContainerRegistry.isFilledContainer(itemStack);
     }

@@ -23,4 +23,8 @@ public interface IPartDefinition {
 	AEItemDefinition partDrive();
 	
 	AEItemDefinition partInterface();
+	
+	AEItemDefinition partStorageMonitor();
+	
+	AEItemDefinition partConversionMonitor();
 }

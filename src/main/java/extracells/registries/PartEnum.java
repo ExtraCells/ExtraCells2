@@ -20,7 +20,9 @@ public enum PartEnum {
     FLUIDPANEFORMATION("fluid.plane.formation", PartFluidPlaneFormation.class, "fluid.plane"),
     DRIVE("drive", PartDrive.class),
     BATTERY("battery", PartBattery.class),
-    INTERFACE("interface", PartFluidInterface.class);
+    INTERFACE("interface", PartFluidInterface.class),
+    FLUIDMONITOR("fluid.monitor", PartStorageMonitor.class),
+    FLUIDCONVERSIONMONITOR("fluid.conversion.monitor", PartConversionMonitor.class);
 
     private String unlocalizedName;
     private Class<? extends PartECBase> partClass;

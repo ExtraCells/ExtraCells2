@@ -49,6 +49,8 @@ extracells.part.fluid.plane.formation.name=ME Fluid Formation Plane
 extracells.part.fluid.levelemitter.name=ME Fluid Level Emitter
 extracells.part.drive.name=ME Drive Fixture
 extracells.part.battery.name=ME Energy Cell Fixture
+extracells.part.fluid.conversion.monitor.name=ME Fluid Conversion Monitor
+extracells.part.fluid.monitor=ME Fluid Storage Monitor
 
 //Blocks
 extracells.block.certustank=Certus Quartz Tank

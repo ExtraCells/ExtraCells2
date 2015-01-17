@@ -45,9 +45,11 @@ extracells.part.fluid.storage.name=ME-Flüssigkeits-Speicherbus
 extracells.part.fluid.terminal.name=ME-Flüssigkeits-Terminal
 extracells.part.fluid.plane.annihilation.name=ME-Flüssigkeits-Annihilationsfeld
 extracells.part.fluid.plane.formation.name=ME-Flüssigkeits-Formationsfeld
-extracells.part.fluid.levelemitter.name=ME Flüssigkeits-Füllstandemitter
+extracells.part.fluid.levelemitter.name=ME-Flüssigkeits-Füllstandemitter
 extracells.part.drive.name=ME-Laufwerkhalterung
 extracells.part.battery.name=ME-Energiezellenhalterung
+extracells.part.fluid.conversion.monitor.name=ME-Flüssigkeits-Konversionsmonitor
+extracells.part.fluid.monitor=ME-Flüssigkeits-Speichermonitor
 
 //Blocks
 extracells.block.certustank=Certus-Quarz-Tank

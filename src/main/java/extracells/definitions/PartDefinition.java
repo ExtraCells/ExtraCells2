@@ -59,4 +59,14 @@ public class PartDefinition implements IPartDefinition {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(), PartEnum.INTERFACE.ordinal());
 	}
 
+	@Override
+	public AEItemDefinition partStorageMonitor() {
+		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(), PartEnum.FLUIDMONITOR.ordinal());
+	}
+
+	@Override
+	public AEItemDefinition partConversionMonitor() {
+		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(), PartEnum.FLUIDCONVERSIONMONITOR.ordinal());
+	}
+
 }

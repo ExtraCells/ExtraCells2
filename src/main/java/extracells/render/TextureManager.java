@@ -23,7 +23,9 @@ public enum TextureManager {
     BATTERY_SIDE(TextureType.PART, "battery_side"),
     LEVEL_FRONT(TextureType.PART, "level_front_1", "level_front_2", "level_front_3"),
     LEVEL_SIDE(TextureType.PART, "level_side"),
-    INTERFACE(TextureType.PART, "fluid_interface");
+    INTERFACE(TextureType.PART, "fluid_interface"),
+    STORAGE_MONITOR(TextureType.PART, "storage.monitor_1", "storage.monitor_2", "storage.monitor_3"),
+    CONVERSION_MONITOR(TextureType.PART, "conversion.monitor_1", "conversion.monitor_2", "conversion.monitor_3");
 
     private TextureType textureType;
     private String[] textureNames;

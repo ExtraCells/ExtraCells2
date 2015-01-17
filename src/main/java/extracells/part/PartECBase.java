@@ -47,7 +47,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     private IGridNode node;
     private ForgeDirection side;
     private IPartHost host;
-    private TileEntity tile;
+    protected TileEntity tile;
     private ECBaseGridBlock gridBlock;
     private double powerUsage;
     private TileEntity hostTile;

@@ -67,3 +67,11 @@ shaped=
 shapeless=
 	ec:interface
 	-> ec:partInterface
+
+shapeless=
+    ae2:ItemPart.LevelEmitter monitor lapis lapis
+    -> ec:partStorageMonitor
+
+shapeless=
+    ae2:ItemMaterial.AnnihilationCore ec:partStorageMonitor ae2:ItemMaterial.FormationCore
+    -> ec:partConversionMonitor

@@ -776,4 +776,13 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 	public IInventory getPatternInventory() {
 		return inventory;
 	}
+	
+	@Override
+    public void getDrops(List<ItemStack> drops, boolean wrenched) {
+		for (int i = 0; i < inventory.getSizeInventory(); i++) {
+			ItemStack pattern = inventory.getStackInSlot(i);
+			if (pattern != null)
+				drops.add(pattern);
+		}
+    }
 }
