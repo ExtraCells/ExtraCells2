@@ -249,11 +249,11 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 
 		String msg = Long.toString( qty ) + "mB";
 		if ( qty > 1000000000 )
-			msg = Long.toString( qty / 1000000000 ) + 'B';
+			msg = Long.toString( qty / 1000000000 ) + "MB";
 		else if ( qty > 1000000 )
-			msg = Long.toString( qty / 1000000 ) + "MB";
+			msg = Long.toString( qty / 1000000 ) + "KB";
 		else if ( qty > 9999 )
-			msg = Long.toString( qty / 1000 ) + "KB";
+			msg = Long.toString( qty / 1000 ) + 'B';
 
 		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 		int width = fr.getStringWidth( msg );
