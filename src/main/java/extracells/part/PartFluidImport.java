@@ -94,7 +94,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     }
 
     public boolean doWork(int rate, int TicksSinceLastCall) {
-        if (getFacingTank() == null)
+        if (getFacingTank() == null || (!isActive()))
             return false;
         boolean empty = true;
 

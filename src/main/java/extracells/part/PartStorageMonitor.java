@@ -376,8 +376,13 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 					IPartHost host = getHost();
 					if(host != null)
 						host.markForUpdate();
+					return;
 				}
 			}
+			amount = 0L;
+			IPartHost host = getHost();
+			if(host != null)
+				host.markForUpdate();
 		}
 		
 	}
@@ -441,4 +446,9 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 		 locked = data.readBoolean();
 		 return true;
 	 }
+	 
+	 @Override
+	    public double getPowerUsage(){
+	    	return 1.0D;
+	    }
 }

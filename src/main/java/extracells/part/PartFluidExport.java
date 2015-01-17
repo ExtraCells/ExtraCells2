@@ -99,7 +99,7 @@ public class PartFluidExport extends PartFluidIO {
     @Override
     public boolean doWork(int rate, int TicksSinceLastCall) {
         IFluidHandler facingTank = getFacingTank();
-        if (facingTank == null)
+        if (facingTank == null || (!isActive()))
             return false;
         List<Fluid> filter = new ArrayList<Fluid>();
         filter.add(filterFluids[4]);

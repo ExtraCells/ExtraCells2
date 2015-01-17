@@ -76,7 +76,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
         return TextureManager.BUS_SIDE.getTexture();
     }
 
-    protected boolean isActive() {
+    public boolean isActive() {
         return node != null ? node.isActive() : isActive;
     }
 

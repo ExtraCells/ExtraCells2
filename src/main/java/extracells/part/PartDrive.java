@@ -5,6 +5,9 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.events.MENetworkChannelsChanged;
+import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
@@ -159,6 +162,8 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
     @Override
     public List<IMEInventoryHandler> getCellArray(StorageChannel channel) {
+    	if(!isActive())
+    		return new ArrayList<IMEInventoryHandler>();
         return channel == StorageChannel.ITEMS ? itemHandlers : fluidHandlers;
     }
 
@@ -260,5 +265,33 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     		return super.onActivate(player, pos);
     	}
     	return false;
+    }
+    
+    @MENetworkEventSubscribe
+    public void updateChannels(MENetworkChannelsChanged channel) {
+        IGridNode node = getGridNode();
+        if (node != null) {
+            boolean isNowActive = node.isActive();
+            if (isNowActive != isActive()) {
+                setActive(isNowActive);
+                onNeighborChanged();
+                getHost().markForUpdate();
+            }
+        }
+        node.getGrid().postEvent(new MENetworkCellArrayUpdate());
+    }
+    
+    @MENetworkEventSubscribe
+    public void powerChange(MENetworkPowerStatusChange event){
+    	IGridNode node = getGridNode();
+        if (node != null) {
+            boolean isNowActive = node.isActive();
+            if (isNowActive != isActive()) {
+                setActive(isNowActive);
+                onNeighborChanged();
+                getHost().markForUpdate();
+            }
+        }
+        node.getGrid().postEvent(new MENetworkCellArrayUpdate());
     }
 }

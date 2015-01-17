@@ -61,7 +61,8 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
     @Override
     public boolean canAccept(IAEFluidStack input) {
-    	
+    	if(!node.isActive())
+    		return false;
     	if ((tank == null && externalSystem == null) || access == AccessRestriction.WRITE || access == AccessRestriction.NO_ACCESS || input == null)
             return false;
         if(externalSystem != null){
@@ -127,6 +128,8 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
     @Override
     public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src) {
+    	if(!node.isActive())
+    		return null;
     	if(externalSystem != null && request != null && (AccessRestriction.WRITE != access || AccessRestriction.NO_ACCESS != access)){
     		IStorageMonitorable monitor = externalSystem.getMonitorable(node.getSide().getOpposite(), src);
     		if(monitor == null)
@@ -159,6 +162,8 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
     @Override
     public IItemList<IAEFluidStack> getAvailableItems(IItemList<IAEFluidStack> out) {
+    	if(!node.isActive())
+    		return out;
     	if(externalSystem != null){
     		IStorageMonitorable monitor = externalSystem.getMonitorable(node.getSide().getOpposite(), new MachineSource(node));
     		if(monitor == null)

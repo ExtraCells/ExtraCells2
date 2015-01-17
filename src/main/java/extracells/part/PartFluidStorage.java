@@ -7,6 +7,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
@@ -170,6 +171,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
             if (grid != null) {
                 grid.postEvent(new MENetworkCellArrayUpdate());
                 node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
+                node.getGrid().postEvent(new MENetworkCellArrayUpdate());
             }
             getHost().markForUpdate();
         }
@@ -216,6 +218,23 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
                 getHost().markForUpdate();
             }
         }
+        node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
+        node.getGrid().postEvent(new MENetworkCellArrayUpdate());
+    }
+    
+    @MENetworkEventSubscribe
+    public void powerChange(MENetworkPowerStatusChange event){
+    	IGridNode node = getGridNode();
+        if (node != null) {
+            boolean isNowActive = node.isActive();
+            if (isNowActive != isActive()) {
+                setActive(isNowActive);
+                onNeighborChanged();
+                getHost().markForUpdate();
+            }
+        }
+        node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
+        node.getGrid().postEvent(new MENetworkCellArrayUpdate());
     }
 
     @Override
