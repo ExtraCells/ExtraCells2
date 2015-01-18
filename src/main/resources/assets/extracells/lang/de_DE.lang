@@ -57,6 +57,7 @@ extracells.part.oredict.export.name=ME-Ore-Dictionary-Exportbus
 extracells.block.certustank=Certus-Quarz-Tank
 extracells.block.walrus.name=Walross
 extracells.block.fluidcrafter.name=ME-Flüssigkeits-Fertigungskammer
+extracells.block.fluidinterface.name=ME-Flüssigkeits-Interface
 extracells.block.fluidfiller.name=ME-Flüssigkeitsfüller
 
 //Tooltips and Chat-Messages
