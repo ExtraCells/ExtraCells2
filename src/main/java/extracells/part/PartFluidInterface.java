@@ -696,7 +696,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 								int outStack = (int) stack.getStackSize();
 								if(max == current)
 									continue;
-								if(current + outStack >= max){
+								if(current + outStack <= max){
 									ItemStack s = inv.getStackInSlot(i).copy();
 									s.stackSize = s.stackSize + outStack;
 									inv.setInventorySlotContents(i, s);
@@ -704,10 +704,10 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 									return;
 								}else{
 									ItemStack s = inv.getStackInSlot(i).copy();
-									s.stackSize = max - current;
+									s.stackSize = max;
 									inv.setInventorySlotContents(i, s);
 									removeFromExport.add(stack0);
-									stack.setStackSize(max - s.stackSize);
+									stack.setStackSize(max - current);
 									addToExport.add(stack);
 									return;
 								}
@@ -728,7 +728,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 								int outStack = (int) stack.getStackSize();
 								if(max == current)
 									continue;
-								if(current + outStack >= max){
+								if(current + outStack <= max){
 									ItemStack s = inv.getStackInSlot(i).copy();
 									s.stackSize = s.stackSize + outStack;
 									inv.setInventorySlotContents(i, s);
@@ -736,10 +736,10 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 									return;
 								}else{
 									ItemStack s = inv.getStackInSlot(i).copy();
-									s.stackSize = max - current;
+									s.stackSize = max;
 									inv.setInventorySlotContents(i, s);
 									removeFromExport.add(stack0);
-									stack.setStackSize(max - s.stackSize);
+									stack.setStackSize(max - current);
 									addToExport.add(stack);
 									return;
 								}

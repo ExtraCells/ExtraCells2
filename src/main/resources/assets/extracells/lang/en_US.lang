@@ -51,6 +51,7 @@ extracells.part.drive.name=ME Drive Fixture
 extracells.part.battery.name=ME Energy Cell Fixture
 extracells.part.fluid.conversion.monitor.name=ME Fluid Conversion Monitor
 extracells.part.fluid.monitor=ME Fluid Storage Monitor
+extracells.part.oredict.export.name=ME Ore Dictionary Export Bus
 
 //Blocks
 extracells.block.certustank=Certus Quartz Tank
@@ -79,6 +80,7 @@ extracells.tooltip.storage.container.0=Mode: Placement Mode
 extracells.tooltip.storage.container.1=Mode: Equal Trade Mode (1*1)
 extracells.tooltip.storage.container.2=Mode: Equal Trade Mode (3*3)
 extracells.tooltip.onlyblocks=You can't place Items! Put a Block into the BLOCK-Container
+extracells.tooltip.save=Save
 
 //Buttons
 extracells.gui.craft=Craft

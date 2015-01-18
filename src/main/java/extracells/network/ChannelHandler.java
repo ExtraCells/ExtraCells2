@@ -49,6 +49,9 @@ public class ChannelHandler {
         
         wrapper.registerMessage(HandlerFluidContainerSlot.class, PacketFluidContainerSlot.class, 8, Side.CLIENT);
         wrapper.registerMessage(HandlerFluidContainerSlot.class, PacketFluidContainerSlot.class, 8, Side.SERVER);
+        
+        wrapper.registerMessage(HandlerOreDictExport.class, PacketOreDictExport.class, 9, Side.CLIENT);
+        wrapper.registerMessage(HandlerOreDictExport.class, PacketOreDictExport.class, 9, Side.SERVER);
 
     }
 

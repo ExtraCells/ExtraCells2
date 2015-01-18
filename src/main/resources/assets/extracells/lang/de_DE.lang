@@ -38,6 +38,7 @@ itemGroup.Extra_Cells=Extra Cells
 //Item Groups
 extracells.fluid.IO=ME-Flüssigkeits-Export-/Importbus
 extracells.fluid.plane=ME-Flüssigkeits-Annihilations-/Formationsfeld
+
 //Parts
 extracells.part.fluid.export.name=ME-Flüssigkeits-Exportbus
 extracells.part.fluid.import.name=ME-Flüssigkeits-Importbus
@@ -50,6 +51,7 @@ extracells.part.drive.name=ME-Laufwerkhalterung
 extracells.part.battery.name=ME-Energiezellenhalterung
 extracells.part.fluid.conversion.monitor.name=ME-Flüssigkeits-Konversionsmonitor
 extracells.part.fluid.monitor=ME-Flüssigkeits-Speichermonitor
+extracells.part.oredict.export.name=ME-Ore-Dictionary-Exportbus
 
 //Blocks
 extracells.block.certustank=Certus-Quarz-Tank
@@ -77,6 +79,7 @@ extracells.tooltip.storage.container.0=Modus: Plazier-Modus
 extracells.tooltip.storage.container.1=Modus: Gleicher-Handel-Modus (1*1)
 extracells.tooltip.storage.container.2=Modus: Gleicher-Handel-Modus (3*3)
 extracells.tooltip.onlyblocks=Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container
+extracells.tooltip.save=Speichern
 
 //Buttons
 extracells.gui.craft=Herstellen

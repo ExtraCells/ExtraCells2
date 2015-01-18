@@ -69,4 +69,9 @@ public class PartDefinition implements IPartDefinition {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(), PartEnum.FLUIDCONVERSIONMONITOR.ordinal());
 	}
 
+	@Override
+	public AEItemDefinition partOreDictExportBus() {
+		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(), PartEnum.OREDICTEXPORTBUS.ordinal());
+	}
+
 }

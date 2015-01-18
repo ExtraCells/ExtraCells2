@@ -22,7 +22,8 @@ public enum PartEnum {
     BATTERY("battery", PartBattery.class),
     INTERFACE("interface", PartFluidInterface.class),
     FLUIDMONITOR("fluid.monitor", PartStorageMonitor.class),
-    FLUIDCONVERSIONMONITOR("fluid.conversion.monitor", PartConversionMonitor.class);
+    FLUIDCONVERSIONMONITOR("fluid.conversion.monitor", PartConversionMonitor.class),
+    OREDICTEXPORTBUS("oredict.export", PartOreDictExporter.class);
 
     private String unlocalizedName;
     private Class<? extends PartECBase> partClass;

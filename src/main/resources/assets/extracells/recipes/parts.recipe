@@ -75,3 +75,7 @@ shapeless=
 shapeless=
     ae2:ItemMaterial.AnnihilationCore ec:partStorageMonitor ae2:ItemMaterial.FormationCore
     -> ec:partConversionMonitor
+
+shapeless=
+    ae2:ItemPart.ExportBus ae2:ItemMaterial.CardFuzzy ae2:ItemMaterial.CardFuzzy ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed
+    -> ec:partOreDictExportBus

@@ -163,6 +163,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         }
     }
 
+    @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
         super.mouseClicked(mouseX, mouseY, mouseBtn);
         searchbar.mouseClicked(mouseX, mouseY, mouseBtn);

@@ -27,4 +27,6 @@ public interface IPartDefinition {
 	AEItemDefinition partStorageMonitor();
 	
 	AEItemDefinition partConversionMonitor();
+	
+	AEItemDefinition partOreDictExportBus();
 }
