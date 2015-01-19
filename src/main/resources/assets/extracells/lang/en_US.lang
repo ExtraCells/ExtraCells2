@@ -50,7 +50,7 @@ extracells.part.fluid.levelemitter.name=ME Fluid Level Emitter
 extracells.part.drive.name=ME Drive Fixture
 extracells.part.battery.name=ME Energy Cell Fixture
 extracells.part.fluid.conversion.monitor.name=ME Fluid Conversion Monitor
-extracells.part.fluid.monitor=ME Fluid Storage Monitor
+extracells.part.fluid.monitor.name=ME Fluid Storage Monitor
 extracells.part.oredict.export.name=ME Ore Dictionary Export Bus
 
 //Blocks

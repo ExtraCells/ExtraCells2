@@ -50,7 +50,7 @@ extracells.part.fluid.levelemitter.name=ME-Flüssigkeits-Füllstandemitter
 extracells.part.drive.name=ME-Laufwerkhalterung
 extracells.part.battery.name=ME-Energiezellenhalterung
 extracells.part.fluid.conversion.monitor.name=ME-Flüssigkeits-Konversionsmonitor
-extracells.part.fluid.monitor=ME-Flüssigkeits-Speichermonitor
+extracells.part.fluid.monitor.name=ME-Flüssigkeits-Speichermonitor
 extracells.part.oredict.export.name=ME-Ore-Dictionary-Exportbus
 
 //Blocks
