@@ -20,6 +20,7 @@ import extracells.render.RenderHandler;
 import extracells.util.FluidCellHandler;
 import extracells.util.NameHandler;
 import extracells.util.ExtraCellsEventHandler;
+import extracells.util.Waila;
 import extracells.wireless.AEWirelessTermHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -72,6 +73,7 @@ public class Extracells {
 
         proxy.registerItems();
         proxy.registerBlocks();
+        Waila.init();
     }
 
     @EventHandler

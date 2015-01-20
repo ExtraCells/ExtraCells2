@@ -1,5 +1,7 @@
 package extracells.part;
 
+import java.util.List;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerOreDictExport;
@@ -16,7 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -323,4 +330,19 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
     public double getPowerUsage(){
     	return 10.0D;
     }
+    
+    @Override
+	 public NBTTagCompound getWailaTag(NBTTagCompound tag){
+		 tag.setString("name", filter);
+		 return tag;
+	 }
+	 
+	 @Override
+	 public List<String> getWailaBodey(NBTTagCompound data, List<String> list){
+		 if(data.hasKey("name"))
+			 list.add(StatCollector.translateToLocal("extracells.tooltip.oredict") + ": " + data.getString("name"));
+		 else
+			 list.add(StatCollector.translateToLocal("extracells.tooltip.oredict") + ":");
+		 return list;
+	 }
 }

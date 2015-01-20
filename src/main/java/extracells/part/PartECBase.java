@@ -395,4 +395,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
         if (host != null)
             host.markForSave();
     }
+    
+    public NBTTagCompound getWailaTag(NBTTagCompound tag){
+    	return tag;
+    }
+    
+    public List<String> getWailaBodey(NBTTagCompound tag, List<String> oldList){
+    	return oldList;
+    }
 }

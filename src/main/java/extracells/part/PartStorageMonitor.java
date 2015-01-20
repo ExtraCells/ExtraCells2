@@ -3,6 +3,7 @@ package extracells.part;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -26,10 +27,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import appeng.api.networking.IGrid;
@@ -450,5 +453,36 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 	 @Override
 	    public double getPowerUsage(){
 	    	return 1.0D;
-	    }
+	 }
+	 
+	 @Override
+	 public NBTTagCompound getWailaTag(NBTTagCompound tag){
+		 tag.setLong("amount", amount);
+		 if(fluid == null)
+			 tag.setInteger("fluid", -1);
+		 else
+			 tag.setInteger("fluid", fluid.getID());
+		 return tag;
+	 }
+	 
+	 @Override
+	 public List<String> getWailaBodey(NBTTagCompound data, List<String> list){
+		 long amount = 0L;
+		 Fluid fluid = null;
+		 if(data.hasKey("amount"))
+			 amount = data.getLong("amount");
+		 if(data.hasKey("fluid")){
+			 int id = data.getInteger("fluid");
+			 if(id != -1)
+				 fluid = FluidRegistry.getFluid(id);
+		 }
+		 if(fluid != null){
+			 list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + fluid.getLocalizedName(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME)));
+			 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amount + "mB");
+		 }else{
+			 list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": null");
+			 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB");
+		 }
+		 return list;
+	 }
 }

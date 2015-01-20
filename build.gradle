@@ -58,6 +58,17 @@ sourceSets {
     }
 }
 
+repositories {
+    maven {
+        name "Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+    maven {
+        name 'CB Repo'
+        url "http://chickenbones.net/maven/"
+    }
+}
+
 dependencies {
 	compile ("appeng:appliedenergistics2:rv2-beta-7:dev"){
         exclude group: "mcp.mobius.waila", module: "Waila"
@@ -81,6 +92,7 @@ dependencies {
 		exclude group: "api", module: "rotarycraft"
 	}
     compile 'com.mod-buildcraft:buildcraft:6.3.1:api'
+	compile "mcp.mobius.waila:Waila:1.5.8a_1.7.10"
 }
 
 processResources {

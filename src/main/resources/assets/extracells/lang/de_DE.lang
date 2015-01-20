@@ -81,6 +81,7 @@ extracells.tooltip.storage.container.1=Modus: Gleicher-Handel-Modus (1*1)
 extracells.tooltip.storage.container.2=Modus: Gleicher-Handel-Modus (3*3)
 extracells.tooltip.onlyblocks=Du kannst keine Items platzieren! Packe einen Block in den BLOCK-Container
 extracells.tooltip.save=Speichern
+extracells.tooltip.oredict=Ore-Dictionary Name
 
 //Buttons
 extracells.gui.craft=Herstellen
