@@ -92,13 +92,9 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 		Block block = world.getBlock(x, y, z);
 
 		Vec3 head = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
-		if (player.worldObj.isRemote){
-			head.yCoord += player.getEyeHeight() - player.getDefaultEyeHeight();
-		}else{
-			head.yCoord += player.getEyeHeight();
-			if (player.isSneaking())
-				head.yCoord -= 0.08;
-		}
+		head.yCoord += player.getEyeHeight();
+		if (player.isSneaking())
+			head.yCoord -= 0.08;
 		Vec3 look = player.getLook( 1.0F );
 		double reach = player.theItemInWorldManager.getBlockReachDistance();
 		Vec3 endVec = head.addVector( look.xCoord * reach, look.yCoord * reach, look.zCoord * reach );

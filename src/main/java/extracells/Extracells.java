@@ -73,7 +73,6 @@ public class Extracells {
 
         proxy.registerItems();
         proxy.registerBlocks();
-        Waila.init();
     }
 
     @EventHandler
@@ -90,6 +89,7 @@ public class Extracells {
         proxy.addRecipes(configFolder);
         ChannelHandler.registerMessages();
         RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId()));
+        Waila.init();
     }
 
     @EventHandler

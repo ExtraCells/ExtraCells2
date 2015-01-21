@@ -282,7 +282,7 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 	@Override
     public boolean onActivate(EntityPlayer player, Vec3 pos) {
 		if(player == null || player.worldObj == null)
-			return false;
+			return true;
 		if(player.worldObj.isRemote)
 			return true;
 		ItemStack s = player.getCurrentEquippedItem();
@@ -457,6 +457,7 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 	 
 	 @Override
 	 public NBTTagCompound getWailaTag(NBTTagCompound tag){
+		 super.getWailaTag(tag);
 		 tag.setLong("amount", amount);
 		 if(fluid == null)
 			 tag.setInteger("fluid", -1);
@@ -467,6 +468,7 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 	 
 	 @Override
 	 public List<String> getWailaBodey(NBTTagCompound data, List<String> list){
+		 super.getWailaBodey(data, list);
 		 long amount = 0L;
 		 Fluid fluid = null;
 		 if(data.hasKey("amount"))
@@ -480,7 +482,7 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 			 list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + fluid.getLocalizedName(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME)));
 			 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amount + "mB");
 		 }else{
-			 list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": null");
+			 list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + StatCollector.translateToLocal("extracells.tooltip.empty1"));
 			 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB");
 		 }
 		 return list;

@@ -333,12 +333,14 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
     
     @Override
 	 public NBTTagCompound getWailaTag(NBTTagCompound tag){
+    	super.getWailaTag(tag);
 		 tag.setString("name", filter);
 		 return tag;
 	 }
 	 
 	 @Override
 	 public List<String> getWailaBodey(NBTTagCompound data, List<String> list){
+		 super.getWailaBodey(data, list);
 		 if(data.hasKey("name"))
 			 list.add(StatCollector.translateToLocal("extracells.tooltip.oredict") + ": " + data.getString("name"));
 		 else

@@ -10,6 +10,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidContainerItem;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPartHost;
@@ -92,7 +93,7 @@ public class PartConversionMonitor extends PartStorageMonitor {
 		if(b)
 			return b;
 		if(player == null || player.worldObj == null)
-			return false;
+			return true;
 		if(player.worldObj.isRemote)
 			return true;
 		ItemStack s = player.getCurrentEquippedItem();
@@ -125,8 +126,12 @@ public class PartConversionMonitor extends PartStorageMonitor {
 				return true;
 			}else if(FluidUtil.isEmpty(s2)){
 				if(fluid == null)
-					return true;;
-				IAEFluidStack extract = mon.extractItems(FluidUtil.createAEFluidStack(fluid), Actionable.SIMULATE, new MachineSource(this));
+					return true;
+				IAEFluidStack extract;
+				if(s2.getItem() instanceof IFluidContainerItem){
+					extract = mon.extractItems(FluidUtil.createAEFluidStack(fluid, (long) ((IFluidContainerItem)s2.getItem()).getCapacity(s2)), Actionable.SIMULATE, new MachineSource(this));
+				}else
+					extract = mon.extractItems(FluidUtil.createAEFluidStack(fluid), Actionable.SIMULATE, new MachineSource(this));
 				if(extract != null){
 					mon.extractItems(FluidUtil.createAEFluidStack(new FluidStack(fluid, (int) extract.getStackSize())), Actionable.MODULATE, new MachineSource(this));
 					MutablePair<Integer, ItemStack> empty1 = FluidUtil.fillStack(s2, extract.getFluidStack());
@@ -146,6 +151,7 @@ public class PartConversionMonitor extends PartStorageMonitor {
 						player.inventory.setInventorySlotContents(player.inventory.currentItem, s3);
 					}
 				}
+				return true;
 			}
 		}
 		return false;

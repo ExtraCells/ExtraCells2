@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.*;
 public class TileEntityCertusTank extends TileEntity implements IFluidHandler {
 
     private FluidStack lastBeforeUpdate = null;
-    protected FluidTank tank = new FluidTank(32000) {
+    public FluidTank tank = new FluidTank(32000) {
 
         public FluidTank readFromNBT(NBTTagCompound nbt) {
             if (!nbt.hasKey("Empty")) {

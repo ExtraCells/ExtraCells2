@@ -2,8 +2,11 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.implementations.IPowerChannelState;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.IActionHost;
@@ -42,7 +45,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-public abstract class PartECBase implements IPart, IGridHost, IActionHost {
+public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowerChannelState {
 
     private IGridNode node;
     private ForgeDirection side;
@@ -54,6 +57,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     private IFluidHandler facingTank;
     private boolean redstonePowered;
     private boolean isActive;
+    private boolean isPowerd = false;
     private EntityPlayer owner;
 
     public void initializePart(ItemStack partStack) {
@@ -67,6 +71,13 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     public void setPower(MENetworkPowerStatusChange notUsed) {
         if (node != null) {
             isActive = node.isActive();
+            IGrid grid = node.getGrid();
+            if(grid != null){
+            	IEnergyGrid energy = grid.getCache(IEnergyGrid.class);
+            	if(energy != null)
+            		isPowerd = energy.isNetworkPowered();
+            	System.out.println(isPowerd);
+            }
             host.markForUpdate();
         }
     }
@@ -76,6 +87,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
         return TextureManager.BUS_SIDE.getTexture();
     }
 
+    @Override
     public boolean isActive() {
         return node != null ? node.isActive() : isActive;
     }
@@ -230,11 +242,13 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     @Override
     public void writeToStream(ByteBuf data) throws IOException {
         data.writeBoolean(node != null && node.isActive());
+        data.writeBoolean(isPowerd);
     }
 
     @Override
     public boolean readFromStream(ByteBuf data) throws IOException {
         isActive = data.readBoolean();
+        isPowerd = data.readBoolean();
         return true;
     }
 
@@ -397,10 +411,16 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost {
     }
     
     public NBTTagCompound getWailaTag(NBTTagCompound tag){
+    	
     	return tag;
     }
     
     public List<String> getWailaBodey(NBTTagCompound tag, List<String> oldList){
     	return oldList;
     }
+    
+    @Override
+	public boolean isPowered() {
+		return isPowerd;
+	}
 }
