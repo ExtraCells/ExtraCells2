@@ -61,6 +61,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -331,7 +332,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
             }
 		}
 		if(tank.getFluid() != null && FluidRegistry.getFluid(fluidFilter) != tank.getFluid().getFluid()){
-			FluidStack s = tank.drain(20, false);
+			FluidStack s = tank.drain(125, false);
 			if(s != null){
 				IAEFluidStack notAdded = storage.getFluidInventory().injectItems(AEApi.instance().storage().createFluidStack(s.copy()), Actionable.SIMULATE, new MachineSource(this));
 				if(notAdded != null){
@@ -347,7 +348,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			}
 		}
 		if((tank.getFluid() == null || tank.getFluid().getFluid() == FluidRegistry.getFluid(fluidFilter)) && FluidRegistry.getFluid(fluidFilter) != null){
-			IAEFluidStack extracted = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.getFluid(fluidFilter), 20)), Actionable.SIMULATE, new MachineSource(this));
+			IAEFluidStack extracted = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.getFluid(fluidFilter), 125)), Actionable.SIMULATE, new MachineSource(this));
 			if(extracted == null)
 				return TickRateModulation.URGENT;
 			int accepted = tank.fill(extracted.getFluidStack(), false);
@@ -784,5 +785,36 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			if (pattern != null)
 				drops.add(pattern);
 		}
+    }
+	
+	@Override
+    public NBTTagCompound getWailaTag(NBTTagCompound tag){
+		if(tank.getFluid() == null || tank.getFluid().getFluid() == null)
+			tag.setInteger("fluidID", -1);
+		else
+			tag.setInteger("fluidID", tank.getFluid().fluidID);
+    	tag.setInteger("amount", tank.getFluidAmount());
+    	return tag;
+    }
+    
+    @Override
+    public List<String> getWailaBodey(NBTTagCompound tag, List<String> list){
+    	FluidStack fluid = null;
+    	int id = -1;
+    	int amount = 0;
+    	if(tag.hasKey("fluidID") && tag.hasKey("amount")){
+    		id = tag.getInteger("fluidID");
+    		amount = tag.getInteger("amount");
+    	}
+    	if(id != -1)
+    		fluid = new FluidStack(id, amount);
+    	if(fluid == null){
+			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + StatCollector.translateToLocal("extracells.tooltip.empty1"));
+			list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB / 10000mB");
+		}else{
+			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + fluid.getLocalizedName());
+			list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + fluid.amount + "mB / 10000mB");
+		}
+    	return list;
     }
 }

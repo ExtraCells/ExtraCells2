@@ -31,6 +31,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
@@ -229,5 +230,20 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
                 return false;
         }
         return false;
+    }
+    
+    @Override
+    public NBTTagCompound getWailaTag(NBTTagCompound tag){
+    	tag.setInteger("speed", 125 + speedState * 125);
+    	return tag;
+    }
+    
+    @Override
+    public List<String> getWailaBodey(NBTTagCompound tag, List<String> oldList){
+    	if(tag.hasKey("speed"))
+    		oldList.add(tag.getInteger("speed")+"mB/t");
+    	else
+    		oldList.add("125mB/t");
+    	return oldList;
     }
 }

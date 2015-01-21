@@ -83,6 +83,8 @@ public class FluidUtil {
             int filled = ((IFluidContainerItem) item).fill(itemStack, fluid, true);
             return new MutablePair<Integer, ItemStack>(filled, itemStack);
         } else if (FluidContainerRegistry.isContainer(itemStack)) {
+        	FluidStack fluid2 = fluid.copy();
+        	fluid2.amount = Math.max(FluidContainerRegistry.getContainerCapacity(fluid, itemStack), fluid.amount);
             ItemStack filledContainer = FluidContainerRegistry.fillFluidContainer(fluid, itemStack);
             FluidStack filled = FluidContainerRegistry.getFluidForFilledItem(filledContainer);
             return new MutablePair<Integer, ItemStack>(filled != null ? filled.amount : 0, filledContainer);

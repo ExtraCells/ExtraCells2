@@ -76,7 +76,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
             	IEnergyGrid energy = grid.getCache(IEnergyGrid.class);
             	if(energy != null)
             		isPowerd = energy.isNetworkPowered();
-            	System.out.println(isPowerd);
             }
             host.markForUpdate();
         }
@@ -411,7 +410,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
     }
     
     public NBTTagCompound getWailaTag(NBTTagCompound tag){
-    	
     	return tag;
     }
     

@@ -74,7 +74,7 @@ public class WidgetSlotFluidContainer extends Gui {
     }
 
     public void mouseClicked(ItemStack stack) {
-    	if(stack != null && stack.getItem() != null && FluidContainerRegistry.isEmptyContainer(stack))
+    	if(stack != null && stack.getItem() != null && FluidUtil.isEmpty(stack))
     		new PacketFluidContainerSlot(fluidFiller, stack, player).sendPacketToServer();
     }
 }

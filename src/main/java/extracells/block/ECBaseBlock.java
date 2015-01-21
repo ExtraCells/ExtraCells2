@@ -112,6 +112,7 @@ public class ECBaseBlock extends BlockContainer {
     {
 		if(world.isRemote)
 			return false;
+		Random rand = new Random();
 		switch(world.getBlockMetadata(x, y, z)){
 			case 0:
 			case 1:
@@ -123,7 +124,7 @@ public class ECBaseBlock extends BlockContainer {
 				if (player.isSneaking() && current != null) {
 		        	try{
 		        		if(current.getItem() instanceof IToolWrench && ((IToolWrench)current.getItem()).canWrench(player, x, y, z)){
-		        			ItemStack block = new ItemStack(this, 1, world.getBlockMetadata(y, y, z));
+		        			ItemStack block = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
 		        			if(tile != null && tile instanceof TileEntityFluidInterface){
 		        				block.setTagCompound(((TileEntityFluidInterface)tile).writeFilter(new NBTTagCompound()));
 		        			}
@@ -136,7 +137,7 @@ public class ECBaseBlock extends BlockContainer {
 		        		//No IToolWrench
 		        	}
 		        	if(current.getItem() instanceof IAEWrench && ((IAEWrench)current.getItem()).canWrench(current, player, x, y, z)){
-		        		ItemStack block = new ItemStack(this, 1, world.getBlockMetadata(y, y, z));;
+		        		ItemStack block = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));;
 		    			if(tile != null && tile instanceof TileEntityFluidInterface){
 		    				block.setTagCompound(((TileEntityFluidInterface)tile).writeFilter(new NBTTagCompound()));
 		    			}

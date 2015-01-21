@@ -458,6 +458,7 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 	 @Override
 	 public NBTTagCompound getWailaTag(NBTTagCompound tag){
 		 super.getWailaTag(tag);
+		 tag.setBoolean("locked", locked);
 		 tag.setLong("amount", amount);
 		 if(fluid == null)
 			 tag.setInteger("fluid", -1);
@@ -471,6 +472,10 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 		 super.getWailaBodey(data, list);
 		 long amount = 0L;
 		 Fluid fluid = null;
+		 if(data.hasKey("locked") && data.getBoolean("locked"))
+			 list.add(StatCollector.translateToLocal("waila.appliedenergistics2.Locked"));
+		 else
+			 list.add(StatCollector.translateToLocal("waila.appliedenergistics2.Unlocked"));
 		 if(data.hasKey("amount"))
 			 amount = data.getLong("amount");
 		 if(data.hasKey("fluid")){
@@ -480,7 +485,10 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 		 }
 		 if(fluid != null){
 			 list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + fluid.getLocalizedName(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME)));
-			 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amount + "mB");
+			 if(isActive())
+				 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amount + "mB");
+			 else
+				 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB");
 		 }else{
 			 list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + StatCollector.translateToLocal("extracells.tooltip.empty1"));
 			 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB");

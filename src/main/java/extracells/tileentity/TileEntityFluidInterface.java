@@ -14,6 +14,7 @@ import extracells.gridblock.ECFluidGridBlock;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
 import extracells.util.EmptyMeItemMonitor;
+import extracells.waila.IWailaTile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -25,8 +26,10 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -58,7 +61,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 
-public class TileEntityFluidInterface extends TileEntity implements IActionHost, IFluidHandler, IECTileEntity, IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable, IStorageMonitorable, ICraftingProvider {
+public class TileEntityFluidInterface extends TileEntity implements IActionHost, IFluidHandler, IECTileEntity, IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable, IStorageMonitorable, ICraftingProvider, IWailaTile {
 	
 	List<IContainerListener> listeners = new ArrayList<IContainerListener>();
 	
@@ -397,7 +400,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 		}
 		for (int i = 0; i < tanks.length; i++){
 			if(tanks[i].getFluid() != null && FluidRegistry.getFluid(fluidFilter[i]) != tanks[i].getFluid().getFluid()){
-				FluidStack s = tanks[i].drain(20, false);
+				FluidStack s = tanks[i].drain(125, false);
 				if(s != null){
 					IAEFluidStack notAdded = storage.getFluidInventory().injectItems(AEApi.instance().storage().createFluidStack(s.copy()), Actionable.SIMULATE, new MachineSource(this));
 					if(notAdded != null){
@@ -413,7 +416,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 				}
 			}
 			if((tanks[i].getFluid() == null || tanks[i].getFluid().getFluid() == FluidRegistry.getFluid(fluidFilter[i])) && FluidRegistry.getFluid(fluidFilter[i]) != null){
-				IAEFluidStack extracted = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.getFluid(fluidFilter[i]), 20)), Actionable.SIMULATE, new MachineSource(this));
+				IAEFluidStack extracted = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(FluidRegistry.getFluid(fluidFilter[i]), 125)), Actionable.SIMULATE, new MachineSource(this));
 				if(extracted == null)
 					continue;
 				int accepted = tanks[i].fill(extracted.getFluidStack(), false);
@@ -764,5 +767,53 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	@Override
 	public IInventory getPatternInventory() {
 		return inventory;
+	}
+
+	@Override
+	public List<String> getWailaBody(List<String> list, NBTTagCompound tag, ForgeDirection side) {
+		if(side == null || side == ForgeDirection.UNKNOWN)
+			return list;
+		list.add(StatCollector.translateToLocal("extracells.tooltip.direction." + side.ordinal()));
+		FluidTank[] tanks = new FluidTank[6];
+		for (int i = 0; i < tanks.length; i++)
+		{
+			tanks[i] = new FluidTank(10000)
+			{
+				public FluidTank readFromNBT(NBTTagCompound nbt)
+				{
+					if (!nbt.hasKey("Empty"))
+					{
+						FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+						setFluid(fluid);
+					} else
+					{
+						setFluid(null);
+					}
+					return this;
+				}
+			};
+		}
+		
+		for (int i = 0; i < tanks.length; i++){
+			if(tag.hasKey("tank#"+i))
+				tanks[i].readFromNBT(tag.getCompoundTag("tank#"+i));
+		}
+		FluidTank tank = tanks[side.ordinal()];
+		if(tank == null || tank.getFluid() == null || tank.getFluid().getFluid() == null){
+			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + StatCollector.translateToLocal("extracells.tooltip.empty1"));
+			list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB / 10000mB");
+		}else{
+			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + tank.getFluid().getLocalizedName());
+			list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + tank.getFluidAmount() + "mB / 10000mB");
+		}
+		return list;
+	}
+
+	@Override
+	public NBTTagCompound getWailaTag(NBTTagCompound tag) {
+		for (int i = 0; i < tanks.length; i++){
+			tag.setTag("tank#"+i, tanks[i].writeToNBT(new NBTTagCompound()));
+		}
+		return tag;
 	}
 }

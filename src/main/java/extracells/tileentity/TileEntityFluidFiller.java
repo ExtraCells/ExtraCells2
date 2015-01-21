@@ -3,6 +3,8 @@ package extracells.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
@@ -43,6 +45,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
 import extracells.gridblock.ECFluidGridBlock;
+import extracells.util.FluidUtil;
 
 public class TileEntityFluidFiller extends TileEntity implements IActionHost, ICraftingProvider, IECTileEntity, IMEMonitorHandlerReceiver<IAEFluidStack>, IListenerTile {
 	
@@ -91,11 +94,11 @@ public class TileEntityFluidFiller extends TileEntity implements IActionHost, IC
 		if(returnStack != null)
 			return false;
 		ItemStack filled = patternDetails.getCondensedOutputs()[0].getItemStack();
-		FluidStack fluid = FluidContainerRegistry.getFluidForFilledItem(filled);
+		FluidStack fluid = FluidUtil.getFluidFromContainer(filled);
 		IStorageGrid storage = getStorageGrid();
 		if(storage == null)
 			return false;
-		IAEFluidStack fluidStack = AEApi.instance().storage().createFluidStack(fluid);
+		IAEFluidStack fluidStack = AEApi.instance().storage().createFluidStack(new FluidStack(fluid.getFluid(), FluidUtil.getCapacity(patternDetails.getCondensedInputs()[0].getItemStack())));
 		IAEFluidStack extracted = storage.getFluidInventory().extractItems(fluidStack.copy(), Actionable.SIMULATE, new MachineSource(this));
 		if(extracted == null || extracted.getStackSize() != fluidStack.getStackSize())
 			return false;
@@ -130,10 +133,13 @@ public class TileEntityFluidFiller extends TileEntity implements IActionHost, IC
 			Fluid fluid = fluidStack.getFluid();
 			if(fluid == null)
 				continue;
-			ItemStack filled = FluidContainerRegistry.fillFluidContainer(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME), containerItem);
-			if(filled == null)
+			int maxCapacity = FluidUtil.getCapacity(containerItem);
+			if(maxCapacity == 0)
 				continue;
-			ItemStack pattern = getPattern(containerItem, filled);
+			MutablePair<Integer, ItemStack> filled = FluidUtil.fillStack(containerItem.copy(), new FluidStack(fluid, maxCapacity));
+			if(filled.right == null)
+				continue;
+			ItemStack pattern = getPattern(containerItem, filled.right);
 			ICraftingPatternItem patter = (ICraftingPatternItem) pattern.getItem();
 			craftingTracker.addCraftingOption(this, patter.getPatternForItem(pattern, getWorldObj()));
 		}
