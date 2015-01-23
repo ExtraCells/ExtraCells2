@@ -30,7 +30,7 @@ extracells.item.storage.component.fluid.4096k.name=4096k-ME-Flüssigkeitsspeiche
 extracells.item.storage.casing.physical.name=Erweitertes Speichergehäuse
 extracells.item.storage.casing.fluid.name=Flüssigkeits-Speichergehäuse
 extracells.item.terminal.fluid.wireless.name=Drahtlose Flüssigkeits-Zugangskonsole
-extracells.item.fluid.pattern=ME Flüssigkeitsschablone
+extracells.item.fluid.pattern=ME Flüssigkeitsschablone [WIP]
 
 //Creative Tab
 itemGroup.Extra_Cells=Extra Cells
