@@ -69,7 +69,6 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
         rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[0]);
         rh.setBounds(7, 7, 11, 9, 9, 14);
         rh.renderBlock(x, y, z, renderer);
-
         rh.setTexture(clientRedstoneOutput ? TextureManager.LEVEL_FRONT.getTextures()[2] : TextureManager.LEVEL_FRONT.getTextures()[1]);
         rh.setBounds(7, 7, 14, 9, 9, 16);
         rh.renderBlock(x, y, z, renderer);
@@ -217,6 +216,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     public boolean readFromStream(ByteBuf data) throws IOException {
     	super.readFromStream(data);
     	clientRedstoneOutput = data.readBoolean();
+    	if(getHost() != null)
+    		getHost().markForUpdate();
         return true;
     }
     
