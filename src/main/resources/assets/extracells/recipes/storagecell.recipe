@@ -10,7 +10,7 @@ shaped=
 	-> ec:fluidCasing
 
 shapeless=
-	ae2:ItemBasicStorageCell.1k mc:chest
+	ae2:ItemMaterial.Cell1kPart ae2:ItemMaterial.EmptyStorageCell mc:chest
 	-> ec:physCellContainer
 
 
