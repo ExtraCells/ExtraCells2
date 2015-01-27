@@ -124,7 +124,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 
         if (fluidBlock instanceof IFluidBlock) {
             IFluidBlock block = (IFluidBlock) fluidBlock;
-            FluidStack drained = block.drain(world, x, y, z, false);
+            FluidStack drained = block.drain(world, x + side.offsetX, y + side.offsetY, z + side.offsetZ, false);
             if (drained == null)
                 return;
             IAEFluidStack toInject = FluidUtil.createAEFluidStack(drained);
@@ -132,7 +132,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
             if (notInjected != null)
                 return;
             monitor.injectItems(toInject, Actionable.MODULATE, new MachineSource(this));
-            block.drain(world, x, y, z, true);
+            block.drain(world, x + side.offsetX, y + side.offsetY, z + side.offsetZ, true);
         } else if (meta == 0) {
             if (fluidBlock == Blocks.flowing_water) {
                 IAEFluidStack toInject = FluidUtil.createAEFluidStack(FluidRegistry.WATER);
