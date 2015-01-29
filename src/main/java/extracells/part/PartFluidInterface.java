@@ -527,7 +527,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			{
 				ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack.getItem();
 
-				if (currentPattern != null && currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld()) != null && currentPattern.getPatternForItem(currentPatternStack,getGridNode().getWorld()).isCraftable())
+				if (currentPattern != null && currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld()) != null)
 				{
 					ICraftingPatternDetails pattern = new CraftingPattern(currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld()));
 					patternHandlers.add(pattern);
