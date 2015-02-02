@@ -161,8 +161,10 @@ public class BlockCertusTank extends Block implements ITileEntityProvider {
 
             ((TileEntityCertusTank) worldTE).writeToNBTWithoutCoords(tileEntity);
 
-            dropStack.setTagCompound(new NBTTagCompound());
-            dropStack.stackTagCompound.setTag("tileEntity", tileEntity);
+            if(!tileEntity.hasKey("Empty")){
+            	dropStack.setTagCompound(new NBTTagCompound());
+            	dropStack.stackTagCompound.setTag("tileEntity", tileEntity);
+            }
             return dropStack;
 
         }

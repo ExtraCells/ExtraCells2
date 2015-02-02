@@ -42,7 +42,7 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
     }
 
     @SuppressWarnings(
-            {"rawtypes", "unchecked"})
+    		{"rawtypes", "unchecked"})
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
@@ -120,7 +120,7 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
             container.stackTagCompound = new NBTTagCompound();
         }
 
-        if (!container.stackTagCompound.hasKey("tileEntity"))
+        if ((!container.stackTagCompound.hasKey("tileEntity")) || container.stackTagCompound.getCompoundTag("tileEntity").hasKey("Empty"))
         {
             NBTTagCompound fluidTag = resource.writeToNBT(new NBTTagCompound());
 
@@ -161,7 +161,7 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
     @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain)
     {
-        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("tileEntity"))
+        if (container.stackTagCompound == null || (!container.stackTagCompound.hasKey("tileEntity")) || container.stackTagCompound.getCompoundTag("tileEntity").hasKey("Empty"))
         {
             return null;
         }
