@@ -534,11 +534,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 				{
 					ICraftingPatternDetails pattern = new CraftingPattern2(currentPattern.getPatternForItem(currentPatternStack, getWorldObj()));
 					patternHandlers.add(pattern);
-					if(pattern.getCondensedInputs().length == 0){
-						craftingTracker.setEmitable(pattern.getCondensedOutputs()[0]);
-					}else{
-						craftingTracker.addCraftingOption(this, pattern);
-					}
+					craftingTracker.addCraftingOption(this, pattern);
 				}
 			}
 		}

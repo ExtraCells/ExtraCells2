@@ -14,6 +14,7 @@ import extracells.api.IFluidInterface;
 import extracells.container.ContainerFluidInterface;
 import extracells.container.IContainerListener;
 import extracells.crafting.CraftingPattern;
+import extracells.crafting.CraftingPattern2;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
@@ -321,6 +322,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 		if(storage == null)
 			return TickRateModulation.URGENT;
+		pushItems();
 		if(toExport != null){
 			storage.getItemInventory().injectItems(toExport, Actionable.MODULATE, new MachineSource(this));
 			toExport = null;
@@ -507,7 +509,6 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 				}
 				export.add(s);
 			}
-			
 		}
 		return true;
 	}
@@ -529,13 +530,9 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 
 				if (currentPattern != null && currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld()) != null)
 				{
-					ICraftingPatternDetails pattern = new CraftingPattern(currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld()));
+					ICraftingPatternDetails pattern = new CraftingPattern2(currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld()));
 					patternHandlers.add(pattern);
-					if(pattern.getCondensedInputs().length == 0){
-						craftingTracker.setEmitable(pattern.getCondensedOutputs()[0]);
-					}else{
-						craftingTracker.addCraftingOption(this, pattern);
-					}
+					craftingTracker.addCraftingOption(this, pattern);
 				}
 			}
 		}
@@ -675,7 +672,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			export.add(s);
 		}
 		addToExport.clear();
-		if(getGridNode().getWorld() != null || export.isEmpty())
+		if(getGridNode().getWorld() == null || export.isEmpty())
 			return;
 		ForgeDirection dir = getSide();
 		TileEntity tile = getGridNode().getWorld().getTileEntity(getGridNode().getGridBlock().getLocation().x + dir.offsetX, getGridNode().getGridBlock().getLocation().y + dir.offsetY, getGridNode().getGridBlock().getLocation().z + dir.offsetZ);

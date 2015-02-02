@@ -70,7 +70,7 @@ repositories {
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:rv2-beta-7:dev"){
+	compile ("appeng:appliedenergistics2:rv2-beta-8:dev"){
         exclude group: "mcp.mobius.waila", module: "Waila"
         exclude group: "codechicken", module: "ForgeMultipart"
 		exclude group: "codechicken", module: "CodeChickenCore"
