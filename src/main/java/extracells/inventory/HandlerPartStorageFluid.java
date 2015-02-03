@@ -106,10 +106,10 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
     	if(externalSystem != null && input != null){
     		IStorageMonitorable monitor = externalSystem.getMonitorable(node.getSide().getOpposite(), src);
     		if(monitor == null)
-    			return null;
+    			return input;
     		IMEMonitor<IAEFluidStack> fluidInventory = monitor.getFluidInventory();
     		if(fluidInventory == null)
-    			return null;
+    			return input;
     		return fluidInventory.injectItems(input, mode, src);
     	}
         if (tank == null || input == null || !canAccept(input))
@@ -122,7 +122,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			filled = filled + filled2;
 		} while (filled2 != 0 && filled != toFill.amount);
         if (filled == toFill.amount)
-            return null;
+            return input;
         return FluidUtil.createAEFluidStack(toFill.fluidID, toFill.amount - filled);
     }
 
