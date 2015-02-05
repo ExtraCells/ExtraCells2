@@ -1,0 +1,81 @@
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+extracells.item.storage.physical.256k.name=Stockage ME 256k
+extracells.item.storage.physical.1024k.name=Stockage ME 1024k
+extracells.item.storage.physical.4096k.name=Stockage ME 4096k
+extracells.item.storage.physical.16384k.name=Stockage ME 16384k
+extracells.item.storage.physical.container.name=Conteneur de bloc ME
+extracells.item.storage.fluid.1k.name=Stockage de fluide ME 1k
+extracells.item.storage.fluid.4k.name=Stockage de fluide ME 4k
+extracells.item.storage.fluid.16k.name=Stockage de fluide ME 16k
+extracells.item.storage.fluid.64k.name=Stockage de fluide ME 64k
+extracells.item.storage.fluid.256k.name=Stockage de fluide ME 256k
+extracells.item.storage.fluid.1024k.name=Stockage de fluide ME 1024k  
+extracells.item.storage.fluid.4096k.name=Stockage de fluide ME 4096k  
+extracells.item.storage.fluid.portable.name=Stockage portable de fluide ME 
+extracells.item.storage.component.physical.256k.name=Composant de stockage ME 256k
+extracells.item.storage.component.physical.1024k.name=Composant de stockage ME 1024k
+extracells.item.storage.component.physical.4096k.name=Composant de stockage ME 4096k
+extracells.item.storage.component.physical.16384k.name=Composant de stockage ME 16384k
+extracells.item.storage.component.fluid.1k.name=Composant de stockage de fluide ME 1k
+extracells.item.storage.component.fluid.4k.name=Composant de stockage de fluide ME 4k
+extracells.item.storage.component.fluid.16k.name=Composant de stockage de fluide ME 16k
+extracells.item.storage.component.fluid.64k.name=Composant de stockage de fluide ME 64k
+extracells.item.storage.component.fluid.256k.name=Composant de stockage de fluide ME 256k
+extracells.item.storage.component.fluid.1024k.name=Composant de stockage de fluide ME 1024k
+extracells.item.storage.component.fluid.4096k.name=Composant de stockage de fluide ME 4096k
+extracells.item.storage.casing.physical.name=Boîtier avancé de stockage ME
+extracells.item.storage.casing.fluid.name=Boîtier de stockage de fluide ME
+extracells.item.terminal.fluid.wireless.name=Terminal de fluide ME sans fil
+extracells.item.fluid.pattern=Modèle de fluide ME [WIP]
+
+//Creative Tab
+itemGroup.Extra_Cells=Extra Cells
+
+//Item Groups
+extracells.fluid.IO=Bus d'import/export de fluide ME
+extracells.fluid.plane=Plan de fluide ME
+
+//Parts
+extracells.part.fluid.export.name=Bus d'export de fluide ME
+extracells.part.fluid.import.name=Bus d'import de fluide ME
+extracells.part.fluid.storage.name=Bus de stockage de fluide ME
+extracells.part.fluid.terminal.name=Terminale des fluides ME
+extracells.part.fluid.plane.annihilation.name=Plan d'annihilisation de fluide ME
+extracells.part.fluid.plane.formation.name=Plan de formation de fluide ME
+extracells.part.fluid.levelemitter.name=Emetteur de niveau de fluide ME
+extracells.part.drive.name=Installation de disque ME
+extracells.part.battery.name=Installation de cellule énergétique ME
+
+//Blocks
+extracells.block.certustank=Réservoir en Quartz Certus
+extracells.block.walrus.name=Morse
+extracells.block.fluidcrafter.name=Assembleur de fluide ME
+extracells.block.fluidinterface.name=Interface de fluide ME
+
+//Tooltips and Chat-Messages
+extracells.tooltip.amount=Quantité
+extracells.tooltip.fluid=Fluide
+extracells.tooltip.storage.physical.types=%s of %s item types used.
+extracells.tooltip.storage.fluid.types=%s of %s fluid types used.
+extracells.tooltip.storage.physical.bytes=%s of %s item bytes used.
+extracells.tooltip.storage.fluid.bytes=%s of %s fluid bytes used.
+extracells.tooltip.storage.fluid.content=contains %s mB of fluid.
+extracells.tooltip.storage.physical.content=contains %s items.
+extracells.tooltip.direction.0=Bas
+extracells.tooltip.direction.1=Haut
+extracells.tooltip.direction.2=Nord
+extracells.tooltip.direction.3=Sud
+extracells.tooltip.direction.4=Ouest
+extracells.tooltip.direction.5=Est
+extracells.tooltip.empty1=Vide
+extracells.tooltip.storage.container.0=Mode: Placement Mode
+extracells.tooltip.storage.container.1=Mode: Equal Trade Mode (1*1)
+extracells.tooltip.storage.container.2=Mode: Equal Trade Mode (3*3)
+extracells.tooltip.onlyblocks=You can't place Items! Put a Block into the BLOCK-Container
+
+//Buttons
+extracells.gui.craft=Craft
