@@ -122,7 +122,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			filled = filled + filled2;
 		} while (filled2 != 0 && filled != toFill.amount);
         if (filled == toFill.amount)
-            return input;
+            return null;
         return FluidUtil.createAEFluidStack(toFill.fluidID, toFill.amount - filled);
     }
 
