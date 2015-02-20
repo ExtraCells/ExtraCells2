@@ -1,6 +1,7 @@
 package extracells.util.inventory;
 
 import extracells.registries.ItemEnum;
+import extracells.util.FluidUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
@@ -24,19 +25,22 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
     public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		if(itemstack == null)
 			return false;
-		int fluidID;
 		if(itemstack.getItem() == ItemEnum.FLUIDITEM.getItem()){
-			fluidID = itemstack.getItemDamage();
-		}else{
-			FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemstack);
-			if(fluidStack == null)
-				return false;
-			Fluid fluid = fluidStack.getFluid();
-			if(fluid == null)
-				return false;
-			fluidID = fluid.getID();
+			int fluidID = itemstack.getItemDamage();
+			for(ItemStack s : slots){
+				if(s == null)
+					continue;
+				if(s.getItemDamage() == fluidID)
+					return false;
+			}
+	        return true;
 		}
-		
+		if(!FluidUtil.isFilled(itemstack))
+			return false;
+		FluidStack stack = FluidUtil.getFluidFromContainer(itemstack);
+		if (stack  == null)
+			return false;
+		int fluidID = stack.fluidID;
 		for(ItemStack s : slots){
 			if(s == null)
 				continue;
@@ -60,7 +64,7 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
 		}else{
 			if(!isItemValidForSlot(slotId, itemstack))
 				return;
-			FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(itemstack);
+			FluidStack fluidStack = FluidUtil.getFluidFromContainer(itemstack);
 			if(fluidStack == null){
 				super.setInventorySlotContents(slotId, null);
 				return;
