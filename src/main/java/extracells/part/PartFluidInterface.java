@@ -612,7 +612,6 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
         }
 
         public void writeToNBT(NBTTagCompound tagCompound) {
-                                
                 NBTTagList itemList = new NBTTagList();
                 for (int i = 0; i < inv.length; i++) {
                         ItemStack stack = inv[i];

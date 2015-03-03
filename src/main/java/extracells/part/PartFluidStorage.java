@@ -125,6 +125,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
         upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
         onInventoryChanged();
         onNeighborChanged();
+        handler.setPrioritizedFluids(filterFluids);
     }
 
     @Override
