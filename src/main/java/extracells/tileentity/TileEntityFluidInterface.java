@@ -694,7 +694,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 										s.stackSize = max;
 										inv.setInventorySlotContents(i, s);
 										removeFromExport.add(stack0);
-										stack.setStackSize(max - current);
+										stack.setStackSize(outStack - max + current);
 										addToExport.add(stack);
 										return;
 									}
@@ -726,7 +726,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 										s.stackSize = max;
 										inv.setInventorySlotContents(i, s);
 										removeFromExport.add(stack0);
-										stack.setStackSize(max - current);
+										stack.setStackSize(outStack - max + current);
 										addToExport.add(stack);
 										return;
 									}

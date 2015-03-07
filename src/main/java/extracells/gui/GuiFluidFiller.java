@@ -2,6 +2,7 @@ package extracells.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -44,10 +45,22 @@ public class GuiFluidFiller extends GuiContainer
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int i, int j)
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("extracells.block.fluidfiller.name").replace("ME ", ""), 5, 5, 0x000000);
-		fluidContainerSlot.drawWidget();
+		int i = fluidContainerSlot.getPosX();
+		int j = fluidContainerSlot.getPosY();
+		if (GuiUtil.isPointInRegion(guiLeft, guiTop, i, j, 16, 16, mouseX, mouseY)){
+			fluidContainerSlot.drawWidgetWithRect(i, j);
+			GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glColorMask(true, true, true, false);
+            this.drawGradientRect(i, j, i + 16, j + 16, -2130706433, -2130706433);
+            GL11.glColorMask(true, true, true, true);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+		}else
+			fluidContainerSlot.drawWidget();
 	}
 	
 	@Override

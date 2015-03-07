@@ -704,7 +704,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 									s.stackSize = max;
 									inv.setInventorySlotContents(i, s);
 									removeFromExport.add(stack0);
-									stack.setStackSize(max - current);
+									stack.setStackSize(outStack - max + current);
 									addToExport.add(stack);
 									return;
 								}
@@ -736,7 +736,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 									s.stackSize = max;
 									inv.setInventorySlotContents(i, s);
 									removeFromExport.add(stack0);
-									stack.setStackSize(max - current);
+									stack.setStackSize(outStack - max + current);
 									addToExport.add(stack);
 									return;
 								}

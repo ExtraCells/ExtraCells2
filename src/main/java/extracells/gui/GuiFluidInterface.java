@@ -102,6 +102,16 @@ public class GuiFluidInterface extends GuiContainer
 					tank.drawTooltip(mouseX - guiLeft, mouseY - guiTop);
 				}
 		}
+		for (WidgetFluidSlot fluidSlot : filter) {
+			if(fluidSlot != null){
+				int i = fluidSlot.getPosX() + 1;
+				int j = fluidSlot.getPosY() + 1;
+				if (GuiUtil.isPointInRegion(guiLeft, guiTop, i, j, 16, 16, mouseX, mouseY)) {
+					drawRect(i, j, i + 16, j + 16, -2130706433);
+					break;
+				}
+			}
+		}
 	}
 	
 	@Override
