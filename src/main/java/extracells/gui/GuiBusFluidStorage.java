@@ -1,8 +1,11 @@
 package extracells.gui;
 
 import appeng.api.AEApi;
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.RedstoneMode;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.widget.WidgetRedstoneModes;
+import extracells.gui.widget.WidgetStorageDirection;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketBusFluidStorage;
@@ -10,6 +13,7 @@ import extracells.part.PartFluidStorage;
 import extracells.util.FluidUtil;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -17,8 +21,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +51,15 @@ public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.
         hasNetworkTool = inventorySlots.getInventory().size() > 40;
         xSize = hasNetworkTool ? 246 : 211;
         ySize = 222;
+        
 
+    }
+    
+    @Override
+    public void initGui()
+    {
+    	super.initGui();
+    	buttonList.add(new WidgetStorageDirection(0, guiLeft - 18, guiTop, 16, 16, AccessRestriction.READ_WRITE));
     }
 
     @Override
@@ -56,7 +70,9 @@ public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.
         drawTexturedModalRect(guiLeft + 179, guiTop, 179, 0, 32, 86);
         if (hasNetworkTool)
             drawTexturedModalRect(guiLeft + 179, guiTop + 93, 178, 93, 68, 68);
-
+        for(Object s :this.inventorySlots.inventorySlots){
+			renderBackground((Slot) s);
+		}
     }
 
     public void shiftClick(ItemStack itemStack) {
@@ -81,8 +97,8 @@ public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.
         }
 
         for (Object button : buttonList) {
-            if (button instanceof WidgetRedstoneModes)
-                ((WidgetRedstoneModes) button).drawTooltip(guiLeft, guiTop, (this.width - xSize) / 2, (this.height - ySize) / 2);
+            if (button instanceof WidgetStorageDirection)
+            	((WidgetStorageDirection) button).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
         }
     }
 
@@ -130,4 +146,45 @@ public class GuiBusFluidStorage extends GuiContainer implements WidgetFluidSlot.
     private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
         return this.func_146978_c(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
     }
+    
+    public void updateAccessRestriction(AccessRestriction mode) {
+        if (buttonList.size() > 0)
+            ((WidgetStorageDirection) buttonList.get(0)).setAccessRestriction(mode);
+    }
+    
+    @Override
+    public void actionPerformed(GuiButton button) {
+        super.actionPerformed(button);
+        if(button instanceof WidgetStorageDirection){
+        	switch(((WidgetStorageDirection) button).getAccessRestriction()){
+        	case NO_ACCESS:
+        		new PacketBusFluidStorage(player, AccessRestriction.READ, false).sendPacketToServer();
+        		break;
+        	case READ:
+        		new PacketBusFluidStorage(player, AccessRestriction.READ_WRITE, false).sendPacketToServer();
+        		break;
+        	case READ_WRITE:
+        		new PacketBusFluidStorage(player, AccessRestriction.WRITE, false).sendPacketToServer();
+        		break;
+        	case WRITE:
+        		new PacketBusFluidStorage(player, AccessRestriction.NO_ACCESS, false).sendPacketToServer();
+        		break;
+        	default:
+        		break;
+        	}
+        }
+    }
+    
+    private void renderBackground(Slot slot){
+		if (slot.getStack() == null && (slot.slotNumber == 0 || slot.slotNumber > 36)){
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+			this.mc.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
+			this.drawTexturedModalRect(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, 240, 208, 16, 16);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_LIGHTING);
+            
+        }
+	}
 }

@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -64,7 +65,9 @@ public class GuiBusFluidIO extends GuiContainer implements WidgetFluidSlot.IConf
         drawTexturedModalRect(guiLeft + 179, guiTop, 179, 0, 32, 86);
         if (hasNetworkTool)
             drawTexturedModalRect(guiLeft + 179, guiTop + 93, 178, 93, 68, 68);
-
+        for(Object s :this.inventorySlots.inventorySlots){
+			renderBackground((Slot) s);
+		}
     }
 
     public boolean shiftClick(ItemStack itemStack) {
@@ -137,6 +140,7 @@ public class GuiBusFluidIO extends GuiContainer implements WidgetFluidSlot.IConf
         }
     }
 
+    @Override
     public void actionPerformed(GuiButton button) {
         super.actionPerformed(button);
         new PacketBusFluidIO(player, (byte) button.id, part).sendPacketToServer();
@@ -177,4 +181,17 @@ public class GuiBusFluidIO extends GuiContainer implements WidgetFluidSlot.IConf
     private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
         return this.func_146978_c(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
     }
+    
+    private void renderBackground(Slot slot){
+		if (slot.getStack() == null && (slot.slotNumber < 4 || slot.slotNumber > 39)){
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+			this.mc.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
+			this.drawTexturedModalRect(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, 240, 208, 16, 16);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_LIGHTING);
+            
+        }
+	}
 }

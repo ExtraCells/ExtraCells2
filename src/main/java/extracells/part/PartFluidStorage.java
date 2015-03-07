@@ -1,6 +1,7 @@
 package extracells.part;
 
 import appeng.api.AEApi;
+import appeng.api.config.AccessRestriction;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -24,6 +25,7 @@ import extracells.gui.GuiBusFluidStorage;
 import extracells.inventory.HandlerPartStorageFluid;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.part.PacketBusFluidStorage;
 import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
@@ -48,6 +50,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     private int priority = 0;
     private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
     private Fluid[] filterFluids = new Fluid[54];
+    private AccessRestriction access = AccessRestriction.READ_WRITE;
     private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this) {
 
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
@@ -113,6 +116,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
                 data.setString("FilterFluid#" + i, "");
         }
         data.setTag("upgradeInventory", upgradeInventory.writeToNBT());
+        data.setString("access", access.name());
     }
 
     @Override
@@ -122,10 +126,16 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
         for (int i = 0; i < 9; i++) {
             filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
         }
+        if(data.hasKey("access")){
+        	try{
+        		access = AccessRestriction.valueOf(data.getString("access"));
+        	}catch(Throwable e){}
+        }
         upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
         onInventoryChanged();
         onNeighborChanged();
         handler.setPrioritizedFluids(filterFluids);
+        handler.setAccessRestriction(access);
     }
 
     @Override
@@ -190,6 +200,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
     public void sendInformation(EntityPlayer player) {
         new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
+        new PacketBusFluidStorage(player, access, true).sendPacketToPlayer(player);
     }
 
     public Object getServerGuiElement(EntityPlayer player) {
@@ -254,5 +265,11 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     		return super.onActivate(player, pos);
     	}
     	return false;
+    }
+    
+    public void updateAccess(AccessRestriction access){
+    	this.access = access;
+    	handler.setAccessRestriction(access);
+    	onNeighborChanged();
     }
 }

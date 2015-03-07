@@ -16,11 +16,13 @@ import extracells.tileentity.TileEntityFluidInterface;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -72,6 +74,9 @@ public class GuiFluidInterface extends GuiContainer
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		for(Object s :this.inventorySlots.inventorySlots){
+			renderBackground((Slot) s);
+		}
 	}
 
 	@Override
@@ -101,16 +106,26 @@ public class GuiFluidInterface extends GuiContainer
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
-        super.mouseClicked(mouseX, mouseY, mouseBtn);
-        for (WidgetFluidSlot fluidSlot : filter) {
-        	if(fluidSlot != null)
-        		if (GuiUtil.isPointInRegion(guiLeft, guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
-        			fluidSlot.mouseClicked(player.inventory.getItemStack());
-        			break;
-        		}
+		super.mouseClicked(mouseX, mouseY, mouseBtn);
+		for (WidgetFluidSlot fluidSlot : filter) {
+			if(fluidSlot != null)
+				if (GuiUtil.isPointInRegion(guiLeft, guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
+					fluidSlot.mouseClicked(player.inventory.getItemStack());
+					break;
+				}
+		}
+	}
+	
+	private void renderBackground(Slot slot){
+		if (slot.getStack() == null && slot.slotNumber < 9){
+			GL11.glDisable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+			this.mc.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
+			this.drawTexturedModalRect(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, 240, 128, 16, 16);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_LIGHTING);
+            
         }
-    }
-	
-	
-
+	}
 }

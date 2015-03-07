@@ -147,6 +147,8 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
     		return false;
     	stack.setStackSize(amount);
     	stack = storage.getItemInventory().extractItems(stack.copy(), Actionable.SIMULATE, new MachineSource(this));
+    	if(stack == null)
+    		return false;
     	IAEItemStack exported = exportStack(stack.copy());
     	if(exported == null)
     		return false;
