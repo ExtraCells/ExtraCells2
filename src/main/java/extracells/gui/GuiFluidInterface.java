@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.AEApi;
+import appeng.api.implementations.ICraftingPatternItem;
 import extracells.api.IFluidInterface;
 import extracells.container.ContainerFluidInterface;
 import extracells.gui.widget.WidgetFluidTank;
@@ -15,7 +16,9 @@ import extracells.registries.BlockEnum;
 import extracells.tileentity.TileEntityFluidInterface;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -112,6 +115,13 @@ public class GuiFluidInterface extends GuiContainer
 				}
 			}
 		}
+		for(Object s :this.inventorySlots.inventorySlots){
+			try {
+				renderOutput((Slot) s, mouseX, mouseY);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override
@@ -137,5 +147,52 @@ public class GuiFluidInterface extends GuiContainer
 			GL11.glEnable(GL11.GL_LIGHTING);
             
         }
+	}
+	
+	private void renderOutput(Slot slot, int mouseX, int mouseY) throws Throwable{
+		if (slot.getStack() != null && slot.slotNumber < 9){
+			ItemStack stack = slot.getStack();
+			if(stack.getItem() instanceof ICraftingPatternItem){
+				ICraftingPatternItem pattern = (ICraftingPatternItem) stack.getItem();
+				ItemStack output = pattern.getPatternForItem(stack, Minecraft.getMinecraft().theWorld).getCondensedOutputs()[0].getItemStack().copy();
+				
+				this.zLevel = 160.0F;
+				GL11.glDisable(GL11.GL_LIGHTING);
+		        GL11.glEnable(GL11.GL_BLEND);
+		        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		        GL11.glColor3f(1, 1, 1);
+		        GL11.glDisable(GL11.GL_LIGHTING);
+		        GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		        Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
+		        drawTexturedModalRect(slot.xDisplayPosition, slot.yDisplayPosition, slot.xDisplayPosition, slot.yDisplayPosition, 18, 18);
+		        GL11.glEnable(GL11.GL_LIGHTING);
+				
+				
+				GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+		        this.zLevel = 150.0F;
+		        RenderItem itemRender = RenderItem.getInstance();
+		        itemRender.zLevel = 100.0F;
+		        FontRenderer font = null;
+		        if (output != null) font = output.getItem().getFontRenderer(output);
+		        if (font == null) font = Minecraft.getMinecraft().fontRenderer;
+		        GL11.glEnable(GL11.GL_DEPTH_TEST);
+		        itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), output, slot.xDisplayPosition, slot.yDisplayPosition);
+		        this.zLevel = 0.0F;
+		        itemRender.zLevel = 0.0F;
+		        
+		        
+		        int i = slot.xDisplayPosition;
+				int j = slot.yDisplayPosition;
+		        if (GuiUtil.isPointInRegion(guiLeft, guiTop, i, j, 16, 16, mouseX, mouseY)){
+					GL11.glDisable(GL11.GL_LIGHTING);
+		            GL11.glDisable(GL11.GL_DEPTH_TEST);
+		            GL11.glColorMask(true, true, true, false);
+		            this.drawGradientRect(i, j, i + 16, j + 16, -2130706433, -2130706433);
+		            GL11.glColorMask(true, true, true, true);
+		            GL11.glEnable(GL11.GL_LIGHTING);
+		            GL11.glEnable(GL11.GL_DEPTH_TEST);
+				}
+			}
+		}
 	}
 }

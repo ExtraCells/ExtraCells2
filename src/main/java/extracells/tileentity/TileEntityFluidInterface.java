@@ -7,6 +7,7 @@ import java.util.List;
 import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.api.IECTileEntity;
 import extracells.api.IFluidInterface;
+import extracells.api.crafting.IFluidCraftingPatternDetails;
 import extracells.container.IContainerListener;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
@@ -19,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -74,10 +76,12 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	private int tickCount = 0;
 	private boolean update = false;
 	private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
+	private HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
 	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
 	private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
 	public final FluidInterfaceInventory inventory;
 	private IAEItemStack toExport = null;
+	private final Item encodedPattern = AEApi.instance().items().itemEncodedPattern.item();
 	
 	private List<IAEStack> export = new ArrayList<IAEStack>();
 	private List<IAEStack> removeFromExport = new ArrayList<IAEStack>();
@@ -325,7 +329,14 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound tag){
+	public void writeToNBT(NBTTagCompound data){
+		writeToNBTWithoutExport(data);
+    	NBTTagCompound tag = new NBTTagCompound();
+    	writeOutputToNBT(tag);
+    	data.setTag("export", tag);
+	}
+	
+	public void writeToNBTWithoutExport(NBTTagCompound tag){
 		super.writeToNBT(tag);
 		for (int i = 0; i < tanks.length; i++)
 		{
@@ -364,12 +375,14 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 		}
 		if(tag.hasKey("inventory"))
     		this.inventory.readFromNBT(tag.getCompoundTag("inventory"));
+		if(tag.hasKey("export"))
+        	readOutputFromNBT(tag.getCompoundTag("export"));
 	}
 	
 	@Override
 	public Packet getDescriptionPacket() {
         NBTTagCompound nbtTag = new NBTTagCompound();
-        writeToNBT(nbtTag);
+        writeToNBTWithoutExport(nbtTag);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
     }
 	
@@ -467,10 +480,11 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	}
 
 	@Override
-	public boolean pushPattern(ICraftingPatternDetails patternDetails,
+	public boolean pushPattern(ICraftingPatternDetails patDetails,
 			InventoryCrafting table) {
-		if(isBusy())
+		if(isBusy() || (!patternConvert.containsKey(patDetails)))
 			return false;
+		ICraftingPatternDetails patternDetails = patternConvert.get(patDetails);
 		if(patternDetails instanceof CraftingPattern){
 			CraftingPattern patter = (CraftingPattern) patternDetails;
 			HashMap<Fluid, Long> fluids = new HashMap<Fluid, Long>();
@@ -523,6 +537,7 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 	@Override
 	public void provideCrafting(ICraftingProviderHelper craftingTracker) {
 		patternHandlers = new ArrayList<ICraftingPatternDetails>();
+		patternConvert.clear();
 		
 		for (ItemStack currentPatternStack : inventory.inv)
 		{
@@ -532,9 +547,14 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 
 				if (currentPattern != null && currentPattern.getPatternForItem(currentPatternStack, getWorldObj()) != null)
 				{
-					ICraftingPatternDetails pattern = new CraftingPattern2(currentPattern.getPatternForItem(currentPatternStack, getWorldObj()));
+					IFluidCraftingPatternDetails pattern = new CraftingPattern2(currentPattern.getPatternForItem(currentPatternStack, getWorldObj()));
 					patternHandlers.add(pattern);
-					craftingTracker.addCraftingOption(this, pattern);
+					ItemStack is = makeCraftingPatternItem(pattern);
+					if(is == null)
+						continue;
+					ICraftingPatternDetails p = ((ICraftingPatternItem)is.getItem()).getPatternForItem(is, getWorldObj());
+					patternConvert.put(p, pattern);
+					craftingTracker.addCraftingOption(this, p);
 				}
 			}
 		}
@@ -812,4 +832,124 @@ public class TileEntityFluidInterface extends TileEntity implements IActionHost,
 		}
 		return tag;
 	}
+	
+	private ItemStack makeCraftingPatternItem(ICraftingPatternDetails details){
+    	if(details == null)
+    		return null;
+    	NBTTagList in = new NBTTagList();
+		NBTTagList out = new NBTTagList();
+		for (IAEItemStack s : details.getInputs()){
+			if(s == null)
+				in.appendTag(new NBTTagCompound());
+			else
+				in.appendTag(s.getItemStack().writeToNBT(new NBTTagCompound()));
+		}
+		for (IAEItemStack s : details.getOutputs()){
+			if(s == null)
+				out.appendTag(new NBTTagCompound());
+			else
+				out.appendTag(s.getItemStack().writeToNBT(new NBTTagCompound()));
+		}
+		NBTTagCompound itemTag = new NBTTagCompound();
+		itemTag.setTag("in", in);
+		itemTag.setTag("out", out);
+		itemTag.setBoolean("crafting", details.isCraftable());
+		ItemStack pattern = new ItemStack(encodedPattern);
+		pattern.setTagCompound(itemTag);
+		return pattern;
+    }
+	
+	private NBTTagCompound writeOutputToNBT(NBTTagCompound tag){
+    	int i = 0;
+    	for(IAEStack s : removeFromExport){
+    		if(s != null){
+    			tag.setBoolean("remove-" + i + "-isItem", s.isItem());
+    			NBTTagCompound data = new NBTTagCompound();
+    			if(s.isItem()){
+    				((IAEItemStack)s).getItemStack().writeToNBT(data);
+    			}else{
+    				((IAEFluidStack)s).getFluidStack().writeToNBT(data);
+    			}
+    			tag.setTag("remove-" + i, data);
+    			tag.setLong("remove-" + i +"-amount", s.getStackSize());
+    		}
+    		i++;
+		}
+    	tag.setInteger("remove", removeFromExport.size());
+    	i = 0;
+		for(IAEStack s : addToExport){
+			if(s != null){
+				tag.setBoolean("add-" + i + "-isItem", s.isItem());
+    			NBTTagCompound data = new NBTTagCompound();
+    			if(s.isItem()){
+    				((IAEItemStack)s).getItemStack().writeToNBT(data);
+    			}else{
+    				((IAEFluidStack)s).getFluidStack().writeToNBT(data);
+    			};
+    			tag.setTag("add-" + i, data);
+    			tag.setLong("add-" + i +"-amount", s.getStackSize());
+    		}
+			i++;
+		}
+		tag.setInteger("add", addToExport.size());
+		i = 0;
+		for(IAEStack s : export){
+			if(s != null){
+				tag.setBoolean("export-" + i + "-isItem", s.isItem());
+    			NBTTagCompound data = new NBTTagCompound();
+    			if(s.isItem()){
+    				((IAEItemStack)s).getItemStack().writeToNBT(data);
+    			}else{
+    				((IAEFluidStack)s).getFluidStack().writeToNBT(data);
+    			}
+    			tag.setTag("export-" + i, data);
+    			tag.setLong("export-" + i +"-amount", s.getStackSize());
+    		}
+			i++;
+		}
+		tag.setInteger("export", export.size());
+    	return tag;
+    }
+	
+	private void readOutputFromNBT(NBTTagCompound tag){
+    	addToExport.clear();
+    	removeFromExport.clear();
+    	export.clear();
+    	int i = tag.getInteger("remove");
+    	for(int j = 0; j < i; j++){
+    		if(tag.getBoolean("remove-" + j + "-isItem")){
+    			IAEItemStack s = AEApi.instance().storage().createItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("remove-" + j)));
+    			s.setStackSize(tag.getLong("remove-" + j +"-amount"));
+    			removeFromExport.add(s);
+    		}else{
+    			IAEFluidStack s = AEApi.instance().storage().createFluidStack(FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("remove-" + j)));
+    			s.setStackSize(tag.getLong("remove-" + j +"-amount"));
+    			removeFromExport.add(s);
+    		}
+    	}
+    	i = tag.getInteger("add");
+    	for(int j = 0; j < i; j++){
+    		if(tag.getBoolean("add-" + j + "-isItem")){
+    			IAEItemStack s = AEApi.instance().storage().createItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("add-" + j)));
+    			s.setStackSize(tag.getLong("add-" + j +"-amount"));
+    			addToExport.add(s);
+    		}else{
+    			IAEFluidStack s = AEApi.instance().storage().createFluidStack(FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("add-" + j)));
+    			s.setStackSize(tag.getLong("add-" + j +"-amount"));
+    			addToExport.add(s);
+    		}
+    	}
+    	i = tag.getInteger("export");
+    	for(int j = 0; j < i; j++){
+    		if(tag.getBoolean("export-" + j + "-isItem")){
+    			IAEItemStack s = AEApi.instance().storage().createItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("export-" + j)));
+    			s.setStackSize(tag.getLong("export-" + j +"-amount"));
+    			export.add(s);
+    		}else{
+    			IAEFluidStack s = AEApi.instance().storage().createFluidStack(FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("export-" + j)));
+    			s.setStackSize(tag.getLong("export-" + j +"-amount"));
+    			export.add(s);
+    		}
+    	}
+    }
 }

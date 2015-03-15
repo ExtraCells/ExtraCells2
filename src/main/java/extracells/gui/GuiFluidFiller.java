@@ -69,6 +69,7 @@ public class GuiFluidFiller extends GuiContainer
         if(fluidContainerSlot != null)
     		if (GuiUtil.isPointInRegion(guiLeft, guiTop, fluidContainerSlot.getPosX(), fluidContainerSlot.getPosY(), 18, 18, mouseX, mouseY)) {
     			fluidContainerSlot.mouseClicked(player.inventory.getItemStack());
+    			
     		}
     }
 }

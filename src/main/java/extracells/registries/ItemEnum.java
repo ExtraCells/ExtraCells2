@@ -15,7 +15,8 @@ public enum ItemEnum {
     STORAGECOMPONET("storage.component", new ItemStorageComponent()),
     STORAGECASING("storage.casing", new ItemStorageCasing()),
     FLUIDITEM("fluid.item", new ItemFluid()),//Internal EC Item
-    FLUIDSTORAGEPORTABLE("storage.fluid.portable", new ItemStoragePortableCell());
+    FLUIDSTORAGEPORTABLE("storage.fluid.portable", new ItemStoragePortableCell()),
+    CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern());//Internal EC Item
 
     private final String internalName;
     private Item item;

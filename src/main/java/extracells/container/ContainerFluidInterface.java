@@ -1,5 +1,6 @@
 package extracells.container;
 
+import appeng.api.implementations.ICraftingPatternItem;
 import extracells.api.IFluidInterface;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidInterface;
@@ -108,6 +109,50 @@ public class ContainerFluidInterface extends Container implements IContainerList
 	protected void retrySlotClick(int p_75133_1_, int p_75133_2_, boolean p_75133_3_, EntityPlayer p_75133_4_)
     {
 		
+    }
+	
+	@Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
+        ItemStack itemstack = null;
+        Slot slot = (Slot) inventorySlots.get(slotnumber);
+
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+            
+            if(itemstack.getItem() instanceof ICraftingPatternItem){
+            	if(slotnumber < 9){
+            		if (!mergeItemStack(itemstack1, inventorySlots.size() - 9, inventorySlots.size(), false)) {
+            			if(!mergeItemStack(itemstack1, 9, inventorySlots.size() - 9, false))
+            				return null;
+                    }
+            	}else if (!mergeItemStack(itemstack1, 0, 9, false)) {
+            		return null;
+            	}
+            	if (itemstack1.stackSize == 0) {
+                    slot.putStack(null);
+                } else {
+                    slot.onSlotChanged();
+                }
+            	return itemstack;
+            }
+            
+            if (slotnumber < inventorySlots.size() - 9) {
+                if (!mergeItemStack(itemstack1, inventorySlots.size() - 9, inventorySlots.size(), true)) {
+                    return null;
+                }
+            } else if (!mergeItemStack(itemstack1, 9, inventorySlots.size() - 9, false)) {
+                return null;
+            }
+
+            if (itemstack1.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
+
+        return itemstack;
     }
 
 }

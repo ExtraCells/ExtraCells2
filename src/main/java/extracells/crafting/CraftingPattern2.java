@@ -1,6 +1,7 @@
 package extracells.crafting;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import extracells.registries.ItemEnum;
 import appeng.api.AEApi;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
@@ -80,6 +81,32 @@ public class CraftingPattern2 extends CraftingPattern {
 			return s2;
 		}
 		return out;
+	}
+	
+	@Override
+	public ItemStack getPattern() {
+		System.out.println("getPattern");
+		ItemStack p = pattern.getPattern();
+		if(p == null)
+			return null;
+		ItemStack s = new ItemStack(ItemEnum.CRAFTINGPATTERN.getItem(), 1, 1);
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setTag("item", p.writeToNBT(new NBTTagCompound()));
+		s.setTagCompound(tag);
+		return s;
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		System.out.println(obj);
+		if ( obj == null )
+			return false;
+		if ( this.getClass() != obj.getClass() )
+			return false;
+		CraftingPattern other = (CraftingPattern) obj;
+		if ( this.pattern != null && other.pattern != null )
+			return this.pattern.equals( other.pattern );
+		return false;
 	}
 
 }
