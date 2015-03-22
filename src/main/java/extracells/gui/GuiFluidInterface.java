@@ -177,6 +177,7 @@ public class GuiFluidInterface extends GuiContainer
 		        if (font == null) font = Minecraft.getMinecraft().fontRenderer;
 		        GL11.glEnable(GL11.GL_DEPTH_TEST);
 		        itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), output, slot.xDisplayPosition, slot.yDisplayPosition);
+		        itemRender.renderItemOverlayIntoGUI(font, Minecraft.getMinecraft().getTextureManager(), output, slot.xDisplayPosition, slot.yDisplayPosition, null);
 		        this.zLevel = 0.0F;
 		        itemRender.zLevel = 0.0F;
 		        

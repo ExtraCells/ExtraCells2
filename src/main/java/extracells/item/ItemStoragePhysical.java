@@ -35,6 +35,8 @@ import java.util.List;
 
 import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
 public class ItemStoragePhysical extends Item implements IStorageCell, IAEItemPowerStorage, IEnergyContainerItem {
@@ -308,6 +310,8 @@ public class ItemStoragePhysical extends Item implements IStorageCell, IAEItemPo
 	@Override
 	public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset)
 	{
+		if(itemstack == null || player == null)
+			return false;
 		if (itemstack.getItemDamage() == 4 && (!player.isSneaking()))
 		{
 			double power = getAECurrentPower(itemstack);
@@ -482,5 +486,24 @@ public class ItemStoragePhysical extends Item implements IStorageCell, IAEItemPo
 		default:
 			break;
 		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getItemStackDisplayName(ItemStack stack){
+		if(stack == null)
+			return super.getItemStackDisplayName(stack);
+		if(stack.getItemDamage() == 4){
+			try{
+				IItemList list = AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.ITEMS).getAvailableItems(AEApi.instance().storage().createItemList());
+				if(list.isEmpty())
+					return super.getItemStackDisplayName(stack) + " - " + StatCollector.translateToLocal("extracells.tooltip.empty1");
+				IAEItemStack s = (IAEItemStack) list.getFirstItem();
+				return super.getItemStackDisplayName(stack) + " - " + s.getItemStack().getDisplayName();
+			}catch(Throwable e){	
+			}
+			return super.getItemStackDisplayName(stack) + " - " + StatCollector.translateToLocal("extracells.tooltip.empty1");
+		}
+		return super.getItemStackDisplayName(stack);
 	}
 }
