@@ -1,5 +1,11 @@
 package extracells.proxy;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import appeng.api.AEApi;
 import appeng.api.IAppEngApi;
 import appeng.api.recipes.IRecipeHandler;
@@ -13,69 +19,84 @@ import extracells.tileentity.TileEntityFluidFiller;
 import extracells.tileentity.TileEntityFluidInterface;
 import extracells.tileentity.TileEntityWalrus;
 
-import java.io.*;
-
 public class CommonProxy {
 
-    public void registerMovables() {
-        IAppEngApi api = AEApi.instance();
-        api.registries().movable().whiteListTileEntity(TileEntityCertusTank.class);
-        api.registries().movable().whiteListTileEntity(TileEntityWalrus.class);
-        api.registries().movable().whiteListTileEntity(TileEntityFluidCrafter.class);
-        api.registries().movable().whiteListTileEntity(TileEntityFluidInterface.class);
-        api.registries().movable().whiteListTileEntity(TileEntityFluidFiller.class);
-    }
+	private class ExternalRecipeLoader implements IRecipeLoader {
 
-    public void addRecipes(File configFolder) {
-        IRecipeHandler recipeHandler = AEApi.instance().registries().recipes().createNewRecipehandler();
-        File externalRecipe = new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.recipe");
-        if (externalRecipe.exists()) {
-            recipeHandler.parseRecipes(new ExternalRecipeLoader(), externalRecipe.getPath());
-        } else {
-            recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
-        }
-        recipeHandler.injectRecipes();
-    }
+		@Override
+		public BufferedReader getFile(String path) throws Exception {
+			return new BufferedReader(new FileReader(new File(path)));
+		}
+	}
 
-    public void registerTileEntities() {
-        GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
-        GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
-        GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
-        GameRegistry.registerTileEntity(TileEntityFluidInterface.class, "tileEntityFluidInterface");
-        GameRegistry.registerTileEntity(TileEntityFluidFiller.class, "tileEntityFluidFiller");
-    }
+	private class InternalRecipeLoader implements IRecipeLoader {
 
-    public void registerRenderers() {
-        // Only Clientside
-    }
+		@Override
+		public BufferedReader getFile(String path) throws Exception {
+			InputStream resourceAsStream = getClass().getResourceAsStream(
+					"/assets/extracells/recipes/" + path);
+			InputStreamReader reader = new InputStreamReader(resourceAsStream,
+					"UTF-8");
+			return new BufferedReader(reader);
+		}
+	}
 
-    public void registerItems() {
-        for (ItemEnum current : ItemEnum.values()) {
-            GameRegistry.registerItem(current.getItem(), current.getInternalName());
-        }
-    }
+	public void addRecipes(File configFolder) {
+		IRecipeHandler recipeHandler = AEApi.instance().registries().recipes()
+				.createNewRecipehandler();
+		File externalRecipe = new File(configFolder.getPath() + File.separator
+				+ "AppliedEnergistics2" + File.separator + "extracells.recipe");
+		if (externalRecipe.exists()) {
+			recipeHandler.parseRecipes(new ExternalRecipeLoader(),
+					externalRecipe.getPath());
+		} else {
+			recipeHandler.parseRecipes(new InternalRecipeLoader(),
+					"main.recipe");
+		}
+		recipeHandler.injectRecipes();
+	}
 
-    public void registerBlocks() {
-        for (BlockEnum current : BlockEnum.values()) {
-            GameRegistry.registerBlock(current.getBlock(), current.getItemBlockClass(), current.getInternalName());
-        }
-    }
+	public void registerBlocks() {
+		for (BlockEnum current : BlockEnum.values()) {
+			GameRegistry.registerBlock(current.getBlock(),
+					current.getItemBlockClass(), current.getInternalName());
+		}
+	}
 
-    private class InternalRecipeLoader implements IRecipeLoader {
+	public void registerItems() {
+		for (ItemEnum current : ItemEnum.values()) {
+			GameRegistry.registerItem(current.getItem(),
+					current.getInternalName());
+		}
+	}
 
-        @Override
-        public BufferedReader getFile(String path) throws Exception {
-            InputStream resourceAsStream = getClass().getResourceAsStream("/assets/extracells/recipes/" + path);
-            InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
-            return new BufferedReader(reader);
-        }
-    }
+	public void registerMovables() {
+		IAppEngApi api = AEApi.instance();
+		api.registries().movable()
+				.whiteListTileEntity(TileEntityCertusTank.class);
+		api.registries().movable().whiteListTileEntity(TileEntityWalrus.class);
+		api.registries().movable()
+				.whiteListTileEntity(TileEntityFluidCrafter.class);
+		api.registries().movable()
+				.whiteListTileEntity(TileEntityFluidInterface.class);
+		api.registries().movable()
+				.whiteListTileEntity(TileEntityFluidFiller.class);
+	}
 
-    private class ExternalRecipeLoader implements IRecipeLoader {
+	public void registerRenderers() {
+		// Only Clientside
+	}
 
-        @Override
-        public BufferedReader getFile(String path) throws Exception {
-            return new BufferedReader(new FileReader(new File(path)));
-        }
-    }
+	public void registerTileEntities() {
+		GameRegistry.registerTileEntity(TileEntityCertusTank.class,
+				"tileEntityCertusTank");
+		GameRegistry.registerTileEntity(TileEntityWalrus.class,
+				"tileEntityWalrus");
+		GameRegistry.registerTileEntity(TileEntityFluidCrafter.class,
+				"tileEntityFluidCrafter");
+		GameRegistry.registerTileEntity(TileEntityFluidInterface.class,
+				"tileEntityFluidInterface");
+		GameRegistry.registerTileEntity(TileEntityFluidFiller.class,
+				"tileEntityFluidFiller");
+	}
 }

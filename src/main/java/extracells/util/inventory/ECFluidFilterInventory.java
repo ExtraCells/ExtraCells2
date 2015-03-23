@@ -1,91 +1,93 @@
 package extracells.util.inventory;
 
-import extracells.registries.ItemEnum;
-import extracells.util.FluidUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import extracells.registries.ItemEnum;
+import extracells.util.FluidUtil;
 
 public class ECFluidFilterInventory extends ECPrivateInventory {
 
 	private final ItemStack cellItem;
-	
-	public ECFluidFilterInventory(String _customName, int _size, ItemStack _cellItem) {
+
+	public ECFluidFilterInventory(String _customName, int _size,
+			ItemStack _cellItem) {
 		super(_customName, _size, 1);
-		cellItem = _cellItem;
-		if(cellItem.hasTagCompound())
-			if(cellItem.getTagCompound().hasKey("filter"))
-				readFromNBT(cellItem.getTagCompound().getTagList("filter", 10));
+		this.cellItem = _cellItem;
+		if (this.cellItem.hasTagCompound())
+			if (this.cellItem.getTagCompound().hasKey("filter"))
+				readFromNBT(this.cellItem.getTagCompound().getTagList("filter",
+						10));
 	}
-	
+
 	@Override
-    public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		if(itemstack == null)
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+		if (itemstack == null)
 			return false;
-		if(itemstack.getItem() == ItemEnum.FLUIDITEM.getItem()){
+		if (itemstack.getItem() == ItemEnum.FLUIDITEM.getItem()) {
 			int fluidID = itemstack.getItemDamage();
-			for(ItemStack s : slots){
-				if(s == null)
+			for (ItemStack s : this.slots) {
+				if (s == null)
 					continue;
-				if(s.getItemDamage() == fluidID)
+				if (s.getItemDamage() == fluidID)
 					return false;
 			}
-	        return true;
+			return true;
 		}
-		if(!FluidUtil.isFilled(itemstack))
+		if (!FluidUtil.isFilled(itemstack))
 			return false;
 		FluidStack stack = FluidUtil.getFluidFromContainer(itemstack);
-		if (stack  == null)
+		if (stack == null)
 			return false;
 		int fluidID = stack.fluidID;
-		for(ItemStack s : slots){
-			if(s == null)
+		for (ItemStack s : this.slots) {
+			if (s == null)
 				continue;
-			if(s.getItemDamage() == fluidID)
+			if (s.getItemDamage() == fluidID)
 				return false;
 		}
-        return true;
-    }
-	
+		return true;
+	}
+
 	@Override
-    public void setInventorySlotContents(int slotId, ItemStack itemstack) {
-		if(itemstack == null){
+	public void markDirty() {
+		NBTTagCompound tag;
+		if (this.cellItem.hasTagCompound())
+			tag = this.cellItem.getTagCompound();
+		else
+			tag = new NBTTagCompound();
+		tag.setTag("filter", writeToNBT());
+	}
+
+	@Override
+	public void setInventorySlotContents(int slotId, ItemStack itemstack) {
+		if (itemstack == null) {
 			super.setInventorySlotContents(slotId, null);
 			return;
 		}
 		Fluid fluid;
-		if(itemstack.getItem() == ItemEnum.FLUIDITEM.getItem()){
+		if (itemstack.getItem() == ItemEnum.FLUIDITEM.getItem()) {
 			fluid = FluidRegistry.getFluid(itemstack.getItemDamage());
-			if(fluid == null)
+			if (fluid == null)
 				return;
-		}else{
-			if(!isItemValidForSlot(slotId, itemstack))
+		} else {
+			if (!isItemValidForSlot(slotId, itemstack))
 				return;
 			FluidStack fluidStack = FluidUtil.getFluidFromContainer(itemstack);
-			if(fluidStack == null){
+			if (fluidStack == null) {
 				super.setInventorySlotContents(slotId, null);
 				return;
 			}
 			fluid = fluidStack.getFluid();
-			if(fluid == null){
+			if (fluid == null) {
 				super.setInventorySlotContents(slotId, null);
 				return;
 			}
 		}
-		super.setInventorySlotContents(slotId, new ItemStack(ItemEnum.FLUIDITEM.getItem(), 1, fluid.getID()));
-	}
-	
-	@Override
-	public void markDirty(){
-		NBTTagCompound tag;
-		if(cellItem.hasTagCompound())
-			tag = cellItem.getTagCompound();
-		else
-			tag = new NBTTagCompound();
-		tag.setTag("filter", writeToNBT());
+		super.setInventorySlotContents(slotId,
+				new ItemStack(ItemEnum.FLUIDITEM.getItem(), 1, fluid.getID()));
 	}
 
 }

@@ -1,5 +1,20 @@
 package extracells.part;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.RedstoneMode;
@@ -31,175 +46,185 @@ import extracells.util.ColorUtil;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 
-public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPartOrBlock, IGridTickable {
+public class PartFluidPlaneFormation extends PartECBase implements
+		IFluidSlotPartOrBlock, IGridTickable {
 
-    private Fluid fluid;
-    //TODO redstone control
-    private RedstoneMode redstoneMode;
-    private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1) {
+	private Fluid fluid;
+	// TODO redstone control
+	private RedstoneMode redstoneMode;
+	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1,
+			1) {
 
-        public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-            return AEApi.instance().materials().materialCardRedstone.sameAsStack(itemStack);
-        }
-    };
+		@Override
+		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+			return AEApi.instance().materials().materialCardRedstone
+					.sameAsStack(itemStack);
+		}
+	};
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-        IIcon side = TextureManager.PANE_SIDE.getTexture();
-        rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
-        rh.setBounds(2, 2, 14, 14, 14, 16);
-        rh.renderInventoryBox(renderer);
-        rh.setBounds(3, 3, 14, 13, 13, 16);
-        rh.setInvColor(AEColor.Cyan.blackVariant);
-        rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
-        Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
-        rh.setInvColor(ColorUtil.getInvertedInt(AEColor.Cyan.mediumVariant));
-        rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
-        rh.setInvColor(ColorUtil.getInvertedInt(AEColor.Cyan.whiteVariant));
-        rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[2], ForgeDirection.SOUTH, renderer);
+	@Override
+	public int cableConnectionRenderTo() {
+		return 2;
+	}
 
-        rh.setBounds(5, 5, 13, 11, 11, 14);
-        renderInventoryBusLights(rh, renderer);
-    }
+	public void doWork() {
+		TileEntity hostTile = getHostTile();
+		ECBaseGridBlock gridBlock = getGridBlock();
+		ForgeDirection side = getSide();
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
-        Tessellator ts = Tessellator.instance;
-        IIcon side = TextureManager.PANE_SIDE.getTexture();
-        rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
-        rh.setBounds(2, 2, 14, 14, 14, 16);
-        rh.renderBlock(x, y, z, renderer);
-        rh.setBounds(3, 3, 14, 13, 13, 16);
-        IPartHost host = getHost();
-        if (host != null) {
-            ts.setColorOpaque_I(host.getColor().blackVariant);
-            rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
-            if (isActive())
-                ts.setBrightness(13 << 20 | 13 << 4);
-            ts.setColorOpaque_I(ColorUtil.getInvertedInt(host.getColor().mediumVariant));
-            rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
-            ts.setColorOpaque_I(ColorUtil.getInvertedInt(host.getColor().whiteVariant));
-            rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[2], ForgeDirection.SOUTH, renderer);
-        }
+		if (this.fluid == null || hostTile == null || gridBlock == null)
+			return;
+		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
+		if (monitor == null)
+			return;
+		World world = hostTile.getWorldObj();
+		int x = hostTile.xCoord + side.offsetX;
+		int y = hostTile.yCoord + side.offsetY;
+		int z = hostTile.zCoord + side.offsetZ;
+		Block worldBlock = world.getBlock(x, y, z);
+		if (worldBlock != null && worldBlock != Blocks.air)
+			return;
+		IAEFluidStack canDrain = monitor.extractItems(FluidUtil
+				.createAEFluidStack(this.fluid,
+						FluidContainerRegistry.BUCKET_VOLUME),
+				Actionable.SIMULATE, new MachineSource(this));
+		if (canDrain == null
+				|| canDrain.getStackSize() < FluidContainerRegistry.BUCKET_VOLUME)
+			return;
+		monitor.extractItems(FluidUtil.createAEFluidStack(this.fluid,
+				FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE,
+				new MachineSource(this));
+		Block fluidWorldBlock = this.fluid.getBlock();
+		world.setBlock(x, y, z, fluidWorldBlock);
+		world.markBlockForUpdate(x, y, z);
+	}
 
-        rh.setBounds(5, 5, 13, 11, 11, 14);
-        renderStaticBusLights(x, y, z, rh, renderer);
-    }
+	@Override
+	public void getBoxes(IPartCollisionHelper bch) {
+		bch.addBox(2, 2, 14, 14, 14, 16);
+		bch.addBox(5, 5, 13, 11, 11, 14);
+	}
 
-    @Override
-    public void getBoxes(IPartCollisionHelper bch) {
-        bch.addBox(2, 2, 14, 14, 14, 16);
-        bch.addBox(5, 5, 13, 11, 11, 14);
-    }
+	@Override
+	public Object getClientGuiElement(EntityPlayer player) {
+		return new GuiFluidPlaneFormation(this, player);
+	}
 
-    @Override
-    public int getLightLevel() {
-        return 0;
-    }
+	@Override
+	public int getLightLevel() {
+		return 0;
+	}
 
-    public ECPrivateInventory getUpgradeInventory() {
-        return upgradeInventory;
-    }
+	@Override
+	public double getPowerUsage() {
+		return 1.0D;
+	}
 
-    public void doWork() {
-        TileEntity hostTile = getHostTile();
-        ECBaseGridBlock gridBlock = getGridBlock();
-        ForgeDirection side = getSide();
+	@Override
+	public Object getServerGuiElement(EntityPlayer player) {
+		return new ContainerPlaneFormation(this, player);
+	}
 
-        if (fluid == null || hostTile == null || gridBlock == null)
-            return;
-        IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
-        if (monitor == null)
-            return;
-        World world = hostTile.getWorldObj();
-        int x = hostTile.xCoord + side.offsetX;
-        int y = hostTile.yCoord + side.offsetY;
-        int z = hostTile.zCoord + side.offsetZ;
-        Block worldBlock = world.getBlock(x, y, z);
-        if (worldBlock != null && worldBlock != Blocks.air)
-            return;
-        IAEFluidStack canDrain = monitor.extractItems(FluidUtil.createAEFluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME), Actionable.SIMULATE, new MachineSource(this));
-        if (canDrain == null || canDrain.getStackSize() < FluidContainerRegistry.BUCKET_VOLUME)
-            return;
-        monitor.extractItems(FluidUtil.createAEFluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE, new MachineSource(this));
-        Block fluidWorldBlock = fluid.getBlock();
-        world.setBlock(x, y, z, fluidWorldBlock);
-        world.markBlockForUpdate(x, y, z);
-    }
+	@Override
+	public TickingRequest getTickingRequest(IGridNode node) {
+		return new TickingRequest(1, 20, false, false);
+	}
 
-    @Override
-    public int cableConnectionRenderTo() {
-        return 2;
-    }
+	public ECPrivateInventory getUpgradeInventory() {
+		return this.upgradeInventory;
+	}
 
-    @Override
-    public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
-        fluid = _fluid;
-        new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(_player);
-        saveData();
-    }
+	@Override
+	public boolean onActivate(EntityPlayer player, Vec3 pos) {
+		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
+				(IPart) this)) {
+			return super.onActivate(player, pos);
+		}
+		return false;
+	}
 
-    @Override
-    public void writeToNBT(NBTTagCompound data) {
-        data.setString("fluid", fluid == null ? "" : fluid.getName());
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound data) {
+		this.fluid = FluidRegistry.getFluid(data.getString("fluid"));
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound data) {
-        fluid = FluidRegistry.getFluid(data.getString("fluid"));
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
+		IIcon side = TextureManager.PANE_SIDE.getTexture();
+		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
+				side, side);
+		rh.setBounds(2, 2, 14, 14, 14, 16);
+		rh.renderInventoryBox(renderer);
+		rh.setBounds(3, 3, 14, 13, 13, 16);
+		rh.setInvColor(AEColor.Cyan.blackVariant);
+		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[0],
+				ForgeDirection.SOUTH, renderer);
+		Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
+		rh.setInvColor(ColorUtil.getInvertedInt(AEColor.Cyan.mediumVariant));
+		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[1],
+				ForgeDirection.SOUTH, renderer);
+		rh.setInvColor(ColorUtil.getInvertedInt(AEColor.Cyan.whiteVariant));
+		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[2],
+				ForgeDirection.SOUTH, renderer);
 
-    public Object getServerGuiElement(EntityPlayer player) {
-        return new ContainerPlaneFormation(this, player);
-    }
+		rh.setBounds(5, 5, 13, 11, 11, 14);
+		renderInventoryBusLights(rh, renderer);
+	}
 
-    public Object getClientGuiElement(EntityPlayer player) {
-        return new GuiFluidPlaneFormation(this, player);
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
+			RenderBlocks renderer) {
+		Tessellator ts = Tessellator.instance;
+		IIcon side = TextureManager.PANE_SIDE.getTexture();
+		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
+				side, side);
+		rh.setBounds(2, 2, 14, 14, 14, 16);
+		rh.renderBlock(x, y, z, renderer);
+		rh.setBounds(3, 3, 14, 13, 13, 16);
+		IPartHost host = getHost();
+		if (host != null) {
+			ts.setColorOpaque_I(host.getColor().blackVariant);
+			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[0],
+					ForgeDirection.SOUTH, renderer);
+			if (isActive())
+				ts.setBrightness(13 << 20 | 13 << 4);
+			ts.setColorOpaque_I(ColorUtil.getInvertedInt(host.getColor().mediumVariant));
+			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[1],
+					ForgeDirection.SOUTH, renderer);
+			ts.setColorOpaque_I(ColorUtil.getInvertedInt(host.getColor().whiteVariant));
+			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[2],
+					ForgeDirection.SOUTH, renderer);
+		}
 
-    public void sendInformation(EntityPlayer _player) {
-        new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(_player);
-    }
+		rh.setBounds(5, 5, 13, 11, 11, 14);
+		renderStaticBusLights(x, y, z, rh, renderer);
+	}
 
-    @Override
-    public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(1, 20, false, false);
-    }
+	public void sendInformation(EntityPlayer _player) {
+		new PacketFluidSlot(Lists.newArrayList(this.fluid))
+				.sendPacketToPlayer(_player);
+	}
 
-    @Override
-    public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall) {
-        doWork();
-        return TickRateModulation.SAME;
-    }
-    
-    @Override
-    public double getPowerUsage(){
-    	return 1.0D;
-    }
-    
-    @Override
-    public boolean onActivate(EntityPlayer player, Vec3 pos) {
-    	if(PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)){
-    		return super.onActivate(player, pos);
-    	}
-    	return false;
-    }
+	@Override
+	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
+		this.fluid = _fluid;
+		new PacketFluidSlot(Lists.newArrayList(this.fluid))
+				.sendPacketToPlayer(_player);
+		saveData();
+	}
+
+	@Override
+	public TickRateModulation tickingRequest(IGridNode node,
+			int TicksSinceLastCall) {
+		doWork();
+		return TickRateModulation.SAME;
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound data) {
+		data.setString("fluid", this.fluid == null ? "" : this.fluid.getName());
+	}
 }

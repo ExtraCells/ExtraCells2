@@ -8,62 +8,64 @@ import net.minecraft.world.IBlockAccess;
 import appeng.api.util.AEItemDefinition;
 
 public class BlockItemDefinitions implements AEItemDefinition {
-	
+
 	private final Block block;
 	private final int meta;
 	private final Class<? extends TileEntity> blockTileEntity;
-	
-	public BlockItemDefinitions(Block _block){
+
+	public BlockItemDefinitions(Block _block) {
 		this(_block, 0);
 	}
-	
-	public BlockItemDefinitions(Block _block, int _meta){
-		this(_block, _meta, null);
-	}
-	
-	public BlockItemDefinitions(Block _block, Class<? extends TileEntity> _blockTileEntity){
+
+	public BlockItemDefinitions(Block _block,
+			Class<? extends TileEntity> _blockTileEntity) {
 		this(_block, 0, _blockTileEntity);
 	}
-	
-	public BlockItemDefinitions(Block _block, int _meta, Class<? extends TileEntity> _blockTileEntity){
-		block = _block;
-		meta = _meta;
-		blockTileEntity = _blockTileEntity;
+
+	public BlockItemDefinitions(Block _block, int _meta) {
+		this(_block, _meta, null);
+	}
+
+	public BlockItemDefinitions(Block _block, int _meta,
+			Class<? extends TileEntity> _blockTileEntity) {
+		this.block = _block;
+		this.meta = _meta;
+		this.blockTileEntity = _blockTileEntity;
 	}
 
 	@Override
 	public Block block() {
-		return block;
-	}
-
-	@Override
-	public Item item() {
-		return Item.getItemFromBlock(block);
+		return this.block;
 	}
 
 	@Override
 	public Class<? extends TileEntity> entity() {
-		return blockTileEntity;
+		return this.blockTileEntity;
 	}
 
 	@Override
-	public ItemStack stack(int stackSize) {
-		return new ItemStack(block, stackSize, meta);
-	}
-
-	@Override
-	public boolean sameAsStack(ItemStack comparableItem) {
-		if(comparableItem == null)
-			return false;
-		return ItemStack.areItemStacksEqual(stack(1), comparableItem);
+	public Item item() {
+		return Item.getItemFromBlock(this.block);
 	}
 
 	@Override
 	public boolean sameAsBlock(IBlockAccess world, int x, int y, int z) {
 		Block _block = world.getBlock(x, y, z);
-		if(_block == null || block() == null)
+		if (_block == null || block() == null)
 			return false;
 		return _block == block();
+	}
+
+	@Override
+	public boolean sameAsStack(ItemStack comparableItem) {
+		if (comparableItem == null)
+			return false;
+		return ItemStack.areItemStacksEqual(stack(1), comparableItem);
+	}
+
+	@Override
+	public ItemStack stack(int stackSize) {
+		return new ItemStack(this.block, stackSize, this.meta);
 	}
 
 }

@@ -1,136 +1,138 @@
 package extracells.network.packet.part;
 
-import appeng.api.config.RedstoneMode;
-import extracells.gui.GuiBusFluidIO;
-import extracells.network.AbstractPacket;
-import extracells.part.PartFluidIO;
 import io.netty.buffer.ByteBuf;
+
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.Fluid;
-
-import java.util.List;
+import appeng.api.config.RedstoneMode;
+import extracells.gui.GuiBusFluidIO;
+import extracells.network.AbstractPacket;
+import extracells.part.PartFluidIO;
 
 public class PacketBusFluidIO extends AbstractPacket {
 
-    private List<Fluid> filterFluids;
-    private PartFluidIO part;
-    private byte action;
-    private byte ordinal;
-    private byte filterSize;
-    private boolean redstoneControlled;
+	private List<Fluid> filterFluids;
+	private PartFluidIO part;
+	private byte action;
+	private byte ordinal;
+	private byte filterSize;
+	private boolean redstoneControlled;
 
-    @SuppressWarnings("unused")
-    public PacketBusFluidIO() {
-    }
+	@SuppressWarnings("unused")
+	public PacketBusFluidIO() {}
 
-    public PacketBusFluidIO(EntityPlayer _player, byte _action, PartFluidIO _part) {
-        super(_player);
-        mode = 0;
-        action = _action;
-        part = _part;
-    }
+	public PacketBusFluidIO(boolean _redstoneControlled) {
+		super();
+		this.mode = 4;
+		this.redstoneControlled = _redstoneControlled;
+	}
 
-    public PacketBusFluidIO(RedstoneMode _redstoneMode) {
-        super();
-        mode = 1;
-        ordinal = (byte) _redstoneMode.ordinal();
-    }
+	public PacketBusFluidIO(byte _filterSize) {
+		super();
+		this.mode = 3;
+		this.filterSize = _filterSize;
+	}
 
-    public PacketBusFluidIO(EntityPlayer _player, PartFluidIO _part) {
-        super(_player);
-        mode = 2;
-        part = _part;
-    }
+	public PacketBusFluidIO(EntityPlayer _player, byte _action,
+			PartFluidIO _part) {
+		super(_player);
+		this.mode = 0;
+		this.action = _action;
+		this.part = _part;
+	}
 
-    public PacketBusFluidIO(byte _filterSize) {
-        super();
-        mode = 3;
-        filterSize = _filterSize;
-    }
+	public PacketBusFluidIO(EntityPlayer _player, PartFluidIO _part) {
+		super(_player);
+		this.mode = 2;
+		this.part = _part;
+	}
 
-    public PacketBusFluidIO(boolean _redstoneControlled) {
-        super();
-        mode = 4;
-        redstoneControlled = _redstoneControlled;
-    }
+	public PacketBusFluidIO(RedstoneMode _redstoneMode) {
+		super();
+		this.mode = 1;
+		this.ordinal = (byte) _redstoneMode.ordinal();
+	}
 
-    @Override
-    public void writeData(ByteBuf out) {
-        switch (mode) {
-            case 0:
-                writePart(part, out);
-                out.writeByte(action);
-                break;
-            case 1:
-                out.writeByte(ordinal);
-                break;
-            case 2:
-                writePart(part, out);
-                break;
-            case 3:
-                out.writeByte(filterSize);
-                break;
-            case 4:
-                out.writeBoolean(redstoneControlled);
-                break;
-        }
-    }
+	@Override
+	public void execute() {
+		Gui gui;
+		switch (this.mode) {
+		case 0:
 
-    @Override
-    public void readData(ByteBuf in) {
-        switch (mode) {
-            case 0:
-                part = (PartFluidIO) readPart(in);
-                action = in.readByte();
-                break;
-            case 1:
-                ordinal = in.readByte();
-                break;
-            case 2:
-                part = (PartFluidIO) readPart(in);
-                break;
-            case 3:
-                filterSize = in.readByte();
-                break;
-            case 4:
-                redstoneControlled = in.readBoolean();
-                break;
-        }
-    }
+			this.part.loopRedstoneMode(this.player);
+			break;
+		case 1:
+			gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof GuiBusFluidIO) {
+				GuiBusFluidIO partGui = (GuiBusFluidIO) gui;
+				partGui.updateRedstoneMode(RedstoneMode.values()[this.ordinal]);
+			}
+			break;
+		case 2:
+			this.part.sendInformation(this.player);
+			break;
+		case 3:
+			gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof GuiBusFluidIO) {
+				GuiBusFluidIO partGui = (GuiBusFluidIO) gui;
+				partGui.changeConfig(this.filterSize);
+			}
+			break;
+		case 4:
+			gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof GuiBusFluidIO) {
+				GuiBusFluidIO partGui = (GuiBusFluidIO) gui;
+				partGui.setRedstoneControlled(this.redstoneControlled);
+			}
+			break;
+		}
+	}
 
-    public void execute() {
-        Gui gui;
-        switch (mode) {
-            case 0:
+	@Override
+	public void readData(ByteBuf in) {
+		switch (this.mode) {
+		case 0:
+			this.part = (PartFluidIO) readPart(in);
+			this.action = in.readByte();
+			break;
+		case 1:
+			this.ordinal = in.readByte();
+			break;
+		case 2:
+			this.part = (PartFluidIO) readPart(in);
+			break;
+		case 3:
+			this.filterSize = in.readByte();
+			break;
+		case 4:
+			this.redstoneControlled = in.readBoolean();
+			break;
+		}
+	}
 
-                part.loopRedstoneMode(player);
-                break;
-            case 1:
-                gui = Minecraft.getMinecraft().currentScreen;
-                if (gui instanceof GuiBusFluidIO) {
-                    GuiBusFluidIO partGui = (GuiBusFluidIO) gui;
-                    partGui.updateRedstoneMode(RedstoneMode.values()[ordinal]);
-                }
-                break;
-            case 2:
-                part.sendInformation(player);
-                break;
-            case 3:
-                gui = Minecraft.getMinecraft().currentScreen;
-                if (gui instanceof GuiBusFluidIO) {
-                    GuiBusFluidIO partGui = (GuiBusFluidIO) gui;
-                    partGui.changeConfig(filterSize);
-                }
-                break;
-            case 4:
-                gui = Minecraft.getMinecraft().currentScreen;
-                if (gui instanceof GuiBusFluidIO) {
-                    GuiBusFluidIO partGui = (GuiBusFluidIO) gui;
-                    partGui.setRedstoneControlled(redstoneControlled);
-                }
-                break;
-        }
-    }
+	@Override
+	public void writeData(ByteBuf out) {
+		switch (this.mode) {
+		case 0:
+			writePart(this.part, out);
+			out.writeByte(this.action);
+			break;
+		case 1:
+			out.writeByte(this.ordinal);
+			break;
+		case 2:
+			writePart(this.part, out);
+			break;
+		case 3:
+			out.writeByte(this.filterSize);
+			break;
+		case 4:
+			out.writeBoolean(this.redstoneControlled);
+			break;
+		}
+	}
 }

@@ -1,259 +1,313 @@
 package extracells.tileentity;
 
-import extracells.network.ChannelHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+import extracells.network.ChannelHandler;
 
 public class TileEntityCertusTank extends TileEntity implements IFluidHandler {
 
-    private FluidStack lastBeforeUpdate = null;
-    public FluidTank tank = new FluidTank(32000) {
+	private FluidStack lastBeforeUpdate = null;
+	public FluidTank tank = new FluidTank(32000) {
 
-        public FluidTank readFromNBT(NBTTagCompound nbt) {
-            if (!nbt.hasKey("Empty")) {
-                FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
-                setFluid(fluid);
-            } else {
-                setFluid(null);
-            }
-            return this;
-        }
-    };
+		@Override
+		public FluidTank readFromNBT(NBTTagCompound nbt) {
+			if (!nbt.hasKey("Empty")) {
+				FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+				setFluid(fluid);
+			} else {
+				setFluid(null);
+			}
+			return this;
+		}
+	};
 
-    public Packet getDescriptionPacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        writeToNBT(nbtTag);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
-    }
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		return this.tank.getFluid() == null
+				|| this.tank.getFluid().getFluid() == fluid;
+	}
 
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
-        readFromNBT(packet.func_148857_g());
-    }
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return this.tank.getFluid() == null
+				|| this.tank.getFluid().getFluid() == fluid;
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
-        readFromNBTWithoutCoords(tag);
-    }
+	public void compareAndUpdate() {
+		if (!this.worldObj.isRemote) {
+			FluidStack current = this.tank.getFluid();
 
-    @Override
-    public void writeToNBT(NBTTagCompound tag) {
-        super.writeToNBT(tag);
-        writeToNBTWithoutCoords(tag);
-    }
+			if (current != null) {
+				if (this.lastBeforeUpdate != null) {
+					if (Math.abs(current.amount - this.lastBeforeUpdate.amount) >= 500) {
+						ChannelHandler.sendPacketToAllPlayers(
+								getDescriptionPacket(), this.worldObj);
+						this.lastBeforeUpdate = current.copy();
+					} else if (this.lastBeforeUpdate.amount < this.tank
+							.getCapacity()
+							&& current.amount == this.tank.getCapacity()
+							|| this.lastBeforeUpdate.amount == this.tank
+									.getCapacity()
+							&& current.amount < this.tank.getCapacity()) {
+						ChannelHandler.sendPacketToAllPlayers(
+								getDescriptionPacket(), this.worldObj);
+						this.lastBeforeUpdate = current.copy();
+					}
+				} else {
+					ChannelHandler.sendPacketToAllPlayers(
+							getDescriptionPacket(), this.worldObj);
+					this.lastBeforeUpdate = current.copy();
+				}
+			} else if (this.lastBeforeUpdate != null) {
+				ChannelHandler.sendPacketToAllPlayers(getDescriptionPacket(),
+						this.worldObj);
+				this.lastBeforeUpdate = null;
+			}
+		}
+	}
 
-    public void writeToNBTWithoutCoords(NBTTagCompound tag) {
-        tank.writeToNBT(tag);
-    }
+	/* Multiblock stuff */
+	public FluidStack drain(FluidStack fluid, boolean doDrain,
+			boolean findMainTank) {
+		if (findMainTank) {
+			int yOff = 0;
+			TileEntity offTE = this.worldObj.getTileEntity(this.xCoord,
+					this.yCoord + yOff, this.zCoord);
+			TileEntityCertusTank mainTank = this;
+			while (true) {
+				if (offTE != null && offTE instanceof TileEntityCertusTank) {
+					Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
+					if (offFluid != null && offFluid == fluid.getFluid()) {
+						mainTank = (TileEntityCertusTank) this.worldObj
+								.getTileEntity(this.xCoord, this.yCoord + yOff,
+										this.zCoord);
+						yOff++;
+						offTE = this.worldObj.getTileEntity(this.xCoord,
+								this.yCoord + yOff, this.zCoord);
+						continue;
+					}
+				}
+				break;
+			}
 
-    public void readFromNBTWithoutCoords(NBTTagCompound tag) {
-        tank.readFromNBT(tag);
-    }
+			return mainTank != null ? mainTank.drain(fluid, doDrain, false)
+					: null;
+		}
 
-    /* IFluidHandler */
-    @Override
-    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-        if (resource == null || (tank.getFluid() != null && resource.fluidID != tank.getFluid().fluidID))
-            return 0;
-        return fill(resource, doFill, true);
-    }
+		FluidStack drained = this.tank.drain(fluid.amount, doDrain);
+		compareAndUpdate();
 
-    @Override
-    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-        if (tank.getFluid() == null || resource == null || resource.fluidID != tank.getFluid().fluidID)
-            return null;
+		if (drained == null || drained.amount < fluid.amount) {
+			TileEntity offTE = this.worldObj.getTileEntity(this.xCoord,
+					this.yCoord - 1, this.zCoord);
+			if (offTE instanceof TileEntityCertusTank) {
+				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
+				FluidStack externallyDrained = tank.drain(new FluidStack(
+						fluid.fluidID, fluid.amount
+								- (drained != null ? drained.amount : 0)),
+						doDrain, false);
 
-        return drain(resource, doDrain, true);
-    }
+				if (externallyDrained != null)
+					return new FluidStack(fluid.fluidID,
+							(drained != null ? drained.amount : 0)
+									+ externallyDrained.amount);
+				else
+					return drained;
+			}
+		}
 
-    @Override
-    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-        if (tank.getFluid() == null)
-            return null;
+		return drained;
+	}
 
-        return drain(from, new FluidStack(tank.getFluid(), maxDrain), doDrain);
-    }
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource,
+			boolean doDrain) {
+		if (this.tank.getFluid() == null || resource == null
+				|| resource.fluidID != this.tank.getFluid().fluidID)
+			return null;
 
-    @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid) {
-        return tank.getFluid() == null || tank.getFluid().getFluid() == fluid;
-    }
+		return drain(resource, doDrain, true);
+	}
 
-    @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid) {
-        return tank.getFluid() == null || tank.getFluid().getFluid() == fluid;
-    }
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+		if (this.tank.getFluid() == null)
+			return null;
 
-    @Override
-    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-        return getTankInfo(true);
-    }
+		return drain(from, new FluidStack(this.tank.getFluid(), maxDrain),
+				doDrain);
+	}
 
-    /* Multiblock stuff */
-    public FluidStack drain(FluidStack fluid, boolean doDrain, boolean findMainTank) {
-        if (findMainTank) {
-            int yOff = 0;
-            TileEntity offTE = worldObj.getTileEntity(xCoord, yCoord + yOff, zCoord);
-            TileEntityCertusTank mainTank = this;
-            while (true) {
-                if (offTE != null && offTE instanceof TileEntityCertusTank) {
-                    Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
-                    if (offFluid != null && offFluid == fluid.getFluid()) {
-                        mainTank = (TileEntityCertusTank) worldObj.getTileEntity(xCoord, yCoord + yOff, zCoord);
-                        yOff++;
-                        offTE = worldObj.getTileEntity(xCoord, yCoord + yOff, zCoord);
-                        continue;
-                    }
-                }
-                break;
-            }
+	public int fill(FluidStack fluid, boolean doFill, boolean findMainTank) {
+		if (findMainTank) {
+			int yOff = 0;
+			TileEntity offTE = this.worldObj.getTileEntity(this.xCoord,
+					this.yCoord - yOff, this.zCoord);
+			TileEntityCertusTank mainTank = this;
+			while (true) {
+				if (offTE != null && offTE instanceof TileEntityCertusTank) {
+					Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
+					if (offFluid == null || offFluid == fluid.getFluid()) {
+						mainTank = (TileEntityCertusTank) this.worldObj
+								.getTileEntity(this.xCoord, this.yCoord - yOff,
+										this.zCoord);
+						yOff++;
+						offTE = this.worldObj.getTileEntity(this.xCoord,
+								this.yCoord - yOff, this.zCoord);
+						continue;
+					}
+				}
+				break;
+			}
 
-            return mainTank != null ? mainTank.drain(fluid, doDrain, false) : null;
-        }
+			return mainTank != null ? mainTank.fill(fluid, doFill, false) : 0;
+		}
 
-        FluidStack drained = tank.drain(fluid.amount, doDrain);
-        compareAndUpdate();
+		int filled = this.tank.fill(fluid, doFill);
+		compareAndUpdate();
 
-        if (drained == null || drained.amount < fluid.amount) {
-            TileEntity offTE = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
-            if (offTE instanceof TileEntityCertusTank) {
-                TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
-                FluidStack externallyDrained = tank.drain(new FluidStack(fluid.fluidID, fluid.amount - (drained != null ? drained.amount : 0)), doDrain, false);
+		if (filled < fluid.amount) {
+			TileEntity offTE = this.worldObj.getTileEntity(this.xCoord,
+					this.yCoord + 1, this.zCoord);
+			if (offTE instanceof TileEntityCertusTank) {
+				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
+				return filled
+						+ tank.fill(new FluidStack(fluid.fluidID, fluid.amount
+								- filled), doFill, false);
+			}
+		}
 
-                if (externallyDrained != null)
-                    return new FluidStack(fluid.fluidID, (drained != null ? drained.amount : 0) + externallyDrained.amount);
-                else
-                    return drained;
-            }
-        }
+		return filled;
+	}
 
-        return drained;
-    }
+	/* IFluidHandler */
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		if (resource == null || this.tank.getFluid() != null
+				&& resource.fluidID != this.tank.getFluid().fluidID)
+			return 0;
+		return fill(resource, doFill, true);
+	}
 
-    public int fill(FluidStack fluid, boolean doFill, boolean findMainTank) {
-        if (findMainTank) {
-            int yOff = 0;
-            TileEntity offTE = worldObj.getTileEntity(xCoord, yCoord - yOff, zCoord);
-            TileEntityCertusTank mainTank = this;
-            while (true) {
-                if (offTE != null && offTE instanceof TileEntityCertusTank) {
-                    Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
-                    if (offFluid == null || offFluid == fluid.getFluid()) {
-                        mainTank = (TileEntityCertusTank) worldObj.getTileEntity(xCoord, yCoord - yOff, zCoord);
-                        yOff++;
-                        offTE = worldObj.getTileEntity(xCoord, yCoord - yOff, zCoord);
-                        continue;
-                    }
-                }
-                break;
-            }
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		writeToNBT(nbtTag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
+				this.zCoord, 1, nbtTag);
+	}
 
-            return mainTank != null ? mainTank.fill(fluid, doFill, false) : 0;
-        }
+	public Fluid getFluid() {
+		FluidStack tankFluid = this.tank.getFluid();
+		return tankFluid != null && tankFluid.amount > 0 ? tankFluid.getFluid()
+				: null;
+	}
 
-        int filled = tank.fill(fluid, doFill);
-        compareAndUpdate();
+	public Fluid getRenderFluid() {
+		return this.tank.getFluid() != null ? this.tank.getFluid().getFluid()
+				: null;
+	}
 
-        if (filled < fluid.amount) {
-            TileEntity offTE = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-            if (offTE instanceof TileEntityCertusTank) {
-                TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
-                return filled + tank.fill(new FluidStack(fluid.fluidID, fluid.amount - filled), doFill, false);
-            }
-        }
+	public float getRenderScale() {
+		return (float) this.tank.getFluidAmount() / this.tank.getCapacity();
+	}
 
-        return filled;
-    }
+	public FluidTankInfo[] getTankInfo(boolean goToMainTank) {
+		if (!goToMainTank)
+			return new FluidTankInfo[] { this.tank.getInfo() };
 
-    public FluidTankInfo[] getTankInfo(boolean goToMainTank) {
-        if (!goToMainTank)
-            return new FluidTankInfo[]{tank.getInfo()};
+		int amount = 0, capacity = 0;
+		Fluid fluid = null;
 
-        int amount = 0, capacity = 0;
-        Fluid fluid = null;
+		int yOff = 0;
+		TileEntity offTE = this.worldObj.getTileEntity(this.xCoord, this.yCoord
+				- yOff, this.zCoord);
+		TileEntityCertusTank mainTank = this;
+		while (true) {
+			if (offTE != null && offTE instanceof TileEntityCertusTank) {
+				if (((TileEntityCertusTank) offTE).getFluid() == null
+						|| ((TileEntityCertusTank) offTE).getFluid() == getFluid()) {
+					mainTank = (TileEntityCertusTank) this.worldObj
+							.getTileEntity(this.xCoord, this.yCoord - yOff,
+									this.zCoord);
+					yOff++;
+					offTE = this.worldObj.getTileEntity(this.xCoord,
+							this.yCoord - yOff, this.zCoord);
+					continue;
+				}
+			}
+			break;
+		}
 
-        int yOff = 0;
-        TileEntity offTE = worldObj.getTileEntity(xCoord, yCoord - yOff, zCoord);
-        TileEntityCertusTank mainTank = this;
-        while (true) {
-            if (offTE != null && offTE instanceof TileEntityCertusTank) {
-                if ((((TileEntityCertusTank) offTE).getFluid() == null || ((TileEntityCertusTank) offTE).getFluid() == getFluid())) {
-                    mainTank = (TileEntityCertusTank) worldObj.getTileEntity(xCoord, yCoord - yOff, zCoord);
-                    yOff++;
-                    offTE = worldObj.getTileEntity(xCoord, yCoord - yOff, zCoord);
-                    continue;
-                }
-            }
-            break;
-        }
+		yOff = 0;
+		offTE = this.worldObj.getTileEntity(this.xCoord, this.yCoord + yOff,
+				this.zCoord);
+		while (true) {
+			if (offTE != null && offTE instanceof TileEntityCertusTank) {
+				mainTank = (TileEntityCertusTank) offTE;
+				if (mainTank.getFluid() == null
+						|| mainTank.getFluid() == getFluid()) {
+					FluidTankInfo info = mainTank.getTankInfo(false)[0];
+					if (info != null) {
+						capacity += info.capacity;
+						if (info.fluid != null) {
+							amount += info.fluid.amount;
+							if (info.fluid.getFluid() != null)
+								fluid = info.fluid.getFluid();
+						}
+					}
+					yOff++;
+					offTE = this.worldObj.getTileEntity(this.xCoord,
+							this.yCoord + yOff, this.zCoord);
+					continue;
+				}
+			}
+			break;
+		}
 
-        yOff = 0;
-        offTE = worldObj.getTileEntity(xCoord, yCoord + yOff, zCoord);
-        while (true) {
-            if (offTE != null && offTE instanceof TileEntityCertusTank) {
-                mainTank = (TileEntityCertusTank) offTE;
-                if ((mainTank.getFluid() == null || mainTank.getFluid() == getFluid())) {
-                    FluidTankInfo info = mainTank.getTankInfo(false)[0];
-                    if (info != null) {
-                        capacity += info.capacity;
-                        if (info.fluid != null) {
-                            amount += info.fluid.amount;
-                            if (info.fluid.getFluid() != null)
-                                fluid = info.fluid.getFluid();
-                        }
-                    }
-                    yOff++;
-                    offTE = worldObj.getTileEntity(xCoord, yCoord + yOff, zCoord);
-                    continue;
-                }
-            }
-            break;
-        }
+		return new FluidTankInfo[] { new FluidTankInfo(
+				fluid != null ? new FluidStack(fluid, amount) : null, capacity) };
+	}
 
-        return new FluidTankInfo[]{new FluidTankInfo(fluid != null ? new FluidStack(fluid, amount) : null, capacity)};
-    }
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		return getTankInfo(true);
+	}
 
-    public Fluid getFluid() {
-        FluidStack tankFluid = tank.getFluid();
-        return tankFluid != null && tankFluid.amount > 0 ? tankFluid.getFluid() : null;
-    }
+	@Override
+	public void onDataPacket(NetworkManager net,
+			S35PacketUpdateTileEntity packet) {
+		this.worldObj.markBlockRangeForRenderUpdate(this.xCoord, this.yCoord,
+				this.zCoord, this.xCoord, this.yCoord, this.zCoord);
+		readFromNBT(packet.func_148857_g());
+	}
 
-    public void compareAndUpdate() {
-        if (!worldObj.isRemote) {
-            FluidStack current = tank.getFluid();
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		readFromNBTWithoutCoords(tag);
+	}
 
-            if (current != null) {
-                if (lastBeforeUpdate != null) {
-                    if (Math.abs(current.amount - lastBeforeUpdate.amount) >= 500) {
-                        ChannelHandler.sendPacketToAllPlayers(getDescriptionPacket(), worldObj);
-                        lastBeforeUpdate = current.copy();
-                    } else if (lastBeforeUpdate.amount < tank.getCapacity() && current.amount == tank.getCapacity() || lastBeforeUpdate.amount == tank.getCapacity() && current.amount < tank.getCapacity()) {
-                        ChannelHandler.sendPacketToAllPlayers(getDescriptionPacket(), worldObj);
-                        lastBeforeUpdate = current.copy();
-                    }
-                } else {
-                    ChannelHandler.sendPacketToAllPlayers(getDescriptionPacket(), worldObj);
-                    lastBeforeUpdate = current.copy();
-                }
-            } else if (lastBeforeUpdate != null) {
-                ChannelHandler.sendPacketToAllPlayers(getDescriptionPacket(), worldObj);
-                lastBeforeUpdate = null;
-            }
-        }
-    }
+	public void readFromNBTWithoutCoords(NBTTagCompound tag) {
+		this.tank.readFromNBT(tag);
+	}
 
-    public Fluid getRenderFluid() {
-        return tank.getFluid() != null ? tank.getFluid().getFluid() : null;
-    }
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		writeToNBTWithoutCoords(tag);
+	}
 
-    public float getRenderScale() {
-        return (float) tank.getFluidAmount() / tank.getCapacity();
-    }
+	public void writeToNBTWithoutCoords(NBTTagCompound tag) {
+		this.tank.writeToNBT(tag);
+	}
 }

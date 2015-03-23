@@ -5,11 +5,12 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import extracells.network.packet.part.PacketFluidStorage;
 
-public class HandlerFluidStorage implements IMessageHandler<PacketFluidStorage, IMessage> {
+public class HandlerFluidStorage implements
+		IMessageHandler<PacketFluidStorage, IMessage> {
 
-    @Override
-    public IMessage onMessage(PacketFluidStorage message, MessageContext ctx) {
-        message.execute();
-        return null;
-    }
+	@Override
+	public IMessage onMessage(PacketFluidStorage message, MessageContext ctx) {
+		message.execute();
+		return null;
+	}
 }

@@ -1,14 +1,28 @@
 package extracells.api;
 
-import extracells.api.definitions.IBlockDefinition;
-import extracells.api.definitions.IItemDefinition;
-import extracells.api.definitions.IPartDefinition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import extracells.api.definitions.IBlockDefinition;
+import extracells.api.definitions.IItemDefinition;
+import extracells.api.definitions.IPartDefinition;
 
 public interface ExtraCellsApi {
+
+	public void addFluidToShowBlacklist(Class<? extends Fluid> clazz);
+
+	public void addFluidToShowBlacklist(Fluid fluid);
+
+	public void addFluidToStorageBlacklist(Class<? extends Fluid> clazz);
+
+	public void addFluidToStorageBlacklist(Fluid fluid);
+
+	public IBlockDefinition blocks();
+
+	public boolean canFluidSeeInTerminal(Fluid fluid);
+
+	public boolean canStoreFluid(Fluid fluid);
 
 	/**
 	 * @deprecated incorrect spelling
@@ -18,40 +32,31 @@ public interface ExtraCellsApi {
 
 	public String getVersion();
 
+	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is);
+
+	public boolean isWirelessFluidTerminal(ItemStack is);
+
+	public IItemDefinition items();
+
+	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack,
+			World world);
+
+	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack,
+			World world);
+
+	@Deprecated
+	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack,
+			World world, int x, int y, int z, Long key);
+
+	public IPartDefinition parts();
+
+	public void registerWirelessFluidTermHandler(
+			IWirelessFluidTermHandler handler);
+
 	/**
 	 * @deprecated incorrect spelling
 	 */
 	@Deprecated
-	public void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
-
-	public void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
-	
-	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is);
-	
-	public boolean isWirelessFluidTerminal(ItemStack is);
-	
-	@Deprecated
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, Long key);
-	
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);
-	
-	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
-	
-	public IItemDefinition items();
-	
-	public IBlockDefinition blocks();
-	
-	public IPartDefinition parts();
-	
-	public void addFluidToShowBlacklist(Class<? extends Fluid> clazz);
-	
-	public void addFluidToShowBlacklist(Fluid fluid);
-	
-	public void addFluidToStorageBlacklist(Class<? extends Fluid> clazz);
-	
-	public void addFluidToStorageBlacklist(Fluid fluid);
-	
-	public boolean canFluidSeeInTerminal(Fluid fluid);
-	
-	public boolean canStoreFluid(Fluid fluid);
+	public void registryWirelessFluidTermHandler(
+			IWirelessFluidTermHandler handler);
 }

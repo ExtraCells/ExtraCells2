@@ -1,6 +1,15 @@
 package extracells.gridblock;
 
-import appeng.api.networking.*;
+import java.util.EnumSet;
+
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.ForgeDirection;
+import appeng.api.networking.GridFlags;
+import appeng.api.networking.GridNotification;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridBlock;
+import appeng.api.networking.IGridHost;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
@@ -8,87 +17,81 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import extracells.part.PartECBase;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.EnumSet;
 
 public class ECBaseGridBlock implements IGridBlock {
 
-    protected AEColor color;
-    protected IGrid grid;
-    protected int usedChannels;
-    protected PartECBase host;
+	protected AEColor color;
+	protected IGrid grid;
+	protected int usedChannels;
+	protected PartECBase host;
 
-    public ECBaseGridBlock(PartECBase _host) {
-        host = _host;
-    }
+	public ECBaseGridBlock(PartECBase _host) {
+		this.host = _host;
+	}
 
-    @Override
-    public double getIdlePowerUsage() {
-        return host.getPowerUsage();
-    }
+	@Override
+	public final EnumSet<ForgeDirection> getConnectableSides() {
+		return EnumSet.noneOf(ForgeDirection.class);
+	}
 
-    @Override
-    public EnumSet<GridFlags> getFlags() {
-        return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
-    }
+	@Override
+	public EnumSet<GridFlags> getFlags() {
+		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+	}
 
-    @Override
-    public final boolean isWorldAccessible() {
-        return false;
-    }
+	public IMEMonitor<IAEFluidStack> getFluidMonitor() {
+		IGridNode node = this.host.getGridNode();
+		if (node == null)
+			return null;
+		IGrid grid = node.getGrid();
+		if (grid == null)
+			return null;
+		IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+		if (storageGrid == null)
+			return null;
+		return storageGrid.getFluidInventory();
 
-    @Override
-    public final DimensionalCoord getLocation() {
-        return host.getLocation();
-    }
+	}
 
-    @Override
-    public final AEColor getGridColor() {
-        return color == null ? AEColor.Transparent : color;
-    }
+	@Override
+	public final AEColor getGridColor() {
+		return this.color == null ? AEColor.Transparent : this.color;
+	}
 
-    @Override
-    public void onGridNotification(GridNotification notification) {
-    }
+	@Override
+	public double getIdlePowerUsage() {
+		return this.host.getPowerUsage();
+	}
 
-    @Override
-    public final void setNetworkStatus(IGrid _grid, int _usedChannels) {
-        grid = _grid;
-        usedChannels = _usedChannels;
-    }
+	@Override
+	public final DimensionalCoord getLocation() {
+		return this.host.getLocation();
+	}
 
-    @Override
-    public final EnumSet<ForgeDirection> getConnectableSides() {
-        return EnumSet.noneOf(ForgeDirection.class);
-    }
+	@Override
+	public IGridHost getMachine() {
+		return this.host;
+	}
 
-    @Override
-    public IGridHost getMachine() {
-        return host;
-    }
+	@Override
+	public ItemStack getMachineRepresentation() {
+		return this.host.getItemStack(PartItemStack.Network);
+	}
 
-    @Override
-    public void gridChanged() {
-    }
+	@Override
+	public void gridChanged() {}
 
-    @Override
-    public ItemStack getMachineRepresentation() {
-        return host.getItemStack(PartItemStack.Network);
-    }
+	@Override
+	public final boolean isWorldAccessible() {
+		return false;
+	}
 
-    public IMEMonitor<IAEFluidStack> getFluidMonitor() {
-        IGridNode node = host.getGridNode();
-        if (node == null)
-            return null;
-        IGrid grid = node.getGrid();
-        if (grid == null)
-            return null;
-        IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-        if (storageGrid == null)
-            return null;
-        return storageGrid.getFluidInventory();
+	@Override
+	public void onGridNotification(GridNotification notification) {}
 
-    }
+	@Override
+	public final void setNetworkStatus(IGrid _grid, int _usedChannels) {
+		this.grid = _grid;
+		this.usedChannels = _usedChannels;
+	}
 }

@@ -2,11 +2,7 @@ package extracells.item;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.tileentity.TileEntityFluidInterface;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,6 +12,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.tileentity.TileEntityFluidInterface;
 
 public class ItemBlockECBase extends ItemBlock {
 
@@ -24,78 +23,74 @@ public class ItemBlockECBase extends ItemBlock {
 		setMaxDamage(0);
 		setHasSubtypes(true);
 	}
-	
-	@Override
-	public String getUnlocalizedName(ItemStack stack){
-		if(stack == null)
-			return "null";
-		switch(stack.getItemDamage()){
-			case 0:
-				return "extracells.block.fluidinterface";
-			case 1:
-				return "extracells.block.fluidfiller";
-			default:
-				return super.getUnlocalizedName(stack);
-		}
-	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
-    public int getSpriteNumber()
-    {
-        return 0;
-    }
+	public IIcon getIconFromDamage(int damage) {
+		return Block.getBlockFromItem(this).getIcon(0, damage);
+	}
 
 	@Override
-    @SideOnly(Side.CLIENT)
-    public IIcon getIconFromDamage(int damage)
-    {
-		return Block.getBlockFromItem(this).getIcon(0, damage);
-    }
-	
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List list)
-    {
-        list.add(new ItemStack(item));
-        list.add(new ItemStack(item, 1, 1));
-    }
-    
-    @Override
-    public int getMetadata(int damage)
-    {
-        return damage;
-    }
-    
-    @Override
-    public String getItemStackDisplayName(ItemStack stack)
-    {
-    	return StatCollector.translateToLocal(getUnlocalizedName(stack) + ".name");
-    }
-    
-    @Override
-    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
-    {
+	public String getItemStackDisplayName(ItemStack stack) {
+		return StatCollector.translateToLocal(getUnlocalizedName(stack)
+				+ ".name");
+	}
 
-       if (!world.setBlock(x, y, z, field_150939_a, metadata, 3))
-       {
-           return false;
-       }
+	@Override
+	public int getMetadata(int damage) {
+		return damage;
+	}
 
-       if (world.getBlock(x, y, z) == field_150939_a)
-       {
-           field_150939_a.onBlockPlacedBy(world, x, y, z, player, stack);
-           field_150939_a.onPostBlockPlaced(world, x, y, z, metadata);
-       }
-       
-       if(getMetadata(stack.getItemDamage()) == 0 && stack.hasTagCompound()){
-    	   TileEntity tile = world.getTileEntity(x, y, z);
-    	   if(tile != null && tile instanceof TileEntityFluidInterface){
-    		   ((TileEntityFluidInterface)tile).readFilter(stack.getTagCompound());
-    	   }
-       }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getSpriteNumber() {
+		return 0;
+	}
 
-       return true;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs tab, List list) {
+		list.add(new ItemStack(item));
+		list.add(new ItemStack(item, 1, 1));
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		if (stack == null)
+			return "null";
+		switch (stack.getItemDamage()) {
+		case 0:
+			return "extracells.block.fluidinterface";
+		case 1:
+			return "extracells.block.fluidfiller";
+		default:
+			return super.getUnlocalizedName(stack);
+		}
+	}
+
+	@Override
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player,
+			World world, int x, int y, int z, int side, float hitX, float hitY,
+			float hitZ, int metadata) {
+
+		if (!world.setBlock(x, y, z, this.field_150939_a, metadata, 3)) {
+			return false;
+		}
+
+		if (world.getBlock(x, y, z) == this.field_150939_a) {
+			this.field_150939_a.onBlockPlacedBy(world, x, y, z, player, stack);
+			this.field_150939_a.onPostBlockPlaced(world, x, y, z, metadata);
+		}
+
+		if (getMetadata(stack.getItemDamage()) == 0 && stack.hasTagCompound()) {
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if (tile != null && tile instanceof TileEntityFluidInterface) {
+				((TileEntityFluidInterface) tile).readFilter(stack
+						.getTagCompound());
+			}
+		}
+
+		return true;
+	}
 
 }

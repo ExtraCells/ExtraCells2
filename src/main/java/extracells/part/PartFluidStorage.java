@@ -1,5 +1,19 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.SecurityPermissions;
@@ -30,246 +44,256 @@ import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+public class PartFluidStorage extends PartECBase implements ICellContainer,
+		IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
-public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
+	private int priority = 0;
+	private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
+	private Fluid[] filterFluids = new Fluid[54];
+	private AccessRestriction access = AccessRestriction.READ_WRITE;
+	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1,
+			1, this) {
 
-    private int priority = 0;
-    private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
-    private Fluid[] filterFluids = new Fluid[54];
-    private AccessRestriction access = AccessRestriction.READ_WRITE;
-    private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this) {
+		@Override
+		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+			if (itemStack == null)
+				return false;
+			if (AEApi.instance().materials().materialCardInverter
+					.sameAsStack(itemStack))
+				return true;
+			return false;
+		}
+	};
 
-        public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-            if (itemStack == null)
-                return false;
-            if (AEApi.instance().materials().materialCardInverter.sameAsStack(itemStack))
-                return true;
-            return false;
-        }
-    };
+	@Override
+	public void blinkCell(int slot) {}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-        Tessellator ts = Tessellator.instance;
+	@Override
+	public int cableConnectionRenderTo() {
+		return 3;
+	}
 
-        IIcon side = TextureManager.STORAGE_SIDE.getTexture();
-        rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTextures()[0], side, side);
-        rh.setBounds(2, 2, 15, 14, 14, 16);
-        rh.renderInventoryBox(renderer);
+	@Override
+	public void getBoxes(IPartCollisionHelper bch) {
+		bch.addBox(2, 2, 15, 14, 14, 16);
+		bch.addBox(4, 4, 14, 12, 12, 15);
+		bch.addBox(5, 5, 13, 11, 11, 14);
+	}
 
-        rh.setBounds(4, 4, 14, 12, 12, 15);
-        rh.renderInventoryBox(renderer);
-        rh.setBounds(2, 2, 15, 14, 14, 16);
-        rh.setInvColor(AEColor.Cyan.blackVariant);
-        ts.setBrightness(15 << 20 | 15 << 4);
-        rh.renderInventoryFace(TextureManager.STORAGE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
+	@Override
+	public List<IMEInventoryHandler> getCellArray(StorageChannel channel) {
+		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
+		if (channel == StorageChannel.FLUIDS) {
+			list.add(this.handler);
+		}
+		return list;
+	}
 
-        rh.setBounds(5, 5, 13, 11, 11, 14);
-        renderInventoryBusLights(rh, renderer);
-    }
+	@Override
+	public Object getClientGuiElement(EntityPlayer player) {
+		return new GuiBusFluidStorage(this, player);
+	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
-        Tessellator ts = Tessellator.instance;
+	@Override
+	public int getLightLevel() {
+		return 0;
+	}
 
-        IIcon side = TextureManager.STORAGE_SIDE.getTexture();
-        rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
-        rh.setBounds(2, 2, 15, 14, 14, 16);
-        rh.renderBlock(x, y, z, renderer);
+	@Override
+	public double getPowerUsage() {
+		return 1.0D;
+	}
 
-        ts.setColorOpaque_I(getHost().getColor().blackVariant);
-        if (isActive())
-            ts.setBrightness(15 << 20 | 15 << 4);
-        rh.renderFace(x, y, z, TextureManager.STORAGE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
-        rh.setBounds(4, 4, 14, 12, 12, 15);
-        rh.renderBlock(x, y, z, renderer);
+	@Override
+	public int getPriority() {
+		return this.priority;
+	}
 
-        rh.setBounds(5, 5, 13, 11, 11, 14);
-        renderStaticBusLights(x, y, z, rh, renderer);
-    }
+	@Override
+	public Object getServerGuiElement(EntityPlayer player) {
+		return new ContainerBusFluidStorage(this, player);
+	}
 
-    @Override
-    public void writeToNBT(NBTTagCompound data) {
-        super.writeToNBT(data);
-        data.setInteger("priority", priority);
-        for (int i = 0; i < filterFluids.length; i++) {
-            Fluid fluid = filterFluids[i];
-            if (fluid != null)
-                data.setString("FilterFluid#" + i, fluid.getName());
-            else
-                data.setString("FilterFluid#" + i, "");
-        }
-        data.setTag("upgradeInventory", upgradeInventory.writeToNBT());
-        data.setString("access", access.name());
-    }
+	public ECPrivateInventory getUpgradeInventory() {
+		return this.upgradeInventory;
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound data) {
-        super.readFromNBT(data);
-        priority = data.getInteger("priority");
-        for (int i = 0; i < 9; i++) {
-            filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
-        }
-        if(data.hasKey("access")){
-        	try{
-        		access = AccessRestriction.valueOf(data.getString("access"));
-        	}catch(Throwable e){}
-        }
-        upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
-        onInventoryChanged();
-        onNeighborChanged();
-        handler.setPrioritizedFluids(filterFluids);
-        handler.setAccessRestriction(access);
-    }
+	@Override
+	public boolean onActivate(EntityPlayer player, Vec3 pos) {
+		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
+				(IPart) this)) {
+			return super.onActivate(player, pos);
+		}
+		return false;
+	}
 
-    @Override
-    public void getBoxes(IPartCollisionHelper bch) {
-        bch.addBox(2, 2, 15, 14, 14, 16);
-        bch.addBox(4, 4, 14, 12, 12, 15);
-        bch.addBox(5, 5, 13, 11, 11, 14);
-    }
+	@Override
+	public void onInventoryChanged() {
+		this.handler
+				.setInverted(AEApi.instance().materials().materialCardInverter
+						.sameAsStack(this.upgradeInventory.getStackInSlot(0)));
+		saveData();
+	}
 
-    @Override
-    public int cableConnectionRenderTo() {
-        return 3;
-    }
+	@Override
+	public void onNeighborChanged() {
+		this.handler.onNeighborChange();
+		IGridNode node = getGridNode();
+		if (node != null) {
+			IGrid grid = node.getGrid();
+			if (grid != null) {
+				grid.postEvent(new MENetworkCellArrayUpdate());
+				node.getGrid().postEvent(
+						new MENetworkStorageEvent(getGridBlock()
+								.getFluidMonitor(), StorageChannel.FLUIDS));
+				node.getGrid().postEvent(new MENetworkCellArrayUpdate());
+			}
+			getHost().markForUpdate();
+		}
+	}
 
-    @Override
-    public List<IMEInventoryHandler> getCellArray(StorageChannel channel) {
-        List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
-        if (channel == StorageChannel.FLUIDS) {
-            list.add(handler);
-        }
-        return list;
-    }
+	@MENetworkEventSubscribe
+	public void powerChange(MENetworkPowerStatusChange event) {
+		IGridNode node = getGridNode();
+		if (node != null) {
+			boolean isNowActive = node.isActive();
+			if (isNowActive != isActive()) {
+				setActive(isNowActive);
+				onNeighborChanged();
+				getHost().markForUpdate();
+			}
+		}
+		node.getGrid().postEvent(
+				new MENetworkStorageEvent(getGridBlock().getFluidMonitor(),
+						StorageChannel.FLUIDS));
+		node.getGrid().postEvent(new MENetworkCellArrayUpdate());
+	}
 
-    @Override
-    public int getLightLevel() {
-        return 0;
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound data) {
+		super.readFromNBT(data);
+		this.priority = data.getInteger("priority");
+		for (int i = 0; i < 9; i++) {
+			this.filterFluids[i] = FluidRegistry.getFluid(data
+					.getString("FilterFluid#" + i));
+		}
+		if (data.hasKey("access")) {
+			try {
+				this.access = AccessRestriction.valueOf(data
+						.getString("access"));
+			} catch (Throwable e) {}
+		}
+		this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory",
+				10));
+		onInventoryChanged();
+		onNeighborChanged();
+		this.handler.setPrioritizedFluids(this.filterFluids);
+		this.handler.setAccessRestriction(this.access);
+	}
 
-    @Override
-    public int getPriority() {
-        return priority;
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
+		Tessellator ts = Tessellator.instance;
 
-    @Override
-    public void blinkCell(int slot) {
-    }
+		IIcon side = TextureManager.STORAGE_SIDE.getTexture();
+		rh.setTexture(side, side, side,
+				TextureManager.STORAGE_FRONT.getTextures()[0], side, side);
+		rh.setBounds(2, 2, 15, 14, 14, 16);
+		rh.renderInventoryBox(renderer);
 
-    @Override
-    public void onNeighborChanged() {
-        handler.onNeighborChange();
-        IGridNode node = getGridNode();
-        if (node != null) {
-            IGrid grid = node.getGrid();
-            if (grid != null) {
-                grid.postEvent(new MENetworkCellArrayUpdate());
-                node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
-                node.getGrid().postEvent(new MENetworkCellArrayUpdate());
-            }
-            getHost().markForUpdate();
-        }
-    }
+		rh.setBounds(4, 4, 14, 12, 12, 15);
+		rh.renderInventoryBox(renderer);
+		rh.setBounds(2, 2, 15, 14, 14, 16);
+		rh.setInvColor(AEColor.Cyan.blackVariant);
+		ts.setBrightness(15 << 20 | 15 << 4);
+		rh.renderInventoryFace(TextureManager.STORAGE_FRONT.getTextures()[1],
+				ForgeDirection.SOUTH, renderer);
 
-    public ECPrivateInventory getUpgradeInventory() {
-        return upgradeInventory;
-    }
+		rh.setBounds(5, 5, 13, 11, 11, 14);
+		renderInventoryBusLights(rh, renderer);
+	}
 
-    @Override
-    public void onInventoryChanged() {
-        handler.setInverted(AEApi.instance().materials().materialCardInverter.sameAsStack(upgradeInventory.getStackInSlot(0)));
-        saveData();
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
+			RenderBlocks renderer) {
+		Tessellator ts = Tessellator.instance;
 
-    public void sendInformation(EntityPlayer player) {
-        new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
-        new PacketBusFluidStorage(player, access, true).sendPacketToPlayer(player);
-    }
+		IIcon side = TextureManager.STORAGE_SIDE.getTexture();
+		rh.setTexture(side, side, side,
+				TextureManager.STORAGE_FRONT.getTexture(), side, side);
+		rh.setBounds(2, 2, 15, 14, 14, 16);
+		rh.renderBlock(x, y, z, renderer);
 
-    public Object getServerGuiElement(EntityPlayer player) {
-        return new ContainerBusFluidStorage(this, player);
-    }
+		ts.setColorOpaque_I(getHost().getColor().blackVariant);
+		if (isActive())
+			ts.setBrightness(15 << 20 | 15 << 4);
+		rh.renderFace(x, y, z, TextureManager.STORAGE_FRONT.getTextures()[1],
+				ForgeDirection.SOUTH, renderer);
+		rh.setBounds(4, 4, 14, 12, 12, 15);
+		rh.renderBlock(x, y, z, renderer);
 
-    public Object getClientGuiElement(EntityPlayer player) {
-        return new GuiBusFluidStorage(this, player);
-    }
+		rh.setBounds(5, 5, 13, 11, 11, 14);
+		renderStaticBusLights(x, y, z, rh, renderer);
+	}
 
-    @Override
-    public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
-        filterFluids[_index] = _fluid;
-        handler.setPrioritizedFluids(filterFluids);
-        sendInformation(_player);
-        saveData();
-    }
+	@Override
+	public void saveChanges(IMEInventory cellInventory) {
+		saveData();
+	}
 
-    @MENetworkEventSubscribe
-    public void updateChannels(MENetworkChannelsChanged channel) {
-        IGridNode node = getGridNode();
-        if (node != null) {
-            boolean isNowActive = node.isActive();
-            if (isNowActive != isActive()) {
-                setActive(isNowActive);
-                onNeighborChanged();
-                getHost().markForUpdate();
-            }
-        }
-        node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
-        node.getGrid().postEvent(new MENetworkCellArrayUpdate());
-    }
-    
-    @MENetworkEventSubscribe
-    public void powerChange(MENetworkPowerStatusChange event){
-    	IGridNode node = getGridNode();
-        if (node != null) {
-            boolean isNowActive = node.isActive();
-            if (isNowActive != isActive()) {
-                setActive(isNowActive);
-                onNeighborChanged();
-                getHost().markForUpdate();
-            }
-        }
-        node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
-        node.getGrid().postEvent(new MENetworkCellArrayUpdate());
-    }
+	public void sendInformation(EntityPlayer player) {
+		new PacketFluidSlot(Arrays.asList(this.filterFluids))
+				.sendPacketToPlayer(player);
+		new PacketBusFluidStorage(player, this.access, true)
+				.sendPacketToPlayer(player);
+	}
 
-    @Override
-    public void saveChanges(IMEInventory cellInventory) {
-        saveData();
-    }
-    
-    @Override
-    public double getPowerUsage(){
-    	return 1.0D;
-    }
-    
-    @Override
-    public boolean onActivate(EntityPlayer player, Vec3 pos) {
-    	if(PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)){
-    		return super.onActivate(player, pos);
-    	}
-    	return false;
-    }
-    
-    public void updateAccess(AccessRestriction access){
-    	this.access = access;
-    	handler.setAccessRestriction(access);
-    	onNeighborChanged();
-    }
+	@Override
+	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
+		this.filterFluids[_index] = _fluid;
+		this.handler.setPrioritizedFluids(this.filterFluids);
+		sendInformation(_player);
+		saveData();
+	}
+
+	public void updateAccess(AccessRestriction access) {
+		this.access = access;
+		this.handler.setAccessRestriction(access);
+		onNeighborChanged();
+	}
+
+	@MENetworkEventSubscribe
+	public void updateChannels(MENetworkChannelsChanged channel) {
+		IGridNode node = getGridNode();
+		if (node != null) {
+			boolean isNowActive = node.isActive();
+			if (isNowActive != isActive()) {
+				setActive(isNowActive);
+				onNeighborChanged();
+				getHost().markForUpdate();
+			}
+		}
+		node.getGrid().postEvent(
+				new MENetworkStorageEvent(getGridBlock().getFluidMonitor(),
+						StorageChannel.FLUIDS));
+		node.getGrid().postEvent(new MENetworkCellArrayUpdate());
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound data) {
+		super.writeToNBT(data);
+		data.setInteger("priority", this.priority);
+		for (int i = 0; i < this.filterFluids.length; i++) {
+			Fluid fluid = this.filterFluids[i];
+			if (fluid != null)
+				data.setString("FilterFluid#" + i, fluid.getName());
+			else
+				data.setString("FilterFluid#" + i, "");
+		}
+		data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
+		data.setString("access", this.access.name());
+	}
 }

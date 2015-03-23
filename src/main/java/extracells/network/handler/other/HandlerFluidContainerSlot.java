@@ -5,12 +5,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import extracells.network.packet.other.PacketFluidContainerSlot;
 
-public class HandlerFluidContainerSlot implements IMessageHandler<PacketFluidContainerSlot, IMessage> {
+public class HandlerFluidContainerSlot implements
+		IMessageHandler<PacketFluidContainerSlot, IMessage> {
 
-
-    @Override
-    public IMessage onMessage(PacketFluidContainerSlot message, MessageContext ctx) {
-        message.execute();
-        return null;
-    }
+	@Override
+	public IMessage onMessage(PacketFluidContainerSlot message,
+			MessageContext ctx) {
+		message.execute();
+		return null;
+	}
 }
