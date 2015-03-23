@@ -11,10 +11,10 @@ import extracells.item.ItemBlockCertusTank;
 import extracells.item.ItemBlockECBase;
 
 public enum BlockEnum {
-	CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class), WALRUS(
-			"walrus", new BlockWalrus()), FLUIDCRAFTER("fluidcrafter",
-			new BlockFluidCrafter()), ECBASEBLOCK("ecbaseblock",
-			new ECBaseBlock(), ItemBlockECBase.class);
+	CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),
+	WALRUS("walrus", new BlockWalrus()),
+	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
+	ECBASEBLOCK("ecbaseblock", new ECBaseBlock(), ItemBlockECBase.class);
 
 	private final String internalName;
 	private Block block;
