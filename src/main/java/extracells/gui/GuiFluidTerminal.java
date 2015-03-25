@@ -56,7 +56,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 			int sizeY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
-		drawTexturedModalRect(this.guiLeft, this.guiTop - 18, 0, 0, this.xSize,
+		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,
 				this.ySize);
 		this.searchbar.drawTextBox();
 	}
@@ -66,7 +66,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 		this.fontRendererObj.drawString(
 				StatCollector.translateToLocal(
 						"extracells.part.fluid.terminal.name").replace("ME ",
-						""), 9, -12, 0x000000);
+						""), 9, 6, 0x000000);
 		drawWidgets(mouseX, mouseY);
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
@@ -87,12 +87,12 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
 			this.fontRendererObj.drawString(
 					StatCollector.translateToLocal("extracells.tooltip.amount")
-							+ ": " + amountToText, 45, 73, 0x000000);
+							+ ": " + amountToText, 45, 91, 0x000000);
 			this.fontRendererObj.drawString(
 					StatCollector.translateToLocal("extracells.tooltip.fluid")
 							+ ": "
 							+ this.currentFluid.getFluid().getLocalizedName(
-									this.currentFluid.getFluidStack()), 45, 83,
+									this.currentFluid.getFluidStack()), 45, 101,
 					0x000000);
 		}
 	}
@@ -106,7 +106,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 					if (0 <= widgetIndex && widgetIndex < listSize) {
 						AbstractFluidWidget widget = this.fluidWidgets
 								.get(widgetIndex);
-						widget.drawWidget(x * 18 + 7, y * 18 - 1);
+						widget.drawWidget(x * 18 + 7, y * 18 + 17);
 					} else {
 						break outerLoop;
 					}
@@ -172,7 +172,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
 		this.searchbar = new GuiTextField(this.fontRendererObj,
-				this.guiLeft + 81, this.guiTop - 12, 88, 10) {
+				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 
 			private int xPos = 0;
 			private int yPos = 0;

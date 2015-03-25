@@ -35,7 +35,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 		description.add(this.fluid.getLocalizedName(new FluidStack(this.fluid,
 				1)));
 		drawHoveringText(description, mouseX - this.guiFluidTerminal.guiLeft(),
-				mouseY - this.guiFluidTerminal.guiTop(),
+				mouseY - this.guiFluidTerminal.guiTop() + 18,
 				Minecraft.getMinecraft().fontRenderer);
 		return true;
 	}

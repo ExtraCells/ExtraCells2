@@ -51,10 +51,10 @@ public class ContainerFluidTerminal extends Container implements
 
 		// Input Slot accepts all FluidContainers
 		addSlotToContainer(new SlotRespective(this.terminal.getInventory(), 0,
-				8, 74));
+				8, 92));
 		// Input Slot accepts nothing
 		addSlotToContainer(new SlotFurnace(this.player,
-				this.terminal.getInventory(), 1, 26, 74));
+				this.terminal.getInventory(), 1, 26, 92));
 		bindPlayerInventory(this.player.inventory);
 	}
 
@@ -62,12 +62,12 @@ public class ContainerFluidTerminal extends Container implements
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 104));
+						8 + j * 18, i * 18 + 122));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 162));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 180));
 		}
 	}
 

@@ -71,10 +71,10 @@ public class ContainerFluidStorage extends Container implements
 		}
 
 		// Input Slot accepts all FluidContainers
-		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 74));
+		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 92));
 		// Input Slot accepts nothing
 		addSlotToContainer(new SlotFurnace(this.player, this.inventory, 1, 26,
-				74));
+				92));
 
 		bindPlayerInventory(this.player.inventory);
 	}
@@ -93,10 +93,10 @@ public class ContainerFluidStorage extends Container implements
 		}
 
 		// Input Slot accepts all FluidContainers
-		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 74));
+		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 92));
 		// Input Slot accepts nothing
 		addSlotToContainer(new SlotFurnace(this.player, this.inventory, 1, 26,
-				74));
+				92));
 
 		bindPlayerInventory(this.player.inventory);
 	}
@@ -115,10 +115,10 @@ public class ContainerFluidStorage extends Container implements
 		}
 
 		// Input Slot accepts all FluidContainers
-		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 74));
+		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 92));
 		// Input Slot accepts nothing
 		addSlotToContainer(new SlotFurnace(this.player, this.inventory, 1, 26,
-				74));
+				92));
 
 		bindPlayerInventory(this.player.inventory);
 	}
@@ -127,13 +127,13 @@ public class ContainerFluidStorage extends Container implements
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new SlotPlayerInventory(inventoryPlayer,
-						this, j + i * 9 + 9, 8 + j * 18, i * 18 + 104));
+						this, j + i * 9 + 9, 8 + j * 18, i * 18 + 122));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
 			addSlotToContainer(new SlotPlayerInventory(inventoryPlayer, this,
-					i, 8 + i * 18, 162));
+					i, 8 + i * 18, 180));
 		}
 
 	}

@@ -72,6 +72,7 @@ import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.EmptyMeItemMonitor;
+import extracells.util.ItemUtils;
 import extracells.util.PermissionUtil;
 
 public class PartFluidInterface extends PartECBase implements IFluidHandler,
@@ -581,7 +582,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 										((IAEItemStack) stack).getItemStack());
 								this.removeFromExport.add(stack0);
 								return;
-							} else if (ItemStack.areItemStackTagsEqual(
+							} else if (ItemUtils.areItemEqualsIgnoreStackSize(
 									inv.getStackInSlot(i),
 									((IAEItemStack) stack).getItemStack())) {
 								int max = inv.getInventoryStackLimit();
@@ -617,7 +618,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 										((IAEItemStack) stack).getItemStack());
 								this.removeFromExport.add(stack0);
 								return;
-							} else if (ItemStack.areItemStackTagsEqual(
+							} else if (ItemUtils.areItemEqualsIgnoreStackSize(
 									inv.getStackInSlot(i),
 									((IAEItemStack) stack).getItemStack())) {
 								int max = inv.getInventoryStackLimit();

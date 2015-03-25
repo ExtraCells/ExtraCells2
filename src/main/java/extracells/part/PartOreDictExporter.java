@@ -37,6 +37,7 @@ import extracells.gui.GuiOreDictExport;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
+import extracells.util.ItemUtils;
 
 public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
@@ -126,7 +127,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 							inv.setInventorySlotContents(i,
 									stack.getItemStack());
 							return stack0;
-						} else if (ItemStack.areItemStackTagsEqual(
+						} else if (ItemUtils.areItemEqualsIgnoreStackSize(
 								inv.getStackInSlot(i), stack.getItemStack())) {
 							int max = inv.getInventoryStackLimit();
 							int current = inv.getStackInSlot(i).stackSize;
@@ -156,7 +157,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 							inv.setInventorySlotContents(i,
 									stack.getItemStack());
 							return stack0;
-						} else if (ItemStack.areItemStackTagsEqual(
+						} else if (ItemUtils.areItemEqualsIgnoreStackSize(
 								inv.getStackInSlot(i), stack.getItemStack())) {
 							int max = inv.getInventoryStackLimit();
 							int current = inv.getStackInSlot(i).stackSize;

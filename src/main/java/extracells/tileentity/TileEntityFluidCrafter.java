@@ -159,6 +159,8 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost,
 	private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
 	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
 	private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
+	private ICraftingPatternDetails[] patternHandlerSlot = new ICraftingPatternDetails[9];
+	private ItemStack[] oldStack = new ItemStack[9];
 	private boolean isBusy = false;
 
 	private ICraftingWatcher watcher = null;
@@ -247,8 +249,24 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost,
 	@Override
 	public void provideCrafting(ICraftingProviderHelper craftingTracker) {
 		this.patternHandlers = new ArrayList<ICraftingPatternDetails>();
-
-		for (ItemStack currentPatternStack : this.inventory.inv) {
+		ICraftingPatternDetails[] oldHandler = patternHandlerSlot;
+		patternHandlerSlot = new ICraftingPatternDetails[9];
+		for (int i = 0; this.inventory.inv.length > i; i++) {
+			ItemStack currentPatternStack = this.inventory.inv[i];
+			ItemStack oldItem = this.oldStack[i];
+			if(currentPatternStack != null && oldItem != null && ItemStack.areItemStacksEqual(currentPatternStack, oldItem)){
+				ICraftingPatternDetails pa = oldHandler[i];
+				if(pa != null){
+					patternHandlerSlot[i] = pa;
+					patternHandlers.add(pa);
+					if (pa.getCondensedInputs().length == 0) {
+						craftingTracker.setEmitable(pa.getCondensedOutputs()[0]);
+					} else {
+						craftingTracker.addCraftingOption(this, pa);
+					}
+					continue;
+				}
+			}
 			if (currentPatternStack != null
 					&& currentPatternStack.getItem() != null
 					&& currentPatternStack.getItem() instanceof ICraftingPatternItem) {
@@ -265,6 +283,7 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost,
 							currentPattern.getPatternForItem(
 									currentPatternStack, getWorldObj()));
 					this.patternHandlers.add(pattern);
+					this.patternHandlerSlot[i] = pattern;
 					if (pattern.getCondensedInputs().length == 0) {
 						craftingTracker.setEmitable(pattern
 								.getCondensedOutputs()[0]);
@@ -273,6 +292,7 @@ public class TileEntityFluidCrafter extends TileEntity implements IActionHost,
 					}
 				}
 			}
+			oldStack[i] = currentPatternStack;
 		}
 		updateWatcher();
 	}

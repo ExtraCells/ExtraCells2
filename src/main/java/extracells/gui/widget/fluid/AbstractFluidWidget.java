@@ -104,7 +104,7 @@ public abstract class AbstractFluidWidget extends Gui {
 	protected boolean isPointInRegion(int top, int left, int height, int width,
 			int pointX, int pointY) {
 		int k1 = this.guiFluidTerminal.guiLeft();
-		int l1 = this.guiFluidTerminal.guiTop();
+		int l1 = this.guiFluidTerminal.guiTop() + 18;
 		pointX -= k1;
 		pointY -= l1;
 		return pointX >= top - 1 && pointX < top + height + 1

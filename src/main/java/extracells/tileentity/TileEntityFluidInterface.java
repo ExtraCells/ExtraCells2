@@ -57,6 +57,7 @@ import extracells.gridblock.ECFluidGridBlock;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
 import extracells.util.EmptyMeItemMonitor;
+import extracells.util.ItemUtils;
 import extracells.waila.IWailaTile;
 
 public class TileEntityFluidInterface extends TileEntity implements
@@ -588,7 +589,7 @@ public class TileEntityFluidInterface extends TileEntity implements
 													.getItemStack());
 									this.removeFromExport.add(stack0);
 									return;
-								} else if (ItemStack.areItemStackTagsEqual(
+								} else if (ItemUtils.areItemEqualsIgnoreStackSize(
 										inv.getStackInSlot(i),
 										((IAEItemStack) stack).getItemStack())) {
 									int max = inv.getInventoryStackLimit();
@@ -628,7 +629,7 @@ public class TileEntityFluidInterface extends TileEntity implements
 													.getItemStack());
 									this.removeFromExport.add(stack0);
 									return;
-								} else if (ItemStack.areItemStackTagsEqual(
+								} else if (ItemUtils.areItemEqualsIgnoreStackSize(
 										inv.getStackInSlot(i),
 										((IAEItemStack) stack).getItemStack())) {
 									int max = inv.getInventoryStackLimit();
