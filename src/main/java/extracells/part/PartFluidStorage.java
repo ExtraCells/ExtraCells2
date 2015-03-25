@@ -2,6 +2,7 @@ package extracells.part;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.client.renderer.RenderBlocks;
@@ -14,6 +15,7 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.SecurityPermissions;
@@ -31,6 +33,7 @@ import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -48,6 +51,7 @@ import extracells.util.inventory.IInventoryUpdateReceiver;
 public class PartFluidStorage extends PartECBase implements ICellContainer,
 		IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
+	private HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
 	private int priority = 0;
 	private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
 	private Fluid[] filterFluids = new Fluid[54];
@@ -87,6 +91,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer,
 		if (channel == StorageChannel.FLUIDS) {
 			list.add(this.handler);
 		}
+		updateNeighborFluids();
 		return list;
 	}
 
@@ -142,7 +147,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer,
 		IGridNode node = getGridNode();
 		if (node != null) {
 			IGrid grid = node.getGrid();
-			if (grid != null) {
+			if (grid != null && this.wasChanged()) {
 				grid.postEvent(new MENetworkCellArrayUpdate());
 				node.getGrid().postEvent(
 						new MENetworkStorageEvent(getGridBlock()
@@ -295,5 +300,24 @@ public class PartFluidStorage extends PartECBase implements ICellContainer,
 		}
 		data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
 		data.setString("access", this.access.name());
+	}
+	
+	private void updateNeighborFluids(){
+		fluidList.clear();
+		if(access == AccessRestriction.READ || access == AccessRestriction.READ_WRITE){
+			for(IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())){
+				FluidStack s = stack.getFluidStack().copy();
+				fluidList.put(s, s.amount);
+			}
+		}
+	}
+	
+	private boolean wasChanged(){
+		HashMap<FluidStack, Integer> fluids = new HashMap<FluidStack, Integer>();
+		for(IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())){
+			FluidStack s = stack.getFluidStack();
+			fluids.put(s, s.amount);
+		}
+		return !fluids.equals(fluidList);
 	}
 }
