@@ -153,11 +153,13 @@ public class HandlerPartStorageFluid implements
 				out.add(stack);
 			}
 		} else if (this.tank != null) {
-			FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node
-					.getSide().getOpposite());
-			if (infoArray != null && infoArray.length > 0)
-				out.add(AEApi.instance().storage()
-						.createFluidStack(infoArray[0].fluid));
+			FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node.getSide().getOpposite());
+			if (infoArray != null && infoArray.length > 0){
+				for(FluidTankInfo info : infoArray){
+					if(info.fluid != null)
+						out.add(AEApi.instance().storage().createFluidStack(info.fluid));
+				}
+			}
 		}
 		return out;
 	}
