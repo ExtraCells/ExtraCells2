@@ -6,6 +6,7 @@ import java.util.Set;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import appeng.api.config.Settings;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
 import extracells.api.IWirelessFluidTermHandler;
@@ -15,20 +16,20 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 	// Only added to avoid crashes
 	private class ConfigManager implements IConfigManager {
 
-		HashMap<Enum, Enum> settings = new HashMap<Enum, Enum>();
+		HashMap<Settings, Enum> settings = new HashMap<Settings, Enum>();
 
 		@Override
-		public Enum getSetting(Enum settingName) {
+		public Enum<?> getSetting(Settings settingName) {
 			return this.settings.get(settingName);
 		}
 
 		@Override
-		public Set<Enum> getSettings() {
+		public Set<Settings> getSettings() {
 			return this.settings.keySet();
 		}
 
 		@Override
-		public Enum putSetting(Enum settingName, Enum newValue) {
+		public Enum<?> putSetting(Settings settingName, Enum<?> newValue) {
 			this.settings.put(settingName, newValue);
 			return newValue;
 		}
@@ -39,7 +40,7 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 		}
 
 		@Override
-		public void registerSetting(Enum settingName, Enum defaultValue) {
+		public void registerSetting(Settings settingName, Enum defaultValue) {
 			this.settings.put(settingName, defaultValue);
 		}
 

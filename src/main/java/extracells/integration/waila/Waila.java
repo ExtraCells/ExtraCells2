@@ -1,4 +1,4 @@
-package extracells.waila;
+package extracells.integration.waila;
 
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
@@ -11,9 +11,7 @@ import extracells.tileentity.TileEntityCertusTank;
 public class Waila {
 
 	public static void init() {
-		if (Loader.isModLoaded("Waila"))
-			FMLInterModComms.sendMessage("Waila", "register",
-					Waila.class.getName() + ".register");
+		FMLInterModComms.sendMessage("Waila", "register", Waila.class.getName() + ".register");
 	}
 
 	@Optional.Method(modid = "Waila")

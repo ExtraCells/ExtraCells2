@@ -136,7 +136,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 		return null;
 	}
 
-	protected IFluidHandler getFacingTank() {
+	public IFluidHandler getFacingTank() {
 		return this.facingTank;
 	}
 

@@ -19,6 +19,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import extracells.integration.Intigration;
 import extracells.network.ChannelHandler;
 import extracells.network.GuiHandler;
 import extracells.proxy.CommonProxy;
@@ -27,7 +28,6 @@ import extracells.render.RenderHandler;
 import extracells.util.ExtraCellsEventHandler;
 import extracells.util.FluidCellHandler;
 import extracells.util.NameHandler;
-import extracells.waila.Waila;
 import extracells.wireless.AEWirelessTermHandler;
 
 @Mod(modid = "extracells", name = "Extra Cells", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
@@ -44,6 +44,8 @@ public class Extracells {
 	private static File configFolder;
 	public static boolean shortenedBuckets;
 	public static boolean dynamicTypes;
+	public static Intigration intigration = new Intigration();
+	
 	public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells") {
 
 		@Override
@@ -75,11 +77,13 @@ public class Extracells {
 		ChannelHandler.registerMessages();
 		RenderingRegistry.registerBlockHandler(new RenderHandler(
 				RenderingRegistry.getNextAvailableRenderId()));
-		Waila.init();
+		intigration.init();
 	}
 
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {}
+	public void postInit(FMLPostInitializationEvent event) {
+		intigration.postInit();
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -104,5 +108,6 @@ public class Extracells {
 
 		proxy.registerItems();
 		proxy.registerBlocks();
+		intigration.preInit();
 	}
 }

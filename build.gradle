@@ -45,7 +45,7 @@ logger.lifecycle "$archivesBaseName-$version"
 logger.lifecycle "" + version
 
 minecraft {
-    version = "${config.version.minecraft}-${config.version.forge}"
+    version = "${config.version.minecraft}-${config.version.forge}-${config.version.minecraft}"
     assetDir = "../../MinecraftDebug/run_client/assets"
 }
 
@@ -67,10 +67,15 @@ repositories {
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
     }
+	
+	maven {
+		name 'Open Computers'
+		url "http://maven.cil.li/"
+	}
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:rv2-beta-8:dev"){
+	compile ("appeng:appliedenergistics2:rv2-beta-22:dev"){
         exclude group: "mcp.mobius.waila", module: "Waila"
         exclude group: "codechicken", module: "ForgeMultipart"
 		exclude group: "codechicken", module: "CodeChickenCore"
@@ -91,8 +96,9 @@ dependencies {
 		exclude group: "api", module: "invtweaks"
 		exclude group: "api", module: "rotarycraft"
 	}
-    compile 'com.mod-buildcraft:buildcraft:6.3.1:api'
-	compile "mcp.mobius.waila:Waila:1.5.8a_1.7.10"
+    compile 'com.mod-buildcraft:buildcraft:6.4.6:api'
+	compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
+	compile "li.cil.oc:OpenComputers:MC1.7.10-1.5.5.12:dev"
 }
 
 processResources {

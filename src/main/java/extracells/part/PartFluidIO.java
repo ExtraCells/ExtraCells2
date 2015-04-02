@@ -37,7 +37,7 @@ import extracells.util.inventory.IInventoryUpdateReceiver;
 public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
-	protected Fluid[] filterFluids = new Fluid[9];
+	public Fluid[] filterFluids = new Fluid[9];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 	protected byte filterSize;
 	protected byte speedState;
@@ -83,6 +83,10 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 			return false;
 		}
 		return false;
+	}
+	
+	public byte getSpeedState(){
+		return this.speedState;
 	}
 
 	public abstract boolean doWork(int rate, int TicksSinceLastCall);

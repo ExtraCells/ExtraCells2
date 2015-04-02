@@ -1,4 +1,4 @@
-package extracells.waila;
+package extracells.integration.waila;
 
 import java.util.List;
 

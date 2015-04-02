@@ -54,11 +54,11 @@ import extracells.container.IContainerListener;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gridblock.ECFluidGridBlock;
+import extracells.integration.waila.IWailaTile;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
 import extracells.util.EmptyMeItemMonitor;
 import extracells.util.ItemUtils;
-import extracells.waila.IWailaTile;
 
 public class TileEntityFluidInterface extends TileEntity implements
 		IActionHost, IFluidHandler, IECTileEntity, IFluidInterface,
