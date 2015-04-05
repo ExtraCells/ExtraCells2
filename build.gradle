@@ -14,8 +14,10 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
+apply plugin: 'scala'
 apply plugin: 'forge'
 apply plugin: 'java'
+apply plugin: 'idea'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
@@ -136,4 +138,10 @@ def getBuildNumber() {
         return "${System.getenv("DRONE_BUILD_NUMBER")}"
     }
     return "NIGHTLY"
+}
+
+idea {
+    module {
+        outputDir = file('build/classes/main')
+    }
 }

@@ -1,16 +1,14 @@
 package extracells.gui.widget.fluid;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.Extracells;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.fluids.Fluid;
-
 import org.lwjgl.opengl.GL11;
 
-import appeng.api.storage.data.IAEFluidStack;
-import extracells.Extracells;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WidgetFluidSelector extends AbstractFluidWidget {
 
@@ -53,7 +51,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 			return false;
 
 		String amountToText = Long.toString(this.amount) + "mB";
-		if (Extracells.shortenedBuckets) {
+		if (Extracells.shortenedBuckets()) {
 			if (this.amount > 1000000000L)
 				amountToText = Long.toString(this.amount / 1000000000L)
 						+ "MegaB";

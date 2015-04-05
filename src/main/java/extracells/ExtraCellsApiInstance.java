@@ -1,25 +1,12 @@
 package extracells;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 import appeng.api.AEApi;
 import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.ICellHandler;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.MEMonitorHandler;
-import appeng.api.storage.StorageChannel;
+import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
 import extracells.api.ExtraCellsApi;
@@ -35,6 +22,15 @@ import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
 import extracells.util.FluidCellHandler;
 import extracells.wireless.WirelessTermRegistry;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExtraCellsApiInstance implements ExtraCellsApi {
 
@@ -110,12 +106,12 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	@Deprecated
 	public String getVerion() {
-		return Extracells.VERSION;
+		return Extracells.VERSION();
 	}
 
 	@Override
 	public String getVersion() {
-		return Extracells.VERSION;
+		return Extracells.VERSION();
 	}
 
 	@Override
@@ -152,8 +148,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		}
 		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(
 				handler, StorageChannel.FLUIDS);
-		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, fluidInventory,
-				item);
+		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, new Object[]{fluidInventory, item});
 		return stack;
 	}
 
@@ -209,9 +204,9 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 					IMEMonitor<IAEFluidStack> fluidInventory = gridCache
 							.getFluidInventory();
 					if (fluidInventory != null) {
-						GuiHandler.launchGui(GuiHandler.getGuiId(1), player,
-								fluidInventory,
-								getWirelessFluidTermHandler(itemStack));
+
+						GuiHandler.launchGui(GuiHandler.getGuiId(1), player, new Object[]{
+								fluidInventory, getWirelessFluidTermHandler(itemStack)});
 					}
 				}
 			}

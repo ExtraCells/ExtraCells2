@@ -1,23 +1,18 @@
 package extracells.util;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.networking.security.PlayerSource;
-import appeng.api.storage.ICellHandler;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.ISaveProvider;
-import appeng.api.storage.IStorageMonitorable;
-import appeng.api.storage.StorageChannel;
+import appeng.api.storage.*;
 import extracells.api.IFluidStorageCell;
 import extracells.inventory.HandlerItemPlayerStorageFluid;
 import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
 import extracells.render.TextureManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class FluidCellHandler implements ICellHandler {
 
@@ -100,7 +95,7 @@ public class FluidCellHandler implements ICellHandler {
 		}
 		if (monitorable != null) {
 			GuiHandler.launchGui(GuiHandler.getGuiId(0), player,
-					monitorable.getFluidInventory());
+					new Object[]{monitorable.getFluidInventory()});
 		}
 	}
 

@@ -1,19 +1,10 @@
 package extracells.registries;
 
+import extracells.Extracells;
+import extracells.item.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import extracells.Extracells;
-import extracells.item.ItemFluid;
-import extracells.item.ItemFluidPattern;
-import extracells.item.ItemInternalCraftingPattern;
-import extracells.item.ItemPartECBase;
-import extracells.item.ItemStorageCasing;
-import extracells.item.ItemStorageComponent;
-import extracells.item.ItemStorageFluid;
-import extracells.item.ItemStoragePhysical;
-import extracells.item.ItemStoragePortableCell;
-import extracells.item.ItemWirelessTerminalFluid;
 
 public enum ItemEnum {
 	PARTITEM("part.base", new ItemPartECBase()),
@@ -35,7 +26,7 @@ public enum ItemEnum {
 		this.item = _item;
 		this.item.setUnlocalizedName("extracells." + this.internalName);
 		if (!this.internalName.equals("fluid.item"))
-			this.item.setCreativeTab(Extracells.ModTab);
+			this.item.setCreativeTab(Extracells.ModTab());
 	}
 
 	public ItemStack getDamagedStack(int damage) {

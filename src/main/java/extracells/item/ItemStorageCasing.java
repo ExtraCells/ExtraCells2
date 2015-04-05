@@ -1,14 +1,14 @@
 package extracells.item;
 
-import java.util.List;
-
+import extracells.Extracells;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import extracells.Extracells;
+
+import java.util.List;
 
 public class ItemStorageCasing extends Item {
 
@@ -18,7 +18,7 @@ public class ItemStorageCasing extends Item {
 	public ItemStorageCasing() {
 		setMaxDamage(0);
 		setHasSubtypes(true);
-		setCreativeTab(Extracells.ModTab);
+		setCreativeTab(Extracells.ModTab());
 	}
 
 	@Override

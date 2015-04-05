@@ -1,5 +1,7 @@
 package extracells.block;
 
+import extracells.Extracells;
+import extracells.tileentity.TileEntityWalrus;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -10,14 +12,12 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import extracells.Extracells;
-import extracells.tileentity.TileEntityWalrus;
 
 public class BlockWalrus extends Block implements ITileEntityProvider {
 
 	public BlockWalrus() {
 		super(Material.clay);
-		setCreativeTab(Extracells.ModTab);
+		setCreativeTab(Extracells.ModTab());
 		setHardness(2.0F);
 		setResistance(10.0F);
 	}

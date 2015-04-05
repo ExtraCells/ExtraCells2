@@ -1,21 +1,5 @@
 package extracells.block;
 
-import java.util.Random;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.items.IAEWrench;
@@ -30,6 +14,22 @@ import extracells.tileentity.IListenerTile;
 import extracells.tileentity.TileEntityFluidFiller;
 import extracells.tileentity.TileEntityFluidInterface;
 import extracells.util.PermissionUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.Random;
 
 public class ECBaseBlock extends BlockContainer {
 
@@ -37,7 +37,7 @@ public class ECBaseBlock extends BlockContainer {
 
 	public ECBaseBlock() {
 		super(Material.iron);
-		setCreativeTab(Extracells.ModTab);
+		setCreativeTab(Extracells.ModTab());
 		setHardness(2.0F);
 		setResistance(10.0F);
 	}

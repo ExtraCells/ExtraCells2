@@ -1,7 +1,14 @@
 package extracells.block;
 
-import java.util.Random;
-
+import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.implementations.items.IAEWrench;
+import appeng.api.networking.IGridNode;
+import buildcraft.api.tools.IToolWrench;
+import extracells.Extracells;
+import extracells.network.GuiHandler;
+import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.util.PermissionUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -16,15 +23,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import appeng.api.AEApi;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.implementations.items.IAEWrench;
-import appeng.api.networking.IGridNode;
-import buildcraft.api.tools.IToolWrench;
-import extracells.Extracells;
-import extracells.network.GuiHandler;
-import extracells.tileentity.TileEntityFluidCrafter;
-import extracells.util.PermissionUtil;
+
+import java.util.Random;
 
 public class BlockFluidCrafter extends BlockContainer {
 
@@ -32,7 +32,7 @@ public class BlockFluidCrafter extends BlockContainer {
 
 	public BlockFluidCrafter() {
 		super(Material.iron);
-		setCreativeTab(Extracells.ModTab);
+		setCreativeTab(Extracells.ModTab());
 		setHardness(2.0F);
 		setResistance(10.0F);
 	}

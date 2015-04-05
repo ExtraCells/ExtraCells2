@@ -1,7 +1,23 @@
 package extracells.item;
 
-import java.util.List;
-
+import appeng.api.AEApi;
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.Actionable;
+import appeng.api.config.FuzzyMode;
+import appeng.api.config.PowerUnits;
+import appeng.api.implementations.items.IAEItemPowerStorage;
+import appeng.api.implementations.items.IStorageCell;
+import appeng.api.networking.security.PlayerSource;
+import appeng.api.storage.*;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
+import cofh.api.energy.IEnergyContainerItem;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
+import extracells.registries.ItemEnum;
+import extracells.util.inventory.ECCellInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,28 +34,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import appeng.api.AEApi;
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
-import appeng.api.config.FuzzyMode;
-import appeng.api.config.PowerUnits;
-import appeng.api.implementations.items.IAEItemPowerStorage;
-import appeng.api.implementations.items.IStorageCell;
-import appeng.api.networking.security.PlayerSource;
-import appeng.api.storage.ICellInventory;
-import appeng.api.storage.ICellInventoryHandler;
-import appeng.api.storage.ICellRegistry;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IItemList;
-import cofh.api.energy.IEnergyContainerItem;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
-import extracells.registries.ItemEnum;
-import extracells.util.inventory.ECCellInventory;
+
+import java.util.List;
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
 public class ItemStoragePhysical extends Item implements IStorageCell,
@@ -86,7 +82,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell,
 
 	@Override
 	public int BytePerType(ItemStack cellItem) {
-		return Extracells.dynamicTypes ? bytes_cell[MathHelper.clamp_int(
+		return Extracells.dynamicTypes() ? bytes_cell[MathHelper.clamp_int(
 				cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
 	}
 
