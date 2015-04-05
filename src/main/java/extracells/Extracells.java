@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import extracells.integration.Intigration;
+import extracells.integration.Integration;
 import extracells.network.ChannelHandler;
 import extracells.network.GuiHandler;
 import extracells.proxy.CommonProxy;
@@ -44,7 +44,7 @@ public class Extracells {
 	private static File configFolder;
 	public static boolean shortenedBuckets;
 	public static boolean dynamicTypes;
-	public static Intigration intigration = new Intigration();
+	public static Integration integration = new Integration();
 	
 	public static CreativeTabs ModTab = new CreativeTabs("Extra_Cells") {
 
@@ -77,12 +77,12 @@ public class Extracells {
 		ChannelHandler.registerMessages();
 		RenderingRegistry.registerBlockHandler(new RenderHandler(
 				RenderingRegistry.getNextAvailableRenderId()));
-		intigration.init();
+		integration.init();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		intigration.postInit();
+		integration.postInit();
 	}
 
 	@EventHandler
@@ -104,10 +104,11 @@ public class Extracells {
 				.get("Storage Cells", "dynamicTypes", true,
 						"Should the mount of bytes needed for a new type depend on the cellsize?")
 				.getBoolean(true);
+		integration.loadConfig(config);
 		config.save();
 
 		proxy.registerItems();
 		proxy.registerBlocks();
-		intigration.preInit();
+		integration.preInit();
 	}
 }
