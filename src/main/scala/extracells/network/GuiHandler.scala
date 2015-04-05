@@ -1,30 +1,19 @@
-package extracells.network;
+package extracells.network
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import appeng.api.parts.IPartHost
+import appeng.api.storage.IMEMonitor
+import appeng.api.storage.data.IAEFluidStack
+import cpw.mods.fml.common.network.IGuiHandler
+import extracells.Extracells
+import extracells.api.{IFluidInterface, IPortableFluidStorageCell, IWirelessFluidTermHandler}
+import extracells.container.{ContainerFluidCrafter, ContainerFluidFiller, ContainerFluidInterface, ContainerFluidStorage}
+import extracells.gui.{GuiFluidCrafter, GuiFluidFiller, GuiFluidInterface, GuiFluidStorage}
+import extracells.part.PartECBase
+import extracells.registries.BlockEnum
+import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection;
-import appeng.api.parts.IPartHost;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEFluidStack;
-import cpw.mods.fml.common.network.IGuiHandler;
-import extracells.Extracells;
-import extracells.api.IFluidInterface;
-import extracells.api.IPortableFluidStorageCell;
-import extracells.api.IWirelessFluidTermHandler;
-import extracells.container.ContainerFluidCrafter;
-import extracells.container.ContainerFluidFiller;
-import extracells.container.ContainerFluidInterface;
-import extracells.container.ContainerFluidStorage;
-import extracells.gui.GuiFluidCrafter;
-import extracells.gui.GuiFluidFiller;
-import extracells.gui.GuiFluidInterface;
-import extracells.gui.GuiFluidStorage;
-import extracells.part.PartECBase;
-import extracells.registries.BlockEnum;
-import extracells.tileentity.TileEntityFluidCrafter;
-import extracells.tileentity.TileEntityFluidFiller;
-import extracells.tileentity.TileEntityFluidInterface;
 
 object GuiHandler extends IGuiHandler {
 

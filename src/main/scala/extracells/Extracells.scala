@@ -2,33 +2,23 @@ package extracells
 
 import java.io.File
 
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.common.config.Configuration
 import appeng.api.AEApi
 import cpw.mods.fml.client.registry.RenderingRegistry
-import cpw.mods.fml.common.FMLCommonHandler
-import cpw.mods.fml.common.Loader
-import cpw.mods.fml.common.Mod
 import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.Mod.Instance
-import cpw.mods.fml.common.SidedProxy
-import cpw.mods.fml.common.event.FMLInitializationEvent
-import cpw.mods.fml.common.event.FMLPostInitializationEvent
-import cpw.mods.fml.common.event.FMLPreInitializationEvent
+import cpw.mods.fml.common.{FMLCommonHandler, Loader, Mod, SidedProxy}
+import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
 import extracells.integration.Integration
-import extracells.network.ChannelHandler
-import extracells.network.GuiHandler
+import extracells.network.{ChannelHandler, GuiHandler}
 import extracells.proxy.CommonProxy
 import extracells.registries.ItemEnum
 import extracells.render.RenderHandler
-import extracells.util.ExtraCellsEventHandler
-import extracells.util.FluidCellHandler
-import extracells.util.NameHandler
+import extracells.util.{ExtraCellsEventHandler, FluidCellHandler, NameHandler}
 import extracells.wireless.AEWirelessTermHandler
+import net.minecraft.creativetab.CreativeTabs
+import net.minecraft.item.ItemStack
+import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.common.config.Configuration
 
 @Mod(modid = "extracells", name = "Extra Cells", modLanguage = "scala", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
 object Extracells {

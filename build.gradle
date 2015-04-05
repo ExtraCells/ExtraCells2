@@ -58,6 +58,11 @@ sourceSets {
             exclude '**/integration/**'
         }
     }
+	main {
+		scala{
+			srcDirs = ['src/main/scala']
+		}
+	}
 }
 
 repositories {
