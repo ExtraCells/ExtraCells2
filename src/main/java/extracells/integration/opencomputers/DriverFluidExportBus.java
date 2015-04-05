@@ -75,7 +75,7 @@ public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, Environ
 		}
 
 		@Callback(doc = "function(side:number, [ slot:number]):table -- Get the configuration of the fluid export bus pointing in the specified direction.")
-		public Object[] getFluidConfiguration(Context context, Arguments args){
+		public Object[] getFluidExportConfiguration(Context context, Arguments args){
 			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
 			if (dir == null || dir == ForgeDirection.UNKNOWN)
 				return new Object[]{null, "unknown side"};
@@ -95,7 +95,7 @@ public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, Environ
 		}
 		
 		@Callback(doc = "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the fluid export bus pointing in the specified direction to export fluid stacks matching the specified descriptor.")
-		public Object[] setFluidConfiguration(Context context, Arguments args){
+		public Object[] setFluidExportConfiguration(Context context, Arguments args){
 			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
 			if (dir == null || dir == ForgeDirection.UNKNOWN)
 				return new Object[]{null, "unknown side"};
@@ -176,7 +176,7 @@ public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, Environ
 
 		@Override
 		public int priority() {
-			return 0;
+			return 2;
 		}
 		
 	}
