@@ -51,15 +51,6 @@ minecraft {
     assetDir = "../../MinecraftDebug/run_client/assets"
 }
 
-sourceSets {
-    api {
-        java {
-            exclude '**/layers/**'
-            exclude '**/integration/**'
-        }
-    }
-}
-
 repositories {
     maven {
         name "Mobius Repo"
@@ -77,12 +68,12 @@ repositories {
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:rv2-beta-22:dev"){
+	compile ("appeng:appliedenergistics2:rv2-beta-25:dev"){
         transitive = false
 	}
-    compile 'com.mod-buildcraft:buildcraft:6.4.6:api'
+    compile 'com.mod-buildcraft:buildcraft:6.4.7:api'
 	compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
-	compile "li.cil.oc:OpenComputers:MC1.7.10-1.5.5.12:dev"
+	compile "li.cil.oc:OpenComputers:MC1.7.10-1.5.6.13:dev"
 }
 
 processResources {

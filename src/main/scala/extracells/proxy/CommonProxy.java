@@ -13,11 +13,7 @@ import appeng.api.recipes.IRecipeLoader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
-import extracells.tileentity.TileEntityCertusTank;
-import extracells.tileentity.TileEntityFluidCrafter;
-import extracells.tileentity.TileEntityFluidFiller;
-import extracells.tileentity.TileEntityFluidInterface;
-import extracells.tileentity.TileEntityWalrus;
+import extracells.tileentity.*;
 
 public class CommonProxy {
 
@@ -72,15 +68,12 @@ public class CommonProxy {
 
 	public void registerMovables() {
 		IAppEngApi api = AEApi.instance();
-		api.registries().movable()
-				.whiteListTileEntity(TileEntityCertusTank.class);
+		api.registries().movable().whiteListTileEntity(TileEntityCertusTank.class);
 		api.registries().movable().whiteListTileEntity(TileEntityWalrus.class);
-		api.registries().movable()
-				.whiteListTileEntity(TileEntityFluidCrafter.class);
-		api.registries().movable()
-				.whiteListTileEntity(TileEntityFluidInterface.class);
-		api.registries().movable()
-				.whiteListTileEntity(TileEntityFluidFiller.class);
+		api.registries().movable().whiteListTileEntity(TileEntityFluidCrafter.class);
+		api.registries().movable().whiteListTileEntity(TileEntityFluidInterface.class);
+		api.registries().movable().whiteListTileEntity(TileEntityFluidFiller.class);
+		api.registries().movable().whiteListTileEntity(TileEntityHardMeDrive.class);
 	}
 
 	public void registerRenderers() {
@@ -88,15 +81,11 @@ public class CommonProxy {
 	}
 
 	public void registerTileEntities() {
-		GameRegistry.registerTileEntity(TileEntityCertusTank.class,
-				"tileEntityCertusTank");
-		GameRegistry.registerTileEntity(TileEntityWalrus.class,
-				"tileEntityWalrus");
-		GameRegistry.registerTileEntity(TileEntityFluidCrafter.class,
-				"tileEntityFluidCrafter");
-		GameRegistry.registerTileEntity(TileEntityFluidInterface.class,
-				"tileEntityFluidInterface");
-		GameRegistry.registerTileEntity(TileEntityFluidFiller.class,
-				"tileEntityFluidFiller");
+		GameRegistry.registerTileEntity(TileEntityCertusTank.class, "tileEntityCertusTank");
+		GameRegistry.registerTileEntity(TileEntityWalrus.class, "tileEntityWalrus");
+		GameRegistry.registerTileEntity(TileEntityFluidCrafter.class, "tileEntityFluidCrafter");
+		GameRegistry.registerTileEntity(TileEntityFluidInterface.class, "tileEntityFluidInterface");
+		GameRegistry.registerTileEntity(TileEntityFluidFiller.class, "tileEntityFluidFiller");
+		GameRegistry.registerTileEntity(TileEntityHardMeDrive.class, "tileEntityHardMEDrive");
 	}
 }

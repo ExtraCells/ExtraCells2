@@ -6,6 +6,7 @@ import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.network.IGuiHandler
 import extracells.Extracells
 import extracells.api.{IFluidInterface, IPortableFluidStorageCell, IWirelessFluidTermHandler}
+import extracells.block.TGuiBlock
 import extracells.container.{ContainerFluidCrafter, ContainerFluidFiller, ContainerFluidInterface, ContainerFluidStorage}
 import extracells.gui.{GuiFluidCrafter, GuiFluidFiller, GuiFluidInterface, GuiFluidStorage}
 import extracells.part.PartECBase
@@ -73,6 +74,9 @@ object GuiHandler extends IGuiHandler {
 	var temp: Array[Any] = Array[Any]()
 
 	override def getClientGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : AnyRef =  {
+		val gui: Any = getGuiBlockElement(player, world, x, y, z)
+		if (gui != null)
+			return gui.asInstanceOf[AnyRef]
 		val side = ForgeDirection.getOrientation(ID);
 		if (world.getBlock(x, y, z) == BlockEnum.FLUIDCRAFTER.getBlock()) {
 			val tileEntity = world.getTileEntity(x, y, z);
@@ -97,6 +101,9 @@ object GuiHandler extends IGuiHandler {
 	}
 
 	override def getServerGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : AnyRef =  {
+		val con: Any = getContainerBlockElement(player, world, x, y, z)
+		if (con != null)
+			return con.asInstanceOf[AnyRef]
 		val side = ForgeDirection.getOrientation(ID)
 		if (world != null && world.getBlock(x, y, z) == BlockEnum.FLUIDCRAFTER.getBlock()) {
 			val tileEntity = world.getTileEntity(x, y, z)
@@ -118,5 +125,29 @@ object GuiHandler extends IGuiHandler {
 		if (world != null && side != ForgeDirection.UNKNOWN)
 			return getPartContainer(side, player, world, x, y, z).asInstanceOf[AnyRef]
 		getContainer(ID - 6, player, temp).asInstanceOf[AnyRef]
+	}
+
+	def getGuiBlockElement(player: EntityPlayer, world: World, x:Int, y: Int, z: Int): Any = {
+		if(world == null || player == null)
+			return null
+		val block = world.getBlock(x, y, z)
+		if (block  == null)
+			return null
+		block match{
+			case guiBlock: TGuiBlock => return guiBlock.getClientGuiElement(player, world, x, y, z)
+			case _ => return null
+		}
+	}
+
+	def getContainerBlockElement(player: EntityPlayer, world: World, x:Int, y: Int, z: Int): Any = {
+		if(world == null || player == null)
+			return null
+		val block = world.getBlock(x, y, z)
+		if (block  == null)
+			return null
+		block match{
+			case guiBlock: TGuiBlock => return guiBlock.getServerGuiElement(player, world, x, y, z)
+			case _ => return null
+		}
 	}
 }

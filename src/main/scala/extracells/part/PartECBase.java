@@ -345,18 +345,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 
 		ts.setBrightness(13 << 20 | 13 << 4);
 		rh.setInvColor(AEColor.Transparent.blackVariant);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.UP, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.DOWN, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.NORTH, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.EAST, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.WEST, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.UP, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.DOWN, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.NORTH, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.EAST, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.SOUTH, renderer);
+		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
 	}
 
 	@Override
@@ -380,18 +374,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 		} else {
 			ts.setColorOpaque_I(0x000000);
 		}
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.UP, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.DOWN, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.NORTH, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.EAST, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1],
-				ForgeDirection.WEST, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.UP, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.DOWN, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.NORTH, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.EAST, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.SOUTH, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
 	}
 
 	@Override

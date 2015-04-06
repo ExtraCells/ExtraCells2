@@ -1,12 +1,10 @@
 package extracells.registries;
 
+import extracells.block.*;
+import extracells.tileentity.TileEntityHardMeDrive;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
-import extracells.block.BlockCertusTank;
-import extracells.block.BlockFluidCrafter;
-import extracells.block.BlockWalrus;
-import extracells.block.ECBaseBlock;
 import extracells.item.ItemBlockCertusTank;
 import extracells.item.ItemBlockECBase;
 
@@ -14,7 +12,8 @@ public enum BlockEnum {
 	CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),
 	WALRUS("walrus", new BlockWalrus()),
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
-	ECBASEBLOCK("ecbaseblock", new ECBaseBlock(), ItemBlockECBase.class);
+	ECBASEBLOCK("ecbaseblock", new ECBaseBlock(), ItemBlockECBase.class),
+	BLASTRESISTANTMEDRIVE("hardmedrive", BlockHardMEDrive.instance());
 
 	private final String internalName;
 	private Block block;
@@ -45,7 +44,6 @@ public enum BlockEnum {
 	}
 
 	public String getStatName() {
-		return StatCollector.translateToLocal(this.block.getUnlocalizedName()
-				+ ".name");
+		return StatCollector.translateToLocal(this.block.getUnlocalizedName() + ".name");
 	}
 }

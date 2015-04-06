@@ -130,6 +130,12 @@ public class ECPrivateInventory implements IInventory {
 	}
 
 	public void readFromNBT(NBTTagList nbtList) {
+		if(nbtList == null){
+			for(int i = 0; i < slots.length; i++){
+				slots[i] = null;
+			}
+			return;
+		}
 		for (int i = 0; i < nbtList.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound = nbtList.getCompoundTagAt(i);
 			int j = nbttagcompound.getByte("Slot") & 255;
