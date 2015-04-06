@@ -43,12 +43,9 @@ object Extracells {
 
 	@EventHandler
 	def init(event: FMLInitializationEvent) {
-		AEApi.instance().registries().recipes()
-				.addNewSubItemResolver(new NameHandler());
-		AEApi.instance().registries().wireless()
-				.registerWirelessHandler(new AEWirelessTermHandler());
-		AEApi.instance().registries().cell()
-				.addCellHandler(new FluidCellHandler());
+		AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
+		AEApi.instance().registries().wireless().registerWirelessHandler(new AEWirelessTermHandler());
+		AEApi.instance().registries().cell().addCellHandler(new FluidCellHandler());
 		val handler = new ExtraCellsEventHandler();
 		FMLCommonHandler.instance().bus().register(handler);
 		MinecraftForge.EVENT_BUS.register(handler);

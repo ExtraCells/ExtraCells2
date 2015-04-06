@@ -15,6 +15,7 @@ import extracells.network.GuiHandler
 import extracells.tileentity.TileEntityHardMeDrive
 import extracells.util.PermissionUtil
 import net.minecraft.block.{Block, BlockContainer}
+import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
@@ -22,11 +23,22 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.{MathHelper, IIcon}
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
 
 object BlockHardMEDrive extends BlockContainer(net.minecraft.block.material.Material.rock) with TGuiBlock{
+
+
+  @SideOnly(Side.CLIENT)
+  var frontIcon: IIcon = null
+  @SideOnly(Side.CLIENT)
+  var sideIcon: IIcon = null
+  @SideOnly(Side.CLIENT)
+  var bottomIcon: IIcon = null
+  @SideOnly(Side.CLIENT)
+  var topIcon: IIcon = null
 
   @SideOnly(Side.CLIENT)
   override def getClientGuiElement(player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any = {
@@ -127,6 +139,52 @@ object BlockHardMEDrive extends BlockContainer(net.minecraft.block.material.Mate
   }
 
   override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, entity: EntityLivingBase, stack: ItemStack) {
+    super.onBlockPlacedBy(world, x, y, z, entity, stack);
+    val l = MathHelper.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+
+    if (!entity.isSneaking())
+    {
+      if (l == 0)
+      {
+        world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+      }
+
+      if (l == 1)
+      {
+        world.setBlockMetadataWithNotify(x, y, z, 5, 2);
+      }
+
+      if (l == 2)
+      {
+        world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+      }
+
+      if (l == 3)
+      {
+        world.setBlockMetadataWithNotify(x, y, z, 4, 2);
+      }
+    } else
+    {
+      if (l == 0)
+      {
+        world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(2).getOpposite().ordinal(), 2);
+      }
+
+      if (l == 1)
+      {
+        world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(5).getOpposite().ordinal(), 2);
+      }
+
+      if (l == 2)
+      {
+        world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(3).getOpposite().ordinal(), 2);
+      }
+
+      if (l == 3)
+      {
+        world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(4).getOpposite().ordinal(), 2);
+      }
+    }
     if (world.isRemote) return
     val tile: TileEntity = world.getTileEntity(x, y, z)
     if (tile != null) {
@@ -152,6 +210,26 @@ object BlockHardMEDrive extends BlockContainer(net.minecraft.block.material.Mate
         }
       }
     }
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def getIcon(side: Int, metadata: Int) = {
+    if(side == metadata)
+      frontIcon
+    else if(side == 0)
+      bottomIcon
+    else if(side == 1)
+      topIcon
+    else
+      sideIcon
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def registerBlockIcons(register: IIconRegister) = {
+    frontIcon = register.registerIcon("extracells:hardmedrive.face");
+    sideIcon = register.registerIcon("extracells:hardmedrive.side");
+    bottomIcon = register.registerIcon("extracells:machine.bottom");
+    topIcon = register.registerIcon("extracells:machine.top");
   }
 
 }

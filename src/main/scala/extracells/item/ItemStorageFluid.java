@@ -30,11 +30,9 @@ import extracells.util.inventory.ECPrivateInventory;
 
 public class ItemStorageFluid extends Item implements IFluidStorageCell {
 
-	public static final String[] suffixes = { "1k", "4k", "16k", "64k", "256k",
-			"1024k", "4096k" };
+	public static final String[] suffixes = { "1k", "4k", "16k", "64k", "256k", "1024k", "4096k" };
 
-	public static final int[] spaces = { 1024, 4096, 16348, 65536, 262144,
-			1048576, 4194304 };
+	public static final int[] spaces = { 1024, 4096, 16348, 65536, 262144, 1048576, 4194304 };
 
 	private IIcon[] icons;
 

@@ -41,8 +41,7 @@ public class ModelCertusTank extends ModelBase {
 			double z, RenderBlocks renderer) {
 		Tessellator tessellator = Tessellator.instance;
 		if (tileEntity != null
-				&& ((TileEntityCertusTank) tileEntity)
-						.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null) {
+				&& ((TileEntityCertusTank) tileEntity).getTankInfo(ForgeDirection.UNKNOWN)[0].fluid != null) {
 			Fluid storedFluid = ((TileEntityCertusTank) tileEntity)
 					.getRenderFluid();
 			float scale = ((TileEntityCertusTank) tileEntity).getRenderScale();
