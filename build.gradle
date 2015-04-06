@@ -58,11 +58,6 @@ sourceSets {
             exclude '**/integration/**'
         }
     }
-	main {
-		scala{
-			srcDirs = ['src/main/scala']
-		}
-	}
 }
 
 repositories {
@@ -83,25 +78,7 @@ repositories {
 
 dependencies {
 	compile ("appeng:appliedenergistics2:rv2-beta-22:dev"){
-        exclude group: "mcp.mobius.waila", module: "Waila"
-        exclude group: "codechicken", module: "ForgeMultipart"
-		exclude group: "codechicken", module: "CodeChickenCore"
-		exclude group: "codechicken", module: "CodeChickenLib"
-		exclude group: "codechicken", module: "NotEnoughItems"
-		exclude group: "api", module: "rf"
-		exclude group: "api", module: "mfr"
-		exclude group: "api", module: "railcraft"
-		exclude group: "appeng", module: "mekanism"
-		exclude group: "api", module: "betterstorage"
-		exclude group: "api", module: "ic2"
-		exclude group: "appeng", module: "Waila"
-		exclude group: "api", module: "immibis"
-		exclude group: "api", module: "coloredlightscore"
-		exclude group: "dev", module: "buildcraft"
-		exclude group: "api", module: "craftguide"
-		exclude group: "api", module: "rblocks"
-		exclude group: "api", module: "invtweaks"
-		exclude group: "appeng", module: "RotaryCraft"
+        transitive = false
 	}
     compile 'com.mod-buildcraft:buildcraft:6.4.6:api'
 	compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
