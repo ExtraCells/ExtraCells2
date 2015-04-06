@@ -68,7 +68,7 @@ repositories {
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:rv2-beta-25:dev"){
+	compile ("appeng:appliedenergistics2:rv2-beta-24:dev"){
         transitive = false
 	}
     compile 'com.mod-buildcraft:buildcraft:6.4.7:api'
