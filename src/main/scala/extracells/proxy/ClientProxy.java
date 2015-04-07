@@ -1,5 +1,6 @@
 package extracells.proxy;
 
+import extracells.render.block.RendererHardMEDrive;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -27,20 +28,17 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerRenderers() {
-		MinecraftForgeClient.registerItemRenderer(
-				Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()),
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()),
 				new ItemRendererCertusTank());
-		MinecraftForgeClient
-				.registerItemRenderer(ItemEnum.FLUIDPATTERN.getItem(),
-						new ItemRendererFluidPattern());
-		MinecraftForgeClient.registerItemRenderer(
-				Item.getItemFromBlock(BlockEnum.WALRUS.getBlock()),
+		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDPATTERN.getItem(),
+				new ItemRendererFluidPattern());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.WALRUS.getBlock()),
 				new ItemRendererWalrus());
-		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDITEM.getItem(),
-				new ItemRendererFluid());
+		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDITEM.getItem(), new ItemRendererFluid());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class,
-				new TileEntityRendererWalrus());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRendererWalrus());
+
+		RendererHardMEDrive.registerRenderer();
 	}
 
 	@SubscribeEvent

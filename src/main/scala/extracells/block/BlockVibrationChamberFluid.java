@@ -49,6 +49,7 @@ public class BlockVibrationChamberFluid extends BlockContainer implements TGuiBl
         return new TileEntityVibrationChamberFluid();
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister IIconRegister) {
         icons[0] = IIconRegister.registerIcon("extracells:VibrationChamberFluid");
@@ -56,15 +57,30 @@ public class BlockVibrationChamberFluid extends BlockContainer implements TGuiBl
         icons[2] = IIconRegister.registerIcon("extracells:VibrationChamberFluidFrontOn");
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+    if(side == world.getBlockMetadata(x, y, z)){
+        TileEntity tile = world.getTileEntity(x,y, z);
+        if(!(tile instanceof  TileEntityVibrationChamberFluid))
+            return icons[0];
+        TileEntityVibrationChamberFluid chamberFluid = (TileEntityVibrationChamberFluid) tile;
+        if (chamberFluid.getBurnTime() > 0 && chamberFluid.getBurnTime() < (chamberFluid.getBurnTimeTotal()))
+            return icons[2];
+        else
+            return icons[1];
+    }else
+        return icons[0];
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getIcon(int side, int meta){
         switch (side)
         {
-            case 2:
-                if(((TileEntityVibrationChamberFluid)world.getTileEntity(x, y, z)).getBurnTime() > 0 && ((TileEntityVibrationChamberFluid)world.getTileEntity(x, y, z)).getBurnTime() < ((TileEntityVibrationChamberFluid)world.getTileEntity(x, y, z)).getBurnTimeTotal())
-                return icons[2];
-                else
-                    return icons[1];
+            case 4:
+                return icons[1];
             default:
                 return icons[0];
         }
@@ -90,6 +106,56 @@ public class BlockVibrationChamberFluid extends BlockContainer implements TGuiBl
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, entity, stack);
+        if(world == null)
+            return;
+
+        if(entity != null){
+            int l = MathHelper.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+            if (!entity.isSneaking())
+            {
+                if (l == 0)
+                {
+                    world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+                }
+
+                if (l == 1)
+                {
+                    world.setBlockMetadataWithNotify(x, y, z, 5, 2);
+                }
+
+                if (l == 2)
+                {
+                    world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+                }
+
+                if (l == 3)
+                {
+                    world.setBlockMetadataWithNotify(x, y, z, 4, 2);
+                }
+            } else
+            {
+                if (l == 0)
+                {
+                    world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(2).getOpposite().ordinal(), 2);
+                }
+
+                if (l == 1)
+                {
+                    world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(5).getOpposite().ordinal(), 2);
+                }
+
+                if (l == 2)
+                {
+                    world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(3).getOpposite().ordinal(), 2);
+                }
+
+                if (l == 3)
+                {
+                    world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(4).getOpposite().ordinal(), 2);
+                }
+            }
+        }else
+             world.setBlockMetadataWithNotify(x, y, z, 2, 2);
 
         if (world.isRemote)
             return;
@@ -103,5 +169,6 @@ public class BlockVibrationChamberFluid extends BlockContainer implements TGuiBl
             }
         }
     }
+
 
 }

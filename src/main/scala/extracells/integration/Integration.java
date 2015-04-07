@@ -10,23 +10,34 @@ public class Integration {
 	
 	public enum Mods{
 		WAILA("Waila"),
-		OPENCOMPUTERS("OpenComputers");
+		OPENCOMPUTERS("OpenComputers"),
+		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel");
 		
 		private final String modID;
 		
 		private boolean shouldLoad = true;
 		
-		
+		private final String name;
+
 		private Mods(String modid){
-			modID = modid;
+			this(modid, modid);
+		}
+
+		private Mods(String modid, String modName) {
+			this.modID = modid;
+			this.name = modName;
 		}
 		
 		public String getModID(){
 			return modID;
 		}
+
+		public String getModName() {
+			return name;
+		}
 		
 		public void loadConfig(Configuration config){
-			shouldLoad = config.get("Integration", "enable" + getModID(), true, "Enable " + getModID() + " Integration.").getBoolean(true);
+			shouldLoad = config.get("Integration", "enable" + getModName(), true, "Enable " + getModName() + " Integration.").getBoolean(true);
 		}
 		
 		public boolean isEnabled(){

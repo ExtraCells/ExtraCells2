@@ -14,6 +14,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.*;
+import extracells.util.FuelBurnTime;
 import net.minecraftforge.fluids.FluidRegistry;
 
 public class CommonProxy {
@@ -93,6 +94,6 @@ public class CommonProxy {
 	}
 
 	public void registerFluidBurnTimes() {
-		TileEntityVibrationChamberFluid.registerFluidBurnTime(FluidRegistry.LAVA, 200);
+		FuelBurnTime.registerFuel(FluidRegistry.LAVA, 800);
 	}
 }

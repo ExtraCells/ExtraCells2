@@ -59,4 +59,6 @@ public interface ExtraCellsApi {
 	@Deprecated
 	public void registryWirelessFluidTermHandler(
 			IWirelessFluidTermHandler handler);
+
+	public void registerFuelBurnTime(Fluid fuel, int burnTime);
 }
