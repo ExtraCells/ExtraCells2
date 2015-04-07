@@ -149,12 +149,33 @@ public class WidgetFluidTank extends Gui {
 		}
 	}
 
-	public void drawTooltip(int x, int y) {
+	public void drawDirectionTooltip(int x, int y) {
 
 		List<String> description = new ArrayList<String>();
 		description.add(StatCollector
 				.translateToLocal("extracells.tooltip.direction."
 						+ this.direction.ordinal()));
+
+		if (this.tank == null || this.tank.getFluid() == null) {
+			description.add(StatCollector
+					.translateToLocal("extracells.tooltip.empty1"));
+		} else {
+			if (this.tank.getFluid().amount > 0
+					&& this.tank.getFluid().getFluid() != null) {
+				String amountToText = this.tank.getFluid().amount + "mB";
+
+				description.add(this.tank.getFluid().getFluid()
+						.getLocalizedName(this.tank.getFluid()));
+				description.add(amountToText);
+			}
+		}
+		drawHoveringText(description, x, y,
+				Minecraft.getMinecraft().fontRenderer);
+	}
+
+	public void drawTooltip(int x, int y) {
+
+		List<String> description = new ArrayList<String>();
 
 		if (this.tank == null || this.tank.getFluid() == null) {
 			description.add(StatCollector

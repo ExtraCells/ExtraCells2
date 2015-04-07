@@ -52,6 +52,7 @@ object Extracells {
 		proxy.registerMovables();
 		proxy.registerRenderers();
 		proxy.registerTileEntities();
+		proxy.registerFluidBurnTimes();
 		proxy.addRecipes(configFolder);
 		ChannelHandler.registerMessages();
 		RenderingRegistry.registerBlockHandler(new RenderHandler(

@@ -59,6 +59,7 @@ extracells.block.walrus.name=Walrus
 extracells.block.fluidcrafter.name=ME Fluid Assembler
 extracells.block.fluidinterface.name=ME Fluid Interface
 extracells.block.fluidfiller.name=ME Fluid Auto Filler
+tile.extracells.block.vibrantchamberfluid.name=Fluid Vibration Chamber
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Amount
