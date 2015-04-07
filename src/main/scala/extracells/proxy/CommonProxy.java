@@ -14,6 +14,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.*;
+import net.minecraftforge.fluids.FluidRegistry;
 
 public class CommonProxy {
 
@@ -74,6 +75,7 @@ public class CommonProxy {
 		api.registries().movable().whiteListTileEntity(TileEntityFluidInterface.class);
 		api.registries().movable().whiteListTileEntity(TileEntityFluidFiller.class);
 		api.registries().movable().whiteListTileEntity(TileEntityHardMeDrive.class);
+		api.registries().movable().whiteListTileEntity(TileEntityCertusTank.class);
 	}
 
 	public void registerRenderers() {
@@ -87,5 +89,10 @@ public class CommonProxy {
 		GameRegistry.registerTileEntity(TileEntityFluidInterface.class, "tileEntityFluidInterface");
 		GameRegistry.registerTileEntity(TileEntityFluidFiller.class, "tileEntityFluidFiller");
 		GameRegistry.registerTileEntity(TileEntityHardMeDrive.class, "tileEntityHardMEDrive");
+		GameRegistry.registerTileEntity(TileEntityVibrationChamberFluid.class, "tileEntityVibrationChamberFluid");
+	}
+
+	public void registerFluidBurnTimes() {
+		TileEntityVibrationChamberFluid.registerFluidBurnTime(FluidRegistry.LAVA, 200);
 	}
 }

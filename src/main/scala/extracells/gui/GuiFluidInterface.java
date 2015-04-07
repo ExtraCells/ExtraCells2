@@ -82,7 +82,7 @@ public class GuiFluidInterface extends GuiContainer {
 		for (WidgetFluidTank tank : this.tanks) {
 			if (tank != null)
 				if (func_146978_c(tank.posX, tank.posY, 18, 73, mouseX, mouseY)) {
-					tank.drawTooltip(mouseX - this.guiLeft, mouseY
+					tank.drawDirectionTooltip(mouseX - this.guiLeft, mouseY
 							- this.guiTop);
 				}
 		}
