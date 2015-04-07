@@ -68,9 +68,11 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
                 if (fluidStack != null && fluidBurnTime.containsKey(fluidStack.getFluid()) && fluidBurnTime.get(
                                 fluidStack.getFluid()) > 0) {
                     if (tank.getFluid().amount >= 250) {
-                        burnTime = 0;
-                        burnTimeTotal = fluidBurnTime.get(tank.getFluid().getFluid());
-                        tank.drain(250, true);
+                        if(energyLeft == 0) {
+                            burnTime = 0;
+                            burnTimeTotal = fluidBurnTime.get(tank.getFluid().getFluid());
+                            tank.drain(250, true);
+                        }
                     }
                 }
                 timer = 0;
@@ -85,13 +87,16 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
             burnTime++;
             if(timerEnergy == 4)
             {
-                IEnergyGrid energy = getGridNode(ForgeDirection.UNKNOWN).getGrid().getCache(IEnergyGrid.class);
-                energyLeft = energy.injectPower(24.0D, Actionable.MODULATE);
-                timerEnergy = 0;
-                if(energyLeft != 0)
+                if(energyLeft == 0) {
+                    IEnergyGrid energy = getGridNode(ForgeDirection.UNKNOWN).getGrid().getCache(IEnergyGrid.class);
+                    energyLeft = energy.injectPower(24.0D, Actionable.MODULATE);
+                }
+                else
                 {
+                    IEnergyGrid energy = getGridNode(ForgeDirection.UNKNOWN).getGrid().getCache(IEnergyGrid.class);
                     energy.injectPower(energyLeft, Actionable.MODULATE);
                 }
+                timerEnergy = 0;
             }
             else
             {
