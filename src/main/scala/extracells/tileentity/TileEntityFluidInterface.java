@@ -237,8 +237,7 @@ public class TileEntityFluidInterface extends TileEntity implements
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
 		return from != ForgeDirection.UNKNOWN
-				&& this.tanks[from.ordinal()].fill(new FluidStack(fluid, 1),
-						false) > 0;
+				&& this.tanks[from.ordinal()].fill(new FluidStack(fluid, 1), false) > 0;
 	}
 
 	@Override

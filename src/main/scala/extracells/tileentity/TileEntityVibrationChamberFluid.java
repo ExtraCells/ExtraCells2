@@ -13,23 +13,16 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
 import extracells.gridblock.ECFluidGridBlock;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
+import extracells.util.FuelBurnTime;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 
-import java.util.HashMap;
-
 public class TileEntityVibrationChamberFluid extends TileEntity implements IECTileEntity, IFluidHandler, IActionHost {
-
-    public static HashMap<Fluid, Integer> fluidBurnTime = new HashMap<Fluid, Integer>();
 
     boolean isFirstGridNode = true;
     private final ECFluidGridBlock gridBlock = new ECFluidGridBlock(this);
@@ -55,6 +48,8 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
     @Override
     public void updateEntity() {
         super.updateEntity();
+        if(!hasWorldObj())
+            return;
         FluidStack fluidStack1 = tank.getFluid();
         if(fluidStack1 != null)
             fluidStack1 = fluidStack1.copy();
@@ -63,14 +58,17 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
         if(burnTime == burnTimeTotal) {
             if (timer == 40) {
                 worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-                fluidBurnTime.get(FluidRegistry.WATER);
                 FluidStack fluidStack = tank.getFluid();
-                if (fluidStack != null && fluidBurnTime.containsKey(fluidStack.getFluid()) && fluidBurnTime.get(
-                                fluidStack.getFluid()) > 0) {
+                int bTime;
+                if(fluidStack != null)
+                    bTime = FuelBurnTime.getBurnTime(fluidStack.getFluid());
+                else
+                    bTime = 0;
+                if (fluidStack != null && bTime / 4 > 0) {
                     if (tank.getFluid().amount >= 250) {
                         if(energyLeft == 0) {
                             burnTime = 0;
-                            burnTimeTotal = fluidBurnTime.get(tank.getFluid().getFluid());
+                            burnTimeTotal = bTime;
                             tank.drain(250, true);
                         }
                     }
@@ -79,8 +77,6 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
             } else {
                 timer++;
             }
-
-
         }
         else
         {
@@ -89,12 +85,13 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
             {
                 if(energyLeft == 0) {
                     IEnergyGrid energy = getGridNode(ForgeDirection.UNKNOWN).getGrid().getCache(IEnergyGrid.class);
-                    energyLeft = energy.injectPower(24.0D, Actionable.MODULATE);
+                    energyLeft = 24.0D - energy.injectPower(24.0D, Actionable.MODULATE);
                 }
                 else
                 {
                     IEnergyGrid energy = getGridNode(ForgeDirection.UNKNOWN).getGrid().getCache(IEnergyGrid.class);
-                    energy.injectPower(energyLeft, Actionable.MODULATE);
+                    energyLeft = energyLeft - energy.injectPower(energyLeft, Actionable.MODULATE);
+                    System.out.println(energyLeft);
                 }
                 timerEnergy = 0;
             }
@@ -155,7 +152,12 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-        return tank.fill(resource, doFill);
+        if(resource == null || resource.getFluid() == null || FuelBurnTime.getBurnTime(resource.getFluid()) == 0)
+            return  0;
+        int filled = tank.fill(resource, doFill);
+        if(filled != 0 && hasWorldObj())
+            getWorldObj().markBlockForUpdate(xCoord, yCoord, zCoord);
+        return filled;
     }
 
     @Override
@@ -170,6 +172,8 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
 
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid) {
+        if(fluid == null || FuelBurnTime.getBurnTime(fluid) == 0)
+            return false;
         return true;
     }
 
@@ -186,13 +190,6 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
     public FluidTank getTank() {
         return tank;
     }
-
-    public static void registerFluidBurnTime(Fluid fluid, int burnTime)
-    {
-        fluidBurnTime.put(fluid, burnTime);
-    }
-
-    public static void registerFluidBurnTime(FluidStack fluid, int burnTime) { registerFluidBurnTime(fluid.getFluid(), burnTime); }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
@@ -211,11 +208,16 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        this.burnTime = nbt.getInteger("BurnTime");
-        this.burnTimeTotal = nbt.getInteger("BurnTimeTotal");
-        this.timer = nbt.getInteger("timer");
-        this.timerEnergy = nbt.getInteger("timerEnergy");
-        this.energyLeft = nbt.getDouble("energyLeft");
+        if(nbt.hasKey("BurnTime"))
+            this.burnTime = nbt.getInteger("BurnTime");
+        if(nbt.hasKey("BurnTimeTotal"))
+            this.burnTimeTotal = nbt.getInteger("BurnTimeTotal");
+        if(nbt.hasKey("timer"))
+            this.timer = nbt.getInteger("timer");
+        if(nbt.hasKey("timerEnergy"))
+            this.timerEnergy = nbt.getInteger("timerEnergy");
+        if(nbt.hasKey("energyLeft"))
+            this.energyLeft = nbt.getDouble("energyLeft");
 //for(IAEFluidStack stack : getFluidInventoryNetwork().getAvailableItems(AEApi.instance().storage().createFluidList())){
 //
 //        }

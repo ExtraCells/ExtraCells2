@@ -21,6 +21,7 @@ import extracells.definitions.PartDefinition;
 import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
 import extracells.util.FluidCellHandler;
+import extracells.util.FuelBurnTime;
 import extracells.wireless.WirelessTermRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -233,5 +234,10 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	public void registryWirelessFluidTermHandler(
 			IWirelessFluidTermHandler handler) {
 		WirelessTermRegistry.registerWirelessFluidTermHandler(handler);
+	}
+
+	@Override
+	public void registerFuelBurnTime(Fluid fuel, int burnTime) {
+		FuelBurnTime.registerFuel(fuel, burnTime);
 	}
 }

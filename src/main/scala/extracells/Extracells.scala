@@ -29,6 +29,8 @@ object Extracells {
 
 	var VERSION: String = ""
 
+	var bcBurnTimeMultiplicator = 4;
+
 	var configFolder: File = null
 	var shortenedBuckets = true
 	var dynamicTypes = true
@@ -79,13 +81,13 @@ object Extracells {
 				configFolder.getPath() + File.separator + "AppliedEnergistics2"
 						+ File.separator + "extracells.cfg"));
 		config.load();
-		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true,
-				"Shall the guis shorten large mB values?").getBoolean(true);
-		dynamicTypes = config
-				.get("Storage Cells", "dynamicTypes", true,
-						"Should the mount of bytes needed for a new type depend on the cellsize?")
-				.getBoolean(true);
+		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?")
+			.getBoolean(true);
+		dynamicTypes = config.get("Storage Cells", "dynamicTypes", true,
+						"Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true);
 		integration.loadConfig(config);
+
+
 		config.save();
 
 		proxy.registerItems();

@@ -12,6 +12,7 @@ import extracells.Extracells
 import extracells.container.ContainerHardMEDrive
 import extracells.gui.GuiHardMEDrive
 import extracells.network.GuiHandler
+import extracells.render.block.RendererHardMEDrive
 import extracells.tileentity.TileEntityHardMeDrive
 import extracells.util.PermissionUtil
 import net.minecraft.block.{Block, BlockContainer}
@@ -231,5 +232,7 @@ object BlockHardMEDrive extends BlockContainer(net.minecraft.block.material.Mate
     bottomIcon = register.registerIcon("extracells:machine.bottom");
     topIcon = register.registerIcon("extracells:machine.top");
   }
+
+  override def getRenderType : Int = RendererHardMEDrive.getRenderId
 
 }
