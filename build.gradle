@@ -68,12 +68,15 @@ repositories {
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:rv2-beta-24:dev"){
+	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
         transitive = false
 	}
-    compile 'com.mod-buildcraft:buildcraft:6.4.7:api'
-	compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
-	compile "li.cil.oc:OpenComputers:MC1.7.10-1.5.6.13:dev"
+	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
+        transitive = false
+	}
+    compile "com.mod-buildcraft:buildcraft:${config.version.bc}:api"
+	compile "mcp.mobius.waila:Waila:${config.version.waila}"
+	compile "li.cil.oc:OpenComputers:${config.version.oc}:dev"
 }
 
 processResources {

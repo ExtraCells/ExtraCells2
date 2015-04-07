@@ -48,6 +48,7 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
     @Override
     public void updateEntity() {
         super.updateEntity();
+
         if(!hasWorldObj())
             return;
         FluidStack fluidStack1 = tank.getFluid();
@@ -56,7 +57,8 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
 
         if(worldObj.isRemote)return;
         if(burnTime == burnTimeTotal) {
-            if (timer == 40) {
+
+            if (timer >= 40) {
                 worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 FluidStack fluidStack = tank.getFluid();
                 int bTime;
@@ -64,11 +66,12 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
                     bTime = FuelBurnTime.getBurnTime(fluidStack.getFluid());
                 else
                     bTime = 0;
-                if (fluidStack != null && bTime / 4 > 0) {
+                System.out.println(bTime +  " " + energyLeft);
+                if (fluidStack != null && bTime  > 0) {
                     if (tank.getFluid().amount >= 250) {
-                        if(energyLeft == 0) {
+                        if(energyLeft <= 0) {
                             burnTime = 0;
-                            burnTimeTotal = bTime;
+                            burnTimeTotal = bTime / 4;
                             tank.drain(250, true);
                         }
                     }
@@ -85,13 +88,12 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
             {
                 if(energyLeft == 0) {
                     IEnergyGrid energy = getGridNode(ForgeDirection.UNKNOWN).getGrid().getCache(IEnergyGrid.class);
-                    energyLeft = 24.0D - energy.injectPower(24.0D, Actionable.MODULATE);
+                    energyLeft = energy.injectPower(24.0D, Actionable.MODULATE);
                 }
                 else
                 {
                     IEnergyGrid energy = getGridNode(ForgeDirection.UNKNOWN).getGrid().getCache(IEnergyGrid.class);
-                    energyLeft = energyLeft - energy.injectPower(energyLeft, Actionable.MODULATE);
-                    System.out.println(energyLeft);
+                    energyLeft = energy.injectPower(energyLeft, Actionable.MODULATE);
                 }
                 timerEnergy = 0;
             }
