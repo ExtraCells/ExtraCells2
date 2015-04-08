@@ -166,6 +166,8 @@ public class NameHandler implements ISubItemResolver {
 					1);
 		if (fullName.equals("blockVibrationChamberFluid"))
 			return  new ResolverResult(BlockEnum.VIBRANTCHAMBERFLUID.getInternalName(), 0);
+		if (fullName.equals("hardMEDrive"))
+			return new ResolverResult(BlockEnum.BLASTRESISTANTMEDRIVE.getInternalName(), 0);
 
 		return null;
 	}

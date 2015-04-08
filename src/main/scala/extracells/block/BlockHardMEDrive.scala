@@ -32,13 +32,9 @@ import net.minecraftforge.common.util.ForgeDirection
 object BlockHardMEDrive extends BlockContainer(net.minecraft.block.material.Material.rock) with TGuiBlock{
 
 
-  @SideOnly(Side.CLIENT)
   var frontIcon: IIcon = null
-  @SideOnly(Side.CLIENT)
   var sideIcon: IIcon = null
-  @SideOnly(Side.CLIENT)
   var bottomIcon: IIcon = null
-  @SideOnly(Side.CLIENT)
   var topIcon: IIcon = null
 
   @SideOnly(Side.CLIENT)

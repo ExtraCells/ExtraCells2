@@ -1,4 +1,5 @@
 group= oredictionary:dyeBlue -> lapis
+group= ae2:CableDense -> densecable
 
 shaped=
 	ae2:BlockQuartzGlass ae2:BlockQuartzGlass ae2:BlockQuartzGlass,
@@ -45,3 +46,9 @@ shaped=
 	mc:iron_ingot ec:certusTank mc:iron_ingot,
 	mc:iron_ingot ae2:BlockVibrationChamber mc:iron_ingot
 	-> ec:blockVibrationChamberFluid
+
+shaped=
+	mc:obsidian densecable mc:obsidian,
+	mc:obsidian ae2:BlockDrive mc:obsidian,
+	mc:obsidian mc:obsidian mc:obsidian,
+	-> ec:hardMEDrive
