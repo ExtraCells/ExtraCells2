@@ -59,6 +59,7 @@ extracells.block.walrus.name=Walross
 extracells.block.fluidcrafter.name=ME-Flüssigkeits-Fertigungskammer
 extracells.block.fluidinterface.name=ME-Flüssigkeits-Interface
 extracells.block.fluidfiller.name=ME-Flüssigkeitsfüller
+tile.extracells.block.hardmedrive.name=Explosionssicheres ME-Laufwerk
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Menge

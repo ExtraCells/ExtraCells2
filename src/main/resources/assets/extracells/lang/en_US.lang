@@ -60,6 +60,7 @@ extracells.block.fluidcrafter.name=ME Fluid Assembler
 extracells.block.fluidinterface.name=ME Fluid Interface
 extracells.block.fluidfiller.name=ME Fluid Auto Filler
 tile.extracells.block.vibrantchamberfluid.name=Fluid Vibration Chamber
+tile.extracells.block.hardmedrive.name=Blast resistant ME Drive
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Amount
