@@ -25,6 +25,5 @@ public class ItemFluid extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item p_150895_1_, CreativeTabs p_150895_2_,
-			List p_150895_3_) {}
+	public void getSubItems(Item p_150895_1_, CreativeTabs p_150895_2_, List p_150895_3_) {}
 }

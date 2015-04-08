@@ -11,6 +11,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
 import extracells.gridblock.ECFluidGridBlock;
+import extracells.gridblock.ECGridBlockHardMEDrive;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.inventory.IInventory;
@@ -31,7 +32,7 @@ public class TileEntityHardMeDrive extends TileEntity implements IActionHost, IE
     byte[] cellStatuses = new byte[3];
     List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();
     List<IMEInventoryHandler> itemHandlers = new ArrayList<IMEInventoryHandler>();
-    private final ECFluidGridBlock gridBlock = new ECFluidGridBlock(this);
+    private final ECGridBlockHardMEDrive gridBlock = new ECGridBlockHardMEDrive(this);
 
     private ECPrivateInventory inventory = new ECPrivateInventory(
             "extracells.part.drive", 3, 1, this) {

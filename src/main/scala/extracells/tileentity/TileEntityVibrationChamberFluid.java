@@ -66,7 +66,6 @@ public class TileEntityVibrationChamberFluid extends TileEntity implements IECTi
                     bTime = FuelBurnTime.getBurnTime(fluidStack.getFluid());
                 else
                     bTime = 0;
-                System.out.println(bTime +  " " + energyLeft);
                 if (fluidStack != null && bTime  > 0) {
                     if (tank.getFluid().amount >= 250) {
                         if(energyLeft <= 0) {

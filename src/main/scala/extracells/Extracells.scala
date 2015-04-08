@@ -27,71 +27,70 @@ object Extracells {
 	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
 	var proxy: CommonProxy = null
 
-	var VERSION: String = ""
+	var VERSION = ""
 
 	var bcBurnTimeMultiplicator = 4;
 
 	var configFolder: File = null
 	var shortenedBuckets = true
 	var dynamicTypes = true
-	val integration = new Integration()
+	val integration = new Integration
 	
 	val ModTab = new  CreativeTabs("Extra_Cells") {
 
-		override def  getIconItemStack() = new ItemStack(ItemEnum.FLUIDSTORAGE.getItem())
+		override def  getIconItemStack = new ItemStack(ItemEnum.FLUIDSTORAGE.getItem)
 
-		override def getTabIconItem() = ItemEnum.FLUIDSTORAGE.getItem()
+		override def getTabIconItem = ItemEnum.FLUIDSTORAGE.getItem
 	}
 
 	@EventHandler
 	def init(event: FMLInitializationEvent) {
-		AEApi.instance().registries().recipes().addNewSubItemResolver(new NameHandler());
-		AEApi.instance().registries().wireless().registerWirelessHandler(new AEWirelessTermHandler());
-		AEApi.instance().registries().cell().addCellHandler(new FluidCellHandler());
-		val handler = new ExtraCellsEventHandler();
-		FMLCommonHandler.instance().bus().register(handler);
-		MinecraftForge.EVENT_BUS.register(handler);
-		proxy.registerMovables();
-		proxy.registerRenderers();
-		proxy.registerTileEntities();
-		proxy.registerFluidBurnTimes();
-		proxy.addRecipes(configFolder);
-		ChannelHandler.registerMessages();
-		RenderingRegistry.registerBlockHandler(new RenderHandler(
-				RenderingRegistry.getNextAvailableRenderId()));
-		integration.init();
+		AEApi.instance.registries.recipes.addNewSubItemResolver(new NameHandler)
+		AEApi.instance.registries.wireless.registerWirelessHandler(new AEWirelessTermHandler)
+		AEApi.instance.registries.cell.addCellHandler(new FluidCellHandler)
+		val handler = new ExtraCellsEventHandler
+		FMLCommonHandler.instance.bus.register(handler)
+		MinecraftForge.EVENT_BUS.register(handler)
+		proxy.registerMovables
+		proxy.registerRenderers
+		proxy.registerTileEntities
+		proxy.registerFluidBurnTimes
+		proxy.addRecipes(configFolder)
+		ChannelHandler.registerMessages
+		RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId))
+		integration.init
 	}
 
 	@EventHandler
 	def postInit(event: FMLPostInitializationEvent) {
-		integration.postInit();
+		integration.postInit
 	}
 
 	@EventHandler
 	def preInit(event: FMLPreInitializationEvent) {
-		VERSION = Loader.instance().activeModContainer().getVersion();
-		configFolder = event.getModConfigurationDirectory();
+		VERSION = Loader.instance.activeModContainer.getVersion
+		configFolder = event.getModConfigurationDirectory
 
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler);
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler)
 
 
 
 		// Config
 		val config = new Configuration(new File(
-				configFolder.getPath() + File.separator + "AppliedEnergistics2"
-						+ File.separator + "extracells.cfg"));
-		config.load();
+				configFolder.getPath + File.separator + "AppliedEnergistics2"
+						+ File.separator + "extracells.cfg"))
+		config.load
 		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?")
-			.getBoolean(true);
+			.getBoolean(true)
 		dynamicTypes = config.get("Storage Cells", "dynamicTypes", true,
-						"Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true);
-		integration.loadConfig(config);
+						"Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true)
+		integration.loadConfig(config)
 
 
-		config.save();
+		config.save
 
-		proxy.registerItems();
-		proxy.registerBlocks();
-		integration.preInit();
+		proxy.registerItems
+		proxy.registerBlocks
+		integration.preInit
 	}
 }
