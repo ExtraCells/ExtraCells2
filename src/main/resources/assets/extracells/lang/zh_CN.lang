@@ -59,6 +59,8 @@ extracells.block.walrus.name=海象
 extracells.block.fluidcrafter.name=ME流体装配室
 extracells.block.fluidinterface.name=ME流体接口
 extracells.block.fluidfiller.name=ME Fluid Auto Filler
+tile.extracells.block.vibrantchamberfluid.name=流体谐振仓
+tile.extracells.block.hardmedrive.name=防爆ME驱动器
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=总量
