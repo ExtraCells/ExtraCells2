@@ -1,5 +1,6 @@
 package extracells.integration;
 
+import extracells.integration.ni.Nei;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
@@ -11,7 +12,8 @@ public class Integration {
 	public enum Mods{
 		WAILA("Waila"),
 		OPENCOMPUTERS("OpenComputers"),
-		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel");
+		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
+		NEI("NotEnoughItems");
 		
 		private final String modID;
 		
@@ -64,6 +66,8 @@ public class Integration {
 			Waila.init();
 		if (Mods.OPENCOMPUTERS.isEnabled())
 			OpenComputers.init();
+		if (Mods.NEI.isEnabled())
+			Nei.init();
 	}
 	
 	public void postInit(){

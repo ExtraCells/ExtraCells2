@@ -22,8 +22,4 @@ public class ItemFluid extends Item {
 			return "null";
 		return item.getItemStackDisplayName(new ItemStack(item));
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item p_150895_1_, CreativeTabs p_150895_2_, List p_150895_3_) {}
 }
