@@ -34,7 +34,7 @@ public class HandlerItemPlayerStorageFluid extends HandlerItemStorageFluid {
 		if (!item.hasTagCompound())
 			item.setTagCompound(new NBTTagCompound());
 		NBTTagCompound fluidTag = new NBTTagCompound();
-		if (fluidStack != null && fluidStack.fluidID > 0
+		if (fluidStack != null && fluidStack.getFluidID() > 0
 				&& fluidStack.amount > 0) {
 			fluidStack.writeToNBT(fluidTag);
 			item.getTagCompound().setTag("Fluid#" + i, fluidTag);

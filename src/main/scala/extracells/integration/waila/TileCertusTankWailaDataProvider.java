@@ -27,7 +27,7 @@ public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 				tag.setInteger("fluidID", -1);
 			else {
 				tag.setInteger("fluidID",
-						((TileEntityCertusTank) tile).tank.getFluid().fluidID);
+						((TileEntityCertusTank) tile).tank.getFluid().getFluidID());
 				tag.setInteger("currentFluid",
 						((TileEntityCertusTank) tile).tank.getFluidAmount());
 			}

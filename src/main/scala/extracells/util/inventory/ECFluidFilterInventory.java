@@ -41,7 +41,7 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
 		FluidStack stack = FluidUtil.getFluidFromContainer(itemstack);
 		if (stack == null)
 			return false;
-		int fluidID = stack.fluidID;
+		int fluidID = stack.getFluidID();
 		for (ItemStack s : this.slots) {
 			if (s == null)
 				continue;

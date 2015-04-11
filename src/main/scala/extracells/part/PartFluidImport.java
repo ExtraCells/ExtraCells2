@@ -104,7 +104,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 			return 0;
 		int drainAmount = Math
 				.min(125 + this.speedState * 125, resource.amount);
-		FluidStack toFill = new FluidStack(resource.fluidID, drainAmount);
+		FluidStack toFill = new FluidStack(resource.getFluidID(), drainAmount);
 		Actionable action = doFill ? Actionable.MODULATE : Actionable.SIMULATE;
 		IAEFluidStack filled = injectFluid(AEApi.instance().storage()
 				.createFluidStack(toFill), action);
@@ -124,7 +124,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 					fluid, toDrain), false);
 		}
 
-		if (drained == null || drained.amount <= 0 || drained.fluidID <= 0)
+		if (drained == null || drained.amount <= 0 || drained.getFluidID() <= 0)
 			return false;
 
 		IAEFluidStack toFill = AEApi.instance().storage()

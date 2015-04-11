@@ -71,7 +71,7 @@ public class HandlerPartStorageFluid implements
 		if (infoArray != null && infoArray.length > 0) {
 			FluidTankInfo info = infoArray[0];
 			if (info.fluid == null || info.fluid.amount == 0
-					|| info.fluid.fluidID == input.getFluidStack().fluidID)
+					|| info.fluid.getFluidID() == input.getFluidStack().getFluidID())
 				if (this.inverted)
 					return !this.prioritizedFluids.isEmpty()
 							|| !isPrioritized(input);
@@ -109,7 +109,7 @@ public class HandlerPartStorageFluid implements
 		int drained2 = 0;
 		do {
 			FluidStack drain = this.tank.drain(this.node.getSide()
-					.getOpposite(), new FluidStack(toDrain.fluidID,
+					.getOpposite(), new FluidStack(toDrain.getFluidID(),
 					toDrain.amount - drained), mode == Actionable.MODULATE);
 			if (drain == null)
 				drained2 = 0;
@@ -121,7 +121,7 @@ public class HandlerPartStorageFluid implements
 			return null;
 		if (drained == toDrain.amount)
 			return request;
-		return FluidUtil.createAEFluidStack(toDrain.fluidID, drained);
+		return FluidUtil.createAEFluidStack(toDrain.getFluidID(), drained);
 	}
 
 	@Override
@@ -202,13 +202,13 @@ public class HandlerPartStorageFluid implements
 		int filled2 = 0;
 		do {
 			filled2 = this.tank.fill(this.node.getSide().getOpposite(),
-					new FluidStack(toFill.fluidID, toFill.amount - filled),
+					new FluidStack(toFill.getFluidID(), toFill.amount - filled),
 					mode == Actionable.MODULATE);
 			filled = filled + filled2;
 		} while (filled2 != 0 && filled != toFill.amount);
 		if (filled == toFill.amount)
 			return null;
-		return FluidUtil.createAEFluidStack(toFill.fluidID, toFill.amount
+		return FluidUtil.createAEFluidStack(toFill.getFluidID(), toFill.amount
 				- filled);
 	}
 

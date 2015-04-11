@@ -89,11 +89,11 @@ public class HandlerItemStorageFluid implements
 		for (int i = 0; i < this.fluidStacks.size(); i++) {
 			FluidStack currentStack = this.fluidStacks.get(i);
 			if (currentStack != null
-					&& currentStack.fluidID == request.getFluid().getID()) {
+					&& currentStack.getFluidID() == request.getFluid().getID()) {
 				long endAmount = currentStack.amount - request.getStackSize();
 				if (endAmount >= 0) {
 					removedStack = request.copy();
-					FluidStack toWrite = new FluidStack(currentStack.fluidID,
+					FluidStack toWrite = new FluidStack(currentStack.getFluidID(),
 							(int) endAmount);
 					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
@@ -162,9 +162,9 @@ public class HandlerItemStorageFluid implements
 		for (int i = 0; i < currentFluids.size(); i++) {
 			FluidStack currentStack = currentFluids.get(i);
 			if (notAdded != null && currentStack != null
-					&& input.getFluid().getID() == currentStack.fluidID) {
+					&& input.getFluid().getID() == currentStack.getFluidID()) {
 				if (notAdded.getStackSize() <= freeBytes()) {
-					FluidStack toWrite = new FluidStack(currentStack.fluidID,
+					FluidStack toWrite = new FluidStack(currentStack.getFluidID(),
 							currentStack.amount + (int) notAdded.getStackSize());
 					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
@@ -172,7 +172,7 @@ public class HandlerItemStorageFluid implements
 					}
 					notAdded = null;
 				} else {
-					FluidStack toWrite = new FluidStack(currentStack.fluidID,
+					FluidStack toWrite = new FluidStack(currentStack.getFluidID(),
 							currentStack.amount + freeBytes());
 					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
@@ -265,7 +265,7 @@ public class HandlerItemStorageFluid implements
 
 	protected void writeFluidToSlot(int i, FluidStack fluidStack) {
 		NBTTagCompound fluidTag = new NBTTagCompound();
-		if (fluidStack != null && fluidStack.fluidID > 0
+		if (fluidStack != null && fluidStack.getFluidID() > 0
 				&& fluidStack.amount > 0) {
 			fluidStack.writeToNBT(fluidTag);
 			this.stackTag.setTag("Fluid#" + i, fluidTag);

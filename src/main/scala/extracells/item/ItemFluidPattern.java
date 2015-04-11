@@ -58,8 +58,7 @@ public class ItemFluidPattern extends Item {
 	public String getItemStackDisplayName(ItemStack itemStack) {
 		Fluid fluid = getFluid(itemStack);
 		if (fluid == null)
-			return StatCollector
-					.translateToLocal(getUnlocalizedName(itemStack));
+			return StatCollector.translateToLocal(getUnlocalizedName(itemStack));
 		return StatCollector.translateToLocal(getUnlocalizedName(itemStack))
 				+ ": " + fluid.getLocalizedName(new FluidStack(fluid, 1));
 	}
@@ -77,10 +76,11 @@ public class ItemFluidPattern extends Item {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
-		for (String fluidID : FluidRegistry.getRegisteredFluidIDs().keySet()) {
+		for (Fluid fluid : FluidRegistry.getRegisteredFluidIDsByFluid().keySet()) {
+			String name = "";
 			ItemStack itemStack = new ItemStack(this, 1);
 			itemStack.setTagCompound(new NBTTagCompound());
-			itemStack.getTagCompound().setString("fluidID", fluidID);
+			itemStack.getTagCompound().setString("fluidID", fluid.getName());
 			itemList.add(itemStack);
 		}
 	}

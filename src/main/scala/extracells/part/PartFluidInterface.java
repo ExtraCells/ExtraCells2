@@ -292,7 +292,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		filled += fillToNetwork(resource, doFill);
 
 		if (filled < resource.amount)
-			filled += this.tank.fill(new FluidStack(resource.fluidID,
+			filled += this.tank.fill(new FluidStack(resource.getFluidID(),
 					resource.amount - filled), doFill);
 		if (filled > 0)
 			getHost().markForUpdate();
@@ -466,7 +466,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 				|| this.tank.getFluid().getFluid() == null)
 			tag.setInteger("fluidID", -1);
 		else
-			tag.setInteger("fluidID", this.tank.getFluid().fluidID);
+			tag.setInteger("fluidID", this.tank.getFluid().getFluidID());
 		tag.setInteger("amount", this.tank.getFluidAmount());
 		return tag;
 	}

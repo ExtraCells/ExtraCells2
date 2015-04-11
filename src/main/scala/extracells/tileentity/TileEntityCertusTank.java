@@ -112,12 +112,12 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler {
 			if (offTE instanceof TileEntityCertusTank) {
 				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
 				FluidStack externallyDrained = tank.drain(new FluidStack(
-						fluid.fluidID, fluid.amount
+						fluid.getFluid(), fluid.amount
 								- (drained != null ? drained.amount : 0)),
 						doDrain, false);
 
 				if (externallyDrained != null)
-					return new FluidStack(fluid.fluidID,
+					return new FluidStack(fluid.getFluid(),
 							(drained != null ? drained.amount : 0)
 									+ externallyDrained.amount);
 				else
@@ -132,7 +132,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler {
 	public FluidStack drain(ForgeDirection from, FluidStack resource,
 			boolean doDrain) {
 		if (this.tank.getFluid() == null || resource == null
-				|| resource.fluidID != this.tank.getFluid().fluidID)
+				|| resource.getFluid() != this.tank.getFluid().getFluid())
 			return null;
 
 		return drain(resource, doDrain, true);
@@ -181,7 +181,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler {
 			if (offTE instanceof TileEntityCertusTank) {
 				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
 				return filled
-						+ tank.fill(new FluidStack(fluid.fluidID, fluid.amount
+						+ tank.fill(new FluidStack(fluid.getFluid(), fluid.amount
 								- filled), doFill, false);
 			}
 		}
@@ -193,7 +193,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler {
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 		if (resource == null || this.tank.getFluid() != null
-				&& resource.fluidID != this.tank.getFluid().fluidID)
+				&& resource.getFluid() != this.tank.getFluid().getFluid())
 			return 0;
 		return fill(resource, doFill, true);
 	}

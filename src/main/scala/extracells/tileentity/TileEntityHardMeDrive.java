@@ -25,7 +25,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityHardMeDrive extends TileEntity implements IActionHost, IECTileEntity, ICellContainer, IInventoryUpdateReceiver{
+public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryUpdateReceiver{
 
     private  int priority = 0;
     boolean isFirstGridNode = true;
