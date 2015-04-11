@@ -73,7 +73,7 @@ public class ItemFluidPattern extends Item {
 	public int getSpriteNumber() {
 		return 1;
 	}
-
+/*
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
@@ -83,7 +83,7 @@ public class ItemFluidPattern extends Item {
 			itemStack.getTagCompound().setString("fluidID", fluidID);
 			itemList.add(itemStack);
 		}
-	}
+	}*/
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack) {
