@@ -45,7 +45,7 @@ public class DriverFluidInterface implements li.cil.oc.api.driver.Block, Environ
 	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile == null || (!(tile instanceof IPartHost)))
+		if (tile == null || (!(tile instanceof IPartHost || tile instanceof IFluidInterface)))
 			return null;
 		return new Enviroment(tile);
 	}
