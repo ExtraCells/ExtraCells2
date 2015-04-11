@@ -47,7 +47,7 @@ import extracells.api.IECTileEntity;
 import extracells.gridblock.ECFluidGridBlock;
 import extracells.util.FluidUtil;
 
-public class TileEntityFluidFiller extends TileEntity implements IActionHost,
+public class TileEntityFluidFiller extends TileBase implements IActionHost,
 		ICraftingProvider, IECTileEntity,
 		IMEMonitorHandlerReceiver<IAEFluidStack>, IListenerTile {
 
@@ -357,13 +357,11 @@ public class TileEntityFluidFiller extends TileEntity implements IActionHost,
 	public void writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		if (this.containerItem != null)
-			tagCompound.setTag("container",
-					this.containerItem.writeToNBT(new NBTTagCompound()));
+			tagCompound.setTag("container", this.containerItem.writeToNBT(new NBTTagCompound()));
 		else
 			tagCompound.setBoolean("isContainerEmpty", true);
 		if (this.returnStack != null)
-			tagCompound.setTag("return",
-					this.returnStack.writeToNBT(new NBTTagCompound()));
+			tagCompound.setTag("return", this.returnStack.writeToNBT(new NBTTagCompound()));
 		else
 			tagCompound.setBoolean("isReturnEmpty", true);
 		tagCompound.setInteger("time", this.ticksToFinish);

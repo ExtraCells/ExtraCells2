@@ -38,7 +38,7 @@ import extracells.api.IECTileEntity;
 import extracells.crafting.CraftingPattern;
 import extracells.gridblock.ECFluidGridBlock;
 
-public class TileEntityFluidCrafter extends TileEntity implements IActionHost,
+public class TileEntityFluidCrafter extends TileBase implements IActionHost,
 		ICraftingProvider, ICraftingWatcherHost, IECTileEntity {
 
 	private class FluidCrafterInventory implements IInventory {

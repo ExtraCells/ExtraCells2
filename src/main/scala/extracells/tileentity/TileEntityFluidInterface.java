@@ -60,7 +60,7 @@ import extracells.registries.ItemEnum;
 import extracells.util.EmptyMeItemMonitor;
 import extracells.util.ItemUtils;
 
-public class TileEntityFluidInterface extends TileEntity implements
+public class TileEntityFluidInterface extends TileBase implements
 		IActionHost, IFluidHandler, IECTileEntity, IFluidInterface,
 		IFluidSlotPartOrBlock, ITileStorageMonitorable, IStorageMonitorable,
 		ICraftingProvider, IWailaTile {
@@ -291,7 +291,7 @@ public class TileEntityFluidInterface extends TileEntity implements
 
 		if (filled < resource.amount)
 			filled += this.tanks[from.ordinal()].fill(new FluidStack(
-					resource.fluidID, resource.amount - filled), doFill);
+					resource.getFluid(), resource.amount - filled), doFill);
 		if (filled > 0)
 			if (getWorldObj() != null)
 				getWorldObj().markBlockForUpdate(this.xCoord, this.yCoord,
@@ -367,15 +367,7 @@ public class TileEntityFluidInterface extends TileEntity implements
 
 	@Override
 	public IMEMonitor<IAEFluidStack> getFluidInventory() {
-		if (getGridNode(ForgeDirection.UNKNOWN) == null)
-			return null;
-		IGrid grid = getGridNode(ForgeDirection.UNKNOWN).getGrid();
-		if (grid == null)
-			return null;
-		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-		if (storage == null)
-			return null;
-		return storage.getFluidInventory();
+		return getFluidInventory(ForgeDirection.UNKNOWN);
 	}
 
 	@Override
