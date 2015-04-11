@@ -9,8 +9,6 @@ Thanks to arbrarsyed for ForgeGradle, to AlgorithmX2 for his massive support and
 
 This version is for Applied Energisticsv2 rv1. If you look for a version that supports rv2 look [here](https://github.com/M3gaFr3ak/ExtraCells2/tree/rv2).
 
-Drone.IO:
-[![Build Status](https://drone.io/github.com/M3gaFr3ak/ExtraCells2/status.png)](https://drone.io/github.com/M3gaFr3ak/ExtraCells2/files)
 
 Dmod: [![Build Status](http://shadowcity.net:8080/job/ecrv1/badge/icon)](http://shadowcity.net:8080/job/ecrv1/)
 
