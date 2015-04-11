@@ -127,6 +127,21 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
     return node
   }
 
+  def getGridNodeWithoutUpdate(): IGridNode ={
+    if (isFirstGridNode && hasWorldObj && !getWorldObj.isRemote) {
+      isFirstGridNode = false
+      try {
+        node = AEApi.instance.createGridNode(gridBlock)
+      }
+      catch {
+        case e: Exception => {
+          isFirstGridNode = true
+        }
+      }
+    }
+    node
+  }
+
   def getCableConnectionType(forgeDirection: ForgeDirection): AECableType = {
     return AECableType.SMART
   }

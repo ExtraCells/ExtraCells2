@@ -48,7 +48,7 @@ logger.lifecycle "" + version
 
 minecraft {
     version = "${config.version.minecraft}-${config.version.forge}-${config.version.minecraft}"
-    assetDir = "../../MinecraftDebug/run_client/assets"
+    runDir = "../../MinecraftDebug/run_client"
 }
 
 repositories {

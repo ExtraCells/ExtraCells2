@@ -162,6 +162,24 @@ public class BlockVibrationChamberFluid extends BlockContainer implements TGuiBl
         TileEntity tile = world.getTileEntity(x, y, z);
         if (tile != null) {
             if (tile instanceof TileEntityVibrationChamberFluid) {
+                IGridNode node = ((TileEntityVibrationChamberFluid) tile).getGridNodeWithoutUpdate();
+                if (entity != null && entity instanceof EntityPlayer) {
+                    EntityPlayer player = (EntityPlayer) entity;
+                    node.setPlayerID(AEApi.instance().registries().players()
+                            .getID(player));
+                }
+                node.updateState();
+            }
+        }
+    }
+
+    @Override
+    public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
+        if (world.isRemote)
+            return;
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile != null) {
+            if (tile instanceof TileEntityVibrationChamberFluid) {
                 IGridNode node = ((TileEntityVibrationChamberFluid) tile).getGridNode(ForgeDirection.UNKNOWN);
                 if (node != null) {
                     node.destroy();
@@ -169,6 +187,5 @@ public class BlockVibrationChamberFluid extends BlockContainer implements TGuiBl
             }
         }
     }
-
 
 }
