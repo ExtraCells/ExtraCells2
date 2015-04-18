@@ -1,16 +1,16 @@
 [
 {
   "modid": "extracells",
-  "name": "ExtraCells",
-  "description": "A Mod that adds 4 new ME Storage Cells and some other cool stuff to AE.",
+  "name": "Extra Cells 2",
+  "description": "Adds new ME Storage Cells and some other cool stuff to AE 2.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "http://m3gafr3ak.github.io/ExtraCells/",
+  "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289077-ae-add-on-m3gas-extracells-2-1-x-2-2-x",
   "updateUrl": "",
-  "authors": ["M3gaFr3ak"],
+  "authorList": ["M3gaFr3ak"],
   "credits": "Textures by PaleoCrafter and Cyntain",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": ["AppliedEnergistics"]
+  "dependencies": ["Applied Energistics 2"]
 }
 ]
