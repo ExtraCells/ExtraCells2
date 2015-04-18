@@ -33,7 +33,7 @@ extracells.item.terminal.fluid.wireless.name=Drahtlose Flüssigkeits-Zugangskons
 extracells.item.fluid.pattern=ME Flüssigkeitsschablone [WIP]
 
 //Creative Tab
-itemGroup.Extra_Cells=Extra Cells
+itemGroup.Extra_Cells=Extra Cells 2
 
 //Item Groups
 extracells.fluid.IO=ME-Flüssigkeits-Export-/Importbus
