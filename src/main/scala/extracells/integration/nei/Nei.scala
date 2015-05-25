@@ -1,4 +1,4 @@
-package extracells.integration.ni
+package extracells.integration.nei
 
 import codechicken.nei.api.API
 import extracells.registries.ItemEnum

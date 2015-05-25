@@ -81,9 +81,15 @@ public class ItemStoragePhysical extends Item implements IStorageCell,
 	}
 
 	@Override
-	public int BytePerType(ItemStack cellItem) {
+	public int getBytesPerType(ItemStack cellItem) {
 		return Extracells.dynamicTypes() ? bytes_cell[MathHelper.clamp_int(
 				cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
+	}
+
+	@Override
+	@Deprecated
+	public int BytePerType(ItemStack cellItem) {
+		return getBytesPerType(cellItem);
 	}
 
 	private NBTTagCompound ensureTagCompound(ItemStack itemStack) {

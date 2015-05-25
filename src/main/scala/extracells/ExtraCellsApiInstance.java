@@ -180,7 +180,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		if (world.isRemote)
 			return itemStack;
 		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries()
-				.locatable().findLocatableBySerial(key);
+				.locatable().getLocatableBy(key);
 		if (securityTerminal == null)
 			return itemStack;
 		IGridNode gridNode = securityTerminal
@@ -191,8 +191,8 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		if (grid == null)
 			return itemStack;
 		for (IGridNode node : grid
-				.getMachines((Class<? extends IGridHost>) AEApi.instance()
-						.blocks().blockWireless.entity())) {
+				.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions()
+						.blocks().wireless().maybeEntity().get())) {
 			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node
 					.getMachine();
 			WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);

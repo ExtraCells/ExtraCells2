@@ -1,6 +1,6 @@
 package extracells.integration;
 
-import extracells.integration.ni.Nei;
+import extracells.integration.nei.Nei;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;

@@ -75,8 +75,13 @@ dependencies {
         transitive = false
 	}
     compile "com.mod-buildcraft:buildcraft:${config.version.bc}:api"
-	compile "mcp.mobius.waila:Waila:${config.version.waila}"
+	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
+        transitive = false
+	}
 	compile "li.cil.oc:OpenComputers:${config.version.oc}:dev"
+	compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
+    compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
+    compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
 }
 
 processResources {

@@ -31,6 +31,7 @@ extracells.item.storage.casing.physical.name=Advanced Storage Housing
 extracells.item.storage.casing.fluid.name=Fluid Storage Housing
 extracells.item.terminal.fluid.wireless.name=Wireless ME Fluid Terminal
 extracells.item.fluid.pattern=ME Fluid Pattern [WIP]
+extracells.item.oc.upgrade.name=ME Upgrade
 
 //Creative Tab
 itemGroup.Extra_Cells=Extra Cells
