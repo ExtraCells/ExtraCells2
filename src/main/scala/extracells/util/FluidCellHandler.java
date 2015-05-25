@@ -50,7 +50,7 @@ public class FluidCellHandler implements ICellHandler {
 			return 3;
 		}
 		if (inventory.isFormatted()
-				|| inventory.usedTypes() == inventory.totalBytes()) {
+				|| inventory.usedTypes() == inventory.totalTypes()) {
 			return 2;
 		}
 

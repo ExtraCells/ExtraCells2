@@ -33,7 +33,7 @@ extracells.item.terminal.fluid.wireless.name=Terminal de fluide ME sans fil
 extracells.item.fluid.pattern=Modèle de fluide ME [WIP]
 
 //Creative Tab
-itemGroup.Extra_Cells=Extra Cells
+itemGroup.Extra_Cells=Extra Cells 2
 
 //Item Groups
 extracells.fluid.IO=Bus d'import/export de fluide ME

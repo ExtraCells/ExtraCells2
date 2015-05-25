@@ -33,7 +33,7 @@ extracells.item.terminal.fluid.wireless.name=无线ME流体终端
 extracells.item.fluid.pattern=ME流体模板[WIP]
 
 //Creative Tab
-itemGroup.Extra_Cells=更多存储单元
+itemGroup.Extra_Cells=更多存储单元2
 
 //Item Groups
 extracells.fluid.IO=ME流体输出/输入总线
