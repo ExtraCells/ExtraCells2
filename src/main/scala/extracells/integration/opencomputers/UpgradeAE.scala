@@ -1,16 +1,19 @@
 package extracells.integration.opencomputers
 
+import scala.collection.JavaConversions._
 import appeng.api.AEApi
 import appeng.api.config.Actionable
+import appeng.api.implementations.tiles.IWirelessAccessPoint
 import appeng.api.networking.security.MachineSource
 import appeng.api.networking.storage.IStorageGrid
-import appeng.api.networking.{IGridNode, IGridHost, IGrid}
+import appeng.api.networking.{IGrid, IGridHost, IGridNode}
 import appeng.api.storage.IMEMonitor
-import appeng.api.storage.data.{IAEItemStack, IAEFluidStack}
+import appeng.api.storage.data.{IAEFluidStack, IAEItemStack}
+import appeng.api.util.WorldCoord
 import appeng.tile.misc.TileSecurity
 import li.cil.oc.api.Network
 import li.cil.oc.api.driver.EnvironmentHost
-import li.cil.oc.api.internal.{Database, Agent, Drone, Robot}
+import li.cil.oc.api.internal.{Agent, Database, Drone, Robot}
 import li.cil.oc.api.machine.{Arguments, Callback, Context}
 import li.cil.oc.api.network.{Environment, Node, Visibility}
 import li.cil.oc.api.prefab.ManagedEnvironment
@@ -19,8 +22,6 @@ import li.cil.oc.server.network.Component
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.FluidContainerRegistry
-
-import scala.math.ScalaNumber
 
 
 class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with NetworkControl[TileSecurity]{
@@ -55,7 +56,49 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with NetworkCo
 
   def getSecurity: IGridHost = {
     if (host.world.isRemote) return null
-    AEApi.instance.registries.locatable.getLocatableBy(getAEKey).asInstanceOf[IGridHost]
+    val component = getComponent
+    val sec = AEApi.instance.registries.locatable.getLocatableBy(getAEKey(component)).asInstanceOf[IGridHost]
+    if(checkRange(component, sec))
+      sec
+    else
+      null
+  }
+  def checkRange(stack: ItemStack, sec: IGridHost): Boolean = {
+    if (sec == null) return false
+    val gridNode: IGridNode = sec.getGridNode(ForgeDirection.UNKNOWN)
+    if (gridNode == null) return false
+    val grid = gridNode.getGrid
+    if(grid == null) return false
+    stack.getItemDamage match{
+      case 0 =>
+        grid.getMachines(AEApi.instance.definitions.blocks.wireless.maybeEntity.get.asInstanceOf[Class[_ <: IGridHost]]).iterator.hasNext
+      case 1 =>
+        val gridBlock = gridNode.getGridBlock
+        if (gridBlock == null) return false
+        val loc = gridBlock.getLocation
+        if (loc == null) return false
+        for (node <- grid.getMachines(AEApi.instance.definitions.blocks.wireless.maybeEntity.get.asInstanceOf[Class[_ <: IGridHost]])) {
+          val accessPoint: IWirelessAccessPoint = node.getMachine.asInstanceOf[IWirelessAccessPoint]
+          val distance: WorldCoord = accessPoint.getLocation.subtract(agent.xPosition.toInt, agent.yPosition.toInt, agent.zPosition.toInt)
+          val squaredDistance: Int = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z
+          val range = accessPoint.getRange
+          if (squaredDistance <= range * range) return true
+        }
+        false
+      case _ =>
+        val gridBlock = gridNode.getGridBlock
+        if (gridBlock == null) return false
+        val loc = gridBlock.getLocation
+        if (loc == null) return false
+        for (node <- grid.getMachines(AEApi.instance.definitions.blocks.wireless.maybeEntity.get.asInstanceOf[Class[_ <: IGridHost]])) {
+          val accessPoint: IWirelessAccessPoint = node.getMachine.asInstanceOf[IWirelessAccessPoint]
+          val distance: WorldCoord = accessPoint.getLocation.subtract(agent.xPosition.toInt, agent.yPosition.toInt, agent.zPosition.toInt)
+          val squaredDistance: Int = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z
+          val range = accessPoint.getRange / 2
+          if (squaredDistance <= range * range) return true
+        }
+        false
+    }
   }
 
   def getGrid: IGrid = {
@@ -67,9 +110,9 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with NetworkCo
     gridNode.getGrid
   }
 
-  def getAEKey: Long = {
+  def getAEKey(stack: ItemStack): Long = {
     try {
-      return WirelessHandlerUpgradeAE.getEncryptionKey(getComponent).toLong
+      return WirelessHandlerUpgradeAE.getEncryptionKey(stack).toLong
     }
     catch {
       case ignored: Throwable => {

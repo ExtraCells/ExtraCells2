@@ -1,10 +1,13 @@
 package extracells.integration.opencomputers
 
 import cpw.mods.fml.common.registry.GameRegistry
+import cpw.mods.fml.relauncher.{SideOnly, Side}
+import extracells.Extracells
 import li.cil.oc.api.driver.{EnvironmentAware, EnvironmentHost}
 import li.cil.oc.api.driver.item.{HostAware, Slot}
 import li.cil.oc.api.internal.{Drone, Robot}
 import li.cil.oc.api.network.{Environment, ManagedEnvironment}
+import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{ItemStack, EnumRarity, Item}
 import net.minecraft.nbt.NBTTagCompound
 
@@ -15,12 +18,26 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
   setTextureName("extracells:upgrade.oc")
 
   GameRegistry.registerItem(this, "oc.upgrade", "extracells")
+  setCreativeTab(Extracells.ModTab)
 
   override def getUnlocalizedName = super.getUnlocalizedName.replace("item.extracells", "extracells.item")
 
   override def getUnlocalizedName(stack: ItemStack) = getUnlocalizedName
 
-  override def tier(stack: ItemStack): Int = 2
+  override def tier(stack: ItemStack): Int =
+    stack.getItemDamage match {
+      case 0 => 2
+      case 1 => 1
+      case _ => 0
+  }
+
+  @SideOnly(Side.CLIENT)
+  override def getSubItems(item : Item, tab : CreativeTabs, list : java.util.List[_]) {
+    def add[T](list: java.util.List[T], value: Any) = list.add(value.asInstanceOf[T])
+    add(list, new ItemStack(item, 1, 2))
+    add(list, new ItemStack(item, 1, 1))
+    add(list, new ItemStack(item, 1, 0))
+  }
 
   override def slot(stack: ItemStack): String = Slot.Upgrade
 
@@ -33,7 +50,12 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
       null
   }
 
-  override def getRarity (itemStack: ItemStack) = EnumRarity.rare
+  override def getRarity (stack: ItemStack) =
+    stack.getItemDamage match {
+      case 0 => EnumRarity.rare
+      case 1 => EnumRarity.uncommon
+      case _ => super.getRarity(stack)
+  }
 
   override def dataTag(stack: ItemStack) = {
     if (!stack.hasTagCompound) {
@@ -54,5 +76,14 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
       classOf[UpgradeAE]
     else
       null
+  }
+
+  override def getItemStackDisplayName(stack : ItemStack): String = {
+    val tier = stack.getItemDamage match {
+      case 0 => 3
+      case 1 => 2
+      case _ => 1
+    }
+    super.getItemStackDisplayName(stack) + " (Tier " + tier + ")"
   }
 }
