@@ -1,5 +1,8 @@
 package extracells.integration.opencomputers
 
+import li.cil.oc.Settings
+import net.minecraftforge.common.ForgeChunkManager
+
 import scala.collection.JavaConversions._
 import appeng.api.AEApi
 import appeng.api.config.Actionable
@@ -15,7 +18,7 @@ import li.cil.oc.api.Network
 import li.cil.oc.api.driver.EnvironmentHost
 import li.cil.oc.api.internal.{Agent, Database, Drone, Robot}
 import li.cil.oc.api.machine.{Arguments, Callback, Context}
-import li.cil.oc.api.network.{Environment, Node, Visibility}
+import li.cil.oc.api.network._
 import li.cil.oc.api.prefab.ManagedEnvironment
 import li.cil.oc.integration.appeng.NetworkControl
 import li.cil.oc.server.network.Component
@@ -36,6 +39,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with NetworkCo
       host.asInstanceOf[Drone]
     else
       null
+  var isActive = false
 
   val agent: Agent = host.asInstanceOf[Agent]
   setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("upgrade_me", Visibility.Neighbors).create());
@@ -184,6 +188,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with NetworkCo
 
   @Callback(doc = "function(database:address, entry:number[, number:amount]):number -- Get items from your ae system.")
   def requestItems(context: Context, args: Arguments): Array[AnyRef] = {
+
     val address = args.checkString(0)
     val entry = args.checkInteger(1)
     val amount = args.optInteger(2, 64)
@@ -288,4 +293,36 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with NetworkCo
     val isLinked = getGrid != null
     Array(boolean2Boolean(isLinked))
   }
+
+  override def update() {
+    super.update()
+    if (host.world.getTotalWorldTime % 10 == 0 && isActive) {
+      if (!node.asInstanceOf[Connector].tryChangeBuffer(-getEnergy)) {
+        isActive = false
+      }
+    }
+  }
+
+  def getEnergy  = {
+    val c = getComponent
+    if (c == null)
+      .0
+    else
+      c.getItemDamage match{
+        case 0 => .6
+        case 1 => .3
+        case _ => .05
+      }
+  }
+
+  override def onMessage(message: Message) {
+    super.onMessage(message)
+    if (message.name == "computer.stopped") {
+      isActive = false
+    }
+    else if (message.name == "computer.started") {
+      isActive = true
+    }
+  }
+
 }
