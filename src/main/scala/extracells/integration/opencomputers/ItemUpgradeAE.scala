@@ -1,17 +1,15 @@
 package extracells.integration.opencomputers
 
 import cpw.mods.fml.common.registry.GameRegistry
-import extracells.Extracells
-import extracells.api.ExtraCellsApi
-import li.cil.oc.api.driver.EnvironmentHost
+import li.cil.oc.api.driver.{EnvironmentAware, EnvironmentHost}
 import li.cil.oc.api.driver.item.{HostAware, Slot}
-import li.cil.oc.api.internal.Robot
-import li.cil.oc.api.network.ManagedEnvironment
+import li.cil.oc.api.internal.{Drone, Robot}
+import li.cil.oc.api.network.{Environment, ManagedEnvironment}
 import net.minecraft.item.{ItemStack, EnumRarity, Item}
 import net.minecraft.nbt.NBTTagCompound
 
 
-object ItemUpgradeAE  extends Item with HostAware{
+object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
 
   setUnlocalizedName("extracells.oc.upgrade")
   setTextureName("extracells:upgrade.oc")
@@ -49,6 +47,12 @@ object ItemUpgradeAE  extends Item with HostAware{
   }
 
   override def worksWith(stack: ItemStack, host: Class[_ <: EnvironmentHost]): Boolean =
-    worksWith(stack) && host != null && classOf[Robot].isAssignableFrom(host)
+    worksWith(stack) && host != null && (classOf[Robot].isAssignableFrom(host) || classOf[Drone].isAssignableFrom(host))
 
+  override def providedEnvironment(stack: ItemStack): Class[_ <: Environment] = {
+    if (stack != null && stack.getItem == this)
+      classOf[UpgradeAE]
+    else
+      null
+  }
 }
