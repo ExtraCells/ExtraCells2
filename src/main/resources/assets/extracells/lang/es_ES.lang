@@ -1,0 +1,90 @@
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+extracells.item.storage.physical.256k.name=ME 256k Almacenamiento
+extracells.item.storage.physical.1024k.name=ME 1024k Almacenamiento
+extracells.item.storage.physical.4096k.name=ME 4096k Almacenamiento
+extracells.item.storage.physical.16384k.name=ME 16384k Almacenamiento
+extracells.item.storage.physical.container.name=ME Contenedor de Bloques
+extracells.item.storage.fluid.1k.name=ME 1k Almacenamiento de Fluidos
+extracells.item.storage.fluid.4k.name=ME 4k Almacenamiento de Fluidos
+extracells.item.storage.fluid.16k.name=ME 16k Almacenamiento de Fluidos
+extracells.item.storage.fluid.64k.name=ME 64k Almacenamiento de Fluidos
+extracells.item.storage.fluid.256k.name=ME 256k Almacenamiento de Fluidos
+extracells.item.storage.fluid.1024k.name=ME 1024k Almacenamiento de Fluidos
+extracells.item.storage.fluid.4096k.name=ME 4096k Almacenamiento de Fluidos
+extracells.item.storage.fluid.portable.name=ME Portable Almacenamiento de Fluidos
+extracells.item.storage.component.physical.256k.name=256k ME Almacenamiento de Componentes
+extracells.item.storage.component.physical.1024k.name=1024k ME Almacenamiento de Componentes
+extracells.item.storage.component.physical.4096k.name=4096k ME Almacenamiento de Componentes
+extracells.item.storage.component.physical.16384k.name=16384k ME Almacenamiento de Componentes
+extracells.item.storage.component.fluid.1k.name=1k ME Almacenamiento de Componentes Liquidos
+extracells.item.storage.component.fluid.4k.name=4k ME Almacenamiento de Componentes Liquidos
+extracells.item.storage.component.fluid.16k.name=16k ME Almacenamiento de Componentes Liquidos
+extracells.item.storage.component.fluid.64k.name=64k ME Almacenamiento de Componentes Liquidos
+extracells.item.storage.component.fluid.256k.name=256k ME Almacenamiento de Componentes Liquidos
+extracells.item.storage.component.fluid.1024k.name=1024k ME Almacenamiento de Componentes Liquidos
+extracells.item.storage.component.fluid.4096k.name=4096k ME Almacenamiento de Componentes Liquidos
+extracells.item.storage.casing.physical.name=Almacenamiento Avanzado de Vivienda
+extracells.item.storage.casing.fluid.name=Almacenamiento de Fluidos en Vivienda
+extracells.item.terminal.fluid.wireless.name=Inalambrico ME Terminal de Fluidos
+extracells.item.fluid.pattern=ME Fluido Patrón [WIP]
+extracells.item.oc.upgrade.name=ME Mejora
+
+//Creative Tab
+itemGroup.Extra_Cells=Extra Cells 2
+
+//Item Groups
+extracells.fluid.IO=ME Bus de Importación/Exportación de Fluidos
+extracells.fluid.plane=ME Plano de Eliminación/Formación de Fluidos
+
+//Parts
+extracells.part.fluid.export.name=ME Bus de Exportación de Fluidos
+extracells.part.fluid.import.name=ME Bus de Importación de Fluidos
+extracells.part.fluid.storage.name=ME Bus de Almacenamiento de Fluidos
+extracells.part.fluid.terminal.name=ME Terminal de Fluidos
+extracells.part.fluid.plane.annihilation.name=ME Plano de Eliminación de Fluidos
+extracells.part.fluid.plane.formation.name=ME Plano de Formación de Fluidos
+extracells.part.fluid.levelemitter.name=ME Emisor de Nivel de Fluido
+extracells.part.drive.name=ME Componente de la Unidad
+extracells.part.battery.name=ME Componente Celular de Energía 
+extracells.part.fluid.conversion.monitor.name=ME Monitor de Conversión de Fluidos
+extracells.part.fluid.monitor.name=ME Monitor de Almacenamiento de Fluido
+extracells.part.oredict.export.name=ME Bus de Exportación de Diccionario de minerales
+
+//Blocks
+extracells.block.certustank=Tanque de Quarzo Certus
+extracells.block.walrus.name=Morsa
+extracells.block.fluidcrafter.name=ME Fluido Ensamblador
+extracells.block.fluidinterface.name=ME Interfaz de Fluidos
+extracells.block.fluidfiller.name=ME Llenado Automatico de Fluidos
+tile.extracells.block.vibrantchamberfluid.name=Camara de la Vibración de Fluidos
+tile.extracells.block.hardmedrive.name=ME Unidad Resistente a Explociones
+
+//Tooltips and Chat-Messages
+extracells.tooltip.amount=Cantidad
+extracells.tooltip.fluid=Fluido
+extracells.tooltip.storage.physical.types=%s de %s tipos de item utilizados.
+extracells.tooltip.storage.fluid.types=%s de %s tipos de fluidos utilizados.
+extracells.tooltip.storage.physical.bytes=%s de %s bytes de articulos utilizados.
+extracells.tooltip.storage.fluid.bytes=%s de %s bytes de fluidos utilizados.
+extracells.tooltip.storage.fluid.content=contiene %s mB de fluido.
+extracells.tooltip.storage.physical.content=contiene %s items.
+extracells.tooltip.direction.0=Abajo
+extracells.tooltip.direction.1=Arriba
+extracells.tooltip.direction.2=Norte
+extracells.tooltip.direction.3=Sur
+extracells.tooltip.direction.4=Oeste
+extracells.tooltip.direction.5=Este
+extracells.tooltip.empty1=Vacío
+extracells.tooltip.storage.container.0=Modo: Modo de Colocación
+extracells.tooltip.storage.container.1=Modo: Modo de Igualdad de Comercio (1*1)
+extracells.tooltip.storage.container.2=Modo: Modo de Igualdad de Comercio (3*3)
+extracells.tooltip.onlyblocks=No se puede colocar Items! Ponga un bloque en el Contenedor de Bloques
+extracells.tooltip.save=Guardar
+extracells.tooltip.oredict=Nombre del diccionario de menas
+
+//Buttons
+extracells.gui.craft=Craft
