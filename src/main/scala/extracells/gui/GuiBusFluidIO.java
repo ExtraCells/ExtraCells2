@@ -3,6 +3,8 @@ package extracells.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.integration.Integration;
+import extracells.part.PartGasImport;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -154,13 +156,15 @@ public class GuiBusFluidIO extends GuiContainer implements
 		if (slot != null
 				&& slot.getStack() != null
 				&& slot.getStack().isItemEqual(
-						AEApi.instance().items().itemNetworkTool.stack(1)))
+				AEApi.instance().definitions().items().networkTool().maybeStack(1).get()))
 			return;
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
-			if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18,
-					18, mouseX, mouseY)) {
-				fluidSlot.mouseClicked(this.player.inventory.getItemStack());
+			if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
+				if(part instanceof PartGasImport && Integration.Mods.MEKANISMGAS.isEnabled())
+					fluidSlot.mouseClickedGas(this.player.inventory.getItemStack());
+				else
+					fluidSlot.mouseClicked(this.player.inventory.getItemStack());
 				break;
 			}
 		}

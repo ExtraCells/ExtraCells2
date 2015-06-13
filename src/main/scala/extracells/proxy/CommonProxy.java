@@ -96,4 +96,12 @@ public class CommonProxy {
 	public void registerFluidBurnTimes() {
 		FuelBurnTime.registerFuel(FluidRegistry.LAVA, 800);
 	}
+
+	public boolean isClient(){
+		return false;
+	}
+
+	public boolean isServer(){
+		return true;
+	}
 }

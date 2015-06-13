@@ -2,6 +2,9 @@ package extracells.gui.widget.fluid;
 
 import java.util.List;
 
+import cpw.mods.fml.common.Optional;
+import extracells.util.GasUtil;
+import mekanism.api.gas.GasStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -181,8 +184,15 @@ public class WidgetFluidSlot extends Gui {
 	public void mouseClicked(ItemStack stack) {
 		FluidStack fluidStack = FluidUtil.getFluidFromContainer(stack);
 		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
-		new PacketFluidSlot(this.part, this.id, this.fluid, this.player)
-				.sendPacketToServer();
+		new PacketFluidSlot(this.part, this.id, this.fluid, this.player).sendPacketToServer();
+	}
+
+	@Optional.Method(modid = "MekanismAPI|gas")
+	public void mouseClickedGas(ItemStack stack) {
+		GasStack gasStack = GasUtil.getGasFromContainer(stack);
+		FluidStack fluidStack = GasUtil.getFluidStack(gasStack);
+		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
+		new PacketFluidSlot(this.part, this.id, this.fluid, this.player).sendPacketToServer();
 	}
 
 	public void setFluid(Fluid _fluid) {

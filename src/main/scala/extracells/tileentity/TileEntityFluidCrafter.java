@@ -307,8 +307,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost,
 			HashMap<Fluid, Long> fluids = new HashMap<Fluid, Long>();
 			for (IAEFluidStack stack : patter.getCondensedFluidInputs()) {
 				if (fluids.containsKey(stack.getFluid())) {
-					Long amount = fluids.get(stack.getFluid())
-							+ stack.getStackSize();
+					Long amount = fluids.get(stack.getFluid()) + stack.getStackSize();
 					fluids.remove(stack.getFluid());
 					fluids.put(stack.getFluid(), amount);
 				} else {
@@ -323,29 +322,14 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost,
 				return false;
 			for (Fluid fluid : fluids.keySet()) {
 				Long amount = fluids.get(fluid);
-				IAEFluidStack extractFluid = storage.getFluidInventory()
-						.extractItems(
-								AEApi.instance()
-										.storage()
-										.createFluidStack(
-												new FluidStack(fluid,
-														(int) (amount + 0))),
-								Actionable.SIMULATE, new MachineSource(this));
-				if (extractFluid == null
-						|| extractFluid.getStackSize() != amount) {
+				IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))), Actionable.SIMULATE, new MachineSource(this));
+				if (extractFluid == null || extractFluid.getStackSize() != amount) {
 					return false;
 				}
 			}
 			for (Fluid fluid : fluids.keySet()) {
 				Long amount = fluids.get(fluid);
-				IAEFluidStack extractFluid = storage.getFluidInventory()
-						.extractItems(
-								AEApi.instance()
-										.storage()
-										.createFluidStack(
-												new FluidStack(fluid,
-														(int) (amount + 0))),
-								Actionable.MODULATE, new MachineSource(this));
+				IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))), Actionable.MODULATE, new MachineSource(this));
 			}
 			this.finishCraftingTime = System.currentTimeMillis() + 1000;
 
@@ -355,8 +339,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost,
 			for (int i = 0; i < 9; i++) {
 				ItemStack s = table.getStackInSlot(i);
 				if (s != null && s.getItem() != null) {
-					this.optionalReturnStack[i] = s.getItem().getContainerItem(
-							s.copy());
+					this.optionalReturnStack[i] = s.getItem().getContainerItem(s.copy());
 				}
 			}
 
@@ -390,14 +373,10 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost,
 		if (this.update) {
 			this.update = false;
 			if (getGridNode() != null && getGridNode().getGrid() != null) {
-				getGridNode().getGrid().postEvent(
-						new MENetworkCraftingPatternChange(this.instance,
-								getGridNode()));
+				getGridNode().getGrid().postEvent(new MENetworkCraftingPatternChange(this.instance, getGridNode()));
 			}
 		}
-		if (this.isBusy
-				&& this.finishCraftingTime <= System.currentTimeMillis()
-				&& getWorldObj() != null && !getWorldObj().isRemote) {
+		if (this.isBusy && this.finishCraftingTime <= System.currentTimeMillis() && getWorldObj() != null && !getWorldObj().isRemote) {
 			if (this.node == null || this.returnStack == null)
 				return;
 			IGrid grid = this.node.getGrid();
@@ -406,16 +385,11 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost,
 			IStorageGrid storage = grid.getCache(IStorageGrid.class);
 			if (storage == null)
 				return;
-			storage.getItemInventory().injectItems(
-					AEApi.instance().storage()
-							.createItemStack(this.returnStack),
-					Actionable.MODULATE, new MachineSource(this));
+			storage.getItemInventory().injectItems(AEApi.instance().storage().createItemStack(this.returnStack), Actionable.MODULATE, new MachineSource(this));
 			for (ItemStack s : this.optionalReturnStack) {
 				if (s == null)
 					continue;
-				storage.getItemInventory().injectItems(
-						AEApi.instance().storage().createItemStack(s),
-						Actionable.MODULATE, new MachineSource(this));
+				storage.getItemInventory().injectItems(AEApi.instance().storage().createItemStack(s), Actionable.MODULATE, new MachineSource(this));
 			}
 			this.optionalReturnStack = new ItemStack[0];
 			this.isBusy = false;
@@ -442,38 +416,23 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost,
 						if (details.getCondensedOutputs()[0].equals(s)) {
 							CraftingPattern patter = (CraftingPattern) details;
 							HashMap<Fluid, Long> fluids = new HashMap<Fluid, Long>();
-							for (IAEFluidStack stack : patter
-									.getCondensedFluidInputs()) {
+							for (IAEFluidStack stack : patter.getCondensedFluidInputs()) {
 								if (fluids.containsKey(stack.getFluid())) {
-									Long amount = fluids.get(stack.getFluid())
-											+ stack.getStackSize();
+									Long amount = fluids.get(stack.getFluid()) + stack.getStackSize();
 									fluids.remove(stack.getFluid());
 									fluids.put(stack.getFluid(), amount);
 								} else {
-									fluids.put(stack.getFluid(),
-											stack.getStackSize());
+									fluids.put(stack.getFluid(), stack.getStackSize());
 								}
 							}
-							IStorageGrid storage = grid
-									.getCache(IStorageGrid.class);
+							IStorageGrid storage = grid.getCache(IStorageGrid.class);
 							if (storage == null)
 								break;
 							boolean doBreak = false;
 							for (Fluid fluid : fluids.keySet()) {
 								Long amount = fluids.get(fluid);
-								IAEFluidStack extractFluid = storage
-										.getFluidInventory()
-										.extractItems(
-												AEApi.instance()
-														.storage()
-														.createFluidStack(
-																new FluidStack(
-																		fluid,
-																		(int) (amount + 0))),
-												Actionable.SIMULATE,
-												new MachineSource(this));
-								if (extractFluid == null
-										|| extractFluid.getStackSize() != amount) {
+								IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))), Actionable.SIMULATE, new MachineSource(this));
+								if (extractFluid == null || extractFluid.getStackSize() != amount) {
 									doBreak = true;
 									break;
 								}
@@ -482,23 +441,11 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost,
 								break;
 							for (Fluid fluid : fluids.keySet()) {
 								Long amount = fluids.get(fluid);
-								IAEFluidStack extractFluid = storage
-										.getFluidInventory()
-										.extractItems(
-												AEApi.instance()
-														.storage()
-														.createFluidStack(
-																new FluidStack(
-																		fluid,
-																		(int) (amount + 0))),
-												Actionable.MODULATE,
-												new MachineSource(this));
+								IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))), Actionable.MODULATE, new MachineSource(this));
 							}
-							this.finishCraftingTime = System
-									.currentTimeMillis() + 1000;
+							this.finishCraftingTime = System.currentTimeMillis() + 1000;
 
-							this.returnStack = patter.getCondensedOutputs()[0]
-									.getItemStack();
+							this.returnStack = patter.getCondensedOutputs()[0].getItemStack();
 							this.isBusy = true;
 							return;
 						}

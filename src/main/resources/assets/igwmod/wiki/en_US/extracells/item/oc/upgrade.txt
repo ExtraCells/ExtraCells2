@@ -1,0 +1,6 @@
+The me upgrade can be placed into robots and drones. The upgrade connect wireless to your me system. Put this upgrade or a robot/drone into your ae security station to link it with your network. The ranged depents on the tier of the upgrade.
+
+
+Tier 1: 0.5x access point range.
+Tier 2: access point range.
+Tier 3: infinity ranger, over dimensions

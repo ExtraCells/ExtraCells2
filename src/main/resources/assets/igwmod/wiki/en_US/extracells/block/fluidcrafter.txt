@@ -1,0 +1,1 @@
+You can put crafting patterns in it. It replace filled fluid containers witth the specific fluid. In your network must be stored the fluid instead of the filled container.

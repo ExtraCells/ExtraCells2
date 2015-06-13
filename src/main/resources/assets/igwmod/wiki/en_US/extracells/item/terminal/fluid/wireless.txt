@@ -1,0 +1,1 @@
+The same as the normal [link{extracells/part/fluid/terminal}] Fluid Terminal [link{}] but it is wireless.

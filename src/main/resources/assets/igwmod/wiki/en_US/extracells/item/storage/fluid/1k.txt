@@ -1,0 +1,3 @@
+A Storage Cell that can store fluids.
+It can store five different fluid types.
+Size: 1024 bytes

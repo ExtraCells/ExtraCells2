@@ -1,0 +1,2 @@
+It can automatic fill fluids. It scans the network for fluid and add autocrafting recipes to your network.
+The fluid container that would be filled can changed in the gui.

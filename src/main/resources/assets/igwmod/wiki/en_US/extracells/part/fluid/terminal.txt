@@ -1,0 +1,2 @@
+In the Fluid Terminal you can see your fluid in your ME Network.
+You can select select fluid with your left mouse button. If you put an empty fluid container in the left slot it will be filled. If the container is filled with a liquid it will be stored in your network.

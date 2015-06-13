@@ -1,0 +1,3 @@
+A Storage Cell that can store a lot of items.
+It can store 63 different item types.
+Size: 16777216 bytes

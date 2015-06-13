@@ -48,4 +48,14 @@ public class ClientProxy extends CommonProxy {
 			currentTexture.registerTexture(map);
 		}
 	}
+
+	@Override
+	public boolean isClient(){
+		return true;
+	}
+
+	@Override
+	public boolean isServer(){
+		return false;
+	}
 }

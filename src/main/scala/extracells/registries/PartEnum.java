@@ -3,6 +3,7 @@ package extracells.registries;
 import java.util.HashMap;
 import java.util.Map;
 
+import extracells.part.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
@@ -10,39 +11,23 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import appeng.api.config.Upgrades;
-import extracells.part.PartBattery;
-import extracells.part.PartConversionMonitor;
-import extracells.part.PartDrive;
-import extracells.part.PartECBase;
-import extracells.part.PartFluidExport;
-import extracells.part.PartFluidImport;
-import extracells.part.PartFluidInterface;
-import extracells.part.PartFluidLevelEmitter;
-import extracells.part.PartFluidPlaneAnnihilation;
-import extracells.part.PartFluidPlaneFormation;
-import extracells.part.PartFluidStorage;
-import extracells.part.PartFluidTerminal;
-import extracells.part.PartOreDictExporter;
-import extracells.part.PartStorageMonitor;
 
 public enum PartEnum {
-	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO",
-			generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE,
-					1), generatePair(Upgrades.SPEED, 2)), FLUIDIMPORT(
-			"fluid.import", PartFluidImport.class, "fluid.IO", generatePair(
-					Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1),
-			generatePair(Upgrades.SPEED, 2)), FLUIDSTORAGE("fluid.storage",
-			PartFluidStorage.class, null, generatePair(Upgrades.INVERTER, 1)), FLUIDTERMINAL(
-			"fluid.terminal", PartFluidTerminal.class), FLUIDLEVELEMITTER(
-			"fluid.levelemitter", PartFluidLevelEmitter.class), FLUIDPANEANNIHILATION(
-			"fluid.plane.annihilation", PartFluidPlaneAnnihilation.class,
-			"fluid.plane"), FLUIDPANEFORMATION("fluid.plane.formation",
-			PartFluidPlaneFormation.class, "fluid.plane"), DRIVE("drive",
-			PartDrive.class), BATTERY("battery", PartBattery.class), INTERFACE(
-			"interface", PartFluidInterface.class), FLUIDMONITOR(
-			"fluid.monitor", PartStorageMonitor.class), FLUIDCONVERSIONMONITOR(
-			"fluid.conversion.monitor", PartConversionMonitor.class), OREDICTEXPORTBUS(
-			"oredict.export", PartOreDictExporter.class);
+	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
+	FLUIDIMPORT("fluid.import", PartFluidImport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
+	FLUIDSTORAGE("fluid.storage", PartFluidStorage.class, null, generatePair(Upgrades.INVERTER, 1)),
+	FLUIDTERMINAL("fluid.terminal", PartFluidTerminal.class),
+	FLUIDLEVELEMITTER("fluid.levelemitter", PartFluidLevelEmitter.class),
+	FLUIDPANEANNIHILATION("fluid.plane.annihilation", PartFluidPlaneAnnihilation.class, "fluid.plane"),
+	FLUIDPANEFORMATION("fluid.plane.formation", PartFluidPlaneFormation.class, "fluid.plane"),
+	DRIVE("drive", PartDrive.class),
+	BATTERY("battery", PartBattery.class),
+	INTERFACE("interface", PartFluidInterface.class),
+	FLUIDMONITOR("fluid.monitor", PartStorageMonitor.class),
+	FLUIDCONVERSIONMONITOR("fluid.conversion.monitor", PartConversionMonitor.class),
+	OREDICTEXPORTBUS("oredict.export", PartOreDictExporter.class),
+	GASIMPORT("gas.import", PartGasImport.class, "gas.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2));
+
 
 	private static Pair<Upgrades, Integer> generatePair(Upgrades _upgrade,
 			int integer) {

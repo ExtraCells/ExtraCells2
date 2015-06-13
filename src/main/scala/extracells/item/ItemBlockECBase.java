@@ -32,8 +32,7 @@ public class ItemBlockECBase extends ItemBlock {
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		return StatCollector.translateToLocal(getUnlocalizedName(stack)
-				+ ".name");
+		return StatCollector.translateToLocal(getUnlocalizedName(stack) + ".name");
 	}
 
 	@Override

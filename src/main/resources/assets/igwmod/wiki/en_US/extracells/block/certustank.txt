@@ -1,0 +1,2 @@
+The certus tank can store 32 Bucket.
+shift + right click with a wrench drop the certus tank. The liquid will be stored in it.

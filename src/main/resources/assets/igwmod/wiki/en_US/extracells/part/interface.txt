@@ -1,0 +1,2 @@
+On the fluid interface you can set a fluid that would automatic extract from the network to the internal tank. You can get out the fluid with a pipe. If fluid comes in the interface it would be stored in the network.
+The interface has 9 slots for crafting pattern. You can putt patterns in there like the normal interface. If fluid containers are in your recipe the fluid containers will be replaced with the liquid in it.

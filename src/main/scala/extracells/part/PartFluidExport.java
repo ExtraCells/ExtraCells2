@@ -58,26 +58,14 @@ public class PartFluidExport extends PartFluidIO {
 
 		for (Fluid fluid : filter) {
 			if (fluid != null) {
-				IAEFluidStack stack = extractFluid(
-						AEApi.instance()
-								.storage()
-								.createFluidStack(
-										new FluidStack(fluid, rate
-												* TicksSinceLastCall)),
-						Actionable.SIMULATE);
+				IAEFluidStack stack = extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, rate * TicksSinceLastCall)), Actionable.SIMULATE);
 
 				if (stack == null)
 					continue;
-				int filled = facingTank.fill(getSide().getOpposite(),
-						stack.getFluidStack(), true);
+				int filled = facingTank.fill(getSide().getOpposite(), stack.getFluidStack(), true);
 
 				if (filled > 0) {
-					extractFluid(
-							AEApi.instance()
-									.storage()
-									.createFluidStack(
-											new FluidStack(fluid, filled)),
-							Actionable.MODULATE);
+					extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE);
 					return true;
 				}
 			}

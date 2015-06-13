@@ -1,0 +1,2 @@
+The same as the normal ME Conversion Monitor, but for fluids.
+You can set the filter with a filled fluid container.

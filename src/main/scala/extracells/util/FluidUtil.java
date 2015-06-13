@@ -2,10 +2,7 @@ package extracells.util;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.*;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -17,7 +14,7 @@ import extracells.registries.ItemEnum;
 public class FluidUtil {
 
 	public static IAEFluidStack createAEFluidStack(Fluid fluid) {
-		return createAEFluidStack(new FluidStack(fluid.getID(),
+		return createAEFluidStack(new FluidStack(fluid,
 				FluidContainerRegistry.BUCKET_VOLUME));
 	}
 
@@ -30,7 +27,7 @@ public class FluidUtil {
 	}
 
 	public static IAEFluidStack createAEFluidStack(int fluidId, long amount) {
-		return createAEFluidStack(new FluidStack(fluidId, 1)).setStackSize(
+		return createAEFluidStack(new FluidStack(FluidRegistry.getFluid(fluidId), 1)).setStackSize(
 				amount);
 	}
 

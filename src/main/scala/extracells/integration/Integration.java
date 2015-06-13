@@ -1,5 +1,9 @@
 package extracells.integration;
 
+import cpw.mods.fml.relauncher.Side;
+import extracells.Extracells;
+import extracells.integration.igw.IGW;
+import extracells.integration.mekanism.Mekanism;
 import extracells.integration.nei.Nei;
 import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Loader;
@@ -13,7 +17,9 @@ public class Integration {
 		WAILA("Waila"),
 		OPENCOMPUTERS("OpenComputers"),
 		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
-		NEI("NotEnoughItems");
+		NEI("NotEnoughItems"),
+		MEKANISMGAS("MekanismAPI|gas", "MekanismGas"),
+		IGW("IGWMod", "IngameWikiMod", Side.CLIENT);
 		
 		private final String modID;
 		
@@ -21,13 +27,24 @@ public class Integration {
 		
 		private final String name;
 
+		private final Side side;
+
 		private Mods(String modid){
 			this(modid, modid);
 		}
 
-		private Mods(String modid, String modName) {
+		private Mods(String modid, String modName, Side side) {
 			this.modID = modid;
 			this.name = modName;
+			this.side = side;
+		}
+
+		private Mods(String modid, String modName){
+			this(modid, modName, null);
+		}
+
+		private Mods(String modid, Side side){
+			this(modid, modid, side);
 		}
 		
 		public String getModID(){
@@ -37,13 +54,25 @@ public class Integration {
 		public String getModName() {
 			return name;
 		}
-		
+
+		public boolean isOnClient(){
+			return side != Side.SERVER;
+		}
+
+		public boolean isOnServer(){
+			return side != Side.CLIENT;
+		}
+
 		public void loadConfig(Configuration config){
 			shouldLoad = config.get("Integration", "enable" + getModName(), true, "Enable " + getModName() + " Integration.").getBoolean(true);
 		}
 		
 		public boolean isEnabled(){
-			return (Loader.isModLoaded(getModID()) && shouldLoad) || (ModAPIManager.INSTANCE.hasAPI(getModID()) && shouldLoad);
+			return (Loader.isModLoaded(getModID()) && shouldLoad && correctSide()) || (ModAPIManager.INSTANCE.hasAPI(getModID()) && shouldLoad && correctSide());
+		}
+
+		private boolean correctSide(){
+			return Extracells.proxy().isClient() ? isOnClient() : isOnServer();
 		}
 		
 		
@@ -58,7 +87,8 @@ public class Integration {
 	
 	
 	public void preInit(){
-		
+		if (Mods.IGW.correctSide() && Mods.IGW.shouldLoad)
+			IGW.initNotifier();
 	}
 	
 	public void init(){
@@ -68,10 +98,15 @@ public class Integration {
 			OpenComputers.init();
 		if (Mods.NEI.isEnabled())
 			Nei.init();
+		if (Mods.MEKANISMGAS.isEnabled())
+			Mekanism.init();
+		if (Mods.IGW.isEnabled())
+			IGW.init();
 	}
 	
 	public void postInit(){
-		
+		if (Mods.MEKANISMGAS.isEnabled())
+			Mekanism.postInit();
 	}
 
 }

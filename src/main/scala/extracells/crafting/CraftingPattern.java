@@ -226,4 +226,9 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 		this.pattern.setPriority(priority);
 	}
 
+	@Override
+	public int hashCode(){
+		return this.pattern.hashCode();
+	}
+
 }

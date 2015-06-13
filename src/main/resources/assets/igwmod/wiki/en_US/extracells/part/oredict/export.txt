@@ -1,0 +1,5 @@
+The export bus can export all items with the specific ore dictionary name.
+
+Examples:
+'ore*' will export all your ores.
+'ingotCopper' will export all your copper from different mods.

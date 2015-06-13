@@ -78,9 +78,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 				}
 			}
 		}
-		if (empty)
-			return fillToNetwork(null, rate * TicksSinceLastCall);
-		return false;
+		return empty && fillToNetwork(null, rate * TicksSinceLastCall);
 	}
 
 	@Override
@@ -104,7 +102,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 			return 0;
 		int drainAmount = Math
 				.min(125 + this.speedState * 125, resource.amount);
-		FluidStack toFill = new FluidStack(resource.getFluidID(), drainAmount);
+		FluidStack toFill = new FluidStack(resource.getFluid(), drainAmount);
 		Actionable action = doFill ? Actionable.MODULATE : Actionable.SIMULATE;
 		IAEFluidStack filled = injectFluid(AEApi.instance().storage()
 				.createFluidStack(toFill), action);
@@ -113,7 +111,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 		return toFill.amount - (int) filled.getStackSize();
 	}
 
-	private boolean fillToNetwork(Fluid fluid, int toDrain) {
+	protected boolean fillToNetwork(Fluid fluid, int toDrain) {
 		FluidStack drained;
 		IFluidHandler facingTank = getFacingTank();
 		ForgeDirection side = getSide();
@@ -175,11 +173,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 pos) {
-		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
-				(IPart) this)) {
-			return super.onActivate(player, pos);
-		}
-		return false;
+		return PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this) && super.onActivate(player, pos);
 	}
 
 	@SideOnly(Side.CLIENT)
