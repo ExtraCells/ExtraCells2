@@ -69,4 +69,6 @@ public interface ExtraCellsApi {
 	public boolean isGasStack(FluidStack stack);
 
 	public boolean isGas(Fluid fluid);
+
+	public Object createGasStack(IAEFluidStack stack);
 }

@@ -25,6 +25,7 @@ import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
 import extracells.util.FluidCellHandler;
 import extracells.util.FuelBurnTime;
+import extracells.util.GasUtil;
 import extracells.wireless.WirelessTermRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -246,6 +247,16 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	public boolean isGas(Fluid fluid) {
 		return fluid != null && Integration.Mods.MEKANISMGAS.isEnabled() && checkGas(fluid);
+	}
+
+	@Override
+	public Object createGasStack(IAEFluidStack stack) {
+		return Integration.Mods.MEKANISMGAS.isEnabled() ? createGasFromFluidStack(stack) : null;
+	}
+
+	@Optional.Method(modid = "MekanismAPI|gas")
+	private Object createGasFromFluidStack(IAEFluidStack stack) {
+		return stack == null ? null : GasUtil.getGasStack(stack.getFluidStack());
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")
