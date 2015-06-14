@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.api.ECApi
 import mekanism.api.gas.{GasRegistry, Gas}
 import net.minecraft.util.IIcon
-import net.minecraftforge.fluids.{FluidStack, Fluid}
+import net.minecraftforge.fluids.{FluidRegistry, FluidStack, Fluid}
 import scala.collection.JavaConversions._
 
 
@@ -25,11 +25,14 @@ object Mekanism {
       val fluid = new GasFluid(g)
       fluidGas += (g -> fluid)
     }
-    //ECApi.instance.addFluidToShowBlacklist(classOf[GasFluid])
+    ECApi.instance.addFluidToShowBlacklist(classOf[GasFluid])
     ECApi.instance.addFluidToStorageBlacklist(classOf[GasFluid])
   }
 
   class GasFluid(gas: Gas) extends Fluid("ec.internal." + gas.getName){
+
+    FluidRegistry.registerFluid(this)
+
     override def getLocalizedName (stack: FluidStack) =  gas.getLocalizedName
 
     override def getIcon = gas.getIcon
