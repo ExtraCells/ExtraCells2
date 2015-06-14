@@ -1,5 +1,6 @@
 package extracells.api;
 
+import appeng.api.storage.data.IAEFluidStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -7,6 +8,7 @@ import net.minecraftforge.fluids.Fluid;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
 import extracells.api.definitions.IPartDefinition;
+import net.minecraftforge.fluids.FluidStack;
 
 public interface ExtraCellsApi {
 
@@ -61,4 +63,10 @@ public interface ExtraCellsApi {
 			IWirelessFluidTermHandler handler);
 
 	public void registerFuelBurnTime(Fluid fuel, int burnTime);
+
+	public boolean isGasStack(IAEFluidStack stack);
+
+	public boolean isGasStack(FluidStack stack);
+
+	public boolean isGas(Fluid fluid);
 }

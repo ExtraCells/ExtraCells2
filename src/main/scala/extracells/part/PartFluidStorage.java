@@ -48,23 +48,20 @@ import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer,
-		IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
+public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
 	private HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
 	private int priority = 0;
-	private HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
+	protected HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
 	private Fluid[] filterFluids = new Fluid[54];
 	private AccessRestriction access = AccessRestriction.READ_WRITE;
-	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1,
-			1, this) {
+	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 			if (itemStack == null)
 				return false;
-			if (AEApi.instance().materials().materialCardInverter
-					.sameAsStack(itemStack))
+			if (AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack))
 				return true;
 			return false;
 		}
@@ -135,9 +132,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer,
 
 	@Override
 	public void onInventoryChanged() {
-		this.handler
-				.setInverted(AEApi.instance().materials().materialCardInverter
-						.sameAsStack(this.upgradeInventory.getStackInSlot(0)));
+		this.handler.setInverted(AEApi.instance().definitions().materials().cardInverter().isSameAs(this.upgradeInventory.getStackInSlot(0)));
 		saveData();
 	}
 
@@ -149,9 +144,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer,
 			IGrid grid = node.getGrid();
 			if (grid != null && this.wasChanged()) {
 				grid.postEvent(new MENetworkCellArrayUpdate());
-				node.getGrid().postEvent(
-						new MENetworkStorageEvent(getGridBlock()
-								.getFluidMonitor(), StorageChannel.FLUIDS));
+				node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
 				node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 			}
 			getHost().markForUpdate();
@@ -169,9 +162,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer,
 				getHost().markForUpdate();
 			}
 		}
-		node.getGrid().postEvent(
-				new MENetworkStorageEvent(getGridBlock().getFluidMonitor(),
-						StorageChannel.FLUIDS));
+		node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
 		node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 	}
 
@@ -180,17 +171,14 @@ public class PartFluidStorage extends PartECBase implements ICellContainer,
 		super.readFromNBT(data);
 		this.priority = data.getInteger("priority");
 		for (int i = 0; i < 9; i++) {
-			this.filterFluids[i] = FluidRegistry.getFluid(data
-					.getString("FilterFluid#" + i));
+			this.filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
 		}
 		if (data.hasKey("access")) {
 			try {
-				this.access = AccessRestriction.valueOf(data
-						.getString("access"));
+				this.access = AccessRestriction.valueOf(data.getString("access"));
 			} catch (Throwable e) {}
 		}
-		this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory",
-				10));
+		this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
 		onInventoryChanged();
 		onNeighborChanged();
 		this.handler.setPrioritizedFluids(this.filterFluids);

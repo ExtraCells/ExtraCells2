@@ -9,6 +9,7 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
+import cpw.mods.fml.common.Optional;
 import extracells.api.ExtraCellsApi;
 import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
@@ -18,6 +19,8 @@ import extracells.api.definitions.IPartDefinition;
 import extracells.definitions.BlockDefinition;
 import extracells.definitions.ItemDefinition;
 import extracells.definitions.PartDefinition;
+import extracells.integration.Integration;
+import extracells.integration.mekanism.Mekanism;
 import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
 import extracells.util.FluidCellHandler;
@@ -29,6 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,24 +135,20 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack,
-			World world) {
+	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world) {
 		if (world.isRemote || stack == null || stack.getItem() == null)
 			return stack;
 		Item item = stack.getItem();
 		if (!(item instanceof IPortableFluidStorageCell))
 			return stack;
-		ICellHandler cellHandler = AEApi.instance().registries().cell()
-				.getHandler(stack);
+		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
 		if (!(cellHandler instanceof FluidCellHandler))
 			return stack;
-		IMEInventoryHandler<IAEFluidStack> handler = ((FluidCellHandler) cellHandler)
-				.getCellInventoryPlayer(stack, player);
+		IMEInventoryHandler<IAEFluidStack> handler = ((FluidCellHandler) cellHandler).getCellInventoryPlayer(stack, player);
 		if (!(handler instanceof HandlerItemStorageFluid)) {
 			return stack;
 		}
-		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(
-				handler, StorageChannel.FLUIDS);
+		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannel.FLUIDS);
 		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, new Object[]{fluidInventory, item});
 		return stack;
 	}
@@ -190,22 +190,16 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		IGrid grid = gridNode.getGrid();
 		if (grid == null)
 			return itemStack;
-		for (IGridNode node : grid
-				.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions()
-						.blocks().wireless().maybeEntity().get())) {
+		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wireless().maybeEntity().get())) {
 			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node
 					.getMachine();
 			WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
-			int squaredDistance = distance.x * distance.x + distance.y
-					* distance.y + distance.z * distance.z;
-			if (squaredDistance <= accessPoint.getRange()
-					* accessPoint.getRange()) {
+			int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
 				IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
 				if (gridCache != null) {
-					IMEMonitor<IAEFluidStack> fluidInventory = gridCache
-							.getFluidInventory();
+					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
 					if (fluidInventory != null) {
-
 						GuiHandler.launchGui(GuiHandler.getGuiId(1), player, new Object[]{
 								fluidInventory, getWirelessFluidTermHandler(itemStack)});
 					}
@@ -221,8 +215,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public void registerWirelessFluidTermHandler(
-			IWirelessFluidTermHandler handler) {
+	public void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler) {
 		WirelessTermRegistry.registerWirelessFluidTermHandler(handler);
 	}
 
@@ -231,8 +224,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	 */
 	@Override
 	@Deprecated
-	public void registryWirelessFluidTermHandler(
-			IWirelessFluidTermHandler handler) {
+	public void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler) {
 		WirelessTermRegistry.registerWirelessFluidTermHandler(handler);
 	}
 
@@ -240,4 +232,25 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	public void registerFuelBurnTime(Fluid fuel, int burnTime) {
 		FuelBurnTime.registerFuel(fuel, burnTime);
 	}
+
+	@Override
+	public boolean isGasStack(IAEFluidStack stack) {
+		return stack != null && isGasStack(stack.getFluidStack());
+	}
+
+	@Override
+	public boolean isGasStack(FluidStack stack) {
+		return stack != null && isGas(stack.getFluid());
+	}
+
+	@Override
+	public boolean isGas(Fluid fluid) {
+		return fluid != null && Integration.Mods.MEKANISMGAS.isEnabled() && checkGas(fluid);
+	}
+
+	@Optional.Method(modid = "MekanismAPI|gas")
+	private boolean checkGas(Fluid fluid) {
+		return fluid instanceof Mekanism.GasFluid;
+	}
+
 }

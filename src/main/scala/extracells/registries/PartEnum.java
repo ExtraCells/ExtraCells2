@@ -26,7 +26,8 @@ public enum PartEnum {
 	FLUIDMONITOR("fluid.monitor", PartStorageMonitor.class),
 	FLUIDCONVERSIONMONITOR("fluid.conversion.monitor", PartConversionMonitor.class),
 	OREDICTEXPORTBUS("oredict.export", PartOreDictExporter.class),
-	GASIMPORT("gas.import", PartGasImport.class, "gas.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2));
+	GASIMPORT("gas.import", PartGasImport.class, "gas.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
+	GASEXPORT("gas.export", PartGasExport.class, "gas.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2));
 
 
 	private static Pair<Upgrades, Integer> generatePair(Upgrades _upgrade,
