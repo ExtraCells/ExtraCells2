@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import extracells.integration.Integration;
+import extracells.part.PartGasExport;
 import extracells.part.PartGasImport;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -45,24 +46,15 @@ public class GuiBusFluidIO extends GuiContainer implements
 		this.part = _terminal;
 		this.player = _player;
 
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 0,
-				61, 21, this, (byte) 2));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 1,
-				79, 21, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 2,
-				97, 21, this, (byte) 2));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 3,
-				61, 39, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 4,
-				79, 39, this, (byte) 0));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 5,
-				97, 39, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 6,
-				61, 57, this, (byte) 2));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 7,
-				79, 57, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 8,
-				97, 57, this, (byte) 2));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 0, 61, 21, this, (byte) 2));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 1, 79, 21, this, (byte) 1));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 2, 97, 21, this, (byte) 2));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 3, 61, 39, this, (byte) 1));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 4, 79, 39, this, (byte) 0));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 5, 97, 39, this, (byte) 1));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 6, 61, 57, this, (byte) 2));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 7, 79, 57, this, (byte) 1));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 8, 97, 57, this, (byte) 2));
 
 		new PacketBusFluidIO(this.player, this.part).sendPacketToServer();
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;
@@ -103,16 +95,12 @@ public class GuiBusFluidIO extends GuiContainer implements
 		boolean overlayRendered = false;
 		for (byte i = 0; i < 9; i++) {
 			this.fluidSlotList.get(i).drawWidget();
-			if (!overlayRendered && this.fluidSlotList.get(i).canRender())
-				overlayRendered = renderOverlay(this.fluidSlotList.get(i),
-						mouseX, mouseY);
+			if (!overlayRendered && this.fluidSlotList.get(i).canRender()) overlayRendered = renderOverlay(this.fluidSlotList.get(i), mouseX, mouseY);
 		}
 
 		for (Object button : this.buttonList) {
 			if (button instanceof WidgetRedstoneModes)
-				((WidgetRedstoneModes) button).drawTooltip(mouseX, mouseY,
-						(this.width - this.xSize) / 2,
-						(this.height - this.ySize) / 2);
+				((WidgetRedstoneModes) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
 		}
 	}
 
@@ -133,14 +121,11 @@ public class GuiBusFluidIO extends GuiContainer implements
 		return null;
 	}
 
-	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_,
-			int p_146981_3_) {
-		return this.func_146978_c(p_146981_1_.xDisplayPosition,
-				p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
+	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
+		return this.func_146978_c(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
 	}
 
-	protected boolean isPointInRegion(int top, int left, int height, int width,
-			int pointX, int pointY) {
+	protected boolean isPointInRegion(int top, int left, int height, int width, int pointX, int pointY) {
 		int k1 = this.guiLeft;
 		int l1 = this.guiTop;
 		pointX -= k1;
@@ -153,15 +138,12 @@ public class GuiBusFluidIO extends GuiContainer implements
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
 		Slot slot = getSlotAtPosition(mouseX, mouseY);
 
-		if (slot != null
-				&& slot.getStack() != null
-				&& slot.getStack().isItemEqual(
-				AEApi.instance().definitions().items().networkTool().maybeStack(1).get()))
+		if (slot != null && slot.getStack() != null && slot.getStack().isItemEqual(AEApi.instance().definitions().items().networkTool().maybeStack(1).get()))
 			return;
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
 			if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
-				if(part instanceof PartGasImport && Integration.Mods.MEKANISMGAS.isEnabled())
+				if((part instanceof PartGasImport || part instanceof PartGasExport) && Integration.Mods.MEKANISMGAS.isEnabled())
 					fluidSlot.mouseClickedGas(this.player.inventory.getItemStack());
 				else
 					fluidSlot.mouseClicked(this.player.inventory.getItemStack());
@@ -171,16 +153,12 @@ public class GuiBusFluidIO extends GuiContainer implements
 	}
 
 	private void renderBackground(Slot slot) {
-		if (slot.getStack() == null
-				&& (slot.slotNumber < 4 || slot.slotNumber > 39)) {
+		if (slot.getStack() == null && (slot.slotNumber < 4 || slot.slotNumber > 39)) {
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-			this.mc.getTextureManager().bindTexture(
-					new ResourceLocation("appliedenergistics2",
-							"textures/guis/states.png"));
-			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition,
-					this.guiTop + slot.yDisplayPosition, 240, 208, 16, 16);
+			this.mc.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
+			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 208, 16, 16);
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glEnable(GL11.GL_LIGHTING);
 
@@ -189,13 +167,10 @@ public class GuiBusFluidIO extends GuiContainer implements
 
 	public boolean renderOverlay(WidgetFluidSlot fluidSlot, int mouseX,
 			int mouseY) {
-		if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18,
-				mouseX, mouseY)) {
+		if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1,
-					fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17,
-					-0x7F000001, -0x7F000001);
+			drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1, fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17, -0x7F000001, -0x7F000001);
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			return true;
@@ -207,17 +182,14 @@ public class GuiBusFluidIO extends GuiContainer implements
 		this.redstoneControlled = _redstoneControlled;
 		this.buttonList.clear();
 		if (this.redstoneControlled)
-			this.buttonList.add(new WidgetRedstoneModes(0, this.guiLeft - 18,
-					this.guiTop, 16, 16, this.part.getRedstoneMode()));
+			this.buttonList.add(new WidgetRedstoneModes(0, this.guiLeft - 18, this.guiTop, 16, 16, this.part.getRedstoneMode()));
 	}
 
 	public boolean shiftClick(ItemStack itemStack) {
 		FluidStack containerFluid = FluidUtil.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
-			if (fluidSlot.canRender()
-					&& fluid != null
-					&& (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid)) {
+			if (fluidSlot.canRender() && fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid)) {
 				fluidSlot.mouseClicked(itemStack);
 				return true;
 			}
@@ -234,7 +206,6 @@ public class GuiBusFluidIO extends GuiContainer implements
 
 	public void updateRedstoneMode(RedstoneMode mode) {
 		if (this.redstoneControlled && this.buttonList.size() > 0)
-			((WidgetRedstoneModes) this.buttonList.get(0))
-					.setRedstoneMode(mode);
+			((WidgetRedstoneModes) this.buttonList.get(0)).setRedstoneMode(mode);
 	}
 }

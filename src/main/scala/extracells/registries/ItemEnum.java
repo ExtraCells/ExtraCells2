@@ -10,6 +10,7 @@ public enum ItemEnum {
 	PARTITEM("part.base", new ItemPartECBase()),
 	FLUIDSTORAGE("storage.fluid", new ItemStorageFluid()),
 	PHYSICALSTORAGE("storage.physical", new ItemStoragePhysical()),
+	GASSTORAGE("storage.gas", new ItemStorageGas()),
 	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern()),
 	FLUIDWIRELESSTERMINAL( "terminal.fluid.wireless", new ItemWirelessTerminalFluid()),
 	STORAGECOMPONET( "storage.component", new ItemStorageComponent()),
@@ -25,7 +26,7 @@ public enum ItemEnum {
 		this.internalName = _internalName;
 		this.item = _item;
 		this.item.setUnlocalizedName("extracells." + this.internalName);
-		if (!this.internalName.equals("fluid.item"))
+		if (!(this.internalName.equals("fluid.item") || this.internalName.equals("pattern.crafting")))
 			this.item.setCreativeTab(Extracells.ModTab());
 	}
 

@@ -3,6 +3,7 @@ package extracells.part;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.container.ContainerGasTerminal;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,20 +47,29 @@ import extracells.util.inventory.IInventoryUpdateReceiver;
 public class PartFluidTerminal extends PartECBase implements IGridTickable,
 		IInventoryUpdateReceiver {
 
-	private Fluid currentFluid;
-	private List<ContainerFluidTerminal> containers = new ArrayList<ContainerFluidTerminal>();
-	private ECPrivateInventory inventory = new ECPrivateInventory(
+	protected Fluid currentFluid;
+	private List<Object> containers = new ArrayList<Object>();
+	protected ECPrivateInventory inventory = new ECPrivateInventory(
 			"extracells.part.fluid.terminal", 2, 64, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-			return FluidUtil.isFluidContainer(itemStack);
+			return isItemValidForInputSlot(i, itemStack);
 		}
 	};
-	private MachineSource machineSource = new MachineSource(this);
+
+	protected boolean isItemValidForInputSlot(int i, ItemStack itemStack) {
+		return FluidUtil.isFluidContainer(itemStack);
+	}
+	protected MachineSource machineSource = new MachineSource(this);
 
 	public void addContainer(ContainerFluidTerminal containerTerminalFluid) {
 		this.containers.add(containerTerminalFluid);
+		sendCurrentFluid();
+	}
+
+	public void addContainer(ContainerGasTerminal containerTerminalGas) {
+		this.containers.add(containerTerminalGas);
 		sendCurrentFluid();
 	}
 
@@ -77,8 +87,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null
-				&& secondSlot.stackSize >= secondSlot.getMaxStackSize())
+		if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize())
 			return;
 		ItemStack container = this.inventory.getStackInSlot(0);
 		if (!FluidUtil.isFluidContainer(container))
@@ -97,35 +106,22 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 			if (this.currentFluid == null)
 				return;
 			int capacity = FluidUtil.getCapacity(container);
-			IAEFluidStack result = monitor.extractItems(
-					FluidUtil.createAEFluidStack(this.currentFluid, capacity),
-					Actionable.SIMULATE, this.machineSource);
-			int proposedAmount = result == null ? 0 : (int) Math.min(capacity,
-					result.getStackSize());
-			MutablePair<Integer, ItemStack> filledContainer = FluidUtil
-					.fillStack(container, new FluidStack(this.currentFluid,
-							proposedAmount));
+			IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource);
+			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
+			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(this.currentFluid, proposedAmount));
 			if (fillSecondSlot(filledContainer.getRight())) {
-				monitor.extractItems(FluidUtil.createAEFluidStack(
-						this.currentFluid, filledContainer.getLeft()),
-						Actionable.MODULATE, this.machineSource);
+				monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, filledContainer.getLeft()), Actionable.MODULATE, this.machineSource);
 				decreaseFirstSlot();
 			}
 		} else {
-			FluidStack containerFluid = FluidUtil
-					.getFluidFromContainer(container);
-			IAEFluidStack notInjected = monitor.injectItems(
-					FluidUtil.createAEFluidStack(containerFluid),
-					Actionable.SIMULATE, this.machineSource);
+			FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
+			IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
 			if (notInjected != null)
 				return;
-			MutablePair<Integer, ItemStack> drainedContainer = FluidUtil
-					.drainStack(container, containerFluid);
+			MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
 			ItemStack emptyContainer = drainedContainer.getRight();
 			if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
-				monitor.injectItems(
-						FluidUtil.createAEFluidStack(containerFluid),
-						Actionable.MODULATE, this.machineSource);
+				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, this.machineSource);
 				decreaseFirstSlot();
 			}
 		}
@@ -139,8 +135,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 			this.inventory.setInventorySlotContents(1, itemStack);
 			return true;
 		} else {
-			if (!secondSlot.isItemEqual(itemStack)
-					|| !ItemStack.areItemStackTagsEqual(itemStack, secondSlot))
+			if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot))
 				return false;
 			this.inventory.incrStackSize(1, itemStack.stackSize);
 			return true;
@@ -180,11 +175,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 pos) {
-		if (isActive()
-				&& (PermissionUtil.hasPermission(player,
-						SecurityPermissions.INJECT, (IPart) this) || PermissionUtil
-						.hasPermission(player, SecurityPermissions.EXTRACT,
-								(IPart) this)))
+		if (isActive() && (PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) this) || PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) this)))
 			return super.onActivate(player, pos);
 		return false;
 	}
@@ -202,6 +193,10 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 
 	public void removeContainer(ContainerFluidTerminal containerTerminalFluid) {
 		this.containers.remove(containerTerminalFluid);
+	}
+
+	public void removeContainer(ContainerGasTerminal containerTerminalGas) {
+		this.containers.remove(containerTerminalGas);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -241,16 +236,14 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
+	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
 		Tessellator ts = Tessellator.instance;
 
 		IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
 		rh.setTexture(side);
 		rh.setBounds(4, 4, 13, 12, 12, 14);
 		rh.renderBlock(x, y, z, renderer);
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
+		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
 		rh.setBounds(2, 2, 14, 14, 14, 16);
 		rh.renderBlock(x, y, z, renderer);
 
@@ -258,35 +251,36 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 			Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
 
 		ts.setColorOpaque_I(0xFFFFFF);
-		rh.renderFace(x, y, z, TextureManager.BUS_BORDER.getTexture(),
-				ForgeDirection.SOUTH, renderer);
+		rh.renderFace(x, y, z, TextureManager.BUS_BORDER.getTexture(), ForgeDirection.SOUTH, renderer);
 
 		IPartHost host = getHost();
 		rh.setBounds(3, 3, 15, 13, 13, 16);
 		ts.setColorOpaque_I(host.getColor().blackVariant);
-		rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
+		rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
 		ts.setColorOpaque_I(host.getColor().mediumVariant);
-		rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
+		rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 		ts.setColorOpaque_I(host.getColor().whiteVariant);
-		rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[2],
-				ForgeDirection.SOUTH, renderer);
+		rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[2], ForgeDirection.SOUTH, renderer);
 
 		rh.setBounds(5, 5, 12, 11, 11, 13);
 		renderStaticBusLights(x, y, z, rh, renderer);
 	}
 
 	public void sendCurrentFluid() {
-		for (ContainerFluidTerminal containerFluidTerminal : this.containers) {
+		for (Object containerFluidTerminal : this.containers) {
 			sendCurrentFluid(containerFluidTerminal);
 		}
 	}
 
-	public void sendCurrentFluid(ContainerFluidTerminal containerFluidTerminal) {
-		new PacketFluidTerminal(containerFluidTerminal.getPlayer(),
-				this.currentFluid).sendPacketToPlayer(containerFluidTerminal
-				.getPlayer());
+	public void sendCurrentFluid(Object container) {
+		if(container instanceof ContainerFluidTerminal){
+			ContainerFluidTerminal containerFluidTerminal = (ContainerFluidTerminal) container;
+			new PacketFluidTerminal(containerFluidTerminal.getPlayer(), this.currentFluid).sendPacketToPlayer(containerFluidTerminal.getPlayer());
+		}else if(container instanceof ContainerGasTerminal){
+			ContainerGasTerminal containerGasTerminal = (ContainerGasTerminal) container;
+			new PacketFluidTerminal(containerGasTerminal.getPlayer(), this.currentFluid).sendPacketToPlayer(containerGasTerminal.getPlayer());
+		}
+
 	}
 
 	public void setCurrentFluid(Fluid _currentFluid) {

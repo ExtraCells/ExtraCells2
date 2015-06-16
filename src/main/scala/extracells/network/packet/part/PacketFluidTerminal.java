@@ -1,5 +1,7 @@
 package extracells.network.packet.part;
 
+import extracells.container.ContainerGasTerminal;
+import extracells.gui.GuiGasTerminal;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -60,6 +62,9 @@ public class PacketFluidTerminal extends AbstractPacket {
 				if (gui instanceof GuiFluidTerminal) {
 					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
 					container.updateFluidList(this.fluidStackList);
+				} else if (gui instanceof GuiGasTerminal) {
+					ContainerGasTerminal container = (ContainerGasTerminal) ((GuiGasTerminal) gui).inventorySlots;
+					container.updateFluidList(this.fluidStackList);
 				}
 			}
 			break;
@@ -67,18 +72,21 @@ public class PacketFluidTerminal extends AbstractPacket {
 			this.terminalFluid.setCurrentFluid(this.currentFluid);
 			break;
 		case 2:
-			if (this.player != null
-					&& Minecraft.getMinecraft().currentScreen instanceof GuiFluidTerminal) {
-				GuiFluidTerminal gui = (GuiFluidTerminal) Minecraft
-						.getMinecraft().currentScreen;
-				((ContainerFluidTerminal) gui.getContainer())
-						.receiveSelectedFluid(this.currentFluid);
+			if (this.player != null && Minecraft.getMinecraft().currentScreen instanceof GuiFluidTerminal) {
+				GuiFluidTerminal gui = (GuiFluidTerminal) Minecraft.getMinecraft().currentScreen;
+				((ContainerFluidTerminal) gui.getContainer()).receiveSelectedFluid(this.currentFluid);
+			} else if (this.player != null && Minecraft.getMinecraft().currentScreen instanceof GuiGasTerminal) {
+				GuiGasTerminal gui = (GuiGasTerminal) Minecraft.getMinecraft().currentScreen;
+				((ContainerGasTerminal) gui.getContainer()).receiveSelectedFluid(this.currentFluid);
 			}
 			break;
 		case 3:
-			if (this.player != null
-					&& this.player.openContainer instanceof ContainerFluidTerminal) {
+			if (this.player != null && this.player.openContainer instanceof ContainerFluidTerminal) {
 				ContainerFluidTerminal fluidContainer = (ContainerFluidTerminal) this.player.openContainer;
+				fluidContainer.forceFluidUpdate();
+				this.terminalFluid.sendCurrentFluid(fluidContainer);
+			} else if (this.player != null && this.player.openContainer instanceof ContainerGasTerminal) {
+				ContainerGasTerminal fluidContainer = (ContainerGasTerminal) this.player.openContainer;
 				fluidContainer.forceFluidUpdate();
 				this.terminalFluid.sendCurrentFluid(fluidContainer);
 			}

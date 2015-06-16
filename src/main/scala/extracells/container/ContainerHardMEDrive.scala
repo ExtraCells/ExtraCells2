@@ -3,13 +3,14 @@ package extracells.container
 import appeng.api.AEApi
 import extracells.container.slot.SlotRespective
 import extracells.tileentity.TileEntityHardMeDrive
+import extracells.util.FluidUtil
+import extracells.util.inventory.ECPrivateInventory
 import net.minecraft.entity.player.{EntityPlayer, InventoryPlayer}
 import net.minecraft.inventory.{Slot, Container}
 import net.minecraft.item.ItemStack
 
 
 class ContainerHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDrive) extends Container{
-
 
 
   for (i <- 0 to 2)

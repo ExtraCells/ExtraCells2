@@ -41,11 +41,9 @@ import java.util.List;
 public class ItemStoragePhysical extends Item implements IStorageCell,
 		IAEItemPowerStorage, IEnergyContainerItem {
 
-	public static final String[] suffixes = { "256k", "1024k", "4096k",
-			"16384k", "container" };
+	public static final String[] suffixes = { "256k", "1024k", "4096k", "16384k", "container" };
 
-	public static final int[] bytes_cell = { 262144, 1048576, 4194304,
-			16777216, 65536 };
+	public static final int[] bytes_cell = { 262144, 1048576, 4194304, 16777216, 65536 };
 	public static final int[] types_cell = { 63, 63, 63, 63, 1 };
 	private IIcon[] icons;
 	private final int MAX_POWER = 32000;

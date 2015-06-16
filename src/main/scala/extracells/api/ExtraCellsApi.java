@@ -40,27 +40,22 @@ public interface ExtraCellsApi {
 
 	public IItemDefinition items();
 
-	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack,
-			World world);
+	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
 
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack,
-			World world);
+	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);
 
 	@Deprecated
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack,
-			World world, int x, int y, int z, Long key);
+	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, Long key);
 
 	public IPartDefinition parts();
 
-	public void registerWirelessFluidTermHandler(
-			IWirelessFluidTermHandler handler);
+	public void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
 
 	/**
 	 * @deprecated incorrect spelling
 	 */
 	@Deprecated
-	public void registryWirelessFluidTermHandler(
-			IWirelessFluidTermHandler handler);
+	public void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
 
 	public void registerFuelBurnTime(Fluid fuel, int burnTime);
 

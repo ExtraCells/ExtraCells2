@@ -49,9 +49,7 @@ public class ItemStoragePortableCell extends Item implements
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player,
 			List list, boolean par4) {
-		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance()
-				.registries().cell()
-				.getCellInventory(itemStack, null, StorageChannel.FLUIDS);
+		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
 		if (!(handler instanceof IHandlerFluidStorage)) {
 			return;
 		}
@@ -60,32 +58,17 @@ public class ItemStoragePortableCell extends Item implements
 		long usedBytes = cellHandler.usedBytes();
 		double aeCurrentPower = getAECurrentPower(itemStack);
 
-		list.add(String.format(StatCollector
-				.translateToLocal("extracells.tooltip.storage.fluid.bytes"),
-				usedBytes / 250, cellHandler.totalBytes() / 250));
-		list.add(String.format(StatCollector
-				.translateToLocal("extracells.tooltip.storage.fluid.types"),
-				cellHandler.usedTypes(), cellHandler.totalTypes()));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
 		if (usedBytes != 0) {
-			list.add(String.format(
-					StatCollector
-							.translateToLocal("extracells.tooltip.storage.fluid.content"),
-					usedBytes));
+			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes));
 		}
 
 		if (partitioned) {
-			list.add(StatCollector
-					.translateToLocal("gui.appliedenergistics2.Partitioned")
-					+ " - "
-					+ StatCollector
-							.translateToLocal("gui.appliedenergistics2.Precise"));
+			list.add(StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + StatCollector
+					.translateToLocal("gui.appliedenergistics2.Precise"));
 		}
-		list.add(StatCollector
-				.translateToLocal("gui.appliedenergistics2.StoredEnergy")
-				+ ": "
-				+ aeCurrentPower
-				+ " AE - "
-				+ Math.floor(aeCurrentPower / MAX_POWER * 1e4) / 1e2 + "%");
+		list.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / MAX_POWER * 1e4) / 1e2 + "%");
 	}
 
 	private NBTTagCompound ensureTagCompound(ItemStack itemStack) {
@@ -110,14 +93,9 @@ public class ItemStoragePortableCell extends Item implements
 		if (container == null)
 			return 0;
 		if (simulate) {
-			return getEnergyStored(container) >= maxExtract ? maxExtract
-					: getEnergyStored(container);
+			return getEnergyStored(container) >= maxExtract ? maxExtract : getEnergyStored(container);
 		} else {
-			return (int) PowerUnits.AE
-					.convertTo(
-							PowerUnits.RF,
-							extractAEPower(container, PowerUnits.RF.convertTo(
-									PowerUnits.AE, maxExtract)));
+			return (int) PowerUnits.AE.convertTo(PowerUnits.RF, extractAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract)));
 		}
 	}
 
@@ -145,14 +123,12 @@ public class ItemStoragePortableCell extends Item implements
 	@Override
 	@Optional.Method(modid = "CoFHAPI|energy")
 	public int getEnergyStored(ItemStack arg0) {
-		return (int) PowerUnits.AE.convertTo(PowerUnits.RF,
-				getAECurrentPower(arg0));
+		return (int) PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(arg0));
 	}
 
 	@Override
 	public ArrayList<Fluid> getFilter(ItemStack stack) {
-		ECFluidFilterInventory inventory = new ECFluidFilterInventory("", 63,
-				stack);
+		ECFluidFilterInventory inventory = new ECFluidFilterInventory("", 63, stack);
 		ItemStack[] stacks = inventory.slots;
 		ArrayList<Fluid> filter = new ArrayList<Fluid>();
 		if (stacks.length == 0)
@@ -174,8 +150,7 @@ public class ItemStoragePortableCell extends Item implements
 		if (!is.hasTagCompound())
 			is.setTagCompound(new NBTTagCompound());
 		if (is.getTagCompound().hasKey("fuzzyMode"))
-			return FuzzyMode
-					.valueOf(is.getTagCompound().getString("fuzzyMode"));
+			return FuzzyMode.valueOf(is.getTagCompound().getString("fuzzyMode"));
 		is.getTagCompound().setString("fuzzyMode", FuzzyMode.IGNORE_ALL.name());
 		return FuzzyMode.IGNORE_ALL;
 	}
@@ -193,8 +168,7 @@ public class ItemStoragePortableCell extends Item implements
 	@Override
 	@Optional.Method(modid = "CoFHAPI|energy")
 	public int getMaxEnergyStored(ItemStack arg0) {
-		return (int) PowerUnits.AE
-				.convertTo(PowerUnits.RF, getAEMaxPower(arg0));
+		return (int) PowerUnits.AE.convertTo(PowerUnits.RF, getAEMaxPower(arg0));
 	}
 
 	@Override
@@ -253,8 +227,7 @@ public class ItemStoragePortableCell extends Item implements
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world,
-			EntityPlayer player) {
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		return ECApi.instance().openPortableCellGui(player, itemStack, world);
 	}
 
@@ -265,28 +238,21 @@ public class ItemStoragePortableCell extends Item implements
 		if (container == null)
 			return 0;
 		if (simulate) {
-			double current = PowerUnits.AE.convertTo(PowerUnits.RF,
-					getAECurrentPower(container));
-			double max = PowerUnits.AE.convertTo(PowerUnits.RF,
-					getAEMaxPower(container));
+			double current = PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(container));
+			double max = PowerUnits.AE.convertTo(PowerUnits.RF, getAEMaxPower(container));
 			if (max - current >= maxReceive)
 				return maxReceive;
 			else
 				return (int) (max - current);
 		} else {
-			int notStored = (int) PowerUnits.AE
-					.convertTo(
-							PowerUnits.RF,
-							injectAEPower(container, PowerUnits.RF.convertTo(
-									PowerUnits.AE, maxReceive)));
+			int notStored = (int) PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)));
 			return maxReceive - notStored;
 		}
 	}
 
 	@Override
 	public void registerIcons(IIconRegister iconRegister) {
-		this.icon = iconRegister
-				.registerIcon("extracells:storage.fluid.portable");
+		this.icon = iconRegister.registerIcon("extracells:storage.fluid.portable");
 
 	}
 

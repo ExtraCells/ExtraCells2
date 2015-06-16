@@ -14,10 +14,7 @@ import appeng.api.implementations.items.IStorageComponent;
 public class ItemStorageComponent extends Item implements IStorageComponent {
 
 	private IIcon[] icons;
-	public final String[] suffixes = { "physical.256k", "physical.1024k",
-			"physical.4096k", "physical.16384k", "fluid.1k", "fluid.4k",
-			"fluid.16k", "fluid.64k", "fluid.256k", "fluid.1024k",
-			"fluid.4096k" };
+	public final String[] suffixes = { "physical.256k", "physical.1024k", "physical.4096k", "physical.16384k", "fluid.1k", "fluid.4k", "fluid.16k", "fluid.64k", "fluid.256k", "fluid.1024k", "fluid.4096k" };
 	public final int[] size = new int[] { 262144, 1048576, 4194304, 16777216,
 			1024, 4096, 16384, 65536, 262144, 1048576, 4194304 };
 

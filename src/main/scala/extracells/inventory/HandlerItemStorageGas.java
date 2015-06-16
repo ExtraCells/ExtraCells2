@@ -1,12 +1,5 @@
 package extracells.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -16,15 +9,20 @@ import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-
 import com.google.common.collect.Lists;
-
 import extracells.api.ECApi;
-import extracells.api.IFluidStorageCell;
+import extracells.api.IGasStorageCell;
 import extracells.api.IHandlerFluidStorage;
 import extracells.container.ContainerFluidStorage;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
-public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
+import java.util.ArrayList;
+import java.util.List;
+
+public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 
 	private NBTTagCompound stackTag;
 	protected ArrayList<FluidStack> fluidStacks = new ArrayList<FluidStack>();
@@ -34,12 +32,12 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	private List<ContainerFluidStorage> containers = new ArrayList<ContainerFluidStorage>();
 	private ISaveProvider saveProvider;
 
-	public HandlerItemStorageFluid(ItemStack _storageStack,
-			ISaveProvider _saveProvider) {
+	public HandlerItemStorageGas(ItemStack _storageStack,
+								 ISaveProvider _saveProvider) {
 		if (!_storageStack.hasTagCompound()) _storageStack.setTagCompound(new NBTTagCompound());
 		this.stackTag = _storageStack.getTagCompound();
-		this.totalTypes = ((IFluidStorageCell) _storageStack.getItem()).getMaxTypes(_storageStack);
-		this.totalBytes = ((IFluidStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack) * 250;
+		this.totalTypes = ((IGasStorageCell) _storageStack.getItem()).getMaxTypes(_storageStack);
+		this.totalBytes = ((IGasStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack) * 250;
 
 		for (int i = 0; i < this.totalTypes; i++)
 			this.fluidStacks.add(FluidStack.loadFluidStackFromNBT(this.stackTag.getCompoundTag("Fluid#" + i)));
@@ -47,7 +45,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		this.saveProvider = _saveProvider;
 	}
 
-	public HandlerItemStorageFluid(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Fluid> _filter) {
+	public HandlerItemStorageGas(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Fluid> _filter) {
 		this(_storageStack, _saveProvider);
 		if (_filter != null)
 			this.prioritizedFluids = _filter;
@@ -61,7 +59,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	public boolean canAccept(IAEFluidStack input) {
 		if (input == null)
 			return false;
-		if (!ECApi.instance().canStoreFluid(input.getFluid()))
+		if (!ECApi.instance().isGasStack(input))
 			return false;
 		for (FluidStack fluidStack : this.fluidStacks) {
 			if (fluidStack == null || fluidStack.getFluid() == input.getFluid())

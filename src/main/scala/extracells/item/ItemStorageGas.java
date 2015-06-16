@@ -1,8 +1,15 @@
 package extracells.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.api.AEApi;
+import appeng.api.config.FuzzyMode;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.api.IGasStorageCell;
+import extracells.api.IHandlerFluidStorage;
+import extracells.registries.ItemEnum;
+import extracells.util.inventory.ECFluidFilterInventory;
+import extracells.util.inventory.ECPrivateInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,18 +24,11 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import appeng.api.AEApi;
-import appeng.api.config.FuzzyMode;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
-import extracells.api.IFluidStorageCell;
-import extracells.api.IHandlerFluidStorage;
-import extracells.registries.ItemEnum;
-import extracells.util.inventory.ECFluidFilterInventory;
-import extracells.util.inventory.ECPrivateInventory;
 
-public class ItemStorageFluid extends Item implements IFluidStorageCell {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ItemStorageGas extends Item implements IGasStorageCell {
 
 	public static final String[] suffixes = { "1k", "4k", "16k", "64k", "256k", "1024k", "4096k" };
 
@@ -36,7 +36,7 @@ public class ItemStorageFluid extends Item implements IFluidStorageCell {
 
 	private IIcon[] icons;
 
-	public ItemStorageFluid() {
+	public ItemStorageGas() {
 		setMaxStackSize(1);
 		setMaxDamage(0);
 		setHasSubtypes(true);
@@ -131,7 +131,7 @@ public class ItemStorageFluid extends Item implements IFluidStorageCell {
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack) {
-		return "extracells.item.storage.fluid." + suffixes[itemStack.getItemDamage()];
+		return "extracells.item.storage.gas." + suffixes[itemStack.getItemDamage()];
 	}
 
 	@Override

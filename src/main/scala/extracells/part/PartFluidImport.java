@@ -95,17 +95,12 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 		boolean redstonePowered = isRedstonePowered();
-		if (resource == null || redstonePowered
-				&& getRedstoneMode() == RedstoneMode.LOW_SIGNAL
-				|| !redstonePowered
-				&& getRedstoneMode() == RedstoneMode.HIGH_SIGNAL)
+		if (resource == null || redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL)
 			return 0;
-		int drainAmount = Math
-				.min(125 + this.speedState * 125, resource.amount);
+		int drainAmount = Math.min(125 + this.speedState * 125, resource.amount);
 		FluidStack toFill = new FluidStack(resource.getFluid(), drainAmount);
 		Actionable action = doFill ? Actionable.MODULATE : Actionable.SIMULATE;
-		IAEFluidStack filled = injectFluid(AEApi.instance().storage()
-				.createFluidStack(toFill), action);
+		IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), action);
 		if (filled == null)
 			return toFill.amount;
 		return toFill.amount - (int) filled.getStackSize();

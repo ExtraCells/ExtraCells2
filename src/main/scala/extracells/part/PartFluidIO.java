@@ -50,14 +50,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 			if (itemStack == null)
 				return false;
-			if (AEApi.instance().materials().materialCardCapacity
-					.sameAsStack(itemStack))
+			if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(itemStack))
 				return true;
-			else if (AEApi.instance().materials().materialCardSpeed
-					.sameAsStack(itemStack))
+			else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack))
 				return true;
-			else if (AEApi.instance().materials().materialCardRedstone
-					.sameAsStack(itemStack))
+			else if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack))
 				return true;
 			return false;
 		}
@@ -139,8 +136,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 
 	public void loopRedstoneMode(EntityPlayer player) {
 		if (this.redstoneMode.ordinal() + 1 < RedstoneMode.values().length)
-			this.redstoneMode = RedstoneMode.values()[this.redstoneMode
-					.ordinal() + 1];
+			this.redstoneMode = RedstoneMode.values()[this.redstoneMode.ordinal() + 1];
 		else
 			this.redstoneMode = RedstoneMode.values()[0];
 		new PacketBusFluidIO(this.redstoneMode).sendPacketToPlayer(player);
@@ -162,14 +158,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		for (int i = 0; i < this.upgradeInventory.getSizeInventory(); i++) {
 			ItemStack currentStack = this.upgradeInventory.getStackInSlot(i);
 			if (currentStack != null) {
-				if (AEApi.instance().materials().materialCardCapacity
-						.sameAsStack(currentStack))
+				if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(currentStack))
 					this.filterSize++;
-				if (AEApi.instance().materials().materialCardRedstone
-						.sameAsStack(currentStack))
+				if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(currentStack))
 					this.redstoneControlled = true;
-				if (AEApi.instance().materials().materialCardSpeed
-						.sameAsStack(currentStack))
+				if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(currentStack))
 					this.speedState++;
 			}
 		}

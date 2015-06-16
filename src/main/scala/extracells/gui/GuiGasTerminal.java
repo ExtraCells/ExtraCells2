@@ -3,7 +3,7 @@ package extracells.gui;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.Extracells;
 import extracells.api.ECApi;
-import extracells.container.ContainerFluidTerminal;
+import extracells.container.ContainerGasTerminal;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.fluid.AbstractFluidWidget;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
@@ -11,6 +11,7 @@ import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
+import extracells.part.PartGasTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui {
+public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 
 	private PartFluidTerminal terminal;
 	private EntityPlayer player;
@@ -34,11 +35,11 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
-	private ContainerFluidTerminal containerTerminalFluid;
+	private ContainerGasTerminal containerTerminalFluid;
 
-	public GuiFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player) {
-		super(new ContainerFluidTerminal(_terminal, _player));
-		this.containerTerminalFluid = (ContainerFluidTerminal) this.inventorySlots;
+	public GuiGasTerminal(PartGasTerminal _terminal, EntityPlayer _player) {
+		super(new ContainerGasTerminal(_terminal, _player));
+		this.containerTerminalFluid = (ContainerGasTerminal) this.inventorySlots;
 		this.containerTerminalFluid.setGui(this);
 		this.terminal = _terminal;
 		this.player = _player;
@@ -57,16 +58,14 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRendererObj.drawString(
-				StatCollector.translateToLocal("extracells.part.fluid.terminal.name").replace("ME ", ""), 9, 6, 0x000000);
+		this.fontRendererObj.drawString(StatCollector.translateToLocal("extracells.part.gas.terminal.name").replace("ME ", ""), 9, 6, 0x000000);
 		drawWidgets(mouseX, mouseY);
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
 			if (Extracells.shortenedBuckets()) {
 				if (currentFluidAmount > 1000000000L)
-					amountToText = Long
-							.toString(currentFluidAmount / 1000000000L) + "MegaB";
+					amountToText = Long.toString(currentFluidAmount / 1000000000L) + "MegaB";
 				else if (currentFluidAmount > 1000000L)
 					amountToText = Long.toString(currentFluidAmount / 1000000L) + "KiloB";
 				else if (currentFluidAmount > 9999L) {
@@ -200,8 +199,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	public void updateFluids() {
 		this.fluidWidgets = new ArrayList<AbstractFluidWidget>();
 		for (IAEFluidStack fluidStack : this.containerTerminalFluid.getFluidStackList()) {
-			if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(this.searchbar.getText().toLowerCase()) && ECApi.instance().canFluidSeeInTerminal(
-							fluidStack.getFluid())) {
+			if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(this.searchbar.getText().toLowerCase()) && ECApi.instance().isGasStack(fluidStack)) {
 				this.fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
 			}
 		}

@@ -23,6 +23,10 @@ public class GasUtil {
 				FluidContainerRegistry.BUCKET_VOLUME));
 	}
 
+	public static IAEFluidStack createAEFluidStack(GasStack gasStack) {
+		return gasStack == null ? null : createAEFluidStack(new FluidStack(Mekanism.getFluidGasMap().get(gasStack.getGas()), gasStack.amount));
+	}
+
 
 	public static IAEFluidStack createAEFluidStack(FluidStack fluid) {
 		return AEApi.instance().storage().createFluidStack(fluid);

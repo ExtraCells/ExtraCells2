@@ -1,9 +1,8 @@
 package extracells.integration.mekanism
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import appeng.api.AEApi
 import extracells.api.ECApi
-import mekanism.api.gas.{GasRegistry, Gas}
-import net.minecraft.util.IIcon
+import mekanism.api.gas.{ITubeConnection, IGasHandler, GasRegistry, Gas}
 import net.minecraftforge.fluids.{FluidRegistry, FluidStack, Fluid}
 import scala.collection.JavaConversions._
 
@@ -13,7 +12,10 @@ object Mekanism {
   private var fluidGas:Map[Gas, Fluid] = Map()
 
   def init {
-
+    val api = AEApi.instance.partHelper
+    api.registerNewLayer(classOf[LayerGasHandler].getName, classOf[IGasHandler].getName)
+    api.registerNewLayer(classOf[LayerTubeConnection].getName, classOf[ITubeConnection].getName)
+    AEApi.instance().registries().cell().addCellHandler(new GasCellHandler())
   }
 
   def getFluidGasMap  = mapAsJavaMap(fluidGas)

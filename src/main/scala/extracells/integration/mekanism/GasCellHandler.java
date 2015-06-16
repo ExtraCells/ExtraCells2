@@ -1,12 +1,11 @@
-package extracells.util;
+package extracells.integration.mekanism;
 
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.*;
-import extracells.api.IFluidStorageCell;
-import extracells.inventory.HandlerItemPlayerStorageFluid;
-import extracells.inventory.HandlerItemStorageFluid;
+import extracells.api.IGasStorageCell;
+import extracells.inventory.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 import extracells.render.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class FluidCellHandler implements ICellHandler {
+public class GasCellHandler implements ICellHandler {
 
 	@Override
 	public double cellIdleDrain(ItemStack is, IMEInventory handler) {
@@ -23,15 +22,15 @@ public class FluidCellHandler implements ICellHandler {
 
 	@Override
 	public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, StorageChannel channel) {
-		if (channel == StorageChannel.ITEMS || !(itemStack.getItem() instanceof IFluidStorageCell)) {
+		if (channel == StorageChannel.ITEMS || !(itemStack.getItem() instanceof IGasStorageCell)) {
 			return null;
 		}
-		return new HandlerItemStorageFluid(itemStack, saveProvider, ((IFluidStorageCell) itemStack.getItem()).getFilter(itemStack));
+		return new HandlerItemStorageGas(itemStack, saveProvider, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack));
 	}
 
-	public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player) {
+	/*public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player) {
 		return new HandlerItemPlayerStorageFluid(itemStack, null, ((IFluidStorageCell) itemStack.getItem()).getFilter(itemStack), player);
-	}
+	}*/
 
 	@Override
 	public int getStatusForCell(ItemStack is, IMEInventory handler) {
@@ -39,7 +38,7 @@ public class FluidCellHandler implements ICellHandler {
 			return 0;
 		}
 
-		HandlerItemStorageFluid inventory = (HandlerItemStorageFluid) handler;
+		HandlerItemStorageGas inventory = (HandlerItemStorageGas) handler;
 		if (inventory.freeBytes() == 0) {
 			return 3;
 		}
@@ -67,7 +66,7 @@ public class FluidCellHandler implements ICellHandler {
 
 	@Override
 	public boolean isCell(ItemStack is) {
-		return is != null && is.getItem() != null && is.getItem() instanceof IFluidStorageCell;
+		return is != null && is.getItem() != null && is.getItem() instanceof IGasStorageCell;
 	}
 
 	@Override

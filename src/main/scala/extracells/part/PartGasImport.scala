@@ -3,22 +3,26 @@ package extracells.part
 import java.util
 
 import appeng.api.config.Actionable
+import appeng.api.networking.security.MachineSource
+import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.Optional
 import extracells.integration.Integration
+import extracells.integration.mekanism.Mekanism
 import extracells.util.{FluidUtil, GasUtil}
-import mekanism.api.gas.{GasStack, IGasHandler}
+import mekanism.api.gas.{Gas, GasStack, IGasHandler}
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{IFluidHandler, FluidStack, Fluid}
+import net.minecraftforge.fluids.{FluidStack, Fluid}
+import cpw.mods.fml.common.Optional.{Interface, Method}
 
 
-
-class PartGasImport extends PartFluidImport{
+@Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true)
+class PartGasImport extends PartFluidImport with IGasHandler{
 
   private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
   override def doWork(rate: Int, TicksSinceLastCall: Int): Boolean = {
-    if (getFacingGasTank == null || !isActive || !isMekanismEnabled) return false
+    if ((!isMekanismEnabled) || getFacingGasTank == null || !isActive) return false
     var empty: Boolean = true
     val filter: util.List[Fluid] = new util.ArrayList[Fluid]
     filter.add(this.filterFluids(4))
@@ -57,7 +61,7 @@ class PartGasImport extends PartFluidImport{
         }
       }
     }
-    return empty && fillToNetwork(null, rate * TicksSinceLastCall)
+    empty && fillToNetwork(null, rate * TicksSinceLastCall)
   }
 
   @Optional.Method(modid = "MekanismAPI|gas")
@@ -100,5 +104,54 @@ class PartGasImport extends PartFluidImport{
       facingTank.drawGas(side.getOpposite, toFill.getFluidStack.amount, true)
       true
     }
+  }
+
+  @Method(modid = "MekanismAPI|gas")
+  override def receiveGas(side: ForgeDirection, stack: GasStack, doTransfer: Boolean): Int = {
+    if (stack == null || stack.amount <= 0 || ! canReceiveGas(side, stack.getGas))
+      return 0
+    val amount = Math.min(stack.amount, 125 + this.speedState * 125)
+    val gasStack = GasUtil.createAEFluidStack(stack.getGas, amount)
+    val notInjected = {
+      if (getGridBlock == null) {
+        gasStack
+      }else{
+        val monitor: IMEMonitor[IAEFluidStack] = getGridBlock.getFluidMonitor
+        if (monitor == null)
+          gasStack
+        else
+          monitor.injectItems(gasStack, if (true)  Actionable.MODULATE else Actionable.SIMULATE, new MachineSource(this))
+      }
+    }
+    if (notInjected == null)
+      amount
+    else
+      amount - notInjected.getStackSize.toInt
+  }
+
+  @Method(modid = "MekanismAPI|gas")
+  override def receiveGas(side: ForgeDirection, stack: GasStack): Int = receiveGas(side, stack, true)
+
+  @Method(modid = "MekanismAPI|gas")
+  override def drawGas(side: ForgeDirection, amount: Int, doTransfer: Boolean): GasStack = null
+
+  @Method(modid = "MekanismAPI|gas")
+  override def drawGas(side: ForgeDirection, amount: Int): GasStack = drawGas(side, amount, true)
+
+  @Method(modid = "MekanismAPI|gas")
+  override def canDrawGas(side: ForgeDirection, gasType: Gas): Boolean = false
+
+  @Method(modid = "MekanismAPI|gas")
+  override def canReceiveGas(side: ForgeDirection, gasType: Gas): Boolean = {
+    val fluid = Mekanism.getFluidGasMap.get(gasType)
+    var isEmpty = true
+    for(filter <- filterFluids){
+      if(filter != null){
+        isEmpty = false
+        if(filter == fluid)
+          return true
+      }
+    }
+    isEmpty
   }
 }
