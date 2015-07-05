@@ -1,8 +1,5 @@
 package extracells.integration.opencomputers
 
-import li.cil.oc.Settings
-import net.minecraftforge.common.ForgeChunkManager
-
 import scala.collection.JavaConversions._
 import appeng.api.AEApi
 import appeng.api.config.Actionable
@@ -20,14 +17,14 @@ import li.cil.oc.api.internal.{Agent, Database, Drone, Robot}
 import li.cil.oc.api.machine.{Arguments, Callback, Context}
 import li.cil.oc.api.network._
 import li.cil.oc.api.prefab.ManagedEnvironment
-import li.cil.oc.integration.appeng.NetworkControl
+import li.cil.oc.integration.{appeng, ec}
 import li.cil.oc.server.network.Component
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.FluidContainerRegistry
 
 
-class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with NetworkControl[TileSecurity]{
+class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.NetworkControl[TileSecurity] with ec.NetworkControl[TileSecurity]{
   val robot: Robot =
     if (host.isInstanceOf[Robot])
       host.asInstanceOf[Robot]

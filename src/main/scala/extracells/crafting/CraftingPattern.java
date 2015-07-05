@@ -46,7 +46,6 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 
 	@Override
 	public boolean equals(Object obj) {
-		System.out.println(obj);
 		if (obj == null)
 			return false;
 		if (this.getClass() != obj.getClass())
