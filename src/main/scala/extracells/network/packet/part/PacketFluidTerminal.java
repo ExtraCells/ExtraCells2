@@ -1,5 +1,7 @@
 package extracells.network.packet.part;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerGasTerminal;
 import extracells.gui.GuiGasTerminal;
 import io.netty.buffer.ByteBuf;
@@ -57,28 +59,13 @@ public class PacketFluidTerminal extends AbstractPacket {
 	public void execute() {
 		switch (this.mode) {
 		case 0:
-			if (this.player != null && this.player.isClientWorld()) {
-				Gui gui = Minecraft.getMinecraft().currentScreen;
-				if (gui instanceof GuiFluidTerminal) {
-					ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
-					container.updateFluidList(this.fluidStackList);
-				} else if (gui instanceof GuiGasTerminal) {
-					ContainerGasTerminal container = (ContainerGasTerminal) ((GuiGasTerminal) gui).inventorySlots;
-					container.updateFluidList(this.fluidStackList);
-				}
-			}
+			case0();
 			break;
 		case 1:
 			this.terminalFluid.setCurrentFluid(this.currentFluid);
 			break;
 		case 2:
-			if (this.player != null && Minecraft.getMinecraft().currentScreen instanceof GuiFluidTerminal) {
-				GuiFluidTerminal gui = (GuiFluidTerminal) Minecraft.getMinecraft().currentScreen;
-				((ContainerFluidTerminal) gui.getContainer()).receiveSelectedFluid(this.currentFluid);
-			} else if (this.player != null && Minecraft.getMinecraft().currentScreen instanceof GuiGasTerminal) {
-				GuiGasTerminal gui = (GuiGasTerminal) Minecraft.getMinecraft().currentScreen;
-				((ContainerGasTerminal) gui.getContainer()).receiveSelectedFluid(this.currentFluid);
-			}
+			case2();
 			break;
 		case 3:
 			if (this.player != null && this.player.openContainer instanceof ContainerFluidTerminal) {
@@ -91,6 +78,31 @@ public class PacketFluidTerminal extends AbstractPacket {
 				this.terminalFluid.sendCurrentFluid(fluidContainer);
 			}
 			break;
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void case0(){
+		if (this.player != null && this.player.isClientWorld()) {
+			Gui gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof GuiFluidTerminal) {
+				ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
+				container.updateFluidList(this.fluidStackList);
+			} else if (gui instanceof GuiGasTerminal) {
+				ContainerGasTerminal container = (ContainerGasTerminal) ((GuiGasTerminal) gui).inventorySlots;
+				container.updateFluidList(this.fluidStackList);
+			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void case2(){
+		if (this.player != null && Minecraft.getMinecraft().currentScreen instanceof GuiFluidTerminal) {
+			GuiFluidTerminal gui = (GuiFluidTerminal) Minecraft.getMinecraft().currentScreen;
+			((ContainerFluidTerminal) gui.getContainer()).receiveSelectedFluid(this.currentFluid);
+		} else if (this.player != null && Minecraft.getMinecraft().currentScreen instanceof GuiGasTerminal) {
+			GuiGasTerminal gui = (GuiGasTerminal) Minecraft.getMinecraft().currentScreen;
+			((ContainerGasTerminal) gui.getContainer()).receiveSelectedFluid(this.currentFluid);
 		}
 	}
 
