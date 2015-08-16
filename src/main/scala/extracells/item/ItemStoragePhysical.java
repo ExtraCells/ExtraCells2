@@ -362,7 +362,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell,
 					ItemStack block = request.getItemStack();
 					if (block.getItem() instanceof ItemBlock) {
 						ItemBlock itemblock = (ItemBlock) request.getItem();
-						if (world.getBlock(x, y, z) != Blocks.bedrock) {
+						if (world.getBlock(x, y, z) != Blocks.bedrock && world.getBlock(x, y, z).getBlockHardness(world, x, y, z) >= 0.0F) {
 							switch (itemstack.getTagCompound().getInteger(
 									"mode")) {
 							case 0:
