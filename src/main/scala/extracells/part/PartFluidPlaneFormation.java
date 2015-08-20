@@ -73,7 +73,7 @@ public class PartFluidPlaneFormation extends PartECBase implements
 		ECBaseGridBlock gridBlock = getGridBlock();
 		ForgeDirection side = getSide();
 
-		if (this.fluid == null || hostTile == null || gridBlock == null)
+		if (this.fluid == null || hostTile == null || gridBlock == null || this.fluid.getBlock() == null)
 			return;
 		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
 		if (monitor == null)
