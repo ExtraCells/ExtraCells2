@@ -9,9 +9,9 @@ import extracells.container.slot.SlotRespective;
 import extracells.part.PartDrive;
 
 public class ContainerDrive extends Container {
-
+	PartDrive part;
 	public ContainerDrive(PartDrive part, EntityPlayer player) {
-
+		this.part = part;
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 3; j++) {
 				addSlotToContainer(new SlotRespective(part.getInventory(), j
@@ -36,7 +36,7 @@ public class ContainerDrive extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		return part.isValid();
 	}
 
 	@Override

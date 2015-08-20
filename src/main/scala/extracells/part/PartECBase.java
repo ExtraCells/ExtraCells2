@@ -300,6 +300,18 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 	@Override
 	public void onEntityCollision(Entity entity) {}
 
+	public boolean isValid() {
+		if (this.hostTile.hasWorldObj()) {
+			DimensionalCoord loc = this.getLocation();
+			TileEntity host = this.hostTile.getWorldObj().getTileEntity(loc.x, loc.y, loc.z);
+			if (host instanceof IPartHost) {
+				return ((IPartHost) host).getPart(this.side) == this;
+			}
+			else return false;
+		}
+		else return false;
+	}
+
 	@Override
 	public void onNeighborChanged() {
 		if (this.hostTile == null)
