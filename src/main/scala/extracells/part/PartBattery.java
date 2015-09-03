@@ -3,6 +3,7 @@ package extracells.part;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -42,6 +43,15 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 					&& itemStack.getItem() instanceof IAEItemPowerStorage;
 		}
 	};
+
+	@Override
+	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+		for (ItemStack stack : inventory.slots) {
+			if (stack == null)
+				continue;
+			drops.add(stack);
+		}
+	}
 
 	@Override
 	public int cableConnectionRenderTo() {

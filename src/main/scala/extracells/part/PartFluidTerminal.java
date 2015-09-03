@@ -63,6 +63,15 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 	}
 	protected MachineSource machineSource = new MachineSource(this);
 
+	@Override
+	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+		for (ItemStack stack : inventory.slots) {
+			if (stack == null)
+				continue;
+			drops.add(stack);
+		}
+	}
+
 	public void addContainer(ContainerFluidTerminal containerTerminalFluid) {
 		this.containers.add(containerTerminalFluid);
 		sendCurrentFluid();

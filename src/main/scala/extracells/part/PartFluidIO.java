@@ -7,11 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -59,6 +61,16 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 			return false;
 		}
 	};
+
+	@Override
+	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+		for (ItemStack stack : upgradeInventory.slots) {
+			if (stack == null)
+				continue;
+			drops.add(stack);
+		}
+	}
+
 
 	@Override
 	public int cableConnectionRenderTo() {

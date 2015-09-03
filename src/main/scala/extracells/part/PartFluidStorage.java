@@ -68,6 +68,15 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	};
 
 	@Override
+	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+		for (ItemStack stack : upgradeInventory.slots) {
+			if (stack == null)
+				continue;
+			drops.add(stack);
+		}
+	}
+
+	@Override
 	public void blinkCell(int slot) {}
 
 	@Override

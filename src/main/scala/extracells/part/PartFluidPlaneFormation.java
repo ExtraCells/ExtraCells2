@@ -47,6 +47,8 @@ import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 
+import java.util.List;
+
 public class PartFluidPlaneFormation extends PartECBase implements
 		IFluidSlotPartOrBlock, IGridTickable {
 
@@ -62,6 +64,15 @@ public class PartFluidPlaneFormation extends PartECBase implements
 					.sameAsStack(itemStack);
 		}
 	};
+
+	@Override
+	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+		for (ItemStack stack : upgradeInventory.slots) {
+			if (stack == null)
+				continue;
+			drops.add(stack);
+		}
+	}
 
 	@Override
 	public int cableConnectionRenderTo() {
