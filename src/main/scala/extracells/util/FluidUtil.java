@@ -61,20 +61,25 @@ public class FluidUtil {
 		if (itemStack == null)
 			return null;
 		Item item = itemStack.getItem();
+		//If its a fluid container item instance
 		if (item instanceof IFluidContainerItem) {
+			//Call the fill method on it.
 			int filled = ((IFluidContainerItem) item).fill(itemStack, fluid,
 					true);
+
+			//Return the filled itemstack.
 			return new MutablePair<Integer, ItemStack>(filled, itemStack);
 		} else if (FluidContainerRegistry.isContainer(itemStack)) {
-			FluidStack fluid2 = fluid.copy();
-			fluid2.amount = Math.max(FluidContainerRegistry
-					.getContainerCapacity(fluid, itemStack), fluid.amount);
+			//Fill it through the fluidcontainer registry.
 			ItemStack filledContainer = FluidContainerRegistry
 					.fillFluidContainer(fluid, itemStack);
+			//get the filled fluidstack.
 			FluidStack filled = FluidContainerRegistry
 					.getFluidForFilledItem(filledContainer);
+			//Return filled container and fill amount.
 			return new MutablePair<Integer, ItemStack>(
 					filled != null ? filled.amount : 0, filledContainer);
+
 		} else if (item == ItemEnum.FLUIDPATTERN.getItem()) {
 			return new MutablePair<Integer, ItemStack>(0,
 					ItemFluidPattern.getPatternForFluid(fluid.getFluid()));

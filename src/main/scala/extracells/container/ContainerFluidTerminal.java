@@ -1,13 +1,5 @@
 package extracells.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.security.BaseActionSource;
@@ -24,6 +16,14 @@ import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 
 public class ContainerFluidTerminal extends Container implements
 		IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
@@ -73,7 +73,9 @@ public class ContainerFluidTerminal extends Container implements
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		if (terminal == null)
+			return false;
+		return terminal.isValid();
 	}
 
 	public void forceFluidUpdate() {

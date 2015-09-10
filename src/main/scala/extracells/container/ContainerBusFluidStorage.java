@@ -62,7 +62,7 @@ public class ContainerBusFluidStorage extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		return part.isValid();
 	}
 
 	public void setGui(GuiBusFluidStorage _guiBusFluidStorage) {

@@ -166,14 +166,21 @@ public class ContainerFluidStorage extends Container implements
 			if (this.selectedFluid == null)
 				return;
 			int capacity = FluidUtil.getCapacity(container);
+			//Tries to simulate the extraction of fluid from storage.
 			IAEFluidStack result = this.monitor.extractItems(
 					FluidUtil.createAEFluidStack(this.selectedFluid, capacity),
 					Actionable.SIMULATE, new PlayerSource(this.player, null));
+
+			//Calculates the amount of fluid to fill container with.
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity,
 					result.getStackSize());
+
+			//Tries to fill the container with fluid.
 			MutablePair<Integer, ItemStack> filledContainer = FluidUtil
 					.fillStack(container, new FluidStack(this.selectedFluid,
 							proposedAmount));
+
+			//Moves it to second slot and commits extraction to grid.
 			if (fillSecondSlot(filledContainer.getRight())) {
 				this.monitor.extractItems(FluidUtil.createAEFluidStack(
 						this.selectedFluid, filledContainer.getLeft()),
@@ -181,9 +188,12 @@ public class ContainerFluidStorage extends Container implements
 						new PlayerSource(this.player, null));
 				decreaseFirstSlot();
 			}
+
 		} else if (FluidUtil.isFilled(container)) {
 			FluidStack containerFluid = FluidUtil
 					.getFluidFromContainer(container);
+
+			//Tries to inject fluid to network.
 			IAEFluidStack notInjected = this.monitor.injectItems(
 					FluidUtil.createAEFluidStack(containerFluid),
 					Actionable.SIMULATE, new PlayerSource(this.player, null));

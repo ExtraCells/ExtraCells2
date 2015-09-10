@@ -15,10 +15,11 @@ import extracells.gui.GuiBusFluidIO;
 import extracells.part.PartFluidIO;
 
 public class ContainerBusFluidIO extends Container {
-
+	private PartFluidIO part;
 	private GuiBusFluidIO guiBusFluidIO;
 
 	public ContainerBusFluidIO(PartFluidIO part, EntityPlayer player) {
+		this.part = part;
 		for (int i = 0; i < 4; i++)
 			addSlotToContainer(new SlotRespective(part.getUpgradeInventory(),
 					i, 187, i * 18 + 8));
@@ -59,7 +60,7 @@ public class ContainerBusFluidIO extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		return part.isValid();
 	}
 
 	@Override
