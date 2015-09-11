@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import appeng.api.parts.PartItemStack;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -74,6 +75,14 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 				continue;
 			drops.add(stack);
 		}
+	}
+
+	@Override
+	public ItemStack getItemStack(PartItemStack type) {
+		ItemStack stack = super.getItemStack(type);
+		if (type.equals(PartItemStack.Wrench) || type.equals(PartItemStack.Break))
+			stack.getTagCompound().removeTag("upgradeInventory");
+		return stack;
 	}
 
 	@Override

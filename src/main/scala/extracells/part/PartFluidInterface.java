@@ -361,6 +361,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		}
 	}
 
+
+
 	@Override
 	public Fluid getFilter(ForgeDirection side) {
 		return FluidRegistry.getFluid(this.fluidFilter);

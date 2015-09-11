@@ -3,6 +3,7 @@ package extracells.part;
 import java.util.ArrayList;
 import java.util.List;
 
+import appeng.api.parts.*;
 import extracells.container.ContainerGasTerminal;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -25,10 +26,6 @@ import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
@@ -70,6 +67,14 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 				continue;
 			drops.add(stack);
 		}
+	}
+
+	@Override
+	public ItemStack getItemStack(PartItemStack type) {
+		ItemStack stack = super.getItemStack(type);
+		if (type.equals(PartItemStack.Wrench) || type.equals(PartItemStack.Break))
+			stack.getTagCompound().removeTag("inventory");
+		return stack;
 	}
 
 	public void addContainer(ContainerFluidTerminal containerTerminalFluid) {

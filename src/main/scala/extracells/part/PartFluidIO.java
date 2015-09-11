@@ -1,5 +1,6 @@
 package extracells.part;
 
+import appeng.api.parts.PartItemStack;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
@@ -69,6 +70,14 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 				continue;
 			drops.add(stack);
 		}
+	}
+
+	@Override
+	public ItemStack getItemStack(PartItemStack type) {
+		ItemStack stack = super.getItemStack(type);
+		if (type.equals(PartItemStack.Wrench) || type.equals(PartItemStack.Break))
+			stack.getTagCompound().removeTag("upgradeInventory");
+		return stack;
 	}
 
 
