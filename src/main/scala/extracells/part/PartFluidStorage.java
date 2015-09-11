@@ -80,7 +80,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack stack = super.getItemStack(type);
-		if (type.equals(PartItemStack.Wrench) || type.equals(PartItemStack.Break))
+		if (type.equals(PartItemStack.Wrench))
 			stack.getTagCompound().removeTag("upgradeInventory");
 		return stack;
 	}
