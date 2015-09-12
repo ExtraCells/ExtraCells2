@@ -100,10 +100,15 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 	@Override
 	public void mouseClicked(int posX, int posY, int mouseX, int mouseY) {
 		if (this.fluid != null
-				&& isPointInRegion(posX, posY, this.height, this.width, mouseX,
-						mouseY)) {
-			((IFluidSelectorGui) this.guiFluidTerminal).getContainer()
-					.setSelectedFluid(this.fluid);
+				&& isPointInRegion(posX, posY,
+					this.height, this.width, mouseX, mouseY)) {
+
+			IFluidSelectorGui selectorGui = ((IFluidSelectorGui) this.guiFluidTerminal);
+			IAEFluidStack currentFluid = selectorGui.getCurrentFluid();
+			if(currentFluid != null && currentFluid.getFluid() == this.fluid)
+				selectorGui.getContainer().setSelectedFluid(null);
+			else
+				selectorGui.getContainer().setSelectedFluid(this.fluid);
 		}
 	}
 
