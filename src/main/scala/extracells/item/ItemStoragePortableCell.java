@@ -245,8 +245,8 @@ public class ItemStoragePortableCell extends Item implements
 			else
 				return (int) (max - current);
 		} else {
-			int notStored = (int) PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)));
-			return maxReceive - notStored;
+			int amountReceived = (int) PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)));
+			return amountReceived;
 		}
 	}
 
