@@ -63,15 +63,16 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		if (stack == null)
-			return super.getItemStackDisplayName(stack);
+			return super.getItemStackDisplayName(null);
 		if (stack.getItemDamage() == PartEnum.INTERFACE.ordinal())
 			return ECApi
 					.instance()
 					.blocks()
 					.blockInterface()
-					.item()
+					.maybeItem()
+					.get()
 					.getItemStackDisplayName(
-							ECApi.instance().blocks().blockInterface().stack(1));
+							ECApi.instance().blocks().blockInterface().maybeStack(1).get());
 		return super.getItemStackDisplayName(stack);
 	}
 

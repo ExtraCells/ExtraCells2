@@ -193,8 +193,8 @@ public class TileEntityFluidInterface extends TileBase implements
 	public final FluidInterfaceInventory inventory;
 	private IAEItemStack toExport = null;
 
-	private final Item encodedPattern = AEApi.instance().items().itemEncodedPattern
-			.item();
+	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern()
+			.maybeItem().orNull();
 	private List<IAEStack> export = new ArrayList<IAEStack>();
 	private List<IAEStack> removeFromExport = new ArrayList<IAEStack>();
 

@@ -84,7 +84,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 				long endAmount = currentStack.amount - request.getStackSize();
 				if (endAmount >= 0) {
 					removedStack = request.copy();
-					FluidStack toWrite = new FluidStack(currentStack.getFluidID(), (int) endAmount);
+					FluidStack toWrite = new FluidStack(currentStack.getFluid(), (int) endAmount);
 					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
 						writeFluidToSlot(i, toWrite);

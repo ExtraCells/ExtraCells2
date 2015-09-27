@@ -60,8 +60,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 
 	private boolean isFirstGetGridNode = true;
 
-	private final Item encodedPattern = AEApi.instance().items().itemEncodedPattern
-			.item();
+	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
 
 	public TileEntityFluidFiller() {
 		super();

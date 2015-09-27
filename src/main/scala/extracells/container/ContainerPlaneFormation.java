@@ -27,8 +27,7 @@ public class ContainerPlaneFormation extends Container {
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack stack = player.inventory.getStackInSlot(i);
 			if (stack != null
-					&& stack.isItemEqual(AEApi.instance().items().itemNetworkTool
-							.stack(1))) {
+					&& AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
 				DimensionalCoord coord = part.getHost().getLocation();
 				IGuiItem guiItem = (IGuiItem) stack.getItem();
 				INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(

@@ -159,8 +159,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 
 		if (slot != null
 				&& slot.getStack() != null
-				&& slot.getStack().isItemEqual(
-						AEApi.instance().items().itemNetworkTool.stack(1)))
+				&& AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack()))
 			return;
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {

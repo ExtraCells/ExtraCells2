@@ -60,8 +60,7 @@ public class PartFluidPlaneFormation extends PartECBase implements
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-			return AEApi.instance().materials().materialCardRedstone
-					.sameAsStack(itemStack);
+			return AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack);
 		}
 	};
 

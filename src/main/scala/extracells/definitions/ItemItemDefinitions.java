@@ -1,13 +1,12 @@
 package extracells.definitions;
 
-import net.minecraft.block.Block;
+import appeng.api.definitions.IItemDefinition;
+import com.google.common.base.Optional;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import appeng.api.util.AEItemDefinition;
 
-public class ItemItemDefinitions implements AEItemDefinition {
+public class ItemItemDefinitions implements IItemDefinition {
 
 	public final Item item;
 	public final int meta;
@@ -22,35 +21,22 @@ public class ItemItemDefinitions implements AEItemDefinition {
 	}
 
 	@Override
-	public Block block() {
-		return null;
+	public Optional<Item> maybeItem() {
+		return Optional.fromNullable(this.item);
 	}
 
-	@Override
-	public Class<? extends TileEntity> entity() {
-		return null;
-	}
+    @Override
+    public Optional<ItemStack> maybeStack(int stackSize) {
+        return Optional.of(new ItemStack(this.item, stackSize, this.meta));
+    }
 
-	@Override
-	public Item item() {
-		return this.item;
-	}
+    @Override
+    public boolean isSameAs(ItemStack comparableStack) {
+        return comparableStack != null && comparableStack.isItemEqual(maybeStack(1).get());
+    }
 
-	@Override
-	public boolean sameAsBlock(IBlockAccess world, int x, int y, int z) {
-		return false;
-	}
-
-	@Override
-	public boolean sameAsStack(ItemStack comparableItem) {
-		if (comparableItem == null)
-			return false;
-		return ItemStack.areItemStacksEqual(stack(1), comparableItem);
-	}
-
-	@Override
-	public ItemStack stack(int stackSize) {
-		return new ItemStack(this.item, stackSize, this.meta);
-	}
-
+    @Override
+    public boolean isSameAs(IBlockAccess world, int x, int y, int z) {
+        return false;
+    }
 }

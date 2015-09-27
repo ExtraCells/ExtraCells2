@@ -5,6 +5,7 @@ import extracells.Extracells;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		}
 
 		List<String> description = new ArrayList<String>();
-		description.add(this.fluid.getLocalizedName());
+		description.add(this.fluid.getLocalizedName(new FluidStack(this.fluid, 0)));
 		description.add(amountToText);
 		drawHoveringText(description, mouseX - this.guiFluidTerminal.guiLeft(),
 				mouseY - this.guiFluidTerminal.guiTop() + 18,

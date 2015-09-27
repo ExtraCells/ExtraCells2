@@ -1,16 +1,17 @@
 package extracells.api.definitions;
 
+import appeng.api.definitions.ITileDefinition;
 import appeng.api.util.AEItemDefinition;
 
 public interface IBlockDefinition {
 
-	AEItemDefinition blockInterface();
+	ITileDefinition blockInterface();
 
-	AEItemDefinition certusTank();
+	ITileDefinition certusTank();
 
-	AEItemDefinition fluidCrafter();
+	ITileDefinition fluidCrafter();
 
-	AEItemDefinition fluidFiller();
+	ITileDefinition fluidFiller();
 
-	AEItemDefinition walrus();
+	ITileDefinition walrus();
 }

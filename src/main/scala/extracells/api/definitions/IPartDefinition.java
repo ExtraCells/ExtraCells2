@@ -1,32 +1,31 @@
 package extracells.api.definitions;
 
-import appeng.api.util.AEItemDefinition;
 
 public interface IPartDefinition {
 
-	AEItemDefinition partBattery();
+	appeng.api.definitions.IItemDefinition partBattery();
 
-	AEItemDefinition partConversionMonitor();
+	appeng.api.definitions.IItemDefinition partConversionMonitor();
 
-	AEItemDefinition partDrive();
+	appeng.api.definitions.IItemDefinition partDrive();
 
-	AEItemDefinition partFluidAnnihilationPlane();
+	appeng.api.definitions.IItemDefinition partFluidAnnihilationPlane();
 
-	AEItemDefinition partFluidExportBus();
+	appeng.api.definitions.IItemDefinition partFluidExportBus();
 
-	AEItemDefinition partFluidFormationPlane();
+	appeng.api.definitions.IItemDefinition partFluidFormationPlane();
 
-	AEItemDefinition partFluidImportBus();
+	appeng.api.definitions.IItemDefinition partFluidImportBus();
 
-	AEItemDefinition partFluidLevelEmitter();
+	appeng.api.definitions.IItemDefinition partFluidLevelEmitter();
 
-	AEItemDefinition partFluidStorageBus();
+	appeng.api.definitions.IItemDefinition partFluidStorageBus();
 
-	AEItemDefinition partFluidTerminal();
+	appeng.api.definitions.IItemDefinition partFluidTerminal();
 
-	AEItemDefinition partInterface();
+	appeng.api.definitions.IItemDefinition partInterface();
 
-	AEItemDefinition partOreDictExportBus();
+	appeng.api.definitions.IItemDefinition partOreDictExportBus();
 
-	AEItemDefinition partStorageMonitor();
+	appeng.api.definitions.IItemDefinition partStorageMonitor();
 }

@@ -1,67 +1,66 @@
 package extracells.api.definitions;
 
-import appeng.api.util.AEItemDefinition;
 
 public interface IItemDefinition {
 
 	// Fluid Storage Components
-	AEItemDefinition cell1kPartFluid();
+	appeng.api.definitions.IItemDefinition cell1kPartFluid();
 
-	AEItemDefinition cell4kPartFluid();
+	appeng.api.definitions.IItemDefinition cell4kPartFluid();
 
-	AEItemDefinition cell16kPartFluid();
+	appeng.api.definitions.IItemDefinition cell16kPartFluid();
 
-	AEItemDefinition cell64kPartFluid();
+	appeng.api.definitions.IItemDefinition cell64kPartFluid();
 
-	AEItemDefinition cell256kPartFluid();
+	appeng.api.definitions.IItemDefinition cell256kPartFluid();
 
-	AEItemDefinition cell1024kPartFluid();
+	appeng.api.definitions.IItemDefinition cell1024kPartFluid();
 
-	AEItemDefinition cell4096kPartFluid();
+	appeng.api.definitions.IItemDefinition cell4096kPartFluid();
 
 	// Physical Storage Components
-	AEItemDefinition cell256kPart();
+	appeng.api.definitions.IItemDefinition cell256kPart();
 
-	AEItemDefinition cell1024kPart();
+	appeng.api.definitions.IItemDefinition cell1024kPart();
 
-	AEItemDefinition cell4096kPart();
+	appeng.api.definitions.IItemDefinition cell4096kPart();
 
-	AEItemDefinition cell16384kPart();
+	appeng.api.definitions.IItemDefinition cell16384kPart();
 
 	// Fluid Storage Casing
-	AEItemDefinition fluidCasing();
+	appeng.api.definitions.IItemDefinition fluidCasing();
 
 	// Fluid Cells
-	AEItemDefinition fluidCell1k();
+	appeng.api.definitions.IItemDefinition fluidCell1k();
 
-	AEItemDefinition fluidCell4k();
+	appeng.api.definitions.IItemDefinition fluidCell4k();
 
-	AEItemDefinition fluidCell16k();
+	appeng.api.definitions.IItemDefinition fluidCell16k();
 
-	AEItemDefinition fluidCell64k();
+	appeng.api.definitions.IItemDefinition fluidCell64k();
 
-	AEItemDefinition fluidCell256k();
+	appeng.api.definitions.IItemDefinition fluidCell256k();
 
-	AEItemDefinition fluidCell1024k();
+	appeng.api.definitions.IItemDefinition fluidCell1024k();
 
-	AEItemDefinition fluidCell4096k();
+	appeng.api.definitions.IItemDefinition fluidCell4096k();
 
-	AEItemDefinition fluidCellPortable();
+	appeng.api.definitions.IItemDefinition fluidCellPortable();
 
 	// Physical Storage Casing
-	AEItemDefinition physCasing();
+	appeng.api.definitions.IItemDefinition physCasing();
 
 	// Physical Cells
-	AEItemDefinition physCell256k();
+	appeng.api.definitions.IItemDefinition physCell256k();
 
-	AEItemDefinition physCell1024k();
+	appeng.api.definitions.IItemDefinition physCell1024k();
 
-	AEItemDefinition physCell4096k();
+	appeng.api.definitions.IItemDefinition physCell4096k();
 
-	AEItemDefinition physCell16384k();
+	appeng.api.definitions.IItemDefinition physCell16384k();
 
-	AEItemDefinition physCellContainer();
+	appeng.api.definitions.IItemDefinition physCellContainer();
 
 	// MISC
-	AEItemDefinition wirelessFluidTerminal();
+	appeng.api.definitions.IItemDefinition wirelessFluidTerminal();
 }

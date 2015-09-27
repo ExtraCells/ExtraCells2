@@ -213,8 +213,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 	private List<IAEStack> addToExport = new ArrayList<IAEStack>();
 	private IAEItemStack toExport = null;
 
-	private final Item encodedPattern = AEApi.instance().items().itemEncodedPattern
-			.item();
+	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
 	private FluidTank tank = new FluidTank(10000) {
 		@Override
 		public FluidTank readFromNBT(NBTTagCompound nbt) {
@@ -292,7 +291,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		filled += fillToNetwork(resource, doFill);
 
 		if (filled < resource.amount)
-			filled += this.tank.fill(new FluidStack(resource.getFluidID(),
+			filled += this.tank.fill(new FluidStack(resource.getFluid(),
 					resource.amount - filled), doFill);
 		if (filled > 0)
 			getHost().markForUpdate();

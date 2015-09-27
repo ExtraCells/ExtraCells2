@@ -1,13 +1,15 @@
 package extracells.definitions;
 
+import appeng.api.definitions.ITileDefinition;
+import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import appeng.api.util.AEItemDefinition;
 
-public class BlockItemDefinitions implements AEItemDefinition {
+public class BlockItemDefinitions implements ITileDefinition {
 
 	private final Block block;
 	private final int meta;
@@ -34,38 +36,38 @@ public class BlockItemDefinitions implements AEItemDefinition {
 	}
 
 	@Override
-	public Block block() {
-		return this.block;
+	public Optional<Block> maybeBlock() {
+		return Optional.fromNullable(block);
 	}
 
 	@Override
-	public Class<? extends TileEntity> entity() {
-		return this.blockTileEntity;
+	public Optional<ItemBlock> maybeItemBlock() {
+		return Optional.absent();
 	}
 
 	@Override
-	public Item item() {
-		return Item.getItemFromBlock(this.block);
+	public boolean isSameAs(ItemStack comparableStack) {
+		return comparableStack != null && ItemStack.areItemStacksEqual(maybeStack(1).orNull(), comparableStack);
 	}
 
 	@Override
-	public boolean sameAsBlock(IBlockAccess world, int x, int y, int z) {
-		Block _block = world.getBlock(x, y, z);
-		if (_block == null || block() == null)
-			return false;
-		return _block == block();
+	public boolean isSameAs(IBlockAccess world, int x, int y, int z) {
+		Block block = world.getBlock(x, y, z);
+		return !maybeBlock().isPresent() && block == this.block;
 	}
 
 	@Override
-	public boolean sameAsStack(ItemStack comparableItem) {
-		if (comparableItem == null)
-			return false;
-		return ItemStack.areItemStacksEqual(stack(1), comparableItem);
+	public Optional<Item> maybeItem() {
+		return Optional.fromNullable(Item.getItemFromBlock(block));
 	}
 
 	@Override
-	public ItemStack stack(int stackSize) {
-		return new ItemStack(this.block, stackSize, this.meta);
+	public Optional<ItemStack> maybeStack(int stackSize) {
+		return Optional.of(new ItemStack(this.block, stackSize, this.meta));
 	}
 
+	@Override
+	public Optional<? extends Class<? extends TileEntity>> maybeEntity() {
+		return Optional.fromNullable(this.blockTileEntity);
+	}
 }
