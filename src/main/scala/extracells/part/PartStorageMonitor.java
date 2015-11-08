@@ -360,27 +360,31 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 			tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
 
 			IIcon fluidIcon = this.fluid.getIcon();
-
-			GL11.glTranslatef(0.0f, 0.14f, -0.24f);
-			GL11.glScalef(1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f);
-			GL11.glTranslated(-8.6F, -16.3, -1.2F);
-			Minecraft.getMinecraft().renderEngine
-					.bindTexture(TextureMap.locationBlocksTexture);
-			Tessellator cake = Tessellator.instance;
-			cake.startDrawingQuads();
-			cake.setBrightness(255);
-			cake.setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f);
-			cake.addVertexWithUV(0, 16, 0, fluidIcon.getMinU(),
-					fluidIcon.getMaxV());
-			cake.addVertexWithUV(16, 16, 0, fluidIcon.getMaxU(),
-					fluidIcon.getMaxV());
-			cake.addVertexWithUV(16, 0, 0, fluidIcon.getMaxU(),
-					fluidIcon.getMinV());
-			cake.addVertexWithUV(0, 0, 0, fluidIcon.getMinU(),
-					fluidIcon.getMinV());
-			cake.draw();
+			if (fluidIcon != null) {
+				GL11.glTranslatef(0.0f, 0.14f, -0.24f);
+				GL11.glScalef(1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f);
+				GL11.glTranslated(-8.6F, -16.3, -1.2F);
+				Minecraft.getMinecraft().renderEngine
+						.bindTexture(TextureMap.locationBlocksTexture);
+				Tessellator cake = Tessellator.instance;
+				cake.startDrawingQuads();
+				try {
+					cake.setBrightness(255);
+					cake.setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f);
+					cake.addVertexWithUV(0, 16, 0, fluidIcon.getMinU(),
+							fluidIcon.getMaxV());
+					cake.addVertexWithUV(16, 16, 0, fluidIcon.getMaxU(),
+							fluidIcon.getMaxV());
+					cake.addVertexWithUV(16, 0, 0, fluidIcon.getMaxU(),
+							fluidIcon.getMinV());
+					cake.addVertexWithUV(0, 0, 0, fluidIcon.getMinU(),
+							fluidIcon.getMinV());
+				} finally {
+					cake.draw();
+				}
+			}
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 
 		GL11.glPopMatrix();
