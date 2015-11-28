@@ -22,7 +22,7 @@ public class LayerGasHandler extends LayerBase implements IGasHandler{
     public int receiveGas(ForgeDirection side, GasStack stack) {
         IPart part = this.getPart(side);
         if(part instanceof IGasHandler){
-            return ((IGasHandler) part).receiveGas(side, stack);
+            return ((IGasHandler) part).receiveGas(side, stack, true);
         }
         return 0;
     }
@@ -40,7 +40,7 @@ public class LayerGasHandler extends LayerBase implements IGasHandler{
     public GasStack drawGas(ForgeDirection side, int amount) {
         IPart part = this.getPart(side);
         if(part instanceof IGasHandler){
-            return ((IGasHandler) part).drawGas(side, amount);
+            return ((IGasHandler) part).drawGas(side, amount, true);
         }
         return null;
     }

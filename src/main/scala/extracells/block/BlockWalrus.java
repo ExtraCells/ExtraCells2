@@ -13,13 +13,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockWalrus extends Block implements ITileEntityProvider {
+public class BlockWalrus extends BlockEC {
 
 	public BlockWalrus() {
-		super(Material.clay);
-		setCreativeTab(Extracells.ModTab());
-		setHardness(2.0F);
-		setResistance(10.0F);
+		super(Material.clay, 2.0F, 10.0F);
 	}
 
 	@Override

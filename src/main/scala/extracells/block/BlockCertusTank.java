@@ -2,13 +2,11 @@ package extracells.block;
 
 import appeng.api.implementations.items.IAEWrench;
 import buildcraft.api.tools.IToolWrench;
-import extracells.Extracells;
 import extracells.network.ChannelHandler;
 import extracells.registries.BlockEnum;
 import extracells.render.RenderHandler;
 import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +21,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-public class BlockCertusTank extends Block implements ITileEntityProvider {
+public class BlockCertusTank extends BlockEC {
 
 	IIcon breakIcon;
 	IIcon topIcon;
@@ -34,10 +32,7 @@ public class BlockCertusTank extends Block implements ITileEntityProvider {
 	IIcon sideBottomIcon;
 
 	public BlockCertusTank() {
-		super(Material.glass);
-		setCreativeTab(Extracells.ModTab());
-		setHardness(2.0F);
-		setResistance(10.0F);
+		super(Material.glass, 2.0F, 10.0F);
 		setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 1.0F, 0.9375F);
 	}
 
@@ -93,8 +88,7 @@ public class BlockCertusTank extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world,
-			int x, int y, int z) {
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
 		return getDropWithNBT(world, x, y, z);
 	}
 

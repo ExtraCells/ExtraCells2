@@ -7,7 +7,6 @@ import appeng.api.networking.IGridNode;
 import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
 import extracells.api.IECTileEntity;
 import extracells.network.GuiHandler;
 import extracells.tileentity.IListenerTile;
@@ -15,7 +14,6 @@ import extracells.tileentity.TileEntityFluidFiller;
 import extracells.tileentity.TileEntityFluidInterface;
 import extracells.util.PermissionUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,15 +29,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
-public class ECBaseBlock extends BlockContainer {
+public class ECBaseBlock extends BlockEC {
 
 	private IIcon[] icons = new IIcon[2];
 
 	public ECBaseBlock() {
-		super(Material.iron);
-		setCreativeTab(Extracells.ModTab());
-		setHardness(2.0F);
-		setResistance(10.0F);
+		super(Material.iron, 2.0F, 10.0F);
 	}
 
 	@Override

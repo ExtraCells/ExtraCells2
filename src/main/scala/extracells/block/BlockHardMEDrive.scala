@@ -29,7 +29,7 @@ import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
 
-object BlockHardMEDrive extends BlockContainer(net.minecraft.block.material.Material.rock) with TGuiBlock{
+object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.rock, 2.0F, 1000000.0F) with TGuiBlock{
 
 
   var frontIcon: IIcon = null
@@ -63,10 +63,7 @@ object BlockHardMEDrive extends BlockContainer(net.minecraft.block.material.Mate
   //Only needed because BlockEnum is in java. not in scala
   val instance = this
 
-  setCreativeTab(Extracells.ModTab);
   setBlockName("block.hardmedrive");
-  setHardness(2.0F);
-  setResistance(1000000.0F);
 
   override def createNewTileEntity(world : World, meta : Int): TileEntity = new TileEntityHardMeDrive()
 

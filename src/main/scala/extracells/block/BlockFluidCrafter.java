@@ -5,12 +5,10 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.items.IAEWrench;
 import appeng.api.networking.IGridNode;
 import buildcraft.api.tools.IToolWrench;
-import extracells.Extracells;
 import extracells.network.GuiHandler;
 import extracells.tileentity.TileEntityFluidCrafter;
 import extracells.util.PermissionUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,15 +24,12 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class BlockFluidCrafter extends BlockContainer {
+public class BlockFluidCrafter extends BlockEC {
 
 	IIcon icon;
 
 	public BlockFluidCrafter() {
-		super(Material.iron);
-		setCreativeTab(Extracells.ModTab());
-		setHardness(2.0F);
-		setResistance(10.0F);
+		super(Material.iron, 2.0F, 10.0F);
 	}
 
 	@Override

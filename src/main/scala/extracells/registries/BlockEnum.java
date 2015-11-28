@@ -1,5 +1,6 @@
 package extracells.registries;
 
+import extracells.Extracells;
 import extracells.block.*;
 import extracells.tileentity.TileEntityHardMeDrive;
 import net.minecraft.block.Block;
@@ -30,6 +31,7 @@ public enum BlockEnum {
 		this.block = _block;
 		this.block.setBlockName("extracells.block." + this.internalName);
 		this.itemBlockClass = _itemBlockClass;
+		this.block.setCreativeTab(Extracells.ModTab());
 	}
 
 	public Block getBlock() {
