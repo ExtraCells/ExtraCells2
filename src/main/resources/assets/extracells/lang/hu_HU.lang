@@ -1,0 +1,90 @@
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+extracells.item.storage.physical.256k.name=256k ME Tároló Cella
+extracells.item.storage.physical.1024k.name=1024k ME Tároló Cella
+extracells.item.storage.physical.4096k.name=4096k ME Tároló Cella
+extracells.item.storage.physical.16384k.name=16384k ME Tároló Cella
+extracells.item.storage.physical.container.name=ME Blokk Tároló
+extracells.item.storage.fluid.1k.name=1k ME Folyadék Cella
+extracells.item.storage.fluid.4k.name=4k ME folyadék Cella
+extracells.item.storage.fluid.16k.name=16k ME folyadék Cella
+extracells.item.storage.fluid.64k.name=64k ME folyadék Cella
+extracells.item.storage.fluid.256k.name=256k ME folyadék Cella
+extracells.item.storage.fluid.1024k.name=1024k ME folyadék Cella
+extracells.item.storage.fluid.4096k.name=4096k ME folyadék Cella
+extracells.item.storage.fluid.portable.name=ME Hordozható Folyadék Tároló
+extracells.item.storage.component.physical.256k.name=256k ME Tároló Komponens
+extracells.item.storage.component.physical.1024k.name=1024k ME Tároló Komponens
+extracells.item.storage.component.physical.4096k.name=4096k ME Tároló Komponens
+extracells.item.storage.component.physical.16384k.name=16384k ME Tároló Komponens
+extracells.item.storage.component.fluid.1k.name=1k ME Folyadék Tároló Komponens
+extracells.item.storage.component.fluid.4k.name=4k ME Folyadék Tároló Komponens
+extracells.item.storage.component.fluid.16k.name=16k ME Folyadék Tároló Komponens
+extracells.item.storage.component.fluid.64k.name=64k ME Folyadék Tároló Komponens
+extracells.item.storage.component.fluid.256k.name=256k ME Folyadék Tároló Komponens
+extracells.item.storage.component.fluid.1024k.name=1024k ME Folyadék Tároló Komponens
+extracells.item.storage.component.fluid.4096k.name=4096k ME Folyadék Tároló Komponens
+extracells.item.storage.casing.physical.name=Fejlett Tároló Ház
+extracells.item.storage.casing.fluid.name=Folyadék Tároló Ház
+extracells.item.terminal.fluid.wireless.name=Vezetéknélküli ME Folyadék Terminál
+extracells.item.fluid.pattern=ME Folyadék Minta [WIP]
+extracells.item.oc.upgrade.name=ME Fejlesztés
+
+//Creative Tab
+itemGroup.Extra_Cells=Extra Cells 2
+
+//Item Groups
+extracells.fluid.IO=ME Folyadék Export/Import Busz
+extracells.fluid.plane=ME Folyadék Megsemmisítő/Kialakító Lap
+
+//Parts
+extracells.part.fluid.export.name=ME Folyadék Export Busz
+extracells.part.fluid.import.name=ME Folyadék Import Busz
+extracells.part.fluid.storage.name=ME Folyadék Tároló Busz
+extracells.part.fluid.terminal.name=ME Folyadék Terminál
+extracells.part.fluid.plane.annihilation.name=ME Folyadék Megsemmisítő Lap
+extracells.part.fluid.plane.formation.name=ME Folyadék Kialakítő Lap
+extracells.part.fluid.levelemitter.name=ME Folyadék Szint Kibocsátó
+extracells.part.drive.name=ME Meghajtótartó Test
+extracells.part.battery.name=ME Energia Cella Test
+extracells.part.fluid.conversion.monitor.name=ME Folyadék Átváltási Monitor
+extracells.part.fluid.monitor.name=ME Folyadék Tár Monitor
+extracells.part.oredict.export.name=ME Érc Szótár Export Busz
+
+//Blocks
+extracells.block.certustank=Certus Kvarc Tank
+extracells.block.walrus.name=Rozmár
+extracells.block.fluidcrafter.name=ME Folyadék Összeállító
+extracells.block.fluidinterface.name=ME Folyadék Interfész
+extracells.block.fluidfiller.name=ME Automatikus Folyadék Kitöltő
+tile.extracells.block.vibrantchamberfluid.name=Folyadék Vibrációs Kamra
+tile.extracells.block.hardmedrive.name=Robbanásálló ME Meghajtó [WIP]
+
+//Tooltips and Chat-Messages
+extracells.tooltip.amount=Mennyíség
+extracells.tooltip.fluid=Folyadék
+extracells.tooltip.storage.physical.types=%s-ból Típus használva %s.
+extracells.tooltip.storage.fluid.types=%s-ból Típus használva %s.
+extracells.tooltip.storage.physical.bytes=%s-ból Byte (Tárgy) használva %s.
+extracells.tooltip.storage.fluid.bytes=%s-ból Byte (Folyadék) használva %s.
+extracells.tooltip.storage.fluid.content=%s mB folyadékot tartalmaz.
+extracells.tooltip.storage.physical.content=%s darab tárgyat tartalmaz.
+extracells.tooltip.direction.0=Le
+extracells.tooltip.direction.1=Fel
+extracells.tooltip.direction.2=Észak
+extracells.tooltip.direction.3=Dél
+extracells.tooltip.direction.4=Nyugat
+extracells.tooltip.direction.5=Kelet
+extracells.tooltip.empty1=Üres
+extracells.tooltip.storage.container.0=Mode: Lehelyezési Mód
+extracells.tooltip.storage.container.1=Mode: Egyenlő Csere (1*1)
+extracells.tooltip.storage.container.2=Mode: Egyenlő Csere (3*3)
+extracells.tooltip.onlyblocks=Nem rakhatsz tárgyakat ebbe! Rakj egy Blokkot a BLOKK-Tárolóba
+extracells.tooltip.save=Mentés
+extracells.tooltip.oredict=Érc Szótár név
+
+//Buttons
+extracells.gui.craft=Barkácsolni
