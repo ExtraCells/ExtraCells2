@@ -14,9 +14,10 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
+
+
 apply plugin: 'scala'
 apply plugin: 'forge'
-apply plugin: 'java'
 apply plugin: 'idea'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
