@@ -69,16 +69,8 @@ public class GasUtil {
 		if (itemStack == null)
 			return 0;
 		Item item = itemStack.getItem();
-		if (item instanceof IFluidContainerItem) {
-			return ((IFluidContainerItem) item).getCapacity(itemStack);
-		} else if (FluidContainerRegistry.isEmptyContainer(itemStack)) {
-			for (FluidContainerRegistry.FluidContainerData data : FluidContainerRegistry
-					.getRegisteredFluidContainerData()) {
-				if (data != null && data.emptyContainer.isItemEqual(itemStack)) {
-					FluidStack interior = data.fluid;
-					return interior != null ? interior.amount : 0;
-				}
-			}
+		if (item instanceof IGasItem) {
+			return ((IGasItem) item).getMaxGas(itemStack);
 		}
 		return 0;
 	}
@@ -110,9 +102,8 @@ public class GasUtil {
 		if (itemStack == null)
 			return false;
 		Item item = itemStack.getItem();
-		if (item instanceof IFluidContainerItem) {
-			FluidStack content = ((IFluidContainerItem) item)
-					.getFluid(itemStack);
+		if (item instanceof IGasItem) {
+			GasStack content = ((IGasItem) item).getGas(itemStack);
 			return content != null && content.amount > 0;
 		}
 		return FluidContainerRegistry.isFilledContainer(itemStack);

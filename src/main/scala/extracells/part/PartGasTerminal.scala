@@ -18,6 +18,7 @@ import org.apache.commons.lang3.tuple.MutablePair
 class PartGasTerminal extends PartFluidTerminal{
 
   val mekLoaded = Mods.MEKANISMGAS.isEnabled
+  var doNextFill = false;
 
   override protected def isItemValidForInputSlot(i: Int, itemStack: ItemStack): Boolean = {
     GasUtil.isGasContainer(itemStack)
@@ -33,6 +34,8 @@ class PartGasTerminal extends PartFluidTerminal{
     val secondSlot: ItemStack = this.inventory.getStackInSlot(1)
     if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize) return
     var container: ItemStack = this.inventory.getStackInSlot(0)
+    if(container == null)
+      doNextFill = false;
     if (!GasUtil.isGasContainer(container)) return
     container = container.copy
     container.stackSize = 1
@@ -40,24 +43,49 @@ class PartGasTerminal extends PartFluidTerminal{
     if (gridBlock == null) return
     val monitor: IMEMonitor[IAEFluidStack] = gridBlock.getFluidMonitor
     if (monitor == null) return
-    if (GasUtil.isEmpty(container)) {
+    val gasStack = GasUtil.getGasFromContainer(container);
+
+    if (GasUtil.isEmpty(container) || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack).getFluid == this.currentFluid && doNextFill)) {
       if (this.currentFluid == null) return
       val capacity: Int = GasUtil.getCapacity(container)
+      print(capacity)
       val result: IAEFluidStack = monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource)
-      val proposedAmount: Int = if (result == null) 0 else Math.min(capacity, result.getStackSize).toInt
+      var proposedAmount: Int = 0
+      println(result)
+      if (result == null)
+        proposedAmount = 0
+      else {
+        if (gasStack == null)
+          proposedAmount = Math.min(capacity, result.getStackSize).toInt
+        else
+          proposedAmount = Math.min(capacity - gasStack.amount, result.getStackSize).toInt
+      }
+      println(proposedAmount)
       val filledContainer: MutablePair[Integer, ItemStack] = GasUtil.fillStack(container, GasUtil.getGasStack(new FluidStack(this.currentFluid, proposedAmount)))
-      if (fillSecondSlot(filledContainer.getRight)) {
+      val gasStack2 = GasUtil.getGasFromContainer(filledContainer.getRight)
+      if (container.stackSize == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight)) {
+        this.inventory.setInventorySlotContents(0, filledContainer.getRight)
+        monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
+        doNextFill = true
+      }else if (fillSecondSlot(filledContainer.getRight)) {
         monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
         decreaseFirstSlot
+        doNextFill = false
       }
     }
     else {
       val containerGas = GasUtil.getGasFromContainer(container)
-      val notInjected: IAEFluidStack = monitor.injectItems(GasUtil.createAEFluidStack(containerGas), Actionable.SIMULATE, this.machineSource)
+
+      val drainedContainer: MutablePair[Integer, ItemStack] = GasUtil.drainStack(container.copy(), containerGas)
+      val gasStack = containerGas.copy()
+      gasStack.amount = drainedContainer.getLeft;
+      val notInjected: IAEFluidStack = monitor.injectItems(GasUtil.createAEFluidStack(gasStack), Actionable.SIMULATE, this.machineSource)
       if (notInjected != null) return
-      val drainedContainer: MutablePair[Integer, ItemStack] = GasUtil.drainStack(container, containerGas)
       val emptyContainer: ItemStack = drainedContainer.getRight
-      if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
+      if (emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1) {
+        monitor.injectItems(GasUtil.createAEFluidStack(gasStack), Actionable.MODULATE, this.machineSource)
+        this.inventory.setInventorySlotContents(0, emptyContainer)
+      }else if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
         monitor.injectItems(GasUtil.createAEFluidStack(containerGas), Actionable.MODULATE, this.machineSource)
         decreaseFirstSlot
       }

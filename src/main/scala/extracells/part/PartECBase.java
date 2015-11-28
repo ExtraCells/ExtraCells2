@@ -110,6 +110,16 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 		return monitor.extractItems(toExtract, action, new MachineSource(this));
 	}
 
+	protected final IAEFluidStack extractGasFluid(IAEFluidStack toExtract,
+											   Actionable action) {
+		if (this.gridBlock == null || this.facingGasTank == null)
+			return null;
+		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
+		if (monitor == null)
+			return null;
+		return monitor.extractItems(toExtract, action, new MachineSource(this));
+	}
+
 	protected final IAEFluidStack extractGas(IAEFluidStack toExtract,
 											   Actionable action) {
 		if (this.gridBlock == null || this.facingGasTank == null)

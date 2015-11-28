@@ -4,6 +4,7 @@ import java.util
 
 import appeng.api.AEApi
 import appeng.api.config.Actionable
+import appeng.api.networking.security.MachineSource
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.Optional
 import extracells.integration.Integration
@@ -61,13 +62,14 @@ class PartGasExport extends PartFluidExport{
     import scala.collection.JavaConversions._
     for (fluid <- filter) {
       if (fluid != null) {
-        val stack: IAEFluidStack = extractFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
+        val stack: IAEFluidStack = extractGasFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
+
         if (stack != null) {
           val gasStack = GasUtil.getGasStack(stack.getFluidStack)
           if (gasStack != null && facingTank.canReceiveGas(getSide.getOpposite, gasStack.getGas)) {
             val filled: Int = facingTank.receiveGas(getSide.getOpposite, gasStack, true)
             if (filled > 0) {
-              extractFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
+              extractGasFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
               return true
             }
           }
@@ -76,5 +78,7 @@ class PartGasExport extends PartFluidExport{
     }
     return false
   }
+
+
 
 }
