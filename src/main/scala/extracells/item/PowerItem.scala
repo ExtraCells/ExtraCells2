@@ -43,8 +43,7 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem{
       else return (max - current).toInt
     }
     else {
-      val notStored: Int = PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive))).toInt
-      return maxReceive - notStored
+      return PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive))).toInt
     }
   }
 
