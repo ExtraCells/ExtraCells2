@@ -145,7 +145,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 
 	@Override
 	public AECableType getCableConnectionType(ForgeDirection dir) {
-		return AECableType.SMART;
+		return AECableType.GLASS;
 	}
 
 	public Object getClientGuiElement(EntityPlayer player) {
