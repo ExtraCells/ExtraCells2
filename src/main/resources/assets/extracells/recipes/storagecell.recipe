@@ -9,6 +9,12 @@ shaped=
 	ec:certusTank ec:certusTank ec:certusTank
 	-> ec:fluidCasing
 
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix _ oredictionary:dustFluix,
+	mc:gold_ingot mc:gold_ingot mc:gold_ingot
+	-> ec:gasCasing
+
 shapeless=
 	ae2:ItemMaterial.Cell1kPart ae2:ItemMaterial.EmptyStorageCell mc:chest
 	-> ec:physCellContainer
@@ -110,3 +116,64 @@ shaped=
 shapeless=
 	ae2:BlockChest ec:cell1kPartFluid ae2:BlockEnergyCell
 	-> ec:fluidCellPortable
+
+
+
+
+shapeless=
+	ec:gasCasing ec:cell1kPartGas
+	-> ec:gasCell1k
+shapeless=
+	ec:gasCasing ec:cell4kPartGas
+	-> ec:gasCell4k
+shapeless=
+	ec:gasCasing ec:cell16kPartGas
+	-> ec:gasCell16k
+shapeless=
+	ec:gasCasing ec:cell64kPartGas
+	-> ec:gasCell64k
+shapeless=
+	ec:gasCasing ec:cell256kPartGas
+	-> ec:gasCell256k
+shapeless=
+	ec:gasCasing ec:cell1024kPartGas
+	-> ec:gasCell1024k
+shapeless=
+	ec:gasCasing ec:cell4096kPartGas
+	-> ec:gasCell4096k
+
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:cell1kPartGas oredictionary:dustFluix,
+	mc:gold_ingot mc:gold_ingot mc:gold_ingot
+	-> ec:gasCell1k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:cell4kPartGas oredictionary:dustFluix,
+	mc:gold_ingot mc:gold_ingot mc:gold_ingot
+	-> ec:gasCell4k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:cell16kPartGas oredictionary:dustFluix,
+	mc:gold_ingot mc:gold_ingot mc:gold_ingot
+	-> ec:gasCell16k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:cell64kPartGas oredictionary:dustFluix,
+	mc:gold_ingot mc:gold_ingot mc:gold_ingot
+	-> ec:gasCell64k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:cell256kPartGas oredictionary:dustFluix,
+	mc:gold_ingot mc:gold_ingot mc:gold_ingot
+	-> ec:gasCell256k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:cell1024kPartGas oredictionary:dustFluix,
+	mc:gold_ingot mc:gold_ingot mc:gold_ingot
+	-> ec:gasCell1024k
+shaped=
+	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
+	oredictionary:dustFluix  ec:cell4096kPartGas oredictionary:dustFluix,
+	mc:gold_ingot mc:gold_ingot mc:gold_ingot
+	-> ec:gasCell4096k

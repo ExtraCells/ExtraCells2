@@ -3,6 +3,7 @@ group=ae2:ItemMaterial.LogicProcessor -> logProcessor
 group=ae2:ItemMaterial.CalcProcessor -> calcProcessor
 group=oredictionary:dustGlowstone -> dustGlowstone
 group=oredictionary:dyeBlue -> lapis
+group=oredictionary:dyeYellow -> flower
 group=ae2:BlockQuartzGlass -> glassQuartz
 group=oredictionary:crystalCertusQuartz ae2:ItemMaterial.CertusQuartzCrystalCharged ae2:ItemMaterial.PurifiedCertusQuartzCrystal -> certusCrystal
 
@@ -62,3 +63,39 @@ shaped=
 	ec:cell1024kPartFluid logProcessor ec:cell1024kPartFluid,
 	lapis ec:cell1024kPartFluid lapis
 	-> ec:cell4096kPartFluid
+
+shaped=
+	flower certusCrystal flower,
+	certusCrystal logProcessor certusCrystal,
+	flower certusCrystal flower
+	-> ec:cell1kPartGas
+shaped=
+	flower calcProcessor flower,
+	ec:cell1kPartGas glassQuartz ec:cell1kPartGas,
+	flower ec:cell1kPartGas flower
+	-> ec:cell4kPartGas
+shaped=
+	flower engProcessor flower,
+	ec:cell4kPartGas glassQuartz ec:cell4kPartGas,
+	flower ec:cell4kPartGas flower
+	-> ec:cell16kPartGas
+shaped=
+	flower engProcessor flower,
+	ec:cell16kPartGas glassQuartz ec:cell16kPartGas,
+	flower ec:cell16kPartGas flower
+	-> ec:cell64kPartGas
+shaped=
+	flower engProcessor flower,
+	ec:cell64kPartGas logProcessor ec:cell64kPartGas,
+	flower ec:cell64kPartGas flower
+	-> ec:cell256kPartGas
+shaped=
+	flower engProcessor flower,
+	ec:cell256kPartGas logProcessor ec:cell256kPartGas,
+	flower ec:cell256kPartGas flower
+	-> ec:cell1024kPartGas
+shaped=
+	flower engProcessor flower,
+	ec:cell1024kPartGas logProcessor ec:cell1024kPartGas,
+	flower ec:cell1024kPartGas flower
+	-> ec:cell4096kPartGas

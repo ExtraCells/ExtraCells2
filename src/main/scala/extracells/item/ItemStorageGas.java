@@ -158,8 +158,8 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
 			return itemStack;
 		}
 		IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
-		if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1))) {
-			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
+		if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(2))) {
+			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 11);
 		}
 		return itemStack;
 	}
@@ -169,7 +169,7 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
 		this.icons = new IIcon[suffixes.length];
 
 		for (int i = 0; i < suffixes.length; ++i) {
-			this.icons[i] = iconRegister.registerIcon("extracells:" + "storage.fluid." + suffixes[i]);
+			this.icons[i] = iconRegister.registerIcon("extracells:" + "storage.gas." + suffixes[i]);
 		}
 	}
 

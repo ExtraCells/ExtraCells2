@@ -13,7 +13,7 @@ import java.util.List;
 public class ItemStorageCasing extends ItemECBase {
 
 	private IIcon[] icons;
-	public final String[] suffixes = { "physical", "fluid" };
+	public final String[] suffixes = { "physical", "fluid", "gas" };
 
 	public ItemStorageCasing() {
 		setMaxDamage(0);

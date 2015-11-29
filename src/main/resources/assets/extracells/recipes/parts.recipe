@@ -1,55 +1,56 @@
-group=oredictionary:dyeBlue -> lapis
+group=oredictionary:dyeBlue -> flower
+group=oredictionary:dyeYellow -> flower
 group= ae2:ItemPart.SemiDarkMonitor ae2:ItemPart.Monitor ae2:ItemPart.DarkMonitor -> monitor
 group= ae2:BlockInterface ae2:ItemPart.Interface -> interface
 
 shapeless=
-	ae2:ItemMaterial.CalcProcessor mc:redstone_torch lapis
+	ae2:ItemMaterial.CalcProcessor mc:redstone_torch flower
 	-> ec:partFluidLevelEmitter
 
 shapeless=
-	ae2:ItemPart.LevelEmitter lapis
+	ae2:ItemPart.LevelEmitter flower
 	-> ec:partFluidLevelEmitter
 
 shaped=
 	mc:iron_ingot ae2:ItemMaterial.FormationCore mc:iron_ingot,
-	lapis mc:piston lapis
+	flower mc:piston flower
 	-> ec:partFluidExportBus
 
 shapeless=
-	ae2:ItemPart.ExportBus lapis
+	ae2:ItemPart.ExportBus flower
 	-> ec:partFluidExportBus
 
 shaped=
-	lapis ae2:ItemMaterial.AnnihilationCore lapis,
+	flower ae2:ItemMaterial.AnnihilationCore flower,
 	mc:iron_ingot mc:sticky_piston mc:iron_ingot
 	-> ec:partFluidImportBus
 
 shapeless=
-	ae2:ItemPart.ImportBus lapis
+	ae2:ItemPart.ImportBus flower
 	-> ec:partFluidImportBus
 
 shaped=
-	mc:iron_ingot lapis oredictionary:dustFluix,
-	ae2:ItemMaterial.AnnihilationCore lapis oredictionary:dustFluix,
-	mc:iron_ingot lapis oredictionary:dustFluix
+	mc:iron_ingot flower oredictionary:dustFluix,
+	ae2:ItemMaterial.AnnihilationCore flower oredictionary:dustFluix,
+	mc:iron_ingot flower oredictionary:dustFluix
 	-> ec:partFluidAnnihilationPlane
 
 shapeless=
-	ae2:ItemPart.AnnihilationPlane lapis
+	ae2:ItemPart.AnnihilationPlane flower
 	-> ec:partFluidAnnihilationPlane
 
 shaped=
-	mc:iron_ingot lapis oredictionary:dustFluix,
-	ae2:ItemMaterial.FormationCore lapis oredictionary:dustFluix,
-	mc:iron_ingot lapis oredictionary:dustFluix
+	mc:iron_ingot flower oredictionary:dustFluix,
+	ae2:ItemMaterial.FormationCore flower oredictionary:dustFluix,
+	mc:iron_ingot flower oredictionary:dustFluix
 	-> ec:partFluidFormationPlane
 
 shapeless=
-	ae2:ItemPart.FormationPlane lapis
+	ae2:ItemPart.FormationPlane flower
 	-> ec:partFluidFormationPlane
 
 shapeless=
-	monitor ae2:ItemMaterial.FormationCore ae2:ItemMaterial.AnnihilationCore ae2:ItemMaterial.LogicProcessor lapis lapis
+	monitor ae2:ItemMaterial.FormationCore ae2:ItemMaterial.AnnihilationCore ae2:ItemMaterial.LogicProcessor flower flower
 	-> ec:partFluidTerminal
 
 shapeless=
@@ -57,7 +58,7 @@ shapeless=
 	-> ec:partDrive
 
 shapeless=
-	interface mc:sticky_piston mc:piston lapis lapis
+	interface mc:sticky_piston mc:piston flower flower
 	-> ec:partFluidStorageBus
 
 shaped=
@@ -69,7 +70,7 @@ shapeless=
 	-> ec:partInterface
 
 shapeless=
-    ae2:ItemPart.LevelEmitter monitor lapis lapis
+    ae2:ItemPart.LevelEmitter monitor flower flower
     -> ec:partStorageMonitor
 
 shapeless=
@@ -79,3 +80,26 @@ shapeless=
 shapeless=
     ae2:ItemPart.ExportBus ae2:ItemMaterial.CardFuzzy ae2:ItemMaterial.CardFuzzy ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed
     -> ec:partOreDictExportBus
+
+
+shaped=
+	mc:iron_ingot ae2:ItemMaterial.FormationCore mc:iron_ingot,
+	flower mc:piston flower
+	-> ec:partGasExportBus
+
+shapeless=
+	ae2:ItemPart.ExportBus flower
+	-> ec:partGasExportBus
+
+shaped=
+	flower ae2:ItemMaterial.AnnihilationCore flower,
+	mc:iron_ingot mc:sticky_piston mc:iron_ingot
+	-> ec:partGasImportBus
+
+shapeless=
+	ae2:ItemPart.ImportBus flower
+	-> ec:partGasImportBus
+
+shapeless=
+	monitor ae2:ItemMaterial.FormationCore ae2:ItemMaterial.AnnihilationCore ae2:ItemMaterial.LogicProcessor flower flower
+	-> ec:partGasTerminal
