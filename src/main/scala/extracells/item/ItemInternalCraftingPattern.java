@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 
-public class ItemInternalCraftingPattern extends Item implements ICraftingPatternItem {
+public class ItemInternalCraftingPattern extends ItemECBase implements ICraftingPatternItem {
 
 	@Override
 	public ICraftingPatternDetails getPatternForItem(ItemStack is, World w) {

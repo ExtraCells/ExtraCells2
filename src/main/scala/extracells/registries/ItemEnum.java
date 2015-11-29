@@ -12,11 +12,11 @@ public enum ItemEnum {
 	PHYSICALSTORAGE("storage.physical", new ItemStoragePhysical()),
 	GASSTORAGE("storage.gas", new ItemStorageGas()),
 	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern()),
-	FLUIDWIRELESSTERMINAL( "terminal.fluid.wireless", new ItemWirelessTerminalFluid()),
+	FLUIDWIRELESSTERMINAL( "terminal.fluid.wireless", ItemWirelessTerminalFluid.THIS()),
 	STORAGECOMPONET( "storage.component", new ItemStorageComponent()),
 	STORAGECASING( "storage.casing", new ItemStorageCasing()),
 	FLUIDITEM("fluid.item", new ItemFluid()), // Internal EC Item
-	FLUIDSTORAGEPORTABLE("storage.fluid.portable", new ItemStoragePortableCell()),
+	FLUIDSTORAGEPORTABLE("storage.fluid.portable", ItemStoragePortableCell.THIS()),
 	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern());// Internal EC Item
 
 	private final String internalName;

@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemFluid extends Item {
+public class ItemFluid extends ItemECBase {
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {

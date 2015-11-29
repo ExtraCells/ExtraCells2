@@ -38,7 +38,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.List;
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
-public class ItemStoragePhysical extends Item implements IStorageCell,
+public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 		IAEItemPowerStorage, IEnergyContainerItem {
 
 	public static final String[] suffixes = { "256k", "1024k", "4096k", "16384k", "container" };
@@ -297,40 +297,30 @@ public class ItemStoragePhysical extends Item implements IStorageCell,
 			EntityPlayer entityPlayer) {
 		if (itemStack == null)
 			return itemStack;
-		if (itemStack.getItemDamage() == 4 && !world.isRemote
-				&& entityPlayer.isSneaking()) {
+		if (itemStack.getItemDamage() == 4 && !world.isRemote && entityPlayer.isSneaking()) {
 			switch (itemStack.getTagCompound().getInteger("mode")) {
 			case 0:
 				itemStack.getTagCompound().setInteger("mode", 1);
-				entityPlayer.addChatMessage(new ChatComponentTranslation(
-						"extracells.tooltip.storage.container.1"));
+				entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.1"));
 				break;
 			case 1:
 				itemStack.getTagCompound().setInteger("mode", 2);
-				entityPlayer.addChatMessage(new ChatComponentTranslation(
-						"extracells.tooltip.storage.container.2"));
+				entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.2"));
 				break;
 			case 2:
 				itemStack.getTagCompound().setInteger("mode", 0);
-				entityPlayer.addChatMessage(new ChatComponentTranslation(
-						"extracells.tooltip.storage.container.0"));
+				entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.0"));
 				break;
 			}
 			return itemStack;
 		}
 		if (!entityPlayer.isSneaking())
 			return itemStack;
-		IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance()
-				.registries().cell()
-				.getCellInventory(itemStack, null, StorageChannel.ITEMS);
+		IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
-		if (cellInv.getUsedBytes() == 0
-				&& entityPlayer.inventory
-						.addItemStackToInventory(ItemEnum.STORAGECASING
-								.getDamagedStack(0)))
-			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack
-					.getItemDamage());
+		if (cellInv.getUsedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
+			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage());
 		return itemStack;
 	}
 
@@ -343,19 +333,12 @@ public class ItemStoragePhysical extends Item implements IStorageCell,
 		if (itemstack.getItemDamage() == 4 && !player.isSneaking()) {
 			double power = getAECurrentPower(itemstack);
 			ForgeDirection face = ForgeDirection.getOrientation(side);
-			IItemList list = AEApi
-					.instance()
-					.registries()
-					.cell()
-					.getCellInventory(itemstack, null, StorageChannel.ITEMS)
-					.getAvailableItems(
+			IItemList list = AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).getAvailableItems(
 							AEApi.instance().storage().createItemList());
 			if (list.isEmpty())
 				return false;
 			IAEItemStack storageStack = (IAEItemStack) list.getFirstItem();
-			if (world.getBlock(x + face.offsetX, y + face.offsetY, z
-					+ face.offsetZ) == Blocks.air
-					&& storageStack.getStackSize() != 0 && power >= 20.0D) {
+			if (world.getBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ) == Blocks.air && storageStack.getStackSize() != 0 && power >= 20.0D) {
 				if (!world.isRemote) {
 					IAEItemStack request = storageStack.copy();
 					request.setStackSize(1);
@@ -363,42 +346,18 @@ public class ItemStoragePhysical extends Item implements IStorageCell,
 					if (block.getItem() instanceof ItemBlock) {
 						ItemBlock itemblock = (ItemBlock) request.getItem();
 						if (world.getBlock(x, y, z) != Blocks.bedrock && world.getBlock(x, y, z).getBlockHardness(world, x, y, z) >= 0.0F) {
-							switch (itemstack.getTagCompound().getInteger(
-									"mode")) {
+							switch (itemstack.getTagCompound().getInteger("mode")) {
 							case 0:
 								request.setStackSize(1);
-								itemblock.onItemUseFirst(
-										request.getItemStack(), player, world,
-										x, y, z, side, xOffset, yOffset,
-										zOffset);
-								itemblock.onItemUse(request.getItemStack(),
-										player, world, x, y, z, side, xOffset,
-										yOffset, zOffset);
-								AEApi.instance()
-										.registries()
-										.cell()
-										.getCellInventory(itemstack, null,
-												StorageChannel.ITEMS)
-										.extractItems(request,
-												Actionable.MODULATE,
-												new PlayerSource(player, null));
-								extractAEPower(player.getCurrentEquippedItem(),
-										20.0D);
+								itemblock.onItemUseFirst(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
+								itemblock.onItemUse(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
+								AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));extractAEPower(player.getCurrentEquippedItem(), 20.0D);
 								break;
 							case 1:
 								request.setStackSize(1);
 								world.func_147480_a(x, y, z, true);
-								placeBlock(request.getItemStack(), world,
-										player, x, y, z, side, xOffset,
-										yOffset, zOffset);
-								AEApi.instance()
-										.registries()
-										.cell()
-										.getCellInventory(itemstack, null,
-												StorageChannel.ITEMS)
-										.extractItems(request,
-												Actionable.MODULATE,
-												new PlayerSource(player, null));
+								placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
+								AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
 								break;
 							case 2:
 
@@ -409,50 +368,20 @@ public class ItemStoragePhysical extends Item implements IStorageCell,
 									case DOWN:
 										for (int posX = x - 1; posX < x + 2; posX++) {
 											for (int posZ = z - 1; posZ < z + 2; posZ++) {
-												world.func_147480_a(posX, y,
-														posZ, true);
-												placeBlock(
-														request.getItemStack(),
-														world, player, x, y, z,
-														side, xOffset, yOffset,
-														zOffset);
+												world.func_147480_a(posX, y, posZ, true);
+												placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
 											}
 										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
+										AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
 										break;
 									case EAST:
 										for (int posZ = z - 1; posZ < z + 2; posZ++) {
 											for (int posY = y - 1; posY < y + 2; posY++) {
-												world.func_147480_a(x, posY,
-														posZ, true);
-												placeBlock(
-														request.getItemStack(),
-														world, player, x, posY,
-														posZ, side, xOffset,
-														yOffset, zOffset);
+												world.func_147480_a(x, posY, posZ, true);
+												placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
 											}
 										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
+										AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
 										break;
 									case NORTH:
 										for (int posX = x - 1; posX < x + 2; posX++) {

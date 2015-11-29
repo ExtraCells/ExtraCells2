@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import extracells.registries.ItemEnum;
 
-public class ItemFluidPattern extends Item {
+public class ItemFluidPattern extends ItemECBase {
 
 	public static Fluid getFluid(ItemStack itemStack) {
 		if (!itemStack.hasTagCompound())

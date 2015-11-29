@@ -144,24 +144,19 @@ public class BlockCertusTank extends BlockEC {
 
 		}
 		if (current != null) {
-			FluidStack liquid = FluidContainerRegistry
-					.getFluidForFilledItem(current);
-			TileEntityCertusTank tank = (TileEntityCertusTank) worldObj
-					.getTileEntity(x, y, z);
+			FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(current);
+			TileEntityCertusTank tank = (TileEntityCertusTank) worldObj.getTileEntity(x, y, z);
 
 			if (liquid != null) {
-				int amountFilled = tank.fill(ForgeDirection.UNKNOWN, liquid,
-						true);
+				int amountFilled = tank.fill(ForgeDirection.UNKNOWN, liquid, true);
 
 				if (amountFilled != 0
 						&& !entityplayer.capabilities.isCreativeMode) {
 					if (current.stackSize > 1) {
 						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
-						entityplayer.inventory.addItemStackToInventory(current
-								.getItem().getContainerItem(current));
+						entityplayer.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
 					} else {
-						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = current
-								.getItem().getContainerItem(current);
+						entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = current.getItem().getContainerItem(current);
 					}
 				}
 
@@ -172,20 +167,15 @@ public class BlockCertusTank extends BlockEC {
 
 				FluidStack available = tank.getTankInfo(ForgeDirection.UNKNOWN)[0].fluid;
 				if (available != null) {
-					ItemStack filled = FluidContainerRegistry
-							.fillFluidContainer(available, current);
+					ItemStack filled = FluidContainerRegistry.fillFluidContainer(available, current);
 
-					liquid = FluidContainerRegistry
-							.getFluidForFilledItem(filled);
+					liquid = FluidContainerRegistry.getFluidForFilledItem(filled);
 
 					if (liquid != null) {
 						if (!entityplayer.capabilities.isCreativeMode) {
 							if (current.stackSize > 1) {
-								if (!entityplayer.inventory
-										.addItemStackToInventory(filled)) {
-									tank.fill(ForgeDirection.UNKNOWN,
-											new FluidStack(liquid,
-													liquid.amount), true);
+								if (!entityplayer.inventory.addItemStackToInventory(filled)) {
+									tank.fill(ForgeDirection.UNKNOWN, new FluidStack(liquid, liquid.amount), true);
 									return false;
 								} else {
 									entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
@@ -208,8 +198,7 @@ public class BlockCertusTank extends BlockEC {
 			Block neighborBlock) {
 		if (!world.isRemote) {
 
-			ChannelHandler.sendPacketToAllPlayers(world.getTileEntity(x, y, z)
-					.getDescriptionPacket(), world);
+			ChannelHandler.sendPacketToAllPlayers(world.getTileEntity(x, y, z).getDescriptionPacket(), world);
 		}
 	}
 
@@ -219,11 +208,9 @@ public class BlockCertusTank extends BlockEC {
 		this.topIcon = iconregister.registerIcon("extracells:CTankTop");
 		this.bottomIcon = iconregister.registerIcon("extracells:CTankBottom");
 		this.sideIcon = iconregister.registerIcon("extracells:CTankSide");
-		this.sideMiddleIcon = iconregister
-				.registerIcon("extracells:CTankSideMiddle");
+		this.sideMiddleIcon = iconregister.registerIcon("extracells:CTankSideMiddle");
 		this.sideTopIcon = iconregister.registerIcon("extracells:CTankSideTop");
-		this.sideBottomIcon = iconregister
-				.registerIcon("extracells:CTankSideBottom");
+		this.sideBottomIcon = iconregister.registerIcon("extracells:CTankSideBottom");
 	}
 
 	@Override

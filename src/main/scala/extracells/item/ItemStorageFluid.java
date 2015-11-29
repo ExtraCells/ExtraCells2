@@ -28,7 +28,7 @@ import extracells.registries.ItemEnum;
 import extracells.util.inventory.ECFluidFilterInventory;
 import extracells.util.inventory.ECPrivateInventory;
 
-public class ItemStorageFluid extends Item implements IFluidStorageCell {
+public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 
 	public static final String[] suffixes = { "1k", "4k", "16k", "64k", "256k", "1024k", "4096k" };
 
