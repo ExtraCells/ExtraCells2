@@ -25,7 +25,8 @@ object Mekanism {
     while(it.hasNext){
       val g = it.next
       val fluid = new GasFluid(g)
-      fluidGas += (g -> fluid)
+      if(fluid.isInRegister)
+        fluidGas += (g -> fluid)
     }
     ECApi.instance.addFluidToShowBlacklist(classOf[GasFluid])
     ECApi.instance.addFluidToStorageBlacklist(classOf[GasFluid])
@@ -33,7 +34,7 @@ object Mekanism {
 
   class GasFluid(gas: Gas) extends Fluid("ec.internal." + gas.getName){
 
-    FluidRegistry.registerFluid(this)
+    val isInRegister = FluidRegistry.registerFluid(this)
 
     override def getLocalizedName (stack: FluidStack) =  gas.getLocalizedName
 
