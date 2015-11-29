@@ -6,7 +6,6 @@ import java.util
 import appeng.api.AEApi
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
-import cpw.mods.fml.common.Optional
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.api.{ECApi, IWirelessFluidTermHandler}
 import extracells.integration.Integration
@@ -18,10 +17,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{StatCollector, IIcon}
 import net.minecraft.world.World
-import thaumicenergistics.api.IThEWirelessEssentiaTerminal
 
-@Optional.Interface(iface = "thaumicenergistics.api.IThEWirelessEssentiaTerminal", modid = "thaumicenergistics", striprefs = true)
-object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessTermHandler with IThEWirelessEssentiaTerminal{
+object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessTermHandler with EssensiaTerminal{
   val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
   override val MAX_POWER: Double = 3200000
@@ -36,13 +33,6 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
   override def getConfigManager(itemStack: ItemStack): IConfigManager = {
     new ConfigManager()
-  }
-
-  override def getWETerminalTag(terminalItemstack: ItemStack): NBTTagCompound = {
-    val tag = ensureTagCompound(terminalItemstack)
-    if (!tag.hasKey("essentia"))
-      tag.setTag("essentia", new NBTTagCompound)
-    return tag.getCompoundTag("essentia")
   }
 
   private def ensureTagCompound(itemStack: ItemStack): NBTTagCompound = {

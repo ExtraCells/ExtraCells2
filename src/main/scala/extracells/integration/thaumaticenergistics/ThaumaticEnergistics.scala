@@ -8,7 +8,7 @@ import thaumicenergistics.api.{IThEWirelessEssentiaTerminal, ThEApi}
   */
 object ThaumaticEnergistics {
 
-  def openEssentiaTerminal(player :EntityPlayer, terminal :IThEWirelessEssentiaTerminal) :Unit =
-    ThEApi.instance.interact.openWirelessTerminalGui(player, terminal)
+  def openEssentiaTerminal(player :EntityPlayer, terminal :Any) :Unit =
+    ThEApi.instance.interact.openWirelessTerminalGui(player, terminal.asInstanceOf[IThEWirelessEssentiaTerminal])
 
 }
