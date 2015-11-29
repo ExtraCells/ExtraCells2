@@ -2,7 +2,7 @@ package extracells.integration.opencomputers
 
 import cpw.mods.fml.common.registry.GameRegistry
 import cpw.mods.fml.relauncher.{SideOnly, Side}
-import extracells.Extracells
+import li.cil.oc.api.CreativeTab
 import li.cil.oc.api.driver.{EnvironmentAware, EnvironmentHost}
 import li.cil.oc.api.driver.item.{HostAware, Slot}
 import li.cil.oc.api.internal.{Drone, Robot}
@@ -18,7 +18,7 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
   setTextureName("extracells:upgrade.oc")
 
   GameRegistry.registerItem(this, "oc.upgrade", "extracells")
-  setCreativeTab(Extracells.ModTab)
+  setCreativeTab(CreativeTab.instance)
 
   override def getUnlocalizedName = super.getUnlocalizedName.replace("item.extracells", "extracells.item")
 
