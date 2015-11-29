@@ -1,6 +1,7 @@
 package extracells.item
 
 import java.util
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
@@ -140,6 +141,7 @@ object ItemStoragePortableCell extends ItemECBase with IPortableFluidStorageCell
   }
 
 
+  @SideOnly(Side.CLIENT)
   override def registerIcons(iconRegister: IIconRegister) {
     this.icon = iconRegister.registerIcon("extracells:storage.fluid.portable")
   }

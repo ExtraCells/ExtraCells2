@@ -17,7 +17,8 @@ public enum ItemEnum {
 	STORAGECASING( "storage.casing", new ItemStorageCasing()),
 	FLUIDITEM("fluid.item", new ItemFluid()), // Internal EC Item
 	FLUIDSTORAGEPORTABLE("storage.fluid.portable", ItemStoragePortableCell.THIS()),
-	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern());// Internal EC Item
+	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern()),// Internal EC Item
+	UNIVERSALTERMINAL("terminal.universal.wireless", ItemWirelessTerminalUniversal.THIS());
 
 	private final String internalName;
 	private Item item;

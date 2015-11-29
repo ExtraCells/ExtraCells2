@@ -95,6 +95,10 @@ extracells.tooltip.storage.container.2=Mode: Equal Trade Mode (3*3)
 extracells.tooltip.onlyblocks=You can't place Items! Put a Block into the BLOCK-Container
 extracells.tooltip.save=Save
 extracells.tooltip.oredict=Ore Dictionary Name
+extracells.tooltip.mode=Mode
+extracells.tooltip.item=Item
+extracells.tooltip.gas=Gas
+extracells.tooltip.essentia=Essentia
 
 //Buttons
 extracells.gui.craft=Craft

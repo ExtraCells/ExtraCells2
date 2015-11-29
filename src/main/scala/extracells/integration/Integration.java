@@ -19,7 +19,8 @@ public class Integration {
 		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
 		NEI("NotEnoughItems"),
 		MEKANISMGAS("MekanismAPI|gas", "MekanismGas"),
-		IGW("IGWMod", "IngameWikiMod", Side.CLIENT);
+		IGW("IGWMod", "IngameWikiMod", Side.CLIENT),
+		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics");
 		
 		private final String modID;
 		
