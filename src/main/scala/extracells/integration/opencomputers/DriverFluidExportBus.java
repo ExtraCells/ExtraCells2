@@ -4,6 +4,7 @@ import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import extracells.integration.opencomputers.DriverOreDictExportBus.Enviroment;
 import extracells.part.PartFluidExport;
+import extracells.part.PartGasExport;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.util.FluidUtil;
@@ -51,13 +52,13 @@ public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, Environ
 		if(dir == null || dir == ForgeDirection.UNKNOWN){
 			for (ForgeDirection side: ForgeDirection.VALID_DIRECTIONS){
 				IPart part = host.getPart(side);
-				if (part != null && part instanceof PartFluidExport)
+				if (part != null && part instanceof PartFluidExport && !(part instanceof PartGasExport))
 					return (PartFluidExport) part;
 			}
 			return null;
 		}else{
 			IPart part = host.getPart(dir);
-			return part == null ? null : (PartFluidExport) part;
+			return part == null ? null : part instanceof PartGasExport ? null :(PartFluidExport) part;
 		}
 	}
 	

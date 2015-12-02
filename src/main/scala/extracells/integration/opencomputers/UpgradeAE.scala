@@ -231,7 +231,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     val ext = extracted.getStackSize.toInt
     stack.stackSize = inSlot + ext
     invRobot.setInventorySlotContents(selected, stack)
-    return Array(ext.underlying.asInstanceOf[AnyRef])
+    Array(ext.underlying.asInstanceOf[AnyRef])
   }
 
   @Callback(doc = "function([number:amount]):number -- Transfer selecte fluid to your ae system.")
@@ -249,10 +249,10 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     val notInjectet = inv.injectItems(AEApi.instance.storage.createFluidStack(fluid2), Actionable.MODULATE, new MachineSource(tile))
     if (notInjectet == null){
       tank.drain(amount, true)
-      return Array(amount.underlying.asInstanceOf[AnyRef])
+      Array(amount.underlying.asInstanceOf[AnyRef])
     }else{
       tank.drain(amount - notInjectet.getStackSize.toInt, true)
-      return Array((amount - notInjectet.getStackSize).underlying.asInstanceOf[AnyRef])
+      Array((amount - notInjectet.getStackSize).underlying.asInstanceOf[AnyRef])
     }
   }
 
@@ -281,7 +281,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     if (fluid2.amount == 0) return Array(0.underlying.asInstanceOf[AnyRef])
     val extracted = inv.extractItems(AEApi.instance.storage.createFluidStack(fluid2), Actionable.MODULATE, new MachineSource(tile))
     if (extracted == 0) return Array(0.underlying.asInstanceOf[AnyRef])
-    return Array(tank.fill(extracted.getFluidStack, true).underlying.asInstanceOf[AnyRef])
+    Array(tank.fill(extracted.getFluidStack, true).underlying.asInstanceOf[AnyRef])
   }
 
 
