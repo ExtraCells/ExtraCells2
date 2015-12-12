@@ -18,7 +18,7 @@ import org.apache.commons.lang3.tuple.MutablePair
 class PartGasTerminal extends PartFluidTerminal{
 
   val mekLoaded = Mods.MEKANISMGAS.isEnabled
-  var doNextFill = false;
+  var doNextFill = false
 
   override protected def isItemValidForInputSlot(i: Int, itemStack: ItemStack): Boolean = {
     GasUtil.isGasContainer(itemStack)
@@ -35,7 +35,7 @@ class PartGasTerminal extends PartFluidTerminal{
     if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize) return
     var container: ItemStack = this.inventory.getStackInSlot(0)
     if(container == null)
-      doNextFill = false;
+      doNextFill = false
     if (!GasUtil.isGasContainer(container)) return
     container = container.copy
     container.stackSize = 1
@@ -48,19 +48,15 @@ class PartGasTerminal extends PartFluidTerminal{
     if (GasUtil.isEmpty(container) || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack).getFluid == this.currentFluid && doNextFill)) {
       if (this.currentFluid == null) return
       val capacity: Int = GasUtil.getCapacity(container)
-      print(capacity)
       val result: IAEFluidStack = monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource)
       var proposedAmount: Int = 0
-      println(result)
       if (result == null)
         proposedAmount = 0
-      else {
-        if (gasStack == null)
+      else if (gasStack == null)
           proposedAmount = Math.min(capacity, result.getStackSize).toInt
         else
           proposedAmount = Math.min(capacity - gasStack.amount, result.getStackSize).toInt
-      }
-      println(proposedAmount)
+
       val filledContainer: MutablePair[Integer, ItemStack] = GasUtil.fillStack(container, GasUtil.getGasStack(new FluidStack(this.currentFluid, proposedAmount)))
       val gasStack2 = GasUtil.getGasFromContainer(filledContainer.getRight)
       if (container.stackSize == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight)) {

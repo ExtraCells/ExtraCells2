@@ -1,16 +1,14 @@
 package extracells.item
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import extracells.api.{IWirelessGasTermHandler, ECApi, IWirelessFluidTermHandler}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
-import extracells.api.ECApi
-import extracells.api.IWirelessFluidTermHandler
 
-object ItemWirelessTerminalFluid extends Item with IWirelessFluidTermHandler with WirelessTermBase {
+object ItemWirelessTerminalGas extends Item with IWirelessGasTermHandler with WirelessTermBase {
   private[item] var icon: IIcon = null
   override val MAX_POWER: Double =  3200000
   def THIS = this
@@ -29,7 +27,7 @@ object ItemWirelessTerminalFluid extends Item with IWirelessFluidTermHandler wit
   }
 
   override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer): ItemStack = {
-    return ECApi.instance.openWirelessFluidTerminal(entityPlayer, itemStack, world)
+    return ECApi.instance.openWirelessGasTerminal(entityPlayer, itemStack, world)
   }
 
   @SideOnly(Side.CLIENT)

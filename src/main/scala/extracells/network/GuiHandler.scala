@@ -5,10 +5,10 @@ import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.network.IGuiHandler
 import extracells.Extracells
-import extracells.api.{IFluidInterface, IPortableFluidStorageCell, IWirelessFluidTermHandler}
+import extracells.api.{IWirelessGasTermHandler, IFluidInterface, IPortableFluidStorageCell, IWirelessFluidTermHandler}
 import extracells.block.TGuiBlock
-import extracells.container.{ContainerFluidCrafter, ContainerFluidFiller, ContainerFluidInterface, ContainerFluidStorage}
-import extracells.gui.{GuiFluidCrafter, GuiFluidFiller, GuiFluidInterface, GuiFluidStorage}
+import extracells.container._
+import extracells.gui._
 import extracells.part.PartECBase
 import extracells.registries.BlockEnum
 import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
@@ -22,30 +22,47 @@ object GuiHandler extends IGuiHandler {
 		ID match {
 		case 0 =>
 			val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-			return new ContainerFluidStorage(fluidInventory, player)
+			new ContainerFluidStorage(fluidInventory, player)
 		case 1 =>
 			val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
 			val handler = args.apply(1).asInstanceOf[IWirelessFluidTermHandler]
-			return new ContainerFluidStorage(fluidInventory2, player, handler)
+			new ContainerFluidStorage(fluidInventory2, player, handler)
 		case 3 =>
 			val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
 			val storageCell =  args.apply(1).asInstanceOf[IPortableFluidStorageCell]
-			return new ContainerFluidStorage(fluidInventory3, player, storageCell)
+			new ContainerFluidStorage(fluidInventory3, player, storageCell)
+		case 4 =>
+			val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+			new ContainerGasStorage(fluidInventory, player)
+		case 5 =>
+			val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+			val handler = args.apply(1).asInstanceOf[IWirelessGasTermHandler]
+			new ContainerGasStorage(fluidInventory2, player, handler)
+		/*case 6 => TODO: Add portable gas Storage cell
+			val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+			val storageCell =  args.apply(1).asInstanceOf[IPortableGasStorageCell]
+			new ContainerGasStorage(fluidInventory3, player, storageCell)*/
 		case _ =>
-			return null
+			null
 		}
 	}
 
 	def getGui(ID: Int, player: EntityPlayer) : Any = {
 		ID match {
 		case 0 =>
-			return new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+			new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
 		case 1 =>
-			return new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+			new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
 		case 3 =>
-			return new GuiFluidStorage(player, "extracells.item.storage.fluid.portable.name");
+			new GuiFluidStorage(player, "extracells.item.storage.fluid.portable.name");
+		case 4 =>
+			new GuiGasStorage(player, "extracells.part.gas.terminal.name");
+		case 5 =>
+			new GuiGasStorage(player, "extracells.part.gas.terminal.name");
+		case 6 =>
+			new GuiGasStorage(player, "extracells.item.storage.fluid.portable.name");
 		case _ =>
-			return null;
+			null;
 		}
 	}
 

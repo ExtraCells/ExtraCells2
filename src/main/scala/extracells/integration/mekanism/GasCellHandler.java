@@ -79,7 +79,7 @@ public class GasCellHandler implements ICellHandler {
 			monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
 		}
 		if (monitorable != null) {
-			GuiHandler.launchGui(GuiHandler.getGuiId(0), player, new Object[]{monitorable.getFluidInventory()});
+			GuiHandler.launchGui(GuiHandler.getGuiId(4), player, new Object[]{monitorable.getFluidInventory()});
 		}
 	}
 

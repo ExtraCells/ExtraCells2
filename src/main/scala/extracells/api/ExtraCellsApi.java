@@ -34,7 +34,10 @@ public interface ExtraCellsApi {
 
 	public String getVersion();
 
+	@Deprecated
 	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is);
+
+	public IWirelessGasFluidTermHandler getWirelessTermHandler(ItemStack is);
 
 	public boolean isWirelessFluidTerminal(ItemStack is);
 
@@ -42,13 +45,21 @@ public interface ExtraCellsApi {
 
 	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
 
+	@Deprecated
 	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);
+
+	public ItemStack openWirelessFluidTerminal(EntityPlayer player, ItemStack stack, World world);
+
+	public ItemStack openWirelessGasTerminal(EntityPlayer player, ItemStack stack, World world);
 
 	@Deprecated
 	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, Long key);
 
 	public IPartDefinition parts();
 
+	public void registerWirelessTermHandler(IWirelessGasFluidTermHandler handler);
+
+	@Deprecated
 	public void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
 
 	/**

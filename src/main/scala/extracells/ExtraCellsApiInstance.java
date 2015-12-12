@@ -13,6 +13,7 @@ import cpw.mods.fml.common.Optional;
 import extracells.api.ExtraCellsApi;
 import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
+import extracells.api.IWirelessGasFluidTermHandler;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
 import extracells.api.definitions.IPartDefinition;
@@ -122,6 +123,11 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Override
 	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is) {
+		return (IWirelessFluidTermHandler) getWirelessTermHandler(is);
+	}
+
+	@Override
+	public IWirelessGasFluidTermHandler getWirelessTermHandler(ItemStack is) {
 		return WirelessTermRegistry.getWirelessTermHandler(is);
 	}
 
@@ -155,13 +161,17 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack,
-			World world) {
+	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world) {
+		return openWirelessFluidTerminal(player, stack, world);
+	}
+
+	@Override
+	public ItemStack openWirelessFluidTerminal(EntityPlayer player, ItemStack stack, World world) {
 		if (world.isRemote)
 			return stack;
 		if (!isWirelessFluidTerminal(stack))
 			return stack;
-		IWirelessFluidTermHandler handler = getWirelessFluidTermHandler(stack);
+		IWirelessGasFluidTermHandler handler = getWirelessTermHandler(stack);
 		if (!handler.hasPower(player, 1.0D, stack))
 			return stack;
 		Long key;
@@ -170,18 +180,60 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		} catch (Throwable ignored) {
 			return stack;
 		}
-		return openWirelessTerminal(player, stack, world, (int) player.posX,
-				(int) player.posY, (int) player.posZ, key);
+		return openWirelessTerminal(player, stack, world, (int) player.posX, (int) player.posY, (int) player.posZ, key);
+	}
+
+	@Override
+	public ItemStack openWirelessGasTerminal(EntityPlayer player, ItemStack itemStack, World world) {
+		if (world.isRemote)
+			return itemStack;
+		if (!isWirelessFluidTerminal(itemStack))
+			return itemStack;
+		IWirelessGasFluidTermHandler handler = getWirelessTermHandler(itemStack);
+		if (!handler.hasPower(player, 1.0D, itemStack))
+			return itemStack;
+		Long key;
+		try {
+			key = Long.parseLong(handler.getEncryptionKey(itemStack));
+		} catch (Throwable ignored) {
+			return itemStack;
+		}
+		int x = (int) player.posX;
+		int y = (int) player.posY;
+		int z = (int) player.posZ;
+		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable().getLocatableBy(key);
+		if (securityTerminal == null)
+			return itemStack;
+		IGridNode gridNode = securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
+		if (gridNode == null)
+			return itemStack;
+		IGrid grid = gridNode.getGrid();
+		if (grid == null)
+			return itemStack;
+		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wireless().maybeEntity().get())) {
+			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
+			WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
+			int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
+				IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
+				if (gridCache != null) {
+					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
+					if (fluidInventory != null) {
+						GuiHandler.launchGui(GuiHandler.getGuiId(5), player, new Object[]{
+								fluidInventory, getWirelessTermHandler(itemStack)});
+					}
+				}
+			}
+		}
+		return itemStack;
 	}
 
 	@Deprecated
 	@Override
-	public ItemStack openWirelessTerminal(EntityPlayer player,
-			ItemStack itemStack, World world, int x, int y, int z, Long key) {
+	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack itemStack, World world, int x, int y, int z, Long key) {
 		if (world.isRemote)
 			return itemStack;
-		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries()
-				.locatable().getLocatableBy(key);
+		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable().getLocatableBy(key);
 		if (securityTerminal == null)
 			return itemStack;
 		IGridNode gridNode = securityTerminal
@@ -216,8 +268,13 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
+	public void registerWirelessTermHandler(IWirelessGasFluidTermHandler handler) {
+		WirelessTermRegistry.registerWirelessTermHandler(handler);
+	}
+
+	@Override
 	public void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler) {
-		WirelessTermRegistry.registerWirelessFluidTermHandler(handler);
+		registerWirelessTermHandler(handler);
 	}
 
 	/**
@@ -226,7 +283,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	@Deprecated
 	public void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler) {
-		WirelessTermRegistry.registerWirelessFluidTermHandler(handler);
+		registerWirelessFluidTermHandler(handler);
 	}
 
 	@Override

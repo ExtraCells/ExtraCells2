@@ -1,16 +1,16 @@
 package extracells.wireless;
 
+import extracells.api.IWirelessGasFluidTermHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.util.IConfigManager;
-import extracells.api.IWirelessFluidTermHandler;
 
 public class AEWirelessTermHandler implements IWirelessTermHandler {
 
 	@Override
 	public boolean canHandle(ItemStack is) {
-		IWirelessFluidTermHandler handler = WirelessTermRegistry
+		IWirelessGasFluidTermHandler handler = WirelessTermRegistry
 				.getWirelessTermHandler(is);
 		if (handler == null)
 			return false;
@@ -24,7 +24,7 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 
 	@Override
 	public String getEncryptionKey(ItemStack item) {
-		IWirelessFluidTermHandler handler = WirelessTermRegistry
+		IWirelessGasFluidTermHandler handler = WirelessTermRegistry
 				.getWirelessTermHandler(item);
 		if (handler == null)
 			return null;
@@ -33,7 +33,7 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 
 	@Override
 	public boolean hasPower(EntityPlayer player, double amount, ItemStack is) {
-		IWirelessFluidTermHandler handler = WirelessTermRegistry
+		IWirelessGasFluidTermHandler handler = WirelessTermRegistry
 				.getWirelessTermHandler(is);
 		if (handler == null)
 			return false;
@@ -42,8 +42,7 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 
 	@Override
 	public void setEncryptionKey(ItemStack item, String encKey, String name) {
-		IWirelessFluidTermHandler handler = WirelessTermRegistry
-				.getWirelessTermHandler(item);
+		IWirelessGasFluidTermHandler handler = WirelessTermRegistry.getWirelessTermHandler(item);
 		if (handler == null)
 			return;
 		handler.setEncryptionKey(item, encKey, name);
@@ -51,8 +50,7 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 
 	@Override
 	public boolean usePower(EntityPlayer player, double amount, ItemStack is) {
-		IWirelessFluidTermHandler handler = WirelessTermRegistry
-				.getWirelessTermHandler(is);
+		IWirelessGasFluidTermHandler handler = WirelessTermRegistry.getWirelessTermHandler(is);
 		if (handler == null)
 			return false;
 		return handler.usePower(player, amount, is);

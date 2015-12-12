@@ -1,5 +1,6 @@
 package extracells.util;
 
+import extracells.container.ContainerGasStorage;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -32,6 +33,8 @@ public class ExtraCellsEventHandler {
 				Container con = event.player.openContainer;
 				if (con instanceof ContainerFluidStorage) {
 					((ContainerFluidStorage) con).removeEnergyTick();
+				}else if (con instanceof ContainerGasStorage) {
+					((ContainerGasStorage) con).removeEnergyTick();
 				}
 			}
 		}

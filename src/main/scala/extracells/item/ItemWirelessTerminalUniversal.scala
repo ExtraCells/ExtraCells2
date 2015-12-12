@@ -7,7 +7,7 @@ import appeng.api.AEApi
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import extracells.api.{ECApi, IWirelessFluidTermHandler}
+import extracells.api.{IWirelessGasTermHandler, ECApi, IWirelessFluidTermHandler}
 import extracells.integration.Integration
 import extracells.integration.thaumaticenergistics.ThaumaticEnergistics
 import extracells.wireless.{ConfigManager, AEWirelessTermHandler}
@@ -18,13 +18,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{StatCollector, IIcon}
 import net.minecraft.world.World
 
-object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessTermHandler with EssensiaTerminal{
+object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler with EssensiaTerminal{
   val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
   override val MAX_POWER: Double = 3200000
   var icon :IIcon = null
   def THIS = this
-  ECApi.instance.registerWirelessFluidTermHandler(this)
+  ECApi.instance.registerWirelessTermHandler(this)
   AEApi.instance.registries.wireless.registerWirelessHandler(this)
 
 
@@ -54,7 +54,8 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
       return changeMode(itemStack, entityPlayer, tag)
     val matchted = tag.getByte("type") match {
       case 0 => AEApi.instance.registries.wireless.openWirelessTerminalGui(itemStack, world, entityPlayer)
-      case 1 => ECApi.instance().openWirelessTerminal(entityPlayer, itemStack, world)
+      case 1 => ECApi.instance.openWirelessFluidTerminal(entityPlayer, itemStack, world)
+      case 2 => ECApi.instance.openWirelessGasTerminal(entityPlayer, itemStack, world)
       case 3 => if(isTeEnabled) ThaumaticEnergistics.openEssentiaTerminal(entityPlayer, this)
       case _ =>
     }

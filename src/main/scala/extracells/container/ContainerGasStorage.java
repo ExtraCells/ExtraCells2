@@ -1,16 +1,5 @@
 package extracells.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.BaseActionSource;
@@ -20,47 +9,65 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
+import cpw.mods.fml.common.Optional;
 import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
+import extracells.api.IWirelessGasTermHandler;
 import extracells.container.slot.SlotPlayerInventory;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidStorage;
+import extracells.gui.GuiGasStorage;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
+import extracells.integration.Integration;
 import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.packet.part.PacketFluidStorage;
 import extracells.util.FluidUtil;
+import extracells.util.GasUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
+import mekanism.api.gas.GasStack;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.MutablePair;
 
-public class ContainerFluidStorage extends Container implements
+public class ContainerGasStorage extends Container implements
 		IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer,
 		IInventoryUpdateReceiver, IStorageContainer {
 
-	private GuiFluidStorage guiFluidStorage;
+	private boolean isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled();
+	private GuiGasStorage guiGasStorage;
 	private IItemList<IAEFluidStack> fluidStackList;
 	private Fluid selectedFluid;
 	private IAEFluidStack selectedFluidStack;
 	private EntityPlayer player;
 	private IMEMonitor<IAEFluidStack> monitor;
 	private HandlerItemStorageFluid storageFluid;
-	private IWirelessFluidTermHandler handler = null;
-	private IPortableFluidStorageCell storageCell = null;
+	private IWirelessGasTermHandler handler = null;
+	//private IPortableFluidStorageCell storageCell = null; TODO: Add portabel gas Storage cell
 	public boolean hasWirelessTermHandler = false;
 	private ECPrivateInventory inventory = new ECPrivateInventory(
 			"extracells.item.fluid.storage", 2, 64, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-			return FluidUtil.isFluidContainer(itemStack);
+			return GasUtil.isGasContainer(itemStack);
 		}
 	};
 
-	public ContainerFluidStorage(EntityPlayer _player) {
+	private boolean doNextFill = false;
+
+	public ContainerGasStorage(EntityPlayer _player) {
 		this(null, _player);
 	}
 
-	public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor,
-			EntityPlayer _player) {
+	public ContainerGasStorage(IMEMonitor<IAEFluidStack> _monitor,
+							   EntityPlayer _player) {
 		this.monitor = _monitor;
 		this.player = _player;
 		if (!this.player.worldObj.isRemote && this.monitor != null) {
@@ -79,8 +86,10 @@ public class ContainerFluidStorage extends Container implements
 		bindPlayerInventory(this.player.inventory);
 	}
 
-	public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor,
-			EntityPlayer _player, IPortableFluidStorageCell _storageCell) {
+
+	//TODO: Add portable gas storage cell
+	/*public ContainerGasStorage(IMEMonitor<IAEFluidStack> _monitor,
+							   EntityPlayer _player, IPortableFluidStorageCell _storageCell) {
 		this.hasWirelessTermHandler = _storageCell != null;
 		this.storageCell = _storageCell;
 		this.monitor = _monitor;
@@ -92,17 +101,17 @@ public class ContainerFluidStorage extends Container implements
 			this.fluidStackList = AEApi.instance().storage().createFluidList();
 		}
 
-		// Input Slot accepts all FluidContainers
+		// Input Slot accepts gas FluidContainers
 		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 92));
 		// Input Slot accepts nothing
 		addSlotToContainer(new SlotFurnace(this.player, this.inventory, 1, 26,
 				92));
 
 		bindPlayerInventory(this.player.inventory);
-	}
+	}*/
 
-	public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor,
-			EntityPlayer _player, IWirelessFluidTermHandler _handler) {
+	public ContainerGasStorage(IMEMonitor<IAEFluidStack> _monitor,
+							   EntityPlayer _player, IWirelessGasTermHandler _handler) {
 		this.hasWirelessTermHandler = _handler != null;
 		this.handler = _handler;
 		this.monitor = _monitor;
@@ -152,51 +161,57 @@ public class ContainerFluidStorage extends Container implements
 			this.inventory.setInventorySlotContents(0, null);
 	}
 
+	@Optional.Method(modid = "MekanismAPI|gas")
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize > 64)
+		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize())
 			return;
 		ItemStack container = this.inventory.getStackInSlot(0);
-		if (!FluidUtil.isFluidContainer(container))
+		if (container == null)
+			doNextFill = false;
+		if (!GasUtil.isGasContainer(container))
 			return;
 		if (this.monitor == null)
 			return;
-
-		if (FluidUtil.isEmpty(container)) {
+		GasStack gasStack = GasUtil.getGasFromContainer(container);
+		container = container.copy();
+		container.stackSize = 1;
+		if (GasUtil.isEmpty(container)  || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack).getFluid() == this.selectedFluid && doNextFill)) {
 			if (this.selectedFluid == null)
 				return;
-			int capacity = FluidUtil.getCapacity(container);
+			int capacity = GasUtil.getCapacity(container);
 			//Tries to simulate the extraction of fluid from storage.
-			IAEFluidStack result = this.monitor.extractItems(
-					FluidUtil.createAEFluidStack(this.selectedFluid, capacity),
-					Actionable.SIMULATE, new PlayerSource(this.player, null));
+			IAEFluidStack result = this.monitor.extractItems(FluidUtil.createAEFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
 
 			//Calculates the amount of fluid to fill container with.
-			int proposedAmount = result == null ? 0 : (int) Math.min(capacity,
-					result.getStackSize());
+			int proposedAmount = result == null ? 0 :  gasStack == null ? (int) Math.min(capacity, result.getStackSize()) : (int) Math.min(capacity - gasStack.amount, result.getStackSize());
 
 			//Tries to fill the container with fluid.
-			MutablePair<Integer, ItemStack> filledContainer = FluidUtil
-					.fillStack(container, new FluidStack(this.selectedFluid,
-							proposedAmount));
+			MutablePair<Integer, ItemStack> filledContainer = GasUtil.fillStack(container, GasUtil.getGasStack(new FluidStack(this.selectedFluid, proposedAmount)));
+
+			GasStack gasStack2 = GasUtil.getGasFromContainer(filledContainer.getRight());
 
 			//Moves it to second slot and commits extraction to grid.
-			if (fillSecondSlot(filledContainer.getRight())) {
-				this.monitor.extractItems(FluidUtil.createAEFluidStack(
-						this.selectedFluid, filledContainer.getLeft()),
-						Actionable.MODULATE,
-						new PlayerSource(this.player, null));
+			if (container.stackSize == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight())) {
+				this.inventory.setInventorySlotContents(0, filledContainer.getRight());
+				monitor.extractItems(FluidUtil.createAEFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
+				doNextFill = true;
+
+			}else if (fillSecondSlot(filledContainer.getRight())){
+				monitor.extractItems(FluidUtil.createAEFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
 				decreaseFirstSlot();
+				doNextFill = false;
 			}
 
 		} else if (FluidUtil.isFilled(container)) {
-			FluidStack containerFluid = FluidUtil
-					.getFluidFromContainer(container);
+			GasStack containerGas = GasUtil.getGasFromContainer(container);
+
+			MutablePair<Integer, ItemStack> drainedContainer =  GasUtil.drainStack(container.copy(), containerGas);
+			GasStack gasStack1 = containerGas.copy();
+			gasStack1.amount = drainedContainer.getLeft();
 
 			//Tries to inject fluid to network.
-			IAEFluidStack notInjected = this.monitor.injectItems(
-					FluidUtil.createAEFluidStack(containerFluid),
-					Actionable.SIMULATE, new PlayerSource(this.player, null));
+			IAEFluidStack notInjected = this.monitor.injectItems(GasUtil.createAEFluidStack(gasStack1), Actionable.SIMULATE, new PlayerSource(this.player, null));
 			if (notInjected != null)
 				return;
 			if (this.handler != null) {
@@ -206,21 +221,21 @@ public class ContainerFluidStorage extends Container implements
 				}
 				this.handler.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			} else if (this.storageCell != null) {
+			}/* else if (this.storageCell != null) { TODO: Add portable gas storage cell
 				if (!this.storageCell.hasPower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem())) {
 					return;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
+			}*/
+			ItemStack emptyContainer  = drainedContainer.getRight();
+			if(emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1){
+				monitor.injectItems(GasUtil.createAEFluidStack(gasStack), Actionable.MODULATE, new PlayerSource(this.player, null));
+				this.inventory.setInventorySlotContents(0, emptyContainer);
 			}
-			MutablePair<Integer, ItemStack> drainedContainer = FluidUtil
-					.drainStack(container, containerFluid);
-			if (fillSecondSlot(drainedContainer.getRight())) {
-				this.monitor.injectItems(
-						FluidUtil.createAEFluidStack(containerFluid),
-						Actionable.MODULATE,
-						new PlayerSource(this.player, null));
+			if (emptyContainer == null || fillSecondSlot(drainedContainer.getRight())) {
+				monitor.injectItems(GasUtil.createAEFluidStack(containerGas), Actionable.MODULATE, new PlayerSource(this.player, null));
 				decreaseFirstSlot();
 			}
 		}
@@ -238,14 +253,14 @@ public class ContainerFluidStorage extends Container implements
 				}
 				this.handler.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			} else if (this.storageCell != null) {
+			}/* else if (this.storageCell != null) { TODO: Add portable gas storage cell
 				if (!this.storageCell.hasPower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem())) {
 					return false;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			}
+			}*/
 			this.inventory.setInventorySlotContents(1, itemStack);
 			return true;
 		} else {
@@ -259,14 +274,14 @@ public class ContainerFluidStorage extends Container implements
 				}
 				this.handler.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			} else if (this.storageCell != null) {
+			}/* else if (this.storageCell != null) { TODO: Add portable gas storage cell
 				if (!this.storageCell.hasPower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem())) {
 					return false;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			}
+			}*/
 			this.inventory.incrStackSize(1, itemStack.stackSize);
 			return true;
 		}
@@ -347,8 +362,8 @@ public class ContainerFluidStorage extends Container implements
 		} else {
 			this.selectedFluidStack = null;
 		}
-		if (this.guiFluidStorage != null)
-			this.guiFluidStorage.updateSelectedFluid();
+		if (this.guiGasStorage != null)
+			this.guiGasStorage.updateSelectedFluid();
 	}
 
 	public void removeEnergyTick() {
@@ -358,17 +373,17 @@ public class ContainerFluidStorage extends Container implements
 				this.handler.usePower(this.player, 1.0D,
 						this.player.getCurrentEquippedItem());
 			}
-		} else if (this.storageCell != null) {
+		}/* else if (this.storageCell != null) { TODO: Add portable gas storage cell
 			if (this.storageCell.hasPower(this.player, 0.5D,
 					this.player.getCurrentEquippedItem())) {
 				this.storageCell.usePower(this.player, 0.5D,
 						this.player.getCurrentEquippedItem());
 			}
-		}
+		}*/
 	}
 
-	public void setGui(GuiFluidStorage _guiFluidStorage) {
-		this.guiFluidStorage = _guiFluidStorage;
+	public void setGui(GuiGasStorage _guiGasStorage) {
+		this.guiGasStorage = _guiGasStorage;
 	}
 
 	@Override
@@ -406,7 +421,7 @@ public class ContainerFluidStorage extends Container implements
 
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList) {
 		this.fluidStackList = _fluidStackList;
-		if (this.guiFluidStorage != null)
-			this.guiFluidStorage.updateFluids();
+		if (this.guiGasStorage != null)
+			this.guiGasStorage.updateFluids();
 	}
 }
