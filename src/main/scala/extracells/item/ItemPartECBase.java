@@ -89,7 +89,9 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 	@SuppressWarnings("unchecked")
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
 		for (int i = 0; i < PartEnum.values().length; i++) {
-			itemList.add(new ItemStack(item, 1, i));
+			PartEnum part = PartEnum.values()[i];
+			if(part.getMod() == null || part.getMod().isEnabled())
+				itemList.add(new ItemStack(item, 1, i));
 		}
 	}
 

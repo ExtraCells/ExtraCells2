@@ -3,6 +3,7 @@ package extracells.registries;
 import java.util.HashMap;
 import java.util.Map;
 
+import extracells.integration.Integration;
 import extracells.part.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -26,13 +27,14 @@ public enum PartEnum {
 	FLUIDMONITOR("fluid.monitor", PartStorageMonitor.class),
 	FLUIDCONVERSIONMONITOR("fluid.conversion.monitor", PartConversionMonitor.class),
 	OREDICTEXPORTBUS("oredict.export", PartOreDictExporter.class),
-	GASIMPORT("gas.import", PartGasImport.class, "gas.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
-	GASEXPORT("gas.export", PartGasExport.class, "gas.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
-	GASTERMINAL("gas.terminal", PartGasTerminal.class);
+	GASIMPORT("gas.import", PartGasImport.class, "gas.IO", Integration.Mods.MEKANISMGAS, generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
+	GASEXPORT("gas.export", PartGasExport.class, "gas.IO", Integration.Mods.MEKANISMGAS, generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
+	GASTERMINAL("gas.terminal", PartGasTerminal.class, Integration.Mods.MEKANISMGAS);
+
+	private Integration.Mods mod;
 
 
-	private static Pair<Upgrades, Integer> generatePair(Upgrades _upgrade,
-			int integer) {
+	private static Pair<Upgrades, Integer> generatePair(Upgrades _upgrade, int integer) {
 		return new MutablePair<Upgrades, Integer>(_upgrade, integer);
 	}
 
@@ -57,20 +59,33 @@ public enum PartEnum {
 	private Map<Upgrades, Integer> upgrades = new HashMap<Upgrades, Integer>();
 
 	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass) {
-		this(_unlocalizedName, _partClass, null);
+		this(_unlocalizedName, _partClass, null, (Integration.Mods )null);
 	}
 
-	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass,
-			String _groupName) {
+	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, Integration.Mods _mod) {
+		this(_unlocalizedName, _partClass, null, _mod);
+	}
+
+	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName) {
+		this(_unlocalizedName, _partClass, _groupName, (Integration.Mods )null);
+	}
+
+	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName, Integration.Mods _mod) {
 		this.unlocalizedName = "extracells.part." + _unlocalizedName;
 		this.partClass = _partClass;
-		this.groupName = _groupName == null || _groupName.isEmpty() ? null
-				: "extracells." + _groupName;
+		this.groupName = _groupName == null || _groupName.isEmpty() ? null : "extracells." + _groupName;
+		this.mod = _mod;
 	}
 
-	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass,
-			String _groupName, Pair<Upgrades, Integer>... _upgrades) {
-		this(_unlocalizedName, _partClass, _groupName);
+	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName, Pair<Upgrades, Integer>... _upgrades) {
+		this(_unlocalizedName, _partClass, _groupName, (Integration.Mods )null);
+		for (Pair<Upgrades, Integer> pair : _upgrades) {
+			this.upgrades.put(pair.getKey(), pair.getValue());
+		}
+	}
+
+	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName, Integration.Mods _mod, Pair<Upgrades, Integer>... _upgrades) {
+		this(_unlocalizedName, _partClass, _groupName, _mod);
 		for (Pair<Upgrades, Integer> pair : _upgrades) {
 			this.upgrades.put(pair.getKey(), pair.getValue());
 		}
@@ -102,5 +117,9 @@ public enum PartEnum {
 		PartECBase partECBase = this.partClass.newInstance();
 		partECBase.initializePart(partStack);
 		return partECBase;
+	}
+
+	public Integration.Mods getMod(){
+		return mod;
 	}
 }

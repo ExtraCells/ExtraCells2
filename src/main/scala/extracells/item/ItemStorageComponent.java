@@ -2,6 +2,7 @@ package extracells.item;
 
 import java.util.List;
 
+import extracells.integration.Integration;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
@@ -45,7 +46,8 @@ public class ItemStorageComponent extends ItemECBase implements IStorageComponen
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
 		for (int j = 0; j < this.suffixes.length; ++j) {
-			itemList.add(new ItemStack(item, 1, j));
+			if(!(suffixes[j].contains("gas") && !Integration.Mods.MEKANISMGAS.isEnabled()))
+				itemList.add(new ItemStack(item, 1, j));
 		}
 	}
 

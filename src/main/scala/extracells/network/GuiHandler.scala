@@ -4,6 +4,7 @@ import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.network.IGuiHandler
+import cpw.mods.fml.relauncher.{SideOnly, Side}
 import extracells.Extracells
 import extracells.api.{IWirelessGasTermHandler, IFluidInterface, IPortableFluidStorageCell, IWirelessFluidTermHandler}
 import extracells.block.TGuiBlock
@@ -47,6 +48,7 @@ object GuiHandler extends IGuiHandler {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	def getGui(ID: Int, player: EntityPlayer) : Any = {
 		ID match {
 		case 0 =>

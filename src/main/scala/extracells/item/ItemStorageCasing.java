@@ -1,6 +1,7 @@
 package extracells.item;
 
 import extracells.Extracells;
+import extracells.integration.Integration;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -31,6 +32,7 @@ public class ItemStorageCasing extends ItemECBase {
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
 		for (int j = 0; j < this.suffixes.length; ++j) {
+			if(!(suffixes[j].contains("gas") && !Integration.Mods.MEKANISMGAS.isEnabled()))
 			itemList.add(new ItemStack(item, 1, j));
 		}
 	}
