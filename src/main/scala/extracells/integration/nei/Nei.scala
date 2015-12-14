@@ -40,6 +40,9 @@ object Nei {
 
   def init = {
     hideItems
+    val handler = new UniversalTerminalRecipe
+    API.registerUsageHandler(handler)
+    API.registerRecipeHandler(handler)
   }
 
 }
