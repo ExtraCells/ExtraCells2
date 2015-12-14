@@ -7,13 +7,13 @@ import appeng.api.networking.security.MachineSource
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.Optional
+import cpw.mods.fml.common.Optional.{Interface, Method}
 import extracells.integration.Integration
 import extracells.integration.mekanism.Mekanism
 import extracells.util.{FluidUtil, GasUtil}
 import mekanism.api.gas.{Gas, GasStack, IGasHandler}
 import net.minecraftforge.common.util.ForgeDirection
-import net.minecraftforge.fluids.{FluidStack, Fluid}
-import cpw.mods.fml.common.Optional.{Interface, Method}
+import net.minecraftforge.fluids.{Fluid, FluidStack}
 
 
 @Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true)

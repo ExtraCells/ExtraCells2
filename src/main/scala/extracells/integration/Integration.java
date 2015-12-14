@@ -1,15 +1,15 @@
 package extracells.integration;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.relauncher.Side;
 import extracells.Extracells;
 import extracells.integration.igw.IGW;
 import extracells.integration.mekanism.Mekanism;
 import extracells.integration.nei.Nei;
-import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
 import extracells.integration.opencomputers.OpenComputers;
 import extracells.integration.waila.Waila;
+import net.minecraftforge.common.config.Configuration;
 
 public class Integration {
 	

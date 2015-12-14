@@ -6,7 +6,7 @@ import extracells.tileentity.TileEntityHardMeDrive
 import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.texture.TextureMap
-import net.minecraft.client.renderer.{Tessellator, RenderBlocks}
+import net.minecraft.client.renderer.{RenderBlocks, Tessellator}
 import net.minecraft.util.{IIcon, ResourceLocation}
 import net.minecraft.world.IBlockAccess
 import org.lwjgl.opengl.GL11

@@ -1,7 +1,6 @@
 package extracells.api.definitions;
 
 import appeng.api.definitions.ITileDefinition;
-import appeng.api.util.AEItemDefinition;
 
 public interface IBlockDefinition {
 

@@ -1,8 +1,8 @@
 package extracells.network.packet.other;
 
-import java.util.List;
-
 import net.minecraftforge.fluids.Fluid;
+
+import java.util.List;
 
 public interface IFluidSlotGui {
 

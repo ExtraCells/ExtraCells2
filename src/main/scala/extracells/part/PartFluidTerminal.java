@@ -1,10 +1,28 @@
 package extracells.part;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.api.config.Actionable;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.security.MachineSource;
+import appeng.api.networking.ticking.IGridTickable;
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.*;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.AEColor;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.container.ContainerFluidTerminal;
 import extracells.container.ContainerGasTerminal;
+import extracells.gridblock.ECBaseGridBlock;
+import extracells.gui.GuiFluidTerminal;
+import extracells.network.packet.part.PacketFluidTerminal;
+import extracells.render.TextureManager;
+import extracells.util.FluidUtil;
+import extracells.util.PermissionUtil;
+import extracells.util.inventory.ECPrivateInventory;
+import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,30 +34,10 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import appeng.api.config.Actionable;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.MachineSource;
-import appeng.api.networking.ticking.IGridTickable;
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.AEColor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.container.ContainerFluidTerminal;
-import extracells.gridblock.ECBaseGridBlock;
-import extracells.gui.GuiFluidTerminal;
-import extracells.network.packet.part.PacketFluidTerminal;
-import extracells.render.TextureManager;
-import extracells.util.FluidUtil;
-import extracells.util.PermissionUtil;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PartFluidTerminal extends PartECBase implements IGridTickable,
 		IInventoryUpdateReceiver {

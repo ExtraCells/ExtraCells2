@@ -1,5 +1,12 @@
 package extracells.container;
 
+import appeng.api.implementations.ICraftingPatternItem;
+import extracells.api.IFluidInterface;
+import extracells.container.slot.SlotRespective;
+import extracells.gui.GuiFluidInterface;
+import extracells.network.packet.part.PacketFluidInterface;
+import extracells.part.PartFluidInterface;
+import extracells.tileentity.TileEntityFluidInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -8,13 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import appeng.api.implementations.ICraftingPatternItem;
-import extracells.api.IFluidInterface;
-import extracells.container.slot.SlotRespective;
-import extracells.gui.GuiFluidInterface;
-import extracells.network.packet.part.PacketFluidInterface;
-import extracells.part.PartFluidInterface;
-import extracells.tileentity.TileEntityFluidInterface;
 
 public class ContainerFluidInterface extends Container implements
 		IContainerListener {

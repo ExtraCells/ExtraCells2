@@ -1,12 +1,12 @@
 package extracells.util.inventory;
 
+import extracells.registries.ItemEnum;
+import extracells.util.FluidUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import extracells.registries.ItemEnum;
-import extracells.util.FluidUtil;
 
 public class ECFluidFilterInventory extends ECPrivateInventory {
 

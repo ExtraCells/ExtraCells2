@@ -1,7 +1,6 @@
 package extracells.integration.waila;
 
-import java.util.List;
-
+import extracells.tileentity.TileEntityCertusTank;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -15,7 +14,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import extracells.tileentity.TileEntityCertusTank;
+
+import java.util.List;
 
 public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 

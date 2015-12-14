@@ -1,15 +1,13 @@
 package extracells.util;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.*;
-
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.item.ItemFluidPattern;
 import extracells.registries.ItemEnum;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.*;
+import org.apache.commons.lang3.tuple.MutablePair;
 
 public class FluidUtil {
 

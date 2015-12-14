@@ -1,9 +1,7 @@
 package extracells.gui.widget;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import appeng.api.config.AccessRestriction;
+import com.google.common.base.Splitter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -11,13 +9,12 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import appeng.api.config.AccessRestriction;
-
-import com.google.common.base.Splitter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class WidgetStorageDirection extends GuiButton {
 

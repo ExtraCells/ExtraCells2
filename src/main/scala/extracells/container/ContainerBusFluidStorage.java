@@ -1,10 +1,5 @@
 package extracells.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import appeng.api.AEApi;
 import appeng.api.implementations.guiobjects.IGuiItem;
 import appeng.api.implementations.guiobjects.INetworkTool;
@@ -13,6 +8,11 @@ import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.part.PartFluidStorage;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 public class ContainerBusFluidStorage extends Container {
 

@@ -1,11 +1,17 @@
 package extracells.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.api.AEApi;
+import appeng.api.config.RedstoneMode;
+import extracells.container.ContainerBusFluidIO;
+import extracells.gui.widget.WidgetRedstoneModes;
+import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.integration.Integration;
+import extracells.network.packet.other.IFluidSlotGui;
+import extracells.network.packet.part.PacketBusFluidIO;
+import extracells.part.PartFluidIO;
 import extracells.part.PartGasExport;
 import extracells.part.PartGasImport;
+import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -15,18 +21,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
 import org.lwjgl.opengl.GL11;
 
-import appeng.api.AEApi;
-import appeng.api.config.RedstoneMode;
-import extracells.container.ContainerBusFluidIO;
-import extracells.gui.widget.WidgetRedstoneModes;
-import extracells.gui.widget.fluid.WidgetFluidSlot;
-import extracells.network.packet.other.IFluidSlotGui;
-import extracells.network.packet.part.PacketBusFluidIO;
-import extracells.part.PartFluidIO;
-import extracells.util.FluidUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiBusFluidIO extends GuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {

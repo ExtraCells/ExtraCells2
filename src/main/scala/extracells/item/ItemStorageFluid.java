@@ -1,8 +1,15 @@
 package extracells.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.api.AEApi;
+import appeng.api.config.FuzzyMode;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.api.IFluidStorageCell;
+import extracells.api.IHandlerFluidStorage;
+import extracells.registries.ItemEnum;
+import extracells.util.inventory.ECFluidFilterInventory;
+import extracells.util.inventory.ECPrivateInventory;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,16 +24,9 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import appeng.api.AEApi;
-import appeng.api.config.FuzzyMode;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
-import extracells.api.IFluidStorageCell;
-import extracells.api.IHandlerFluidStorage;
-import extracells.registries.ItemEnum;
-import extracells.util.inventory.ECFluidFilterInventory;
-import extracells.util.inventory.ECPrivateInventory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 

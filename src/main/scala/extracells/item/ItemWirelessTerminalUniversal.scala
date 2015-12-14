@@ -7,15 +7,15 @@ import appeng.api.AEApi
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import extracells.api.{IWirelessGasTermHandler, ECApi, IWirelessFluidTermHandler}
+import extracells.api.{ECApi, IWirelessFluidTermHandler, IWirelessGasTermHandler}
 import extracells.integration.Integration
 import extracells.integration.thaumaticenergistics.ThaumaticEnergistics
-import extracells.wireless.{ConfigManager, AEWirelessTermHandler}
+import extracells.wireless.ConfigManager
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{StatCollector, IIcon}
+import net.minecraft.util.{IIcon, StatCollector}
 import net.minecraft.world.World
 
 object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler with EssensiaTerminal{

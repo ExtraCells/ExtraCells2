@@ -1,9 +1,9 @@
 package extracells.gui.widget;
 
-import java.util.Comparator;
-
 import extracells.gui.widget.fluid.AbstractFluidWidget;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.Comparator;
 
 public class FluidWidgetComparator implements Comparator<AbstractFluidWidget> {
 

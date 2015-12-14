@@ -1,14 +1,12 @@
 package extracells.item
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import extracells.api.{ECApi, IWirelessFluidTermHandler}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.IIcon
 import net.minecraft.world.World
-import extracells.api.ECApi
-import extracells.api.IWirelessFluidTermHandler
 
 object ItemWirelessTerminalFluid extends Item with IWirelessFluidTermHandler with WirelessTermBase {
   private[item] var icon: IIcon = null

@@ -1,16 +1,14 @@
 package extracells.gui;
 
+import extracells.container.ContainerFluidCrafter;
+import extracells.registries.BlockEnum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
-import extracells.container.ContainerFluidCrafter;
-import extracells.registries.BlockEnum;
 
 public class GuiFluidCrafter extends GuiContainer {
 	public static final int xSize = 176;

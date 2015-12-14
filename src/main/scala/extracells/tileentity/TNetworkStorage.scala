@@ -3,7 +3,7 @@ package extracells.tileentity
 import appeng.api.networking.storage.IStorageGrid
 import appeng.api.networking.{IGrid, IGridHost}
 import appeng.api.storage.IMEMonitor
-import appeng.api.storage.data.{IAEItemStack, IAEFluidStack}
+import appeng.api.storage.data.{IAEFluidStack, IAEItemStack}
 import net.minecraftforge.common.util.ForgeDirection
 
 

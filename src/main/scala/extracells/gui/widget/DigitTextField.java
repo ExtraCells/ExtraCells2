@@ -3,7 +3,6 @@ package extracells.gui.widget;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-
 import org.lwjgl.input.Keyboard;
 
 public class DigitTextField extends GuiTextField {

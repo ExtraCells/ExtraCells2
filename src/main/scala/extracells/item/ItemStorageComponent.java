@@ -1,7 +1,6 @@
 package extracells.item;
 
-import java.util.List;
-
+import appeng.api.implementations.items.IStorageComponent;
 import extracells.integration.Integration;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,7 +9,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import appeng.api.implementations.items.IStorageComponent;
+
+import java.util.List;
 
 public class ItemStorageComponent extends ItemECBase implements IStorageComponent {
 

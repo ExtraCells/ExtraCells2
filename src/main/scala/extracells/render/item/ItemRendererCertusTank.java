@@ -1,5 +1,6 @@
 package extracells.render.item;
 
+import extracells.render.model.ModelCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -11,10 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
 import org.lwjgl.opengl.GL11;
-
-import extracells.render.model.ModelCertusTank;
 
 public class ItemRendererCertusTank implements IItemRenderer {
 

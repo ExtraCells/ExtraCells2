@@ -1,20 +1,20 @@
 package extracells.network.packet.part;
 
+import appeng.api.AEApi;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IItemList;
+import extracells.container.ContainerFluidStorage;
 import extracells.container.ContainerGasStorage;
+import extracells.gui.GuiFluidStorage;
 import extracells.gui.GuiGasStorage;
 import extracells.integration.Integration;
+import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import appeng.api.AEApi;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IItemList;
-import extracells.container.ContainerFluidStorage;
-import extracells.gui.GuiFluidStorage;
-import extracells.network.AbstractPacket;
 
 public class PacketFluidStorage extends AbstractPacket {
 

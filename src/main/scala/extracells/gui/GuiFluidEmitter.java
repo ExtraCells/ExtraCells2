@@ -1,17 +1,5 @@
 package extracells.gui;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-
 import appeng.api.config.RedstoneMode;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.widget.DigitTextField;
@@ -22,6 +10,16 @@ import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.part.PartFluidLevelEmitter;
 import extracells.registries.PartEnum;
 import extracells.util.GuiUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 

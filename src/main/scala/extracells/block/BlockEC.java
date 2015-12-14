@@ -1,6 +1,5 @@
 package extracells.block;
 
-import extracells.Extracells;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 

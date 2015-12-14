@@ -1,6 +1,5 @@
 package extracells.integration.opencomputers
 
-import scala.collection.JavaConversions._
 import appeng.api.AEApi
 import appeng.api.config.Actionable
 import appeng.api.implementations.tiles.IWirelessAccessPoint
@@ -22,6 +21,8 @@ import li.cil.oc.server.network.Component
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.FluidContainerRegistry
+
+import scala.collection.JavaConversions._
 
 
 class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.NetworkControl[TileSecurity] with ec.NetworkControl[TileSecurity]{

@@ -1,17 +1,15 @@
 package extracells.gui;
 
+import extracells.container.ContainerFluidFiller;
+import extracells.gui.widget.WidgetSlotFluidContainer;
+import extracells.tileentity.TileEntityFluidFiller;
+import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-
 import org.lwjgl.opengl.GL11;
-
-import extracells.container.ContainerFluidFiller;
-import extracells.gui.widget.WidgetSlotFluidContainer;
-import extracells.tileentity.TileEntityFluidFiller;
-import extracells.util.GuiUtil;
 
 public class GuiFluidFiller extends GuiContainer {
 	public static final int xSize = 176;

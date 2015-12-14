@@ -1,5 +1,6 @@
 package extracells.container;
 
+import extracells.part.PartFluidLevelEmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -7,7 +8,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import extracells.part.PartFluidLevelEmitter;
 
 public class ContainerFluidEmitter extends Container {
 

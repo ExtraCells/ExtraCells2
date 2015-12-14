@@ -1,5 +1,6 @@
 package extracells.render.model;
 
+import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
@@ -11,10 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-
 import org.lwjgl.opengl.GL11;
-
-import extracells.tileentity.TileEntityCertusTank;
 
 public class ModelCertusTank extends ModelBase {
 

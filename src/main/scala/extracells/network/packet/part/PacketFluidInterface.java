@@ -1,5 +1,11 @@
 package extracells.network.packet.part;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.container.ContainerFluidInterface;
+import extracells.gui.GuiFluidInterface;
+import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,12 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.container.ContainerFluidInterface;
-import extracells.gui.GuiFluidInterface;
-import extracells.network.AbstractPacket;
 
 public class PacketFluidInterface extends AbstractPacket {
 

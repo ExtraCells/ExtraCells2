@@ -1,13 +1,33 @@
 package extracells.part;
 
+import appeng.api.AEApi;
+import appeng.api.config.Actionable;
+import appeng.api.implementations.IPowerChannelState;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridHost;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.energy.IEnergyGrid;
+import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
+import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.MachineSource;
+import appeng.api.parts.*;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
+import appeng.api.util.DimensionalCoord;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.gridblock.ECBaseGridBlock;
 import extracells.integration.Integration;
+import extracells.network.GuiHandler;
+import extracells.registries.ItemEnum;
+import extracells.registries.PartEnum;
+import extracells.render.TextureManager;
 import io.netty.buffer.ByteBuf;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
-
 import mekanism.api.gas.IGasHandler;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -23,36 +43,10 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
-import appeng.api.AEApi;
-import appeng.api.config.Actionable;
-import appeng.api.implementations.IPowerChannelState;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridHost;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.energy.IEnergyGrid;
-import appeng.api.networking.events.MENetworkEventSubscribe;
-import appeng.api.networking.events.MENetworkPowerStatusChange;
-import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.MachineSource;
-import appeng.api.parts.BusSupport;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
-import appeng.api.parts.PartItemStack;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.api.util.DimensionalCoord;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.gridblock.ECBaseGridBlock;
-import extracells.network.GuiHandler;
-import extracells.registries.ItemEnum;
-import extracells.registries.PartEnum;
-import extracells.render.TextureManager;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
 
 public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 		IPowerChannelState {

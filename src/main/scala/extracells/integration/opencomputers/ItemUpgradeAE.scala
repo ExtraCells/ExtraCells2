@@ -1,14 +1,14 @@
 package extracells.integration.opencomputers
 
 import cpw.mods.fml.common.registry.GameRegistry
-import cpw.mods.fml.relauncher.{SideOnly, Side}
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import li.cil.oc.api.CreativeTab
-import li.cil.oc.api.driver.{EnvironmentAware, EnvironmentHost}
 import li.cil.oc.api.driver.item.{HostAware, Slot}
+import li.cil.oc.api.driver.{EnvironmentAware, EnvironmentHost}
 import li.cil.oc.api.internal.{Drone, Robot}
 import li.cil.oc.api.network.{Environment, ManagedEnvironment}
 import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.item.{ItemStack, EnumRarity, Item}
+import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 
 

@@ -3,7 +3,7 @@ package extracells.gridblock
 import java.util.EnumSet
 
 import appeng.api.networking._
-import appeng.api.util.{DimensionalCoord, AEColor}
+import appeng.api.util.{AEColor, DimensionalCoord}
 import extracells.tileentity.TileEntityHardMeDrive
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection

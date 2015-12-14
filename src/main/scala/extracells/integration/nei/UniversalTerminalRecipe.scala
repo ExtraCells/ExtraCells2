@@ -3,9 +3,9 @@ package extracells.integration.nei
 import java.awt.Rectangle
 import java.util
 
-import codechicken.nei.{PositionedStack, NEIClientUtils, NEIServerUtils}
-import codechicken.nei.api.{IOverlayHandler, DefaultOverlayRenderer, IStackPositioner, IRecipeOverlayRenderer}
-import codechicken.nei.recipe.{TemplateRecipeHandler, RecipeInfo}
+import codechicken.nei.api.{DefaultOverlayRenderer, IOverlayHandler, IRecipeOverlayRenderer, IStackPositioner}
+import codechicken.nei.recipe.{RecipeInfo, TemplateRecipeHandler}
+import codechicken.nei.{NEIClientUtils, PositionedStack}
 import extracells.registries.ItemEnum
 import extracells.util.UniversalTerminal
 import net.minecraft.client.gui.inventory.{GuiContainer, GuiCrafting}

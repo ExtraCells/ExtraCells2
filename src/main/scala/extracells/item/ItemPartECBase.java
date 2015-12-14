@@ -1,20 +1,5 @@
 package extracells.item;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
-
-import org.apache.logging.log4j.Level;
-
 import appeng.api.AEApi;
 import appeng.api.config.Upgrades;
 import appeng.api.implementations.items.IItemGroup;
@@ -25,6 +10,19 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.api.ECApi;
 import extracells.registries.PartEnum;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
+import org.apache.logging.log4j.Level;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 

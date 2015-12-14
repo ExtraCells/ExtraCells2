@@ -1,22 +1,22 @@
 package extracells.network.packet.part;
 
+import appeng.api.AEApi;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IItemList;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.container.ContainerFluidTerminal;
 import extracells.container.ContainerGasTerminal;
+import extracells.gui.GuiFluidTerminal;
 import extracells.gui.GuiGasTerminal;
+import extracells.network.AbstractPacket;
+import extracells.part.PartFluidTerminal;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import appeng.api.AEApi;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IItemList;
-import extracells.container.ContainerFluidTerminal;
-import extracells.gui.GuiFluidTerminal;
-import extracells.network.AbstractPacket;
-import extracells.part.PartFluidTerminal;
 
 public class PacketFluidTerminal extends AbstractPacket {
 

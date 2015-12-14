@@ -8,7 +8,8 @@ import extracells.Extracells
 import extracells.integration.Integration
 import extracells.registries.{BlockEnum, ItemEnum}
 import igwmod.api.WikiRegistry
-import net.minecraft.item.{ItemStack, Item}
+import net.minecraft.item.{Item, ItemStack}
+
 import scala.collection.JavaConversions._
 
 object IGW {

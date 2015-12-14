@@ -1,8 +1,9 @@
 package extracells.gui.widget.fluid;
 
-import java.util.List;
-
 import cpw.mods.fml.common.Optional;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
+import extracells.network.packet.other.PacketFluidSlot;
+import extracells.util.FluidUtil;
 import extracells.util.GasUtil;
 import mekanism.api.gas.GasStack;
 import net.minecraft.client.Minecraft;
@@ -15,13 +16,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.other.PacketFluidSlot;
-import extracells.util.FluidUtil;
+import java.util.List;
 
 public class WidgetFluidSlot extends Gui {
 

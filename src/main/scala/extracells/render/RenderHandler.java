@@ -1,13 +1,13 @@
 package extracells.render;
 
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import extracells.block.BlockCertusTank;
+import extracells.render.model.ModelCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import extracells.block.BlockCertusTank;
-import extracells.render.model.ModelCertusTank;
 
 public class RenderHandler implements ISimpleBlockRenderingHandler {
 

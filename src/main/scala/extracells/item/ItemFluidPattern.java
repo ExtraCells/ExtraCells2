@@ -1,7 +1,6 @@
 package extracells.item;
 
-import java.util.List;
-
+import extracells.registries.ItemEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +14,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import extracells.registries.ItemEnum;
+
+import java.util.List;
 
 public class ItemFluidPattern extends ItemECBase {
 

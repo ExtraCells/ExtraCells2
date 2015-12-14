@@ -1,31 +1,23 @@
 package extracells.item
 
 import java.util
+
+import appeng.api.AEApi
+import appeng.api.config.{AccessRestriction, FuzzyMode}
+import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
+import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.relauncher.{Side, SideOnly}
+import extracells.api.{ECApi, IHandlerFluidStorage, IPortableFluidStorageCell}
+import extracells.util.inventory.{ECFluidFilterInventory, ECPrivateInventory}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
-import net.minecraft.item.EnumRarity
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.IIcon
-import net.minecraft.util.StatCollector
+import net.minecraft.util.{IIcon, StatCollector}
 import net.minecraft.world.World
-import net.minecraftforge.fluids.Fluid
-import net.minecraftforge.fluids.FluidRegistry
-import appeng.api.AEApi
-import appeng.api.config.AccessRestriction
-import appeng.api.config.FuzzyMode
-import appeng.api.storage.IMEInventoryHandler
-import appeng.api.storage.StorageChannel
-import appeng.api.storage.data.IAEFluidStack
-import extracells.api.ECApi
-import extracells.api.IHandlerFluidStorage
-import extracells.api.IPortableFluidStorageCell
-import extracells.util.inventory.ECFluidFilterInventory
-import extracells.util.inventory.ECPrivateInventory
+import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 
 object ItemStoragePortableCell extends ItemECBase with IPortableFluidStorageCell with PowerItem {
 

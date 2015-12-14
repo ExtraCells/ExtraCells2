@@ -3,7 +3,6 @@ package extracells.gui;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.Extracells;
 import extracells.api.ECApi;
-import extracells.container.ContainerFluidStorage;
 import extracells.container.ContainerGasStorage;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.fluid.AbstractFluidWidget;

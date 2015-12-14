@@ -1,7 +1,7 @@
 package extracells.item
 
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import extracells.api.{IWirelessGasTermHandler, ECApi, IWirelessFluidTermHandler}
+import extracells.api.{ECApi, IWirelessGasTermHandler}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}

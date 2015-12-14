@@ -8,7 +8,7 @@ import extracells.container.ContainerGasTerminal
 import extracells.gridblock.ECBaseGridBlock
 import extracells.gui.GuiGasTerminal
 import extracells.integration.Integration.Mods
-import extracells.util.{GasUtil, FluidUtil}
+import extracells.util.{FluidUtil, GasUtil}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.FluidStack

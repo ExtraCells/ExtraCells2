@@ -1,6 +1,6 @@
 package extracells.util;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class ColorUtil {
 

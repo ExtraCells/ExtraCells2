@@ -1,15 +1,6 @@
 package extracells.gridblock;
 
-import java.util.EnumSet;
-
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
-import appeng.api.networking.GridFlags;
-import appeng.api.networking.GridNotification;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridBlock;
-import appeng.api.networking.IGridHost;
-import appeng.api.networking.IGridNode;
+import appeng.api.networking.*;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
@@ -17,6 +8,10 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import extracells.part.PartECBase;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.EnumSet;
 
 public class ECBaseGridBlock implements IGridBlock {
 

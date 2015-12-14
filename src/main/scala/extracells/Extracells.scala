@@ -5,9 +5,9 @@ import java.io.File
 import appeng.api.AEApi
 import cpw.mods.fml.client.registry.RenderingRegistry
 import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.{FMLCommonHandler, Loader, Mod, SidedProxy}
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import cpw.mods.fml.common.network.NetworkRegistry
+import cpw.mods.fml.common.{FMLCommonHandler, Loader, Mod, SidedProxy}
 import extracells.integration.Integration
 import extracells.network.{ChannelHandler, GuiHandler}
 import extracells.proxy.CommonProxy

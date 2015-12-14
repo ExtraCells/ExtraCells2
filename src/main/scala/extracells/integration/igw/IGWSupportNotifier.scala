@@ -2,25 +2,20 @@ package extracells.integration.igw
 
 import java.awt.Desktop
 import java.io.File
-import java.net.URL
-import java.net.URLConnection
+import java.net.{URL, URLConnection}
 import java.util.List
-import net.minecraft.client.Minecraft
-import net.minecraft.command.CommandBase
-import net.minecraft.command.ICommandSender
-import net.minecraft.util.ChatComponentText
-import net.minecraft.util.EnumChatFormatting
-import net.minecraft.util.IChatComponent
-import net.minecraftforge.client.ClientCommandHandler
-import net.minecraftforge.common.config.Configuration
-import org.apache.commons.io.FileUtils
+
 import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.common.FMLCommonHandler
-import cpw.mods.fml.common.Loader
-import cpw.mods.fml.common.ModContainer
+import cpw.mods.fml.common.{FMLCommonHandler, Loader, ModContainer}
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.gameevent.TickEvent
 import cpw.mods.fml.relauncher.Side
+import net.minecraft.client.Minecraft
+import net.minecraft.command.{CommandBase, ICommandSender}
+import net.minecraft.util.{ChatComponentText, EnumChatFormatting, IChatComponent}
+import net.minecraftforge.client.ClientCommandHandler
+import net.minecraftforge.common.config.Configuration
+import org.apache.commons.io.FileUtils
 
 /**
  * This class is meant to be copied to your own mod which implements IGW-Mod. When properly implemented by instantiating a new instance somewhere in your mod

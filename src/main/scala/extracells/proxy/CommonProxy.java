@@ -1,11 +1,5 @@
 package extracells.proxy;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import appeng.api.AEApi;
 import appeng.api.IAppEngApi;
 import appeng.api.recipes.IRecipeHandler;
@@ -16,6 +10,8 @@ import extracells.registries.ItemEnum;
 import extracells.tileentity.*;
 import extracells.util.FuelBurnTime;
 import net.minecraftforge.fluids.FluidRegistry;
+
+import java.io.*;
 
 public class CommonProxy {
 

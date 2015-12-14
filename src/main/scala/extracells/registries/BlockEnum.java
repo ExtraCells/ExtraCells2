@@ -3,12 +3,11 @@ package extracells.registries;
 import extracells.Extracells;
 import extracells.block.*;
 import extracells.integration.Integration;
-import extracells.tileentity.TileEntityHardMeDrive;
+import extracells.item.ItemBlockCertusTank;
+import extracells.item.ItemBlockECBase;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
-import extracells.item.ItemBlockCertusTank;
-import extracells.item.ItemBlockECBase;
 
 public enum BlockEnum {
 	CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),

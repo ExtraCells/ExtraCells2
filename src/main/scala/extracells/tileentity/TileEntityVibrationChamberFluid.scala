@@ -2,21 +2,15 @@ package extracells.tileentity
 
 import appeng.api.AEApi
 import appeng.api.config.Actionable
-import appeng.api.networking.IGrid
 import appeng.api.networking.IGridNode
 import appeng.api.networking.energy.IEnergyGrid
 import appeng.api.networking.security.IActionHost
-import appeng.api.networking.storage.IStorageGrid
-import appeng.api.storage.IMEInventory
-import appeng.api.storage.data.IAEFluidStack
-import appeng.api.util.AECableType
-import appeng.api.util.DimensionalCoord
+import appeng.api.util.{AECableType, DimensionalCoord}
 import extracells.api.IECTileEntity
-import extracells.gridblock.{ECGridBlockVibrantChamber, ECFluidGridBlock}
+import extracells.gridblock.ECGridBlockVibrantChamber
 import extracells.util.FuelBurnTime
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.NetworkManager
-import net.minecraft.network.Packet
+import net.minecraft.network.{NetworkManager, Packet}
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._

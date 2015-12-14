@@ -1,17 +1,16 @@
 package extracells.network.packet.other;
 
+import extracells.network.AbstractPacket;
+import extracells.part.PartECBase;
 import io.netty.buffer.ByteBuf;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
-import extracells.network.AbstractPacket;
-import extracells.part.PartECBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PacketFluidSlot extends AbstractPacket {
 

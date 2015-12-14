@@ -2,8 +2,9 @@ package extracells.integration.mekanism
 
 import appeng.api.AEApi
 import extracells.api.ECApi
-import mekanism.api.gas.{ITubeConnection, IGasHandler, GasRegistry, Gas}
-import net.minecraftforge.fluids.{FluidRegistry, FluidStack, Fluid}
+import mekanism.api.gas.{Gas, GasRegistry, IGasHandler, ITubeConnection}
+import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
+
 import scala.collection.JavaConversions._
 
 

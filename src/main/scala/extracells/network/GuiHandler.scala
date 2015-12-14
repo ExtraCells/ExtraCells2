@@ -4,9 +4,9 @@ import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.network.IGuiHandler
-import cpw.mods.fml.relauncher.{SideOnly, Side}
+import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.Extracells
-import extracells.api.{IWirelessGasTermHandler, IFluidInterface, IPortableFluidStorageCell, IWirelessFluidTermHandler}
+import extracells.api.{IFluidInterface, IPortableFluidStorageCell, IWirelessFluidTermHandler, IWirelessGasTermHandler}
 import extracells.block.TGuiBlock
 import extracells.container._
 import extracells.gui._

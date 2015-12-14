@@ -1,6 +1,6 @@
 package extracells.tileentity
 
-import appeng.api.config.{AccessRestriction, PowerMultiplier, Actionable}
+import appeng.api.config.{AccessRestriction, Actionable, PowerMultiplier}
 import appeng.api.networking.energy.IAEPowerStorage
 import net.minecraft.nbt.NBTTagCompound
 

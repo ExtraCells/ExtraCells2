@@ -1,20 +1,5 @@
 package extracells.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-
-import org.lwjgl.opengl.GL11;
-
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import extracells.container.ContainerBusFluidStorage;
@@ -25,6 +10,19 @@ import extracells.network.packet.part.PacketBusFluidStorage;
 import extracells.part.PartFluidStorage;
 import extracells.util.FluidUtil;
 import extracells.util.GuiUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiBusFluidStorage extends GuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {

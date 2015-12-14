@@ -1,22 +1,22 @@
 package extracells.proxy;
 
-import extracells.render.block.RendererHardMEDrive;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.render.TextureManager;
+import extracells.render.block.RendererHardMEDrive;
 import extracells.render.item.ItemRendererCertusTank;
 import extracells.render.item.ItemRendererFluid;
 import extracells.render.item.ItemRendererFluidPattern;
 import extracells.render.item.ItemRendererWalrus;
 import extracells.render.tileentity.TileEntityRendererWalrus;
 import extracells.tileentity.TileEntityWalrus;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {

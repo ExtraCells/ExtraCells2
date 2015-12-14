@@ -1,17 +1,15 @@
 package extracells.registries;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import appeng.api.config.Upgrades;
 import extracells.integration.Integration;
 import extracells.part.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import appeng.api.config.Upgrades;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum PartEnum {
 	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),

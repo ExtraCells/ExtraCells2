@@ -1,9 +1,6 @@
 package extracells.block;
 
-import extracells.Extracells;
 import extracells.tileentity.TileEntityWalrus;
-import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;

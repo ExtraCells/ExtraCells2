@@ -1,23 +1,5 @@
 package extracells.part;
 
-import appeng.api.parts.PartItemStack;
-import io.netty.buffer.ByteBuf;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.IGridNode;
@@ -27,6 +9,7 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
+import appeng.api.parts.PartItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidIO;
@@ -36,6 +19,20 @@ import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketBusFluidIO;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		IInventoryUpdateReceiver, IFluidSlotPartOrBlock {

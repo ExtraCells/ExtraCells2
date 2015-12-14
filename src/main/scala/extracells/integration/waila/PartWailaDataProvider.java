@@ -1,7 +1,9 @@
 package extracells.integration.waila;
 
-import java.util.List;
-
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.SelectedPart;
+import extracells.part.PartECBase;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -13,10 +15,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.SelectedPart;
-import extracells.part.PartECBase;
+
+import java.util.List;
 
 public class PartWailaDataProvider implements IWailaDataProvider {
 

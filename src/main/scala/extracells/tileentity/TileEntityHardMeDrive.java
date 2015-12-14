@@ -10,7 +10,6 @@ import appeng.api.storage.*;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
-import extracells.gridblock.ECFluidGridBlock;
 import extracells.gridblock.ECGridBlockHardMEDrive;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
@@ -19,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;

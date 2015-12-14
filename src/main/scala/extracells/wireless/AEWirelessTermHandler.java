@@ -1,10 +1,10 @@
 package extracells.wireless;
 
+import appeng.api.features.IWirelessTermHandler;
+import appeng.api.util.IConfigManager;
 import extracells.api.IWirelessGasFluidTermHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import appeng.api.features.IWirelessTermHandler;
-import appeng.api.util.IConfigManager;
 
 public class AEWirelessTermHandler implements IWirelessTermHandler {
 
