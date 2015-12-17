@@ -4,8 +4,8 @@ import java.util
 
 import appeng.api.AEApi
 import appeng.api.config.{AccessRestriction, FuzzyMode}
-import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
 import appeng.api.storage.data.IAEFluidStack
+import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.api.{ECApi, IHandlerFluidStorage, IPortableFluidStorageCell}
 import extracells.util.inventory.{ECFluidFilterInventory, ECPrivateInventory}

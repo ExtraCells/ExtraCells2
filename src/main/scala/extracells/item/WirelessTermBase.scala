@@ -14,6 +14,7 @@ import net.minecraft.util.StatCollector
 trait WirelessTermBase extends PowerItem{
 
   setMaxStackSize(1)
+  override val MAX_POWER: Double = 1600000
 
   def getPowerFlow(itemStack: ItemStack): AccessRestriction = {
     return AccessRestriction.READ_WRITE

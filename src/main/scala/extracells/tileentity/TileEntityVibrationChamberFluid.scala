@@ -10,8 +10,8 @@ import extracells.api.IECTileEntity
 import extracells.gridblock.ECGridBlockVibrantChamber
 import extracells.util.FuelBurnTime
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.network.{NetworkManager, Packet}
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity
+import net.minecraft.network.{NetworkManager, Packet}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 

@@ -6,9 +6,9 @@ import java.net.{URL, URLConnection}
 import java.util.List
 
 import cpw.mods.fml.client.FMLClientHandler
-import cpw.mods.fml.common.{FMLCommonHandler, Loader, ModContainer}
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import cpw.mods.fml.common.gameevent.TickEvent
+import cpw.mods.fml.common.{FMLCommonHandler, Loader, ModContainer}
 import cpw.mods.fml.relauncher.Side
 import net.minecraft.client.Minecraft
 import net.minecraft.command.{CommandBase, ICommandSender}

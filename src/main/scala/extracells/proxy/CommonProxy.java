@@ -9,6 +9,7 @@ import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.*;
 import extracells.util.FuelBurnTime;
+import extracells.util.recipe.RecipeUniversalTerminal;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import java.io.*;
@@ -48,6 +49,7 @@ public class CommonProxy {
 					"main.recipe");
 		}
 		recipeHandler.injectRecipes();
+		GameRegistry.addRecipe(RecipeUniversalTerminal.THIS());
 	}
 
 	public void registerBlocks() {

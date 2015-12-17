@@ -214,16 +214,15 @@ public class NameHandler implements ISubItemResolver {
 			return new ResolverResult(BlockEnum.FLUIDCRAFTER.getInternalName(),
 					0);
 		if (fullName.equals("wirelessFluidTerminal"))
-			return new ResolverResult(
-					ItemEnum.FLUIDWIRELESSTERMINAL.getInternalName(), 0);
+			return new ResolverResult(ItemEnum.FLUIDWIRELESSTERMINAL.getInternalName(), 0);
+		if (fullName.equals("wirelessGasTerminal"))
+			return new ResolverResult(ItemEnum.GASWIRELESSTERMINAL.getInternalName(), 0);
 		if (fullName.equals("walrus"))
 			return new ResolverResult(BlockEnum.WALRUS.getInternalName(), 0);
 		if (fullName.equals("interface"))
-			return new ResolverResult(BlockEnum.ECBASEBLOCK.getInternalName(),
-					0);
+			return new ResolverResult(BlockEnum.ECBASEBLOCK.getInternalName(), 0);
 		if (fullName.equals("fluidFiller"))
-			return new ResolverResult(BlockEnum.ECBASEBLOCK.getInternalName(),
-					1);
+			return new ResolverResult(BlockEnum.ECBASEBLOCK.getInternalName(), 1);
 		if (fullName.equals("blockVibrationChamberFluid"))
 			return  new ResolverResult(BlockEnum.VIBRANTCHAMBERFLUID.getInternalName(), 0);
 		if (fullName.equals("hardMEDrive"))
