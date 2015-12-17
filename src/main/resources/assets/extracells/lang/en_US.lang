@@ -45,7 +45,9 @@ extracells.item.storage.component.gas.4096k.name=4096k ME Gas Storage Component
 extracells.item.storage.casing.physical.name=Advanced Storage Housing
 extracells.item.storage.casing.fluid.name=Fluid Storage Housing
 extracells.item.storage.casing.gas.name=Gas Storage Housing
-extracells.item.terminal.fluid.wireless.name=Wireless ME Fluid Terminal
+extracells.item.terminal.fluid.wireless.name=Wireless Fluid Terminal
+extracells.item.terminal.gas.wireless.name=Wireless Gas Terminal
+extracells.item.terminal.universal.wireless.name=Wireless Universal Terminal
 extracells.item.fluid.pattern=ME Fluid Pattern [WIP]
 extracells.item.oc.upgrade.name=ME Upgrade
 
@@ -108,6 +110,7 @@ extracells.tooltip.mode=Mode
 extracells.tooltip.item=Item
 extracells.tooltip.gas=Gas
 extracells.tooltip.essentia=Essentia
+extracells.tooltip.installed=Installed:
 
 //Buttons
 extracells.gui.craft=Craft

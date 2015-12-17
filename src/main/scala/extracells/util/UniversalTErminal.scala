@@ -3,6 +3,7 @@ package extracells.util
 import appeng.api.AEApi
 import extracells.integration.Integration.Mods
 import extracells.integration.thaumaticenergistics.ThaumaticEnergistics
+import extracells.item.TerminalType
 import extracells.registries.{ItemEnum, PartEnum}
 import net.minecraft.item.ItemStack
 
@@ -58,7 +59,7 @@ object UniversalTerminal {
     val ecterm = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
     if(item == ecterm.getItem && meta == ecterm.getItemDamage)
       return true
-    val ectermgas = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
+    val ectermgas = ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal)
     if(item == ectermgas.getItem && meta == ectermgas.getItemDamage)
       return true
     if(Mods.THAUMATICENERGISTICS.isEnabled){
@@ -91,6 +92,44 @@ object UniversalTerminal {
         return true
     }
     false
+  }
+
+  def getTerminalType(stack: ItemStack): TerminalType = {
+    if(stack == null)
+      return null
+    val item = stack.getItem
+    val meta = stack.getItemDamage
+    if(item == null)
+      return null
+    val aeterm = AEApi.instance.definitions.parts.terminal.maybeStack(1).get
+    if(item == aeterm.getItem && meta == aeterm.getItemDamage)
+      return TerminalType.ITEM
+    val ecterm = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
+    if(item == ecterm.getItem && meta == ecterm.getItemDamage)
+      return TerminalType.FLUID
+    val ectermgas = ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal)
+    if(item == ectermgas.getItem && meta == ectermgas.getItemDamage)
+      return TerminalType.GAS
+    if(Mods.THAUMATICENERGISTICS.isEnabled){
+      val thterm = ThaumaticEnergistics.getTerminal
+      if(item == thterm.getItem && meta == thterm.getItemDamage)
+        return TerminalType.ESSENTIA
+    }
+    val aeterm2 = AEApi.instance.definitions.items.wirelessTerminal.maybeStack(1).get
+    if(item == aeterm2.getItem && meta == aeterm2.getItemDamage)
+      return TerminalType.ITEM
+    val ecterm2 = ItemEnum.FLUIDWIRELESSTERMINAL.getDamagedStack(0)
+    if(item == ecterm2.getItem && meta == ecterm2.getItemDamage)
+      return TerminalType.FLUID
+    val ectermgas2 = ItemEnum.GASWIRELESSTERMINAL.getDamagedStack(0)
+    if(item == ectermgas2.getItem && meta == ectermgas2.getItemDamage)
+      return TerminalType.GAS
+    if(Mods.THAUMATICENERGISTICS.isEnabled){
+      val thterm = ThaumaticEnergistics.getWirelessTerminal
+      if(item == thterm.getItem && meta == thterm.getItemDamage)
+        return TerminalType.ESSENTIA
+    }
+    null
   }
 
 }
