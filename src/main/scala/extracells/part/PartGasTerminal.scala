@@ -59,7 +59,9 @@ class PartGasTerminal extends PartFluidTerminal{
 
       val filledContainer: MutablePair[Integer, ItemStack] = GasUtil.fillStack(container, GasUtil.getGasStack(new FluidStack(this.currentFluid, proposedAmount)))
       val gasStack2 = GasUtil.getGasFromContainer(filledContainer.getRight)
-      if (container.stackSize == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight)) {
+      if(gasStack2 == null) {
+        doNextFill = false
+      }else if (container.stackSize == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight)) {
         this.inventory.setInventorySlotContents(0, filledContainer.getRight)
         monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
         doNextFill = true
