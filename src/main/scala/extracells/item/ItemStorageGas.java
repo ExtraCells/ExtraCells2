@@ -54,10 +54,10 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
 		boolean partitioned = cellHandler.isFormatted();
 		long usedBytes = cellHandler.usedBytes();
 
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
+		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
 		if (usedBytes != 0) {
-			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes));
+			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.content"), usedBytes));
 		}
 
 		if (partitioned) {

@@ -7,7 +7,7 @@ import appeng.api.config.{AccessRestriction, FuzzyMode}
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import extracells.api.{ECApi, IHandlerFluidStorage, IPortableFluidStorageCell}
+import extracells.api.{IPortableGasStorageCell, ECApi, IHandlerFluidStorage, IPortableFluidStorageCell}
 import extracells.util.inventory.{ECFluidFilterInventory, ECPrivateInventory}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
@@ -19,7 +19,7 @@ import net.minecraft.util.{IIcon, StatCollector}
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 
-object ItemStoragePortableCell extends ItemECBase with IPortableFluidStorageCell with PowerItem {
+object ItemStoragePortableGasCell extends ItemECBase with IPortableGasStorageCell with PowerItem {
 
   override val MAX_POWER: Double = 20000
   private[item] var icon: IIcon = null
@@ -28,7 +28,8 @@ object ItemStoragePortableCell extends ItemECBase with IPortableFluidStorageCell
   setMaxDamage(0)
 
 
-  @SuppressWarnings(Array("rawtypes", "unchecked")) override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
+  @SuppressWarnings(Array("rawtypes", "unchecked"))
+  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
     val list2 = list.asInstanceOf[util.List[String]]
     val handler: IMEInventoryHandler[IAEFluidStack] = AEApi.instance.registries.cell.getCellInventory(itemStack, null, StorageChannel.FLUIDS).asInstanceOf[IMEInventoryHandler[IAEFluidStack]]
 
@@ -39,24 +40,22 @@ object ItemStoragePortableCell extends ItemECBase with IPortableFluidStorageCell
     val partitioned: Boolean = cellHandler.isFormatted
     val usedBytes: Long = cellHandler.usedBytes
     val aeCurrentPower: Double = getAECurrentPower(itemStack)
-    list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), (usedBytes / 250).asInstanceOf[AnyRef], (cellHandler.totalBytes / 250).asInstanceOf[AnyRef]))
-    list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes.asInstanceOf[AnyRef], cellHandler.totalTypes.asInstanceOf[AnyRef]))
+    list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.bytes"), (usedBytes / 250).asInstanceOf[AnyRef], (cellHandler.totalBytes / 250).asInstanceOf[AnyRef]))
+    list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.types"), cellHandler.usedTypes.asInstanceOf[AnyRef], cellHandler.totalTypes.asInstanceOf[AnyRef]))
     if (usedBytes != 0) {
-      list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes.asInstanceOf[AnyRef]))
+      list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.content"), usedBytes.asInstanceOf[AnyRef]))
     }
     if (partitioned) {
       list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + StatCollector.translateToLocal("gui.appliedenergistics2.Precise"))
     }
-    list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStoragePortableCell.MAX_POWER * 1e4) / 1e2 + "%")
+    list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStoragePortableFluidCell.MAX_POWER * 1e4) / 1e2 + "%")
   }
 
-  def getConfigInventory(is: ItemStack): IInventory = {
-    return new ECFluidFilterInventory("configFluidCell", 63, is)
-  }
+  def getConfigInventory(is: ItemStack): IInventory = new ECFluidFilterInventory("configFluidCell", 63, is)
 
-  override def getDurabilityForDisplay(itemStack: ItemStack): Double = {
-    return 1 - getAECurrentPower(itemStack) / ItemStoragePortableCell.MAX_POWER
-  }
+
+  override def getDurabilityForDisplay(itemStack: ItemStack): Double = 1 - getAECurrentPower(itemStack) / ItemStoragePortableFluidCell.MAX_POWER
+
 
 
   def getFilter(stack: ItemStack): util.ArrayList[Fluid] = {
@@ -70,7 +69,7 @@ object ItemStoragePortableCell extends ItemECBase with IPortableFluidStorageCell
         if (f != null) filter.add(f)
       }
     }
-    return filter
+    filter
   }
 
   def getFuzzyMode(is: ItemStack): FuzzyMode = {
@@ -78,64 +77,56 @@ object ItemStoragePortableCell extends ItemECBase with IPortableFluidStorageCell
     if (!is.hasTagCompound) is.setTagCompound(new NBTTagCompound)
     if (is.getTagCompound.hasKey("fuzzyMode")) return FuzzyMode.valueOf(is.getTagCompound.getString("fuzzyMode"))
     is.getTagCompound.setString("fuzzyMode", FuzzyMode.IGNORE_ALL.name)
-    return FuzzyMode.IGNORE_ALL
+    FuzzyMode.IGNORE_ALL
   }
 
-  override def getIconFromDamage(dmg: Int): IIcon = {
-    return this.icon
-  }
-
-  def getMaxBytes(is: ItemStack): Int = {
-    return 512
-  }
+  override def getIconFromDamage(dmg: Int): IIcon = this.icon
 
 
-  def getMaxTypes(unused: ItemStack): Int = {
-    return 3
-  }
+  def getMaxBytes(is: ItemStack): Int = 512
 
-  override def getPowerFlow(itemStack: ItemStack): AccessRestriction = {
-    return AccessRestriction.READ_WRITE
-  }
 
-  override def getRarity(itemStack: ItemStack): EnumRarity = {
-    return EnumRarity.rare
-  }
+
+  def getMaxTypes(unused: ItemStack): Int = 3
+
+
+  override def getPowerFlow(itemStack: ItemStack): AccessRestriction = AccessRestriction.READ_WRITE
+
+
+  override def getRarity(itemStack: ItemStack): EnumRarity = EnumRarity.rare
+
 
   override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[_]) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     itemList2.add(new ItemStack(item))
     val itemStack: ItemStack = new ItemStack(item)
-    injectAEPower(itemStack, ItemStoragePortableCell.MAX_POWER)
+    injectAEPower(itemStack, ItemStoragePortableFluidCell.MAX_POWER)
     itemList2.add(itemStack)
   }
 
-  override def getUnlocalizedName(itemStack: ItemStack): String = {
-    return "extracells.item.storage.fluid.portable"
-  }
+  override def getUnlocalizedName(itemStack: ItemStack): String = "extracells.item.storage.gas.portable"
 
-  def getUpgradesInventory(is: ItemStack): IInventory = {
-    return new ECPrivateInventory("configInventory", 0, 64)
-  }
 
-  def hasPower(player: EntityPlayer, amount: Double, is: ItemStack): Boolean = {
-    return getAECurrentPower(is) >= amount
-  }
+  def getUpgradesInventory(is: ItemStack): IInventory = new ECPrivateInventory("configInventory", 0, 64)
+
+
+  def hasPower(player: EntityPlayer, amount: Double, is: ItemStack): Boolean = getAECurrentPower(is) >= amount
+
 
   def isEditable(is: ItemStack): Boolean = {
     if (is == null) return false
-    return is.getItem eq this
+    is.getItem == this
   }
 
   @SuppressWarnings(Array("rawtypes", "unchecked"))
-  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer): ItemStack = {
-    return ECApi.instance.openPortableCellGui(player, itemStack, world)
-  }
+  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer): ItemStack =
+    ECApi.instance.openPortableGasCellGui(player, itemStack, world)
+
 
 
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconRegister: IIconRegister) {
-    this.icon = iconRegister.registerIcon("extracells:storage.fluid.portable")
+    this.icon = iconRegister.registerIcon("extracells:storage.gas.portable")
   }
 
   def setFuzzyMode(is: ItemStack, fzMode: FuzzyMode) {
@@ -145,12 +136,11 @@ object ItemStoragePortableCell extends ItemECBase with IPortableFluidStorageCell
     tag.setString("fuzzyMode", fzMode.name)
   }
 
-  override def showDurabilityBar(itemStack: ItemStack): Boolean = {
-    return true
-  }
+  override def showDurabilityBar(itemStack: ItemStack): Boolean = true
+
 
   def usePower(player: EntityPlayer, amount: Double, is: ItemStack): Boolean = {
     extractAEPower(is, amount)
-    return true
+    true
   }
 }

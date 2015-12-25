@@ -117,6 +117,10 @@ shapeless=
 	ae2:BlockChest ec:cell1kPartFluid ae2:BlockEnergyCell
 	-> ec:fluidCellPortable
 
+shapeless=
+	ae2:BlockChest ec:cell1kPartGas ae2:BlockEnergyCell
+	-> ec:gasCellPortable
+
 
 
 

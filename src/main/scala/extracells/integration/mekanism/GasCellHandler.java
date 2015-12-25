@@ -5,6 +5,7 @@ import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.*;
 import extracells.api.IGasStorageCell;
+import extracells.inventory.HandlerItemPlayerStorageGas;
 import extracells.inventory.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 import extracells.render.TextureManager;
@@ -28,9 +29,9 @@ public class GasCellHandler implements ICellHandler {
 		return new HandlerItemStorageGas(itemStack, saveProvider, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack));
 	}
 
-	/*public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player) {
-		return new HandlerItemPlayerStorageFluid(itemStack, null, ((IFluidStorageCell) itemStack.getItem()).getFilter(itemStack), player);
-	}*/
+	public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player) {
+		return new HandlerItemPlayerStorageGas(itemStack, null, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack), player);
+	}
 
 	@Override
 	public int getStatusForCell(ItemStack is, IMEInventory handler) {

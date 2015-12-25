@@ -43,7 +43,12 @@ public interface ExtraCellsApi {
 
 	public IItemDefinition items();
 
+	@Deprecated
 	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
+
+	public ItemStack openPortableGasCellGui(EntityPlayer player, ItemStack stack, World world);
+
+	public ItemStack openPortableFluidCellGui(EntityPlayer player, ItemStack stack, World world);
 
 	@Deprecated
 	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);

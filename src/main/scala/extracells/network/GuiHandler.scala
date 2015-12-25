@@ -6,7 +6,7 @@ import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.network.IGuiHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.Extracells
-import extracells.api.{IFluidInterface, IPortableFluidStorageCell, IWirelessFluidTermHandler, IWirelessGasTermHandler}
+import extracells.api._
 import extracells.block.TGuiBlock
 import extracells.container._
 import extracells.gui._
@@ -39,10 +39,10 @@ object GuiHandler extends IGuiHandler {
 			val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
 			val handler = args.apply(1).asInstanceOf[IWirelessGasTermHandler]
 			new ContainerGasStorage(fluidInventory2, player, handler)
-		/*case 6 => TODO: Add portable gas Storage cell
+		case 6 =>
 			val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
 			val storageCell =  args.apply(1).asInstanceOf[IPortableGasStorageCell]
-			new ContainerGasStorage(fluidInventory3, player, storageCell)*/
+			new ContainerGasStorage(fluidInventory3, player, storageCell)
 		case _ =>
 			null
 		}
@@ -62,7 +62,7 @@ object GuiHandler extends IGuiHandler {
 		case 5 =>
 			new GuiGasStorage(player, "extracells.part.gas.terminal.name");
 		case 6 =>
-			new GuiGasStorage(player, "extracells.item.storage.fluid.portable.name");
+			new GuiGasStorage(player, "extracells.item.storage.gas.portable.name");
 		case _ =>
 			null;
 		}

@@ -10,6 +10,7 @@ import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import cpw.mods.fml.common.Optional;
+import extracells.api.IPortableGasStorageCell;
 import extracells.api.IWirelessGasTermHandler;
 import extracells.container.slot.SlotPlayerInventory;
 import extracells.container.slot.SlotRespective;
@@ -46,7 +47,7 @@ public class ContainerGasStorage extends Container implements
 	private IMEMonitor<IAEFluidStack> monitor;
 	private HandlerItemStorageFluid storageFluid;
 	private IWirelessGasTermHandler handler = null;
-	//private IPortableFluidStorageCell storageCell = null; TODO: Add portabel gas Storage cell
+	private IPortableGasStorageCell storageCell = null;
 	public boolean hasWirelessTermHandler = false;
 	private ECPrivateInventory inventory = new ECPrivateInventory(
 			"extracells.item.fluid.storage", 2, 64, this) {
@@ -84,9 +85,7 @@ public class ContainerGasStorage extends Container implements
 	}
 
 
-	//TODO: Add portable gas storage cell
-	/*public ContainerGasStorage(IMEMonitor<IAEFluidStack> _monitor,
-							   EntityPlayer _player, IPortableFluidStorageCell _storageCell) {
+	public ContainerGasStorage(IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player, IPortableGasStorageCell _storageCell) {
 		this.hasWirelessTermHandler = _storageCell != null;
 		this.storageCell = _storageCell;
 		this.monitor = _monitor;
@@ -105,7 +104,7 @@ public class ContainerGasStorage extends Container implements
 				92));
 
 		bindPlayerInventory(this.player.inventory);
-	}*/
+	}
 
 	public ContainerGasStorage(IMEMonitor<IAEFluidStack> _monitor,
 							   EntityPlayer _player, IWirelessGasTermHandler _handler) {
@@ -218,14 +217,14 @@ public class ContainerGasStorage extends Container implements
 				}
 				this.handler.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			}/* else if (this.storageCell != null) { TODO: Add portable gas storage cell
+			} else if (this.storageCell != null) {
 				if (!this.storageCell.hasPower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem())) {
 					return;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			}*/
+			}
 			ItemStack emptyContainer  = drainedContainer.getRight();
 			if(emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1){
 				monitor.injectItems(GasUtil.createAEFluidStack(gasStack), Actionable.MODULATE, new PlayerSource(this.player, null));
@@ -250,14 +249,14 @@ public class ContainerGasStorage extends Container implements
 				}
 				this.handler.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			}/* else if (this.storageCell != null) { TODO: Add portable gas storage cell
+			} else if (this.storageCell != null) {
 				if (!this.storageCell.hasPower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem())) {
 					return false;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			}*/
+			}
 			this.inventory.setInventorySlotContents(1, itemStack);
 			return true;
 		} else {
@@ -271,14 +270,14 @@ public class ContainerGasStorage extends Container implements
 				}
 				this.handler.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			}/* else if (this.storageCell != null) { TODO: Add portable gas storage cell
+			}else if (this.storageCell != null) {
 				if (!this.storageCell.hasPower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem())) {
 					return false;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
 						this.player.getCurrentEquippedItem());
-			}*/
+			}
 			this.inventory.incrStackSize(1, itemStack.stackSize);
 			return true;
 		}
@@ -370,13 +369,13 @@ public class ContainerGasStorage extends Container implements
 				this.handler.usePower(this.player, 1.0D,
 						this.player.getCurrentEquippedItem());
 			}
-		}/* else if (this.storageCell != null) { TODO: Add portable gas storage cell
+		} else if (this.storageCell != null) {
 			if (this.storageCell.hasPower(this.player, 0.5D,
 					this.player.getCurrentEquippedItem())) {
 				this.storageCell.usePower(this.player, 0.5D,
 						this.player.getCurrentEquippedItem());
 			}
-		}*/
+		}
 	}
 
 	public void setGui(GuiGasStorage _guiGasStorage) {

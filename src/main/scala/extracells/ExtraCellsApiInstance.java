@@ -10,10 +10,7 @@ import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.WorldCoord;
 import cpw.mods.fml.common.Optional;
-import extracells.api.ExtraCellsApi;
-import extracells.api.IPortableFluidStorageCell;
-import extracells.api.IWirelessFluidTermHandler;
-import extracells.api.IWirelessGasFluidTermHandler;
+import extracells.api.*;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
 import extracells.api.definitions.IPartDefinition;
@@ -21,8 +18,10 @@ import extracells.definitions.BlockDefinition;
 import extracells.definitions.ItemDefinition;
 import extracells.definitions.PartDefinition;
 import extracells.integration.Integration;
+import extracells.integration.mekanism.GasCellHandler;
 import extracells.integration.mekanism.Mekanism;
 import extracells.inventory.HandlerItemStorageFluid;
+import extracells.inventory.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 import extracells.util.FluidCellHandler;
 import extracells.util.FuelBurnTime;
@@ -142,7 +141,12 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world) {
+	public ItemStack openPortableCellGui (EntityPlayer player, ItemStack stack, World world){
+		return openPortableFluidCellGui(player, stack, world);
+	}
+
+	@Override
+	public ItemStack openPortableFluidCellGui(EntityPlayer player, ItemStack stack, World world) {
 		if (world.isRemote || stack == null || stack.getItem() == null)
 			return stack;
 		Item item = stack.getItem();
@@ -157,6 +161,25 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		}
 		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannel.FLUIDS);
 		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, new Object[]{fluidInventory, item});
+		return stack;
+	}
+
+	@Override
+	public ItemStack openPortableGasCellGui(EntityPlayer player, ItemStack stack, World world) {
+		if (world.isRemote || stack == null || stack.getItem() == null)
+			return stack;
+		Item item = stack.getItem();
+		if (!(item instanceof IPortableGasStorageCell))
+			return stack;
+		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
+		if (!(cellHandler instanceof GasCellHandler))
+			return stack;
+		IMEInventoryHandler<IAEFluidStack> handler = ((GasCellHandler) cellHandler).getCellInventoryPlayer(stack, player);
+		if (!(handler instanceof HandlerItemStorageGas)) {
+			return stack;
+		}
+		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannel.FLUIDS);
+		GuiHandler.launchGui(GuiHandler.getGuiId(6), player, new Object[]{fluidInventory, item});
 		return stack;
 	}
 

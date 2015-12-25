@@ -17,7 +17,8 @@ public enum ItemEnum {
 	STORAGECOMPONET("storage.component", new ItemStorageComponent()),
 	STORAGECASING("storage.casing", new ItemStorageCasing()),
 	FLUIDITEM("fluid.item", new ItemFluid()), // Internal EC Item
-	FLUIDSTORAGEPORTABLE("storage.fluid.portable", ItemStoragePortableCell.THIS()),
+	FLUIDSTORAGEPORTABLE("storage.fluid.portable", ItemStoragePortableFluidCell.THIS()),
+	GASSTORAGEPORTABLE("storage.gas.portable", ItemStoragePortableGasCell.THIS(), Integration.Mods.MEKANISMGAS),
 	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern()),// Internal EC Item
 	UNIVERSALTERMINAL("terminal.universal.wireless", ItemWirelessTerminalUniversal.THIS()),
 	GASWIRELESSTERMINAL("terminal.gas.wireless", ItemWirelessTerminalGas.THIS(), Integration.Mods.MEKANISMGAS);
