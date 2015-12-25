@@ -17,7 +17,7 @@ public class Integration {
 		WAILA("Waila"),
 		OPENCOMPUTERS("OpenComputers"),
 		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
-		NEI("NotEnoughItems"),
+		NEI("NotEnoughItems", Side.CLIENT),
 		MEKANISMGAS("MekanismAPI|gas", "MekanismGas"),
 		IGW("IGWMod", "IngameWikiMod", Side.CLIENT),
 		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics");
