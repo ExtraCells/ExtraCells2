@@ -44,8 +44,7 @@ public class ContainerFluidStorage extends Container implements
 	private IWirelessFluidTermHandler handler = null;
 	private IPortableFluidStorageCell storageCell = null;
 	public boolean hasWirelessTermHandler = false;
-	private ECPrivateInventory inventory = new ECPrivateInventory(
-			"extracells.item.fluid.storage", 2, 64, this) {
+	private ECPrivateInventory inventory = new ECPrivateInventory("extracells.item.fluid.storage", 2, 64, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
@@ -57,8 +56,7 @@ public class ContainerFluidStorage extends Container implements
 		this(null, _player);
 	}
 
-	public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor,
-			EntityPlayer _player) {
+	public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player) {
 		this.monitor = _monitor;
 		this.player = _player;
 		if (!this.player.worldObj.isRemote && this.monitor != null) {
@@ -77,8 +75,7 @@ public class ContainerFluidStorage extends Container implements
 		bindPlayerInventory(this.player.inventory);
 	}
 
-	public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor,
-			EntityPlayer _player, IPortableFluidStorageCell _storageCell) {
+	public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player, IPortableFluidStorageCell _storageCell) {
 		this.hasWirelessTermHandler = _storageCell != null;
 		this.storageCell = _storageCell;
 		this.monitor = _monitor;
@@ -152,7 +149,7 @@ public class ContainerFluidStorage extends Container implements
 
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize > 64)
+		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize())
 			return;
 		ItemStack container = this.inventory.getStackInSlot(0);
 		if (!FluidUtil.isFluidContainer(container))
@@ -160,23 +157,24 @@ public class ContainerFluidStorage extends Container implements
 		if (this.monitor == null)
 			return;
 
+		container = container.copy();
+		container.stackSize = 1;
+
 		if (FluidUtil.isEmpty(container)) {
 			if (this.selectedFluid == null)
 				return;
 			int capacity = FluidUtil.getCapacity(container);
 			//Tries to simulate the extraction of fluid from storage.
-			IAEFluidStack result = this.monitor.extractItems(
-					FluidUtil.createAEFluidStack(this.selectedFluid, capacity),
-					Actionable.SIMULATE, new PlayerSource(this.player, null));
+			IAEFluidStack result = this.monitor.extractItems(FluidUtil.createAEFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
 
 			//Calculates the amount of fluid to fill container with.
-			int proposedAmount = result == null ? 0 : (int) Math.min(capacity,
-					result.getStackSize());
+			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
+
+			if(proposedAmount == 0)
+				return;
 
 			//Tries to fill the container with fluid.
-			MutablePair<Integer, ItemStack> filledContainer = FluidUtil
-					.fillStack(container, new FluidStack(this.selectedFluid,
-							proposedAmount));
+			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(this.selectedFluid, proposedAmount));
 
 			//Moves it to second slot and commits extraction to grid.
 			if (fillSecondSlot(filledContainer.getRight())) {
