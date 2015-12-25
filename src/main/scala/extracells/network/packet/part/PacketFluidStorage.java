@@ -3,6 +3,8 @@ package extracells.network.packet.part;
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidStorage;
 import extracells.container.ContainerGasStorage;
 import extracells.gui.GuiFluidStorage;
@@ -53,16 +55,7 @@ public class PacketFluidStorage extends AbstractPacket {
 	public void execute() {
 		switch (this.mode) {
 		case 0:
-			if (this.player != null && this.player.isClientWorld()) {
-				Gui gui = Minecraft.getMinecraft().currentScreen;
-				if (gui instanceof GuiFluidStorage) {
-					ContainerFluidStorage container = (ContainerFluidStorage) ((GuiFluidStorage) gui).inventorySlots;
-					container.updateFluidList(this.fluidStackList);
-				}else if (gui instanceof GuiGasStorage  && Integration.Mods.MEKANISMGAS.isEnabled()) {
-					ContainerGasStorage container = (ContainerGasStorage) ((GuiGasStorage) gui).inventorySlots;
-					container.updateFluidList(this.fluidStackList);
-				}
-			}
+			case0();
 			break;
 		case 1:
 			if (this.player != null && this.player.openContainer instanceof ContainerFluidStorage) {
@@ -85,17 +78,36 @@ public class PacketFluidStorage extends AbstractPacket {
 			}
 			break;
 		case 3:
-			if (this.player != null && this.player.isClientWorld()) {
-				Gui gui = Minecraft.getMinecraft().currentScreen;
-				if (gui instanceof GuiFluidStorage) {
-					ContainerFluidStorage container = (ContainerFluidStorage) ((GuiFluidStorage) gui).inventorySlots;
-					container.hasWirelessTermHandler = this.hasTermHandler;
-				}else if (gui instanceof GuiGasStorage && Integration.Mods.MEKANISMGAS.isEnabled()) {
-					ContainerGasStorage container = (ContainerGasStorage) ((GuiGasStorage) gui).inventorySlots;
-					container.hasWirelessTermHandler = this.hasTermHandler;
-				}
-			}
+			case3();
 			break;
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void case0(){
+		if (this.player != null && this.player.isClientWorld()) {
+			Gui gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof GuiFluidStorage) {
+				ContainerFluidStorage container = (ContainerFluidStorage) ((GuiFluidStorage) gui).inventorySlots;
+				container.updateFluidList(this.fluidStackList);
+			}else if (gui instanceof GuiGasStorage  && Integration.Mods.MEKANISMGAS.isEnabled()) {
+				ContainerGasStorage container = (ContainerGasStorage) ((GuiGasStorage) gui).inventorySlots;
+				container.updateFluidList(this.fluidStackList);
+			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void case3(){
+		if (this.player != null && this.player.isClientWorld()) {
+			Gui gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof GuiFluidStorage) {
+				ContainerFluidStorage container = (ContainerFluidStorage) ((GuiFluidStorage) gui).inventorySlots;
+				container.hasWirelessTermHandler = this.hasTermHandler;
+			}else if (gui instanceof GuiGasStorage && Integration.Mods.MEKANISMGAS.isEnabled()) {
+				ContainerGasStorage container = (ContainerGasStorage) ((GuiGasStorage) gui).inventorySlots;
+				container.hasWirelessTermHandler = this.hasTermHandler;
+			}
 		}
 	}
 
