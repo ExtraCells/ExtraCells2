@@ -17,7 +17,6 @@ public class CraftingPattern2 extends CraftingPattern {
 
 	@Override
 	public boolean equals(Object obj) {
-		System.out.println(obj);
 		if (obj == null)
 			return false;
 		if (this.getClass() != obj.getClass())
@@ -127,7 +126,6 @@ public class CraftingPattern2 extends CraftingPattern {
 
 	@Override
 	public ItemStack getPattern() {
-		System.out.println("getPattern");
 		ItemStack p = this.pattern.getPattern();
 		if (p == null)
 			return null;

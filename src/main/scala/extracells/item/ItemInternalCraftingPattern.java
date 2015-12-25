@@ -13,7 +13,6 @@ public class ItemInternalCraftingPattern extends ItemECBase implements ICrafting
 	public ICraftingPatternDetails getPatternForItem(ItemStack is, World w) {
 		if (is == null || w == null)
 			return null;
-		System.out.println(is);
 		switch (is.getItemDamage()) {
 		case 0:
 			if (is.hasTagCompound() && is.getTagCompound().hasKey("item")) {

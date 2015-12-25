@@ -117,7 +117,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 				drained = (int) Math.min(drained, fluid.getStackSize());
 			}
 		}
-		System.out.println(drained);
+
 		if (drained == toDrain.amount)
 			return request;
 		return FluidUtil.createAEFluidStack(toDrain.getFluidID(), drained);

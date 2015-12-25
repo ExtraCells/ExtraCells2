@@ -194,7 +194,6 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     val invRobot = agent.mainInventory
     if (invRobot.getSizeInventory <= 0) return Array(0.underlying.asInstanceOf[AnyRef])
     val inv = getItemInventory
-    println(inv)
     if (inv == null) return Array(0.underlying.asInstanceOf[AnyRef])
     val n: Node = node.network.node(address)
     if (n == null) throw new IllegalArgumentException("no such component")
