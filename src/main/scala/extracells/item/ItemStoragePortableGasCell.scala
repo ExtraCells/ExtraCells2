@@ -7,7 +7,7 @@ import appeng.api.config.{AccessRestriction, FuzzyMode}
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
 import cpw.mods.fml.relauncher.{Side, SideOnly}
-import extracells.api.{IPortableGasStorageCell, ECApi, IHandlerFluidStorage, IPortableFluidStorageCell}
+import extracells.api.{ECApi, IHandlerFluidStorage, IPortableGasStorageCell}
 import extracells.util.inventory.{ECFluidFilterInventory, ECPrivateInventory}
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
