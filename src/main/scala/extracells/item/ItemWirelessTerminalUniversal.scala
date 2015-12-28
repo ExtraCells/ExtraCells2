@@ -32,7 +32,11 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
   override def isItemNormalWirelessTermToo(is: ItemStack): Boolean = true
 
   override def getConfigManager(itemStack: ItemStack): IConfigManager = {
-    new ConfigManager()
+    val nbt = ensureTagCompound(itemStack)
+    if(!nbt.hasKey("settings"))
+      nbt.setTag("settings", new NBTTagCompound)
+    val tag = nbt.getCompoundTag("settings")
+    new ConfigManager(tag)
   }
 
   private def ensureTagCompound(itemStack: ItemStack): NBTTagCompound = {
