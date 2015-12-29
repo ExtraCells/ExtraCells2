@@ -51,7 +51,7 @@ object HandlerMekanismGasTank extends IExternalGasStorageHandler{
         val returnStack = stackType.copy()
         returnStack.setStackSize(stackType.getStackSize - accepted)
       }
-      null
+      stackType
     }
 
     override def getChannel: StorageChannel = StorageChannel.FLUIDS

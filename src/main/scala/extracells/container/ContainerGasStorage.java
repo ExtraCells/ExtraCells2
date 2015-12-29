@@ -199,7 +199,7 @@ public class ContainerGasStorage extends Container implements
 				doNextFill = false;
 			}
 
-		} else if (FluidUtil.isFilled(container)) {
+		} else if (GasUtil.isFilled(container)) {
 			GasStack containerGas = GasUtil.getGasFromContainer(container);
 
 			MutablePair<Integer, ItemStack> drainedContainer =  GasUtil.drainStack(container.copy(), containerGas);
