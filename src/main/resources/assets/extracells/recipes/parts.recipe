@@ -120,3 +120,7 @@ shapeless=
 shapeless=
     ae2:ItemMaterial.AnnihilationCore ec:partGasStorageMonitor ae2:ItemMaterial.FormationCore
     -> ec:partGasConversionMonitor
+
+shapeless=
+	interface mc:sticky_piston mc:piston flower flower
+	-> ec:partGasStorageBus
