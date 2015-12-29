@@ -227,7 +227,7 @@ public class ContainerGasStorage extends Container implements
 			}
 			ItemStack emptyContainer  = drainedContainer.getRight();
 			if(emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1){
-				monitor.injectItems(GasUtil.createAEFluidStack(gasStack), Actionable.MODULATE, new PlayerSource(this.player, null));
+				monitor.injectItems(GasUtil.createAEFluidStack(gasStack1), Actionable.MODULATE, new PlayerSource(this.player, null));
 				this.inventory.setInventorySlotContents(0, emptyContainer);
 			}
 			if (emptyContainer == null || fillSecondSlot(drainedContainer.getRight())) {

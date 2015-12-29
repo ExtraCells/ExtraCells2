@@ -76,7 +76,7 @@ class PartGasTerminal extends PartFluidTerminal{
 
       val drainedContainer: MutablePair[Integer, ItemStack] = GasUtil.drainStack(container.copy(), containerGas)
       val gasStack = containerGas.copy()
-      gasStack.amount = drainedContainer.getLeft;
+      gasStack.amount = drainedContainer.getLeft
       val notInjected: IAEFluidStack = monitor.injectItems(GasUtil.createAEFluidStack(gasStack), Actionable.SIMULATE, this.machineSource)
       if (notInjected != null) return
       val emptyContainer: ItemStack = drainedContainer.getRight

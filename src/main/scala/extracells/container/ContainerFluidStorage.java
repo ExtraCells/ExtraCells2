@@ -186,8 +186,7 @@ public class ContainerFluidStorage extends Container implements
 			}
 
 		} else if (FluidUtil.isFilled(container)) {
-			FluidStack containerFluid = FluidUtil
-					.getFluidFromContainer(container);
+			FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
 
 			//Tries to inject fluid to network.
 			IAEFluidStack notInjected = this.monitor.injectItems(
