@@ -55,34 +55,26 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 				return false;
 			IMEMonitor<IAEFluidStack> fluidInventory = monitor
 					.getFluidInventory();
-			if (fluidInventory == null)
-				return false;
-			return fluidInventory.canAccept(input);
+			return fluidInventory != null && fluidInventory.canAccept(input);
 		}else if(externalHandler != null){
 			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
-			if(inventory == null)
-				return false;
-			return true;
+			return inventory != null;
 		}
-		FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node.getSide()
-				.getOpposite());
+		FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node.getSide().getOpposite());
 		if (infoArray != null && infoArray.length > 0) {
 			FluidTankInfo info = infoArray[0];
 			if (info.fluid == null || info.fluid.amount == 0
 					|| info.fluid.getFluidID() == input.getFluidStack().getFluidID())
 				if (this.inverted)
-					return !this.prioritizedFluids.isEmpty()
-							|| !isPrioritized(input);
+					return !this.prioritizedFluids.isEmpty() || !isPrioritized(input);
 				else
-					return this.prioritizedFluids.isEmpty()
-							|| isPrioritized(input);
+					return this.prioritizedFluids.isEmpty() || isPrioritized(input);
 		}
 		return false;
 	}
 
 	@Override
-	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode,
-			BaseActionSource src) {
+	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src) {
 		if (!this.node.isActive()
 				|| !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE))
 			return null;
@@ -103,9 +95,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 				return null;
 			return inventory.extractItems(request, mode, new MachineSource(this.node));
 		}
-		if (this.tank == null || request == null
-				|| this.access == AccessRestriction.WRITE
-				|| this.access == AccessRestriction.NO_ACCESS)
+		if (this.tank == null || request == null || this.access == AccessRestriction.WRITE || this.access == AccessRestriction.NO_ACCESS)
 			return null;
 		FluidStack toDrain = request.getFluidStack();
 		int drained = 0;

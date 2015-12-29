@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-public class PartConversionMonitor extends PartStorageMonitor {
+public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 pos) {

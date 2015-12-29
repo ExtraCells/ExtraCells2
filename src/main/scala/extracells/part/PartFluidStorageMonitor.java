@@ -48,7 +48,7 @@ import org.lwjgl.opengl.GL12;
 import java.io.IOException;
 import java.util.List;
 
-public class PartStorageMonitor extends PartECBase implements IStackWatcherHost {
+public class PartFluidStorageMonitor extends PartECBase implements IStackWatcherHost {
 
 	Fluid fluid = null;
 	long amount = 0L;
@@ -71,8 +71,7 @@ public class PartStorageMonitor extends PartECBase implements IStackWatcherHost 
 			double d0 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
 			double d1 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
 			double d2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-			EntityItem entityitem = new EntityItem(world, x + d0, y + d1, z
-					+ d2, stack);
+			EntityItem entityitem = new EntityItem(world, x + d0, y + d1, z + d2, stack);
 			entityitem.delayBeforeCanPickup = 10;
 			world.spawnEntityInWorld(entityitem);
 		}

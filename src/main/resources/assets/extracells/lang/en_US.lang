@@ -74,6 +74,10 @@ extracells.part.oredict.export.name=ME Ore Dictionary Export Bus
 extracells.part.gas.export.name=ME Gas Export Bus
 extracells.part.gas.import.name=ME Gas Import Bus
 extracells.part.gas.terminal.name=ME Gas Terminal
+extracells.part.gas.storage.name=ME Gas Storage Bus
+extracells.part.gas.levelemitter.name=ME Gas Level Emitter
+extracells.part.gas.conversion.monitor.name=ME Gas Conversion Monitor
+extracells.part.gas.monitor.name=ME Gas Storage Monitor
 
 //Blocks
 extracells.block.certustank=Certus Quartz Tank

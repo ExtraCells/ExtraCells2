@@ -1,12 +1,15 @@
 package extracells.api;
 
+import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
 import extracells.api.definitions.IPartDefinition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -81,5 +84,43 @@ public interface ExtraCellsApi {
 
 	public boolean isGas(Fluid fluid);
 
-	public Object createGasStack(IAEFluidStack stack);
+	/**
+	 * Converts an IAEFluid stack to a GasStack
+	 *
+	 * @param fluidStack
+	 * @return GasStack
+     */
+	public Object createGasStack(IAEFluidStack fluidStack);
+
+	/**
+	 * Create the fluidstack from the specific gas
+	 *
+	 * @param gasStack
+	 * @return FluidStack
+     */
+	public IAEFluidStack createFluidStackFromGas(Object gasStack);
+
+	/**
+	 * Create the ec fluid from the specific gas
+	 *
+	 * @param gas
+	 * @return Fluid
+     */
+	public Fluid getGasFluid(Object gas);
+
+	/**
+	 * A registry for StorageBus interactions
+	 *
+	 * @param esh storage handler
+	 */
+	void addExternalStorageInterface( IExternalGasStorageHandler esh );
+
+	/**
+	 * @param te       tile entity
+	 * @param opposite direction
+	 * @param mySrc    source
+	 *
+	 * @return the handler for a given tile / forge direction
+	 */
+	IExternalGasStorageHandler getHandler(TileEntity te, ForgeDirection opposite, BaseActionSource mySrc );
 }

@@ -21,22 +21,18 @@ public class ContainerBusFluidIO extends Container {
 	public ContainerBusFluidIO(PartFluidIO part, EntityPlayer player) {
 		this.part = part;
 		for (int i = 0; i < 4; i++)
-			addSlotToContainer(new SlotRespective(part.getUpgradeInventory(),
-					i, 187, i * 18 + 8));
+			addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), i, 187, i * 18 + 8));
 		bindPlayerInventory(player.inventory);
 
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack stack = player.inventory.getStackInSlot(i);
-			if (stack != null
-					&& AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
+			if (stack != null && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
 				DimensionalCoord coord = part.getHost().getLocation();
 				IGuiItem guiItem = (IGuiItem) stack.getItem();
-				INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(
-						stack, coord.getWorld(), coord.x, coord.y, coord.z);
+				INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.x, coord.y, coord.z);
 				for (int j = 0; j < 3; j++) {
 					for (int k = 0; k < 3; k++) {
-						addSlotToContainer(new SlotNetworkTool(networkTool, j
-								+ k * 3, 187 + k * 18, j * 18 + 102));
+						addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
 					}
 				}
 				return;
@@ -47,8 +43,7 @@ public class ContainerBusFluidIO extends Container {
 	protected void bindPlayerInventory(IInventory inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 102));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 102));
 			}
 		}
 
@@ -63,8 +58,7 @@ public class ContainerBusFluidIO extends Container {
 	}
 
 	@Override
-	protected void retrySlotClick(int par1, int par2, boolean par3,
-			EntityPlayer par4EntityPlayer) {
+	protected void retrySlotClick(int par1, int par2, boolean par3, EntityPlayer par4EntityPlayer) {
 		// NOPE
 	}
 
@@ -74,9 +68,7 @@ public class ContainerBusFluidIO extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		if (this.guiBusFluidIO != null
-				&& this.guiBusFluidIO
-						.shiftClick(getSlot(slotnumber).getStack()))
+		if (this.guiBusFluidIO != null && this.guiBusFluidIO.shiftClick(getSlot(slotnumber).getStack()))
 			return ((Slot) this.inventorySlots.get(slotnumber)).getStack();
 
 		ItemStack itemstack = null;

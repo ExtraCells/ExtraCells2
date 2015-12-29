@@ -129,11 +129,20 @@ public class GasUtil {
 		return new FluidStack(fluid, gasStack.amount);
 	}
 
-	public boolean isGas(FluidStack fluidStack){
+	public static boolean isGas(FluidStack fluidStack){
 		return fluidStack != null && isGas(fluidStack.getFluid());
 	}
 
-	public boolean isGas(Fluid fluid){
+	public static boolean isGas(Fluid fluid){
 		return fluid != null && fluid instanceof Mekanism.GasFluid;
+	}
+
+	public static Gas getGas(Fluid fluid){
+		if(fluid == null)
+			return null;
+		if(fluid instanceof  Mekanism.GasFluid){
+			return ((Mekanism.GasFluid)fluid).getGas();
+		}
+		return null;
 	}
 }

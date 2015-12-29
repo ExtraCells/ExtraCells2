@@ -29,8 +29,7 @@ import java.util.List;
 public class GuiBusFluidIO extends GuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
-	private static final ResourceLocation guiTexture = new ResourceLocation(
-			"extracells", "textures/gui/busiofluid.png");
+	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
 	private PartFluidIO part;
 	private EntityPlayer player;
 	private byte filterSize;
@@ -188,7 +187,10 @@ public class GuiBusFluidIO extends GuiContainer implements
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
 			if (fluidSlot.canRender() && fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid)) {
-				fluidSlot.mouseClicked(itemStack);
+				if((part instanceof PartGasImport || part instanceof PartGasExport) && Integration.Mods.MEKANISMGAS.isEnabled())
+					fluidSlot.mouseClickedGas(itemStack);
+				else
+					fluidSlot.mouseClicked(itemStack);
 				return true;
 			}
 		}

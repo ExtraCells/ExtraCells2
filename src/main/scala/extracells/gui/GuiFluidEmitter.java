@@ -5,9 +5,11 @@ import extracells.container.ContainerFluidEmitter;
 import extracells.gui.widget.DigitTextField;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
+import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.part.PartFluidLevelEmitter;
+import extracells.part.PartGasLevelEmitter;
 import extracells.registries.PartEnum;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
@@ -28,8 +30,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 	private DigitTextField amountField;
 	private PartFluidLevelEmitter part;
 	private EntityPlayer player;
-	private ResourceLocation guiTexture = new ResourceLocation("extracells",
-			"textures/gui/levelemitterfluid.png");
+	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png");
 	private WidgetFluidSlot fluidSlot;
 
 	public GuiFluidEmitter(PartFluidLevelEmitter _part, EntityPlayer _player) {
@@ -37,8 +38,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		this.player = _player;
 		this.part = _part;
 		this.fluidSlot = new WidgetFluidSlot(this.player, this.part, 79, 36);
-		new PacketFluidEmitter(false, this.part, this.player)
-				.sendPacketToServer();
+		new PacketFluidEmitter(false, this.part, this.player).sendPacketToServer();
 	}
 
 	@Override
@@ -63,8 +63,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 			modifyAmount(+100);
 			break;
 		case 6:
-			new PacketFluidEmitter(true, this.part, this.player)
-					.sendPacketToServer();
+			new PacketFluidEmitter(true, this.part, this.player).sendPacketToServer();
 			break;
 
 		}
@@ -81,21 +80,17 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRendererObj.drawString(
-				PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
+		this.fontRendererObj.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
 		this.fluidSlot.drawWidget();
-		((WidgetRedstoneModes) this.buttonList.get(6)).drawTooltip(mouseX,
-				mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
-		GuiUtil.renderOverlay(this.zLevel, this.guiLeft, this.guiTop,
-				this.fluidSlot, mouseX, mouseY);
+		((WidgetRedstoneModes) this.buttonList.get(6)).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
+		GuiUtil.renderOverlay(this.zLevel, this.guiLeft, this.guiTop, this.fluidSlot, mouseX, mouseY);
 	}
 
 	@Override
 	public void drawScreen(int x, int y, float f) {
 
 		String[] buttonNames = { "-1", "-10", "-100", "+1", "+10", "+100" };
-		String[] shiftNames = { "-100", "-1000", "-10000", "+100", "+1000",
-				"+10000" };
+		String[] shiftNames = { "-100", "-1000", "-10000", "+100", "+1000", "+10000" };
 
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			if (i == 6)
@@ -119,27 +114,19 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
 
-		this.amountField = new DigitTextField(this.fontRendererObj, posX + 10,
-				posY + 40, 59, 10);
+		this.amountField = new DigitTextField(this.fontRendererObj, posX + 10, posY + 40, 59, 10);
 		this.amountField.setFocused(true);
 		this.amountField.setEnableBackgroundDrawing(false);
 		this.amountField.setTextColor(0xFFFFFF);
 
 		this.buttonList.clear();
-		this.buttonList.add(new GuiButton(0, posX + 65 - 46, posY + 8 + 6, 42,
-				20, "-1"));
-		this.buttonList.add(new GuiButton(1, posX + 115 - 46, posY + 8 + 6, 42,
-				20, "-10"));
-		this.buttonList.add(new GuiButton(2, posX + 165 - 46, posY + 8 + 6, 42,
-				20, "-100"));
-		this.buttonList.add(new GuiButton(3, posX + 65 - 46, posY + 58 - 2, 42,
-				20, "+1"));
-		this.buttonList.add(new GuiButton(4, posX + 115 - 46, posY + 58 - 2,
-				42, 20, "+10"));
-		this.buttonList.add(new GuiButton(5, posX + 165 - 46, posY + 58 - 2,
-				42, 20, "+100"));
-		this.buttonList.add(new WidgetRedstoneModes(6, posX + 120, posY + 36,
-				16, 16, RedstoneMode.LOW_SIGNAL, true));
+		this.buttonList.add(new GuiButton(0, posX + 65 - 46, posY + 8 + 6, 42, 20, "-1"));
+		this.buttonList.add(new GuiButton(1, posX + 115 - 46, posY + 8 + 6, 42, 20, "-10"));
+		this.buttonList.add(new GuiButton(2, posX + 165 - 46, posY + 8 + 6, 42, 20, "-100"));
+		this.buttonList.add(new GuiButton(3, posX + 65 - 46, posY + 58 - 2, 42, 20, "+1"));
+		this.buttonList.add(new GuiButton(4, posX + 115 - 46, posY + 58 - 2, 42, 20, "+10"));
+		this.buttonList.add(new GuiButton(5, posX + 165 - 46, posY + 58 - 2, 42, 20, "+100"));
+		this.buttonList.add(new WidgetRedstoneModes(6, posX + 120, posY + 36, 16, 16, RedstoneMode.LOW_SIGNAL, true));
 
 		super.initGui();
 	}
@@ -147,28 +134,29 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 	@Override
 	protected void keyTyped(char key, int keyID) {
 		super.keyTyped(key, keyID);
-		if ("0123456789".contains(String.valueOf(key))
-				|| keyID == Keyboard.KEY_BACK) {
+		if ("0123456789".contains(String.valueOf(key)) || keyID == Keyboard.KEY_BACK) {
 			this.amountField.textboxKeyTyped(key, keyID);
-			new PacketFluidEmitter(this.amountField.getText(), this.part,
-					this.player).sendPacketToServer();
+			new PacketFluidEmitter(this.amountField.getText(), this.part, this.player).sendPacketToServer();
 		}
 	}
 
 	private void modifyAmount(int amount) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 			amount *= 100;
-		new PacketFluidEmitter(amount, this.part, this.player)
-				.sendPacketToServer();
+		new PacketFluidEmitter(amount, this.part, this.player).sendPacketToServer();
 	}
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
-		if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop,
-				this.fluidSlot.getPosX(), this.fluidSlot.getPosY(), 18, 18,
-				mouseX, mouseY))
-			this.fluidSlot.mouseClicked(this.player.inventory.getItemStack());
+		if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, this.fluidSlot.getPosX(), this.fluidSlot.getPosY(), 18, 18, mouseX, mouseY)){
+			if(part instanceof PartGasLevelEmitter && Integration.Mods.MEKANISMGAS.isEnabled())
+				this.fluidSlot.mouseClickedGas(this.player.inventory.getItemStack());
+			else
+				this.fluidSlot.mouseClicked(this.player.inventory.getItemStack());
+		}
+
+
 	}
 
 	public void setAmountField(long amount) {

@@ -76,14 +76,10 @@ object Extracells {
 
 
 		// Config
-		val config = new Configuration(new File(
-				configFolder.getPath + File.separator + "AppliedEnergistics2"
-						+ File.separator + "extracells.cfg"))
+		val config = new Configuration(new File(configFolder.getPath + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"))
 		config.load
-		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?")
-			.getBoolean(true)
-		dynamicTypes = config.get("Storage Cells", "dynamicTypes", true,
-						"Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true)
+		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true)
+		dynamicTypes = config.get("Storage Cells", "dynamicTypes", true, "Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true)
 		integration.loadConfig(config)
 
 

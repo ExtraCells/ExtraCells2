@@ -5,6 +5,7 @@ import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
@@ -25,11 +26,15 @@ import extracells.inventory.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 import extracells.util.FluidCellHandler;
 import extracells.util.FuelBurnTime;
+import extracells.util.GasStorageRegistry;
 import extracells.util.GasUtil;
 import extracells.wireless.WirelessTermRegistry;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -334,6 +339,37 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		return Integration.Mods.MEKANISMGAS.isEnabled() ? createGasFromFluidStack(stack) : null;
 	}
 
+	@Override
+	public IAEFluidStack createFluidStackFromGas(Object gasStack) {
+		return isMekEnabled() ? createFluidStackFromGasStack(gasStack): null;
+	}
+
+	@Override
+	public Fluid getGasFluid(Object gas) {
+		return isMekEnabled() ? createFluidFromGas(gas) : null;
+	}
+
+	@Override
+	public void addExternalStorageInterface(IExternalGasStorageHandler esh) {
+		if(isMekEnabled())
+			GasStorageRegistry.addExternalStorageInterface(esh);
+	}
+
+	@Override
+	public IExternalGasStorageHandler getHandler(TileEntity te, ForgeDirection opposite, BaseActionSource mySrc) {
+		return isMekEnabled() ? GasStorageRegistry.getHandler(te, opposite, mySrc) : null;
+	}
+
+	@Optional.Method(modid = "MekanismAPI|gas")
+	private IAEFluidStack createFluidStackFromGasStack(Object gasStack){
+		return gasStack instanceof GasStack ? GasUtil.createAEFluidStack((GasStack) gasStack) : null;
+	}
+
+	@Optional.Method(modid = "MekanismAPI|gas")
+	private Fluid createFluidFromGas(Object gas){
+		return gas instanceof Gas ? Mekanism.getFluidGasMap().containsKey(gas) ? Mekanism.getFluidGasMap().get(gas) : null : null;
+	}
+
 	@Optional.Method(modid = "MekanismAPI|gas")
 	private Object createGasFromFluidStack(IAEFluidStack stack) {
 		return stack == null ? null : GasUtil.getGasStack(stack.getFluidStack());
@@ -344,4 +380,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		return fluid instanceof Mekanism.GasFluid;
 	}
 
+	private boolean isMekEnabled(){
+		return Integration.Mods.MEKANISMGAS.isEnabled();
+	}
 }

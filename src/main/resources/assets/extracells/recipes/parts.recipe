@@ -71,15 +71,24 @@ shapeless=
 
 shapeless=
     ae2:ItemPart.LevelEmitter monitor lapis lapis
-    -> ec:partStorageMonitor
+    -> ec:partFluidStorageMonitor
 
 shapeless=
-    ae2:ItemMaterial.AnnihilationCore ec:partStorageMonitor ae2:ItemMaterial.FormationCore
-    -> ec:partConversionMonitor
+    ae2:ItemMaterial.AnnihilationCore ec:partFluidStorageMonitor ae2:ItemMaterial.FormationCore
+    -> ec:partFluidConversionMonitor
 
 shapeless=
     ae2:ItemPart.ExportBus ae2:ItemMaterial.CardFuzzy ae2:ItemMaterial.CardFuzzy ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed ae2:ItemMaterial.CardSpeed
     -> ec:partOreDictExportBus
+
+
+shapeless=
+	ae2:ItemMaterial.CalcProcessor mc:redstone_torch flower
+	-> ec:partGasLevelEmitter
+
+shapeless=
+	ae2:ItemPart.LevelEmitter flower
+	-> ec:partGasLevelEmitter
 
 
 shaped=
@@ -103,3 +112,11 @@ shapeless=
 shapeless=
 	monitor ae2:ItemMaterial.FormationCore ae2:ItemMaterial.AnnihilationCore ae2:ItemMaterial.LogicProcessor flower flower
 	-> ec:partGasTerminal
+
+shapeless=
+    ae2:ItemPart.LevelEmitter monitor flower flower
+    -> ec:partGasStorageMonitor
+
+shapeless=
+    ae2:ItemMaterial.AnnihilationCore ec:partGasStorageMonitor ae2:ItemMaterial.FormationCore
+    -> ec:partGasConversionMonitor
