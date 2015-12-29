@@ -33,7 +33,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	protected AccessRestriction access = AccessRestriction.READ_WRITE;
 	protected List<Fluid> prioritizedFluids = new ArrayList<Fluid>();
 	protected boolean inverted;
-	protected  IExternalStorageHandler externalHandler = null;
+	private  IExternalStorageHandler externalHandler = null;
 	protected TileEntity tile = null;
 	public ITileStorageMonitorable externalSystem;
 
@@ -194,7 +194,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		}else if(externalHandler != null && input != null){
 			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
 			if(inventory == null)
-				return null;
+				return input;
 			return inventory.injectItems(input, mode, new MachineSource(this.node));
 		}
 		if (this.tank == null || input == null || !canAccept(input))

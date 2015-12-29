@@ -4,6 +4,7 @@ package extracells.api;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IExternalStorageRegistry;
 import appeng.api.storage.IMEInventory;
+import appeng.api.storage.data.IAEFluidStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -35,5 +36,5 @@ public interface IExternalGasStorageHandler
      *
      * @return The Handler for the inventory
      */
-    IMEInventory getInventory( TileEntity te, ForgeDirection d, BaseActionSource src );
+    IMEInventory<IAEFluidStack> getInventory(TileEntity te, ForgeDirection d, BaseActionSource src );
 }

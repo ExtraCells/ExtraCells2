@@ -56,11 +56,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-			if (itemStack == null)
-				return false;
-			if (AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack))
-				return true;
-			return false;
+			return itemStack != null && AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack);
 		}
 	};
 
@@ -137,11 +133,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 pos) {
-		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
-				(IPart) this)) {
-			return super.onActivate(player, pos);
-		}
-		return false;
+		return PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this) && super.onActivate(player, pos);
 	}
 
 	@Override

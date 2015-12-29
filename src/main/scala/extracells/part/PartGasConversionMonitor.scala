@@ -132,7 +132,6 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
           fluidStack.getFluid
       }
       if (this.watcher != null) this.watcher.add(FluidUtil.createAEFluidStack(this.fluid))
-      onStackChange(null, null, null, null, null)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
       return true

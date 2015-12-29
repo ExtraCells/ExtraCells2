@@ -2,7 +2,7 @@ package extracells.util;
 
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.integration.mekanism.Mekanism;
+import extracells.integration.mekanism.gas.MekanismGas;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasItem;
@@ -16,12 +16,12 @@ import org.apache.commons.lang3.tuple.MutablePair;
 public class GasUtil {
 
 	public static IAEFluidStack createAEFluidStack(Gas gas) {
-		return createAEFluidStack(new FluidStack(Mekanism.getFluidGasMap().get(gas),
+		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas),
 				FluidContainerRegistry.BUCKET_VOLUME));
 	}
 
 	public static IAEFluidStack createAEFluidStack(GasStack gasStack) {
-		return gasStack == null ? null : createAEFluidStack(new FluidStack(Mekanism.getFluidGasMap().get(gasStack.getGas()), gasStack.amount));
+		return gasStack == null ? null : createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gasStack.getGas()), gasStack.amount));
 	}
 
 
@@ -30,7 +30,7 @@ public class GasUtil {
 	}
 
 	public static IAEFluidStack createAEFluidStack(Gas gas, long amount) {
-		return createAEFluidStack(new FluidStack(Mekanism.getFluidGasMap().get(gas), 1)).setStackSize(
+		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas), 1)).setStackSize(
 				amount);
 	}
 
@@ -116,15 +116,24 @@ public class GasUtil {
 	public static GasStack getGasStack(FluidStack fluidStack) {
 		if(fluidStack == null) return null;
 		Fluid fluid = fluidStack.getFluid();
-		if(fluid instanceof  Mekanism.GasFluid){
-			return new GasStack(((Mekanism.GasFluid)fluid).getGas(), fluidStack.amount);
+		if(fluid instanceof  MekanismGas.GasFluid){
+			return new GasStack(((MekanismGas.GasFluid)fluid).getGas(), fluidStack.amount);
+		}
+		return null;
+	}
+
+	public static GasStack getGasStack(IAEFluidStack fluidStack) {
+		if(fluidStack == null) return null;
+		Fluid fluid = fluidStack.getFluid();
+		if(fluid instanceof  MekanismGas.GasFluid){
+			return new GasStack(((MekanismGas.GasFluid)fluid).getGas(), (int) fluidStack.getStackSize());
 		}
 		return null;
 	}
 
 	public static FluidStack getFluidStack(GasStack gasStack) {
 		if (gasStack == null) return null;
-		Fluid fluid = Mekanism.getFluidGasMap().get(gasStack.getGas());
+		Fluid fluid = MekanismGas.getFluidGasMap().get(gasStack.getGas());
 		if (fluid == null) return null;
 		return new FluidStack(fluid, gasStack.amount);
 	}
@@ -134,14 +143,14 @@ public class GasUtil {
 	}
 
 	public static boolean isGas(Fluid fluid){
-		return fluid != null && fluid instanceof Mekanism.GasFluid;
+		return fluid != null && fluid instanceof MekanismGas.GasFluid;
 	}
 
 	public static Gas getGas(Fluid fluid){
 		if(fluid == null)
 			return null;
-		if(fluid instanceof  Mekanism.GasFluid){
-			return ((Mekanism.GasFluid)fluid).getGas();
+		if(fluid instanceof  MekanismGas.GasFluid){
+			return ((MekanismGas.GasFluid)fluid).getGas();
 		}
 		return null;
 	}

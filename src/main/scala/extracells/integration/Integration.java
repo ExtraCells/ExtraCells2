@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import extracells.Extracells;
 import extracells.integration.igw.IGW;
 import extracells.integration.mekanism.Mekanism;
+import extracells.integration.mekanism.gas.MekanismGas;
 import extracells.integration.nei.Nei;
 import extracells.integration.opencomputers.OpenComputers;
 import extracells.integration.waila.Waila;
@@ -20,7 +21,8 @@ public class Integration {
 		NEI("NotEnoughItems", Side.CLIENT),
 		MEKANISMGAS("MekanismAPI|gas", "MekanismGas"),
 		IGW("IGWMod", "IngameWikiMod", Side.CLIENT),
-		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics");
+		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics"),
+		MEKANISM("Mekanism");
 		
 		private final String modID;
 		
@@ -100,14 +102,16 @@ public class Integration {
 		if (Mods.NEI.isEnabled())
 			Nei.init();
 		if (Mods.MEKANISMGAS.isEnabled())
-			Mekanism.init();
+			MekanismGas.init();
 		if (Mods.IGW.isEnabled())
 			IGW.init();
+		if(Mods.MEKANISM.isEnabled())
+			Mekanism.init();
 	}
 	
 	public void postInit(){
 		if (Mods.MEKANISMGAS.isEnabled())
-			Mekanism.postInit();
+			MekanismGas.postInit();
 	}
 
 }

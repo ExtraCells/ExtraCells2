@@ -9,7 +9,7 @@ import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.Optional
 import cpw.mods.fml.common.Optional.{Interface, Method}
 import extracells.integration.Integration
-import extracells.integration.mekanism.Mekanism
+import extracells.integration.mekanism.gas.MekanismGas
 import extracells.util.{FluidUtil, GasUtil}
 import mekanism.api.gas.{Gas, GasStack, IGasHandler}
 import net.minecraftforge.common.util.ForgeDirection
@@ -143,7 +143,7 @@ class PartGasImport extends PartFluidImport with IGasHandler{
 
   @Method(modid = "MekanismAPI|gas")
   override def canReceiveGas(side: ForgeDirection, gasType: Gas): Boolean = {
-    val fluid = Mekanism.getFluidGasMap.get(gasType)
+    val fluid = MekanismGas.getFluidGasMap.get(gasType)
     var isEmpty = true
     for(filter <- filterFluids){
       if(filter != null){

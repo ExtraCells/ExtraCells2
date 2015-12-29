@@ -19,8 +19,8 @@ import extracells.definitions.BlockDefinition;
 import extracells.definitions.ItemDefinition;
 import extracells.definitions.PartDefinition;
 import extracells.integration.Integration;
-import extracells.integration.mekanism.GasCellHandler;
-import extracells.integration.mekanism.Mekanism;
+import extracells.integration.mekanism.gas.GasCellHandler;
+import extracells.integration.mekanism.gas.MekanismGas;
 import extracells.inventory.HandlerItemStorageFluid;
 import extracells.inventory.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
@@ -367,7 +367,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Optional.Method(modid = "MekanismAPI|gas")
 	private Fluid createFluidFromGas(Object gas){
-		return gas instanceof Gas ? Mekanism.getFluidGasMap().containsKey(gas) ? Mekanism.getFluidGasMap().get(gas) : null : null;
+		return gas instanceof Gas ? MekanismGas.getFluidGasMap().containsKey(gas) ? MekanismGas.getFluidGasMap().get(gas) : null : null;
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")
@@ -377,7 +377,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Optional.Method(modid = "MekanismAPI|gas")
 	private boolean checkGas(Fluid fluid) {
-		return fluid instanceof Mekanism.GasFluid;
+		return fluid instanceof MekanismGas.GasFluid;
 	}
 
 	private boolean isMekEnabled(){

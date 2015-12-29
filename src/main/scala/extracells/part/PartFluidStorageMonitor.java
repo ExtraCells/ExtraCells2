@@ -202,7 +202,6 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			this.fluid = FluidUtil.getFluidFromContainer(s).getFluid();
 			if (this.watcher != null)
 				this.watcher.add(FluidUtil.createAEFluidStack(this.fluid));
-			onStackChange(null, null, null, null, null);
 			IPartHost host = getHost();
 			if (host != null)
 				host.markForUpdate();

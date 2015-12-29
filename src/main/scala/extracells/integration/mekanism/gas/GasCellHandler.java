@@ -1,4 +1,4 @@
-package extracells.integration.mekanism;
+package extracells.integration.mekanism.gas;
 
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.implementations.tiles.IMEChest;
