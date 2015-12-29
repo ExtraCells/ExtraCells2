@@ -1,0 +1,135 @@
+#ja_JP By Tier
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+extracells.item.storage.physical.256k.name=256k MEストレージ
+extracells.item.storage.physical.1024k.name=1024k MEストレージ
+extracells.item.storage.physical.4096k.name=4096k MEストレージ
+extracells.item.storage.physical.16384k.name=16384k MEストレージ
+extracells.item.storage.physical.container.name=ME ブロックコンテナ
+extracells.item.storage.casing.physical.name=発展ストレージセル筐体
+extracells.item.storage.casing.fluid.name=液体ストレージセル筐体
+extracells.item.storage.casing.gas.name=気体ストレージセル筐体
+extracells.item.terminal.fluid.wireless.name=ME 無線液体ターミナル
+extracells.item.terminal.universal.wireless.name=ME 発展型無線ターミナル
+extracells.item.fluid.pattern=ME 液体パターン
+extracells.item.oc.upgrade.name=ME アップグレード
+
+
+//Item-AdvancedCell
+extracells.item.storage.component.physical.256k.name=256k MEストレージセル
+extracells.item.storage.component.physical.1024k.name=1024k MEストレージセル
+extracells.item.storage.component.physical.4096k.name=4096k MEストレージセル
+extracells.item.storage.component.physical.16384k.name=16384k MEストレージセル
+
+
+//Item-Fluid
+extracells.item.storage.fluid.1k.name=1k ME液体ストレージ
+extracells.item.storage.fluid.4k.name=4k ME液体ストレージ
+extracells.item.storage.fluid.16k.name=16k ME液体ストレージ
+extracells.item.storage.fluid.64k.name=64k ME液体ストレージ
+extracells.item.storage.fluid.256k.name=256k ME液体ストレージ
+extracells.item.storage.fluid.1024k.name=1024k ME液体ストレージ
+extracells.item.storage.fluid.4096k.name=4096k ME液体ストレージ
+extracells.item.storage.fluid.portable.name=ME ポータブル液体ストレージ
+
+extracells.item.storage.component.fluid.1k.name=1k ME液体ストレージセル
+extracells.item.storage.component.fluid.4k.name=4k ME液体ストレージセル
+extracells.item.storage.component.fluid.16k.name=16k ME液体ストレージセル
+extracells.item.storage.component.fluid.64k.name=64k ME液体ストレージセル
+extracells.item.storage.component.fluid.256k.name=256k ME液体ストレージセル
+extracells.item.storage.component.fluid.1024k.name=1024k ME液体ストレージセル
+extracells.item.storage.component.fluid.4096k.name=4096k ME液体ストレージセル
+
+
+//Item-Gas
+extracells.item.storage.gas.1k.name=1k ME気体ストレージ
+extracells.item.storage.gas.4k.name=4k ME気体ストレージ
+extracells.item.storage.gas.16k.name=ME 16k ME気体ストレージ
+extracells.item.storage.gas.64k.name=ME 64k ME気体ストレージ
+extracells.item.storage.gas.256k.name=ME 256k ME気体ストレージ
+extracells.item.storage.gas.1024k.name=ME 1024k ME気体ストレージ
+extracells.item.storage.gas.4096k.name=ME 4096k ME気体ストレージ
+extracells.item.storage.gas.portable.name=ME ポータブル気体ストレージ
+
+extracells.item.storage.component.gas.1k.name=1k ME気体ストレージセル
+extracells.item.storage.component.gas.4k.name=4k ME気体ストレージセル
+extracells.item.storage.component.gas.16k.name=16k ME気体ストレージセル
+extracells.item.storage.component.gas.64k.name=64k ME気体ストレージセル
+extracells.item.storage.component.gas.256k.name=256k ME気体ストレージセル
+extracells.item.storage.component.gas.1024k.name=1024k ME気体ストレージセル
+extracells.item.storage.component.gas.4096k.name=4096k ME気体ストレージセル
+
+
+
+//Creative Tab
+itemGroup.Extra_Cells=Extra Cells 2
+
+
+//Item Groups
+extracells.fluid.IO=ME 液体 搬出/搬入 バス
+extracells.fluid.plane=ME 液体 消滅/結合 プレーン
+
+
+//Parts
+extracells.part.fluid.export.name=ME 液体搬出バス
+extracells.part.fluid.import.name=ME 液体搬入バス
+extracells.part.gas.export.name=ME 気体搬出バス
+extracells.part.gas.import.name=ME 気体搬入バス
+
+
+extracells.part.fluid.storage.name=ME 液体ストレージバス
+extracells.part.fluid.terminal.name=ME 液体ターミナル
+extracells.part.gas.terminal.name=ME 気体ターミナル
+extracells.part.fluid.plane.annihilation.name=ME 液体消滅プレート
+extracells.part.fluid.plane.formation.name=ME 液体結像プレート
+extracells.part.fluid.levelemitter.name=ME 液体レベルエミッタ
+extracells.part.drive.name=ME ドライブプレート
+extracells.part.battery.name=ME エナジーセルプレート
+extracells.part.fluid.conversion.monitor.name=ME 液体変換モニター
+extracells.part.fluid.monitor.name=ME 液体ストレージモニター
+extracells.part.gas.terminal.name=ME 気体ストレージモニター
+extracells.part.oredict.export.name=ME 鉱石辞書搬出バス
+
+
+//Blocks
+extracells.block.certustank=ケルタクォーツタンク
+extracells.block.walrus.name=セイウチ
+extracells.block.fluidcrafter.name=ME 液体アセンブラー
+extracells.block.fluidinterface.name=ME 液体インターフェース
+extracells.block.fluidfiller.name=ME 液体自動振り分け装置
+tile.extracells.block.vibrantchamberfluid.name=ME 液体振動チャンバー
+tile.extracells.block.hardmedrive.name=ME 対爆ドライブ
+
+
+//Tooltips and Chat-Messages
+extracells.tooltip.amount=量
+extracells.tooltip.fluid=液体
+extracells.tooltip.gas=気体
+extracells.tooltip.storage.physical.types=%s of %s item types used.
+extracells.tooltip.storage.fluid.types=%s of %s fluid types used.
+extracells.tooltip.storage.physical.bytes=%s of %s item bytes used.
+extracells.tooltip.storage.fluid.bytes=%s of %s fluid bytes used.
+extracells.tooltip.storage.fluid.content=contains %s mB of fluid.
+extracells.tooltip.storage.physical.content=contains %s items.
+extracells.tooltip.direction.0=下
+extracells.tooltip.direction.1=上
+extracells.tooltip.direction.2=北
+extracells.tooltip.direction.3=南
+extracells.tooltip.direction.4=西
+extracells.tooltip.direction.5=東
+extracells.tooltip.empty1=空
+extracells.tooltip.storage.container.0=設置モード
+extracells.tooltip.storage.container.1=置換モード (1*1)
+extracells.tooltip.storage.container.2=置換モード (3*3)
+extracells.tooltip.onlyblocks=アイテムを配置できません!
+extracells.tooltip.save=セーブ
+extracells.tooltip.oredict=鉱石辞書名
+extracells.tooltip.mode=モード
+extracells.tooltip.item=アイテム
+extracells.tooltip.essentia=エッセンシア
+
+//Buttons
+extracells.gui.craft=クラフト
