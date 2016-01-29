@@ -320,14 +320,10 @@ public class ContainerFluidStorage extends Container implements
 	public void onListUpdate() {}
 
 	@Override
-	public void postChange(IBaseMonitor<IAEFluidStack> monitor,
-			Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
-		this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor)
-				.getStorageList();
-		new PacketFluidStorage(this.player, this.fluidStackList)
-				.sendPacketToPlayer(this.player);
-		new PacketFluidStorage(this.player, this.hasWirelessTermHandler)
-				.sendPacketToPlayer(this.player);
+	public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+		this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
+		new PacketFluidStorage(this.player, this.fluidStackList).sendPacketToPlayer(this.player);
+		new PacketFluidStorage(this.player, this.hasWirelessTermHandler).sendPacketToPlayer(this.player);
 	}
 
 	public void receiveSelectedFluid(Fluid _selectedFluid) {

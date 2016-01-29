@@ -44,8 +44,7 @@ public class PacketFluidStorage extends AbstractPacket {
 		this.currentFluid = _currentFluid;
 	}
 
-	public PacketFluidStorage(EntityPlayer _player,
-			IItemList<IAEFluidStack> _list) {
+	public PacketFluidStorage(EntityPlayer _player, IItemList<IAEFluidStack> _list) {
 		super(_player);
 		this.mode = 0;
 		this.fluidStackList = _list;
