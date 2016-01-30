@@ -28,25 +28,19 @@ public class CommonProxy {
 
 		@Override
 		public BufferedReader getFile(String path) throws Exception {
-			InputStream resourceAsStream = getClass().getResourceAsStream(
-					"/assets/extracells/recipes/" + path);
-			InputStreamReader reader = new InputStreamReader(resourceAsStream,
-					"UTF-8");
+			InputStream resourceAsStream = getClass().getResourceAsStream("/assets/extracells/recipes/" + path);
+			InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
 			return new BufferedReader(reader);
 		}
 	}
 
 	public void addRecipes(File configFolder) {
-		IRecipeHandler recipeHandler = AEApi.instance().registries().recipes()
-				.createNewRecipehandler();
-		File externalRecipe = new File(configFolder.getPath() + File.separator
-				+ "AppliedEnergistics2" + File.separator + "extracells.recipe");
+		IRecipeHandler recipeHandler = AEApi.instance().registries().recipes().createNewRecipehandler();
+		File externalRecipe = new File(configFolder.getPath() + File.separator + "AppliedEnergistics2" + File.separator + "extracells.recipe");
 		if (externalRecipe.exists()) {
-			recipeHandler.parseRecipes(new ExternalRecipeLoader(),
-					externalRecipe.getPath());
+			recipeHandler.parseRecipes(new ExternalRecipeLoader(), externalRecipe.getPath());
 		} else {
-			recipeHandler.parseRecipes(new InternalRecipeLoader(),
-					"main.recipe");
+			recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
 		}
 		recipeHandler.injectRecipes();
 		GameRegistry.addRecipe(RecipeUniversalTerminal.THIS());
@@ -54,15 +48,13 @@ public class CommonProxy {
 
 	public void registerBlocks() {
 		for (BlockEnum current : BlockEnum.values()) {
-			GameRegistry.registerBlock(current.getBlock(),
-					current.getItemBlockClass(), current.getInternalName());
+			GameRegistry.registerBlock(current.getBlock(), current.getItemBlockClass(), current.getInternalName());
 		}
 	}
 
 	public void registerItems() {
 		for (ItemEnum current : ItemEnum.values()) {
-			GameRegistry.registerItem(current.getItem(),
-					current.getInternalName());
+			GameRegistry.registerItem(current.getItem(), current.getInternalName());
 		}
 	}
 

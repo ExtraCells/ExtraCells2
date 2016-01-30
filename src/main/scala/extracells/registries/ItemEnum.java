@@ -3,6 +3,7 @@ package extracells.registries;
 import extracells.Extracells;
 import extracells.integration.Integration;
 import extracells.item.*;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -16,12 +17,13 @@ public enum ItemEnum {
 	FLUIDWIRELESSTERMINAL("terminal.fluid.wireless", ItemWirelessTerminalFluid.THIS()),
 	STORAGECOMPONET("storage.component", new ItemStorageComponent()),
 	STORAGECASING("storage.casing", new ItemStorageCasing()),
-	FLUIDITEM("fluid.item", new ItemFluid()), // Internal EC Item
+	FLUIDITEM("fluid.item", new ItemFluid(), null, null), // Internal EC Item
 	FLUIDSTORAGEPORTABLE("storage.fluid.portable", ItemStoragePortableFluidCell.THIS()),
 	GASSTORAGEPORTABLE("storage.gas.portable", ItemStoragePortableGasCell.THIS(), Integration.Mods.MEKANISMGAS),
-	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern()),// Internal EC Item
+	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern(), null, null),// Internal EC Item
 	UNIVERSALTERMINAL("terminal.universal.wireless", ItemWirelessTerminalUniversal.THIS()),
-	GASWIRELESSTERMINAL("terminal.gas.wireless", ItemWirelessTerminalGas.THIS(), Integration.Mods.MEKANISMGAS);
+	GASWIRELESSTERMINAL("terminal.gas.wireless", ItemWirelessTerminalGas.THIS(), Integration.Mods.MEKANISMGAS),
+	OCUPGRADE("oc.upgrade", ItemOCUpgrade.THIS(), Integration.Mods.OPENCOMPUTERS);
 
 	private final String internalName;
 	private Item item;
@@ -31,12 +33,16 @@ public enum ItemEnum {
 		this(_internalName, _item, null);
 	}
 
-	ItemEnum(String _internalName, Item _item, Integration.Mods _mod) {
+	ItemEnum(String _internalName, Item _item, Integration.Mods _mod){
+		this(_internalName, _item, _mod, Extracells.ModTab());
+	}
+
+	ItemEnum(String _internalName, Item _item, Integration.Mods _mod, CreativeTabs creativeTab) {
 		this.internalName = _internalName;
 		this.item = _item;
 		this.item.setUnlocalizedName("extracells." + this.internalName);
 		this.mod = _mod;
-		if ((!(this.internalName.equals("fluid.item") || this.internalName.equals("pattern.crafting"))) && (_mod == null || _mod.isEnabled()))
+		if ((creativeTab != null) && (_mod == null || _mod.isEnabled()))
 			this.item.setCreativeTab(Extracells.ModTab());
 	}
 

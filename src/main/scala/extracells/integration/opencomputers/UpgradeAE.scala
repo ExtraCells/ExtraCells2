@@ -10,6 +10,7 @@ import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.{IAEFluidStack, IAEItemStack}
 import appeng.api.util.WorldCoord
 import appeng.tile.misc.TileSecurity
+import extracells.item.ItemOCUpgrade
 import li.cil.oc.api.Network
 import li.cil.oc.api.driver.EnvironmentHost
 import li.cil.oc.api.internal.{Agent, Database, Drone, Robot}
@@ -49,7 +50,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
       val i = drone.internalComponents.iterator
       while (i.hasNext){
         val item = i.next
-        if(item != null && item.getItem == ItemUpgradeAE)
+        if(item != null && item.getItem == ItemOCUpgrade)
           return item
       }
     }

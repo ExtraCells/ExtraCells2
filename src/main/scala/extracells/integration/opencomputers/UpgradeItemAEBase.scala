@@ -1,7 +1,6 @@
 package extracells.integration.opencomputers
 
-import cpw.mods.fml.common.registry.GameRegistry
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import cpw.mods.fml.common.Optional.{Interface, InterfaceList, Method}
 import li.cil.oc.api.CreativeTab
 import li.cil.oc.api.driver.item.{HostAware, Slot}
 import li.cil.oc.api.driver.{EnvironmentAware, EnvironmentHost}
@@ -11,19 +10,18 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 
+@InterfaceList(Array(
+  new Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = "OpenComputers", striprefs = true),
+  new Interface(iface = "li.cil.oc.api.driver.{EnvironmentAware", modid = "OpenComputers", striprefs = true)
+))
+trait UpgradeItemAEBase extends Item with HostAware with EnvironmentAware{
 
-object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
+  @Method(modid = "OpenComputers")
+  override def setCreativeTab(creativeTabs: CreativeTabs): Item ={
+    super.setCreativeTab(CreativeTab.instance)
+  }
 
-  setUnlocalizedName("extracells.oc.upgrade")
-  setTextureName("extracells:upgrade.oc")
-
-  GameRegistry.registerItem(this, "oc.upgrade", "extracells")
-  setCreativeTab(CreativeTab.instance)
-
-  override def getUnlocalizedName = super.getUnlocalizedName.replace("item.extracells", "extracells.item")
-
-  override def getUnlocalizedName(stack: ItemStack) = getUnlocalizedName
-
+  @Method(modid = "OpenComputers")
   override def tier(stack: ItemStack): Int =
     stack.getItemDamage match {
       case 0 => 2
@@ -31,18 +29,13 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
       case _ => 0
   }
 
-  @SideOnly(Side.CLIENT)
-  override def getSubItems(item : Item, tab : CreativeTabs, list : java.util.List[_]) {
-    def add[T](list: java.util.List[T], value: Any) = list.add(value.asInstanceOf[T])
-    add(list, new ItemStack(item, 1, 2))
-    add(list, new ItemStack(item, 1, 1))
-    add(list, new ItemStack(item, 1, 0))
-  }
-
+  @Method(modid = "OpenComputers")
   override def slot(stack: ItemStack): String = Slot.Upgrade
 
+  @Method(modid = "OpenComputers")
   override def worksWith(stack: ItemStack): Boolean = stack != null && stack.getItem == this
 
+  @Method(modid = "OpenComputers")
   override def createEnvironment(stack: ItemStack, host: EnvironmentHost): ManagedEnvironment = {
     if (stack != null && stack.getItem == this && worksWith(stack, host.getClass))
       new UpgradeAE(host)
@@ -50,6 +43,7 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
       null
   }
 
+  @Method(modid = "OpenComputers")
   override def getRarity (stack: ItemStack) =
     stack.getItemDamage match {
       case 0 => EnumRarity.rare
@@ -57,6 +51,7 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
       case _ => super.getRarity(stack)
   }
 
+  @Method(modid = "OpenComputers")
   override def dataTag(stack: ItemStack) = {
     if (!stack.hasTagCompound) {
       stack.setTagCompound(new NBTTagCompound)
@@ -68,9 +63,11 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
     nbt.getCompoundTag("oc:data")
   }
 
+  @Method(modid = "OpenComputers")
   override def worksWith(stack: ItemStack, host: Class[_ <: EnvironmentHost]): Boolean =
     worksWith(stack) && host != null && (classOf[Robot].isAssignableFrom(host) || classOf[Drone].isAssignableFrom(host))
 
+  @Method(modid = "OpenComputers")
   override def providedEnvironment(stack: ItemStack): Class[_ <: Environment] = {
     if (stack != null && stack.getItem == this)
       classOf[UpgradeAE]
@@ -78,12 +75,4 @@ object ItemUpgradeAE  extends Item with HostAware with EnvironmentAware{
       null
   }
 
-  override def getItemStackDisplayName(stack : ItemStack): String = {
-    val tier = stack.getItemDamage match {
-      case 0 => 3
-      case 1 => 2
-      case _ => 1
-    }
-    super.getItemStackDisplayName(stack) + " (Tier " + tier + ")"
-  }
 }

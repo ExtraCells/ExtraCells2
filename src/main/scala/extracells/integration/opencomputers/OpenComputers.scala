@@ -2,6 +2,7 @@ package extracells.integration.opencomputers
 
 import appeng.api.AEApi
 import extracells.integration.Integration
+import extracells.item.ItemOCUpgrade
 import li.cil.oc.api.Driver
 object OpenComputers {
 	
@@ -13,7 +14,7 @@ object OpenComputers {
 			Driver.add(new DriverGasExportBus)
 			Driver.add(new DriverGasImportBus)
 		}
-		Driver.add(ItemUpgradeAE)
+		Driver.add(ItemOCUpgrade)
 		AEApi.instance.registries.wireless.registerWirelessHandler(WirelessHandlerUpgradeAE)
 		OCRecipes.loadRecipes
 		ExtraCellsPathProvider

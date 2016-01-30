@@ -36,7 +36,7 @@ object Extracells {
 	var dynamicTypes = true
 	val integration = new Integration
 	
-	val ModTab = new  CreativeTabs("Extra_Cells") {
+	val ModTab = new CreativeTabs("Extra_Cells") {
 
 		override def  getIconItemStack = new ItemStack(ItemEnum.FLUIDSTORAGE.getItem)
 
