@@ -12,7 +12,7 @@ import net.minecraft.nbt.NBTTagCompound
 
 @InterfaceList(Array(
   new Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = "OpenComputers", striprefs = true),
-  new Interface(iface = "li.cil.oc.api.driver.{EnvironmentAware", modid = "OpenComputers", striprefs = true)
+  new Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = "OpenComputers", striprefs = true)
 ))
 trait UpgradeItemAEBase extends Item with HostAware with EnvironmentAware{
 
