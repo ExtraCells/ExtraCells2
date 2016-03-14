@@ -368,8 +368,10 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 									case DOWN:
 										for (int posX = x - 1; posX < x + 2; posX++) {
 											for (int posZ = z - 1; posZ < z + 2; posZ++) {
-												world.func_147480_a(posX, y, posZ, true);
-												placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
+												if (world.getBlock(posX, y, posZ) != Blocks.bedrock && world.getBlock(posX, y, posZ).getBlockHardness(world, posX, y, posZ) >= 0.0F) {
+													world.func_147480_a(posX, y, posZ, true);
+													placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
+												}
 											}
 										}
 										AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
@@ -377,8 +379,10 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 									case EAST:
 										for (int posZ = z - 1; posZ < z + 2; posZ++) {
 											for (int posY = y - 1; posY < y + 2; posY++) {
-												world.func_147480_a(x, posY, posZ, true);
-												placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
+												if (world.getBlock(x, posY, posZ) != Blocks.bedrock && world.getBlock(x, posY, posZ).getBlockHardness(world, x, posY, posZ) >= 0.0F) {
+													world.func_147480_a(x, posY, posZ, true);
+													placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
+												}
 											}
 										}
 										AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
@@ -386,13 +390,15 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 									case NORTH:
 										for (int posX = x - 1; posX < x + 2; posX++) {
 											for (int posY = y - 1; posY < y + 2; posY++) {
-												world.func_147480_a(posX, posY,
-														z, true);
-												placeBlock(
-														request.getItemStack(),
-														world, player, posX,
-														posY, z, side, xOffset,
-														yOffset, zOffset);
+												if (world.getBlock(posX, posY, z) != Blocks.bedrock && world.getBlock(posX, posY, z).getBlockHardness(world, posX, posY, z) >= 0.0F) {
+													world.func_147480_a(posX, posY,
+															z, true);
+													placeBlock(
+															request.getItemStack(),
+															world, player, posX,
+															posY, z, side, xOffset,
+															yOffset, zOffset);
+												}
 											}
 										}
 										AEApi.instance()
@@ -410,13 +416,15 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 									case SOUTH:
 										for (int posX = x - 1; posX < x + 2; posX++) {
 											for (int posY = y - 1; posY < y + 2; posY++) {
-												world.func_147480_a(posX, posY,
-														z, true);
-												placeBlock(
-														request.getItemStack(),
-														world, player, posX,
-														posY, z, side, xOffset,
-														yOffset, zOffset);
+												if (world.getBlock(posX, posY, z) != Blocks.bedrock && world.getBlock(posX, posY, z).getBlockHardness(world, posX, posY, z) >= 0.0F) {
+													world.func_147480_a(posX, posY,
+															z, true);
+													placeBlock(
+															request.getItemStack(),
+															world, player, posX,
+															posY, z, side, xOffset,
+															yOffset, zOffset);
+												}
 											}
 										}
 										AEApi.instance()
@@ -436,13 +444,15 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 									case UP:
 										for (int posX = x - 1; posX < x + 2; posX++) {
 											for (int posZ = z - 1; posZ < z + 2; posZ++) {
-												world.func_147480_a(posX, y,
-														posZ, true);
-												placeBlock(
-														request.getItemStack(),
-														world, player, posX, y,
-														posZ, side, xOffset,
-														yOffset, zOffset);
+												if (world.getBlock(posX, y, posZ) != Blocks.bedrock && world.getBlock(posX, y, posZ).getBlockHardness(world, posX, y, posZ) >= 0.0F) {
+													world.func_147480_a(posX, y,
+															posZ, true);
+													placeBlock(
+															request.getItemStack(),
+															world, player, posX, y,
+															posZ, side, xOffset,
+															yOffset, zOffset);
+												}
 											}
 										}
 										AEApi.instance()
@@ -460,13 +470,15 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 									case WEST:
 										for (int posZ = z - 1; posZ < z + 2; posZ++) {
 											for (int posY = y - 1; posY < y + 2; posY++) {
-												world.func_147480_a(x, posY,
-														posZ, true);
-												placeBlock(
-														request.getItemStack(),
-														world, player, x, posY,
-														posZ, side, xOffset,
-														yOffset, zOffset);
+												if (world.getBlock(x, posY, posZ) != Blocks.bedrock && world.getBlock(x, posY, posZ).getBlockHardness(world, x, posY, posZ) >= 0.0F) {
+													world.func_147480_a(x, posY,
+															posZ, true);
+													placeBlock(
+															request.getItemStack(),
+															world, player, x, posY,
+															posZ, side, xOffset,
+															yOffset, zOffset);
+												}
 											}
 										}
 										AEApi.instance()
