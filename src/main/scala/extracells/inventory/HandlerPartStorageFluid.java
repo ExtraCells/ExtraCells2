@@ -206,6 +206,15 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			filled2 = this.tank.fill(this.node.getSide().getOpposite(), new FluidStack(toFill.getFluid(), toFill.amount - filled), mode == Actionable.MODULATE);
 			filled = filled + filled2;
 		} while (filled2 != 0 && filled != toFill.amount);
+		FluidTankInfo[] infos = this.tank.getTankInfo(this.node.getSide().getOpposite());
+		int maxFill = 0;
+		for(FluidTankInfo info : infos){
+			if(info.fluid == null)
+				maxFill += info.capacity;
+			else if(info.fluid.getFluid() == toFill.getFluid())
+				maxFill += info.capacity - info.fluid.amount;
+		}
+		filled = Math.min(filled, maxFill);
 		if (filled == toFill.amount)
 			return null;
 		return FluidUtil.createAEFluidStack(toFill.getFluidID(), toFill.amount - filled);
