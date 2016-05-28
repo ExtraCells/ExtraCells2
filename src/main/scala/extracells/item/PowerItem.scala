@@ -39,11 +39,16 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem{
     if (simulate) {
       val current: Double = PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(container))
       val max: Double = PowerUnits.AE.convertTo(PowerUnits.RF, getAEMaxPower(container))
-      if (max - current >= maxReceive) return maxReceive
-      else return (max - current).toInt
+      if (max - current >= maxReceive) maxReceive
+      else (max - current).toInt
     }
     else {
-      return PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive))).toInt
+      val currentAEPower = getAECurrentPower(container)
+      if ( currentAEPower < getAEMaxPower(container)){
+        val leftOver = PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)))
+        (maxReceive - leftOver).toInt
+      }else
+        0
     }
   }
 

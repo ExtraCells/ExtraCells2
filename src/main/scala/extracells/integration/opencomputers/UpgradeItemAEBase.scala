@@ -43,7 +43,6 @@ trait UpgradeItemAEBase extends Item with HostAware with EnvironmentAware{
       null
   }
 
-  @Method(modid = "OpenComputers")
   override def getRarity (stack: ItemStack) =
     stack.getItemDamage match {
       case 0 => EnumRarity.rare
