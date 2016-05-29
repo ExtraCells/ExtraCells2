@@ -175,9 +175,9 @@ public class BlockCertusTank extends BlockEC {
 						if (!entityplayer.capabilities.isCreativeMode) {
 							if (current.stackSize > 1) {
 								if (!entityplayer.inventory.addItemStackToInventory(filled)) {
-									tank.fill(ForgeDirection.UNKNOWN, new FluidStack(liquid, liquid.amount), true);
 									return false;
 								} else {
+									tank.fill(ForgeDirection.UNKNOWN, new FluidStack(liquid, liquid.amount), true);
 									entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
 								}
 							} else {
