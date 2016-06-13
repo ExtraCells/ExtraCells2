@@ -25,7 +25,7 @@ object UniversalTerminal {
   }
 
   val wirelessTerminals : Array[ItemStack] = {
-    val terminals = new Array[ItemStack](arrayLength);
+    val terminals = new Array[ItemStack](arrayLength)
     terminals.update(0, AEApi.instance.definitions.items.wirelessTerminal.maybeStack(1).get())
     terminals.update(1, ItemEnum.FLUIDWIRELESSTERMINAL.getSizedStack(1))
     var next = 2
@@ -43,7 +43,7 @@ object UniversalTerminal {
   }
 
   val terminals : Array[ItemStack] = {
-    val terminals = new Array[ItemStack](arrayLength)
+    val terminals = new Array[ItemStack](if (isWcLLoaded) arrayLength - 1 else arrayLength)
     terminals.update(0, AEApi.instance.definitions.parts.terminal.maybeStack(1).get())
     terminals.update(1, ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal))
     if(isMekLoaded) {
