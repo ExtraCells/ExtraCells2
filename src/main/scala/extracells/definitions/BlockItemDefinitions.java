@@ -67,6 +67,11 @@ public class BlockItemDefinitions implements ITileDefinition {
 	}
 
 	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	@Override
 	public Optional<? extends Class<? extends TileEntity>> maybeEntity() {
 		return Optional.fromNullable(this.blockTileEntity);
 	}

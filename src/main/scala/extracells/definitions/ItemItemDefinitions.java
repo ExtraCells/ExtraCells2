@@ -30,7 +30,12 @@ public class ItemItemDefinitions implements IItemDefinition {
         return Optional.of(new ItemStack(this.item, stackSize, this.meta));
     }
 
-    @Override
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	@Override
     public boolean isSameAs(ItemStack comparableStack) {
         return comparableStack != null && comparableStack.isItemEqual(maybeStack(1).get());
     }

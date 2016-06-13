@@ -8,6 +8,7 @@ import extracells.util.UniversalTerminal
 import net.minecraft.inventory.InventoryCrafting
 import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.IRecipe
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 
 
@@ -112,6 +113,16 @@ object RecipeUniversalTerminal extends IRecipe{
       if(itemTerminal.isInstanceOf[IAEItemPowerStorage]){
         val power = itemTerminal.asInstanceOf[IAEItemPowerStorage].getAECurrentPower(terminal)
         itemUniversal.injectAEPower(t, power)
+      }
+      if(terminal.hasTagCompound){
+        val nbt = terminal.getTagCompound
+        if(!t.hasTagCompound)
+          t.setTagCompound(new NBTTagCompound)
+        if(nbt.hasKey("BoosterSlot")){
+          t.getTagCompound.setTag("BoosterSlot", nbt.getTag("BoosterSlot"))
+        }
+        if(nbt.hasKey("MagnetSlot"))
+          t.getTagCompound.setTag("MagnetSlot", nbt.getTag("MagnetSlot"));
       }
       itemUniversal.installModule(t, terminalType)
       t.getTagCompound.setByte("type", terminalType.ordinal.toByte)

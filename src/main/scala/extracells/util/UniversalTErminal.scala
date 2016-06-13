@@ -2,6 +2,7 @@ package extracells.util
 
 import appeng.api.AEApi
 import extracells.integration.Integration.Mods
+import extracells.integration.WirelessCrafting.WirelessCrafting
 import extracells.integration.thaumaticenergistics.ThaumaticEnergistics
 import extracells.item.TerminalType
 import extracells.registries.{ItemEnum, PartEnum}
@@ -11,25 +12,33 @@ import net.minecraft.item.ItemStack
 object UniversalTerminal {
   val isMekLoaded = Mods.MEKANISMGAS.isEnabled
   val isThaLoaded = Mods.THAUMATICENERGISTICS.isEnabled
+  val isWcLLoaded = Mods.WIRELESSCRAFTING.isEnabled
   val arrayLength = {
-    if(isMekLoaded && isThaLoaded)
-      4
-    else if(isMekLoaded || isThaLoaded)
-      3
-    else
-      2
+    var length = 2
+    if(isMekLoaded)
+      length += 1
+    if(isThaLoaded)
+      length += 1
+    if(isWcLLoaded)
+      length += 1
+    length
   }
 
   val wirelessTerminals : Array[ItemStack] = {
     val terminals = new Array[ItemStack](arrayLength);
     terminals.update(0, AEApi.instance.definitions.items.wirelessTerminal.maybeStack(1).get())
     terminals.update(1, ItemEnum.FLUIDWIRELESSTERMINAL.getSizedStack(1))
+    var next = 2
     if(isMekLoaded) {
-      terminals.update(2, ItemEnum.GASWIRELESSTERMINAL.getSizedStack(1))
-      if(isThaLoaded)
-        terminals.update(3, ThaumaticEnergistics.getWirelessTerminal)
-    }else if(isThaLoaded)
-      terminals.update(2, ThaumaticEnergistics.getWirelessTerminal)
+      terminals.update(next, ItemEnum.GASWIRELESSTERMINAL.getSizedStack(1))
+      next += 1
+    }
+    if(isThaLoaded) {
+      terminals.update(next, ThaumaticEnergistics.getWirelessTerminal)
+      next += 1
+    }
+    if(isWcLLoaded)
+      terminals.update(next, WirelessCrafting.getCraftingTerminal)
     terminals
   }
 
@@ -91,6 +100,11 @@ object UniversalTerminal {
       if(item == thterm.getItem && meta == thterm.getItemDamage)
         return true
     }
+    if(isWcLLoaded){
+      val wcTerm = WirelessCrafting.getCraftingTerminal
+      if(item == wcTerm.getItem && meta == wcTerm.getItemDamage)
+        return true
+    }
     false
   }
 
@@ -128,6 +142,11 @@ object UniversalTerminal {
       val thterm = ThaumaticEnergistics.getWirelessTerminal
       if(item == thterm.getItem && meta == thterm.getItemDamage)
         return TerminalType.ESSENTIA
+    }
+    if(isWcLLoaded){
+      val wcTerm = WirelessCrafting.getCraftingTerminal
+      if(item == wcTerm.getItem && meta == wcTerm.getItemDamage)
+        return TerminalType.CRAFTING
     }
     null
   }

@@ -22,7 +22,8 @@ public class Integration {
 		MEKANISMGAS("MekanismAPI|gas", "MekanismGas"),
 		IGW("IGWMod", "IngameWikiMod", Side.CLIENT),
 		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics"),
-		MEKANISM("Mekanism");
+		MEKANISM("Mekanism"),
+		WIRELESSCRAFTING("ae2wct", "AE2 Wireless Crafting Terminal");
 		
 		private final String modID;
 		
