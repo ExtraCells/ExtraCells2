@@ -114,7 +114,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
           tag.setByte("type", 0)
         else if(installed.contains(TerminalType.FLUID))
           tag.setByte("type", 1)
-        if(isMekEnabled && installed.contains(TerminalType.GAS))
+        else if(isMekEnabled && installed.contains(TerminalType.GAS))
           tag.setByte("type", 2)
       case _ =>
         if(installed.contains(TerminalType.ITEM))
