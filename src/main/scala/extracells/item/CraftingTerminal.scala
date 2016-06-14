@@ -32,4 +32,12 @@ trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem{
 
   @Optional.Method(modid = "ae2wct")
   override def postInit() :Unit = {}
+
+  @Optional.Method(modid = "ae2wct")
+  override def isWirelessCraftingEnabled(itemStack: ItemStack): Boolean = {
+    if (this == ItemWirelessTerminalUniversal)
+      ItemWirelessTerminalUniversal.isInstalled(itemStack, TerminalType.CRAFTING)
+    else
+      true
+  }
 }

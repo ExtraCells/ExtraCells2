@@ -118,6 +118,7 @@ extracells.tooltip.item=Item
 extracells.tooltip.gas=Gas
 extracells.tooltip.essentia=Essentia
 extracells.tooltip.installed=Installed:
+extracells.tooltip.crafting=Crafting
 
 //Buttons
 extracells.gui.craft=Craft
