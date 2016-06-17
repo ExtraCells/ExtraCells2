@@ -11,6 +11,7 @@ import extracells.api.{ECApi, IWirelessFluidTermHandler, IWirelessGasTermHandler
 import extracells.integration.Integration
 import extracells.integration.WirelessCrafting.WirelessCrafting
 import extracells.integration.thaumaticenergistics.ThaumaticEnergistics
+import extracells.util.HandlerUniversalWirelessTerminal
 import extracells.wireless.ConfigManager
 import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
@@ -26,8 +27,14 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
   val isWcEnabled = Integration.Mods.WIRELESSCRAFTING.isEnabled
   var icon :IIcon = null
   def THIS = this
-  ECApi.instance.registerWirelessTermHandler(this)
-  AEApi.instance.registries.wireless.registerWirelessHandler(this)
+  if(isWcEnabled){
+    ECApi.instance.registerWirelessTermHandler(this)
+    AEApi.instance.registries.wireless.registerWirelessHandler(this)
+  }else{
+    ECApi.instance.registerWirelessTermHandler(HandlerUniversalWirelessTerminal)
+    AEApi.instance.registries.wireless.registerWirelessHandler(HandlerUniversalWirelessTerminal)
+  }
+
 
 
 
