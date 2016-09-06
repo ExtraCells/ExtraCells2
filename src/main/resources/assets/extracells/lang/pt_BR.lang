@@ -1,0 +1,124 @@
+//**********//
+//EXTRACELLS//
+//**********//
+
+//Items
+extracells.item.storage.physical.256k.name=Célula de Armazenamento ME 256k
+extracells.item.storage.physical.1024k.name=Célula de Armazenamento ME 1024k
+extracells.item.storage.physical.4096k.name=Célula de Armazenamento ME 4096k
+extracells.item.storage.physical.16384k.name=Célula de Armazenamento ME 16384k
+extracells.item.storage.physical.container.name=Contêiner de Blocos ME
+extracells.item.storage.fluid.1k.name=Célula de Armazenamento de Fluidos ME 1k
+extracells.item.storage.fluid.4k.name=Célula de Armazenamento de Fluidos ME 4k
+extracells.item.storage.fluid.16k.name=Célula de Armazenamento de Fluidos ME 16k
+extracells.item.storage.fluid.64k.name=Célula de Armazenamento de Fluidos ME 64k
+extracells.item.storage.fluid.256k.name=Célula de Armazenamento de Fluidos ME 256k
+extracells.item.storage.fluid.1024k.name=Célula de Armazenamento de Fluidos ME 1024k
+extracells.item.storage.fluid.4096k.name=Célula de Armazenamento de Fluidos ME 4096k
+extracells.item.storage.fluid.portable.name=Célula de Armazenamento Portátil de Fluidos
+extracells.item.storage.gas.1k.name=Célula de Armazenamento de Gás ME 1k
+extracells.item.storage.gas.4k.name=Célula de Armazenamento de Gás ME 4k
+extracells.item.storage.gas.16k.name=Célula de Armazenamento de Gás ME 16k
+extracells.item.storage.gas.64k.name=Célula de Armazenamento de Gás ME 64k
+extracells.item.storage.gas.256k.name=Célula de Armazenamento de Gás ME 256k
+extracells.item.storage.gas.1024k.name=Célula de Armazenamento de Gás ME 1024k
+extracells.item.storage.gas.4096k.name=Célula de Armazenamento de Gás ME 4096k
+extracells.item.storage.gas.portable.name=Armazenamento Portátil de Gás ME
+extracells.item.storage.component.physical.256k.name=Componente de Armazenamento ME 256k 
+extracells.item.storage.component.physical.1024k.name=Componente de Armazenamento ME 1024k
+extracells.item.storage.component.physical.4096k.name=Componente de Armazenamento ME 4096k
+extracells.item.storage.component.physical.16384k.name=Componente de Armazenamento ME 16384k
+extracells.item.storage.component.fluid.1k.name=Componente de Armazenamento de Fluidos ME 1k 
+extracells.item.storage.component.fluid.4k.name=Componente de Armazenamento de Fluidos ME 4k
+extracells.item.storage.component.fluid.16k.name=Componente de Armazenamento de Fluidos ME 16k
+extracells.item.storage.component.fluid.64k.name=Componente de Armazenamento de Fluidos ME 64k
+extracells.item.storage.component.fluid.256k.name=Componente de Armazenamento de Fluidos ME 256k
+extracells.item.storage.component.fluid.1024k.name=Componente de Armazenamento de Fluidos ME 1024k
+extracells.item.storage.component.fluid.4096k.name=Componente de Armazenamento de Fluidos ME 4096k
+extracells.item.storage.component.gas.1k.name=Componente de Armazenamento de Gases ME 1k 
+extracells.item.storage.component.gas.4k.name=Componente de Armazenamento de Gases ME 4k
+extracells.item.storage.component.gas.16k.name=Componente de Armazenamento de Gases ME 16k
+extracells.item.storage.component.gas.64k.name=Componente de Armazenamento de Gases ME 64k
+extracells.item.storage.component.gas.256k.name=Componente de Armazenamento de Gases ME 256k
+extracells.item.storage.component.gas.1024k.name=Componente de Armazenamento de Gases ME 1024k
+extracells.item.storage.component.gas.4096k.name=Componente de Armazenamento de Gases ME 4096k
+extracells.item.storage.casing.physical.name=Encaixe de Armazenamento Avançado ME
+extracells.item.storage.casing.fluid.name=Encaixe de Armazenamento de Fluidos ME
+extracells.item.storage.casing.gas.name=Encaixe de Armazenamento de Gases ME
+extracells.item.terminal.fluid.wireless.name=Terminal de Fluidos Sem Fio
+extracells.item.terminal.gas.wireless.name=Terminal de Gases Sem Fio
+extracells.item.terminal.universal.wireless.name=Terminal Universal Sem Fio
+extracells.item.fluid.pattern=Padrão de Fluidos ME [WIP]
+extracells.item.oc.upgrade.name=Melhoria ME
+
+//Creative Tab
+itemGroup.Extra_Cells=Extra Cells 2
+
+//Item Groups
+extracells.fluid.IO=Barramento de Importação/Exportação de Fluidos ME
+extracells.fluid.plane=Plano de Aniquilaçã/Formação de Fluidos ME
+
+//Parts
+extracells.part.fluid.export.name=Barramento de Exportação de Fluidos ME
+extracells.part.fluid.import.name=Barramento de Importação de Fluidos ME
+extracells.part.fluid.storage.name=Barramento de Armazenamento de Fluidos ME
+extracells.part.fluid.terminal.name=Terminal de Fluidos ME
+extracells.part.fluid.plane.annihilation.name=Plano de Aniquilação de Fluidos ME
+extracells.part.fluid.plane.formation.name=Plano de Formação de Fluidos ME
+extracells.part.fluid.levelemitter.name=Emissor de Nível de Fluidos ME
+extracells.part.drive.name=Fixação do Acionador ME
+extracells.part.battery.name=Fixação da Célula de Energia ME
+extracells.part.fluid.conversion.monitor.name=Monitor de Conversão de Fluidos ME
+extracells.part.fluid.monitor.name=Monitor de Armazenamento de Fluidos ME
+extracells.part.oredict.export.name=Barramento de Exportação Ore Dictionary ME
+extracells.part.gas.export.name=Barramento de Exportação de Gases ME
+extracells.part.gas.import.name=Barramento de Importação de Gases ME
+extracells.part.gas.terminal.name=Terminal de Gases ME
+extracells.part.gas.storage.name=Barramento de Armazenamento de Gases ME
+extracells.part.gas.levelemitter.name=Emissor de Nível de Gases ME
+extracells.part.gas.conversion.monitor.name=Monitor de Conversão de Gases ME
+extracells.part.gas.monitor.name=Monitor de Armazenamento de Gases ME
+
+//Blocks
+extracells.block.certustank=Tanque de Quartzo Certus
+extracells.block.walrus.name=Morsa
+extracells.block.fluidcrafter.name=Montador de Fluidos ME
+extracells.block.fluidinterface.name=Interface de Fluidos ME
+extracells.block.fluidfiller.name=Auto Preenchedor de Fluidos ME
+tile.extracells.block.vibrantchamberfluid.name=Câmara de Vibração de Fluidos
+tile.extracells.block.hardmedrive.name=Acionador ME Resistente à Explosões [WIP]
+
+//Tooltips and Chat-Messages
+extracells.tooltip.amount=Quantia
+extracells.tooltip.fluid=Fluido
+extracells.tooltip.storage.physical.types=%s de %s tipos de itens usados.
+extracells.tooltip.storage.fluid.types=%s de %s tipos de fluidos usados.
+extracells.tooltip.storage.physical.bytes=%s de %s bytes de item usados.
+extracells.tooltip.storage.fluid.bytes=%s de %s bytes de fluido usados.
+extracells.tooltip.storage.fluid.content=contém %s mB de fluidos.
+extracells.tooltip.storage.physical.content=contém %s itens.
+extracells.tooltip.storage.gas.bytes=%s de %s bytes de gás usados.
+extracells.tooltip.storage.gas.content=contains %s de gás.
+extracells.tooltip.storage.gas.types=%s de %s tipos de gás usados.
+extracells.tooltip.direction.0=Baixo
+extracells.tooltip.direction.1=Cima
+extracells.tooltip.direction.2=Norte
+extracells.tooltip.direction.3=Sul
+extracells.tooltip.direction.4=Oeste
+extracells.tooltip.direction.5=Leste
+extracells.tooltip.empty1=Vazio
+extracells.tooltip.storage.container.0=Modo: Modo de Colocação
+extracells.tooltip.storage.container.1=Modo: Modo de Troca Equivalente (1*1)
+extracells.tooltip.storage.container.2=Modo: Modo de Troca Equivalente (3*3)
+extracells.tooltip.onlyblocks=Você não pode colocar Itens! Coloque um Bloco no Contêiner de BLOCOS!
+extracells.tooltip.save=Salvar
+extracells.tooltip.oredict=Nome do Ore Dictionary
+extracells.tooltip.mode=Modo
+extracells.tooltip.item=Item
+extracells.tooltip.gas=Gás
+extracells.tooltip.essentia=Essentia
+extracells.tooltip.installed=Instalado:
+extracells.tooltip.crafting=Fabricação
+
+//Buttons
+extracells.gui.craft=Fabricar
