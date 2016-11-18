@@ -47,6 +47,8 @@ public class ItemRendererCertusTank implements IItemRenderer {
 
 			if (storedFluid != null && storedFluid.getFluid() != null) {
 				IIcon fluidIcon = storedFluid.getFluid().getIcon();
+				if (fluidIcon == null)
+					fluidIcon = FluidRegistry.LAVA.getIcon();
 
 				Tessellator tessellator = Tessellator.instance;
 				RenderBlocks renderer = new RenderBlocks();
