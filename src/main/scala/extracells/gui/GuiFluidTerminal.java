@@ -1,6 +1,12 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.config.SearchBoxMode;
+import appeng.api.config.Settings;
+import appeng.api.config.TerminalStyle;
+import appeng.client.gui.widgets.MEGuiTextField;
+import appeng.core.AEConfig;
+
 import extracells.Extracells;
 import extracells.api.ECApi;
 import extracells.container.ContainerFluidTerminal;
@@ -30,7 +36,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	private PartFluidTerminal terminal;
 	private EntityPlayer player;
 	private int currentScroll = 0;
-	private GuiTextField searchbar;
+	private MEGuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
@@ -42,8 +48,8 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 		this.containerTerminalFluid.setGui(this);
 		this.terminal = _terminal;
 		this.player = _player;
-		this.xSize = 176;
-		this.ySize = 204;
+		this.xSize = 178;
+		this.ySize = 206;
 		new PacketFluidTerminal(this.player, this.terminal).sendPacketToServer();
 	}
 
@@ -153,24 +159,15 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
-		this.searchbar = new GuiTextField(this.fontRendererObj,
-				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
-
-			private int xPos = 0;
-			private int yPos = 0;
-			private int width = 0;
-			private int height = 0;
-
-			@Override
-			public void mouseClicked(int x, int y, int mouseBtn) {
-				boolean flag = x >= this.xPos && x < this.xPos + this.width && y >= this.yPos && y < this.yPos + this.height;
-				if (flag && mouseBtn == 3)
-					setText("");
-			}
-		};
+		this.searchbar = new MEGuiTextField(this.fontRendererObj, this.guiLeft + 81, this.guiTop + 6, 90, 12);
 		this.searchbar.setEnableBackgroundDrawing(false);
-		this.searchbar.setFocused(true);
 		this.searchbar.setMaxStringLength(15);
+		this.searchbar.setTextColor(0xFFFFFF);
+		this.searchbar.setVisible(true);
+
+		Enum searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
+
+		this.searchbar.setFocused(searchMode == SearchBoxMode.AUTOSEARCH);
 	}
 
 	@Override
@@ -184,7 +181,17 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
-		this.searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
+
+		Enum searchMode = AEConfig.instance.settings.getSetting(Settings.SEARCH_MODE);
+
+		if(searchMode != SearchBoxMode.AUTOSEARCH)
+			this.searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
+
+		if(mouseBtn == 1 && this.searchbar.isMouseIn(mouseX, mouseY)) {
+			this.searchbar.setText("");
+			updateFluids();
+		}
+
 		int listSize = this.fluidWidgets.size();
 		for (int x = 0; x < 9; x++) {
 			for (int y = 0; y < 4; y++) {
