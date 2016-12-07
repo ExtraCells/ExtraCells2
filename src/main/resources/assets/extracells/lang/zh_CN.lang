@@ -4,16 +4,16 @@
 
 //Items
 extracells.item.storage.physical.256k.name=ME 256k存储器
-extracells.item.storage.physical.1024k.name=ME 1M存储器
-extracells.item.storage.physical.4096k.name=ME 4M存储器
-extracells.item.storage.physical.16384k.name=ME 16M存储器
+extracells.item.storage.physical.1024k.name=ME 1024k存储器
+extracells.item.storage.physical.4096k.name=ME 4096k存储器
+extracells.item.storage.physical.16384k.name=ME 16384k存储器
 extracells.item.storage.fluid.1k.name=ME 1k流体存储器
 extracells.item.storage.fluid.4k.name=ME 4k流体存储器
 extracells.item.storage.fluid.16k.name=ME 16k流体存储器
 extracells.item.storage.fluid.64k.name=ME 64k流体存储器
 extracells.item.storage.fluid.256k.name=ME 256k流体存储器
-extracells.item.storage.fluid.1024k.name=ME 1M流体存储器
-extracells.item.storage.fluid.4096k.name=ME 4M流体存储器
+extracells.item.storage.fluid.1024k.name=ME 1024k流体存储器
+extracells.item.storage.fluid.4096k.name=ME 4096k流体存储器
 extracells.item.storage.component.physical.256k.name=256k ME存储簇
 extracells.item.storage.component.physical.1024k.name=1024k ME存储簇
 extracells.item.storage.component.physical.4096k.name=4096k ME存储簇
@@ -23,23 +23,23 @@ extracells.item.storage.component.fluid.4k.name=4k ME流体存储簇
 extracells.item.storage.component.fluid.16k.name=16k ME流体存储簇
 extracells.item.storage.component.fluid.64k.name=64k ME流体存储簇
 extracells.item.storage.component.fluid.256k.name=256k ME流体存储簇
-extracells.item.storage.component.fluid.1024k.name=1M ME流体存储簇
-extracells.item.storage.component.fluid.4096k.name=4M ME流体存储簇
+extracells.item.storage.component.fluid.1024k.name=1024k ME流体存储簇
+extracells.item.storage.component.fluid.4096k.name=4096k ME流体存储簇
 extracells.item.storage.casing.physical.name=高级存储单元仓
 extracells.item.storage.casing.fluid.name=流体存储单元仓
 extracells.item.terminal.fluid.wireless.name=无线ME流体访问终端
 extracells.item.fluid.pattern=ME流体模板
 
 //Creative Tab
-itemGroup.Extra_Cells=更多存储器
+itemGroup.Extra_Cells=更多存储单元
 
 //Item Groups
 extracells.fluid.IO=ME流体导入/导出总线
 extracells.fluid.plane=ME流体创造/毁灭刨工机
 
 //Parts
-extracells.part.fluid.export.name=ME流体导出总线
-extracells.part.fluid.import.name=ME流体导出总线
+extracells.part.fluid.export.name=ME流体输出总线
+extracells.part.fluid.import.name=ME流体输入总线
 extracells.part.fluid.storage.name=ME流体存储总线
 extracells.part.fluid.terminal.name=ME流体访问终端
 extracells.part.fluid.plane.annihilation.name=ME流体毁灭刨工机
@@ -49,14 +49,15 @@ extracells.part.drive.name=ME驱动固定器
 extracells.part.battery.name=ME能量单元固定器
 
 //Blocks
-extracells.block.certustank.name=ME赛特斯水槽
+extracells.block.certustank=赛特斯石英水槽
+extracells.block.walrus.name=海象
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=总量
 extracells.tooltip.fluid=流体
-extracells.tooltip.storage.physical.types=%s 中的 %s 个物品类型已使用.
-extracells.tooltip.storage.fluid.types=%s 中的 %s 个流体类型已使用.
-extracells.tooltip.storage.physical.bytes=%s 中的 %s 物品字节已使用.
-extracells.tooltip.storage.fluid.bytes=%s 中的 %s 流体字节已使用.
-extracells.tooltip.storage.fluid.content=存有 %s mB 的流体.
-extracells.tooltip.storage.physical.content=存有 %s 个物品.
+extracells.tooltip.storage.physical.types=%s中的%s个物品类型已使用.
+extracells.tooltip.storage.fluid.types=%s中的%s个流体类型已使用.
+extracells.tooltip.storage.physical.bytes=%s中的%s物品字节已使用.
+extracells.tooltip.storage.fluid.bytes=%s中的%s流体字节已使用.
+extracells.tooltip.storage.fluid.content=存有%smB的流体.
+extracells.tooltip.storage.physical.content=存有%s个物品.

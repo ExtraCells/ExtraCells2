@@ -4,16 +4,16 @@
 
 //Items
 extracells.item.storage.physical.256k.name=ME 256k Storage
-extracells.item.storage.physical.1024k.name=ME 1M Storage
-extracells.item.storage.physical.4096k.name=ME 4M Storage
-extracells.item.storage.physical.16384k.name=ME 16M Storage
+extracells.item.storage.physical.1024k.name=ME 1024k Storage
+extracells.item.storage.physical.4096k.name=ME 4096k Storage
+extracells.item.storage.physical.16384k.name=ME 16384k Storage
 extracells.item.storage.fluid.1k.name=ME 1k Fluid Storage
 extracells.item.storage.fluid.4k.name=ME 4k Fluid Storage
 extracells.item.storage.fluid.16k.name=ME 16k Fluid Storage
 extracells.item.storage.fluid.64k.name=ME 64k Fluid Storage
 extracells.item.storage.fluid.256k.name=ME 256k Fluid Storage
-extracells.item.storage.fluid.1024k.name=ME 1M Fluid Storage
-extracells.item.storage.fluid.4096k.name=ME 4M Fluid Storage
+extracells.item.storage.fluid.1024k.name=ME 1024k Fluid Storage
+extracells.item.storage.fluid.4096k.name=ME 4096k Fluid Storage
 extracells.item.storage.component.physical.256k.name=256k ME Storage Component
 extracells.item.storage.component.physical.1024k.name=1024k ME Storage Component
 extracells.item.storage.component.physical.4096k.name=4096k ME Storage Component
@@ -23,8 +23,8 @@ extracells.item.storage.component.fluid.4k.name=4k ME Fluid Storage Component
 extracells.item.storage.component.fluid.16k.name=16k ME Fluid Storage Component
 extracells.item.storage.component.fluid.64k.name=64k ME Fluid Storage Component
 extracells.item.storage.component.fluid.256k.name=256k ME Fluid Storage Component
-extracells.item.storage.component.fluid.1024k.name=1M ME Fluid Storage Component
-extracells.item.storage.component.fluid.4096k.name=4M ME Fluid Storage Component
+extracells.item.storage.component.fluid.1024k.name=1024k ME Fluid Storage Component
+extracells.item.storage.component.fluid.4096k.name=4096k ME Fluid Storage Component
 extracells.item.storage.casing.physical.name=Advanced Storage Housing
 extracells.item.storage.casing.fluid.name=Fluid Storage Housing
 extracells.item.terminal.fluid.wireless.name=Wireless ME Fluid Terminal

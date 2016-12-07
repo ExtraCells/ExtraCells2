@@ -7,6 +7,7 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
@@ -14,11 +15,13 @@ import appeng.api.util.AEColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidTerminal;
+import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import extracells.util.inventory.ECPrivateInventory;
+import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,11 +38,11 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartFluidTerminal extends PartECBase implements IGridTickable {
+public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryUpdateReceiver {
 
     private Fluid currentFluid;
     private List<ContainerFluidTerminal> containers = new ArrayList<ContainerFluidTerminal>();
-    private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.fluid.terminal", 2, 64) {
+    private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.fluid.terminal", 2, 64, this) {
 
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
             return FluidUtil.isFluidContainer(itemStack);
@@ -52,7 +55,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
         rh.setTexture(side);
         rh.setBounds(4, 4, 13, 12, 12, 14);
         rh.renderInventoryBox(renderer);
@@ -82,7 +85,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
         rh.setTexture(side);
         rh.setBounds(4, 4, 13, 12, 12, 14);
         rh.renderBlock(x, y, z, renderer);
@@ -96,6 +99,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
         ts.setColorOpaque_I(0xFFFFFF);
         rh.renderFace(x, y, z, TextureManager.BUS_BORDER.getTexture(), ForgeDirection.SOUTH, renderer);
 
+        IPartHost host = getHost();
         rh.setBounds(3, 3, 15, 13, 13, 16);
         ts.setColorOpaque_I(host.getColor().blackVariant);
         rh.renderFace(x, y, z, TextureManager.TERMINAL_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
@@ -177,12 +181,15 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
 
     public void doWork() {
         ItemStack secondSlot = inventory.getStackInSlot(1);
-        if (secondSlot != null && secondSlot.stackSize > 64)
+        if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize())
             return;
         ItemStack container = inventory.getStackInSlot(0);
         if (!FluidUtil.isFluidContainer(container))
             return;
         container = container.copy();
+        container.stackSize = 1;
+
+        ECBaseGridBlock gridBlock = getGridBlock();
         if (gridBlock == null)
             return;
         IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
@@ -200,13 +207,14 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
                 monitor.extractItems(FluidUtil.createAEFluidStack(currentFluid, filledContainer.getLeft()), Actionable.MODULATE, machineSource);
                 decreaseFirstSlot();
             }
-        } else if (FluidUtil.isFilled(container)) {
+        } else  {
             FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
             IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, machineSource);
             if (notInjected != null)
                 return;
             MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
-            if (fillSecondSlot(drainedContainer.getRight())) {
+            ItemStack emptyContainer = drainedContainer.getRight();
+            if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
                 monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, machineSource);
                 decreaseFirstSlot();
             }
@@ -244,5 +252,10 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable {
     public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall) {
         doWork();
         return TickRateModulation.FASTER;
+    }
+
+    @Override
+    public void onInventoryChanged() {
+        saveData();
     }
 }

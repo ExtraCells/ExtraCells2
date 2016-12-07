@@ -13,6 +13,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ItemFluidPattern extends Item {
         Fluid fluid = getFluid(itemStack);
         if (fluid == null)
             return StatCollector.translateToLocal(getUnlocalizedName(itemStack));
-        return StatCollector.translateToLocal(getUnlocalizedName(itemStack)) + ": " + fluid.getLocalizedName();
+        return StatCollector.translateToLocal(getUnlocalizedName(itemStack)) + ": " + fluid.getLocalizedName(new FluidStack(fluid, 1));
     }
 
     @Override

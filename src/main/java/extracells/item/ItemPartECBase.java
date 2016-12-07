@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 
@@ -75,12 +76,12 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
     }
 
     @Override
-    public String getUnlocalizedGroupName(ItemStack itemStack) {
-        return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].getGroupName();
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return EnumRarity.rare;
     }
 
     @Override
-    public EnumRarity getRarity(ItemStack itemStack) {
-        return EnumRarity.rare;
+    public String getUnlocalizedGroupName(Set<ItemStack> otherItems, ItemStack itemStack) {
+        return PartEnum.values()[MathHelper.clamp_int(itemStack.getItemDamage(), 0, PartEnum.values().length - 1)].getGroupName();
     }
 }

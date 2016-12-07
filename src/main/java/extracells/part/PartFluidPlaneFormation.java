@@ -3,16 +3,24 @@ package extracells.part;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.RedstoneMode;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.MachineSource;
+import appeng.api.networking.ticking.IGridTickable;
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+
 import com.google.common.collect.Lists;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerPlaneFormation;
+import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiFluidPlaneFormation;
 import extracells.network.packet.other.IFluidSlotPart;
 import extracells.network.packet.other.PacketFluidSlot;
@@ -24,14 +32,16 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 
-public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPart {
+public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPart, IGridTickable {
 
     private Fluid fluid;
     //TODO redstone control
@@ -39,14 +49,14 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
     private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1) {
 
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-            return AEApi.instance().materials().materialCardRedstone.sameAs(itemStack);
+            return AEApi.instance().materials().materialCardRedstone.sameAsStack(itemStack);
         }
     };
 
     @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.PANE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
         rh.setBounds(2, 2, 14, 14, 14, 16);
         rh.renderInventoryBox(renderer);
@@ -67,11 +77,12 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.PANE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
         rh.setBounds(2, 2, 14, 14, 14, 16);
         rh.renderBlock(x, y, z, renderer);
         rh.setBounds(3, 3, 14, 13, 13, 16);
+        IPartHost host = getHost();
         if (host != null) {
             ts.setColorOpaque_I(host.getColor().blackVariant);
             rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
@@ -102,19 +113,22 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
         return upgradeInventory;
     }
 
-    @Override
-    public void onNeighborChanged() {
+    public void doWork() {
+        TileEntity hostTile = getHostTile();
+        ECBaseGridBlock gridBlock = getGridBlock();
+        ForgeDirection side = getSide();
+
         if (fluid == null || hostTile == null || gridBlock == null)
             return;
         IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
         if (monitor == null)
             return;
         World world = hostTile.getWorldObj();
-        int x = hostTile.xCoord;
-        int y = hostTile.yCoord;
-        int z = hostTile.zCoord;
-        Block worldBlock = world.getBlock(x + side.offsetX, y + side.offsetY, z + side.offsetZ);
-        if (worldBlock != null)
+        int x = hostTile.xCoord + side.offsetX;
+        int y = hostTile.yCoord + side.offsetY;
+        int z = hostTile.zCoord + side.offsetZ;
+        Block worldBlock = world.getBlock(x, y, z);
+        if (worldBlock != null && worldBlock != Blocks.air)
             return;
         IAEFluidStack canDrain = monitor.extractItems(FluidUtil.createAEFluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME), Actionable.SIMULATE, new MachineSource(this));
         if (canDrain == null || canDrain.getStackSize() < FluidContainerRegistry.BUCKET_VOLUME)
@@ -122,7 +136,6 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
         monitor.extractItems(FluidUtil.createAEFluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE, new MachineSource(this));
         Block fluidWorldBlock = fluid.getBlock();
         world.setBlock(x, y, z, fluidWorldBlock);
-
     }
 
     @Override
@@ -146,5 +159,16 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotPar
 
     public void sendInformation(EntityPlayer _player) {
         new PacketFluidSlot(Lists.newArrayList(fluid)).sendPacketToPlayer(_player);
+    }
+
+    @Override
+    public TickingRequest getTickingRequest(IGridNode node) {
+        return new TickingRequest(1, 20, false, false);
+    }
+
+    @Override
+    public TickRateModulation tickingRequest(IGridNode node, int TicksSinceLastCall) {
+        doWork();
+        return TickRateModulation.SAME;
     }
 }

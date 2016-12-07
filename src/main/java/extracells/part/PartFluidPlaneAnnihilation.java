@@ -6,18 +6,21 @@ import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.gridblock.ECBaseGridBlock;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -30,7 +33,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
     @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.PANE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
         rh.setBounds(2, 2, 14, 14, 14, 16);
         rh.renderInventoryBox(renderer);
@@ -51,11 +54,12 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.PANE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(), side, side);
         rh.setBounds(2, 2, 14, 14, 14, 16);
         rh.renderBlock(x, y, z, renderer);
         rh.setBounds(3, 3, 14, 13, 13, 16);
+        IPartHost host = getHost();
         if (host != null) {
             ts.setColorOpaque_I(host.getColor().blackVariant);
             rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[0], ForgeDirection.SOUTH, renderer);
@@ -85,8 +89,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
     @SuppressWarnings("unused")
     @MENetworkEventSubscribe
     public void channelChanged(MENetworkChannelChanged e) {
-        System.out.println("ss");
-        if (e.node == node)
+        if (e.node == getGridNode())
             onNeighborChanged();
     }
 
@@ -99,6 +102,8 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 
     @Override
     public void onNeighborChanged() {
+        TileEntity hostTile = getHostTile();
+        ECBaseGridBlock gridBlock = getGridBlock();
         if (hostTile == null || gridBlock == null)
             return;
         IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
@@ -108,6 +113,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
         int x = hostTile.xCoord;
         int y = hostTile.yCoord;
         int z = hostTile.zCoord;
+        ForgeDirection side = getSide();
         Block fluidBlock = world.getBlock(x + side.offsetX, y + side.offsetY, z + side.offsetZ);
         int meta = world.getBlockMetadata(x + side.offsetX, y + side.offsetY, z + side.offsetZ);
 

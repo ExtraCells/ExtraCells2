@@ -29,7 +29,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.IMPORT_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTexture(), side, side);
         rh.setBounds(4, 4, 14, 12, 12, 16);
         rh.renderInventoryBox(renderer);
@@ -55,12 +55,12 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.IMPORT_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.IMPORT_FRONT.getTextures()[0], side, side);
         rh.setBounds(4, 4, 14, 12, 12, 16);
         rh.renderBlock(x, y, z, renderer);
 
-        ts.setColorOpaque_I(host.getColor().blackVariant);
+        ts.setColorOpaque_I(getHost().getColor().blackVariant);
         if (isActive())
             ts.setBrightness(15 << 20 | 15 << 4);
         rh.renderFace(x, y, z, TextureManager.IMPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
@@ -89,7 +89,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     }
 
     public boolean doWork(int rate, int TicksSinceLastCall) {
-        if (facingTank == null)
+        if (getFacingTank() == null)
             return false;
         boolean empty = true;
 
@@ -128,6 +128,8 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
     private boolean fillToNetwork(Fluid fluid, int toDrain) {
         FluidStack drained;
+        IFluidHandler facingTank = getFacingTank();
+        ForgeDirection side = getSide();
         if (fluid == null) {
             drained = facingTank.drain(side.getOpposite(), toDrain, false);
         } else {
@@ -143,25 +145,31 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
         if (notInjected != null) {
             int amount = (int) (toFill.getStackSize() - notInjected.getStackSize());
             if (amount > 0) {
-                facingTank.drain(side.getOpposite(), amount, true);
+                if (fluid == null)
+                    facingTank.drain(side.getOpposite(), amount, true);
+                else
+                    facingTank.drain(side.getOpposite(), new FluidStack(toFill.getFluid(), amount), true);
                 return true;
             } else {
                 return false;
             }
         } else {
-            facingTank.drain(side.getOpposite(), toFill.getFluidStack(), true);
+            if (fluid == null)
+                facingTank.drain(side.getOpposite(), toFill.getFluidStack().amount, true);
+            else
+                facingTank.drain(side.getOpposite(), toFill.getFluidStack(), true);
             return true;
         }
     }
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+        boolean redstonePowered = isRedstonePowered();
         if (resource == null || (redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL))
             return 0;
 
         FluidStack toFill = new FluidStack(resource.fluidID, 125 + speedState * 125);
         IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), Actionable.MODULATE);
-
         if (filled == null)
             return 125 + speedState * 125;
         return toFill.amount - (int) filled.getStackSize();
