@@ -4,6 +4,7 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.PlayerSource;
+import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
@@ -98,6 +99,12 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
         return true;
     }
 
+    @Override
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+        fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
+        new PacketFluidStorage(player, fluidStackList).sendPacketToPlayer(player);
+    }
+
     public void onContainerClosed(EntityPlayer entityPlayer) {
         super.onContainerClosed(entityPlayer);
         if (!entityPlayer.worldObj.isRemote) {
@@ -105,12 +112,6 @@ public class ContainerFluidStorage extends Container implements IMEMonitorHandle
             for (int i = 0; i < 2; i++)
                 player.dropPlayerItemWithRandomChoice(((Slot) inventorySlots.get(i)).getStack(), false);
         }
-    }
-
-    @Override
-    public void postChange(IMEMonitor<IAEFluidStack> monitor, IAEFluidStack change, BaseActionSource actionSource) {
-        fluidStackList = monitor.getStorageList();
-        new PacketFluidStorage(player, fluidStackList).sendPacketToPlayer(player);
     }
 
     @Override

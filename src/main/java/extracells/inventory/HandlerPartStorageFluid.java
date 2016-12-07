@@ -75,6 +75,11 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
     }
 
     @Override
+    public boolean validForPass(int i) {
+        return true; //TODO
+    }
+
+    @Override
     public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
         if (tank == null || input == null || !canAccept(input))
             return input;
@@ -82,7 +87,6 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
         int filled = tank.fill(node.getSide().getOpposite(), toFill.copy(), mode == Actionable.MODULATE);
         if (filled == toFill.amount)
             return null;
-        System.out.println(filled);
         return FluidUtil.createAEFluidStack(toFill.fluidID, toFill.amount - filled);
     }
 

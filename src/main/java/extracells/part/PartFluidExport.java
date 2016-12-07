@@ -2,7 +2,7 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
@@ -15,6 +15,7 @@ import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class PartFluidExport extends PartFluidIO {
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        rh.setTexture(TextureManager.BUS_SIDE.getTexture());
+        rh.setTexture(TextureManager.EXPORT_SIDE.getTexture());
         rh.setBounds(6, 6, 12, 10, 10, 13);
         rh.renderInventoryBox(renderer);
 
@@ -35,7 +36,7 @@ public class PartFluidExport extends PartFluidIO {
         rh.setBounds(5, 5, 14, 11, 11, 15);
         rh.renderInventoryBox(renderer);
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.EXPORT_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.EXPORT_FRONT.getTexture(), side, side);
         rh.setBounds(6, 6, 15, 10, 10, 16);
         rh.renderInventoryBox(renderer);
@@ -52,7 +53,7 @@ public class PartFluidExport extends PartFluidIO {
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        rh.setTexture(TextureManager.BUS_SIDE.getTexture());
+        rh.setTexture(TextureManager.EXPORT_SIDE.getTexture());
         rh.setBounds(6, 6, 12, 10, 10, 13);
         rh.renderBlock(x, y, z, renderer);
 
@@ -62,12 +63,12 @@ public class PartFluidExport extends PartFluidIO {
         rh.setBounds(5, 5, 14, 11, 11, 15);
         rh.renderBlock(x, y, z, renderer);
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.EXPORT_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.EXPORT_FRONT.getTextures()[0], side, side);
         rh.setBounds(6, 6, 15, 10, 10, 16);
         rh.renderBlock(x, y, z, renderer);
 
-        ts.setColorOpaque_I(host.getColor().blackVariant);
+        ts.setColorOpaque_I(getHost().getColor().blackVariant);
         if (isActive())
             ts.setBrightness(15 << 20 | 15 << 4);
         rh.renderFace(x, y, z, TextureManager.EXPORT_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
@@ -77,7 +78,7 @@ public class PartFluidExport extends PartFluidIO {
     }
 
     @Override
-    public void getBoxes(IPartCollsionHelper bch) {
+    public void getBoxes(IPartCollisionHelper bch) {
         bch.addBox(6, 6, 12, 10, 10, 13);
         bch.addBox(4, 4, 13, 12, 12, 14);
         bch.addBox(5, 5, 14, 11, 11, 15);
@@ -92,6 +93,7 @@ public class PartFluidExport extends PartFluidIO {
 
     @Override
     public boolean doWork(int rate, int TicksSinceLastCall) {
+        IFluidHandler facingTank = getFacingTank();
         if (facingTank == null)
             return false;
         List<Fluid> filter = new ArrayList<Fluid>();
@@ -119,7 +121,7 @@ public class PartFluidExport extends PartFluidIO {
 
                 if (stack == null)
                     continue;
-                int filled = facingTank.fill(side.getOpposite(), stack.getFluidStack(), true);
+                int filled = facingTank.fill(getSide().getOpposite(), stack.getFluidStack(), true);
 
                 if (filled > 0) {
                     extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE);

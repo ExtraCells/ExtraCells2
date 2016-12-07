@@ -4,16 +4,16 @@
 
 //Items
 extracells.item.storage.physical.256k.name=МЭ 256Кб хранилище
-extracells.item.storage.physical.1024k.name=МЭ 1Мб хранилище
-extracells.item.storage.physical.4096k.name=МЭ 4Мб хранилище
-extracells.item.storage.physical.16384k.name=МЭ 16Мб хранилище
+extracells.item.storage.physical.1024k.name=МЭ 1024kб хранилище
+extracells.item.storage.physical.4096k.name=МЭ 4096kб хранилище
+extracells.item.storage.physical.16384k.name=МЭ 16384kб хранилище
 extracells.item.storage.fluid.1k.name=МЭ 1Кб жидкостное хранилище
 extracells.item.storage.fluid.4k.name=МЭ 4Кб жидкостное хранилище
 extracells.item.storage.fluid.16k.name=МЭ 16Кб жидкостное хранилище
 extracells.item.storage.fluid.64k.name=МЭ 64Кб жидкостное хранилище
 extracells.item.storage.fluid.256k.name=МЭ 256Кб жидкостное хранилище
-extracells.item.storage.fluid.1024k.name=МЭ 1Мб жидкостное хранилище
-extracells.item.storage.fluid.4096k.name=МЭ 4Мб жидкостное хранилище
+extracells.item.storage.fluid.1024k.name=МЭ 1024kб жидкостное хранилище
+extracells.item.storage.fluid.4096k.name=МЭ 4096kб жидкостное хранилище
 extracells.item.storage.component.physical.256k.name=256Кб МЭ компонент хранилища
 extracells.item.storage.component.physical.1M.name=1024Кб МЭ компонент хранилища
 extracells.item.storage.component.physical.4M.name=4096Кб МЭ компонент хранилища
@@ -23,8 +23,8 @@ extracells.item.storage.component.fluid.4k.name=4Кб МЭ жидкостный 
 extracells.item.storage.component.fluid.16k.name=16Кб МЭ жидкостный компонент хранилища
 extracells.item.storage.component.fluid.64k.name=64Кб МЭ жидкостный компонент хранилища
 extracells.item.storage.component.fluid.256k.name=256Кб МЭ жидкостный компонент хранилища
-extracells.item.storage.component.fluid.1024k.name=1Мб МЭ жидкостный компонент хранилища
-extracells.item.storage.component.fluid.4096k.name=4Мб МЭ жидкостный компонент хранилища
+extracells.item.storage.component.fluid.1024k.name=1024kб МЭ жидкостный компонент хранилища
+extracells.item.storage.component.fluid.4096k.name=4096kб МЭ жидкостный компонент хранилища
 extracells.item.storage.casing.physical.name=Продвинутый корпус хранилища
 extracells.item.storage.casing.fluid.name=Жидкостный корпус хранилища
 extracells.item.terminal.fluid.wireless.name=Беспроводной МЭ жидкостный терминал
@@ -49,7 +49,8 @@ extracells.part.drive.name=Крепление МЭ накопителя
 extracells.part.battery.name=Крепление МЭ энергетической ячейки
 
 //Blocks
-extracells.block.certustank.name=МЭ истинный бак
+extracells.block.certustank=Резервуар из истинного кварца
+extracells.block.walrus.name=Морж
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Количество

@@ -17,8 +17,8 @@ public class CommonProxy {
 
     public void registerMovables() {
         IAppEngApi api = AEApi.instance();
-        api.registries().moveable().whiteListTileEntity(TileEntityCertusTank.class);
-        api.registries().moveable().whiteListTileEntity(TileEntityWalrus.class);
+        api.registries().movable().whiteListTileEntity(TileEntityCertusTank.class);
+        api.registries().movable().whiteListTileEntity(TileEntityWalrus.class);
     }
 
     public void addRecipes(File configFolder) {
@@ -29,7 +29,7 @@ public class CommonProxy {
         } else {
             recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
         }
-        recipeHandler.registerHandlers();
+        recipeHandler.injectRecipes();
     }
 
     public void registerTileEntities() {

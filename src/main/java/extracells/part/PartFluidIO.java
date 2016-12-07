@@ -6,7 +6,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -45,11 +45,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
             if (itemStack == null)
                 return false;
-            if (AEApi.instance().materials().materialCardCapacity.sameAs(itemStack))
+            if (AEApi.instance().materials().materialCardCapacity.sameAsStack(itemStack))
                 return true;
-            else if (AEApi.instance().materials().materialCardSpeed.sameAs(itemStack))
+            else if (AEApi.instance().materials().materialCardSpeed.sameAsStack(itemStack))
                 return true;
-            else if (AEApi.instance().materials().materialCardRedstone.sameAs(itemStack))
+            else if (AEApi.instance().materials().materialCardRedstone.sameAsStack(itemStack))
                 return true;
             return false;
         }
@@ -119,7 +119,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
     }
 
     @Override
-    public abstract void getBoxes(IPartCollsionHelper bch);
+    public abstract void getBoxes(IPartCollisionHelper bch);
 
     @Override
     public int cableConnectionRenderTo() {
@@ -143,6 +143,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
     public final void setFluid(int index, Fluid fluid, EntityPlayer player) {
         filterFluids[index] = fluid;
         new PacketFluidSlot(Arrays.asList(filterFluids)).sendPacketToPlayer(player);
+        saveData();
     }
 
     public RedstoneMode getRedstoneMode() {
@@ -155,6 +156,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
         else
             redstoneMode = RedstoneMode.values()[0];
         new PacketBusFluidIO(redstoneMode).sendPacketToPlayer(player);
+        saveData();
     }
 
     public Object getServerGuiElement(EntityPlayer player) {
@@ -181,7 +183,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
     @Override
     public void onNeighborChanged() {
         super.onNeighborChanged();
-
+        boolean redstonePowered = isRedstonePowered();
         if (redstonePowered) {
             if (!lastRedstone) {
                 doWork(125 + speedState + speedState * 125, 1);
@@ -201,25 +203,27 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
         for (int i = 0; i < upgradeInventory.getSizeInventory(); i++) {
             ItemStack currentStack = upgradeInventory.getStackInSlot(i);
             if (currentStack != null) {
-                if (AEApi.instance().materials().materialCardCapacity.sameAs(currentStack))
+                if (AEApi.instance().materials().materialCardCapacity.sameAsStack(currentStack))
                     filterSize++;
-                if (AEApi.instance().materials().materialCardRedstone.sameAs(currentStack))
+                if (AEApi.instance().materials().materialCardRedstone.sameAsStack(currentStack))
                     redstoneControlled = true;
-                if (AEApi.instance().materials().materialCardSpeed.sameAs(currentStack))
+                if (AEApi.instance().materials().materialCardSpeed.sameAsStack(currentStack))
                     speedState++;
             }
         }
 
         try {
-            if (host.getLocation().getWorld().isRemote)
+            if (getHost().getLocation().getWorld().isRemote)
                 return;
         } catch (Throwable ignored) {
         }
         new PacketBusFluidIO(filterSize).sendPacketToAllPlayers();
         new PacketBusFluidIO(redstoneControlled).sendPacketToAllPlayers();
+        saveData();
     }
 
     private boolean canDoWork() {
+        boolean redstonePowered = isRedstonePowered();
         if (!redstoneControlled)
             return true;
         switch (getRedstoneMode()) {

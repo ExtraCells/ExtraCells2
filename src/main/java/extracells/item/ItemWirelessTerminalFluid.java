@@ -61,7 +61,7 @@ public class ItemWirelessTerminalFluid extends Item implements INetworkEncodable
         int x = (int) entityPlayer.posX;
         int y = (int) entityPlayer.posY;
         int z = (int) entityPlayer.posZ;
-        IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locateable().findLocateableBySerial(key);
+        IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable().findLocatableBySerial(key);
         if (securityTerminal == null)
             return itemStack;
         IGridNode gridNode = securityTerminal.getGridNode(ForgeDirection.UNKNOWN);

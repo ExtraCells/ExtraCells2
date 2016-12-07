@@ -2,13 +2,15 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
-import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
-import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.networking.events.MENetworkStorageEvent;
+import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
+import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.util.AEColor;
@@ -27,7 +29,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -47,7 +48,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
             if (itemStack == null)
                 return false;
-            if (AEApi.instance().materials().materialCardInverter.sameAs(itemStack))
+            if (AEApi.instance().materials().materialCardInverter.sameAsStack(itemStack))
                 return true;
             return false;
         }
@@ -58,7 +59,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.STORAGE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTextures()[0], side, side);
         rh.setBounds(2, 2, 15, 14, 14, 16);
         rh.renderInventoryBox(renderer);
@@ -79,12 +80,12 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
 
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.STORAGE_SIDE.getTexture();
         rh.setTexture(side, side, side, TextureManager.STORAGE_FRONT.getTexture(), side, side);
         rh.setBounds(2, 2, 15, 14, 14, 16);
         rh.renderBlock(x, y, z, renderer);
 
-        ts.setColorOpaque_I(host.getColor().blackVariant);
+        ts.setColorOpaque_I(getHost().getColor().blackVariant);
         if (isActive())
             ts.setBrightness(15 << 20 | 15 << 4);
         rh.renderFace(x, y, z, TextureManager.STORAGE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
@@ -122,7 +123,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     }
 
     @Override
-    public void getBoxes(IPartCollsionHelper bch) {
+    public void getBoxes(IPartCollisionHelper bch) {
         bch.addBox(2, 2, 15, 14, 14, 16);
         bch.addBox(4, 4, 14, 12, 12, 15);
         bch.addBox(5, 5, 13, 11, 11, 14);
@@ -159,19 +160,15 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
     @Override
     public void onNeighborChanged() {
         handler.onNeighborChange();
-
+        IGridNode node = getGridNode();
         if (node != null) {
             IGrid grid = node.getGrid();
             if (grid != null) {
                 grid.postEvent(new MENetworkCellArrayUpdate());
-                node.getGrid().postEvent(new MENetworkStorageEvent(gridBlock.getFluidMonitor(), StorageChannel.FLUIDS));
+                node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
             }
-            host.markForUpdate();
+            getHost().markForUpdate();
         }
-    }
-
-    public TileEntity getHostTile() {
-        return hostTile;
     }
 
     public ECPrivateInventory getUpgradeInventory() {
@@ -180,7 +177,8 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
     @Override
     public void onInventoryChanged() {
-        handler.setInverted(AEApi.instance().materials().materialCardInverter.sameAs(upgradeInventory.getStackInSlot(0)));
+        handler.setInverted(AEApi.instance().materials().materialCardInverter.sameAsStack(upgradeInventory.getStackInSlot(0)));
+        saveData();
     }
 
     public void sendInformation(EntityPlayer player) {
@@ -200,30 +198,24 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
         filterFluids[_index] = _fluid;
         handler.setPrioritizedFluids(filterFluids);
         sendInformation(_player);
+        saveData();
     }
-    
-    // Receive events for when the network channel changes
+
     @MENetworkEventSubscribe
-    public void updateChannels( MENetworkChannelsChanged channel )
-    {
-        // Ensure we have a grid node.
-        if ( this.node != null )
-        {
-            // Is the grid node active?
-            boolean isNowActive = this.node.isActive();
-            
-            // Does our active level differ from the grid node?
-            if ( isNowActive != this.isActive )
-            {
-                // Set our active level to the same as the grid node.
-                this.isActive = isNowActive;
-                
-                // Fire the neighbor changed event.
-                this.onNeighborChanged();
-                
-                // Mark our host tile for an update.
-                this.host.markForUpdate();
+    public void updateChannels(MENetworkChannelsChanged channel) {
+        IGridNode node = getGridNode();
+        if (node != null) {
+            boolean isNowActive = node.isActive();
+            if (isNowActive != isActive()) {
+                setActive(isNowActive);
+                onNeighborChanged();
+                getHost().markForUpdate();
             }
         }
+    }
+
+    @Override
+    public void saveChanges(IMEInventory cellInventory) {
+        saveData();
     }
 }

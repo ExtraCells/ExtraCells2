@@ -2,8 +2,9 @@ package extracells.part;
 
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
-import appeng.api.parts.IPartCollsionHelper;
+import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.*;
@@ -47,7 +48,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     @SideOnly(Side.CLIENT)
     @Override
     public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.DRIVE_SIDE.getTexture();
         IIcon[] front = TextureManager.DRIVE_FRONT.getTextures();
         rh.setBounds(2, 2, 14, 14, 14, 15.999F);
         rh.renderInventoryFace(front[3], ForgeDirection.SOUTH, renderer);
@@ -63,7 +64,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     @Override
     public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
         Tessellator ts = Tessellator.instance;
-        IIcon side = TextureManager.BUS_SIDE.getTexture();
+        IIcon side = TextureManager.DRIVE_SIDE.getTexture();
         IIcon[] front = TextureManager.DRIVE_FRONT.getTextures();
         rh.setBounds(2, 2, 14, 14, 14, 15.999F);
         rh.renderFace(x, y, z, front[3], ForgeDirection.SOUTH, renderer);
@@ -75,7 +76,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 if (cellStati[j + i * 3] > 0) {
-                    rh.setBounds(4 + i * 5, 12 - j * 3, 14, 7 + i * 5, 10 - j * 3, 16);
+                    rh.setBounds(i * 9, 12 - j * 3, 14, 8 + i * 8, 10 - j * 3, 16);
                     rh.renderFace(x, y, z, front[1], ForgeDirection.SOUTH, renderer);
                 }
             }
@@ -83,7 +84,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                rh.setBounds(4 + i * 5, 12 - j * 3, 14, 7 + i * 5, 10 - j * 3, 16);
+                rh.setBounds(i * 9, 12 - j * 3, 14, 8 + i * 8, 10 - j * 3, 16);
                 ts.setColorOpaque_I(getColorByStatus(cellStati[j + i * 3]));
                 ts.setBrightness(13 << 20 | 13 << 4);
                 rh.renderFace(x, y, z, front[2], ForgeDirection.SOUTH, renderer);
@@ -110,7 +111,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
     }
 
     @Override
-    public void getBoxes(IPartCollsionHelper bch) {
+    public void getBoxes(IPartCollisionHelper bch) {
         bch.addBox(2, 2, 14, 14, 14, 16);
         bch.addBox(5, 5, 13, 11, 11, 14);
     }
@@ -180,9 +181,9 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
         for (int i = 0; i < cellStati.length; i++) {
             ItemStack stackInSlot = inventory.getStackInSlot(i);
-            IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, StorageChannel.ITEMS);
+            IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
             if (inventoryHandler == null)
-                inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, StorageChannel.FLUIDS);
+                inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.FLUIDS);
 
             ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stackInSlot);
             if (cellHandler == null || inventoryHandler == null) {
@@ -191,13 +192,15 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
                 cellStati[i] = (byte) cellHandler.getStatusForCell(stackInSlot, inventoryHandler);
             }
         }
+        IGridNode node = getGridNode();
         if (node != null) {
             IGrid grid = node.getGrid();
             if (grid != null) {
                 grid.postEvent(new MENetworkCellArrayUpdate());
             }
-            host.markForUpdate();
+            getHost().markForUpdate();
         }
+        saveData();
     }
 
     private List<IMEInventoryHandler> updateHandlers(StorageChannel channel) {
@@ -206,7 +209,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack cell = inventory.getStackInSlot(i);
             if (cellRegistry.isCellHandled(cell)) {
-                IMEInventoryHandler cellInventory = cellRegistry.getCellInventory(cell, channel);
+                IMEInventoryHandler cellInventory = cellRegistry.getCellInventory(cell, null, channel);
                 if (cellInventory != null)
                     handlers.add(cellInventory);
             }
@@ -234,5 +237,10 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
     public Object getClientGuiElement(EntityPlayer player) {
         return new GuiDrive(this, player);
+    }
+
+    @Override
+    public void saveChanges(IMEInventory cellInventory) {
+        getHost().markForSave();
     }
 }

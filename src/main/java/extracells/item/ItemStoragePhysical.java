@@ -127,7 +127,7 @@ public class ItemStoragePhysical extends Item implements IStorageCell {
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
-        IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry.getCellInventory(itemStack, StorageChannel.ITEMS);
+        IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry.getCellInventory(itemStack, null, StorageChannel.ITEMS);
         ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
         ICellInventory cellInv = inventoryHandler.getCellInv();
         long usedBytes = cellInv.getUsedBytes();
@@ -138,13 +138,12 @@ public class ItemStoragePhysical extends Item implements IStorageCell {
             list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.physical.content"), cellInv.getStoredItemCount()));
     }
 
-    @SuppressWarnings(
-            {"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         if (!entityPlayer.isSneaking())
             return itemStack;
-        IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.ITEMS);
+        IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
         ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
         ICellInventory cellInv = inventoryHandler.getCellInv();
         if (cellInv.getUsedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))

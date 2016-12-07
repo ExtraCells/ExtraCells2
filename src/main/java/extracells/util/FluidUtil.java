@@ -33,10 +33,7 @@ public class FluidUtil {
         if (itemStack == null)
             return false;
         Item item = itemStack.getItem();
-        if (item instanceof IFluidContainerItem || item == ItemEnum.FLUIDPATTERN.getItem() || FluidContainerRegistry.isContainer(itemStack)) {
-            return true;
-        }
-        return false;
+        return item instanceof IFluidContainerItem || item == ItemEnum.FLUIDPATTERN.getItem() || FluidContainerRegistry.isContainer(itemStack);
     }
 
     public static boolean isEmpty(ItemStack itemStack) {

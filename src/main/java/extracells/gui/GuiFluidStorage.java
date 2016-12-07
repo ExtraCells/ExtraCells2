@@ -111,7 +111,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
             }
 
             fontRendererObj.drawString(StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 73, 0x000000);
-            fontRendererObj.drawString(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + currentFluid.getFluid().getLocalizedName(), 45, 83, 0x000000);
+            fontRendererObj.drawString(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + currentFluid.getFluid().getLocalizedName(currentFluid.getFluidStack()), 45, 83, 0x000000);
         }
     }
 

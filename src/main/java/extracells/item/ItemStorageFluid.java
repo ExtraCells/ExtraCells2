@@ -1,6 +1,7 @@
 package extracells.item;
 
 import appeng.api.AEApi;
+import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.networking.security.PlayerSource;
@@ -13,6 +14,7 @@ import extracells.render.TextureManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -73,39 +75,56 @@ public class ItemStorageFluid extends Item implements ICellHandler {
     }
 
     @Override
-    public IMEInventoryHandler getCellInventory(ItemStack is, StorageChannel channel) {
-        if (channel == StorageChannel.ITEMS || is.getItem() != this)
+    public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, StorageChannel channel) {
+        if (channel == StorageChannel.ITEMS || itemStack.getItem() != this) {
             return null;
-        return new HandlerItemStorageFluid(is);
+        }
+        return new HandlerItemStorageFluid(itemStack, saveProvider);
     }
 
     @Override
-    public IIcon getTopTexture() {
-        return TextureManager.ITEM_STORAGE_FLUID.getTexture();
+    public IIcon getTopTexture_Light() {
+        return TextureManager.TERMINAL_FRONT.getTextures()[2];
+    }
+
+    @Override
+    public IIcon getTopTexture_Medium() {
+        return TextureManager.TERMINAL_FRONT.getTextures()[1];
+    }
+
+    @Override
+    public IIcon getTopTexture_Dark() {
+        return TextureManager.TERMINAL_FRONT.getTextures()[0];
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler, IMEInventoryHandler inv, ItemStack is, StorageChannel chan) {
-        if (chan != StorageChannel.FLUIDS)
+        if (chan != StorageChannel.FLUIDS) {
             return;
+        }
         IStorageMonitorable monitorable = null;
-        if (chest != null)
+        if (chest != null) {
             monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
-        if (monitorable != null)
+        }
+        if (monitorable != null) {
             GuiHandler.launchGui(GuiHandler.getGuiId(0), player, monitorable.getFluidInventory());
+        }
     }
 
     @Override
     public int getStatusForCell(ItemStack is, IMEInventory handler) {
-        if (handler == null)
+        if (handler == null) {
             return 0;
+        }
 
         HandlerItemStorageFluid inventory = (HandlerItemStorageFluid) handler;
-        if (inventory.freeBytes() == 0)
+        if (inventory.freeBytes() == 0) {
             return 3;
-        if (inventory.isPreformatted() || inventory.usedTypes() == inventory.totalBytes())
+        }
+        if (inventory.isPreformatted() || inventory.usedTypes() == inventory.totalBytes()) {
             return 2;
+        }
 
         return 1;
     }
@@ -126,17 +145,19 @@ public class ItemStorageFluid extends Item implements ICellHandler {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
-        if (!(handler instanceof HandlerItemStorageFluid))
+        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
+        if (!(handler instanceof HandlerItemStorageFluid)) {
             return;
+        }
         HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
         Boolean partitioned = cellHandler.isPreformatted();
         long usedBytes = cellHandler.usedBytes();
 
         list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
         list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
-        if (usedBytes != 0)
+        if (usedBytes != 0) {
             list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes));
+        }
 
         if (partitioned) {
             list.add(StatCollector.translateToLocal("Appeng.GuiITooltip.Partitioned") + " - " + StatCollector.translateToLocal("Appeng.GuiITooltip.Precise"));
@@ -146,14 +167,17 @@ public class ItemStorageFluid extends Item implements ICellHandler {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
-        if (!entityPlayer.isSneaking())
+        if (!entityPlayer.isSneaking()) {
             return itemStack;
-        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, StorageChannel.FLUIDS);
-        if (!(handler instanceof HandlerItemStorageFluid))
+        }
+        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
+        if (!(handler instanceof HandlerItemStorageFluid)) {
             return itemStack;
+        }
         HandlerItemStorageFluid cellHandler = (HandlerItemStorageFluid) handler;
-        if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1)))
+        if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1))) {
             return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
+        }
         return itemStack;
     }
 
