@@ -36,13 +36,13 @@ public class BlockItemDefinitions implements ITileDefinition {
 	}
 
 	@Override
-	public Optional<Block> maybeBlock() {
-		return Optional.fromNullable(block);
+	public java.util.Optional<Block> maybeBlock() {
+		return java.util.Optional.ofNullable(block);
 	}
 
 	@Override
-	public Optional<ItemBlock> maybeItemBlock() {
-		return Optional.absent();
+	public java.util.Optional<ItemBlock> maybeItemBlock() {
+		return java.util.Optional.empty();
 	}
 
 	@Override

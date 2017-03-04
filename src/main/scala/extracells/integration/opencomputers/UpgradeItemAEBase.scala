@@ -1,6 +1,6 @@
 package extracells.integration.opencomputers
 
-import cpw.mods.fml.common.Optional.{Interface, InterfaceList, Method}
+import net.minecraftforge.fml.common.Optional.{Interface, InterfaceList, Method}
 import li.cil.oc.api.CreativeTab
 import li.cil.oc.api.driver.item.{HostAware, Slot}
 import li.cil.oc.api.driver.{EnvironmentAware, EnvironmentHost}

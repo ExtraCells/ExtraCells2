@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 
 public class SlotPlayerInventory extends Slot {
 
@@ -20,7 +21,7 @@ public class SlotPlayerInventory extends Slot {
 	public boolean canTakeStack(EntityPlayer player) {
 		if (player == null || this.container == null)
 			return true;
-		ItemStack s = player.getCurrentEquippedItem();
+		ItemStack s = player.getHeldItem(EnumHand.MAIN_HAND);
 		if (s == null || !this.container.hasWirelessTermHandler())
 			return true;
 		if (s == this.inventory.getStackInSlot(getSlotIndex()))

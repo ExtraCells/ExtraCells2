@@ -1,21 +1,21 @@
 package extracells.api;
 
+import appeng.api.util.AEPartLocation;
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
 public interface IFluidInterface {
 
-	public Fluid getFilter(ForgeDirection side);
+	public Fluid getFilter(AEPartLocation side);
 
-	public IFluidTank getFluidTank(ForgeDirection side);
+	public IFluidTank getFluidTank(AEPartLocation side);
 
 	public IInventory getPatternInventory();
 
-	public void setFilter(ForgeDirection side, Fluid fluid);
+	public void setFilter(AEPartLocation side, Fluid fluid);
 
-	public void setFluidTank(ForgeDirection side, FluidStack fluid);
+	public void setFluidTank(AEPartLocation side, FluidStack fluid);
 
 }

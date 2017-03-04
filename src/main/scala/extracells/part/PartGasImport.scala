@@ -6,8 +6,8 @@ import appeng.api.config.Actionable
 import appeng.api.networking.security.MachineSource
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
-import cpw.mods.fml.common.Optional
-import cpw.mods.fml.common.Optional.{Interface, Method}
+import net.minecraftforge.fml.common.Optional
+import net.minecraftforge.fml.common.Optional.{Interface, Method}
 import extracells.integration.Integration
 import extracells.integration.mekanism.gas.MekanismGas
 import extracells.util.{FluidUtil, GasUtil}

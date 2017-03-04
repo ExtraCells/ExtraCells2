@@ -1,26 +1,26 @@
 package extracells.util;
 
 import appeng.api.config.SecurityPermissions;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
+import appeng.api.util.AEPartLocation;
 import extracells.api.IECTileEntity;
 import extracells.container.ContainerFluidStorage;
 import extracells.container.ContainerGasStorage;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class ExtraCellsEventHandler {
 
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent event) {
-		TileEntity tile = event.world.getTileEntity(event.x, event.y, event.z);
+		TileEntity tile = event.getWorld().getTileEntity(event.getPos());
 		if (tile instanceof IECTileEntity) {
 			if (!PermissionUtil.hasPermission(event.getPlayer(),
 					SecurityPermissions.BUILD,
-					((IECTileEntity) tile).getGridNode(ForgeDirection.UNKNOWN)))
+					((IECTileEntity) tile).getGridNode(AEPartLocation.INTERNAL)))
 				event.setCanceled(true);
 		}
 	}

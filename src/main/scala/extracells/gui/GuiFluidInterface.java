@@ -1,6 +1,7 @@
 package extracells.gui;
 
 import appeng.api.implementations.ICraftingPatternItem;
+import appeng.api.util.AEPartLocation;
 import extracells.api.IFluidInterface;
 import extracells.container.ContainerFluidInterface;
 import extracells.gui.widget.WidgetFluidTank;
@@ -28,7 +29,7 @@ public class GuiFluidInterface extends GuiContainer {
 	private ResourceLocation guiTexture = new ResourceLocation("extracells",
 			"textures/gui/interfacefluid.png");
 	private EntityPlayer player;
-	private ForgeDirection partSide = ForgeDirection.UNKNOWN;
+	private AEPartLocation partSide = AEPartLocation.INTERNAL;
 
 	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface) {
 		super(new ContainerFluidInterface(player, fluidInterface));
@@ -39,7 +40,7 @@ public class GuiFluidInterface extends GuiContainer {
 	}
 
 	public GuiFluidInterface(EntityPlayer player,
-			IFluidInterface fluidInterface, ForgeDirection side) {
+			IFluidInterface fluidInterface, AEPartLocation side) {
 		this(player, fluidInterface);
 		this.partSide = side;
 	}
@@ -111,7 +112,7 @@ public class GuiFluidInterface extends GuiContainer {
 		this.guiTop = (this.height - this.ySize) / 2;
 		for (int i = 0; i < this.tanks.length; i++) {
 			if (this.partSide != null
-					&& this.partSide != ForgeDirection.UNKNOWN
+					&& this.partSide != AEPartLocation.INTERNAL
 					&& this.partSide.ordinal() != i)
 				continue;
 			this.tanks[i] = new WidgetFluidTank(

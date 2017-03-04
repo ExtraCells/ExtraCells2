@@ -1,7 +1,7 @@
 package mekanism.api;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -63,7 +63,7 @@ public class Chunk3D
 	 */
 	public boolean exists(World world)
 	{
-		return world.getChunkProvider().chunkExists(xCoord, zCoord);
+		return world.getChunkProvider().getLoadedChunk(xCoord, zCoord) != null;
 	}
 	
 	/**
@@ -80,15 +80,15 @@ public class Chunk3D
 	 * Returns this Chunk3D in the Minecraft-based ChunkCoordIntPair format.
 	 * @return this Chunk3D as a ChunkCoordIntPair
 	 */
-	public ChunkCoordIntPair toPair()
+	public ChunkPos getPos()
 	{
-		return new ChunkCoordIntPair(xCoord, zCoord);
+		return new ChunkPos(xCoord, zCoord);
 	}
 	
 	@Override
-	public Coord4D clone()
+	public Chunk3D clone()
 	{
-		return new Coord4D(xCoord, zCoord, dimensionId);
+		return new Chunk3D(xCoord, zCoord, dimensionId);
 	}
 
 	@Override

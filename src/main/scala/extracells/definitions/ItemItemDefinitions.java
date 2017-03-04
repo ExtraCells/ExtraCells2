@@ -20,14 +20,16 @@ public class ItemItemDefinitions implements IItemDefinition {
 		this.meta = _meta;
 	}
 
+
+
 	@Override
-	public Optional<Item> maybeItem() {
-		return Optional.fromNullable(this.item);
+	public java.util.Optional<Item> maybeItem() {
+		return java.util.Optional.ofNullable(this.item);
 	}
 
     @Override
-    public Optional<ItemStack> maybeStack(int stackSize) {
-        return Optional.of(new ItemStack(this.item, stackSize, this.meta));
+    public java.util.Optional<ItemStack> maybeStack(int stackSize) {
+        return java.util.Optional.of(new ItemStack(this.item, stackSize, this.meta));
     }
 
 	@Override

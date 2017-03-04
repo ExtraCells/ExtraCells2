@@ -1,7 +1,7 @@
 package extracells.part
 
 import appeng.api.parts.IPartHost
-import cpw.mods.fml.common.Optional
+import net.minecraftforge.fml.common.Optional
 import extracells.integration.Integration
 import extracells.util.{FluidUtil, GasUtil, WrenchUtil}
 import net.minecraft.entity.player.EntityPlayer

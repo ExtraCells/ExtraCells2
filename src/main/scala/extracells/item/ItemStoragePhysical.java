@@ -12,7 +12,7 @@ import appeng.api.storage.*;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import cofh.api.energy.IEnergyContainerItem;
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;

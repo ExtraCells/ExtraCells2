@@ -4,20 +4,21 @@ import appeng.api.implementations.items.IAEWrench;
 import buildcraft.api.tools.IToolWrench;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 
 public class WrenchUtil {
 
 	public static boolean canWrench(ItemStack wrench, EntityPlayer player,
-			int x, int y, int z) {
+			BlockPos pos) {
 		if (wrench == null || wrench.getItem() == null)
 			return false;
-		try {
+		/*try { //TODO reimplement Buildcraft
 			IToolWrench w = (IToolWrench) wrench.getItem();
 			return w.canWrench(player, x, y, z);
-		} catch (Throwable e) {}
+		} catch (Throwable e) {}*/
 		if (wrench.getItem() instanceof IAEWrench) {
 			IAEWrench w = (IAEWrench) wrench.getItem();
-			return w.canWrench(wrench, player, x, y, z);
+			return w.canWrench(wrench, player, pos);
 		}
 		return false;
 	}
@@ -26,9 +27,9 @@ public class WrenchUtil {
 			int y, int z) {
 		if (wrench == null || wrench.getItem() == null)
 			return;
-		try {
+		/*try {//TODO reimplement Buildcraft
 			IToolWrench w = (IToolWrench) wrench.getItem();
 			w.wrenchUsed(player, x, y, z);
-		} catch (Throwable e) {}
+		} catch (Throwable e) {}*/
 	}
 }

@@ -4,6 +4,7 @@ import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.items.IAEWrench;
 import appeng.api.networking.IGridNode;
+import appeng.api.util.AEPartLocation;
 import buildcraft.api.tools.IToolWrench;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -15,6 +16,7 @@ import extracells.tileentity.TileEntityFluidInterface;
 import extracells.util.PermissionUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -23,10 +25,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class ECBaseBlock extends BlockEC {
@@ -34,14 +40,13 @@ public class ECBaseBlock extends BlockEC {
 	private IIcon[] icons = new IIcon[2];
 
 	public ECBaseBlock() {
-		super(Material.iron, 2.0F, 10.0F);
+		super(Material.IRON, 2.0F, 10.0F);
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block par5,
-			int par6) {
-		dropPatter(world, x, y, z);
-		super.breakBlock(world, x, y, z, par5, par6);
+	public void breakBlock(World world, BlockPos pos, IBlockState stat) {
+		dropPatter(world, pos.getX(), pos.getY(), pos.getZ());
+		super.breakBlock(world, pos, stat);
 	}
 
 	@Override
@@ -58,14 +63,17 @@ public class ECBaseBlock extends BlockEC {
 	}
 
 	@Override
-	public int damageDropped(int p_149692_1_) {
-		return p_149692_1_;
+	public int damageDropped(IBlockState state) {
+		return state.getBlock().getMetaFromState(state);
 	}
 
-	private void dropPatter(World world, int x, int y, int z) {
+	private void dropPatter(World world, BlockPos pos) {
 		Random rand = new Random();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
 
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(pos);
 		if (!(tileEntity instanceof TileEntityFluidInterface)) {
 			return;
 		}
@@ -97,32 +105,26 @@ public class ECBaseBlock extends BlockEC {
 		}
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-		if (meta >= 0 && meta + 1 <= this.icons.length) {
-			return this.icons[meta];
-		}
-		return null;
-	}
+
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z,
-			EntityPlayer player, int side, float p_149727_7_,
-			float p_149727_8_, float p_149727_9_) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack current, EnumFacing side, float hitX, float hitY, float hitZ) {
+
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
 		if (world.isRemote)
 			return false;
 		Random rand = new Random();
-		switch (world.getBlockMetadata(x, y, z)) {
+		switch (world.getblo(pos)) {
 		case 0:
 		case 1:
-			TileEntity tile = world.getTileEntity(x, y, z);
+			TileEntity tile = world.getTileEntity(pos);
 			if (tile instanceof IECTileEntity)
 				if (!PermissionUtil.hasPermission(player,
 						SecurityPermissions.BUILD, ((IECTileEntity) tile)
-								.getGridNode(ForgeDirection.UNKNOWN)))
+								.getGridNode(AEPartLocation.INTERNAL)))
 					return false;
-			ItemStack current = player.getCurrentEquippedItem();
 			if (player.isSneaking() && current != null) {
 				try {
 					if (current.getItem() instanceof IToolWrench
@@ -146,7 +148,7 @@ public class ECBaseBlock extends BlockEC {
 				}
 				if (current.getItem() instanceof IAEWrench
 						&& ((IAEWrench) current.getItem()).canWrench(current,
-								player, x, y, z)) {
+								player, pos)) {
 					ItemStack block = new ItemStack(this, 1,
 							world.getBlockMetadata(x, y, z));;
 					if (tile != null
@@ -154,8 +156,8 @@ public class ECBaseBlock extends BlockEC {
 						block.setTagCompound(((TileEntityFluidInterface) tile)
 								.writeFilter(new NBTTagCompound()));
 					}
-					dropBlockAsItem(world, x, y, z, block);
-					world.setBlockToAir(x, y, z);
+					dropBlockAsItem(world, pos, state, 1);
+					world.setBlockToAir(pos);
 					return true;
 				}
 
@@ -168,8 +170,9 @@ public class ECBaseBlock extends BlockEC {
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z,
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state,
 			EntityLivingBase entity, ItemStack stack) {
+		super.onBlockPlacedBy();
 		if (world.isRemote)
 			return;
 		switch (world.getBlockMetadata(x, y, z)) {

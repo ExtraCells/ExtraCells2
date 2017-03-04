@@ -2,13 +2,11 @@ package extracells.integration.igw
 
 import java.util
 
-import cpw.mods.fml.common.Optional
-import cpw.mods.fml.common.registry.GameRegistry
 import extracells.Extracells
 import extracells.integration.Integration
 import extracells.registries.{BlockEnum, ItemEnum}
-import igwmod.api.WikiRegistry
 import net.minecraft.item.{Item, ItemStack}
+import net.minecraftforge.fml.common.Optional
 
 import scala.collection.JavaConversions._
 

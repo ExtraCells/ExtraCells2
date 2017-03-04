@@ -9,8 +9,8 @@ import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.AEPartLocation;
 import appeng.api.util.WorldCoord;
-import cpw.mods.fml.common.Optional;
 import extracells.api.*;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
@@ -29,19 +29,18 @@ import extracells.util.FuelBurnTime;
 import extracells.util.GasStorageRegistry;
 import extracells.util.GasUtil;
 import extracells.wireless.WirelessTermRegistry;
-import mekanism.api.gas.Gas;
-import mekanism.api.gas.GasStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ExtraCellsApiInstance implements ExtraCellsApi {
 
@@ -232,13 +231,13 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable().getLocatableBy(key);
 		if (securityTerminal == null)
 			return itemStack;
-		IGridNode gridNode = securityTerminal.getGridNode(ForgeDirection.UNKNOWN);
+		IGridNode gridNode = securityTerminal.getGridNode(AEPartLocation.INTERNAL);
 		if (gridNode == null)
 			return itemStack;
 		IGrid grid = gridNode.getGrid();
 		if (grid == null)
 			return itemStack;
-		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wireless().maybeEntity().get())) {
+		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wirelessAccessPoint().maybeEntity().get())) {
 			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
 			WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
 			int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
@@ -265,13 +264,13 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		if (securityTerminal == null)
 			return itemStack;
 		IGridNode gridNode = securityTerminal
-				.getGridNode(ForgeDirection.UNKNOWN);
+				.getGridNode(AEPartLocation.INTERNAL);
 		if (gridNode == null)
 			return itemStack;
 		IGrid grid = gridNode.getGrid();
 		if (grid == null)
 			return itemStack;
-		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wireless().maybeEntity().get())) {
+		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wirelessAccessPoint().maybeEntity().get())) {
 			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node
 					.getMachine();
 			WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
@@ -356,7 +355,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public IExternalGasStorageHandler getHandler(TileEntity te, ForgeDirection opposite, BaseActionSource mySrc) {
+	public IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, BaseActionSource mySrc) {
 		return isMekEnabled() ? GasStorageRegistry.getHandler(te, opposite, mySrc) : null;
 	}
 

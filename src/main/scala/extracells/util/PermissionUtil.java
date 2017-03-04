@@ -6,6 +6,7 @@ import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.ISecurityGrid;
 import appeng.api.parts.IPart;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -21,11 +22,11 @@ public class PermissionUtil {
 
 	public static boolean hasPermission(EntityPlayer player,
 			SecurityPermissions permission, IGridHost host) {
-		return hasPermission(player, permission, host, ForgeDirection.UNKNOWN);
+		return hasPermission(player, permission, host, AEPartLocation.INTERNAL);
 	}
 
 	public static boolean hasPermission(EntityPlayer player,
-			SecurityPermissions permission, IGridHost host, ForgeDirection side) {
+			SecurityPermissions permission, IGridHost host, AEPartLocation side) {
 		if (host != null)
 			return hasPermission(player, permission, host.getGridNode(side));
 		return true;

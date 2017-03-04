@@ -3,7 +3,7 @@ package extracells.item
 import appeng.api.config.PowerUnits
 import appeng.api.implementations.items.IAEItemPowerStorage
 import cofh.api.energy.IEnergyContainerItem
-import cpw.mods.fml.common.Optional
+import net.minecraftforge.fml.common.Optional
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 

@@ -3,7 +3,7 @@ package extracells.integration.mekanism.gas
 import appeng.api.implementations.IPowerChannelState
 import appeng.api.networking.security.IActionHost
 import appeng.api.util.DimensionalCoord
-import cpw.mods.fml.common.Optional.{Interface, InterfaceList, Method}
+import net.minecraftforge.fml.common.Optional.{Interface, InterfaceList, Method}
 import extracells.integration.Integration.Mods.MEKANISM
 import extracells.network.packet.other.IFluidSlotPartOrBlock
 import mekanism.api.gas._

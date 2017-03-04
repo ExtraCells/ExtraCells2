@@ -1,6 +1,6 @@
 package extracells.item
 
-import cpw.mods.fml.common.Optional
+import net.minecraftforge.fml.common.Optional
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import thaumicenergistics.api.IThEWirelessEssentiaTerminal

@@ -1,27 +1,18 @@
 buildscript {
     repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 
 
 apply plugin: 'scala'
-apply plugin: 'forge'
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'idea'
 
-sourceCompatibility = JavaVersion.VERSION_1_6
-targetCompatibility = JavaVersion.VERSION_1_6
 
 ext.buildProps = file "build.properties"
 
@@ -44,12 +35,18 @@ group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
 
+sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.6"
+}
+
 logger.lifecycle "$archivesBaseName-$version"
 logger.lifecycle "" + version
 
 minecraft {
-    version = "${config.version.minecraft}-${config.version.forge}-${config.version.minecraft}"
+    version = "${config.version.minecraft}-${config.version.forge}"
     runDir = "../../MinecraftDebug/run_client"
+	mappings = "${config.version.mappings}"
 }
 
 repositories {
@@ -67,30 +64,35 @@ repositories {
 		url "http://maven.cil.li/"
 	}
 	
-	maven {
-        name = 'IGW'
-        url = "http://maven.k-4u.nl/"
-    }
+	//maven {
+    //    name = 'IGW'
+    //    url = "http://maven.k-4u.nl/"
+    //}
 
-    ivy {
-        name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-    }
+    //ivy {
+    //    name "BuildCraft"
+    //    artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+    //}
 	
 	ivy { 
 		name 'WirelessCraftingTerminal' 
 		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.wc}/[module]-[revision].[ext]" 
+	}
+	
+	ivy { 
+		name 'appliedenergistics2' 
+		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.ae}/[module]-[revision].[ext]" 
 	} 
 
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
-        transitive = false
-	}
-	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
-        transitive = false
-	}
+	//compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
+    //    transitive = false
+	//}
+	//compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
+    //    transitive = false
+	//}
 	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
 	}
@@ -98,11 +100,13 @@ dependencies {
 	compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
     compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
     compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
-	compile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:userdev"
+	//compile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:userdev"
 
-    compile name: "buildcraft", version: "${config.version.bc}", classifier: "dev", ext: 'jar'
+    //compile name: "buildcraft", version: "${config.version.bc}", classifier: "dev", ext: 'jar'
 	
 	compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
+	
+	compile name: 'appliedenergistics2', version: config.version.ae, ext: 'jar'
 }
 
 processResources {

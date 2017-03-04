@@ -1,4 +1,4 @@
-package extracells.block;
+/*package extracells.block;
 
 import appeng.api.implementations.items.IAEWrench;
 import buildcraft.api.tools.IToolWrench;
@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -47,40 +48,7 @@ public class BlockCertusTank extends BlockEC {
 		return new TileEntityCertusTank();
 	}
 
-	public ItemStack getDropWithNBT(World world, int x, int y, int z) {
-		NBTTagCompound tileEntity = new NBTTagCompound();
-		TileEntity worldTE = world.getTileEntity(x, y, z);
-		if (worldTE != null && worldTE instanceof TileEntityCertusTank) {
-			ItemStack dropStack = new ItemStack(
-					BlockEnum.CERTUSTANK.getBlock(), 1);
 
-			((TileEntityCertusTank) worldTE)
-					.writeToNBTWithoutCoords(tileEntity);
-
-			if (!tileEntity.hasKey("Empty")) {
-				dropStack.setTagCompound(new NBTTagCompound());
-				dropStack.stackTagCompound.setTag("tileEntity", tileEntity);
-			}
-			return dropStack;
-
-		}
-		return null;
-	}
-
-	@Override
-	public IIcon getIcon(int side, int b) {
-		switch (b) {
-		case 1:
-			return this.sideTopIcon;
-		case 2:
-			return this.sideBottomIcon;
-		case 3:
-			return this.sideMiddleIcon;
-		default:
-			return side == 0 ? this.bottomIcon : side == 1 ? this.topIcon
-					: this.sideIcon;
-		}
-	}
 
 	@Override
 	public String getLocalizedName() {
@@ -88,29 +56,11 @@ public class BlockCertusTank extends BlockEC {
 	}
 
 	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
-		return getDropWithNBT(world, x, y, z);
-	}
-
-	@Override
-	public int getRenderBlockPass() {
-		return 1;
-	}
-
-	@Override
-	public int getRenderType() {
-		return RenderHandler.getId();
-	}
-
-	@Override
 	public String getUnlocalizedName() {
 		return super.getUnlocalizedName().replace("tile.", "");
 	}
 
-	@Override
-	public boolean isOpaqueCube() {
-		return false;
-	}
+
 
 	@Override
 	public boolean onBlockActivated(World worldObj, int x, int y, int z,
@@ -217,3 +167,4 @@ public class BlockCertusTank extends BlockEC {
 		return false;
 	}
 }
+*/

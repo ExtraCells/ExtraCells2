@@ -12,8 +12,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te,
-			NBTTagCompound tag, World world, int x, int y, int z) {
-		final MovingObjectPosition mop = retraceBlock(world, player, x, y, z);
+			NBTTagCompound tag, World world, BlockPos pos) {
+		final RayTraceResult mop = retraceBlock(world, player, pos);
 
 		if (mop != null) {
 			final IPart part = getPart(te, mop);
@@ -36,7 +36,7 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 		return tag;
 	}
 
-	private IPart getPart(TileEntity tile, MovingObjectPosition pos) {
+	private IPart getPart(TileEntity tile, RayTraceResult pos) {
 		if (tile instanceof IPartHost) {
 			final Vec3 position = pos.hitVec.addVector(-pos.blockX,
 					-pos.blockY, -pos.blockZ);

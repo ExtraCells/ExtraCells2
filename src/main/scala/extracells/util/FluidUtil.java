@@ -17,7 +17,7 @@ public class FluidUtil {
 	}
 
 	public static IAEFluidStack createAEFluidStack(Fluid fluid, long amount) {
-		return createAEFluidStack(fluid.getID(), amount);
+		return createAEFluidStack(new FluidStack(fluid, 1)).setStackSize(amount);
 	}
 
 	public static IAEFluidStack createAEFluidStack(FluidStack fluid) {
@@ -25,8 +25,7 @@ public class FluidUtil {
 	}
 
 	public static IAEFluidStack createAEFluidStack(int fluidId, long amount) {
-		return createAEFluidStack(new FluidStack(FluidRegistry.getFluid(fluidId), 1)).setStackSize(
-				amount);
+		return createAEFluidStack(FluidRegistry.getFluid(fluidId), amount);
 	}
 
 	public static MutablePair<Integer, ItemStack> drainStack(

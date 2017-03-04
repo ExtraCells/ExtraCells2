@@ -1,7 +1,7 @@
 package extracells.part
 
 import appeng.api.parts.{IPartCollisionHelper, IPartRenderHelper}
-import cpw.mods.fml.common.Optional.Method
+import net.minecraftforge.fml.common.Optional.Method
 import extracells.integration.mekanism.gas.GasInterfaceBase
 import mekanism.api.gas.GasTank
 import net.minecraft.client.renderer.RenderBlocks

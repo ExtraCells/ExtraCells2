@@ -18,7 +18,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Optional;
+import net.minecraftforge.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.gridblock.ECBaseGridBlock;

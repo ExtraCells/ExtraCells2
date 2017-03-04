@@ -1,7 +1,7 @@
 package extracells.item
 
 import appeng.core.features.IFeatureHandler
-import cpw.mods.fml.common.Optional
+import net.minecraftforge.fml.common.Optional
 import extracells.integration.WirelessCrafting.WirelessCrafting
 import net.minecraft.item.{Item, ItemStack}
 import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem

@@ -5,7 +5,7 @@ import java.util
 import appeng.api.AEApi
 import appeng.api.config.Actionable
 import appeng.api.storage.data.IAEFluidStack
-import cpw.mods.fml.common.Optional
+import net.minecraftforge.fml.common.Optional
 import extracells.integration.Integration
 import extracells.util.GasUtil
 import mekanism.api.gas.IGasHandler

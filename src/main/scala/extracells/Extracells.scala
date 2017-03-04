@@ -3,11 +3,6 @@ package extracells
 import java.io.File
 
 import appeng.api.AEApi
-import cpw.mods.fml.client.registry.RenderingRegistry
-import cpw.mods.fml.common.Mod.EventHandler
-import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
-import cpw.mods.fml.common.network.NetworkRegistry
-import cpw.mods.fml.common.{FMLCommonHandler, Loader, Mod, SidedProxy}
 import extracells.integration.Integration
 import extracells.network.{ChannelHandler, GuiHandler}
 import extracells.proxy.CommonProxy
@@ -19,6 +14,11 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.common.config.Configuration
+import net.minecraftforge.fml.client.registry.RenderingRegistry
+import net.minecraftforge.fml.common.Mod.EventHandler
+import net.minecraftforge.fml.common.event.{FMLInitializationEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
+import net.minecraftforge.fml.common.network.NetworkRegistry
+import net.minecraftforge.fml.common.{FMLCommonHandler, Loader, Mod, SidedProxy}
 
 @Mod(modid = "extracells", name = "Extra Cells", modLanguage = "scala", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
 object Extracells {

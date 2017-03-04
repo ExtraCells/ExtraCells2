@@ -3,7 +3,7 @@ package extracells.part
 import appeng.api.config.Actionable
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
-import cpw.mods.fml.common.Optional
+import net.minecraftforge.fml.common.Optional
 import extracells.container.ContainerGasTerminal
 import extracells.gridblock.ECBaseGridBlock
 import extracells.gui.GuiGasTerminal
