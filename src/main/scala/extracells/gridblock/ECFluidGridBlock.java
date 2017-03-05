@@ -8,6 +8,7 @@ import extracells.api.IECTileEntity;
 import extracells.tileentity.IListenerTile;
 import extracells.tileentity.TileEntityFluidFiller;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
@@ -23,10 +24,10 @@ public class ECFluidGridBlock implements IGridBlock {
 	}
 
 	@Override
-	public final EnumSet<ForgeDirection> getConnectableSides() {
-		return EnumSet.of(ForgeDirection.DOWN, ForgeDirection.UP,
-				ForgeDirection.NORTH, ForgeDirection.EAST,
-				ForgeDirection.SOUTH, ForgeDirection.WEST);
+	public final EnumSet<EnumFacing> getConnectableSides() {
+		return EnumSet.of(EnumFacing.DOWN, EnumFacing.UP,
+				EnumFacing.NORTH, EnumFacing.EAST,
+				EnumFacing.SOUTH, EnumFacing.WEST);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class ECFluidGridBlock implements IGridBlock {
 
 	@Override
 	public final AEColor getGridColor() {
-		return AEColor.Transparent;
+		return AEColor.TRANSPARENT;
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class ECFluidGridBlock implements IGridBlock {
 		DimensionalCoord loc = getLocation();
 		if (loc == null)
 			return null;
-		return new ItemStack(loc.getWorld().getBlock(loc.x, loc.y, loc.z), 1,
+		return new ItemStack(loc.getWorld().getBlock(loc.), 1,
 				loc.getWorld().getBlockMetadata(loc.x, loc.y, loc.z));
 	}
 

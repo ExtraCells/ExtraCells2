@@ -8,6 +8,7 @@ import extracells.api.definitions.IPartDefinition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -122,5 +123,5 @@ public interface ExtraCellsApi {
 	 *
 	 * @return the handler for a given tile / forge direction
 	 */
-	IExternalGasStorageHandler getHandler(TileEntity te, ForgeDirection opposite, BaseActionSource mySrc );
+	IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, BaseActionSource mySrc );
 }

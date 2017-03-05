@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 public class BlockItemDefinitions implements ITileDefinition {
@@ -47,23 +48,23 @@ public class BlockItemDefinitions implements ITileDefinition {
 
 	@Override
 	public boolean isSameAs(ItemStack comparableStack) {
-		return comparableStack != null && ItemStack.areItemStacksEqual(maybeStack(1).orNull(), comparableStack);
+		return comparableStack != null && ItemStack.areItemStacksEqual(maybeStack(1).get(), comparableStack);
 	}
 
 	@Override
-	public boolean isSameAs(IBlockAccess world, int x, int y, int z) {
-		Block block = world.getBlock(x, y, z);
+	public boolean isSameAs(IBlockAccess world, BlockPos pos) {
+		Block block = world.getBlockState(pos).getBlock();
 		return !maybeBlock().isPresent() && block == this.block;
 	}
 
 	@Override
-	public Optional<Item> maybeItem() {
-		return Optional.fromNullable(Item.getItemFromBlock(block));
+	public java.util.Optional<Item> maybeItem() {
+		return java.util.Optional.ofNullable(Item.getItemFromBlock(block));
 	}
 
 	@Override
-	public Optional<ItemStack> maybeStack(int stackSize) {
-		return Optional.of(new ItemStack(this.block, stackSize, this.meta));
+	public java.util.Optional<ItemStack> maybeStack(int stackSize) {
+		return java.util.Optional.of(new ItemStack(this.block, stackSize, this.meta));
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class BlockItemDefinitions implements ITileDefinition {
 	}
 
 	@Override
-	public Optional<? extends Class<? extends TileEntity>> maybeEntity() {
-		return Optional.fromNullable(this.blockTileEntity);
+	public java.util.Optional<? extends Class<? extends TileEntity>> maybeEntity() {
+		return java.util.Optional.ofNullable(this.blockTileEntity);
 	}
 }

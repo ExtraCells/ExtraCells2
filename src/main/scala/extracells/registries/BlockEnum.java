@@ -13,7 +13,7 @@ public enum BlockEnum {
 	CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),
 	WALRUS("walrus", new BlockWalrus()),
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
-	ECBASEBLOCK("ecbaseblock", new ECBaseBlock(), ItemBlockECBase.class),
+	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), ItemBlockECBase.class),
 	BLASTRESISTANTMEDRIVE("hardmedrive", BlockHardMEDrive.instance()),
 	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid());
 

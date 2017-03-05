@@ -6,20 +6,21 @@ import appeng.api.networking._
 import appeng.api.util.{AEColor, DimensionalCoord}
 import extracells.tileentity.TileEntityHardMeDrive
 import net.minecraft.item.ItemStack
-import net.minecraftforge.common.util.ForgeDirection
+import net.minecraft.util.EnumFacing
+import net.minecraft.util.math.BlockPos
 
 
 class ECGridBlockHardMEDrive(host: TileEntityHardMeDrive) extends IGridBlock{
   protected var grid: IGrid = null
   protected var usedChannels: Int = 0
 
-  override def getConnectableSides: EnumSet[ForgeDirection] =
-    EnumSet.of(ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH,
-      ForgeDirection.WEST)
+  override def getConnectableSides: EnumSet[EnumFacing] =
+    EnumSet.of(EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH,
+      EnumFacing.WEST)
 
   override def getFlags: EnumSet[GridFlags] = EnumSet.of(GridFlags.REQUIRE_CHANNEL, GridFlags.DENSE_CAPACITY)
 
-  override def getGridColor = AEColor.Transparent
+  override def getGridColor = AEColor.TRANSPARENT
 
   override def getIdlePowerUsage = host.getPowerUsage
 
@@ -30,7 +31,7 @@ class ECGridBlockHardMEDrive(host: TileEntityHardMeDrive) extends IGridBlock{
   override def getMachineRepresentation: ItemStack = {
     val loc: DimensionalCoord = getLocation
     if (loc == null) return null
-    new ItemStack(loc.getWorld.getBlock(loc.x, loc.y, loc.z), 1, loc.getWorld.getBlockMetadata(loc.x, loc.y, loc.z))
+    new ItemStack(loc.getWorld.getBlockState(new BlockPos(loc.x, loc.y, loc.z)).getBlock, 1, 0)
   }
 
   override def gridChanged {}

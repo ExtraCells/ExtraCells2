@@ -6,9 +6,11 @@ import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.part.PartECBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
@@ -25,8 +27,8 @@ public class ECBaseGridBlock implements IGridBlock {
 	}
 
 	@Override
-	public final EnumSet<ForgeDirection> getConnectableSides() {
-		return EnumSet.noneOf(ForgeDirection.class);
+	public final EnumSet<EnumFacing> getConnectableSides() {
+		return EnumSet.noneOf(EnumFacing.class);
 	}
 
 	@Override
@@ -50,7 +52,7 @@ public class ECBaseGridBlock implements IGridBlock {
 
 	@Override
 	public final AEColor getGridColor() {
-		return this.color == null ? AEColor.Transparent : this.color;
+		return this.color == null ? AEColor.TRANSPARENT : this.color;
 	}
 
 	@Override
@@ -70,7 +72,7 @@ public class ECBaseGridBlock implements IGridBlock {
 
 	@Override
 	public ItemStack getMachineRepresentation() {
-		return this.host.getItemStack(PartItemStack.Network);
+		return this.host.getItemStack(PartItemStack.NETWORK);
 	}
 
 	@Override

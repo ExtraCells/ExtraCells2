@@ -6,16 +6,13 @@ import appeng.api.AEApi
 import appeng.api.config.SecurityPermissions
 import appeng.api.implementations.items.IAEWrench
 import appeng.api.networking.IGridNode
-import buildcraft.api.tools.IToolWrench
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import appeng.api.util.AEPartLocation
 import extracells.container.ContainerHardMEDrive
-import extracells.gui.GuiHardMEDrive
 import extracells.network.GuiHandler
 import extracells.render.block.RendererHardMEDrive
 import extracells.tileentity.TileEntityHardMeDrive
 import extracells.util.PermissionUtil
-import net.minecraft.block.Block
-import net.minecraft.client.renderer.texture.IIconRegister
+import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
@@ -23,33 +20,17 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.{IIcon, MathHelper}
+import net.minecraft.util.math.{BlockPos, MathHelper}
 import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
 
 
-object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.rock, 2.0F, 1000000.0F) with TGuiBlock{
+object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ROCK, 2.0F, 1000000.0F) with TGuiBlock{
 
 
-  var frontIcon: IIcon = null
-  var sideIcon: IIcon = null
-  var bottomIcon: IIcon = null
-  var topIcon: IIcon = null
 
-  @SideOnly(Side.CLIENT)
-  override def getClientGuiElement(player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any = {
-    val tile = world.getTileEntity(x, y, z)
-    if (tile == null || player == null) return null
-    tile match {
-      case tileMe: TileEntityHardMeDrive => {
-        return new GuiHardMEDrive(player.inventory, tileMe)
-      }
-      case _ => return null
-    }
-  }
 
-  override def getServerGuiElement(player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any = {
-    val tile = world.getTileEntity(x, y, z)
+  override def getServerGuiElement(player: EntityPlayer, world: World,  pos: BlockPos): Any = {
+    val tile = world.getTileEntity(pos)
     if (tile == null || player == null) return null
     tile match {
       case tileMe: TileEntityHardMeDrive => {
@@ -62,18 +43,22 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
   //Only needed because BlockEnum is in java. not in scala
   val instance = this
 
-  setBlockName("block.hardmedrive");
+
+  setUnlocalizedName("block.hardmedrive");
 
   override def createNewTileEntity(world : World, meta : Int): TileEntity = new TileEntityHardMeDrive()
 
-  override def breakBlock(world: World, x: Int, y: Int, z: Int, block: Block, par6: Int) {
-    dropItems(world, x, y, z)
-    super.breakBlock(world, x, y, z, block, par6)
+  override def breakBlock(world: World, pos: BlockPos, state: IBlockState) {
+    dropItems(world, pos)
+    super.breakBlock(world, pos, state)
   }
 
-  private def dropItems(world: World, x: Int, y: Int, z: Int) {
+  private def dropItems(world: World, pos: BlockPos) {
+    val x = pos.getX
+    val y = pos.getY
+    val z = pos.getZ
     val rand: Random = new Random
-    val tileEntity: TileEntity = world.getTileEntity(x, y, z)
+    val tileEntity: TileEntity = world.getTileEntity(pos)
     if (!(tileEntity.isInstanceOf[TileEntityHardMeDrive])) {
       return
     }
@@ -104,12 +89,14 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
   }
 
   override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, p_149727_7_ : Float, p_149727_8_ : Float, p_149727_9_ : Float): Boolean = {
+    val pos = new BlockPos(x,y,z)
     if (world.isRemote) return false
-    val tile: TileEntity = world.getTileEntity(x, y, z)
+    val tile: TileEntity = world.getTileEntity(pos)
     if (tile.isInstanceOf[TileEntityHardMeDrive]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(ForgeDirection.UNKNOWN))) return false
     val current: ItemStack = player.inventory.getCurrentItem
     if (player.isSneaking && current != null) {
-      try {
+      //TODO: Add buildcraft Support
+      /*try {
         if (current.getItem.isInstanceOf[IToolWrench] && (current.getItem.asInstanceOf[IToolWrench]).canWrench(player, x, y, z)) {
           dropBlockAsItem(world, x, y, z, new ItemStack(this))
           world.setBlockToAir(x, y, z)
@@ -120,10 +107,10 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
       catch {
         case e: Throwable => {
         }
-      }
-      if (current.getItem.isInstanceOf[IAEWrench] && (current.getItem.asInstanceOf[IAEWrench]).canWrench(current, player, x, y, z)) {
-        dropBlockAsItem(world, x, y, z, new ItemStack(this))
-        world.setBlockToAir(x, y, z)
+      }*/
+      if (current.getItem.isInstanceOf[IAEWrench] && (current.getItem.asInstanceOf[IAEWrench]).canWrench(current, player, pos)) {
+        dropBlockAsItem(world, pos, world.getBlockState(pos), 1)
+        world.setBlockToAir(pos)
         return true
       }
     }
@@ -131,11 +118,12 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     return true
   }
 
-  override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, entity: EntityLivingBase, stack: ItemStack) {
-    super.onBlockPlacedBy(world, x, y, z, entity, stack);
+  override def onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, entity: EntityLivingBase, stack: ItemStack) {
+    super.onBlockPlacedBy(world, pos, state, entity, stack)
     val l = MathHelper.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
-    if (!entity.isSneaking())
+    //TODO: Add rotation
+    /*if (!entity.isSneaking())
     {
       if (l == 0)
       {
@@ -177,12 +165,12 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
       {
         world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(4).getOpposite().ordinal(), 2);
       }
-    }
+    }*/
     if (world.isRemote) return
-    val tile: TileEntity = world.getTileEntity(x, y, z)
+    val tile: TileEntity = world.getTileEntity(pos)
     if (tile != null) {
       if (tile.isInstanceOf[TileEntityHardMeDrive]) {
-        val node: IGridNode = (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(ForgeDirection.UNKNOWN)
+        val node: IGridNode = (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(AEPartLocation.INTERNAL)
         if (entity != null && entity.isInstanceOf[EntityPlayer]) {
           val player: EntityPlayer = entity.asInstanceOf[EntityPlayer]
           node.setPlayerID(AEApi.instance.registries.players.getID(player))
@@ -192,39 +180,19 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     }
   }
 
-  override def onBlockPreDestroy(world: World, x: Int, y: Int, z: Int, meta: Int) {
+  override def breakBlock(world: World, pos: BlockPos, state: IBlockState) {
     if (world.isRemote) return
-    val tile: TileEntity = world.getTileEntity(x, y, z)
+    val tile: TileEntity = world.getTileEntity(pos)
     if (tile != null) {
       if (tile.isInstanceOf[TileEntityHardMeDrive]) {
-        val node: IGridNode = (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(ForgeDirection.UNKNOWN)
+        val node: IGridNode = (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(AEPartLocation.INTERNAL)
         if (node != null) {
           node.destroy
         }
       }
     }
-  }
 
-  @SideOnly(Side.CLIENT)
-  override def getIcon(side: Int, metadata: Int) = {
-    if(side == metadata)
-      frontIcon
-    else if(side == 0)
-      bottomIcon
-    else if(side == 1)
-      topIcon
-    else
-      sideIcon
+    super.breakBlock(world, pos, state)
   }
-
-  @SideOnly(Side.CLIENT)
-  override def registerBlockIcons(register: IIconRegister) = {
-    frontIcon = register.registerIcon("extracells:hardmedrive.face");
-    sideIcon = register.registerIcon("extracells:hardmedrive.side");
-    bottomIcon = register.registerIcon("extracells:machine.bottom");
-    topIcon = register.registerIcon("extracells:machine.top");
-  }
-
-  override def getRenderType : Int = RendererHardMEDrive.getRenderId
 
 }
