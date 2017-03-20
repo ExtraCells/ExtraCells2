@@ -3,13 +3,17 @@ package extracells.part;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
+import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
+import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
@@ -191,9 +195,30 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		rh.renderBlock(x, y, z, renderer);
 	}
 
+	void updateCurrentAmount() {
+		IGridNode n = getGridNode();
+		if (n == null) return;
+		IGrid g = n.getGrid();
+		if (g == null) return;
+		IStorageGrid s = g.getCache(IStorageGrid.class);
+		if (s == null) return;
+		IMEMonitor<IAEFluidStack> f = s.getFluidInventory();
+		if (f == null) return;
+
+		this.currentAmount = 0L;
+		for (IAEFluidStack st: f.getStorageList()) {
+			if (this.fluid != null && st.getFluid() == this.fluid)
+			    this.currentAmount = st.getStackSize();
+		}
+
+		IPartHost h = getHost();
+		if (h != null) h.markForUpdate();
+	}
+
 	@Override
 	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
 		this.fluid = _fluid;
+		updateCurrentAmount();
 		if (this.watcher == null)
 			return;
 		this.watcher.clear();
