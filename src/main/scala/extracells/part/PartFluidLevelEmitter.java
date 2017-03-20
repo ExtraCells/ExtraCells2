@@ -88,7 +88,7 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		case LOW_SIGNAL:
 			return this.wantedAmount >= this.currentAmount;
 		case HIGH_SIGNAL:
-			return this.wantedAmount <= this.currentAmount;
+			return this.wantedAmount < this.currentAmount;
 		default:
 			return false;
 		}
@@ -225,6 +225,7 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		updateWatcher(this.watcher);
 		new PacketFluidSlot(Lists.newArrayList(this.fluid))
 				.sendPacketToPlayer(_player);
+		notifyTargetBlock(getHostTile(), getSide());
 		saveData();
 	}
 
@@ -232,6 +233,10 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		this.wantedAmount = _wantedAmount;
 		if (this.wantedAmount < 0)
 			this.wantedAmount = 0;
+
+		IPartHost h = getHost();
+		if (h != null) h.markForUpdate();
+
 		new PacketFluidEmitter(this.wantedAmount, player)
 				.sendPacketToPlayer(player);
 		notifyTargetBlock(getHostTile(), getSide());
@@ -256,8 +261,11 @@ public class PartFluidLevelEmitter extends PartECBase implements
 			break;
 		}
 
-		notifyTargetBlock(getHostTile(), getSide());
+		IPartHost h = getHost();
+		if (h != null) h.markForUpdate();
+
 		new PacketFluidEmitter(this.mode, player).sendPacketToPlayer(player);
+		notifyTargetBlock(getHostTile(), getSide());
 		saveData();
 	}
 
