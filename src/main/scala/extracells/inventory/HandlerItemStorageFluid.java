@@ -145,46 +145,50 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (input == null || !allowedByFormat(input.getFluid()))
 			return input;
 		IAEFluidStack notAdded = input.copy();
-		List<FluidStack> currentFluids = Lists.newArrayList(this.fluidStacks);
-		for (int i = 0; i < currentFluids.size(); i++) {
-			FluidStack currentStack = currentFluids.get(i);
-			if (notAdded != null && currentStack != null
-					&& input.getFluid() == currentStack.getFluid()) {
-				if (notAdded.getStackSize() <= freeBytes()) {
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(),
-							currentStack.amount + (int) notAdded.getStackSize());
-					currentFluids.set(i, toWrite);
-					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
+		int free = freeBytes();
+		if (free > 0) {
+			for (int i = 0; i < fluidStacks.size(); i++) {
+				FluidStack currentStack = fluidStacks.get(i);
+				if (notAdded != null && currentStack != null
+						&& input.getFluid() == currentStack.getFluid()) {
+					if (notAdded.getStackSize() <= free) {
+						FluidStack toWrite = new FluidStack(currentStack.getFluid(),
+								currentStack.amount + (int) notAdded.getStackSize());
+						if (mode == Actionable.MODULATE) {
+							writeFluidToSlot(i, toWrite);
+						}
+						free -= notAdded.getStackSize();
+						notAdded = null;
+					} else {
+						FluidStack toWrite = new FluidStack(currentStack.getFluid(), currentStack.amount + free);
+						if (mode == Actionable.MODULATE) {
+							writeFluidToSlot(i, toWrite);
+						}
+						notAdded.setStackSize(notAdded.getStackSize() - free);
+						free = 0;
 					}
-					notAdded = null;
-				} else {
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(), currentStack.amount + freeBytes());
-					currentFluids.set(i, toWrite);
-					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
-					}
-					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
 				}
 			}
 		}
-		for (int i = 0; i < currentFluids.size(); i++) {
-			FluidStack currentStack = currentFluids.get(i);
-			if (notAdded != null && currentStack == null) {
-				if (input.getStackSize() <= freeBytes()) {
-					FluidStack toWrite = notAdded.getFluidStack();
-					currentFluids.set(i, toWrite);
-					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
+		if (free > 0 && notAdded != null) {
+			for (int i = 0; i < fluidStacks.size(); i++) {
+				FluidStack currentStack = fluidStacks.get(i);
+				if (notAdded != null && currentStack == null) {
+					if (input.getStackSize() <= free) {
+						FluidStack toWrite = notAdded.getFluidStack();
+						if (mode == Actionable.MODULATE) {
+							writeFluidToSlot(i, toWrite);
+						}
+						free -= notAdded.getStackSize();
+						notAdded = null;
+					} else {
+						FluidStack toWrite = new FluidStack(notAdded.getFluid(), free);
+						if (mode == Actionable.MODULATE) {
+							writeFluidToSlot(i, toWrite);
+						}
+						notAdded.setStackSize(notAdded.getStackSize() - free);
+						free = 0;
 					}
-					notAdded = null;
-				} else {
-					FluidStack toWrite = new FluidStack(notAdded.getFluid(), freeBytes());
-					currentFluids.set(i, toWrite);
-					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
-					}
-					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
 				}
 			}
 		}
@@ -245,7 +249,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
 	@Override
 	public boolean validForPass(int i) {
-		return true; // TODO
+		return i == 1;
 	}
 
 	protected void writeFluidToSlot(int i, FluidStack fluidStack) {
