@@ -112,7 +112,7 @@ public class TileEntityCertusTank extends TileEntity implements IFluidHandler {
 								- (drained != null ? drained.amount : 0)),
 						doDrain, false);
 
-				if (externallyDrained != null)
+				if (externallyDrained != null && externallyDrained.isFluidEqual(fluid))
 					return new FluidStack(fluid.getFluid(),
 							(drained != null ? drained.amount : 0)
 									+ externallyDrained.amount);
