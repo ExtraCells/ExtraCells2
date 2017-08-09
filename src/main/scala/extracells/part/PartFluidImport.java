@@ -1,47 +1,33 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.AEColor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.render.TextureManager;
+import appeng.api.util.AECableType;
 import extracells.util.PermissionUtil;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 5;
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return false;
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return true;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 5.0F;
 	}
 
 	@Override
@@ -82,18 +68,17 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource,
-			boolean doDrain) {
+	public FluidStack drain(FluidStack resource, boolean doDrain) {
 		return null;
 	}
 
 	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+	public FluidStack drain(int maxDrain, boolean doDrain) {
 		return null;
 	}
 
 	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+	public int fill(FluidStack resource, boolean doFill) {
 		boolean redstonePowered = isRedstonePowered();
 		if (resource == null || redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL)
 			return 0;
@@ -109,15 +94,14 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	protected boolean fillToNetwork(Fluid fluid, int toDrain) {
 		FluidStack drained;
 		IFluidHandler facingTank = getFacingTank();
-		ForgeDirection side = getSide();
+		EnumFacing side = getSide();
 		if (fluid == null) {
-			drained = facingTank.drain(side.getOpposite(), toDrain, false);
+			drained = facingTank.drain(toDrain, false);
 		} else {
-			drained = facingTank.drain(side.getOpposite(), new FluidStack(
-					fluid, toDrain), false);
+			drained = facingTank.drain(new FluidStack(fluid, toDrain), false);
 		}
 
-		if (drained == null || drained.amount <= 0 || drained.getFluidID() <= 0)
+		if (drained == null || drained.amount <= 0 || drained.getFluid() == null)
 			return false;
 
 		IAEFluidStack toFill = AEApi.instance().storage()
@@ -129,21 +113,18 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 					.getStackSize());
 			if (amount > 0) {
 				if (fluid == null)
-					facingTank.drain(side.getOpposite(), amount, true);
+					facingTank.drain(amount, true);
 				else
-					facingTank.drain(side.getOpposite(),
-							new FluidStack(toFill.getFluid(), amount), true);
+					facingTank.drain(new FluidStack(toFill.getFluid(), amount), true);
 				return true;
 			} else {
 				return false;
 			}
 		} else {
 			if (fluid == null)
-				facingTank.drain(side.getOpposite(),
-						toFill.getFluidStack().amount, true);
+				facingTank.drain(toFill.getFluidStack().amount, true);
 			else
-				facingTank.drain(side.getOpposite(), toFill.getFluidStack(),
-						true);
+				facingTank.drain(toFill.getFluidStack(), true);
 			return true;
 		}
 	}
@@ -162,16 +143,16 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	}
 
 	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		return new FluidTankInfo[0];
+	public IFluidTankProperties[] getTankProperties() {
+		return new IFluidTankProperties[0];
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
-		return PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this) && super.onActivate(player, pos);
+	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d pos) {
+		return PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this) && super.onActivate(player, enumHand, pos);
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		Tessellator ts = Tessellator.instance;
@@ -224,5 +205,5 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
 		rh.setBounds(6, 6, 11, 10, 10, 12);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 }

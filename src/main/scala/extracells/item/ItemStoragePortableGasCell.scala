@@ -15,7 +15,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{IIcon, StatCollector}
+import net.minecraft.util.{IIcon, I18n}
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 
@@ -40,15 +40,15 @@ object ItemStoragePortableGasCell extends ItemECBase with IPortableGasStorageCel
     val partitioned: Boolean = cellHandler.isFormatted
     val usedBytes: Long = cellHandler.usedBytes
     val aeCurrentPower: Double = getAECurrentPower(itemStack)
-    list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.bytes"), (usedBytes / 250).asInstanceOf[AnyRef], (cellHandler.totalBytes / 250).asInstanceOf[AnyRef]))
-    list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.types"), cellHandler.usedTypes.asInstanceOf[AnyRef], cellHandler.totalTypes.asInstanceOf[AnyRef]))
+    list2.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.bytes"), (usedBytes / 250).asInstanceOf[AnyRef], (cellHandler.totalBytes / 250).asInstanceOf[AnyRef]))
+    list2.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.types"), cellHandler.usedTypes.asInstanceOf[AnyRef], cellHandler.totalTypes.asInstanceOf[AnyRef]))
     if (usedBytes != 0) {
-      list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.content"), usedBytes.asInstanceOf[AnyRef]))
+      list2.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.content"), usedBytes.asInstanceOf[AnyRef]))
     }
     if (partitioned) {
-      list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + StatCollector.translateToLocal("gui.appliedenergistics2.Precise"))
+      list2.add(I18n.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + I18n.translateToLocal("gui.appliedenergistics2.Precise"))
     }
-    list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStoragePortableFluidCell.MAX_POWER * 1e4) / 1e2 + "%")
+    list2.add(I18n.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStoragePortableFluidCell.MAX_POWER * 1e4) / 1e2 + "%")
   }
 
   def getConfigInventory(is: ItemStack): IInventory = new ECFluidFilterInventory("configFluidCell", 63, is)

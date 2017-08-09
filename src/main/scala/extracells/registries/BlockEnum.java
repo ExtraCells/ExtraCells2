@@ -7,7 +7,8 @@ import extracells.item.ItemBlockCertusTank;
 import extracells.item.ItemBlockECBase;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
+import net.minecraft.util.text.translation.I18n;
 
 public enum BlockEnum {
 	CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),
@@ -37,7 +38,7 @@ public enum BlockEnum {
 	BlockEnum(String _internalName, Block _block, Class<? extends ItemBlock> _itemBlockClass, Integration.Mods _mod) {
 		this.internalName = _internalName;
 		this.block = _block;
-		this.block.setBlockName("extracells.block." + this.internalName);
+		this.block.setUnlocalizedName("extracells.block." + this.internalName);
 		this.itemBlockClass = _itemBlockClass;
 		this.mod = _mod;
 		if(_mod == null || _mod.isEnabled())
@@ -57,7 +58,7 @@ public enum BlockEnum {
 	}
 
 	public String getStatName() {
-		return StatCollector.translateToLocal(this.block.getUnlocalizedName() + ".name");
+		return I18n.translateToLocal(this.block.getUnlocalizedName() + ".name");
 	}
 
 	public Integration.Mods getMod(){

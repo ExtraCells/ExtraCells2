@@ -1,15 +1,37 @@
 package extracells.registries;
 
-import appeng.api.config.Upgrades;
-import extracells.integration.Integration;
-import extracells.part.*;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.translation.I18n;
+
+import appeng.api.config.Upgrades;
+import extracells.integration.Integration;
+import extracells.part.PartBattery;
+import extracells.part.PartDrive;
+import extracells.part.PartECBase;
+import extracells.part.PartFluidConversionMonitor;
+import extracells.part.PartFluidExport;
+import extracells.part.PartFluidImport;
+import extracells.part.PartFluidInterface;
+import extracells.part.PartFluidLevelEmitter;
+import extracells.part.PartFluidPlaneAnnihilation;
+import extracells.part.PartFluidPlaneFormation;
+import extracells.part.PartFluidStorage;
+import extracells.part.PartFluidStorageMonitor;
+import extracells.part.PartFluidTerminal;
+import extracells.part.PartGasConversionMonitor;
+import extracells.part.PartGasExport;
+import extracells.part.PartGasImport;
+import extracells.part.PartGasLevelEmitter;
+import extracells.part.PartGasStorage;
+import extracells.part.PartGasStorageMonitor;
+import extracells.part.PartGasTerminal;
+import extracells.part.PartOreDictExporter;
 
 public enum PartEnum {
 	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
@@ -102,7 +124,7 @@ public enum PartEnum {
 	}
 
 	public String getStatName() {
-		return StatCollector.translateToLocal(this.unlocalizedName + ".name");
+		return I18n.translateToLocal(this.unlocalizedName + ".name");
 	}
 
 	public String getUnlocalizedName() {

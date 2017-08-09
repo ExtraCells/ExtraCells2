@@ -1,15 +1,19 @@
 package extracells.gui;
 
-import extracells.container.ContainerFluidFiller;
-import extracells.gui.widget.WidgetSlotFluidContainer;
-import extracells.tileentity.TileEntityFluidFiller;
-import extracells.util.GuiUtil;
+import java.io.IOException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
+
 import org.lwjgl.opengl.GL11;
+
+import extracells.container.ContainerFluidFiller;
+import extracells.gui.widget.WidgetSlotFluidContainer;
+import extracells.tileentity.TileEntityFluidFiller;
+import extracells.util.GuiUtil;
 
 public class GuiFluidFiller extends GuiContainer {
 	public static final int xSize = 176;
@@ -40,7 +44,7 @@ public class GuiFluidFiller extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		this.fontRendererObj
 				.drawString(
-						StatCollector.translateToLocal(
+						I18n.translateToLocal(
 								"extracells.block.fluidfiller.name").replace(
 								"ME ", ""), 5, 5, 0x000000);
 		int i = this.fluidContainerSlot.getPosX();
@@ -61,7 +65,7 @@ public class GuiFluidFiller extends GuiContainer {
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		if (this.fluidContainerSlot != null)
 			if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop,

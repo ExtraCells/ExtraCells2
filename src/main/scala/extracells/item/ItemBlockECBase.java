@@ -11,7 +11,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class ItemBlockECBase extends ItemBlock {
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		return StatCollector.translateToLocal(getUnlocalizedName(stack) + ".name");
+		return I18n.translateToLocal(getUnlocalizedName(stack) + ".name");
 	}
 
 	@Override

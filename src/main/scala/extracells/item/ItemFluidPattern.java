@@ -9,7 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -58,8 +58,8 @@ public class ItemFluidPattern extends ItemECBase {
 	public String getItemStackDisplayName(ItemStack itemStack) {
 		Fluid fluid = getFluid(itemStack);
 		if (fluid == null)
-			return StatCollector.translateToLocal(getUnlocalizedName(itemStack));
-		return StatCollector.translateToLocal(getUnlocalizedName(itemStack))
+			return I18n.translateToLocal(getUnlocalizedName(itemStack));
+		return I18n.translateToLocal(getUnlocalizedName(itemStack))
 				+ ": " + fluid.getLocalizedName(new FluidStack(fluid, 1));
 	}
 

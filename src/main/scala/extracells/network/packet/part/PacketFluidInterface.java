@@ -1,42 +1,43 @@
 package extracells.network.packet.part;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import appeng.api.util.AEPartLocation;
 import extracells.container.ContainerFluidInterface;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PacketFluidInterface extends AbstractPacket {
 
 	FluidStack[] tank;
-	Integer[] filter;
-	int fluidID;
+	String[] filter;
+	String fluidName;
 	int filterSlot;
 
 	public PacketFluidInterface() {}
 
-	public PacketFluidInterface(FluidStack[] _tank, Integer[] _filter,
-			EntityPlayer _player) {
-		super(_player);
+	public PacketFluidInterface(FluidStack[] tank, String[] filter, EntityPlayer player) {
+		super(player);
 		this.mode = 0;
-		this.tank = _tank;
-		this.filter = _filter;
+		this.tank = tank;
+		this.filter = filter;
 	}
 
-	public PacketFluidInterface(int _fluidID, int _filterSlot,
-			EntityPlayer _player) {
-		super(_player);
+	public PacketFluidInterface(String fluidName, int filterSlot, EntityPlayer player) {
+		super(player);
 		this.mode = 1;
-		this.fluidID = _fluidID;
-		this.filterSlot = _filterSlot;
+		this.fluidName = fluidName;
+		this.filterSlot = filterSlot;
 	}
 
 	@Override
@@ -46,12 +47,11 @@ public class PacketFluidInterface extends AbstractPacket {
 			mode0();
 			break;
 		case 1:
-			if (this.player.openContainer != null
-					&& this.player.openContainer instanceof ContainerFluidInterface) {
+			if (this.player.openContainer != null && this.player.openContainer instanceof ContainerFluidInterface) {
 				ContainerFluidInterface container = (ContainerFluidInterface) this.player.openContainer;
 				container.fluidInterface.setFilter(
-						ForgeDirection.getOrientation(this.filterSlot),
-						FluidRegistry.getFluid(this.fluidID));
+						AEPartLocation.fromOrdinal(this.filterSlot),
+						FluidRegistry.getFluid(this.fluidName));
 			}
 			break;
 		default:
@@ -71,7 +71,7 @@ public class PacketFluidInterface extends AbstractPacket {
 						.getMinecraft().currentScreen;
 				for (int i = 0; i < this.tank.length; i++) {
 					container.fluidInterface.setFluidTank(
-							ForgeDirection.getOrientation(i), this.tank[i]);
+							AEPartLocation.fromOrdinal(i), this.tank[i]);
 				}
 				for (int i = 0; i < this.filter.length; i++) {
 					if (gui.filter[i] != null)
@@ -95,17 +95,17 @@ public class PacketFluidInterface extends AbstractPacket {
 				else
 					this.tank[i] = null;
 			}
-			this.filter = new Integer[tag.getInteger("lengthFilter")];
+			this.filter = new String[tag.getInteger("lengthFilter")];
 			for (int i = 0; i < this.filter.length; i++) {
 				if (tag.hasKey("filter#" + i))
-					this.filter[i] = tag.getInteger("filter#" + i);
+					this.filter[i] = tag.getString("filter#" + i);
 				else
-					this.filter[i] = -1;
+					this.filter[i] = "";
 			}
 			break;
 		case 1:
 			this.filterSlot = in.readInt();
-			this.fluidID = in.readInt();
+			this.fluidName = ByteBufUtils.readUTF8String(in);
 			break;
 		default:
 		}
@@ -127,14 +127,14 @@ public class PacketFluidInterface extends AbstractPacket {
 			tag.setInteger("lengthFilter", this.filter.length);
 			for (int i = 0; i < this.filter.length; i++) {
 				if (this.filter[i] != null) {
-					tag.setInteger("filter#" + i, this.filter[i]);
+					tag.setString("filter#" + i, this.filter[i]);
 				}
 			}
 			ByteBufUtils.writeTag(out, tag);
 			break;
 		case 1:
 			out.writeInt(this.filterSlot);
-			out.writeInt(this.fluidID);
+			ByteBufUtils.writeUTF8String(out, this.fluidName);
 			break;
 		default:
 		}

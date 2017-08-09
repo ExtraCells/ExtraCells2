@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
@@ -166,7 +166,7 @@ public class ItemBlockCertusTank extends ItemBlock implements
 									.getCompoundTag("tileEntity"));
 
 					if (fluidInTank != null && fluidInTank.getFluid() != null) {
-						return StatCollector
+						return I18n
 								.translateToLocal(getUnlocalizedName(itemstack))
 								+ " - "
 								+ fluidInTank.getFluid().getLocalizedName(
@@ -174,7 +174,7 @@ public class ItemBlockCertusTank extends ItemBlock implements
 					}
 				} catch (Throwable ignored) {}
 			}
-			return StatCollector
+			return I18n
 					.translateToLocal(getUnlocalizedName(itemstack));
 		}
 		return "";

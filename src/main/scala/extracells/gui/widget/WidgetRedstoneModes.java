@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -134,26 +134,26 @@ public class WidgetRedstoneModes extends GuiButton {
 	public void drawTooltip(int mouseX, int mouseY, int guiXPos, int guiYPos) {
 		List<String> description = new ArrayList<String>();
 		description
-				.add(StatCollector
+				.add(I18n
 						.translateToLocal("gui.tooltips.appliedenergistics2.RedstoneMode"));
 		String explanation = "";
 		switch (this.redstoneMode) {
 		case HIGH_SIGNAL:
-			explanation = StatCollector
+			explanation = I18n
 					.translateToLocal(this.emitter ? "gui.tooltips.appliedenergistics2.EmitLevelAbove"
 							: "gui.tooltips.appliedenergistics2.ActiveWithSignal");
 			break;
 		case LOW_SIGNAL:
-			explanation = StatCollector
+			explanation = I18n
 					.translateToLocal(this.emitter ? "gui.tooltips.appliedenergistics2.EmitLevelsBelow"
 							: "gui.tooltips.appliedenergistics2.ActiveWithoutSignal");
 			break;
 		case SIGNAL_PULSE:
-			explanation = StatCollector
+			explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.ActiveOnPulse");
 			break;
 		case IGNORE:
-			explanation = StatCollector
+			explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.AlwaysActive");
 			break;
 		default:

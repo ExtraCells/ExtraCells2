@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -46,18 +46,18 @@ public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 		if (tag.hasKey("fluidID")) {
 			int fluidID = tag.getInteger("fluidID");
 			if (fluidID == -1) {
-				list.add(StatCollector
+				list.add(I18n
 						.translateToLocal("extracells.tooltip.fluid")
 						+ ": "
-						+ StatCollector
+						+ I18n
 								.translateToLocal("extracells.tooltip.empty1"));
-				list.add(StatCollector
+				list.add(I18n
 						.translateToLocal("extracells.tooltip.amount")
 						+ ": 0mB / " + tag.getInteger("maxFluid") + "mB");
 				return list;
 			} else {
 				Fluid fluid = FluidRegistry.getFluid(tag.getInteger("fluidID"));
-				list.add(StatCollector
+				list.add(I18n
 						.translateToLocal("extracells.tooltip.fluid")
 						+ ": "
 						+ fluid.getLocalizedName(new FluidStack(fluid,
@@ -66,7 +66,7 @@ public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 		} else
 			return list;
 		if (tag.hasKey("maxFluid") && tag.hasKey("currentFluid"))
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("extracells.tooltip.amount")
 					+ ": "
 					+ tag.getInteger("currentFluid")

@@ -1,5 +1,23 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+
+import net.minecraftforge.common.util.ForgeDirection;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
@@ -12,9 +30,13 @@ import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.storage.*;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import appeng.api.storage.ICellContainer;
+import appeng.api.storage.ICellHandler;
+import appeng.api.storage.ICellRegistry;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.StorageChannel;
+import appeng.api.util.AECableType;
 import extracells.container.ContainerDrive;
 import extracells.gui.GuiDrive;
 import extracells.render.TextureManager;
@@ -22,19 +44,6 @@ import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PartDrive extends PartECBase implements ICellContainer,
 		IInventoryUpdateReceiver {
@@ -68,8 +77,8 @@ public class PartDrive extends PartECBase implements ICellContainer,
 	}
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 2;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 2.0F;
 	}
 
 	@Override

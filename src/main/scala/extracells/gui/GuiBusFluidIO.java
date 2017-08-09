@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 	}
 
 	@Override
-	public void actionPerformed(GuiButton button) {
+	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		new PacketBusFluidIO(this.player, (byte) button.id, this.part)
 				.sendPacketToServer();
@@ -119,7 +120,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 	}
 
 	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
-		return this.func_146978_c(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
+		return this.isPointInRegion(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
 	}
 
 	protected boolean isPointInRegion(int top, int left, int height, int width, int pointX, int pointY) {
@@ -132,7 +133,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		Slot slot = getSlotAtPosition(mouseX, mouseY);
 
 		if (slot != null && slot.getStack() != null && slot.getStack().isItemEqual(AEApi.instance().definitions().items().networkTool().maybeStack(1).get()))

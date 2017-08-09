@@ -57,7 +57,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -436,17 +436,17 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		if (id != -1)
 			fluid = new FluidStack(id, amount);
 		if (fluid == null) {
-			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
+			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
 					+ ": "
-					+ StatCollector
+					+ I18n
 							.translateToLocal("extracells.tooltip.empty1"));
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("extracells.tooltip.amount")
 					+ ": 0mB / 10000mB");
 		} else {
-			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
+			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
 					+ ": " + fluid.getLocalizedName());
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("extracells.tooltip.amount")
 					+ ": "
 					+ fluid.amount + "mB / 10000mB");

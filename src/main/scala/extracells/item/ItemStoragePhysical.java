@@ -31,7 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -65,15 +65,15 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 		ICellInventory cellInv = inventoryHandler.getCellInv();
 		long usedBytes = cellInv.getUsedBytes();
 
-		list.add(String.format(StatCollector
+		list.add(String.format(I18n
 				.translateToLocal("extracells.tooltip.storage.physical.bytes"),
 				usedBytes, cellInv.getTotalBytes()));
-		list.add(String.format(StatCollector
+		list.add(String.format(I18n
 				.translateToLocal("extracells.tooltip.storage.physical.types"),
 				cellInv.getStoredItemTypes(), cellInv.getTotalItemTypes()));
 		if (usedBytes > 0)
 			list.add(String.format(
-					StatCollector
+					I18n
 							.translateToLocal("extracells.tooltip.storage.physical.content"),
 					cellInv.getStoredItemCount()));
 	}
@@ -199,7 +199,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 				if (list.isEmpty())
 					return super.getItemStackDisplayName(stack)
 							+ " - "
-							+ StatCollector
+							+ I18n
 									.translateToLocal("extracells.tooltip.empty1");
 				IAEItemStack s = (IAEItemStack) list.getFirstItem();
 				return super.getItemStackDisplayName(stack) + " - "
@@ -207,7 +207,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 			} catch (Throwable e) {}
 			return super.getItemStackDisplayName(stack)
 					+ " - "
-					+ StatCollector
+					+ I18n
 							.translateToLocal("extracells.tooltip.empty1");
 		}
 		return super.getItemStackDisplayName(stack);

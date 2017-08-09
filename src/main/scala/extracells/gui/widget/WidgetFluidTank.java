@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -151,12 +151,12 @@ public class WidgetFluidTank extends Gui {
 	public void drawDirectionTooltip(int x, int y) {
 
 		List<String> description = new ArrayList<String>();
-		description.add(StatCollector
+		description.add(I18n
 				.translateToLocal("extracells.tooltip.direction."
 						+ this.direction.ordinal()));
 
 		if (this.tank == null || this.tank.getFluid() == null) {
-			description.add(StatCollector
+			description.add(I18n
 					.translateToLocal("extracells.tooltip.empty1"));
 		} else {
 			if (this.tank.getFluid().amount > 0
@@ -177,7 +177,7 @@ public class WidgetFluidTank extends Gui {
 		List<String> description = new ArrayList<String>();
 
 		if (this.tank == null || this.tank.getFluid() == null) {
-			description.add(StatCollector
+			description.add(I18n
 					.translateToLocal("extracells.tooltip.empty1"));
 		} else {
 			if (this.tank.getFluid().amount > 0

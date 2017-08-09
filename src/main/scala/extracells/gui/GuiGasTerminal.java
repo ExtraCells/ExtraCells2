@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -58,7 +58,7 @@ public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("extracells.part.gas.terminal.name").replace("ME ", ""), 9, 6, 0x000000);
+		this.fontRendererObj.drawString(I18n.translateToLocal("extracells.part.gas.terminal.name").replace("ME ", ""), 9, 6, 0x000000);
 		drawWidgets(mouseX, mouseY);
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
@@ -74,9 +74,9 @@ public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 			}
 
 			this.fontRendererObj.drawString(
-					StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
+					I18n.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
 			this.fontRendererObj.drawString(
-					StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
+					I18n.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
 		}
 	}
 

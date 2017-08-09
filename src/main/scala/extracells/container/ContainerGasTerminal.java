@@ -1,5 +1,18 @@
 package extracells.container;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnaceOutput;
+import net.minecraft.item.ItemStack;
+
+import net.minecraftforge.fluids.Fluid;
+
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.security.BaseActionSource;
@@ -17,14 +30,6 @@ import extracells.part.PartFluidTerminal;
 import extracells.part.PartGasTerminal;
 import extracells.util.GasUtil;
 import extracells.util.PermissionUtil;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 
 public class ContainerGasTerminal extends Container implements
 		IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
@@ -53,7 +58,7 @@ public class ContainerGasTerminal extends Container implements
 		addSlotToContainer(new SlotRespective(this.terminal.getInventory(), 0,
 				8, 92));
 		// Input Slot accepts nothing
-		addSlotToContainer(new SlotFurnace(this.player,
+		addSlotToContainer(new SlotFurnaceOutput(this.player,
 				this.terminal.getInventory(), 1, 26, 92));
 		bindPlayerInventory(this.player.inventory);
 	}
@@ -145,17 +150,18 @@ public class ContainerGasTerminal extends Container implements
 				.sendPacketToServer();
 	}
 
+	@Nullable
 	@Override
-	public ItemStack slotClick(int slotNumber, int p_75144_2_, int p_75144_3_, EntityPlayer player) {
+	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
 		ItemStack returnStack = null;
 		boolean hasPermission = true;
-		if (slotNumber == 0 || slotNumber == 1) {
+		if (slotId == 0 || slotId == 1) {
 			ItemStack stack = player.inventory.getItemStack();
 			if (stack == null) {} else {
 				if (GasUtil.isEmpty(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())) {}
 				else if (GasUtil.isFilled(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())) {}
 				else {
-					ItemStack slotStack = ((Slot) this.inventorySlots.get(slotNumber)).getStack();
+					ItemStack slotStack = ((Slot) this.inventorySlots.get(slotId)).getStack();
 					if (slotStack == null)
 						returnStack = null;
 					else
@@ -165,13 +171,12 @@ public class ContainerGasTerminal extends Container implements
 			}
 		}
 		if (hasPermission)
-			returnStack = super.slotClick(slotNumber, p_75144_2_, p_75144_3_, player);
+			returnStack = super.slotClick(slotId, dragType, clickTypeIn, player);
 		if (player instanceof EntityPlayerMP) {
 			EntityPlayerMP p = (EntityPlayerMP) player;
 			p.sendContainerToPlayer(this);
 		}
 		return returnStack;
-
 	}
 
 	@Override

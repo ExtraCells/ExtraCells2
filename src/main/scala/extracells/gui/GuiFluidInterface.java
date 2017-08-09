@@ -18,7 +18,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
@@ -68,7 +68,7 @@ public class GuiFluidInterface extends GuiContainer {
 										1, 0)).replace("ME ", ""), 8, 5,
 				0x000000);
 		this.fontRendererObj.drawString(
-				StatCollector.translateToLocal("container.inventory"), 8, 136,
+				I18n.translateToLocal("container.inventory"), 8, 136,
 				0x000000);
 		for (WidgetFluidTank tank : this.tanks) {
 			if (tank != null)

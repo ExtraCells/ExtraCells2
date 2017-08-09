@@ -6,7 +6,8 @@ import extracells.item.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
+import net.minecraft.util.text.translation.I18n;
 
 public enum ItemEnum {
 	PARTITEM("part.base", new ItemPartECBase()),
@@ -63,7 +64,7 @@ public enum ItemEnum {
 	}
 
 	public String getStatName() {
-		return StatCollector.translateToLocal(this.item.getUnlocalizedName());
+		return I18n.translateToLocal(this.item.getUnlocalizedName());
 	}
 
 	public Integration.Mods getMod(){

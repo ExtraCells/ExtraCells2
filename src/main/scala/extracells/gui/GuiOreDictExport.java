@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -62,11 +62,11 @@ public class GuiOreDictExport extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		this.fontRendererObj.drawString(
-				StatCollector.translateToLocal(
+				I18n.translateToLocal(
 						"extracells.part.oredict.export.name").replace("ME ",
 						""), 8, 5, 0x000000);
 		this.fontRendererObj.drawString(
-				StatCollector.translateToLocal("container.inventory"), 8,
+				I18n.translateToLocal("container.inventory"), 8,
 				this.ySize - 94, 0x000000);
 
 	}
@@ -78,7 +78,7 @@ public class GuiOreDictExport extends GuiContainer {
 		this.guiTop = (this.height - this.ySize) / 2;
 		this.buttonList.add(new GuiButton(1,
 				this.guiLeft + this.xSize / 2 - 44, this.guiTop + 35, 88, 20,
-				StatCollector.translateToLocal("extracells.tooltip.save")));
+				I18n.translateToLocal("extracells.tooltip.save")));
 		this.searchbar = new GuiTextField(this.fontRendererObj, this.guiLeft
 				+ this.xSize / 2 - 44, this.guiTop + 20, 88, 10) {
 

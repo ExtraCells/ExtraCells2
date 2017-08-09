@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -52,7 +52,7 @@ public class BlockCertusTank extends BlockEC {
 
 	@Override
 	public String getLocalizedName() {
-		return StatCollector.translateToLocal(getUnlocalizedName() + ".name");
+		return I18n.translateToLocal(getUnlocalizedName() + ".name");
 	}
 
 	@Override

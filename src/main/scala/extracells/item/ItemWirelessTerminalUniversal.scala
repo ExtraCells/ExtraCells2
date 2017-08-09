@@ -18,7 +18,7 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{IIcon, StatCollector}
+import net.minecraft.util.{IIcon, I18n}
 import net.minecraft.world.World
 
 object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler with EssensiaTerminal with CraftingTerminal{
@@ -154,11 +154,11 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     if(!tag.hasKey("type"))
       tag.setByte("type", 0)
     val list2 = list.asInstanceOf[util.List[String]];
-    list2.add(StatCollector.translateToLocal("extracells.tooltip.mode") + ": " + StatCollector.translateToLocal("extracells.tooltip." + TerminalType.values().apply(tag.getByte("type")).toString.toLowerCase))
-    list2.add(StatCollector.translateToLocal("extracells.tooltip.installed"))
+    list2.add(I18n.translateToLocal("extracells.tooltip.mode") + ": " + I18n.translateToLocal("extracells.tooltip." + TerminalType.values().apply(tag.getByte("type")).toString.toLowerCase))
+    list2.add(I18n.translateToLocal("extracells.tooltip.installed"))
     val it = getInstalledModules(itemStack).iterator
     while (it.hasNext)
-      list2.add("- " + StatCollector.translateToLocal("extracells.tooltip." + it.next.name.toLowerCase))
+      list2.add("- " + I18n.translateToLocal("extracells.tooltip." + it.next.name.toLowerCase))
     super.addInformation(itemStack, player, list, par4);
   }
 

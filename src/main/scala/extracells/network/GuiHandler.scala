@@ -3,8 +3,8 @@ package extracells.network
 import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
-import cpw.mods.fml.common.network.IGuiHandler
-import cpw.mods.fml.relauncher.{Side, SideOnly}
+import net.minecraftforge.fml.common.network.IGuiHandler
+import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 import extracells.Extracells
 import extracells.api._
 import extracells.block.TGuiBlock
@@ -14,8 +14,9 @@ import extracells.part.PartECBase
 import extracells.registries.BlockEnum
 import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.util.EnumFacing
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection;
 
 object GuiHandler extends IGuiHandler {
 
@@ -72,13 +73,13 @@ object GuiHandler extends IGuiHandler {
 
 	def getGuiId(part: PartECBase) = part.getSide().ordinal()
 
-	def getPartContainer(side: ForgeDirection, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : Any =
-		world.getTileEntity(x, y, z).asInstanceOf[IPartHost].getPart(side).asInstanceOf[PartECBase]
+	def getPartContainer(side: EnumFacing, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : Any =
+		world.getTileEntity(new BlockPos(x, y, z)).asInstanceOf[IPartHost].getPart(side).asInstanceOf[PartECBase]
 			.getServerGuiElement(player)
 
 
-	def getPartGui(side: ForgeDirection, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : Any =
-		world.getTileEntity(x, y, z).asInstanceOf[IPartHost].getPart(side).asInstanceOf[PartECBase]
+	def getPartGui(side: EnumFacing, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : Any =
+		world.getTileEntity(new BlockPos(x, y, z)).asInstanceOf[IPartHost].getPart(side).asInstanceOf[PartECBase]
 			.getClientGuiElement(player)
 
 	def launchGui(ID: Int, player: EntityPlayer,  args: Array[Any]) {
@@ -96,16 +97,19 @@ object GuiHandler extends IGuiHandler {
 		val gui: Any = getGuiBlockElement(player, world, x, y, z)
 		if (gui != null)
 			return gui.asInstanceOf[AnyRef]
-		val side = ForgeDirection.getOrientation(ID);
-		if (world.getBlock(x, y, z) == BlockEnum.FLUIDCRAFTER.getBlock()) {
-			val tileEntity = world.getTileEntity(x, y, z);
+		val side = null;
+		if(ID < 5){
+			side == EnumFacing.VALUES(ID);
+		}
+		val pos = new BlockPos(x, y, z);
+		if (world.getBlockState(pos).getBlock == BlockEnum.FLUIDCRAFTER.getBlock()) {
+			val tileEntity = world.getTileEntity(pos);
 			if (tileEntity == null || !(tileEntity.isInstanceOf[TileEntityFluidCrafter]))
 				return null
 			return new GuiFluidCrafter(player.inventory, tileEntity.asInstanceOf[TileEntityFluidCrafter].getInventory())
 		}
-		if (world != null
-				&& world.getBlock(x, y, z) == BlockEnum.ECBASEBLOCK.getBlock()) {
-			val tileEntity = world.getTileEntity(x, y, z)
+		if (world != null && world.getBlockState(pos) == BlockEnum.ECBASEBLOCK.getBlock()) {
+			val tileEntity = world.getTileEntity(pos)
 			if (tileEntity == null)
 				return null
 			if (tileEntity.isInstanceOf[TileEntityFluidInterface])
@@ -114,7 +118,7 @@ object GuiHandler extends IGuiHandler {
 				return new GuiFluidFiller(player, tileEntity.asInstanceOf[TileEntityFluidFiller])
 			return null;
 		}
-		if (world != null && side != ForgeDirection.UNKNOWN)
+		if (world != null && side != null)
 			return getPartGui(side, player, world, x, y, z).asInstanceOf[AnyRef]
 		getGui(ID - 6, player).asInstanceOf[AnyRef]
 	}
@@ -149,11 +153,12 @@ object GuiHandler extends IGuiHandler {
 	def getGuiBlockElement(player: EntityPlayer, world: World, x:Int, y: Int, z: Int): Any = {
 		if(world == null || player == null)
 			return null
-		val block = world.getBlock(x, y, z)
+		val pos = new BlockPos(x, y, z);
+		val block = world.getBlockState(pos).getBlock();
 		if (block  == null)
 			return null
 		block match{
-			case guiBlock: TGuiBlock => return guiBlock.getClientGuiElement(player, world, x, y, z)
+			case guiBlock: TGuiBlock => return guiBlock.getClientGuiElement(player, world, pos)
 			case _ => return null
 		}
 	}
@@ -161,11 +166,12 @@ object GuiHandler extends IGuiHandler {
 	def getContainerBlockElement(player: EntityPlayer, world: World, x:Int, y: Int, z: Int): Any = {
 		if(world == null || player == null)
 			return null
-		val block = world.getBlock(x, y, z)
+		val pos = new BlockPos(x, y, z);
+		val block = world.getBlockState(pos).getBlock();
 		if (block  == null)
 			return null
 		block match{
-			case guiBlock: TGuiBlock => return guiBlock.getServerGuiElement(player, world, x, y, z)
+			case guiBlock: TGuiBlock => return guiBlock.getServerGuiElement(player, world, pos)
 			case _ => return null
 		}
 	}

@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -127,24 +127,24 @@ public class WidgetStorageDirection extends GuiButton {
 
 	public void drawTooltip(int mouseX, int mouseY, int guiXPos, int guiYPos) {
 		List<String> description = new ArrayList<String>();
-		description.add(StatCollector
+		description.add(I18n
 				.translateToLocal("gui.tooltips.appliedenergistics2.IOMode"));
 		String explanation = "";
 		switch (this.access) {
 		case NO_ACCESS:
-			explanation = StatCollector
+			explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.Disabled");
 			break;
 		case READ:
-			explanation = StatCollector
+			explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.Read");
 			break;
 		case READ_WRITE:
-			explanation = StatCollector
+			explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.ReadWrite");
 			break;
 		case WRITE:
-			explanation = StatCollector
+			explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.Write");
 			break;
 		default:

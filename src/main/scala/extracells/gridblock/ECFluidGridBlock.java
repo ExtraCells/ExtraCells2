@@ -1,17 +1,22 @@
 package extracells.gridblock;
 
-import appeng.api.networking.*;
+import java.util.EnumSet;
+
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+
+import appeng.api.networking.GridFlags;
+import appeng.api.networking.GridNotification;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridBlock;
+import appeng.api.networking.IGridHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
 import extracells.tileentity.IListenerTile;
 import extracells.tileentity.TileEntityFluidFiller;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.EnumSet;
 
 public class ECFluidGridBlock implements IGridBlock {
 
@@ -58,10 +63,11 @@ public class ECFluidGridBlock implements IGridBlock {
 	@Override
 	public ItemStack getMachineRepresentation() {
 		DimensionalCoord loc = getLocation();
-		if (loc == null)
+		if (loc == null) {
 			return null;
-		return new ItemStack(loc.getWorld().getBlock(loc.), 1,
-				loc.getWorld().getBlockMetadata(loc.x, loc.y, loc.z));
+		}
+		IBlockState blockState = loc.getWorld().getBlockState(loc.getPos());
+		return new ItemStack(blockState.getBlock(), 1, blockState.getBlock().getMetaFromState(blockState));
 	}
 
 	@Override

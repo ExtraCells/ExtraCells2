@@ -1,5 +1,18 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -10,22 +23,12 @@ import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.networking.events.MENetworkPowerStorage;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import appeng.api.util.AECableType;
 import extracells.network.AbstractPacket;
 import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-
-import java.io.IOException;
-import java.util.List;
 
 public class PartBattery extends PartECBase implements IAEPowerStorage,
 		IInventoryUpdateReceiver {
@@ -53,8 +56,8 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 	}
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 2;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 2.0F;
 	}
 
 	@Override

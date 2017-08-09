@@ -4,7 +4,7 @@ import extracells.gui.GuiFluidTerminal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.text.WordUtils;
@@ -28,7 +28,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 
 		List<String> description = new ArrayList<String>();
 		description
-				.add(StatCollector
+				.add(I18n
 						.translateToLocal("gui.tooltips.appliedenergistics2.Craftable"));
 		description.add(this.fluid.getLocalizedName(new FluidStack(this.fluid,
 				1)));
@@ -50,7 +50,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 			drawTexturedModelRectFromIcon(posX + 1, posY + 1,
 					this.fluid.getIcon(), this.height - 2, this.width - 2);
 			GL11.glScalef(0.5F, 0.5F, 0.5F);
-			String str = StatCollector.translateToLocal("extracells.gui.craft");
+			String str = I18n.translateToLocal("extracells.gui.craft");
 			str = WordUtils.capitalize(str.toLowerCase());
 			Minecraft.getMinecraft().fontRenderer.drawString(
 					EnumChatFormatting.WHITE + str, 52 + posX - str.length(),

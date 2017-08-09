@@ -1,20 +1,22 @@
 package extracells.container;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.implementations.ICraftingPatternItem;
+import appeng.api.util.AEPartLocation;
 import extracells.api.IFluidInterface;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.packet.part.PacketFluidInterface;
 import extracells.part.PartFluidInterface;
 import extracells.tileentity.TileEntityFluidInterface;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class ContainerFluidInterface extends Container implements
 		IContainerListener {
@@ -61,11 +63,12 @@ public class ContainerFluidInterface extends Container implements
 		return true;
 	}
 
-	private int getFluidID(ForgeDirection side) {
+	private String getFluidName(AEPartLocation side) {
 		Fluid fluid = this.fluidInterface.getFilter(side);
-		if (fluid == null)
-			return -1;
-		return fluid.getID();
+		if (fluid == null) {
+			return "";
+		}
+		return fluid.getName();
 	}
 
 	@Override
@@ -138,23 +141,23 @@ public class ContainerFluidInterface extends Container implements
 	public void updateContainer() {
 		new PacketFluidInterface(new FluidStack[] {
 				this.fluidInterface.getFluidTank(
-						ForgeDirection.getOrientation(0)).getFluid(),
+						AEPartLocation.fromOrdinal(0)).getFluid(),
 				this.fluidInterface.getFluidTank(
-						ForgeDirection.getOrientation(1)).getFluid(),
+					AEPartLocation.fromOrdinal(1)).getFluid(),
 				this.fluidInterface.getFluidTank(
-						ForgeDirection.getOrientation(2)).getFluid(),
+					AEPartLocation.fromOrdinal(2)).getFluid(),
 				this.fluidInterface.getFluidTank(
-						ForgeDirection.getOrientation(3)).getFluid(),
+					AEPartLocation.fromOrdinal(3)).getFluid(),
 				this.fluidInterface.getFluidTank(
-						ForgeDirection.getOrientation(4)).getFluid(),
+					AEPartLocation.fromOrdinal(4)).getFluid(),
 				this.fluidInterface.getFluidTank(
-						ForgeDirection.getOrientation(5)).getFluid() },
-				new Integer[] { getFluidID(ForgeDirection.getOrientation(0)),
-						getFluidID(ForgeDirection.getOrientation(1)),
-						getFluidID(ForgeDirection.getOrientation(2)),
-						getFluidID(ForgeDirection.getOrientation(3)),
-						getFluidID(ForgeDirection.getOrientation(4)),
-						getFluidID(ForgeDirection.getOrientation(5)) },
+					AEPartLocation.fromOrdinal(5)).getFluid() },
+				new String[] { getFluidName(AEPartLocation.fromOrdinal(0)),
+						getFluidName(AEPartLocation.fromOrdinal(1)),
+						getFluidName(AEPartLocation.fromOrdinal(2)),
+						getFluidName(AEPartLocation.fromOrdinal(3)),
+						getFluidName(AEPartLocation.fromOrdinal(4)),
+						getFluidName(AEPartLocation.fromOrdinal(5)) },
 				this.player).sendPacketToPlayer(this.player);
 
 	}

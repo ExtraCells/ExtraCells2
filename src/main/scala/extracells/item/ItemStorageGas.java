@@ -20,7 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -54,14 +54,14 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
 		boolean partitioned = cellHandler.isFormatted();
 		long usedBytes = cellHandler.usedBytes();
 
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
-		list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
+		list.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
+		list.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
 		if (usedBytes != 0) {
-			list.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.content"), usedBytes));
+			list.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.content"), usedBytes));
 		}
 
 		if (partitioned) {
-			list.add(StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + StatCollector.translateToLocal("gui.appliedenergistics2.Precise"));
+			list.add(I18n.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + I18n.translateToLocal("gui.appliedenergistics2.Precise"));
 		}
 	}
 

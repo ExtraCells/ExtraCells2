@@ -1,5 +1,19 @@
 package extracells.container;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnaceOutput;
+import net.minecraft.item.ItemStack;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fml.common.Optional;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.BaseActionSource;
@@ -9,7 +23,6 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import net.minecraftforge.fml.common.Optional;
 import extracells.api.IPortableGasStorageCell;
 import extracells.api.IWirelessGasTermHandler;
 import extracells.container.slot.SlotPlayerInventory;
@@ -24,15 +37,6 @@ import extracells.util.GasUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import mekanism.api.gas.GasStack;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.MutablePair;
 
 public class ContainerGasStorage extends Container implements
 		IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer,
@@ -78,7 +82,7 @@ public class ContainerGasStorage extends Container implements
 		// Input Slot accepts all FluidContainers
 		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 92));
 		// Input Slot accepts nothing
-		addSlotToContainer(new SlotFurnace(this.player, this.inventory, 1, 26,
+		addSlotToContainer(new SlotFurnaceOutput(this.player, this.inventory, 1, 26,
 				92));
 
 		bindPlayerInventory(this.player.inventory);
@@ -100,7 +104,7 @@ public class ContainerGasStorage extends Container implements
 		// Input Slot accepts gas FluidContainers
 		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 92));
 		// Input Slot accepts nothing
-		addSlotToContainer(new SlotFurnace(this.player, this.inventory, 1, 26,
+		addSlotToContainer(new SlotFurnaceOutput(this.player, this.inventory, 1, 26,
 				92));
 
 		bindPlayerInventory(this.player.inventory);
@@ -122,7 +126,7 @@ public class ContainerGasStorage extends Container implements
 		// Input Slot accepts all FluidContainers
 		addSlotToContainer(new SlotRespective(this.inventory, 0, 8, 92));
 		// Input Slot accepts nothing
-		addSlotToContainer(new SlotFurnace(this.player, this.inventory, 1, 26,
+		addSlotToContainer(new SlotFurnaceOutput(this.player, this.inventory, 1, 26,
 				92));
 
 		bindPlayerInventory(this.player.inventory);
@@ -212,18 +216,18 @@ public class ContainerGasStorage extends Container implements
 				return;
 			if (this.handler != null) {
 				if (!this.handler.hasPower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem())) {
+						this.player.getActiveItemStack())) {
 					return;
 				}
 				this.handler.usePower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem());
+						this.player.getActiveItemStack());
 			} else if (this.storageCell != null) {
 				if (!this.storageCell.hasPower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem())) {
+						this.player.getActiveItemStack())) {
 					return;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem());
+						this.player.getActiveItemStack());
 			}
 			ItemStack emptyContainer  = drainedContainer.getRight();
 			if(emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1){
@@ -244,18 +248,18 @@ public class ContainerGasStorage extends Container implements
 		if (secondSlot == null) {
 			if (this.handler != null) {
 				if (!this.handler.hasPower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem())) {
+						this.player.getActiveItemStack())) {
 					return false;
 				}
 				this.handler.usePower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem());
+						this.player.getActiveItemStack());
 			} else if (this.storageCell != null) {
 				if (!this.storageCell.hasPower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem())) {
+						this.player.getActiveItemStack())) {
 					return false;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem());
+						this.player.getActiveItemStack());
 			}
 			this.inventory.setInventorySlotContents(1, itemStack);
 			return true;
@@ -265,18 +269,18 @@ public class ContainerGasStorage extends Container implements
 				return false;
 			if (this.handler != null) {
 				if (!this.handler.hasPower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem())) {
+						this.player.getActiveItemStack())) {
 					return false;
 				}
 				this.handler.usePower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem());
+						this.player.getActiveItemStack());
 			}else if (this.storageCell != null) {
 				if (!this.storageCell.hasPower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem())) {
+						this.player.getActiveItemStack())) {
 					return false;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
-						this.player.getCurrentEquippedItem());
+						this.player.getActiveItemStack());
 			}
 			this.inventory.incrStackSize(1, itemStack.stackSize);
 			return true;
@@ -322,7 +326,7 @@ public class ContainerGasStorage extends Container implements
 		if (!entityPlayer.worldObj.isRemote) {
 			this.monitor.removeListener(this);
 			for (int i = 0; i < 2; i++)
-				this.player.dropPlayerItemWithRandomChoice(
+				this.player.dropItem(
 						((Slot) this.inventorySlots.get(i)).getStack(), false);
 		}
 	}
@@ -365,15 +369,15 @@ public class ContainerGasStorage extends Container implements
 	public void removeEnergyTick() {
 		if (this.handler != null) {
 			if (this.handler.hasPower(this.player, 1.0D,
-					this.player.getCurrentEquippedItem())) {
+					this.player.getActiveItemStack())) {
 				this.handler.usePower(this.player, 1.0D,
-						this.player.getCurrentEquippedItem());
+						this.player.getActiveItemStack());
 			}
 		} else if (this.storageCell != null) {
 			if (this.storageCell.hasPower(this.player, 0.5D,
-					this.player.getCurrentEquippedItem())) {
+					this.player.getActiveItemStack())) {
 				this.storageCell.usePower(this.player, 0.5D,
-						this.player.getCurrentEquippedItem());
+						this.player.getActiveItemStack());
 			}
 		}
 	}

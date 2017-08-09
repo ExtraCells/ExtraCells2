@@ -1,35 +1,30 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.AEColor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.render.TextureManager;
+import appeng.api.util.AECableType;
 import extracells.util.PermissionUtil;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PartFluidExport extends PartFluidIO {
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 5;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 5.0F;
 	}
 
 	@Override
@@ -62,7 +57,7 @@ public class PartFluidExport extends PartFluidIO {
 
 				if (stack == null)
 					continue;
-				int filled = facingTank.fill(getSide().getOpposite(), stack.getFluidStack(), true);
+				int filled = facingTank.fill(stack.getFluidStack(), true);
 
 				if (filled > 0) {
 					extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE);
@@ -88,15 +83,14 @@ public class PartFluidExport extends PartFluidIO {
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
-		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
-				(IPart) this)) {
-			return super.onActivate(player, pos);
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
+		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)) {
+			return super.onActivate(player, hand, pos);
 		}
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		Tessellator ts = Tessellator.instance;
@@ -154,5 +148,5 @@ public class PartFluidExport extends PartFluidIO {
 
 		rh.setBounds(6, 6, 11, 10, 10, 12);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 }

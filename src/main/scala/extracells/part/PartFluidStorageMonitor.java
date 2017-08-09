@@ -34,7 +34,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -108,10 +108,10 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		long amount = 0L;
 		Fluid fluid = null;
 		if (data.hasKey("locked") && data.getBoolean("locked"))
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("waila.appliedenergistics2.Locked"));
 		else
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("waila.appliedenergistics2.Unlocked"));
 		if (data.hasKey("amount"))
 			amount = data.getLong("amount");
@@ -121,25 +121,25 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 				fluid = FluidRegistry.getFluid(id);
 		}
 		if (fluid != null) {
-			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
+			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
 					+ ": "
 					+ fluid.getLocalizedName(new FluidStack(fluid,
 							FluidContainerRegistry.BUCKET_VOLUME)));
 			if (isActive())
-				list.add(StatCollector
+				list.add(I18n
 						.translateToLocal("extracells.tooltip.amount")
 						+ ": "
 						+ amount + "mB");
 			else
-				list.add(StatCollector
+				list.add(I18n
 						.translateToLocal("extracells.tooltip.amount")
 						+ ": 0mB");
 		} else {
-			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
+			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
 					+ ": "
-					+ StatCollector
+					+ I18n
 							.translateToLocal("extracells.tooltip.empty1"));
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("extracells.tooltip.amount") + ": 0mB");
 		}
 		return list;

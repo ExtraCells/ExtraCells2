@@ -17,6 +17,9 @@ import appeng.api.storage.data.IItemList;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+
+import appeng.api.util.AECableType;
+import appeng.parts.automation.PartLevelEmitter;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.GuiFluidEmitter;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
@@ -51,8 +54,8 @@ public class PartFluidLevelEmitter extends PartECBase implements
 	private boolean clientRedstoneOutput = false;
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 8;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 16.0F;
 	}
 
 	public void changeWantedAmount(int modifier, EntityPlayer player) {

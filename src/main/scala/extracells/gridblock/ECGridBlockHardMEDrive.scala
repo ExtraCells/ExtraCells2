@@ -5,6 +5,7 @@ import java.util.EnumSet
 import appeng.api.networking._
 import appeng.api.util.{AEColor, DimensionalCoord}
 import extracells.tileentity.TileEntityHardMeDrive
+import net.minecraft.block.state.IBlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
@@ -31,7 +32,8 @@ class ECGridBlockHardMEDrive(host: TileEntityHardMeDrive) extends IGridBlock{
   override def getMachineRepresentation: ItemStack = {
     val loc: DimensionalCoord = getLocation
     if (loc == null) return null
-    new ItemStack(loc.getWorld.getBlockState(new BlockPos(loc.x, loc.y, loc.z)).getBlock, 1, 0)
+    val blockState: IBlockState = loc.getWorld.getBlockState(loc.getPos)
+    new ItemStack(blockState.getBlock, 1, 0)
   }
 
   override def gridChanged {}

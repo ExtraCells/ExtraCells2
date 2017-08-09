@@ -49,7 +49,6 @@ object Extracells {
 		AEApi.instance.registries.wireless.registerWirelessHandler(new AEWirelessTermHandler)
 		AEApi.instance.registries.cell.addCellHandler(new FluidCellHandler)
 		val handler = new ExtraCellsEventHandler
-		FMLCommonHandler.instance.bus.register(handler)
 		MinecraftForge.EVENT_BUS.register(handler)
 		proxy.registerMovables
 		proxy.registerRenderers

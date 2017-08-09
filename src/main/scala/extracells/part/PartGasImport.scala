@@ -12,7 +12,7 @@ import extracells.integration.Integration
 import extracells.integration.mekanism.gas.MekanismGas
 import extracells.util.{FluidUtil, GasUtil}
 import mekanism.api.gas.{Gas, GasStack, IGasHandler}
-import net.minecraftforge.common.util.ForgeDirection
+import net.minecraft.util.EnumFacing
 import net.minecraftforge.fluids.{Fluid, FluidStack}
 
 
@@ -68,7 +68,7 @@ class PartGasImport extends PartFluidImport with IGasHandler{
   override protected def fillToNetwork(fluid: Fluid, toDrain: Int): Boolean = {
     var drained: GasStack = null
     val facingTank: IGasHandler = getFacingGasTank
-    val side: ForgeDirection = getSide
+    val side: EnumFacing = getSide
     val gasType = {
       if (fluid == null)
         null
@@ -107,7 +107,7 @@ class PartGasImport extends PartFluidImport with IGasHandler{
   }
 
   @Method(modid = "MekanismAPI|gas")
-  override def receiveGas(side: ForgeDirection, stack: GasStack, doTransfer: Boolean): Int = {
+  override def receiveGas(side: EnumFacing, stack: GasStack, doTransfer: Boolean): Int = {
     if (stack == null || stack.amount <= 0 || ! canReceiveGas(side, stack.getGas))
       return 0
     val amount = Math.min(stack.amount, 125 + this.speedState * 125)
@@ -130,19 +130,13 @@ class PartGasImport extends PartFluidImport with IGasHandler{
   }
 
   @Method(modid = "MekanismAPI|gas")
-  override def receiveGas(side: ForgeDirection, stack: GasStack): Int = receiveGas(side, stack, true)
+  override def drawGas(side: EnumFacing, amount: Int, doTransfer: Boolean): GasStack = null
 
   @Method(modid = "MekanismAPI|gas")
-  override def drawGas(side: ForgeDirection, amount: Int, doTransfer: Boolean): GasStack = null
+  override def canDrawGas(side: EnumFacing, gasType: Gas): Boolean = false
 
   @Method(modid = "MekanismAPI|gas")
-  override def drawGas(side: ForgeDirection, amount: Int): GasStack = drawGas(side, amount, true)
-
-  @Method(modid = "MekanismAPI|gas")
-  override def canDrawGas(side: ForgeDirection, gasType: Gas): Boolean = false
-
-  @Method(modid = "MekanismAPI|gas")
-  override def canReceiveGas(side: ForgeDirection, gasType: Gas): Boolean = {
+  override def canReceiveGas(side: EnumFacing, gasType: Gas): Boolean = {
     val fluid = MekanismGas.getFluidGasMap.get(gasType)
     var isEmpty = true
     for(filter <- filterFluids){

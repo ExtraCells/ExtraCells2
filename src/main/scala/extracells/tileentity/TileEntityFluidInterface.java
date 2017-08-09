@@ -46,7 +46,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 
@@ -421,7 +421,7 @@ public class TileEntityFluidInterface extends TileBase implements
 			ForgeDirection side) {
 		if (side == null || side == ForgeDirection.UNKNOWN)
 			return list;
-		list.add(StatCollector.translateToLocal("extracells.tooltip.direction."
+		list.add(I18n.translateToLocal("extracells.tooltip.direction."
 				+ side.ordinal()));
 		FluidTank[] tanks = new FluidTank[6];
 		for (int i = 0; i < tanks.length; i++) {
@@ -447,17 +447,17 @@ public class TileEntityFluidInterface extends TileBase implements
 		FluidTank tank = tanks[side.ordinal()];
 		if (tank == null || tank.getFluid() == null
 				|| tank.getFluid().getFluid() == null) {
-			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
+			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
 					+ ": "
-					+ StatCollector
+					+ I18n
 							.translateToLocal("extracells.tooltip.empty1"));
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("extracells.tooltip.amount")
 					+ ": 0mB / 10000mB");
 		} else {
-			list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
+			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
 					+ ": " + tank.getFluid().getLocalizedName());
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("extracells.tooltip.amount")
 					+ ": "
 					+ tank.getFluidAmount() + "mB / 10000mB");

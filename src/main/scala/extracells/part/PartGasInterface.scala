@@ -1,6 +1,7 @@
 package extracells.part
 
 import appeng.api.parts.{IPartCollisionHelper, IPartRenderHelper}
+import appeng.api.util.AECableType
 import net.minecraftforge.fml.common.Optional.Method
 import extracells.integration.mekanism.gas.GasInterfaceBase
 import mekanism.api.gas.GasTank
@@ -11,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection
 class PartGasInterface extends PartECBase with GasInterfaceBase{
   var fluidFilter = -1
 
-  override def cableConnectionRenderTo(): Int = ???
+  override def getCableConnectionLength(aeCableType: AECableType): Float = ???
 
   override def renderStatic(x: Int, y: Int, z: Int, rh: IPartRenderHelper, renderer: RenderBlocks): Unit = ???
 

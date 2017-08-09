@@ -33,7 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.I18n;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -239,12 +239,12 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	public List<String> getWailaBodey(NBTTagCompound data, List<String> list) {
 		super.getWailaBodey(data, list);
 		if (data.hasKey("name"))
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("extracells.tooltip.oredict")
 					+ ": "
 					+ data.getString("name"));
 		else
-			list.add(StatCollector
+			list.add(I18n
 					.translateToLocal("extracells.tooltip.oredict") + ":");
 		return list;
 	}

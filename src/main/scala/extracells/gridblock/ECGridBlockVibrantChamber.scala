@@ -5,7 +5,9 @@ import java.util.EnumSet
 import appeng.api.networking._
 import appeng.api.util.{AEColor, DimensionalCoord}
 import extracells.tileentity.TileEntityVibrationChamberFluid
+import net.minecraft.block.state.IBlockState
 import net.minecraft.item.ItemStack
+import net.minecraft.util.EnumFacing
 import net.minecraftforge.common.util.ForgeDirection
 
 
@@ -13,13 +15,13 @@ class ECGridBlockVibrantChamber(host: TileEntityVibrationChamberFluid) extends I
   protected var grid: IGrid = null
   protected var usedChannels: Int = 0
 
-  override def getConnectableSides: EnumSet[ForgeDirection] =
-    EnumSet.of(ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH,
-      ForgeDirection.WEST)
+  override def getConnectableSides: EnumSet[EnumFacing] =
+    EnumSet.of(EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH,
+      EnumFacing.WEST)
 
   override def getFlags: EnumSet[GridFlags] = EnumSet.noneOf(classOf[GridFlags])
 
-  override def getGridColor = AEColor.Transparent
+  override def getGridColor = AEColor.TRANSPARENT
 
   override def getIdlePowerUsage = host.getPowerUsage
 
@@ -30,7 +32,8 @@ class ECGridBlockVibrantChamber(host: TileEntityVibrationChamberFluid) extends I
   override def getMachineRepresentation: ItemStack = {
     val loc: DimensionalCoord = getLocation
     if (loc == null) return null
-    new ItemStack(loc.getWorld.getBlock(loc.x, loc.y, loc.z), 1, loc.getWorld.getBlockMetadata(loc.x, loc.y, loc.z))
+    val blockState: IBlockState = loc.getWorld.getBlockState(loc.getPos)
+    new ItemStack(blockState.getBlock, 1, blockState.getBlock.getMetaFromState(blockState))
   }
 
   override def gridChanged {}
