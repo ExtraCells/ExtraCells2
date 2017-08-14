@@ -10,7 +10,7 @@ import net.minecraft.item.{Item, ItemStack}
 
 object Nei {
 
-  def hideItems = {
+  /*def hideItems = {
     API.hideItem(new ItemStack(ItemEnum.FLUIDITEM.getItem))
     API.hideItem(new ItemStack(ItemEnum.CRAFTINGPATTERN.getItem))
     for (item <- ItemEnum.values()) {
@@ -46,6 +46,6 @@ object Nei {
       API.registerRecipeHandler(handler)
     }
 
-  }
+  }*/
 
 }

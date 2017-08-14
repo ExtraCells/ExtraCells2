@@ -2,21 +2,16 @@ package extracells.integration.opencomputers;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.api.util.AEPartLocation;
 import extracells.part.PartGasExport;
-import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.util.GasUtil;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentAware;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
@@ -29,37 +24,15 @@ import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import mekanism.api.gas.GasStack;
 
-public class DriverGasExportBus implements li.cil.oc.api.driver.Block, EnvironmentAware{
+public class DriverGasExportBus extends DriverBase<PartGasExport>{
 
-    @Override
-    public boolean worksWith(World world, BlockPos pos) {
-        return getExportBus(world, pos, null) != null;
+    public DriverGasExportBus() {
+        super(PartEnum.GASEXPORT, Enviroment.class);
     }
 
     @Override
-    public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
-        if (tile == null || (!(tile instanceof IPartHost)))
-            return null;
-        return new Enviroment((IPartHost) tile);
-    }
-
-    private static PartGasExport getExportBus(World world, BlockPos pos, AEPartLocation dir){
-        TileEntity tile = world.getTileEntity(pos);
-        if (tile == null || (!(tile instanceof IPartHost)))
-            return null;
-        IPartHost host = (IPartHost) tile;
-        if(dir == null || dir == AEPartLocation.INTERNAL){
-            for (AEPartLocation side: AEPartLocation.SIDE_LOCATIONS){
-                IPart part = host.getPart(side);
-                if (part != null && part instanceof PartGasExport && !(part instanceof PartGasExport))
-                    return (PartGasExport) part;
-            }
-            return null;
-        }else{
-            IPart part = host.getPart(dir);
-            return part == null ? null : part instanceof PartGasExport ? null :(PartGasExport) part;
-        }
+    protected ManagedEnvironment createEnvironment(IPartHost host) {
+        return new Enviroment(host);
     }
 
     public class Enviroment extends ManagedEnvironment implements NamedBlock{
@@ -80,7 +53,7 @@ public class DriverGasExportBus implements li.cil.oc.api.driver.Block, Environme
             AEPartLocation dir =  AEPartLocation.fromOrdinal(args.checkInteger(0));
             if (dir == null || dir == AEPartLocation.INTERNAL)
                 return new Object[]{null, "unknown side"};
-            PartGasExport part = getExportBus(tile.getWorld(), tile.getPos(), dir);
+            PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
             if (part == null)
                 return new Object[]{null, "no export bus"};
             int slot = args.optInteger(1, 4);
@@ -100,7 +73,7 @@ public class DriverGasExportBus implements li.cil.oc.api.driver.Block, Environme
             AEPartLocation dir =  AEPartLocation.fromOrdinal(args.checkInteger(0));
             if (dir == null || dir == AEPartLocation.INTERNAL)
                 return new Object[]{null, "unknown side"};
-            PartGasExport part = getExportBus(tile.getWorld(), tile.getPos(), dir);
+            PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
             if (part == null)
                 return new Object[]{null, "no export bus"};
             int slot;
@@ -158,7 +131,7 @@ public class DriverGasExportBus implements li.cil.oc.api.driver.Block, Environme
             AEPartLocation dir =  AEPartLocation.fromOrdinal(args.checkInteger(0));
             if (dir == null || dir == AEPartLocation.INTERNAL)
                 return new Object[]{null, "unknown side"};
-            PartGasExport part = getExportBus(tile.getWorld(), tile.getPos(), dir);
+            PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
             if (part == null)
                 return new Object[]{false, "no export bus"};
             if (part.getFacingGasTank() == null)
@@ -180,15 +153,6 @@ public class DriverGasExportBus implements li.cil.oc.api.driver.Block, Environme
             return 2;
         }
 
-    }
-
-    @Override
-    public Class<? extends Environment> providedEnvironment(ItemStack stack) {
-        if(stack == null)
-            return null;
-        if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.FLUIDEXPORT.ordinal())
-            return Enviroment.class;
-        return null;
     }
 
 }

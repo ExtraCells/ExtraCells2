@@ -1,62 +1,37 @@
 package extracells.integration.opencomputers;
 
-import appeng.api.parts.IPart;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.parts.IPartHost;
+import appeng.api.util.AEPartLocation;
 import extracells.part.PartFluidImport;
-import extracells.part.PartGasImport;
-import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.util.FluidUtil;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentAware;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import li.cil.oc.server.network.Component;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
-public class DriverFluidImportBus implements li.cil.oc.api.driver.Block, EnvironmentAware{
+public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 
-	@Override
-	public boolean worksWith(World world, int x, int y, int z) {
-		return getImportBus(world, x, y, z, ForgeDirection.UNKNOWN) != null;
+	public DriverFluidImportBus() {
+		super(PartEnum.FLUIDIMPORT, Enviroment.class);
 	}
 
 	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile == null || (!(tile instanceof IPartHost)))
-			return null;
-		return new Enviroment((IPartHost) tile);
-	}
-	
-	private static PartFluidImport getImportBus(World world, int x, int y, int z, ForgeDirection dir){
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile == null || (!(tile instanceof IPartHost)))
-			return null;
-		IPartHost host = (IPartHost) tile;
-		if(dir == null || dir == ForgeDirection.UNKNOWN){
-			for (ForgeDirection side: ForgeDirection.VALID_DIRECTIONS){
-				IPart part = host.getPart(side);
-				if (part != null && part instanceof PartFluidImport &&!(part instanceof PartGasImport))
-					return (PartFluidImport) part;
-			}
-			return null;
-		}else{
-			IPart part = host.getPart(dir);
-			return part == null ? null : part instanceof PartGasImport ? null : (PartFluidImport) part;
-		}
+	protected ManagedEnvironment createEnvironment(IPartHost host) {
+		return new Enviroment(host);
 	}
 	
 	public class Enviroment extends ManagedEnvironment implements NamedBlock{
@@ -74,10 +49,10 @@ public class DriverFluidImportBus implements li.cil.oc.api.driver.Block, Environ
 
 		@Callback(doc = "function(side:number, [ slot:number]):table -- Get the configuration of the fluid import bus pointing in the specified direction.")
 		public Object[] getFluidImportConfiguration(Context context, Arguments args){
-			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-			if (dir == null || dir == ForgeDirection.UNKNOWN)
+			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{null, "unknown side"};
-			PartFluidImport part = getImportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+			PartFluidImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{null, "no export bus"};
 			int slot = args.optInteger(1, 4);
@@ -94,10 +69,10 @@ public class DriverFluidImportBus implements li.cil.oc.api.driver.Block, Environ
 		
 		@Callback(doc = "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the fluid import bus pointing in the specified direction to export fluid stacks matching the specified descriptor.")
 		public Object[] setFluidImportConfiguration(Context context, Arguments args){
-			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-			if (dir == null || dir == ForgeDirection.UNKNOWN)
+			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{null, "unknown side"};
-			PartFluidImport part = getImportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+			PartFluidImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{null, "no export bus"};
 			int slot;
@@ -177,15 +152,6 @@ public class DriverFluidImportBus implements li.cil.oc.api.driver.Block, Environ
 			return 1;
 		}
 		
-	}
-	
-	@Override
-	public Class<? extends Environment> providedEnvironment(ItemStack stack) {
-		if(stack == null)
-			return null;
-		if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.FLUIDEXPORT.ordinal())
-			return Enviroment.class;
-		return null;
 	}
 
 }

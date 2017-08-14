@@ -1,62 +1,36 @@
 package extracells.integration.opencomputers;
 
-import appeng.api.parts.IPart;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.parts.IPartHost;
+import appeng.api.util.AEPartLocation;
 import extracells.part.PartFluidExport;
-import extracells.part.PartGasExport;
-import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.util.FluidUtil;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentAware;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import li.cil.oc.server.network.Component;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
-public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, EnvironmentAware{
-
-	@Override
-	public boolean worksWith(World world, int x, int y, int z) {
-		return getExportBus(world, x, y, z, ForgeDirection.UNKNOWN) != null;
+public class DriverFluidExportBus extends DriverBase<PartFluidExport>{
+	public DriverFluidExportBus() {
+		super(PartEnum.FLUIDEXPORT, Enviroment.class);
 	}
 
 	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile == null || (!(tile instanceof IPartHost)))
-			return null;
-		return new Enviroment((IPartHost) tile);
-	}
-	
-	private static PartFluidExport getExportBus(World world, int x, int y, int z, ForgeDirection dir){
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile == null || (!(tile instanceof IPartHost)))
-			return null;
-		IPartHost host = (IPartHost) tile;
-		if(dir == null || dir == ForgeDirection.UNKNOWN){
-			for (ForgeDirection side: ForgeDirection.VALID_DIRECTIONS){
-				IPart part = host.getPart(side);
-				if (part != null && part instanceof PartFluidExport && !(part instanceof PartGasExport))
-					return (PartFluidExport) part;
-			}
-			return null;
-		}else{
-			IPart part = host.getPart(dir);
-			return part == null ? null : part instanceof PartGasExport ? null :(PartFluidExport) part;
-		}
+	protected ManagedEnvironment createEnvironment(IPartHost host) {
+		return new Enviroment(host);
 	}
 	
 	public class Enviroment extends ManagedEnvironment implements NamedBlock{
@@ -74,10 +48,10 @@ public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, Environ
 
 		@Callback(doc = "function(side:number, [ slot:number]):table -- Get the configuration of the fluid export bus pointing in the specified direction.")
 		public Object[] getFluidExportConfiguration(Context context, Arguments args){
-			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-			if (dir == null || dir == ForgeDirection.UNKNOWN)
+			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{null, "unknown side"};
-			PartFluidExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{null, "no export bus"};
 			int slot = args.optInteger(1, 4);
@@ -94,10 +68,10 @@ public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, Environ
 		
 		@Callback(doc = "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the fluid export bus pointing in the specified direction to export fluid stacks matching the specified descriptor.")
 		public Object[] setFluidExportConfiguration(Context context, Arguments args){
-			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-			if (dir == null || dir == ForgeDirection.UNKNOWN)
+			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{null, "unknown side"};
-			PartFluidExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{null, "no export bus"};
 			int slot;
@@ -152,10 +126,10 @@ public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, Environ
 		
 		@Callback(doc = "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single export operation.")
 		public Object[] exportFluid(Context context, Arguments args){
-			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-			if (dir == null || dir == ForgeDirection.UNKNOWN)
-				return new Object[]{false, "unknown side"};
-			PartFluidExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+			if (dir == null || dir == AEPartLocation.INTERNAL)
+				return new Object[]{null, "unknown side"};
+			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{false, "no export bus"};
 			if (part.getFacingTank() == null)
@@ -177,15 +151,6 @@ public class DriverFluidExportBus implements li.cil.oc.api.driver.Block, Environ
 			return 2;
 		}
 		
-	}
-	
-	@Override
-	public Class<? extends Environment> providedEnvironment(ItemStack stack) {
-		if(stack == null)
-			return null;
-		if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.FLUIDEXPORT.ordinal())
-			return Enviroment.class;
-		return null;
 	}
 
 }

@@ -1,7 +1,17 @@
 package extracells.integration.opencomputers;
 
-import appeng.api.parts.IPart;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.parts.IPartHost;
+import appeng.api.util.AEPartLocation;
 import extracells.api.IFluidInterface;
 import extracells.part.PartFluidInterface;
 import extracells.registries.BlockEnum;
@@ -10,61 +20,38 @@ import extracells.registries.PartEnum;
 import extracells.tileentity.TileEntityFluidInterface;
 import extracells.util.FluidUtil;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentAware;
+import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import li.cil.oc.server.network.Component;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
-public class DriverFluidInterface implements li.cil.oc.api.driver.Block, EnvironmentAware{
+public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 
 	@Override
-	public boolean worksWith(World world, int x, int y, int z) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public boolean worksWith(World world, BlockPos pos, EnumFacing facing) {
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile == null)
 			return false;
-		return getFluidInterface(world, x, y, z, ForgeDirection.UNKNOWN) != null || tile instanceof IFluidInterface;
+		PartFluidInterface partFluidInterface = OCUtils.getPart(world, pos, AEPartLocation.INTERNAL);
+		return partFluidInterface != null || tile instanceof IFluidInterface;
 	}
 
 	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-		TileEntity tile = world.getTileEntity(x, y, z);
+	public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
+		TileEntity tile = world.getTileEntity(pos);
 		if (tile == null || (!(tile instanceof IPartHost || tile instanceof IFluidInterface)))
 			return null;
 		return new Enviroment(tile);
 	}
-	
-	private static PartFluidInterface getFluidInterface(World world, int x, int y, int z, ForgeDirection dir){
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile == null || (!(tile instanceof IPartHost)))
-			return null;
-		IPartHost host = (IPartHost) tile;
-		if(dir == null || dir == ForgeDirection.UNKNOWN){
-			for (ForgeDirection side: ForgeDirection.VALID_DIRECTIONS){
-				IPart part = host.getPart(side);
-				if (part != null && part instanceof PartFluidInterface)
-					return (PartFluidInterface) part;
-			}
-			return null;
-		}else{
-			IPart part = host.getPart(dir);
-			return part == null ? null : (PartFluidInterface) part;
-		}
-	}
-	
+
 	public class Enviroment extends ManagedEnvironment implements NamedBlock{
 		
 		protected final TileEntity tile;
@@ -80,8 +67,8 @@ public class DriverFluidInterface implements li.cil.oc.api.driver.Block, Environ
 
 		@Callback(doc = "function(side:number):table -- Get the configuration of the fluid interface on the specified direction.")
 		public Object[] getFluidInterfaceConfiguration(Context context, Arguments args){
-			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-			if (dir == null || dir == ForgeDirection.UNKNOWN)
+			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{null, "unknown side"};
 			if (tile instanceof TileEntityFluidInterface){
 				TileEntityFluidInterface fluidInterface = (TileEntityFluidInterface) tile;
@@ -90,7 +77,7 @@ public class DriverFluidInterface implements li.cil.oc.api.driver.Block, Environ
 					return new Object[]{null};
 				return new Object[]{new FluidStack(fluid, 1000)};
 			}
-			PartFluidInterface part = getFluidInterface(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+			PartFluidInterface part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{null, "no interface"};
 			Fluid fluid = part.getFilter(dir);
@@ -102,10 +89,10 @@ public class DriverFluidInterface implements li.cil.oc.api.driver.Block, Environ
 		
 		@Callback(doc = "function(side:number[, database:address, entry:number]):boolean -- Configure the filter in fluid interface on the specified direction.")
 		public Object[] setFluidInterfaceConfiguration(Context context, Arguments args){
-			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-			if (dir == null || dir == ForgeDirection.UNKNOWN)
+			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{null, "unknown side"};
-			IFluidInterface part = tile instanceof IFluidInterface ? (IFluidInterface) tile : getFluidInterface(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+			IFluidInterface part = tile instanceof IFluidInterface ? (IFluidInterface) tile : OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{null, "no export bus"};
 			String address;
@@ -158,7 +145,7 @@ public class DriverFluidInterface implements li.cil.oc.api.driver.Block, Environ
 	}
 
 	@Override
-	public Class<? extends Environment> providedEnvironment(ItemStack stack) {
+	public Class<?> getEnvironment(ItemStack stack) {
 		if(stack == null)
 			return null;
 		if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.INTERFACE.ordinal())
@@ -167,5 +154,4 @@ public class DriverFluidInterface implements li.cil.oc.api.driver.Block, Environ
 			return Enviroment.class;
 		return null;
 	}
-
 }

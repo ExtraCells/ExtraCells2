@@ -1,124 +1,99 @@
 package extracells.integration.opencomputers;
 
-import appeng.api.parts.IPart;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.parts.IPartHost;
-import extracells.part.PartFluidImport;
+import appeng.api.util.AEPartLocation;
 import extracells.part.PartGasImport;
-import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.util.GasUtil;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentAware;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import li.cil.oc.server.network.Component;
 import mekanism.api.gas.GasStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
-public class DriverGasImportBus implements li.cil.oc.api.driver.Block, EnvironmentAware{
+public class DriverGasImportBus extends DriverBase<PartGasImport>{
 
-    @Override
-    public boolean worksWith(World world, int x, int y, int z) {
-        return getImportBus(world, x, y, z, ForgeDirection.UNKNOWN) != null;
+    public DriverGasImportBus() {
+        super(PartEnum.GASIMPORT, Enviroment.class);
     }
 
     @Override
-    public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile == null || (!(tile instanceof IPartHost)))
-            return null;
-        return new Enviroment((IPartHost) tile);
+    protected ManagedEnvironment createEnvironment(IPartHost host) {
+        return new Enviroment(host);
     }
 
-    private static PartGasImport getImportBus(World world, int x, int y, int z, ForgeDirection dir){
-        TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile == null || (!(tile instanceof IPartHost)))
-            return null;
-        IPartHost host = (IPartHost) tile;
-        if(dir == null || dir == ForgeDirection.UNKNOWN){
-            for (ForgeDirection side: ForgeDirection.VALID_DIRECTIONS){
-                IPart part = host.getPart(side);
-                if (part != null && part instanceof PartGasImport)
-                    return (PartGasImport) part;
-            }
-            return null;
-        }else{
-            IPart part = host.getPart(dir);
-            return part == null ? null : (PartGasImport) part;
-        }
-    }
-
-    public class Enviroment extends ManagedEnvironment implements NamedBlock{
+    public class Enviroment extends ManagedEnvironment implements NamedBlock {
 
         protected final TileEntity tile;
         protected final IPartHost host;
 
-        public Enviroment(IPartHost host){
+        public Enviroment(IPartHost host) {
             tile = (TileEntity) host;
             this.host = host;
             setNode(Network.newNode(this, Visibility.Network).
-                    withComponent("me_importbus").
-                    create());
+                withComponent("me_importbus").
+                create());
         }
 
         @Callback(doc = "function(side:number, [ slot:number]):table -- Get the configuration of the gas import bus pointing in the specified direction.")
-        public Object[] getGasImportConfiguration(Context context, Arguments args){
-            ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-            if (dir == null || dir == ForgeDirection.UNKNOWN)
+        public Object[] getGasImportConfiguration(Context context, Arguments args) {
+            AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+            if (dir == null || dir == AEPartLocation.INTERNAL)
                 return new Object[]{null, "unknown side"};
-            PartFluidImport part = getImportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+            PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
             if (part == null)
                 return new Object[]{null, "no export bus"};
             int slot = args.optInteger(1, 4);
-            try{
+            try {
                 Fluid fluid = part.filterFluids[slot];
                 if (fluid == null)
                     return new Object[]{null};
                 return new Object[]{GasUtil.getGasStack(new FluidStack(fluid, 1000))};
-            }catch(Throwable e){
+            } catch (Throwable e) {
                 return new Object[]{null, "Invalid slot"};
             }
 
         }
 
         @Callback(doc = "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the gas import bus pointing in the specified direction to export gas stacks matching the specified descriptor.")
-        public Object[] setFluidImportConfiguration(Context context, Arguments args){
-            ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-            if (dir == null || dir == ForgeDirection.UNKNOWN)
+        public Object[] setFluidImportConfiguration(Context context, Arguments args) {
+            AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+            if (dir == null || dir == AEPartLocation.INTERNAL)
                 return new Object[]{null, "unknown side"};
-            PartGasImport part = getImportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+            PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
             if (part == null)
                 return new Object[]{null, "no export bus"};
             int slot;
             String address;
             int entry;
-            if (args.count() == 3){
+            if (args.count() == 3) {
                 address = args.checkString(1);
                 entry = args.checkInteger(2);
                 slot = 4;
-            }else if (args.count() < 3){
+            } else if (args.count() < 3) {
                 slot = args.optInteger(1, 4);
-                try{
+                try {
                     part.filterFluids[slot] = null;
                     part.onInventoryChanged();
                     context.pause(0.5);
                     return new Object[]{true};
-                }catch(Throwable e){
+                } catch (Throwable e) {
                     return new Object[]{false, "invalid slot"};
                 }
-            }else{
+            } else {
                 slot = args.optInteger(1, 4);
                 address = args.checkString(2);
                 entry = args.checkInteger(3);
@@ -133,20 +108,20 @@ public class DriverGasImportBus implements li.cil.oc.api.driver.Block, Environme
             if (!(env instanceof Database))
                 throw new IllegalArgumentException("not a database");
             Database database = (Database) env;
-            try{
+            try {
                 ItemStack data = database.getStackInSlot(entry - 1);
                 if (data == null)
                     part.filterFluids[slot] = null;
-                else{
+                else {
                     GasStack fluid = GasUtil.getGasFromContainer(data);
-                    if(fluid == null || fluid.getGas() == null)
+                    if (fluid == null || fluid.getGas() == null)
                         return new Object[]{false, "not a fluid container"};
                     part.filterFluids[slot] = GasUtil.getFluidStack(fluid).getFluid();
                 }
                 part.onInventoryChanged();
                 context.pause(0.5);
                 return new Object[]{true};
-            }catch(Throwable e){
+            } catch (Throwable e) {
                 return new Object[]{false, "invalid slot"};
             }
         }
@@ -178,15 +153,6 @@ public class DriverGasImportBus implements li.cil.oc.api.driver.Block, Environme
             return 1;
         }
 
-    }
-
-    @Override
-    public Class<? extends Environment> providedEnvironment(ItemStack stack) {
-        if(stack == null)
-            return null;
-        if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.FLUIDEXPORT.ordinal())
-            return Enviroment.class;
-        return null;
     }
 
 }

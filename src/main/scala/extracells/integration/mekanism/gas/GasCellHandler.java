@@ -1,18 +1,23 @@
 package extracells.integration.mekanism.gas;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+
 import appeng.api.implementations.tiles.IChestOrDrive;
-import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.networking.security.PlayerSource;
-import appeng.api.storage.*;
+import appeng.api.storage.ICellHandler;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.ISaveProvider;
+import appeng.api.storage.IStorageMonitorable;
+import appeng.api.storage.IStorageMonitorableAccessor;
+import appeng.api.storage.StorageChannel;
 import extracells.api.IGasStorageCell;
+import extracells.integration.Capabilities;
 import extracells.inventory.HandlerItemPlayerStorageGas;
 import extracells.inventory.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
-import extracells.render.TextureManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class GasCellHandler implements ICellHandler {
 
@@ -50,7 +55,7 @@ public class GasCellHandler implements ICellHandler {
 		return 1;
 	}
 
-	@Override
+	/*@Override
 	public IIcon getTopTexture_Dark() {
 		return TextureManager.TERMINAL_FRONT.getTextures()[0];
 	}
@@ -63,7 +68,8 @@ public class GasCellHandler implements ICellHandler {
 	@Override
 	public IIcon getTopTexture_Medium() {
 		return TextureManager.TERMINAL_FRONT.getTextures()[1];
-	}
+	}*/
+
 
 	@Override
 	public boolean isCell(ItemStack is) {
@@ -76,8 +82,12 @@ public class GasCellHandler implements ICellHandler {
 			return;
 		}
 		IStorageMonitorable monitorable = null;
-		if (chest != null) {
-			monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
+		if (chest != null && chest instanceof TileEntity) {
+			TileEntity tileEntity = (TileEntity) chest;
+			if(tileEntity.hasCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, null)){
+				IStorageMonitorableAccessor accessor = tileEntity.getCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, null);
+				monitorable = accessor.getInventory(new PlayerSource(player, chest));
+			}
 		}
 		if (monitorable != null) {
 			GuiHandler.launchGui(GuiHandler.getGuiId(4), player, new Object[]{monitorable.getFluidInventory()});

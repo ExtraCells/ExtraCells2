@@ -1,8 +1,9 @@
 package extracells.integration.waila;
 
-import appeng.api.parts.IPartHost;
 import net.minecraftforge.fml.common.Optional;
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+
+import appeng.api.parts.IPartHost;
 import extracells.tileentity.TileEntityCertusTank;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;

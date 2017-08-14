@@ -1,33 +1,35 @@
 package extracells.integration.waila;
 
-import extracells.tileentity.TileEntityCertusTank;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.I18n;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.List;
+import extracells.tileentity.TileEntityCertusTank;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
 
 public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile,
-			NBTTagCompound tag, World world, int x, int y, int z) {
+			NBTTagCompound tag, World world, BlockPos blockPos) {
 		if (tile instanceof TileEntityCertusTank) {
 			if (((TileEntityCertusTank) tile).tank.getFluid() == null)
-				tag.setInteger("fluidID", -1);
+				tag.setString("fluidName", "");
 			else {
-				tag.setInteger("fluidID",
-						((TileEntityCertusTank) tile).tank.getFluid().getFluidID());
+				tag.setString("fluidName",
+						((TileEntityCertusTank) tile).tank.getFluid().getFluid().getName());
 				tag.setInteger("currentFluid",
 						((TileEntityCertusTank) tile).tank.getFluidAmount());
 			}
@@ -43,9 +45,9 @@ public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 		NBTTagCompound tag = accessor.getNBTData();
 		if (tag == null)
 			return list;
-		if (tag.hasKey("fluidID")) {
-			int fluidID = tag.getInteger("fluidID");
-			if (fluidID == -1) {
+		if (tag.hasKey("fluidName")) {
+			String fluidName = tag.getString("fluidName");
+			if (fluidName.isEmpty()) {
 				list.add(I18n
 						.translateToLocal("extracells.tooltip.fluid")
 						+ ": "
@@ -56,12 +58,11 @@ public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 						+ ": 0mB / " + tag.getInteger("maxFluid") + "mB");
 				return list;
 			} else {
-				Fluid fluid = FluidRegistry.getFluid(tag.getInteger("fluidID"));
+				Fluid fluid = FluidRegistry.getFluid(fluidName);
 				list.add(I18n
 						.translateToLocal("extracells.tooltip.fluid")
 						+ ": "
-						+ fluid.getLocalizedName(new FluidStack(fluid,
-								FluidContainerRegistry.BUCKET_VOLUME)));
+						+ fluid.getLocalizedName(new FluidStack(fluid, Fluid.BUCKET_VOLUME)));
 			}
 		} else
 			return list;
@@ -94,5 +95,4 @@ public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 			IWailaConfigHandler config) {
 		return currenttip;
 	}
-
 }

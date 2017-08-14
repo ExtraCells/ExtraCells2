@@ -101,7 +101,7 @@ dependencies {
         transitive = false
 	}
 	deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}"
-	deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}:api"
+	//deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}:api"
 	//compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
     //compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
     //compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"

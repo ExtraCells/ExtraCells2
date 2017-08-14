@@ -7,7 +7,9 @@ import appeng.api.storage.{IMEInventory, StorageChannel}
 import extracells.api.IExternalGasStorageHandler
 import extracells.util.GasUtil
 import mekanism.api.gas.GasTank
+import net.minecraft.client.renderer.EnumFaceDirection
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.EnumFacing
 import net.minecraftforge.common.util.ForgeDirection
 
 
@@ -15,11 +17,11 @@ object HandlerMekanismGasTank extends IExternalGasStorageHandler{
 
   val clazz = Class.forName("mekanism.common.tile.TileEntityGasTank")
 
-  override def canHandle(tile: TileEntity, d: ForgeDirection, mySrc: BaseActionSource): Boolean = {
+  override def canHandle(tile: TileEntity, d: EnumFacing, mySrc: BaseActionSource): Boolean = {
     tile != null && tile.getClass == clazz
   }
 
-  override def getInventory(tile: TileEntity, d: ForgeDirection, src: BaseActionSource): IMEInventory[IAEFluidStack] = {
+  override def getInventory(tile: TileEntity, d: EnumFacing, src: BaseActionSource): IMEInventory[IAEFluidStack] = {
     val tank = getGasTank(tile)
     if(tank == null)
       null

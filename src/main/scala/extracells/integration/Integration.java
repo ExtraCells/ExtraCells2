@@ -1,16 +1,17 @@
 package extracells.integration;
 
+import net.minecraftforge.common.config.Configuration;
+
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModAPIManager;
+import net.minecraftforge.fml.relauncher.Side;
+
 import extracells.Extracells;
 import extracells.integration.igw.IGW;
 import extracells.integration.mekanism.Mekanism;
 import extracells.integration.mekanism.gas.MekanismGas;
-import extracells.integration.nei.Nei;
 import extracells.integration.opencomputers.OpenComputers;
 import extracells.integration.waila.Waila;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModAPIManager;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class Integration {
 	
@@ -100,8 +101,8 @@ public class Integration {
 			Waila.init();
 		if (Mods.OPENCOMPUTERS.isEnabled())
 			OpenComputers.init();
-		if (Mods.NEI.isEnabled())
-			Nei.init();
+		//if (Mods.NEI.isEnabled())
+			//Nei.init();
 		if (Mods.MEKANISMGAS.isEnabled())
 			MekanismGas.init();
 		if (Mods.IGW.isEnabled())

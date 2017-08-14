@@ -1,11 +1,34 @@
 package extracells.integration.opencomputers
 
+import appeng.api.parts.{IPart, IPartHost}
+import appeng.api.util.AEPartLocation
+import extracells.part.PartGasImport
 import li.cil.oc.api.API
 import li.cil.oc.common.item.data.{DroneData, RobotData}
 import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
 
 
 object OCUtils {
+
+  def getPart[P>: IPart ](world: World, pos: BlockPos, location: AEPartLocation): P = {
+    val tile = world.getTileEntity(pos)
+    if (tile == null || (!tile.isInstanceOf[IPartHost])) return null
+    val host = tile.asInstanceOf[IPartHost]
+    if (location == null || (location eq AEPartLocation.INTERNAL)) {
+      for (side <- AEPartLocation.SIDE_LOCATIONS) {
+        val part = host.getPart(side)
+        if (part != null && part.isInstanceOf[P]) return part.asInstanceOf[P]
+      }
+      return null
+    } else {
+      val part = host.getPart(location)
+      return if (part == null || !part.isInstanceOf[P]) null
+      else part.asInstanceOf[P]
+    }
+  }
 
   def isRobot(stack: ItemStack): Boolean = {
     val item = API.items.get(stack)
