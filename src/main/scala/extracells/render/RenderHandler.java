@@ -1,17 +1,8 @@
 package extracells.render;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import extracells.block.BlockCertusTank;
-import extracells.render.model.ModelCertusTank;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
+public class RenderHandler/* implements ISimpleBlockRenderingHandler*/ {
 
-public class RenderHandler implements ISimpleBlockRenderingHandler {
-
-	public static int getId() {
+	/*public static int getId() {
 		return renderID;
 	}
 
@@ -32,7 +23,7 @@ public class RenderHandler implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID,
-			RenderBlocks renderer) {}
+			RenderBlocks renderer) {}ModelFluid
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
@@ -58,5 +49,5 @@ public class RenderHandler implements ISimpleBlockRenderingHandler {
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
 		return true;
-	}
+	}*/
 }

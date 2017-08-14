@@ -219,8 +219,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		return null;
 	}
 
-	public EnumFacing getSide() {
+	public EnumFacing getFacing() {
 		return this.side.getFacing();
+	}
+
+	public AEPartLocation getSide() {
+		return side;
 	}
 
 	public List<String> getWailaBodey(NBTTagCompound tag, List<String> oldList) {

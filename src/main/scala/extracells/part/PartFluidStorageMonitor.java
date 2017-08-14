@@ -1,5 +1,25 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
@@ -8,45 +28,15 @@ import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import appeng.api.util.AEColor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.render.TextureManager;
+import appeng.api.util.AECableType;
 import extracells.util.FluidUtil;
 import extracells.util.WrenchUtil;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.I18n;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import java.io.IOException;
-import java.util.List;
 
 public class PartFluidStorageMonitor extends PartECBase implements IStackWatcherHost {
 
@@ -59,11 +49,11 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	IStackWatcher watcher = null;
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 1;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 1.0F;
 	}
 
-	protected void dropItems(World world, int x, int y, int z, ItemStack stack) {
+	protected void dropItems(World world, BlockPos pos, ItemStack stack) {
 		if (world == null)
 			return;
 		if (!world.isRemote) {
@@ -71,8 +61,8 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			double d0 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
 			double d1 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
 			double d2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
-			EntityItem entityitem = new EntityItem(world, x + d0, y + d1, z + d2, stack);
-			entityitem.delayBeforeCanPickup = 10;
+			EntityItem entityitem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, stack);
+			entityitem.setPickupDelay(10);
 			world.spawnEntityInWorld(entityitem);
 		}
 	}
@@ -116,15 +106,15 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		if (data.hasKey("amount"))
 			amount = data.getLong("amount");
 		if (data.hasKey("fluid")) {
-			int id = data.getInteger("fluid");
-			if (id != -1)
-				fluid = FluidRegistry.getFluid(id);
+			String fluidName = data.getString("fluid");
+			if (!fluidName.isEmpty())
+				fluid = FluidRegistry.getFluid(fluidName);
 		}
 		if (fluid != null) {
 			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
 					+ ": "
 					+ fluid.getLocalizedName(new FluidStack(fluid,
-							FluidContainerRegistry.BUCKET_VOLUME)));
+							Fluid.BUCKET_VOLUME)));
 			if (isActive())
 				list.add(I18n
 						.translateToLocal("extracells.tooltip.amount")
@@ -151,19 +141,19 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		tag.setBoolean("locked", this.locked);
 		tag.setLong("amount", this.amount);
 		if (this.fluid == null)
-			tag.setInteger("fluid", -1);
+			tag.setString("fluid", "");
 		else
-			tag.setInteger("fluid", this.fluid.getID());
+			tag.setString("fluid", this.fluid.getName());
 		return tag;
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		if (player == null || player.worldObj == null)
 			return true;
 		if (player.worldObj.isRemote)
 			return true;
-		ItemStack s = player.getCurrentEquippedItem();
+		ItemStack s = player.getHeldItem(hand);
 		if (s == null) {
 			if (this.locked)
 				return false;
@@ -178,19 +168,17 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 				host.markForUpdate();
 			return true;
 		}
-		if (WrenchUtil.canWrench(s, player, this.tile.xCoord, this.tile.yCoord,
-				this.tile.zCoord)) {
+		if (WrenchUtil.canWrench(s, player, this.tile.getPos())) {
 			this.locked = !this.locked;
-			WrenchUtil.wrenchUsed(s, player, this.tile.xCoord,
-					this.tile.zCoord, this.tile.yCoord);
+			WrenchUtil.wrenchUsed(s, player, this.tile.getPos());
 			IPartHost host = getHost();
 			if (host != null)
 				host.markForUpdate();
 			if (this.locked)
-				player.addChatMessage(new ChatComponentTranslation(
+				player.addChatMessage(new TextComponentTranslation(
 						"chat.appliedenergistics2.isNowLocked"));
 			else
-				player.addChatMessage(new ChatComponentTranslation(
+				player.addChatMessage(new TextComponentTranslation(
 						"chat.appliedenergistics2.isNowUnlocked"));
 			return true;
 		}
@@ -249,11 +237,11 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		if (data.hasKey("amount"))
 			this.amount = data.getLong("amount");
 		if (data.hasKey("fluid")) {
-			int id = data.getInteger("fluid");
-			if (id == -1)
+			String name = data.getString("fluid");
+			if (name.isEmpty())
 				this.fluid = null;
 			else
-				this.fluid = FluidRegistry.getFluid(id);
+				this.fluid = FluidRegistry.getFluid(name);
 		}
 		if (data.hasKey("locked"))
 			this.locked = data.getBoolean("locked");
@@ -263,16 +251,16 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	public boolean readFromStream(ByteBuf data) throws IOException {
 		super.readFromStream(data);
 		this.amount = data.readLong();
-		int id = data.readInt();
-		if (id == -1)
+		String name = ByteBufUtils.readUTF8String(data);
+		if (name.isEmpty())
 			this.fluid = null;
 		else
-			this.fluid = FluidRegistry.getFluid(id);
+			this.fluid = FluidRegistry.getFluid(name);
 		this.locked = data.readBoolean();
 		return true;
 	}
 
-	@Override
+	/*@Override
 	@SideOnly(Side.CLIENT)
 	public void renderDynamic(double x, double y, double z,
 			IPartRenderHelper rh, RenderBlocks renderer) {
@@ -304,7 +292,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	@SideOnly(Side.CLIENT)
 	private void renderFluid(Tessellator tess, IAEFluidStack fluidStack) {
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		ForgeDirection d = this.getSide();
+		ForgeDirection d = this.getFacing();
 		GL11.glTranslated(d.offsetX * 0.77, d.offsetY * 0.77, d.offsetZ * 0.77);
 
 		if (d == ForgeDirection.UP) {
@@ -478,7 +466,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 
 		rh.setBounds(5, 5, 12, 11, 11, 13);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 	@Override
 	public boolean requireDynamicRender() {
@@ -500,7 +488,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		if (this.fluid == null)
 			data.setInteger("fluid", -1);
 		else
-			data.setInteger("fluid", this.fluid.getID());
+			data.setString("fluid", this.fluid.getName());
 		data.setBoolean("locked", this.locked);
 	}
 
@@ -511,7 +499,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		if (this.fluid == null)
 			data.writeInt(-1);
 		else
-			data.writeInt(this.fluid.getID());
+			ByteBufUtils.writeUTF8String(data, fluid.getName());;
 		data.writeBoolean(this.locked);
 
 	}

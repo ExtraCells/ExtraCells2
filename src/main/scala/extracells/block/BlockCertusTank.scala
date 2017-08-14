@@ -58,7 +58,7 @@ class BlockCertusTank extends BlockEC(Material.GLASS, 2.0F, 10.0F) with Extended
       list
     }
 
-  override def getLocalizedName: String = LanguageMap.(getUnlocalizedName + ".name")
+  override def getLocalizedName: String = I18n.translateToLocal(getUnlocalizedName + ".name")
 
   override def getUnlocalizedName: String = super.getUnlocalizedName.replace("tile.", "")
 

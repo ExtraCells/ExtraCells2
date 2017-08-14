@@ -1,5 +1,23 @@
 package extracells.tileentity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ITickable;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.implementations.ICraftingPatternItem;
@@ -22,42 +40,26 @@ import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
-import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.api.IECTileEntity;
 import extracells.gridblock.ECFluidGridBlock;
 import extracells.util.FluidUtil;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.MutablePair;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TileEntityFluidFiller extends TileBase implements IActionHost,
 		ICraftingProvider, IECTileEntity,
-		IMEMonitorHandlerReceiver<IAEFluidStack>, IListenerTile {
+		IMEMonitorHandlerReceiver<IAEFluidStack>, IListenerTile, ITickable {
 
 	private ECFluidGridBlock gridBlock;
 	private IGridNode node = null;
 	List<Fluid> fluids = new ArrayList<Fluid>();
-	public ItemStack containerItem = new ItemStack(Items.bucket);
+	public ItemStack containerItem = new ItemStack(Items.BUCKET);
 	ItemStack returnStack = null;
 	int ticksToFinish = 0;
 
 	private boolean isFirstGetGridNode = true;
 
-	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
+	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orElse(null);
 
 	public TileEntityFluidFiller() {
 		super();
@@ -82,22 +84,19 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 	}
 
 	@Override
-	public AECableType getCableConnectionType(ForgeDirection dir) {
+	public AECableType getCableConnectionType(AEPartLocation dir) {
 		return AECableType.DENSE;
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound nbtTag = new NBTTagCompound();
-		writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
-				this.zCoord, 1, nbtTag);
+	public NBTTagCompound getUpdateTag() {
+		return writeToNBT(new NBTTagCompound());
 	}
 
 	@Override
-	public IGridNode getGridNode(ForgeDirection dir) {
+	public IGridNode getGridNode(AEPartLocation location) {
 		if (FMLCommonHandler.instance().getSide().isClient()
-				&& (getWorldObj() == null || getWorldObj().isRemote))
+				&& (worldObj == null || worldObj.isRemote))
 			return null;
 		if (this.isFirstGetGridNode) {
 			this.isFirstGetGridNode = false;
@@ -134,7 +133,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 	}
 
 	private IStorageGrid getStorageGrid() {
-		this.node = getGridNode(ForgeDirection.UNKNOWN);
+		this.node = getGridNode(AEPartLocation.INTERNAL);
 		if (this.node == null)
 			return null;
 		IGrid grid = this.node.getGrid();
@@ -151,11 +150,6 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 	@Override
 	public boolean isValid(Object verificationToken) {
 		return true;
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.func_148857_g());
 	}
 
 	@Override
@@ -176,21 +170,21 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 			this.fluids.add(fluid.getFluid());
 		}
 		if (!(oldFluids.isEmpty() && !mustUpdate)) {
-			if (getGridNode(ForgeDirection.UNKNOWN) != null
-					&& getGridNode(ForgeDirection.UNKNOWN).getGrid() != null) {
-				getGridNode(ForgeDirection.UNKNOWN).getGrid().postEvent(
+			if (getGridNode(AEPartLocation.INTERNAL) != null
+					&& getGridNode(AEPartLocation.INTERNAL).getGrid() != null) {
+				getGridNode(AEPartLocation.INTERNAL).getGrid().postEvent(
 						new MENetworkCraftingPatternChange(this,
-								getGridNode(ForgeDirection.UNKNOWN)));
+								getGridNode(AEPartLocation.INTERNAL)));
 			}
 		}
 	}
 
 	public void postUpdateEvent() {
-		if (getGridNode(ForgeDirection.UNKNOWN) != null
-				&& getGridNode(ForgeDirection.UNKNOWN).getGrid() != null) {
-			getGridNode(ForgeDirection.UNKNOWN).getGrid().postEvent(
+		if (getGridNode(AEPartLocation.INTERNAL) != null
+				&& getGridNode(AEPartLocation.INTERNAL).getGrid() != null) {
+			getGridNode(AEPartLocation.INTERNAL).getGrid().postEvent(
 					new MENetworkCraftingPatternChange(this,
-							getGridNode(ForgeDirection.UNKNOWN)));
+							getGridNode(AEPartLocation.INTERNAL)));
 		}
 	}
 
@@ -223,7 +217,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 			ICraftingPatternItem patter = (ICraftingPatternItem) pattern
 					.getItem();
 			craftingTracker.addCraftingOption(this,
-					patter.getPatternForItem(pattern, getWorldObj()));
+					patter.getPatternForItem(pattern, worldObj));
 		}
 
 	}
@@ -278,7 +272,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 		if (tagCompound.hasKey("time"))
 			this.ticksToFinish = tagCompound.getInteger("time");
 		if (hasWorldObj()) {
-			IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
+			IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 			if (tagCompound.hasKey("nodes") && node != null) {
 				node.loadFromNBT("node0", tagCompound.getCompoundTag("nodes"));
 				node.updateState();
@@ -305,14 +299,14 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 
 	@Override
 	public void securityBreak() {
-		if (this.getWorldObj() != null)
-			getWorldObj().func_147480_a(this.xCoord, this.yCoord, this.zCoord,
-					true);
+		//TODO: Find out what func_147480_a is
+		/*if (this.getWorldObj() != null)
+			getWorldObj().func_147480_a(this.xCoord, this.yCoord, this.zCoord, true);*/
 	}
 
 	@Override
-	public void updateEntity() {
-		if (getWorldObj() == null || getWorldObj().provider == null)
+	public void update() {
+		if (worldObj == null)
 			return;
 		if (this.ticksToFinish > 0)
 			this.ticksToFinish = this.ticksToFinish - 1;
@@ -350,7 +344,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tagCompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		if (this.containerItem != null)
 			tagCompound.setTag("container", this.containerItem.writeToNBT(new NBTTagCompound()));
@@ -362,12 +356,13 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 			tagCompound.setBoolean("isReturnEmpty", true);
 		tagCompound.setInteger("time", this.ticksToFinish);
 		if (!hasWorldObj())
-			return;
-		IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
+			return tagCompound;
+		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 		if (node != null) {
 			NBTTagCompound nodeTag = new NBTTagCompound();
 			node.saveToNBT("node0", nodeTag);
 			tagCompound.setTag("nodes", nodeTag);
 		}
+		return tagCompound;
 	}
 }

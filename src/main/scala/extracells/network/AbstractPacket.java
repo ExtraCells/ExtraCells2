@@ -1,22 +1,27 @@
 package extracells.network;
 
-import appeng.api.parts.IPartHost;
 import com.google.common.base.Charsets;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.part.PartECBase;
-import io.netty.buffer.ByteBuf;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import appeng.api.parts.IPartHost;
+import appeng.api.util.AEPartLocation;
+import extracells.part.PartECBase;
+import io.netty.buffer.ByteBuf;
 
 public abstract class AbstractPacket implements IMessage {
 
@@ -31,7 +36,7 @@ public abstract class AbstractPacket implements IMessage {
 
 	public static PartECBase readPart(ByteBuf in) {
 		return (PartECBase) ((IPartHost) readTileEntity(in))
-				.getPart(ForgeDirection.getOrientation(in.readByte()));
+				.getPart(AEPartLocation.fromOrdinal(in.readByte()));
 	}
 
 	public static EntityPlayer readPlayer(ByteBuf in) {
@@ -49,8 +54,7 @@ public abstract class AbstractPacket implements IMessage {
 	}
 
 	public static TileEntity readTileEntity(ByteBuf in) {
-		return readWorld(in).getTileEntity(in.readInt(), in.readInt(),
-				in.readInt());
+		return readWorld(in).getTileEntity(BlockPos.fromLong(in.readLong()));
 	}
 
 	public static World readWorld(ByteBuf in) {
@@ -71,7 +75,7 @@ public abstract class AbstractPacket implements IMessage {
 
 	public static void writePart(PartECBase part, ByteBuf out) {
 		writeTileEntity(part.getHost().getTile(), out);
-		out.writeByte(part.getSide().ordinal());
+		out.writeByte(part.getFacing().ordinal());
 	}
 
 	public static void writePlayer(EntityPlayer player, ByteBuf out) {
@@ -81,7 +85,7 @@ public abstract class AbstractPacket implements IMessage {
 		}
 		out.writeBoolean(true);
 		writeWorld(player.worldObj, out);
-		writeString(player.getCommandSenderName(), out);
+		writeString(player.getName(), out);
 	}
 
 	public static void writeString(String string, ByteBuf out) {
@@ -92,14 +96,12 @@ public abstract class AbstractPacket implements IMessage {
 	}
 
 	public static void writeTileEntity(TileEntity tileEntity, ByteBuf out) {
-		writeWorld(tileEntity.getWorldObj(), out);
-		out.writeInt(tileEntity.xCoord);
-		out.writeInt(tileEntity.yCoord);
-		out.writeInt(tileEntity.zCoord);
+		writeWorld(tileEntity.getWorld(), out);
+		out.writeLong(tileEntity.getPos().toLong());
 	}
 
 	public static void writeWorld(World world, ByteBuf out) {
-		out.writeInt(world.provider.dimensionId);
+		out.writeInt(world.provider.getDimension());
 	}
 
 	protected EntityPlayer player;

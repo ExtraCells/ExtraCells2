@@ -1,14 +1,16 @@
 package extracells.network.packet.part;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
 import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 
 public class PacketOreDictExport extends AbstractPacket {
 

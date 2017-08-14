@@ -68,7 +68,7 @@ class PartGasImport extends PartFluidImport with IGasHandler{
   override protected def fillToNetwork(fluid: Fluid, toDrain: Int): Boolean = {
     var drained: GasStack = null
     val facingTank: IGasHandler = getFacingGasTank
-    val side: EnumFacing = getSide
+    val side: EnumFacing = getFacing
     val gasType = {
       if (fluid == null)
         null

@@ -1,21 +1,37 @@
 package extracells.network;
 
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
-import extracells.network.handler.other.HandlerFluidContainerSlot;
-import extracells.network.handler.other.HandlerFluidSlot;
-import extracells.network.handler.part.*;
-import extracells.network.packet.other.PacketFluidContainerSlot;
-import extracells.network.packet.other.PacketFluidSlot;
-import extracells.network.packet.part.*;
+import java.util.EnumMap;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
 
-import java.util.EnumMap;
+import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
+
+import extracells.network.handler.other.HandlerFluidContainerSlot;
+import extracells.network.handler.other.HandlerFluidSlot;
+import extracells.network.handler.part.HandlerBusFluidIO;
+import extracells.network.handler.part.HandlerBusFluidStorage;
+import extracells.network.handler.part.HandlerFluidEmitter;
+import extracells.network.handler.part.HandlerFluidInterface;
+import extracells.network.handler.part.HandlerFluidPlaneFormation;
+import extracells.network.handler.part.HandlerFluidStorage;
+import extracells.network.handler.part.HandlerFluidTerminal;
+import extracells.network.handler.part.HandlerOreDictExport;
+import extracells.network.packet.other.PacketFluidContainerSlot;
+import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.part.PacketBusFluidIO;
+import extracells.network.packet.part.PacketBusFluidStorage;
+import extracells.network.packet.part.PacketFluidEmitter;
+import extracells.network.packet.part.PacketFluidInterface;
+import extracells.network.packet.part.PacketFluidPlaneFormation;
+import extracells.network.packet.part.PacketFluidStorage;
+import extracells.network.packet.part.PacketFluidTerminal;
+import extracells.network.packet.part.PacketOreDictExport;
 
 public class ChannelHandler {
 
@@ -79,7 +95,7 @@ public class ChannelHandler {
 	public static void sendPacketToAllPlayers(Packet packet, World world) {
 		for (Object player : world.playerEntities) {
 			if (player instanceof EntityPlayerMP) {
-				((EntityPlayerMP) player).playerNetServerHandler
+				((EntityPlayerMP) player).connection
 						.sendPacket(packet);
 			}
 		}

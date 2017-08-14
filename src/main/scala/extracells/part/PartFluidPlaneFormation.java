@@ -5,24 +5,20 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -35,19 +31,14 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
 import extracells.container.ContainerPlaneFormation;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiFluidPlaneFormation;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
-import extracells.render.TextureManager;
-import extracells.util.ColorUtil;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
@@ -84,19 +75,17 @@ public class PartFluidPlaneFormation extends PartECBase implements
 	public void doWork() {
 		TileEntity hostTile = getHostTile();
 		ECBaseGridBlock gridBlock = getGridBlock();
-		ForgeDirection side = getSide();
+		EnumFacing facing = getFacing();
 
 		if (this.fluid == null || hostTile == null || gridBlock == null || this.fluid.getBlock() == null)
 			return;
 		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
 		if (monitor == null)
 			return;
-		World world = hostTile.getWorldObj();
-		int x = hostTile.xCoord + side.offsetX;
-		int y = hostTile.yCoord + side.offsetY;
-		int z = hostTile.zCoord + side.offsetZ;
-		Block worldBlock = world.getBlock(x, y, z);
-		if (worldBlock != null && worldBlock != Blocks.air)
+		World world = hostTile.getWorld();
+		BlockPos pos = hostTile.getPos().offset(facing);
+		Block worldBlock = world.getBlockState(pos).getBlock();
+		if (worldBlock != null && worldBlock != Blocks.AIR)
 			return;
 		IAEFluidStack canDrain = monitor.extractItems(FluidUtil
 				.createAEFluidStack(this.fluid,
@@ -109,8 +98,8 @@ public class PartFluidPlaneFormation extends PartECBase implements
 				FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE,
 				new MachineSource(this));
 		Block fluidWorldBlock = this.fluid.getBlock();
-		world.setBlock(x, y, z, fluidWorldBlock);
-		world.markBlockForUpdate(x, y, z);
+		world.setBlockState(pos, fluidWorldBlock.getDefaultState());
+		world.notifyBlockUpdate(pos, fluidWorldBlock.getDefaultState(), fluidWorldBlock.getDefaultState(), 0);
 	}
 
 	@Override
@@ -149,10 +138,10 @@ public class PartFluidPlaneFormation extends PartECBase implements
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
 				(IPart) this)) {
-			return super.onActivate(player, pos);
+			return super.onActivate(player, hand, pos);
 		}
 		return false;
 	}
@@ -162,7 +151,7 @@ public class PartFluidPlaneFormation extends PartECBase implements
 		this.fluid = FluidRegistry.getFluid(data.getString("fluid"));
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		IIcon side = TextureManager.PANE_SIDE.getTexture();
@@ -214,7 +203,7 @@ public class PartFluidPlaneFormation extends PartECBase implements
 
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 	public void sendInformation(EntityPlayer _player) {
 		new PacketFluidSlot(Lists.newArrayList(this.fluid))

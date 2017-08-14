@@ -7,6 +7,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+
 public class PacketFluidContainerSlot extends AbstractPacket {
 
 	private ItemStack container;
@@ -29,7 +31,7 @@ public class PacketFluidContainerSlot extends AbstractPacket {
 			this.container.stackSize = 1;
 			this.fluidFiller.containerItem = this.container;
 			if (this.fluidFiller.hasWorldObj())
-				this.fluidFiller.getWorldObj().markBlockForUpdate(
+				this.fluidFiller.getWorld().markBlockForUpdate(
 						this.fluidFiller.xCoord, this.fluidFiller.yCoord,
 						this.fluidFiller.zCoord);
 			this.fluidFiller.postUpdateEvent();

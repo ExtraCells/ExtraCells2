@@ -94,7 +94,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	protected boolean fillToNetwork(Fluid fluid, int toDrain) {
 		FluidStack drained;
 		IFluidHandler facingTank = getFacingTank();
-		EnumFacing side = getSide();
+		EnumFacing side = getFacing();
 		if (fluid == null) {
 			drained = facingTank.drain(toDrain, false);
 		} else {

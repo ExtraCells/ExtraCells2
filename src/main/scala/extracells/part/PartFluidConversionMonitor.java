@@ -1,39 +1,33 @@
 package extracells.part;
 
-import appeng.api.config.Actionable;
-import appeng.api.networking.security.MachineSource;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.AEColor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.render.TextureManager;
-import extracells.util.FluidUtil;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
-import org.apache.commons.lang3.tuple.MutablePair;
+
+import appeng.api.config.Actionable;
+import appeng.api.networking.security.MachineSource;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.util.FluidUtil;
 
 public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
-		boolean b = super.onActivate(player, pos);
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
+		boolean b = super.onActivate(player, hand, pos);
 		if (b)
 			return b;
 		if (player == null || player.worldObj == null)
 			return true;
 		if (player.worldObj.isRemote)
 			return true;
-		ItemStack s = player.getCurrentEquippedItem();
+		ItemStack s = player.getHeldItem(hand);
 		IMEMonitor<IAEFluidStack> mon = getFluidStorage();
 		if (this.locked && s != null && mon != null) {
 			ItemStack s2 = s.copy();
@@ -54,11 +48,7 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 							.drainStack(s2, f);
 					ItemStack empty = empty1.right;
 					if (empty != null) {
-						dropItems(getHost().getTile().getWorldObj(), getHost()
-								.getTile().xCoord + getSide().offsetX,
-								getHost().getTile().yCoord + getSide().offsetY,
-								getHost().getTile().zCoord + getSide().offsetZ,
-								empty);
+						dropItems(getHost().getTile().getWorld(), getHost().getTile().getPos().offset(getFacing()), empty);
 					}
 					ItemStack s3 = s.copy();
 					s3.stackSize = s3.stackSize - 1;
@@ -100,11 +90,7 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 					}
 					ItemStack empty = empty1.right;
 					if (empty != null) {
-						dropItems(getHost().getTile().getWorldObj(), getHost()
-								.getTile().xCoord + getSide().offsetX,
-								getHost().getTile().yCoord + getSide().offsetY,
-								getHost().getTile().zCoord + getSide().offsetZ,
-								empty);
+						dropItems(getHost().getTile().getWorld(), getHost().getTile().getPos().offset(getFacing()), empty);
 					}
 					ItemStack s3 = s.copy();
 					s3.stackSize = s3.stackSize - 1;
@@ -122,7 +108,7 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 		return false;
 	}
 
-	@Override
+	/*@Override
 	@SideOnly(Side.CLIENT)
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		Tessellator ts = Tessellator.instance;
@@ -199,6 +185,6 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 
 		rh.setBounds(5, 5, 12, 11, 11, 13);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 }

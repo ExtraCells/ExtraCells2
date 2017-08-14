@@ -4,19 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-
-import net.minecraftforge.common.util.ForgeDirection;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
 
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
@@ -29,7 +22,6 @@ import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.ICellHandler;
 import appeng.api.storage.ICellRegistry;
@@ -37,9 +29,9 @@ import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEPartLocation;
 import extracells.container.ContainerDrive;
 import extracells.gui.GuiDrive;
-import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
@@ -138,10 +130,10 @@ public class PartDrive extends PartECBase implements ICellContainer,
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
 				(IPart) this)) {
-			return super.onActivate(player, pos);
+			return super.onActivate(player, hand, pos);
 		}
 		return false;
 	}
@@ -212,7 +204,7 @@ public class PartDrive extends PartECBase implements ICellContainer,
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		IIcon side = TextureManager.DRIVE_SIDE.getTexture();
@@ -244,8 +236,8 @@ public class PartDrive extends PartECBase implements ICellContainer,
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 3; j++) {
 				if (this.cellStatuses[j + i * 3] > 0) {
-					if (getSide() == ForgeDirection.EAST
-							|| getSide() == ForgeDirection.WEST ? i == 1
+					if (getFacing() == ForgeDirection.EAST
+							|| getFacing() == ForgeDirection.WEST ? i == 1
 							: i == 0)
 						rh.setBounds(8, 12 - j * 3, 14, 13, 10 - j * 3, 16);
 					else
@@ -258,8 +250,8 @@ public class PartDrive extends PartECBase implements ICellContainer,
 
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 3; j++) {
-				if (getSide() == ForgeDirection.EAST
-						|| getSide() == ForgeDirection.WEST ? i == 1 : i == 0)
+				if (getFacing() == ForgeDirection.EAST
+						|| getFacing() == ForgeDirection.WEST ? i == 1 : i == 0)
 					rh.setBounds(8, 12 - j * 3, 14, 13, 10 - j * 3, 16);
 				else
 					rh.setBounds(3, 12 - j * 3, 14, 8, 10 - j * 3, 16);
@@ -271,7 +263,7 @@ public class PartDrive extends PartECBase implements ICellContainer,
 		}
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 	@Override
 	public void saveChanges(IMEInventory cellInventory) {
@@ -279,9 +271,8 @@ public class PartDrive extends PartECBase implements ICellContainer,
 	}
 
 	@Override
-	public void setPartHostInfo(ForgeDirection _side, IPartHost _host,
-			TileEntity _tile) {
-		super.setPartHostInfo(_side, _host, _tile);
+	public void setPartHostInfo(AEPartLocation location, IPartHost iPartHost, TileEntity tileEntity) {
+		super.setPartHostInfo(location, iPartHost, tileEntity);
 		onInventoryChanged();
 	}
 

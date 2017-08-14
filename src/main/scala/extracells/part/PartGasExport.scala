@@ -65,8 +65,8 @@ class PartGasExport extends PartFluidExport{
 
         if (stack != null) {
           val gasStack = GasUtil.getGasStack(stack.getFluidStack)
-          if (gasStack != null && facingTank.canReceiveGas(getSide.getOpposite, gasStack.getGas)) {
-            val filled: Int = facingTank.receiveGas(getSide.getOpposite, gasStack, true)
+          if (gasStack != null && facingTank.canReceiveGas(getFacing.getOpposite, gasStack.getGas)) {
+            val filled: Int = facingTank.receiveGas(getFacing.getOpposite, gasStack, true)
             if (filled > 0) {
               extractGasFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
               return true

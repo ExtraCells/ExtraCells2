@@ -49,7 +49,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			return false;
 		if (this.externalSystem != null) {
 			IStorageMonitorable monitor = this.externalSystem.getMonitorable(
-					this.node.getSide().getOpposite(), new MachineSource(
+					this.node.getFacing().getOpposite(), new MachineSource(
 							this.node));
 			if (monitor == null)
 				return false;
@@ -57,10 +57,10 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 					.getFluidInventory();
 			return fluidInventory != null && fluidInventory.canAccept(input);
 		}else if(externalHandler != null){
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getFacing().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
 			return inventory != null;
 		}
-		FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node.getSide().getOpposite());
+		FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node.getFacing().getOpposite());
 		if (infoArray != null && infoArray.length > 0) {
 			FluidTankInfo info = infoArray[0];
 			if (info.fluid == null || info.fluid.amount == 0
@@ -80,7 +80,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			return null;
 		if (this.externalSystem != null && request != null) {
 			IStorageMonitorable monitor = this.externalSystem.getMonitorable(
-					this.node.getSide().getOpposite(), src);
+					this.node.getFacing().getOpposite(), src);
 			if (monitor == null)
 				return null;
 			IMEMonitor<IAEFluidStack> fluidInventory = monitor
@@ -90,7 +90,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			return fluidInventory.extractItems(request, mode, src);
 
 		}else if(externalHandler != null && request != null){
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getFacing().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
 			if(inventory == null)
 				return null;
 			return inventory.extractItems(request, mode, new MachineSource(this.node));
@@ -101,7 +101,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		int drained = 0;
 		int drained2 = 0;
 		do {
-			FluidStack drain = this.tank.drain(this.node.getSide().getOpposite(), new FluidStack(toDrain.getFluid(), toDrain.amount - drained), mode == Actionable.MODULATE);
+			FluidStack drain = this.tank.drain(this.node.getFacing().getOpposite(), new FluidStack(toDrain.getFluid(), toDrain.amount - drained), mode == Actionable.MODULATE);
 			if (drain == null)
 				drained2 = 0;
 			else
@@ -133,18 +133,18 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (!this.node.isActive() || !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE))
 			return out;
 		if (this.externalSystem != null) {
-			IStorageMonitorable monitor = this.externalSystem.getMonitorable(this.node.getSide().getOpposite(), new MachineSource(this.node));
+			IStorageMonitorable monitor = this.externalSystem.getMonitorable(this.node.getFacing().getOpposite(), new MachineSource(this.node));
 			if (monitor == null)
 				return out;
 			IMEMonitor<IAEFluidStack> fluidInventory = monitor.getFluidInventory();
 			if (fluidInventory == null)
 				return out;
-			IItemList<IAEFluidStack> list = this.externalSystem.getMonitorable(this.node.getSide().getOpposite(), new MachineSource(this.node)).getFluidInventory().getStorageList();
+			IItemList<IAEFluidStack> list = this.externalSystem.getMonitorable(this.node.getFacing().getOpposite(), new MachineSource(this.node)).getFluidInventory().getStorageList();
 			for (IAEFluidStack stack : list) {
 				out.add(stack);
 			}
 		}else if(externalHandler != null){
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getFacing().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
 			if(inventory == null)
 				return out;
 			IItemList<IAEFluidStack> list = inventory.getAvailableItems(AEApi.instance().storage().createFluidList());
@@ -152,7 +152,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 				out.add(stack);
 			}
 		} else if (this.tank != null) {
-			FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node.getSide().getOpposite());
+			FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node.getFacing().getOpposite());
 			if (infoArray != null && infoArray.length > 0){
 				for(FluidTankInfo info : infoArray){
 					if(info.fluid != null)
@@ -184,7 +184,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (!(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE))
 			return null;
 		if (this.externalSystem != null && input != null) {
-			IStorageMonitorable monitor = this.externalSystem.getMonitorable(this.node.getSide().getOpposite(), src);
+			IStorageMonitorable monitor = this.externalSystem.getMonitorable(this.node.getFacing().getOpposite(), src);
 			if (monitor == null)
 				return input;
 			IMEMonitor<IAEFluidStack> fluidInventory = monitor.getFluidInventory();
@@ -192,7 +192,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 				return input;
 			return fluidInventory.injectItems(input, mode, src);
 		}else if(externalHandler != null && input != null){
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getFacing().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
 			if(inventory == null)
 				return input;
 			return inventory.injectItems(input, mode, new MachineSource(this.node));
@@ -203,10 +203,10 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		int filled = 0;
 		int filled2 = 0;
 		do {
-			filled2 = this.tank.fill(this.node.getSide().getOpposite(), new FluidStack(toFill.getFluid(), toFill.amount - filled), mode == Actionable.MODULATE);
+			filled2 = this.tank.fill(this.node.getFacing().getOpposite(), new FluidStack(toFill.getFluid(), toFill.amount - filled), mode == Actionable.MODULATE);
 			filled = filled + filled2;
 		} while (filled2 != 0 && filled != toFill.amount);
-		FluidTankInfo[] infos = this.tank.getTankInfo(this.node.getSide().getOpposite());
+		FluidTankInfo[] infos = this.tank.getTankInfo(this.node.getFacing().getOpposite());
 		int maxFill = 0;
 		for(FluidTankInfo info : infos){
 			if(info.fluid == null)
@@ -242,7 +242,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
 	public void onNeighborChange() {
 		if (this.externalSystem != null) {
-			IStorageMonitorable monitor = this.externalSystem.getMonitorable(this.node.getSide().getOpposite(), new MachineSource(this.node));
+			IStorageMonitorable monitor = this.externalSystem.getMonitorable(this.node.getFacing().getOpposite(), new MachineSource(this.node));
 			if (monitor != null) {
 				IMEMonitor<IAEFluidStack> fluidInventory = monitor.getFluidInventory();
 				if (fluidInventory != null) {
@@ -251,7 +251,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			}
 		}
 		this.tank = null;
-		ForgeDirection orientation = this.node.getSide();
+		ForgeDirection orientation = this.node.getFacing();
 		TileEntity hostTile = this.node.getHostTile();
 		if (hostTile == null)
 			return;
@@ -268,11 +268,11 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			this.externalHandler = null;
 			return;
 		}
-		this.externalHandler = AEApi.instance().registries().externalStorage().getHandler(tileEntity, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
+		this.externalHandler = AEApi.instance().registries().externalStorage().getHandler(tileEntity, this.node.getFacing().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
 		if (tileEntity instanceof ITileStorageMonitorable) {
 			this.externalSystem = (ITileStorageMonitorable) tileEntity;
 			IStorageMonitorable monitor = this.externalSystem.getMonitorable(
-					this.node.getSide().getOpposite(), new MachineSource(
+					this.node.getFacing().getOpposite(), new MachineSource(
 							this.node));
 			if (monitor == null)
 				return;

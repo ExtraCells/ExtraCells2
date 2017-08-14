@@ -1,15 +1,14 @@
 package extracells.util;
 
-import appeng.api.implementations.items.IAEWrench;
-import buildcraft.api.tools.IToolWrench;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
+import appeng.api.implementations.items.IAEWrench;
+
 public class WrenchUtil {
 
-	public static boolean canWrench(ItemStack wrench, EntityPlayer player,
-			BlockPos pos) {
+	public static boolean canWrench(ItemStack wrench, EntityPlayer player, BlockPos pos) {
 		if (wrench == null || wrench.getItem() == null)
 			return false;
 		/*try { //TODO reimplement Buildcraft
@@ -23,8 +22,7 @@ public class WrenchUtil {
 		return false;
 	}
 
-	public static void wrenchUsed(ItemStack wrench, EntityPlayer player, int x,
-			int y, int z) {
+	public static void wrenchUsed(ItemStack wrench, EntityPlayer player, BlockPos pos) {
 		if (wrench == null || wrench.getItem() == null)
 			return;
 		/*try {//TODO reimplement Buildcraft

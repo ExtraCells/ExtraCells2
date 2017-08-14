@@ -1,10 +1,18 @@
 package extracells.network.packet.part;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.player.EntityPlayer;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidStorage;
 import extracells.container.ContainerGasStorage;
 import extracells.gui.GuiFluidStorage;
@@ -12,11 +20,6 @@ import extracells.gui.GuiGasStorage;
 import extracells.integration.Integration;
 import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PacketFluidStorage extends AbstractPacket {
 
@@ -84,7 +87,7 @@ public class PacketFluidStorage extends AbstractPacket {
 
 	@SideOnly(Side.CLIENT)
 	private void case0(){
-		if (this.player != null && this.player.isClientWorld()) {
+		if (this.player != null && this.player.worldObj.isRemote) {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof GuiFluidStorage) {
 				ContainerFluidStorage container = (ContainerFluidStorage) ((GuiFluidStorage) gui).inventorySlots;
@@ -98,7 +101,7 @@ public class PacketFluidStorage extends AbstractPacket {
 
 	@SideOnly(Side.CLIENT)
 	private void case3(){
-		if (this.player != null && this.player.isClientWorld()) {
+		if (this.player != null && this.player.worldObj.isRemote) {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof GuiFluidStorage) {
 				ContainerFluidStorage container = (ContainerFluidStorage) ((GuiFluidStorage) gui).inventorySlots;

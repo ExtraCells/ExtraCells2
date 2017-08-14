@@ -3,15 +3,8 @@ package extracells.part;
 import java.io.IOException;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -22,10 +15,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.networking.events.MENetworkPowerStorage;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.util.AECableType;
-import extracells.network.AbstractPacket;
-import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
@@ -33,7 +23,7 @@ import io.netty.buffer.ByteBuf;
 public class PartBattery extends PartECBase implements IAEPowerStorage,
 		IInventoryUpdateReceiver {
 
-	private IIcon batteryIcon = TextureManager.BATTERY_FRONT.getTexture();
+	//private IIcon batteryIcon = TextureManager.BATTERY_FRONT.getTexture();
 	private ItemStack battery;
 	IAEItemPowerStorage handler;
 	private ECPrivateInventory inventory = new ECPrivateInventory(
@@ -115,10 +105,10 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 		this.battery = this.inventory.getStackInSlot(0);
 		if (this.battery != null
 				&& this.battery.getItem() instanceof IAEItemPowerStorage) {
-			this.batteryIcon = this.battery.getIconIndex();
+			//this.batteryIcon = this.battery.getgetIconIndex();
 			this.handler = (IAEItemPowerStorage) this.battery.getItem();
 		} else {
-			this.batteryIcon = null;
+			//this.batteryIcon = null;
 			this.handler = null;
 		}
 		IGridNode node = getGridNode();
@@ -142,7 +132,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 	@Override
 	public boolean readFromStream(ByteBuf data) throws IOException {
 		super.readFromStream(data);
-		String iconName = AbstractPacket.readString(data);
+		/*String iconName = AbstractPacket.readString(data);
 		if (!iconName.equals("none")) {
 			this.batteryIcon = ((TextureMap) Minecraft.getMinecraft()
 					.getTextureManager()
@@ -150,11 +140,11 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 					.getAtlasSprite(iconName);
 		} else {
 			this.batteryIcon = TextureManager.BATTERY_FRONT.getTexture();
-		}
+		}*/
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		IIcon side = TextureManager.BUS_SIDE.getTexture();
@@ -178,7 +168,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 	@Override
 	public void writeToNBT(NBTTagCompound data) {
@@ -189,8 +179,8 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 	@Override
 	public void writeToStream(ByteBuf data) throws IOException {
 		super.writeToStream(data);
-		AbstractPacket.writeString(this.battery != null ? this.battery
+	/*	AbstractPacket.writeString(this.battery != null ? this.battery
 				.getItem().getIconIndex(this.battery).getIconName() : "none",
-				data);
+				data);*/
 	}
 }

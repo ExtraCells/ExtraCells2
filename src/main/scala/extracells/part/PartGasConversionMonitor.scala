@@ -49,7 +49,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
           val empty1: MutablePair[Integer, ItemStack] = GasUtil.drainStack(s2, g)
           val empty: ItemStack = empty1.right
           if (empty != null) {
-            dropItems(getHost.getTile.getWorldObj, getHost.getTile.xCoord + getSide.offsetX, getHost.getTile.yCoord + getSide.offsetY, getHost.getTile.zCoord + getSide.offsetZ, empty)
+            dropItems(getHost.getTile.getWorldObj, getHost.getTile.xCoord + getFacing.offsetX, getHost.getTile.yCoord + getFacing.offsetY, getHost.getTile.zCoord + getFacing.offsetZ, empty)
           }
           val s3: ItemStack = s.copy
           s3.stackSize = s3.stackSize - 1
@@ -79,7 +79,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
           }
           val empty: ItemStack = empty1.right
           if (empty != null) {
-            dropItems(getHost.getTile.getWorldObj, getHost.getTile.xCoord + getSide.offsetX, getHost.getTile.yCoord + getSide.offsetY, getHost.getTile.zCoord + getSide.offsetZ, empty)
+            dropItems(getHost.getTile.getWorldObj, getHost.getTile.xCoord + getFacing.offsetX, getHost.getTile.yCoord + getFacing.offsetY, getHost.getTile.zCoord + getFacing.offsetZ, empty)
           }
           val s3: ItemStack = s.copy
           s3.stackSize = s3.stackSize - 1

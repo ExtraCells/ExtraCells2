@@ -71,7 +71,7 @@ object GuiHandler extends IGuiHandler {
 
 	def getGuiId(guiId: Int) = guiId + 6
 
-	def getGuiId(part: PartECBase) = part.getSide().ordinal()
+	def getGuiId(part: PartECBase) = part.getFacing().ordinal()
 
 	def getPartContainer(side: EnumFacing, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : Any =
 		world.getTileEntity(new BlockPos(x, y, z)).asInstanceOf[IPartHost].getPart(side).asInstanceOf[PartECBase]

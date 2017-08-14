@@ -4,12 +4,12 @@ import appeng.api.networking.storage.IStorageGrid
 import appeng.api.networking.{IGrid, IGridHost}
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.{IAEFluidStack, IAEItemStack}
-import net.minecraftforge.common.util.ForgeDirection
+import appeng.api.util.AEPartLocation
 
 
 trait TNetworkStorage {
 
-  def getStorageGrid(side: ForgeDirection): IStorageGrid = {
+  def getStorageGrid(side: AEPartLocation): IStorageGrid = {
     if(!this.isInstanceOf[IGridHost])
       return  null
     val host = this.asInstanceOf[IGridHost]
@@ -19,7 +19,7 @@ trait TNetworkStorage {
     grid.getCache(classOf[IStorageGrid])
   }
 
-  def getFluidInventory(side: ForgeDirection): IMEMonitor[IAEFluidStack] = {
+  def getFluidInventory(side: AEPartLocation): IMEMonitor[IAEFluidStack] = {
     val storageGrid = getStorageGrid(side)
     if (storageGrid == null)
       null
@@ -27,7 +27,7 @@ trait TNetworkStorage {
       storageGrid.getFluidInventory
   }
 
-  def getitemInventory(side: ForgeDirection): IMEMonitor[IAEItemStack] = {
+  def getitemInventory(side: AEPartLocation): IMEMonitor[IAEItemStack] = {
     val storageGrid = getStorageGrid(side)
     if (storageGrid == null)
       null

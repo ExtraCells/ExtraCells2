@@ -1,5 +1,19 @@
 package extracells.part;
 
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
+
+import net.minecraftforge.oredict.OreDictionary;
+
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -12,40 +26,22 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.api.util.AEColor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import appeng.api.util.AECableType;
 import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
-import extracells.render.TextureManager;
 import extracells.util.ItemUtils;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.I18n;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.List;
 
 public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
 	public String filter = "";
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 5;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 5.0F;
 	}
 
 	private boolean checkItem(IAEItemStack s) {
@@ -109,20 +105,17 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	public IAEItemStack exportStack(IAEItemStack stack0) {
 		if (this.tile == null || !this.tile.hasWorldObj() || stack0 == null)
 			return null;
-		ForgeDirection dir = getSide();
-		TileEntity tile = this.tile.getWorldObj().getTileEntity(
-				this.tile.xCoord + dir.offsetX, this.tile.yCoord + dir.offsetY,
-				this.tile.zCoord + dir.offsetZ);
+		EnumFacing facing = getFacing();
+		BlockPos pos = tile.getPos();
+		TileEntity tile = this.tile.getWorld().getTileEntity(pos.offset(facing));
 		if (tile == null)
 			return null;
 		IAEItemStack stack = stack0.copy();
 		if (tile instanceof IInventory) {
 			if (tile instanceof ISidedInventory) {
 				ISidedInventory inv = (ISidedInventory) tile;
-				for (int i : inv.getAccessibleSlotsFromSide(dir.getOpposite()
-						.ordinal())) {
-					if (inv.canInsertItem(i, stack.getItemStack(), dir
-							.getOpposite().ordinal())) {
+				for (int i : inv.getSlotsForFace(facing.getOpposite())) {
+					if (inv.canInsertItem(i, stack.getItemStack(), facing.getOpposite())) {
 						if (inv.getStackInSlot(i) == null) {
 							inv.setInventorySlotContents(i,
 									stack.getItemStack());
@@ -202,7 +195,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1,
 				PartEnum.getPartID(this));
-		if (type != PartItemStack.Break) {
+		if (type != PartItemStack.BREAK) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setString("filter", this.filter);
 			is.setTagCompound(tag);
@@ -276,7 +269,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 			this.filter = data.getString("filter");
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		Tessellator ts = Tessellator.instance;
@@ -334,7 +327,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
 		rh.setBounds(6, 6, 11, 10, 10, 12);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 	@Override
 	public final TickRateModulation tickingRequest(IGridNode node,

@@ -13,10 +13,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.entity.effect.EntityWeatherEffect;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.I18n;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -39,10 +41,10 @@ public class GuiFluidInterface extends GuiContainer {
 		((ContainerFluidInterface) this.inventorySlots).gui = this;
 	}
 
-	public GuiFluidInterface(EntityPlayer player,
-			IFluidInterface fluidInterface, AEPartLocation side) {
+	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface, AEPartLocation side) {
 		this(player, fluidInterface);
 		this.partSide = side;
+		PotionEffect
 	}
 
 	@Override

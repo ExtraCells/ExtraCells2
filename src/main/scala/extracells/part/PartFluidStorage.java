@@ -1,49 +1,48 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.events.*;
+import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.events.MENetworkChannelsChanged;
+import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
+import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.AEColor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import appeng.api.util.AECableType;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.inventory.HandlerPartStorageFluid;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketBusFluidStorage;
-import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
@@ -72,7 +71,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack stack = super.getItemStack(type);
-		if (type.equals(PartItemStack.Wrench))
+		if (type.equals(PartItemStack.WRENCH))
 			stack.getTagCompound().removeTag("upgradeInventory");
 		return stack;
 	}
@@ -81,8 +80,8 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	public void blinkCell(int slot) {}
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 3;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 3.0F;
 	}
 
 	@Override
@@ -132,8 +131,8 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
-		return PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this) && super.onActivate(player, pos);
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
+		return PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this) && super.onActivate(player, hand, pos);
 	}
 
 	@Override
@@ -191,7 +190,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		this.handler.setAccessRestriction(this.access);
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		Tessellator ts = Tessellator.instance;
@@ -236,7 +235,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 	@Override
 	public void saveChanges(IMEInventory cellInventory) {

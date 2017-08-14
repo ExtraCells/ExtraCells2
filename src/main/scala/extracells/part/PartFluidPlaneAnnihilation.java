@@ -85,7 +85,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 		int x = hostTile.xCoord;
 		int y = hostTile.yCoord;
 		int z = hostTile.zCoord;
-		ForgeDirection side = getSide();
+		ForgeDirection side = getFacing();
 		Block fluidBlock = world.getBlock(x + side.offsetX, y + side.offsetY, z
 				+ side.offsetZ);
 		int meta = world.getBlockMetadata(x + side.offsetX, y + side.offsetY, z
@@ -133,7 +133,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		IIcon side = TextureManager.PANE_SIDE.getTexture();
@@ -185,7 +185,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 
 		rh.setBounds(5, 5, 13, 11, 11, 14);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 	@Override
 	@SuppressWarnings("unused")

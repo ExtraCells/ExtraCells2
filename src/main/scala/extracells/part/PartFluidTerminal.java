@@ -1,5 +1,20 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
@@ -7,40 +22,23 @@ import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.parts.*;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.util.AEColor;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import appeng.api.util.AECableType;
 import extracells.container.ContainerFluidTerminal;
 import extracells.container.ContainerGasTerminal;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiFluidTerminal;
 import extracells.network.packet.part.PacketFluidTerminal;
-import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.MutablePair;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class PartFluidTerminal extends PartECBase implements IGridTickable,
-		IInventoryUpdateReceiver {
+public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryUpdateReceiver {
 
 	protected Fluid currentFluid;
 	private List<Object> containers = new ArrayList<Object>();
@@ -70,7 +68,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack stack = super.getItemStack(type);
-		if (type.equals(PartItemStack.Wrench))
+		if (type.equals(PartItemStack.WRENCH))
 			stack.getTagCompound().removeTag("inventory");
 		return stack;
 	}
@@ -86,8 +84,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 	}
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 1;
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 1.0F;
 	}
 
 	public void decreaseFirstSlot() {
@@ -188,9 +186,9 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		if (isActive() && (PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) this) || PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) this)))
-			return super.onActivate(player, pos);
+			return super.onActivate(player, hand, pos);
 		return false;
 	}
 
@@ -213,7 +211,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 		this.containers.remove(containerTerminalGas);
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		Tessellator ts = Tessellator.instance;
@@ -278,7 +276,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 
 		rh.setBounds(5, 5, 12, 11, 11, 13);
 		renderStaticBusLights(x, y, z, rh, renderer);
-	}
+	}*/
 
 	public void sendCurrentFluid() {
 		for (Object containerFluidTerminal : this.containers) {

@@ -1,10 +1,18 @@
 package extracells.network.packet.part;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.player.EntityPlayer;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidTerminal;
 import extracells.container.ContainerGasTerminal;
 import extracells.gui.GuiFluidTerminal;
@@ -12,11 +20,6 @@ import extracells.gui.GuiGasTerminal;
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidTerminal;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PacketFluidTerminal extends AbstractPacket {
 
@@ -83,7 +86,7 @@ public class PacketFluidTerminal extends AbstractPacket {
 
 	@SideOnly(Side.CLIENT)
 	public void case0(){
-		if (this.player != null && this.player.isClientWorld()) {
+		if (this.player != null && this.player.worldObj.isRemote) {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof GuiFluidTerminal) {
 				ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;

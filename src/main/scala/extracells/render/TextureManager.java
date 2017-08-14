@@ -1,8 +1,5 @@
 package extracells.render;
 
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.IIcon;
-
 public enum TextureManager {
 	BUS_SIDE(TextureType.PART, "bus_side"),
 	BUS_BORDER(TextureType.PART, "bus_border"),
@@ -34,15 +31,15 @@ public enum TextureManager {
 	private TextureType textureType;
 	private String[] textureNames;
 
-	private IIcon[] textures;
+	//private IIcon[] textures;
 
 	TextureManager(TextureType _textureType, String... _textureName) {
 		this.textureType = _textureType;
 		this.textureNames = _textureName;
-		this.textures = new IIcon[this.textureNames.length];
+		//this.textures = new IIcon[this.textureNames.length];
 	}
 
-	public IIcon getTexture() {
+	/*public IIcon getTexture() {
 		return this.textures[0];
 	}
 
@@ -65,5 +62,5 @@ public enum TextureManager {
 				this.textures[i] = textureMap.registerIcon("extracells:"
 						+ this.textureNames[i]);
 		}
-	}
+	}*/
 }

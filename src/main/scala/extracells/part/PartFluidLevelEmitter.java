@@ -19,7 +19,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import appeng.api.util.AECableType;
-import appeng.parts.automation.PartLevelEmitter;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.GuiFluidEmitter;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
@@ -33,7 +32,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -133,20 +135,19 @@ public class PartFluidLevelEmitter extends PartECBase implements
 			if (node != null) {
 				setActive(node.isActive());
 				getHost().markForUpdate();
-				notifyTargetBlock(getHostTile(), getSide());
+				notifyTargetBlock(getHostTile(), getFacing());
 			}
 		}
 	}
 
 	@Override
-	public void randomDisplayTick(World world, int x, int y, int z, Random r) {
+	public void randomDisplayTick(World world, BlockPos blockPos, Random random) {
 		if (this.clientRedstoneOutput) {
-			ForgeDirection d = getSide();
-			double d0 = d.offsetX * 0.45F + (r.nextFloat() - 0.5F) * 0.2D;
-			double d1 = d.offsetY * 0.45F + (r.nextFloat() - 0.5F) * 0.2D;
-			double d2 = d.offsetZ * 0.45F + (r.nextFloat() - 0.5F) * 0.2D;
-			world.spawnParticle("reddust", 0.5 + x + d0, 0.5 + y + d1, 0.5 + z
-					+ d2, 0.0D, 0.0D, 0.0D);
+			EnumFacing facing = getFacing();
+			double d0 = facing.getFrontOffsetX() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
+			double d1 = facing.getFrontOffsetY() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
+			double d2 = facing.getFrontOffsetZ() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
+			world.spawnParticle(EnumParticleTypes.REDSTONE, 0.5 + blockPos.getX() + d0, 0.5 + blockPos.getY() + d1, 0.5 + blockPos.getZ() + d2, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
@@ -169,7 +170,7 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
+	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
 		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[0]);
@@ -192,7 +193,7 @@ public class PartFluidLevelEmitter extends PartECBase implements
 				.getTextures()[2] : TextureManager.LEVEL_FRONT.getTextures()[1]);
 		rh.setBounds(7, 7, 14, 9, 9, 16);
 		rh.renderBlock(x, y, z, renderer);
-	}
+	}*/
 
 	@Override
 	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
@@ -212,7 +213,7 @@ public class PartFluidLevelEmitter extends PartECBase implements
 			this.wantedAmount = 0;
 		new PacketFluidEmitter(this.wantedAmount, player)
 				.sendPacketToPlayer(player);
-		notifyTargetBlock(getHostTile(), getSide());
+		notifyTargetBlock(getHostTile(), getFacing());
 		saveData();
 	}
 
@@ -234,7 +235,7 @@ public class PartFluidLevelEmitter extends PartECBase implements
 			break;
 		}
 
-		notifyTargetBlock(getHostTile(), getSide());
+		notifyTargetBlock(getHostTile(), getFacing());
 		new PacketFluidEmitter(this.mode, player).sendPacketToPlayer(player);
 		saveData();
 	}

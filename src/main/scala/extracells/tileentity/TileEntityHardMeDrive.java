@@ -1,27 +1,31 @@
 package extracells.tileentity;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.storage.*;
+import appeng.api.storage.ICellContainer;
+import appeng.api.storage.ICellHandler;
+import appeng.api.storage.ICellRegistry;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.StorageChannel;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
 import extracells.gridblock.ECGridBlockHardMEDrive;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryUpdateReceiver{
 
@@ -57,7 +61,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
     @Override
     public IGridNode getActionableNode() {
-        return getGridNode(ForgeDirection.UNKNOWN);
+        return getGridNode(AEPartLocation.INTERNAL);
     }
 
     @Override
@@ -84,8 +88,8 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
     }
 
     @Override
-    public IGridNode getGridNode(ForgeDirection forgeDirection) {
-        if (isFirstGridNode && hasWorldObj() && !getWorldObj().isRemote){
+    public IGridNode getGridNode(AEPartLocation location) {
+        if (isFirstGridNode && hasWorldObj() && !worldObj.isRemote){
             isFirstGridNode = false;
             try{
                 node = AEApi.instance().createGridNode(gridBlock);
@@ -99,7 +103,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
     }
 
     @Override
-    public AECableType getCableConnectionType(ForgeDirection forgeDirection) {
+    public AECableType getCableConnectionType(AEPartLocation location) {
         return AECableType.SMART;
     }
 
@@ -157,13 +161,13 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
                         stackInSlot, inventoryHandler);
             }
         }
-        IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
+        IGridNode node = getGridNode(AEPartLocation.INTERNAL);
         if (node != null) {
             IGrid grid = node.getGrid();
             if (grid != null) {
                 grid.postEvent(new MENetworkCellArrayUpdate());
             }
-            getWorldObj().markBlockForUpdate(xCoord, yCoord, zCoord);
+            updateBlock();
         }
     }
 
@@ -190,20 +194,20 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
     }
 
     @Override
-    public  void writeToNBT(NBTTagCompound tag){
+    public NBTTagCompound writeToNBT(NBTTagCompound tag){
         super.writeToNBT(tag);
         tag.setTag("inventory", inventory.writeToNBT());
+        return tag;
     }
 
     @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        writeToNBT(nbtTag);
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound tag = writeToNBT(new NBTTagCompound());
         int i = 0;
         for (byte aCellStati : this.cellStatuses) {
-            nbtTag.setByte("status#" + i, aCellStati);
+            tag.setByte("status#" + i, aCellStati);
             i++;
         }
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+        return tag;
     }
 }

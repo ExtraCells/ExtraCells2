@@ -36,7 +36,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 		if (this.tank == null && this.externalSystem == null && this.externalHandler == null || !(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE) || input == null)
 			return false;
 		if(externalHandler != null){
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getFacing().getOpposite(), new MachineSource(this.node));
 			if (inventory == null)
 				return false;
 		}else
@@ -52,7 +52,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 		if (!this.node.isActive() || !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE))
 			return null;
 		if(externalHandler != null && request != null){
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getFacing().getOpposite(), new MachineSource(this.node));
 			if(inventory == null)
 				return null;
 			return inventory.extractItems(request, mode, new MachineSource(this.node));
@@ -70,7 +70,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 		if (!this.node.isActive() || !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE))
 			return out;
 		if(externalHandler != null) {
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getFacing().getOpposite(), new MachineSource(this.node));
 			if (inventory == null)
 				return out;
 			IItemList<IAEFluidStack> list = inventory.getAvailableItems(AEApi.instance().storage().createFluidList());
@@ -101,7 +101,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 		if (!(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE))
 			return input;
 		if(externalHandler != null && input != null){
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getFacing().getOpposite(), new MachineSource(this.node));
 			if(inventory == null)
 				return null;
 			return inventory.injectItems(input, mode, new MachineSource(this.node));
@@ -131,7 +131,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 
 	public void onNeighborChange() {
 		this.tank = null;
-		ForgeDirection orientation = this.node.getSide();
+		ForgeDirection orientation = this.node.getFacing();
 		TileEntity hostTile = this.node.getHostTile();
 		if (hostTile == null)
 			return;
@@ -148,7 +148,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 			this.externalHandler = null;
 			return;
 		}
-		this.externalHandler = ECApi.instance().getHandler(tileEntity, this.node.getSide().getOpposite(), new MachineSource(this.node));
+		this.externalHandler = ECApi.instance().getHandler(tileEntity, this.node.getFacing().getOpposite(), new MachineSource(this.node));
 	}
 
 	@Override

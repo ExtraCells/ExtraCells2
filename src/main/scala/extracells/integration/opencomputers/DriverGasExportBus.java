@@ -1,7 +1,16 @@
 package extracells.integration.opencomputers;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
+import appeng.api.util.AEPartLocation;
 import extracells.part.PartGasExport;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
@@ -13,41 +22,35 @@ import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
-import li.cil.oc.server.network.Component;
 import mekanism.api.gas.GasStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class DriverGasExportBus implements li.cil.oc.api.driver.Block, EnvironmentAware{
 
     @Override
-    public boolean worksWith(World world, int x, int y, int z) {
-        return getExportBus(world, x, y, z, ForgeDirection.UNKNOWN) != null;
+    public boolean worksWith(World world, BlockPos pos) {
+        return getExportBus(world, pos, null) != null;
     }
 
     @Override
-    public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
-        TileEntity tile = world.getTileEntity(x, y, z);
+    public ManagedEnvironment createEnvironment(World world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
         if (tile == null || (!(tile instanceof IPartHost)))
             return null;
         return new Enviroment((IPartHost) tile);
     }
 
-    private static PartGasExport getExportBus(World world, int x, int y, int z, ForgeDirection dir){
-        TileEntity tile = world.getTileEntity(x, y, z);
+    private static PartGasExport getExportBus(World world, BlockPos pos, AEPartLocation dir){
+        TileEntity tile = world.getTileEntity(pos);
         if (tile == null || (!(tile instanceof IPartHost)))
             return null;
         IPartHost host = (IPartHost) tile;
-        if(dir == null || dir == ForgeDirection.UNKNOWN){
-            for (ForgeDirection side: ForgeDirection.VALID_DIRECTIONS){
+        if(dir == null || dir == AEPartLocation.INTERNAL){
+            for (AEPartLocation side: AEPartLocation.SIDE_LOCATIONS){
                 IPart part = host.getPart(side);
                 if (part != null && part instanceof PartGasExport && !(part instanceof PartGasExport))
                     return (PartGasExport) part;
@@ -74,10 +77,10 @@ public class DriverGasExportBus implements li.cil.oc.api.driver.Block, Environme
 
         @Callback(doc = "function(side:number, [ slot:number]):table -- Get the configuration of the gas export bus pointing in the specified direction.")
         public Object[] getGasExportConfiguration(Context context, Arguments args){
-            ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-            if (dir == null || dir == ForgeDirection.UNKNOWN)
+            AEPartLocation dir =  AEPartLocation.fromOrdinal(args.checkInteger(0));
+            if (dir == null || dir == AEPartLocation.INTERNAL)
                 return new Object[]{null, "unknown side"};
-            PartGasExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+            PartGasExport part = getExportBus(tile.getWorld(), tile.getPos(), dir);
             if (part == null)
                 return new Object[]{null, "no export bus"};
             int slot = args.optInteger(1, 4);
@@ -94,10 +97,10 @@ public class DriverGasExportBus implements li.cil.oc.api.driver.Block, Environme
 
         @Callback(doc = "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the gas export bus pointing in the specified direction to export gas stacks matching the specified descriptor.")
         public Object[] setGasExportConfiguration(Context context, Arguments args){
-            ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-            if (dir == null || dir == ForgeDirection.UNKNOWN)
+            AEPartLocation dir =  AEPartLocation.fromOrdinal(args.checkInteger(0));
+            if (dir == null || dir == AEPartLocation.INTERNAL)
                 return new Object[]{null, "unknown side"};
-            PartGasExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+            PartGasExport part = getExportBus(tile.getWorld(), tile.getPos(), dir);
             if (part == null)
                 return new Object[]{null, "no export bus"};
             int slot;
@@ -152,10 +155,10 @@ public class DriverGasExportBus implements li.cil.oc.api.driver.Block, Environme
 
         @Callback(doc = "function(side:number, amount:number):boolean -- Make the gas export bus facing the specified direction perform a single export operation.")
         public Object[] exportGas(Context context, Arguments args){
-            ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-            if (dir == null || dir == ForgeDirection.UNKNOWN)
-                return new Object[]{false, "unknown side"};
-            PartGasExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+            AEPartLocation dir =  AEPartLocation.fromOrdinal(args.checkInteger(0));
+            if (dir == null || dir == AEPartLocation.INTERNAL)
+                return new Object[]{null, "unknown side"};
+            PartGasExport part = getExportBus(tile.getWorld(), tile.getPos(), dir);
             if (part == null)
                 return new Object[]{false, "no export bus"};
             if (part.getFacingGasTank() == null)

@@ -1,13 +1,14 @@
 package extracells.network.packet.part;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.player.EntityPlayer;
+
 import appeng.api.config.RedstoneMode;
 import extracells.gui.GuiFluidEmitter;
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidLevelEmitter;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class PacketFluidEmitter extends AbstractPacket {
 
@@ -64,7 +65,7 @@ public class PacketFluidEmitter extends AbstractPacket {
 			this.part.setWantedAmount(this.wantedAmount, this.player);
 			break;
 		case 2:
-			if (this.player != null && this.player.isClientWorld()) {
+			if (this.player != null && this.player.worldObj.isRemote) {
 				Gui gui = Minecraft.getMinecraft().currentScreen;
 				if (gui instanceof GuiFluidEmitter) {
 					((GuiFluidEmitter) gui).setAmountField(this.wantedAmount);
@@ -79,7 +80,7 @@ public class PacketFluidEmitter extends AbstractPacket {
 			}
 			break;
 		case 4:
-			if (this.player != null && this.player.isClientWorld()) {
+			if (this.player != null && this.player.worldObj.isRemote) {
 				Gui gui = Minecraft.getMinecraft().currentScreen;
 				if (gui instanceof GuiFluidEmitter) {
 					((GuiFluidEmitter) gui).setRedstoneMode(this.redstoneMode);
