@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface IWailaTile {
 
-	public List<String> getWailaBody(List<String> list, NBTTagCompound tag,
-			EnumFacing side);
+	List<String> getWailaBody(List<String> list, NBTTagCompound tag,
+		EnumFacing side);
 
-	public NBTTagCompound getWailaTag(NBTTagCompound tag);
+	NBTTagCompound getWailaTag(NBTTagCompound tag);
 
 }

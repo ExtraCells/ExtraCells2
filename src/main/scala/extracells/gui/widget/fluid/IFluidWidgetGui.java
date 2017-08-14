@@ -2,7 +2,7 @@ package extracells.gui.widget.fluid;
 
 public interface IFluidWidgetGui {
 
-	public int guiLeft();
+	int guiLeft();
 
-	public int guiTop();
+	int guiTop();
 }

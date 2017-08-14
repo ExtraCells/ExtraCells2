@@ -24,9 +24,7 @@ public class SlotPlayerInventory extends Slot {
 		ItemStack s = player.getHeldItem(EnumHand.MAIN_HAND);
 		if (s == null || !this.container.hasWirelessTermHandler())
 			return true;
-		if (s == this.inventory.getStackInSlot(getSlotIndex()))
-			return false;
-		return true;
+		return s != this.inventory.getStackInSlot(getSlotIndex());
 	}
 
 }

@@ -613,7 +613,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 	public boolean showDurabilityBar(ItemStack itemStack) {
 		if (itemStack == null)
 			return false;
-		return itemStack.getItemDamage() == 4 ? true : false;
+		return itemStack.getItemDamage() == 4;
 	}
 
 	@Override

@@ -34,21 +34,21 @@ public class Integration {
 
 		private final Side side;
 
-		private Mods(String modid){
+		Mods(String modid){
 			this(modid, modid);
 		}
 
-		private Mods(String modid, String modName, Side side) {
+		Mods(String modid, String modName, Side side) {
 			this.modID = modid;
 			this.name = modName;
 			this.side = side;
 		}
 
-		private Mods(String modid, String modName){
+		Mods(String modid, String modName){
 			this(modid, modName, null);
 		}
 
-		private Mods(String modid, Side side){
+		Mods(String modid, Side side){
 			this(modid, modid, side);
 		}
 		

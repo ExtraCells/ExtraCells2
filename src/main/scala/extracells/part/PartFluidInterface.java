@@ -1060,7 +1060,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 					((IAEItemStack) s).getItemStack().writeToNBT(data);
 				} else {
 					((IAEFluidStack) s).getFluidStack().writeToNBT(data);
-				};
+				}
 				tag.setTag("add-" + i, data);
 				tag.setLong("add-" + i + "-amount", s.getStackSize());
 			}

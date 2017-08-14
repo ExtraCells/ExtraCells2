@@ -374,7 +374,7 @@ public class ContainerFluidStorage extends Container implements
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
 		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(slotnumber);
+		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();

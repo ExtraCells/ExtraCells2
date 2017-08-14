@@ -39,6 +39,8 @@ public class BlockFluidCrafter extends BlockEC {
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
+
+
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityFluidCrafter();
@@ -66,7 +68,7 @@ public class BlockFluidCrafter extends BlockEC {
 
 				if (item.hasTagCompound()) {
 					entityItem.getEntityItem().setTagCompound(
-							(NBTTagCompound) item.getTagCompound().copy());
+						item.getTagCompound().copy());
 				}
 
 				float factor = 0.05F;

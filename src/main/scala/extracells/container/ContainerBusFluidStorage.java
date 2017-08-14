@@ -70,7 +70,7 @@ public class ContainerBusFluidStorage extends Container {
 			this.guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
 
 		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(slotnumber);
+		Slot slot = this.inventorySlots.get(slotnumber);
 
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();

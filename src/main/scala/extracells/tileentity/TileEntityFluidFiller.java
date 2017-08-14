@@ -339,7 +339,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 		if (newGrid != null) {
 			IStorageGrid storage = newGrid.getCache(IStorageGrid.class);
 			if (storage != null)
-				storage.getFluidInventory().addListener(this, null);;
+				storage.getFluidInventory().addListener(this, null);
 		}
 	}
 

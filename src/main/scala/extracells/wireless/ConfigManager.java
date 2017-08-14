@@ -28,7 +28,7 @@ public class ConfigManager implements IConfigManager {
             registerSetting( Settings.VIEW_MODE, ViewItems.ALL );
             registerSetting( Settings.SORT_DIRECTION, SortDir.ASCENDING );
 
-            readFromNBT((NBTTagCompound) tag.copy());
+            readFromNBT(tag.copy());
         }
 
     }

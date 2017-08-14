@@ -1,13 +1,15 @@
 package extracells.container;
 
-import extracells.part.PartFluidLevelEmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import extracells.part.PartFluidLevelEmitter;
 
 public class ContainerFluidEmitter extends Container {
 
@@ -43,7 +45,7 @@ public class ContainerFluidEmitter extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
 		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(slotnumber);
+		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack fluidItem = slot.getStack().copy();
 			fluidItem.stackSize = 1;

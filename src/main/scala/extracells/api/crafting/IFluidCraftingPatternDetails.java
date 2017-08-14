@@ -5,8 +5,8 @@ import appeng.api.storage.data.IAEFluidStack;
 
 public interface IFluidCraftingPatternDetails extends ICraftingPatternDetails {
 
-	public IAEFluidStack[] getCondensedFluidInputs();
+	IAEFluidStack[] getCondensedFluidInputs();
 
-	public IAEFluidStack[] getFluidInputs();
+	IAEFluidStack[] getFluidInputs();
 
 }

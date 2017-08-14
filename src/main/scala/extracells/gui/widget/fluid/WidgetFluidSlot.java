@@ -25,7 +25,7 @@ public class WidgetFluidSlot extends Gui {
 
 	public interface IConfigurable {
 
-		public byte getConfigState();
+		byte getConfigState();
 	}
 
 	private int id;

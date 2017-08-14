@@ -16,74 +16,74 @@ import net.minecraftforge.fluids.FluidStack;
 
 public interface ExtraCellsApi {
 
-	public void addFluidToShowBlacklist(Class<? extends Fluid> clazz);
+	void addFluidToShowBlacklist(Class<? extends Fluid> clazz);
 
-	public void addFluidToShowBlacklist(Fluid fluid);
+	void addFluidToShowBlacklist(Fluid fluid);
 
-	public void addFluidToStorageBlacklist(Class<? extends Fluid> clazz);
+	void addFluidToStorageBlacklist(Class<? extends Fluid> clazz);
 
-	public void addFluidToStorageBlacklist(Fluid fluid);
+	void addFluidToStorageBlacklist(Fluid fluid);
 
-	public IBlockDefinition blocks();
+	IBlockDefinition blocks();
 
-	public boolean canFluidSeeInTerminal(Fluid fluid);
+	boolean canFluidSeeInTerminal(Fluid fluid);
 
-	public boolean canStoreFluid(Fluid fluid);
-
-	/**
-	 * @deprecated incorrect spelling
-	 */
-	@Deprecated
-	public String getVerion();
-
-	public String getVersion();
-
-	@Deprecated
-	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is);
-
-	public IWirelessGasFluidTermHandler getWirelessTermHandler(ItemStack is);
-
-	public boolean isWirelessFluidTerminal(ItemStack is);
-
-	public IItemDefinition items();
-
-	@Deprecated
-	public ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
-
-	public ItemStack openPortableGasCellGui(EntityPlayer player, ItemStack stack, World world);
-
-	public ItemStack openPortableFluidCellGui(EntityPlayer player, ItemStack stack, World world);
-
-	@Deprecated
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);
-
-	public ItemStack openWirelessFluidTerminal(EntityPlayer player, ItemStack stack, World world);
-
-	public ItemStack openWirelessGasTerminal(EntityPlayer player, ItemStack stack, World world);
-
-	@Deprecated
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, Long key);
-
-	public IPartDefinition parts();
-
-	public void registerWirelessTermHandler(IWirelessGasFluidTermHandler handler);
-
-	@Deprecated
-	public void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
+	boolean canStoreFluid(Fluid fluid);
 
 	/**
 	 * @deprecated incorrect spelling
 	 */
 	@Deprecated
-	public void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
+	String getVerion();
 
-	public void registerFuelBurnTime(Fluid fuel, int burnTime);
+	String getVersion();
 
-	public boolean isGasStack(IAEFluidStack stack);
+	@Deprecated
+	IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is);
 
-	public boolean isGasStack(FluidStack stack);
+	IWirelessGasFluidTermHandler getWirelessTermHandler(ItemStack is);
 
-	public boolean isGas(Fluid fluid);
+	boolean isWirelessFluidTerminal(ItemStack is);
+
+	IItemDefinition items();
+
+	@Deprecated
+	ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
+
+	ItemStack openPortableGasCellGui(EntityPlayer player, ItemStack stack, World world);
+
+	ItemStack openPortableFluidCellGui(EntityPlayer player, ItemStack stack, World world);
+
+	@Deprecated
+	ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);
+
+	ItemStack openWirelessFluidTerminal(EntityPlayer player, ItemStack stack, World world);
+
+	ItemStack openWirelessGasTerminal(EntityPlayer player, ItemStack stack, World world);
+
+	@Deprecated
+	ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, Long key);
+
+	IPartDefinition parts();
+
+	void registerWirelessTermHandler(IWirelessGasFluidTermHandler handler);
+
+	@Deprecated
+	void registerWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
+
+	/**
+	 * @deprecated incorrect spelling
+	 */
+	@Deprecated
+	void registryWirelessFluidTermHandler(IWirelessFluidTermHandler handler);
+
+	void registerFuelBurnTime(Fluid fuel, int burnTime);
+
+	boolean isGasStack(IAEFluidStack stack);
+
+	boolean isGasStack(FluidStack stack);
+
+	boolean isGas(Fluid fluid);
 
 	/**
 	 * Converts an IAEFluid stack to a GasStack
@@ -91,7 +91,7 @@ public interface ExtraCellsApi {
 	 * @param fluidStack
 	 * @return GasStack
      */
-	public Object createGasStack(IAEFluidStack fluidStack);
+	Object createGasStack(IAEFluidStack fluidStack);
 
 	/**
 	 * Create the fluidstack from the specific gas
@@ -99,7 +99,7 @@ public interface ExtraCellsApi {
 	 * @param gasStack
 	 * @return FluidStack
      */
-	public IAEFluidStack createFluidStackFromGas(Object gasStack);
+	IAEFluidStack createFluidStackFromGas(Object gasStack);
 
 	/**
 	 * Create the ec fluid from the specific gas
@@ -107,7 +107,7 @@ public interface ExtraCellsApi {
 	 * @param gas
 	 * @return Fluid
      */
-	public Fluid getGasFluid(Object gas);
+	Fluid getGasFluid(Object gas);
 
 	/**
 	 * A registry for StorageBus interactions

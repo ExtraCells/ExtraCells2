@@ -211,7 +211,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			IStorageGrid storage = g.getCache(IStorageGrid.class);
 			if (storage == null)
 				return;
-			IMEMonitor<IAEFluidStack> fluids = getFluidStorage();;
+			IMEMonitor<IAEFluidStack> fluids = getFluidStorage();
 			if (fluids == null)
 				return;
 			for (IAEFluidStack s : fluids.getStorageList()) {
@@ -499,7 +499,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		if (this.fluid == null)
 			data.writeInt(-1);
 		else
-			ByteBufUtils.writeUTF8String(data, fluid.getName());;
+			ByteBufUtils.writeUTF8String(data, fluid.getName());
 		data.writeBoolean(this.locked);
 
 	}

@@ -56,7 +56,7 @@ object Extracells {
 		proxy.registerFluidBurnTimes
 		proxy.addRecipes(configFolder)
 		ChannelHandler.registerMessages
-		RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId))
+		//RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId))
 		integration.init
 	}
 

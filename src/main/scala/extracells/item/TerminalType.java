@@ -5,5 +5,5 @@ public enum TerminalType {
     FLUID,
     GAS,
     ESSENTIA,
-    CRAFTING;
+    CRAFTING
 }

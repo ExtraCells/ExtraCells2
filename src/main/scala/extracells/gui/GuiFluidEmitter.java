@@ -95,7 +95,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			if (i == 6)
 				break;
-			GuiButton currentButton = (GuiButton) this.buttonList.get(i);
+			GuiButton currentButton = this.buttonList.get(i);
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 				currentButton.displayString = shiftNames[i] + "mB";

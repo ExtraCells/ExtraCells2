@@ -20,14 +20,12 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
+import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.util.math.{BlockPos, MathHelper}
 import net.minecraft.world.World
 
 
 object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ROCK, 2.0F, 1000000.0F) with TGuiBlock{
-
-
-
 
   override def getServerGuiElement(player: EntityPlayer, world: World,  pos: BlockPos): Any = {
     val tile = world.getTileEntity(pos)
@@ -88,11 +86,10 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
     }
   }
 
-  override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, p_149727_7_ : Float, p_149727_8_ : Float, p_149727_9_ : Float): Boolean = {
-    val pos = new BlockPos(x,y,z)
+  override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, heldItem: ItemStack, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
     if (world.isRemote) return false
     val tile: TileEntity = world.getTileEntity(pos)
-    if (tile.isInstanceOf[TileEntityHardMeDrive]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(ForgeDirection.UNKNOWN))) return false
+    if (tile.isInstanceOf[TileEntityHardMeDrive]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(AEPartLocation.INTERNAL))) return false
     val current: ItemStack = player.inventory.getCurrentItem
     if (player.isSneaking && current != null) {
       //TODO: Add buildcraft Support
@@ -114,7 +111,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
         return true
       }
     }
-    GuiHandler.launchGui(0, player, world, x, y, z)
+    GuiHandler.launchGui(0, player, world, pos.getX, pos.getY, pos.getZ)
     return true
   }
 

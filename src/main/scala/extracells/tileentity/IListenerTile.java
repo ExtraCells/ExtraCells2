@@ -4,10 +4,10 @@ import appeng.api.networking.IGrid;
 
 public interface IListenerTile {
 
-	public void registerListener();
+	void registerListener();
 
-	public void removeListener();
+	void removeListener();
 
-	public void updateGrid(IGrid oldGrid, IGrid newGrid);
+	void updateGrid(IGrid oldGrid, IGrid newGrid);
 
 }

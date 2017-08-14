@@ -327,7 +327,7 @@ public class ContainerGasStorage extends Container implements
 			this.monitor.removeListener(this);
 			for (int i = 0; i < 2; i++)
 				this.player.dropItem(
-						((Slot) this.inventorySlots.get(i)).getStack(), false);
+						this.inventorySlots.get(i).getStack(), false);
 		}
 	}
 
@@ -396,7 +396,7 @@ public class ContainerGasStorage extends Container implements
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
 		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(slotnumber);
+		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();

@@ -5,9 +5,6 @@ import appeng.api.config.SecurityPermissions
 import appeng.api.implementations.items.IAEWrench
 import appeng.api.networking.IGridNode
 import appeng.api.util.AEPartLocation
-import buildcraft.api.tools.IToolWrench
-import cpw.mods.fml.relauncher.Side
-import cpw.mods.fml.relauncher.SideOnly
 import extracells.api.IECTileEntity
 import extracells.network.GuiHandler
 import extracells.tileentity.IListenerTile
@@ -17,7 +14,6 @@ import extracells.util.PermissionUtil
 import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
-import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.entity.player.EntityPlayer
@@ -27,10 +23,8 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.EnumHand
-import net.minecraft.util.IIcon
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import net.minecraftforge.common.util.ForgeDirection
 import javax.annotation.Nullable
 import java.util.Random
 

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IFluidSlotGui {
 
-	public void updateFluids(List<Fluid> _fluids);
+	void updateFluids(List<Fluid> _fluids);
 }

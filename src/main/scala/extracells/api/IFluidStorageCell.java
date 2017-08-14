@@ -14,10 +14,10 @@ public interface IFluidStorageCell extends ICellWorkbenchItem {
 	 * @return the Fluid Filter. An empty ArrayList or null if the cell accepts
 	 *         all Fluids
 	 */
-	public ArrayList<Fluid> getFilter(ItemStack is);
+	ArrayList<Fluid> getFilter(ItemStack is);
 
-	public int getMaxBytes(ItemStack is);
+	int getMaxBytes(ItemStack is);
 
-	public int getMaxTypes(ItemStack is);
+	int getMaxTypes(ItemStack is);
 
 }

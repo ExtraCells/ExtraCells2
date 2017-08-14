@@ -118,7 +118,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 
 	protected Slot getSlotAtPosition(int p_146975_1_, int p_146975_2_) {
 		for (int k = 0; k < this.inventorySlots.inventorySlots.size(); ++k) {
-			Slot slot = (Slot) this.inventorySlots.inventorySlots.get(k);
+			Slot slot = this.inventorySlots.inventorySlots.get(k);
 
 			if (this.isMouseOverSlot(slot, p_146975_1_, p_146975_2_)) {
 				return slot;

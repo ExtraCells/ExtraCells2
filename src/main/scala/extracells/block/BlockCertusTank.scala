@@ -38,7 +38,7 @@ class BlockCertusTank extends BlockEC(Material.GLASS, 2.0F, 10.0F) with Extended
     unlisted += PropertyTile.Tile
   }
 
-  override def createNewTileEntity(worldIn: World, meta: Int): TileEntity = TileEntityCertusTank
+  override def createNewTileEntity(worldIn: World, meta: Int): TileEntity = new TileEntityCertusTank
 
     override def getDrops(world: IBlockAccess, pos: BlockPos, state: IBlockState, fortune: Int): util.List[ItemStack] = {
       val tileEntity = new NBTTagCompound
