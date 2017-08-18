@@ -14,7 +14,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.EnumHand
+import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
 import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
@@ -123,10 +123,9 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
   }
 
   @SuppressWarnings(Array("rawtypes", "unchecked"))
-  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer, hand: EnumHand): ItemStack = {
-    return ECApi.instance.openPortableFluidCellGui(player, hand, world)
+  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
+    new ActionResult(EnumActionResult.SUCCESS, ECApi.instance.openPortableFluidCellGui(player, hand, world))
   }
-
 
   @SideOnly(Side.CLIENT)
   override def registerModel(item: Item, manager: ModelManager)=manager.registerItemModel(item, 0, "storage/fluid/portable")

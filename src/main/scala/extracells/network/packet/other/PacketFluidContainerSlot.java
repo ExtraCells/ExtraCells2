@@ -30,10 +30,9 @@ public class PacketFluidContainerSlot extends AbstractPacket {
 		case 0:
 			this.container.stackSize = 1;
 			this.fluidFiller.containerItem = this.container;
-			if (this.fluidFiller.hasWorldObj())
-				this.fluidFiller.getWorld().markBlockForUpdate(
-						this.fluidFiller.xCoord, this.fluidFiller.yCoord,
-						this.fluidFiller.zCoord);
+			if (this.fluidFiller.hasWorldObj()) {
+				fluidFiller.updateBlock();
+			}
 			this.fluidFiller.postUpdateEvent();
 			break;
 		}

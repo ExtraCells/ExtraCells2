@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import extracells.models.ModelManager;
 import extracells.models.PartModels;
-import extracells.render.block.RendererHardMEDrive;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
@@ -33,7 +32,7 @@ public class ClientProxy extends CommonProxy {
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRendererWalrus());*/
 		ModelManager.registerItemAndBlockColors();
-		RendererHardMEDrive.registerRenderer();
+		//RendererHardMEDrive.registerRenderer();
 	}
 
 	/*@SubscribeEvent

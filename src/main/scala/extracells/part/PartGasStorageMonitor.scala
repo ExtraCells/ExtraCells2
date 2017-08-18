@@ -5,24 +5,27 @@ import extracells.integration.Integration
 import extracells.util.{FluidUtil, GasUtil, WrenchUtil}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraft.util.EnumHand
+import net.minecraft.util.math.Vec3d
+import net.minecraft.util.text.TextComponentTranslation
 import net.minecraftforge.fml.common.Optional
 
 
 class PartGasStorageMonitor extends PartFluidStorageMonitor{
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
-  override def onActivate(player: EntityPlayer, pos: Vec3): Boolean = {
+  override def onActivate(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
     if(isMekEnabled)
-      onActivateGas(player, pos)
+      onActivateGas(player, hand, pos)
     else
       false
   }
 
   @Optional.Method(modid = "MekanismAPI|gas")
-  def onActivateGas(player: EntityPlayer, pos: Vec3): Boolean = {
+  def onActivateGas(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
     if (player == null || player.worldObj == null) return true
     if (player.worldObj.isRemote) return true
-    val s: ItemStack = player.getCurrentEquippedItem
+    val s: ItemStack = player.getHeldItem(hand)
     if (s == null) {
       if (this.locked) return false
       if (this.fluid == null) return true
@@ -33,13 +36,13 @@ class PartGasStorageMonitor extends PartFluidStorageMonitor{
       if (host != null) host.markForUpdate
       return true
     }
-    if (WrenchUtil.canWrench(s, player, this.tile.xCoord, this.tile.yCoord, this.tile.zCoord)) {
+    if (WrenchUtil.canWrench(s, player, this.tile.getPos)) {
       this.locked = !this.locked
-      WrenchUtil.wrenchUsed(s, player, this.tile.xCoord, this.tile.zCoord, this.tile.yCoord)
+      WrenchUtil.wrenchUsed(s, player, this.tile.getPos)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
-      if (this.locked) player.addChatMessage(new ChatComponentTranslation("chat.appliedenergistics2.isNowLocked"))
-      else player.addChatMessage(new ChatComponentTranslation("chat.appliedenergistics2.isNowUnlocked"))
+      if (this.locked) player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))
+      else player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowUnlocked"))
       return true
     }
     if (this.locked) return false

@@ -6,9 +6,10 @@ import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.I18n;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -38,26 +39,26 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 				1)));
 		drawHoveringText(description, mouseX - this.guiFluidTerminal.guiLeft(),
 				mouseY - this.guiFluidTerminal.guiTop() + 18,
-				Minecraft.getMinecraft().fontRenderer);
+				Minecraft.getMinecraft().fontRendererObj);
 		return true;
 	}
 
 	@Override
 	public void drawWidget(int posX, int posY) {
 		Minecraft.getMinecraft().renderEngine
-				.bindTexture(TextureMap.locationBlocksTexture);
+				.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor3f(1, 1, 1);
-		if (this.fluid != null && this.fluid.getIcon() != null) {
-			drawTexturedModelRectFromIcon(posX + 1, posY + 1,
-					this.fluid.getIcon(), this.height - 2, this.width - 2);
+		if (this.fluid != null) {
+			TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
+			drawTexturedModalRect(posX + 1, posY + 1, sprite, this.height - 2, this.width - 2);
 			GL11.glScalef(0.5F, 0.5F, 0.5F);
 			String str = I18n.translateToLocal("extracells.gui.craft");
 			str = WordUtils.capitalize(str.toLowerCase());
-			Minecraft.getMinecraft().fontRenderer.drawString(
-					EnumChatFormatting.WHITE + str, 52 + posX - str.length(),
+			Minecraft.getMinecraft().fontRendererObj.drawString(
+					TextFormatting.WHITE + str, 52 + posX - str.length(),
 					posY + 24, 0);
 		}
 		GL11.glEnable(GL11.GL_LIGHTING);

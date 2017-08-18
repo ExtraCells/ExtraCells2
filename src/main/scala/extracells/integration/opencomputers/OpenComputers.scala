@@ -3,21 +3,27 @@ package extracells.integration.opencomputers
 import appeng.api.AEApi
 import extracells.integration.Integration
 import extracells.item.ItemOCUpgrade
+import extracells.registries.ItemEnum
 import li.cil.oc.api.Driver
-object OpenComputers {
+import li.cil.oc.api.driver.{EnvironmentProvider, SidedBlock}
+/*object OpenComputers {
 	
 	def init{
-		Driver.add(new DriverFluidExportBus)
-		Driver.add(new DriverOreDictExportBus)
-		Driver.add(new DriverFluidInterface)
+		add(new DriverFluidExportBus)
+		add(new DriverOreDictExportBus)
+		add(new DriverFluidInterface)
 		if(Integration.Mods.MEKANISMGAS.isEnabled){
-			Driver.add(new DriverGasExportBus)
-			Driver.add(new DriverGasImportBus)
+			add(new DriverGasExportBus)
+			add(new DriverGasImportBus)
 		}
-		Driver.add(ItemOCUpgrade)
+		add(ItemEnum.OCUPGRADE.getItem.asInstanceOf[ItemOCUpgrade])
 		AEApi.instance.registries.wireless.registerWirelessHandler(WirelessHandlerUpgradeAE)
 		OCRecipes.loadRecipes
 		ExtraCellsPathProvider
 	}
 
-}
+	def add(provider: EnvironmentProvider): Unit ={
+		Driver.add(provider)
+	}
+
+}*/

@@ -8,9 +8,9 @@ import org.lwjgl.input.Keyboard;
 
 public class DigitTextField extends GuiTextField {
 
-	public DigitTextField(FontRenderer fontRenderer, int x, int y, int length,
+	public DigitTextField(int id, FontRenderer fontRenderer, int x, int y, int length,
 			int height) {
-		super(fontRenderer, x, y, length, height);
+		super(id, fontRenderer, x, y, length, height);
 	}
 
 	private Boolean isWhiteListed(char key) {

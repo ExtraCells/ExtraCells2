@@ -1,18 +1,17 @@
 package extracells.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.I18n;
 import net.minecraft.util.ResourceLocation;
-
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.text.translation.I18n;
 
 import org.lwjgl.opengl.GL11;
 
@@ -46,7 +45,6 @@ public class GuiFluidInterface extends GuiContainer {
 	public GuiFluidInterface(EntityPlayer player, IFluidInterface fluidInterface, AEPartLocation side) {
 		this(player, fluidInterface);
 		this.partSide = side;
-		PotionEffect
 	}
 
 	@Override
@@ -84,7 +82,7 @@ public class GuiFluidInterface extends GuiContainer {
 		}
 		for (WidgetFluidTank tank : this.tanks) {
 			if (tank != null)
-				if (func_146978_c(tank.posX, tank.posY, 18, 73, mouseX, mouseY)) {
+				if (isPointInRegion(tank.posX, tank.posY, 18, 73, mouseX, mouseY)) {
 					tank.drawDirectionTooltip(mouseX - this.guiLeft, mouseY
 							- this.guiTop);
 				}
@@ -120,9 +118,7 @@ public class GuiFluidInterface extends GuiContainer {
 					&& this.partSide.ordinal() != i)
 				continue;
 			this.tanks[i] = new WidgetFluidTank(
-					this.fluidInterface.getFluidTank(ForgeDirection
-							.getOrientation(i)), i * 20 + 30, 16,
-					ForgeDirection.getOrientation(i));
+					this.fluidInterface.getFluidTank(AEPartLocation.fromOrdinal(i)), i * 20 + 30, 16, AEPartLocation.fromOrdinal(i));
 			if (this.fluidInterface instanceof IFluidSlotPartOrBlock) {
 				this.filter[i] = new WidgetFluidSlot(this.player,
 						(IFluidSlotPartOrBlock) this.fluidInterface, i,
@@ -132,7 +128,7 @@ public class GuiFluidInterface extends GuiContainer {
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		for (WidgetFluidSlot fluidSlot : this.filter) {
 			if (fluidSlot != null)
@@ -162,8 +158,7 @@ public class GuiFluidInterface extends GuiContainer {
 		}
 	}
 
-	private void renderOutput(Slot slot, int mouseX, int mouseY)
-			throws Throwable {
+	private void renderOutput(Slot slot, int mouseX, int mouseY) throws Throwable {
 		if (slot.getStack() != null && slot.slotNumber < 9) {
 			ItemStack stack = slot.getStack();
 			if (stack.getItem() instanceof ICraftingPatternItem) {
@@ -189,20 +184,16 @@ public class GuiFluidInterface extends GuiContainer {
 
 				GL11.glTranslatef(0.0F, 0.0F, 32.0F);
 				this.zLevel = 150.0F;
-				RenderItem itemRender = RenderItem.getInstance();
+				RenderItem itemRender = mc.getRenderItem();
 				itemRender.zLevel = 100.0F;
 				FontRenderer font = null;
 				if (output != null)
 					font = output.getItem().getFontRenderer(output);
 				if (font == null)
-					font = Minecraft.getMinecraft().fontRenderer;
+					font = Minecraft.getMinecraft().fontRendererObj;
 				GL11.glEnable(GL11.GL_DEPTH_TEST);
-				itemRender.renderItemAndEffectIntoGUI(font, Minecraft
-						.getMinecraft().getTextureManager(), output,
-						slot.xDisplayPosition, slot.yDisplayPosition);
-				itemRender.renderItemOverlayIntoGUI(font, Minecraft
-						.getMinecraft().getTextureManager(), output,
-						slot.xDisplayPosition, slot.yDisplayPosition, null);
+				itemRender.renderItemAndEffectIntoGUI(output, slot.xDisplayPosition, slot.yDisplayPosition);
+				itemRender.renderItemOverlayIntoGUI(font, output, slot.xDisplayPosition, slot.yDisplayPosition, null);
 				this.zLevel = 0.0F;
 				itemRender.zLevel = 0.0F;
 

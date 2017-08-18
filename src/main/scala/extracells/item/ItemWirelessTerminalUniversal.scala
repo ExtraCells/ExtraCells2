@@ -16,12 +16,12 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.EnumHand
+import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
 import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
-object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler with EssensiaTerminal with CraftingTerminal{
+object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with CraftingTerminal{
   val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
   val isWcEnabled = Integration.Mods.WIRELESSCRAFTING.isEnabled
@@ -56,23 +56,23 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     super.getUnlocalizedName(itemStack).replace("item.extracells", "extracells.item")
 
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ItemStack = {
+  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
     if(world.isRemote){
       if(entityPlayer.isSneaking)
-        return itemStack
+        return new ActionResult(EnumActionResult.SUCCESS, itemStack)
       val tag = ensureTagCompound(itemStack)
       if(!tag.hasKey("type"))
         tag.setByte("type", 0)
       if(tag.getByte("type") == 4 && isWcEnabled)
         WirelessCrafting.openCraftingTerminal(entityPlayer)
-      return itemStack
+      return new ActionResult(EnumActionResult.SUCCESS, itemStack)
     }
 
     val tag = ensureTagCompound(itemStack)
     if(!tag.hasKey("type"))
       tag.setByte("type", 0)
     if(entityPlayer.isSneaking)
-      return changeMode(itemStack, entityPlayer, tag)
+      return new ActionResult(EnumActionResult.SUCCESS, changeMode(itemStack, entityPlayer, tag))
     val matchted = tag.getByte("type") match {
       case 0 => AEApi.instance.registries.wireless.openWirelessTerminalGui(itemStack, world, entityPlayer)
       case 1 => ECApi.instance.openWirelessFluidTerminal(entityPlayer, hand, world)
@@ -80,7 +80,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
       //case 3 => if(isTeEnabled) ThaumaticEnergistics.openEssentiaTerminal(entityPlayer, this)
       case _ =>
     }
-    itemStack
+    new ActionResult(EnumActionResult.SUCCESS, itemStack)
   }
 
   def changeMode(itemStack: ItemStack, player: EntityPlayer, tag :NBTTagCompound): ItemStack = {
@@ -145,7 +145,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
 
   @SideOnly(Side.CLIENT)
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], advanced: Boolean) {
+  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[String], advanced: Boolean) {
     val tag = ensureTagCompound(itemStack)
     if(!tag.hasKey("type"))
       tag.setByte("type", 0)
@@ -209,7 +209,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
 
   @SuppressWarnings(Array("unchecked", "rawtypes"))
-  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[_]) {
+  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[ItemStack]) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     val tag = new NBTTagCompound
     tag.setByte("modules", 31)

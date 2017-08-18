@@ -1,13 +1,16 @@
 package extracells.part;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -22,6 +25,7 @@ import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.util.AECableType;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
@@ -29,8 +33,8 @@ import extracells.util.PermissionUtil;
 public class PartFluidPlaneAnnihilation extends PartECBase {
 
 	@Override
-	public int cableConnectionRenderTo() {
-		return 2;
+	public float getCableConnectionLength(AECableType cable) {
+		return 2.0F;
 	}
 
 	@SuppressWarnings("unused")
@@ -57,10 +61,10 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
 				(IPart) this)) {
-			return super.onActivate(player, pos);
+			return super.onActivate(player, hand, pos);
 		}
 		return false;
 	}
@@ -74,20 +78,17 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
 		if (monitor == null)
 			return;
-		World world = hostTile.getWorldObj();
-		int x = hostTile.xCoord;
-		int y = hostTile.yCoord;
-		int z = hostTile.zCoord;
-		ForgeDirection side = getFacing();
-		Block fluidBlock = world.getBlock(x + side.offsetX, y + side.offsetY, z
-				+ side.offsetZ);
-		int meta = world.getBlockMetadata(x + side.offsetX, y + side.offsetY, z
-				+ side.offsetZ);
+		World world = hostTile.getWorld();
+		BlockPos pos = hostTile.getPos();
+		EnumFacing facing = getFacing();
+		BlockPos offsetPos = pos.offset(facing);
+		IBlockState blockState = world.getBlockState(offsetPos);
+		Block fluidBlock = blockState.getBlock();
+		int meta = fluidBlock.getMetaFromState(blockState);
 
 		if (fluidBlock instanceof IFluidBlock) {
 			IFluidBlock block = (IFluidBlock) fluidBlock;
-			FluidStack drained = block.drain(world, x + side.offsetX, y
-					+ side.offsetY, z + side.offsetZ, false);
+			FluidStack drained = block.drain(world, offsetPos, false);
 			if (drained == null)
 				return;
 			IAEFluidStack toInject = FluidUtil.createAEFluidStack(drained);
@@ -95,12 +96,10 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 					Actionable.SIMULATE, new MachineSource(this));
 			if (notInjected != null)
 				return;
-			monitor.injectItems(toInject, Actionable.MODULATE,
-					new MachineSource(this));
-			block.drain(world, x + side.offsetX, y + side.offsetY, z
-					+ side.offsetZ, true);
+			monitor.injectItems(toInject, Actionable.MODULATE, new MachineSource(this));
+			block.drain(world, offsetPos, true);
 		} else if (meta == 0) {
-			if (fluidBlock == Blocks.flowing_water) {
+			if (fluidBlock == Blocks.FLOWING_WATER) {
 				IAEFluidStack toInject = FluidUtil
 						.createAEFluidStack(FluidRegistry.WATER);
 				IAEFluidStack notInjected = monitor.injectItems(toInject,
@@ -109,19 +108,16 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 					return;
 				monitor.injectItems(toInject, Actionable.MODULATE,
 						new MachineSource(this));
-				world.setBlockToAir(x + side.offsetX, y + side.offsetY, z
-						+ side.offsetZ);
-			} else if (fluidBlock == Blocks.flowing_lava) {
+				world.setBlockToAir(offsetPos);
+			} else if (fluidBlock == Blocks.FLOWING_LAVA) {
 				IAEFluidStack toInject = FluidUtil
 						.createAEFluidStack(FluidRegistry.LAVA);
 				IAEFluidStack notInjected = monitor.injectItems(toInject,
 						Actionable.SIMULATE, new MachineSource(this));
 				if (notInjected != null)
 					return;
-				monitor.injectItems(toInject, Actionable.MODULATE,
-						new MachineSource(this));
-				world.setBlockToAir(x + side.offsetX, y + side.offsetY, z
-						+ side.offsetZ);
+				monitor.injectItems(toInject, Actionable.MODULATE, new MachineSource(this));
+				world.setBlockToAir(offsetPos);
 			}
 		}
 	}

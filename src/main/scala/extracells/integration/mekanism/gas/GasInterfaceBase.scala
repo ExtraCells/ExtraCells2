@@ -2,7 +2,7 @@ package extracells.integration.mekanism.gas
 
 import appeng.api.implementations.IPowerChannelState
 import appeng.api.networking.security.IActionHost
-import appeng.api.util.DimensionalCoord
+import appeng.api.util.{AEPartLocation, DimensionalCoord}
 import extracells.integration.Integration.Mods.MEKANISM
 import extracells.network.packet.other.IFluidSlotPartOrBlock
 import mekanism.api.gas._
@@ -32,23 +32,23 @@ trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChann
   override def canDrawGas(side: EnumFacing, gas: Gas): Boolean = getGasTank(side).canDraw(gas)
 
   @Method(modid = "MekanismAPI|gas")
-  override def canReceiveGas(side: EnumFacing, gas: Gas): Boolean = (!hasFilter(side)) && getGasTank(side).canReceive(gas)
+  override def canReceiveGas(side: EnumFacing, gas: Gas): Boolean = (!hasFilter(AEPartLocation.fromFacing(side))) && getGasTank(side).canReceive(gas)
 
   @Method(modid = "MekanismAPI|gas")
   override def canTubeConnect(side: EnumFacing): Boolean = isMekanismLoaded
 
-  def getFilter(side: EnumFacing): Int
+  def getFilter(side: AEPartLocation): String
 
-  def setFilter(side: EnumFacing, fluid: Fluid): Unit ={
+  def setFilter(side: AEPartLocation, fluid: Fluid): Unit ={
     if(fluid == null)
       setFilter(side, "")
     else
       setFilter(side, fluid.getName)
   }
 
-  def setFilter(side: EnumFacing, fluid: String)
+  def setFilter(side: AEPartLocation, fluid: String)
 
-  def hasFilter(side: EnumFacing) = getFilter(side) != -1
+  def hasFilter(side: AEPartLocation) = getFilter(side) != -1
 
   @Method(modid = "MekanismAPI|gas")
   def exportGas(side: EnumFacing, gas: GasStack, pos: DimensionalCoord): Int = {
@@ -69,6 +69,6 @@ trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChann
   }
 
   override def setFluid(_index: Int, _fluid: Fluid, _player: EntityPlayer) {
-    setFilter(EnumFacing.getFront(_index), _fluid)
+    setFilter(AEPartLocation.fromOrdinal(_index), _fluid)
   }
 }

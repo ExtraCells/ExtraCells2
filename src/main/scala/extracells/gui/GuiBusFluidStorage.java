@@ -1,5 +1,6 @@
 package extracells.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 	}
 
 	@Override
-	public void actionPerformed(GuiButton button) {
+	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		if (button instanceof WidgetStorageDirection) {
 			switch (((WidgetStorageDirection) button).getAccessRestriction()) {
@@ -105,7 +106,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 		for (byte i = 0; i < 54; i++) {
 			this.fluidSlotList.get(i).drawWidget();
 			if (!overlayRendered && this.fluidSlotList.get(i).canRender())
-				overlayRendered = GuiUtil.renderOverlay(this.zLevel, this.guiLeft, this.guiTop, this.fluidSlotList.get(i), mouseX, mouseY);
+				overlayRendered = GuiUtil.renderOverlay((int)this.zLevel, this.guiLeft, this.guiTop, this.fluidSlotList.get(i), mouseX, mouseY);
 		}
 
 		for (Object button : this.buttonList) {
@@ -138,11 +139,11 @@ public class GuiBusFluidStorage extends GuiContainer implements
 	}
 
 	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
-		return this.func_146978_c(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
+		return this.isPointInRegion(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		Slot slot = getSlotAtPosition(mouseX, mouseY);
 
 		if (slot != null && slot.getStack() != null && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack()))

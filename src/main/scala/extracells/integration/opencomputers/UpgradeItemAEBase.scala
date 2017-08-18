@@ -10,7 +10,7 @@ import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fml.common.Optional.{Interface, InterfaceList, Method}
 
-@InterfaceList(Array(
+/*@InterfaceList(Array(
   new Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = "OpenComputers", striprefs = true),
   new Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = "OpenComputers", striprefs = true)
 ))
@@ -73,4 +73,4 @@ trait UpgradeItemAEBase extends Item with HostAware with EnvironmentProvider{
     else
       null
   }
-}
+}*/

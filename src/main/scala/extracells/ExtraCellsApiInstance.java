@@ -125,23 +125,9 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		return true;
 	}
 
-	/**
-	 * @deprecated Incorrect spelling
-	 */
-	@Override
-	@Deprecated
-	public String getVerion() {
-		return ExtraCells.VERSION();
-	}
-
 	@Override
 	public String getVersion() {
-		return ExtraCells.VERSION();
-	}
-
-	@Override
-	public IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is) {
-		return (IWirelessFluidTermHandler) getWirelessTermHandler(is);
+		return Constants.VERSION;
 	}
 
 	@Override
@@ -260,8 +246,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 				if (gridCache != null) {
 					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
 					if (fluidInventory != null) {
-						GuiHandler.launchGui(GuiHandler.getGuiId(guiId), player, new Object[]{
-								fluidInventory, getWirelessFluidTermHandler(itemStack)});
+						GuiHandler.launchGui(GuiHandler.getGuiId(guiId), player, new Object[]{fluidInventory, getWirelessTermHandler(itemStack)});
 					}
 				}
 			}

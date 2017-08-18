@@ -3,7 +3,7 @@ package extracells.gui.widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -48,16 +48,15 @@ public class WidgetSlotFluidContainer extends Gui {
 		ItemStack container = this.fluidFiller.containerItem;
 		GL11.glTranslatef(0.0F, 0.0F, 32.0F);
 		this.zLevel = 100.0F;
-		RenderItem itemRender = RenderItem.getInstance();
+		RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 		itemRender.zLevel = 100.0F;
 		FontRenderer font = null;
 		if (container != null)
 			font = container.getItem().getFontRenderer(container);
 		if (font == null)
-			font = Minecraft.getMinecraft().fontRenderer;
+			font = Minecraft.getMinecraft().fontRendererObj;
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft()
-				.getTextureManager(), container, this.posX, this.posY);
+		itemRender.renderItemAndEffectIntoGUI(container, this.posX, this.posY);
 		// itemRender.renderItemOverlayIntoGUI(font,
 		// Minecraft.getMinecraft().getTextureManager(), container, posX + 1,
 		// posY - 7, null);
@@ -69,17 +68,16 @@ public class WidgetSlotFluidContainer extends Gui {
 		ItemStack container = this.fluidFiller.containerItem;
 		GL11.glTranslatef(0.0F, 0.0F, 32.0F);
 		this.zLevel = 100.0F;
-		RenderItem itemRender = RenderItem.getInstance();
+		RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 		itemRender.zLevel = 100.0F;
 		FontRenderer font = null;
 		if (container != null)
 			font = container.getItem().getFontRenderer(container);
 		if (font == null)
-			font = Minecraft.getMinecraft().fontRenderer;
+			font = Minecraft.getMinecraft().fontRendererObj;
 		drawRect(i, j, i + 16, j + 16, -2130706433);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		itemRender.renderItemAndEffectIntoGUI(font, Minecraft.getMinecraft()
-				.getTextureManager(), container, this.posX, this.posY);
+		itemRender.renderItemAndEffectIntoGUI(container, this.posX, this.posY);
 		// itemRender.renderItemOverlayIntoGUI(font,
 		// Minecraft.getMinecraft().getTextureManager(), container, posX + 1,
 		// posY - 7, null);

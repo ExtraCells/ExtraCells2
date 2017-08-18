@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 
 import net.minecraftforge.fluids.Fluid;
@@ -12,7 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.ExtraCells;
+import extracells.util.ECConfigHandler;
 
 public class WidgetFluidSelector extends AbstractFluidWidget {
 
@@ -55,7 +56,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 			return false;
 
 		String amountToText = Long.toString(this.amount) + "mB";
-		if (ExtraCells.shortenedBuckets()) {
+		if (ECConfigHandler.shortenedBuckets) {
 			if (this.amount > 1000000000L)
 				amountToText = Long.toString(this.amount / 1000000000L)
 						+ "MegaB";
@@ -71,28 +72,32 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		description.add(amountToText);
 		drawHoveringText(description, mouseX - this.guiFluidTerminal.guiLeft(),
 				mouseY - this.guiFluidTerminal.guiTop() + 18,
-				Minecraft.getMinecraft().fontRenderer);
+				Minecraft.getMinecraft().fontRendererObj);
 		return true;
 	}
 
 	@Override
 	public void drawWidget(int posX, int posY) {
 		Minecraft.getMinecraft().renderEngine
-				.bindTexture(TextureMap.locationBlocksTexture);
+			.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glColor3f(1, 1, 1);
 		IAEFluidStack terminalFluid = ((IFluidSelectorGui) this.guiFluidTerminal)
-				.getCurrentFluid();
+			.getCurrentFluid();
 		Fluid currentFluid = terminalFluid != null ? terminalFluid.getFluid()
-				: null;
-		if (this.fluid != null && this.fluid.getIcon() != null)
-			drawTexturedModelRectFromIcon(posX + 1, posY + 1,
-					this.fluid.getIcon(), this.height - 2, this.width - 2);
-		if (this.fluid == currentFluid)
+			: null;
+		if (this.fluid != null) {
+			TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
+			TextureAtlasSprite sprite = map.getAtlasSprite(fluid.getStill().toString());
+			drawTexturedModalRect(posX + 1, posY + 1,
+				sprite, this.height - 2, this.width - 2);
+		}
+		if (this.fluid == currentFluid) {
 			drawHollowRectWithCorners(posX, posY, this.height, this.width,
-					this.color, this.borderThickness);
+				this.color, this.borderThickness);
+		}
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 	}

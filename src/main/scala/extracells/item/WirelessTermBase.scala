@@ -65,7 +65,7 @@ trait WirelessTermBase extends PowerItem{
 
   @SuppressWarnings(Array("rawtypes", "unchecked"))
   @SideOnly(Side.CLIENT)
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
+  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[String], par4: Boolean) {
     val list2 = list.asInstanceOf[util.List[String]];
     if (!itemStack.hasTagCompound) itemStack.setTagCompound(new NBTTagCompound)
     val encryptionKey: String = itemStack.getTagCompound.getString("key")

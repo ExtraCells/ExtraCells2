@@ -1,27 +1,28 @@
 package extracells.part
 
 import appeng.api.parts.IPartCollisionHelper
-import appeng.api.util.AECableType
+import appeng.api.util.{AECableType, AEPartLocation}
 import extracells.integration.mekanism.gas.GasInterfaceBase
 import mekanism.api.gas.GasTank
+import net.minecraft.util.EnumFacing
 import net.minecraftforge.fml.common.Optional.Method
 
 
 class PartGasInterface extends PartECBase with GasInterfaceBase{
-  var fluidFilter = -1
+  var fluidFilter = ""
 
   override def getCableConnectionLength(aeCableType: AECableType): Float = ???
 
-  override def renderStatic(x: Int, y: Int, z: Int, rh: IPartRenderHelper, renderer: RenderBlocks): Unit = ???
+  /*override def renderStatic(x: Int, y: Int, z: Int, rh: IPartRenderHelper, renderer: RenderBlocks): Unit = ???
 
-  override def renderInventory(rh: IPartRenderHelper, renderer: RenderBlocks): Unit = ???
+  override def renderInventory(rh: IPartRenderHelper, renderer: RenderBlocks): Unit = ???*/
 
   override def getBoxes(bch: IPartCollisionHelper): Unit = ???
 
   @Method(modid = "MekanismAPI|gas")
-  override def getGasTank(side: ForgeDirection): GasTank = ???
+  override def getGasTank(side: EnumFacing): GasTank = ???
 
-  override def getFilter(side: ForgeDirection): Int = fluidFilter
+  override def getFilter(side: AEPartLocation): String = fluidFilter
 
-  override def setFilter(side: ForgeDirection, fluid: Int): Unit = fluidFilter = fluid
+  override def setFilter(side: AEPartLocation, fluid: String): Unit = fluidFilter = fluid
 }

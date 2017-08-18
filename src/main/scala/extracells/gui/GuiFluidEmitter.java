@@ -87,7 +87,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		this.fontRendererObj.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
 		this.fluidSlot.drawWidget();
 		((WidgetRedstoneModes) this.buttonList.get(6)).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
-		GuiUtil.renderOverlay(this.zLevel, this.guiLeft, this.guiTop, this.fluidSlot, mouseX, mouseY);
+		GuiUtil.renderOverlay((int)this.zLevel, this.guiLeft, this.guiTop, this.fluidSlot, mouseX, mouseY);
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
 
-		this.amountField = new DigitTextField(this.fontRendererObj, posX + 10, posY + 40, 59, 10);
+		this.amountField = new DigitTextField(0, this.fontRendererObj, posX + 10, posY + 40, 59, 10);
 		this.amountField.setFocused(true);
 		this.amountField.setEnableBackgroundDrawing(false);
 		this.amountField.setTextColor(0xFFFFFF);

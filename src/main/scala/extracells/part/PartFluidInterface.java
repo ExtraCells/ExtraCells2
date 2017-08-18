@@ -25,6 +25,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -70,6 +71,7 @@ import extracells.container.IContainerListener;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gui.GuiFluidInterface;
+import extracells.integration.Capabilities;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
@@ -79,7 +81,6 @@ import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
 public class PartFluidInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotPartOrBlock, IStorageMonitorable, IGridTickable, ICraftingProvider {
-	//ITileStorageMonitorable
 
 	private class FluidInterfaceInventory implements IInventory {
 
@@ -1113,5 +1114,21 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 		this.inventory.writeToNBT(inventory);
 		tag.setTag("inventory", inventory);
 		ByteBufUtils.writeTag(data, tag);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability) {
+		if(capability == Capabilities.STORAGE_MONITORABLE_ACCESSOR){
+			return Capabilities.STORAGE_MONITORABLE_ACCESSOR.cast((m)->this);
+		}
+		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
+		}
+		return super.getCapability(capability);
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability) {
+		return capability == Capabilities.STORAGE_MONITORABLE_ACCESSOR || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 	}
 }

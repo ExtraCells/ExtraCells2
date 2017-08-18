@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.text.translation.I18n;
 
-import extracells.ExtraCells;
 import extracells.block.BlockCertusTank;
 import extracells.block.BlockFluidCrafter;
 import extracells.block.BlockFluidInterface;
@@ -14,6 +13,7 @@ import extracells.block.BlockWalrus;
 import extracells.integration.Integration;
 import extracells.item.ItemBlockCertusTank;
 import extracells.item.ItemBlockECBase;
+import extracells.util.CreativeTabEC;
 
 public enum BlockEnum {
 	CERTUSTANK("certustank", new BlockCertusTank(), (block)-> new ItemBlockCertusTank(block)),
@@ -49,7 +49,7 @@ public enum BlockEnum {
 		this.item.setRegistryName(block.getRegistryName());
 		this.mod = mod;
 		if(mod == null || mod.isEnabled())
-			this.block.setCreativeTab(ExtraCells.ModTab());
+			this.block.setCreativeTab(CreativeTabEC.INSTANCE);
 	}
 
 	public Block getBlock() {

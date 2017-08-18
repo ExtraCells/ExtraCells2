@@ -10,9 +10,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -155,7 +155,7 @@ public class WidgetStorageDirection extends GuiButton {
 		}
 
 		for (String current : Splitter.fixedLength(30).split(explanation)) {
-			description.add(EnumChatFormatting.GRAY + current);
+			description.add(TextFormatting.GRAY + current);
 		}
 
 		Minecraft mc = Minecraft.getMinecraft();
@@ -164,7 +164,7 @@ public class WidgetStorageDirection extends GuiButton {
 				&& mouseY >= this.yPosition
 				&& mouseY <= this.yPosition + this.height) {
 			drawHoveringText(description, mouseX - guiXPos, mouseY - guiYPos,
-					mc.fontRenderer);
+					mc.fontRendererObj);
 		}
 	}
 

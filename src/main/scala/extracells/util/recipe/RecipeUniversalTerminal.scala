@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.crafting.IRecipe
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
+import net.minecraftforge.common.ForgeHooks
 
 
 object RecipeUniversalTerminal extends IRecipe{
@@ -71,6 +72,8 @@ object RecipeUniversalTerminal extends IRecipe{
       true
     }
   }
+
+  override def getRemainingItems(inv: InventoryCrafting): Array[ItemStack] = ForgeHooks.defaultRecipeGetRemainingItems(inv)
 
   override def getRecipeOutput: ItemStack = ItemEnum.UNIVERSALTERMINAL.getDamagedStack(0)
 

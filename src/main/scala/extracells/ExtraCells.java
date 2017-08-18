@@ -27,7 +27,10 @@ import extracells.wireless.AEWirelessTermHandler;
 @Mod(modid = Constants.MOD_ID, version = Constants.VERSION, name = "Extra Cells", modLanguage = "scala", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
 public class ExtraCells {
 	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
-	public CommonProxy proxy = null;
+	public static CommonProxy proxy = null;
+
+	@Mod.Instance(Constants.MOD_ID)
+	public static ExtraCells instance;
 
 	public static final Integration integration = new Integration();
 	public static int bcBurnTimeMultiplicator = 4;

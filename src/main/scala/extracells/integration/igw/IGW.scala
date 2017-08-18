@@ -12,7 +12,7 @@ import scala.collection.JavaConversions._
 
 object IGW {
 
-  def initNotifier {
+  /*def initNotifier {
     IGWSupportNotifier
   }
 
@@ -54,5 +54,5 @@ object IGW {
         WikiRegistry.registerBlockAndItemPageEntry(stack, stack.getUnlocalizedName.replace(".", "/").replace("tile/", ""))
       }
     }
-  }
+  }*/
 }

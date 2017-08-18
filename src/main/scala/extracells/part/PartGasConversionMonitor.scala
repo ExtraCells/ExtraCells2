@@ -10,6 +10,9 @@ import extracells.util.{FluidUtil, GasUtil, WrenchUtil}
 import mekanism.api.gas.IGasItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
+import net.minecraft.util.EnumHand
+import net.minecraft.util.math.Vec3d
+import net.minecraft.util.text.TextComponentTranslation
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fml.common.Optional
 import org.apache.commons.lang3.tuple.MutablePair
@@ -19,20 +22,20 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
 
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
-  override def onActivate(player: EntityPlayer, pos: Vec3): Boolean = {
+  override def onActivate(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
     if(isMekEnabled)
-      onActivateGas(player, pos)
+      onActivateGas(player, hand, pos)
     else
       false
   }
 
   @Optional.Method(modid = "MekanismAPI|gas")
-  def onActivateGas(player: EntityPlayer, pos: Vec3): Boolean = {
-    val b: Boolean = super.onActivate(player, pos)
+  def onActivateGas(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
+    val b: Boolean = super.onActivate(player, hand, pos)
     if (b) return b
     if (player == null || player.worldObj == null) return true
     if (player.worldObj.isRemote) return true
-    val s: ItemStack = player.getCurrentEquippedItem
+    val s: ItemStack = player.getHeldItem(hand)
     val mon: IMEMonitor[IAEFluidStack] = getFluidStorage
     if (this.locked && s != null && mon != null) {
       val s2: ItemStack = s.copy
@@ -48,7 +51,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
           val empty1: MutablePair[Integer, ItemStack] = GasUtil.drainStack(s2, g)
           val empty: ItemStack = empty1.right
           if (empty != null) {
-            dropItems(getHost.getTile.getWorldObj, getHost.getTile.xCoord + getFacing.offsetX, getHost.getTile.yCoord + getFacing.offsetY, getHost.getTile.zCoord + getFacing.offsetZ, empty)
+            dropItems(getHost.getTile.getWorld, getHost.getTile.getPos.offset(getFacing), empty)
           }
           val s3: ItemStack = s.copy
           s3.stackSize = s3.stackSize - 1
@@ -78,7 +81,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
           }
           val empty: ItemStack = empty1.right
           if (empty != null) {
-            dropItems(getHost.getTile.getWorldObj, getHost.getTile.xCoord + getFacing.offsetX, getHost.getTile.yCoord + getFacing.offsetY, getHost.getTile.zCoord + getFacing.offsetZ, empty)
+            dropItems(getHost.getTile.getWorld, getHost.getTile.getPos.offset(getFacing), empty)
           }
           val s3: ItemStack = s.copy
           s3.stackSize = s3.stackSize - 1
@@ -96,10 +99,10 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
   }
 
   @Optional.Method(modid = "MekanismAPI|gas")
-  def storageMonitor(player: EntityPlayer, pos: Vec3): Boolean = {
+  def storageMonitor(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
     if (player == null || player.worldObj == null) return true
     if (player.worldObj.isRemote) return true
-    val s: ItemStack = player.getCurrentEquippedItem
+    val s: ItemStack = player.getHeldItem(hand)
     if (s == null) {
       if (this.locked) return false
       if (this.fluid == null) return true
@@ -110,13 +113,13 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
       if (host != null) host.markForUpdate
       return true
     }
-    if (WrenchUtil.canWrench(s, player, this.tile.xCoord, this.tile.yCoord, this.tile.zCoord)) {
+    if (WrenchUtil.canWrench(s, player, this.tile.getPos)) {
       this.locked = !this.locked
-      WrenchUtil.wrenchUsed(s, player, this.tile.xCoord, this.tile.zCoord, this.tile.yCoord)
+      WrenchUtil.wrenchUsed(s, player, this.tile.getPos)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
-      if (this.locked) player.addChatMessage(new ChatComponentTranslation("chat.appliedenergistics2.isNowLocked"))
-      else player.addChatMessage(new ChatComponentTranslation("chat.appliedenergistics2.isNowUnlocked"))
+      if (this.locked) player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))
+      else player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowUnlocked"))
       return true
     }
     if (this.locked) return false

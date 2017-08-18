@@ -4,7 +4,7 @@ import extracells.api.{ECApi, IWirelessFluidTermHandler}
 import extracells.models.ModelManager
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.util.EnumHand
+import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
@@ -19,8 +19,8 @@ object ItemWirelessTerminalFluid extends ItemECBase with IWirelessFluidTermHandl
   def isItemNormalWirelessTermToo(is: ItemStack): Boolean = false
 
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ItemStack =
-    ECApi.instance.openWirelessFluidTerminal(entityPlayer, hand, world)
+  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] =
+    new ActionResult(EnumActionResult.SUCCESS, ECApi.instance.openWirelessFluidTerminal(entityPlayer, hand, world))
 
 
   @SideOnly(Side.CLIENT)

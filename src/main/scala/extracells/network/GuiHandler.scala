@@ -84,11 +84,11 @@ object GuiHandler extends IGuiHandler {
 
 	def launchGui(ID: Int, player: EntityPlayer,  args: Array[Any]) {
 		temp = args
-		player.openGui(ExtraCells, ID, null, 0, 0, 0);
+		player.openGui(ExtraCells.instance, ID, null, 0, 0, 0);
 	}
 
 	def launchGui(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z:Int) : Any =
-		player.openGui(ExtraCells, ID, world, x, y, z);
+		player.openGui(ExtraCells.instance, ID, world, x, y, z);
 
 
 	var temp: Array[Any] = Array[Any]()
@@ -108,7 +108,7 @@ object GuiHandler extends IGuiHandler {
 				return null
 			return new GuiFluidCrafter(player.inventory, tileEntity.asInstanceOf[TileEntityFluidCrafter].getInventory())
 		}
-		if (world != null && world.getBlockState(pos) == BlockEnum.ECBASEBLOCK.getBlock()) {
+		if (world != null && world.getBlockState(pos).getBlock == BlockEnum.ECBASEBLOCK.getBlock()) {
 			val tileEntity = world.getTileEntity(pos)
 			if (tileEntity == null)
 				return null

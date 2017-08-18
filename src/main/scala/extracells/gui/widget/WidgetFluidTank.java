@@ -8,30 +8,32 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.I18n;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import appeng.api.util.AEPartLocation;
+import extracells.Constants;
+
 public class WidgetFluidTank extends Gui {
 
 	IFluidTank tank;
 	public int posX, posY;
-	ForgeDirection direction;
+	AEPartLocation direction;
 
 	public WidgetFluidTank(IFluidTank tank, int posX, int posY) {
-		this(tank, posX, posY, ForgeDirection.UNKNOWN);
+		this(tank, posX, posY, AEPartLocation.INTERNAL);
 	}
 
 	public WidgetFluidTank(IFluidTank tank, int posX, int posY,
-			ForgeDirection direction) {
+		AEPartLocation direction) {
 		this.tank = tank;
 		this.posX = posX;
 		this.posY = posY;
@@ -46,7 +48,7 @@ public class WidgetFluidTank extends Gui {
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(
-				"extracells", "textures/gui/fluidtank.png"));
+			Constants.MOD_ID, "textures/gui/fluidtank.png"));
 		drawTexturedModalRect(this.posX, this.posY, 0, 0, 18, 73);
 
 		int iconHeightRemainder = (73 - 4) % 16;
@@ -54,21 +56,21 @@ public class WidgetFluidTank extends Gui {
 		FluidStack fluid = this.tank.getFluid();
 		if (fluid != null && fluid.amount > 0) {
 			Minecraft.getMinecraft().renderEngine
-					.bindTexture(TextureMap.locationBlocksTexture);
+					.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-			IIcon fluidIcon = fluid.getFluid().getStillIcon();
+			TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getFluid().getStill().toString());
 
 			if (iconHeightRemainder > 0) {
-				drawTexturedModelRectFromIcon(this.posX + 1, this.posY + 2,
-						fluidIcon, 16, iconHeightRemainder);
+				drawTexturedModalRect(this.posX + 1, this.posY + 2,
+						sprite, 16, iconHeightRemainder);
 			}
 			for (int i = 0; i < (73 - 6) / 16; i++) {
-				drawTexturedModelRectFromIcon(this.posX + 1, this.posY + 2 + i
-						* 16 + iconHeightRemainder, fluidIcon, 16, 16);
+				drawTexturedModalRect(this.posX + 1, this.posY + 2 + i
+						* 16 + iconHeightRemainder, sprite, 16, 16);
 			}
 
 			Minecraft.getMinecraft().renderEngine
-					.bindTexture(new ResourceLocation("extracells",
+					.bindTexture(new ResourceLocation(Constants.MOD_ID,
 							"textures/gui/fluidtank.png"));
 			drawTexturedModalRect(this.posX + 2, this.posY + 1, 1, 1, 15,
 					72 - (int) (73 * ((float) fluid.amount / this.tank
@@ -76,7 +78,7 @@ public class WidgetFluidTank extends Gui {
 		}
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(
-				"extracells", "textures/gui/fluidtank.png"));
+			Constants.MOD_ID, "textures/gui/fluidtank.png"));
 		drawTexturedModalRect(this.posX + 1, this.posY + 1, 19, 1, 16, 73);
 
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -171,7 +173,7 @@ public class WidgetFluidTank extends Gui {
 			}
 		}
 		drawHoveringText(description, x, y,
-				Minecraft.getMinecraft().fontRenderer);
+				Minecraft.getMinecraft().fontRendererObj);
 	}
 
 	public void drawTooltip(int x, int y) {
@@ -192,6 +194,6 @@ public class WidgetFluidTank extends Gui {
 			}
 		}
 		drawHoveringText(description, x, y,
-				Minecraft.getMinecraft().fontRenderer);
+				Minecraft.getMinecraft().fontRendererObj);
 	}
 }

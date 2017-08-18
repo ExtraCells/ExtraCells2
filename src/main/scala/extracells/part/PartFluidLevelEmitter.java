@@ -10,12 +10,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.Vec3;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -102,20 +102,17 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		return isProvidingStrongPower();
 	}
 
-	private void notifyTargetBlock(TileEntity _tile, ForgeDirection _side) {
+	private void notifyTargetBlock(TileEntity tileEntity, EnumFacing facing) {
 		// note - params are always the same
-		_tile.getWorldObj().notifyBlocksOfNeighborChange(_tile.xCoord,
-				_tile.yCoord, _tile.zCoord, Blocks.air);
-		_tile.getWorldObj().notifyBlocksOfNeighborChange(
-				_tile.xCoord + _side.offsetX, _tile.yCoord + _side.offsetY,
-				_tile.zCoord + _side.offsetZ, Blocks.air);
+		tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos(), Blocks.AIR);
+		tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos().offset(facing), Blocks.AIR);
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 pos) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
 				(IPart) this)) {
-			return super.onActivate(player, pos);
+			return super.onActivate(player, hand, pos);
 		}
 		return false;
 	}
@@ -197,7 +194,7 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		this.fluid = _fluid;
 		if (this.watcher == null)
 			return;
-		this.watcher.clear();
+		this.watcher.reset();
 		updateWatcher(this.watcher);
 		new PacketFluidSlot(Lists.newArrayList(this.fluid))
 				.sendPacketToPlayer(_player);

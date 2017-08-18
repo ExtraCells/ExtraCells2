@@ -1,7 +1,7 @@
 package mekanism.api.gas;
 
-import mekanism.client.render.MekanismRenderer;
-import mekanism.client.render.MekanismRenderer.FluidType;
+/*import mekanism.client.render.MekanismRenderer;
+import mekanism.client.render.MekanismRenderer.FluidType;*/
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.nbt.NBTTagCompound;
@@ -134,7 +134,7 @@ public class Gas
 	{
 		if(from_fluid)
 		{
-			return MekanismRenderer.getFluidTexture(fluid, FluidType.STILL);
+			//return MekanismRenderer.getFluidTexture(fluid, FluidType.STILL);
 		}
 		
 		return sprite;
@@ -223,21 +223,31 @@ public class Gas
 	 * Registers a new fluid out of this Gas or gets one from the FluidRegistry.
 	 * @return this Gas object
 	 */
-	public Gas registerFluid()
+	public Gas registerFluid(String name)
 	{
 		if(fluid == null)
 		{
-			if(FluidRegistry.getFluid(getName()) == null)
+			if(FluidRegistry.getFluid(name) == null)
 			{
-				fluid = new Fluid(getName(), getIcon(), getIcon()).setGaseous(true);
+				fluid = new Fluid(name, getIcon(), getIcon());
 				FluidRegistry.registerFluid(fluid);
 			}
 			else {
-				fluid = FluidRegistry.getFluid(getName());
+				fluid = FluidRegistry.getFluid(name);
 			}
 		}
 
 		return this;
+	}
+	
+	/**
+	 * Registers a new fluid out of this Gas or gets one from the FluidRegistry.
+	 * Uses default gas name.
+	 * @return this Gas object
+	 */
+	public Gas registerFluid()
+	{
+		return registerFluid(getName());
 	}
 
 	@Override

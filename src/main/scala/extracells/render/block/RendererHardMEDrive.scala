@@ -11,9 +11,9 @@ import net.minecraft.world.IBlockAccess
 import org.lwjgl.opengl.GL11
 
 
-object RendererHardMEDrive extends ISimpleBlockRenderingHandler {
+object RendererHardMEDrive/* extends ISimpleBlockRenderingHandler*/ {
 
-  var renderID = 0
+  /*var renderID = 0
 
   val tex = new ResourceLocation("extracells", "textures/blocks/hardmedrive.png")
 
@@ -277,5 +277,5 @@ object RendererHardMEDrive extends ISimpleBlockRenderingHandler {
       val f: Float = this.getMaxU - this.getMinU
       this.getMinU + f// * (p_94214_1_.toFloat / 16.0F)
     }
-  }
+  }*/
 }

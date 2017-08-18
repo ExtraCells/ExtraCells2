@@ -1,8 +1,8 @@
 package extracells.inventory;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 
 import appeng.api.AEApi;
@@ -133,16 +133,13 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 
 	public void onNeighborChange() {
 		this.tank = null;
-		ForgeDirection orientation = this.node.getFacing();
+		EnumFacing orientation = this.node.getFacing();
 		TileEntity hostTile = this.node.getHostTile();
 		if (hostTile == null)
 			return;
-		if (hostTile.getWorldObj() == null)
+		if (hostTile.getWorld() == null)
 			return;
-		TileEntity tileEntity = hostTile.getWorldObj().getTileEntity(
-				hostTile.xCoord + orientation.offsetX,
-				hostTile.yCoord + orientation.offsetY,
-				hostTile.zCoord + orientation.offsetZ);
+		TileEntity tileEntity = hostTile.getWorld().getTileEntity(hostTile.getPos().offset(orientation));
 		this.tile = tileEntity;
 		this.tank = null;
 		this.externalSystem = null;

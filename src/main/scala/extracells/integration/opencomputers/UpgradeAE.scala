@@ -11,6 +11,7 @@ import appeng.api.storage.data.{IAEFluidStack, IAEItemStack}
 import appeng.api.util.{AEPartLocation, WorldCoord}
 import appeng.tile.misc.TileSecurityStation
 import extracells.item.ItemOCUpgrade
+import extracells.registries.ItemEnum
 import li.cil.oc.api.Network
 import li.cil.oc.api.internal.{Agent, Database, Drone, Robot}
 import li.cil.oc.api.machine.{Arguments, Callback, Context}
@@ -22,7 +23,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry
 import scala.collection.JavaConversions._
 
 
-class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.NetworkControl[TileSecurityStation] with ec.NetworkControl[TileSecurityStation]{
+/*class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.NetworkControl[TileSecurityStation] with ec.NetworkControl[TileSecurityStation]{
   val robot: Robot =
     if (host.isInstanceOf[Robot])
       host.asInstanceOf[Robot]
@@ -46,7 +47,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
       val i = drone.internalComponents.iterator
       while (i.hasNext){
         val item = i.next
-        if(item != null && item.getItem == ItemOCUpgrade)
+        if(item != null && item.getItem == ItemEnum.OCUPGRADE.getItem)
           return item
       }
     }
@@ -319,4 +320,4 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     }
   }
 
-}
+}*/

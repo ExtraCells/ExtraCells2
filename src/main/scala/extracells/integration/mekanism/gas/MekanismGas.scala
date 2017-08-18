@@ -33,15 +33,9 @@ object MekanismGas {
     ECApi.instance.addFluidToStorageBlacklist(classOf[GasFluid])
   }
 
-  class GasFluid(gas: Gas) extends Fluid("ec.internal." + gas.getName){
+  class GasFluid(gas: Gas) extends Fluid("ec.internal." + gas.getName, gas.getIcon, gas.getIcon){
 
     override def getLocalizedName (stack: FluidStack) =  gas.getLocalizedName
-
-    override def getIcon = gas.getIcon
-
-    override def getStillIcon = gas.getIcon
-
-    override def getFlowingIcon = gas.getIcon
 
     def getGas = gas
   }

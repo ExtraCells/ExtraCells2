@@ -59,6 +59,7 @@ import extracells.container.IContainerListener;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gridblock.ECFluidGridBlock;
+import extracells.integration.Capabilities;
 import extracells.integration.waila.IWailaTile;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
@@ -67,7 +68,7 @@ import extracells.util.ItemUtils;
 
 public class TileEntityFluidInterface extends TileBase implements
 		IActionHost, IECTileEntity, IFluidInterface,
-		IFluidSlotPartOrBlock/*, ITileStorageMonitorable*/, IStorageMonitorable,
+		IFluidSlotPartOrBlock, IStorageMonitorable,
 		ICraftingProvider, IWailaTile, ITickable {
 
 	List<IContainerListener> listeners = new ArrayList<IContainerListener>();
@@ -858,15 +859,17 @@ public class TileEntityFluidInterface extends TileBase implements
 		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(fluidHandlers[facing.ordinal()]);
 		}
+		if(capability == Capabilities.STORAGE_MONITORABLE_ACCESSOR){
+			return Capabilities.STORAGE_MONITORABLE_ACCESSOR.cast((m)->this);
+		}
 		return super.getCapability(capability, facing);
 	}
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
-			return true;
-		}
-		return super.hasCapability(capability, facing);
+		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
+			|| capability == Capabilities.STORAGE_MONITORABLE_ACCESSOR
+			|| super.hasCapability(capability, facing);
 	}
 
 	private class FluidInterfaceInventory implements IInventory {

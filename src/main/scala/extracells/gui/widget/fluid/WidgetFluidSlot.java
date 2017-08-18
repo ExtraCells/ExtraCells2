@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -158,15 +159,14 @@ public class WidgetFluidSlot extends Gui {
 		drawTexturedModalRect(this.posX, this.posY, 79, 39, 18, 18);
 		GL11.glEnable(GL11.GL_LIGHTING);
 
-		if (this.fluid == null || this.fluid.getIcon() == null)
+		if (this.fluid == null)
 			return;
 
-		Minecraft.getMinecraft().renderEngine
-				.bindTexture(TextureMap.locationBlocksTexture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		drawTexturedModelRectFromIcon(this.posX + 1, this.posY + 1,
-				this.fluid.getIcon(), 16, 16);
+		drawTexturedModalRect(this.posX + 1, this.posY + 1, sprite, 16, 16);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 	}

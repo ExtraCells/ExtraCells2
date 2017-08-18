@@ -1,5 +1,6 @@
 package extracells.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,15 +9,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.ExtraCells;
 import extracells.api.ECApi;
 import extracells.container.ContainerFluidStorage;
 import extracells.gui.widget.FluidWidgetComparator;
@@ -25,6 +25,7 @@ import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidStorage;
+import extracells.util.ECConfigHandler;
 
 public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
@@ -69,7 +70,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
-			if (ExtraCells.shortenedBuckets()) {
+			if (ECConfigHandler.shortenedBuckets) {
 				if (currentFluidAmount > 1000000000L)
 					amountToText = Long
 							.toString(currentFluidAmount / 1000000000L)
@@ -164,7 +165,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
-		this.searchbar = new GuiTextField(this.fontRendererObj,
+		this.searchbar = new GuiTextField(0, this.fontRendererObj,
 				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 
 			private int xPos = 0;
@@ -194,7 +195,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		this.searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
 		int listSize = this.fluidWidgets.size();

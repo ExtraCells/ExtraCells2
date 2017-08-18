@@ -1,15 +1,17 @@
 package extracells.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -82,7 +84,7 @@ public class GuiOreDictExport extends GuiContainer {
 		this.buttonList.add(new GuiButton(1,
 				this.guiLeft + this.xSize / 2 - 44, this.guiTop + 35, 88, 20,
 				I18n.translateToLocal("extracells.tooltip.save")));
-		this.searchbar = new GuiTextField(this.fontRendererObj, this.guiLeft
+		this.searchbar = new GuiTextField(0, this.fontRendererObj, this.guiLeft
 				+ this.xSize / 2 - 44, this.guiTop + 20, 88, 10) {
 
 			private int xPos = 0;
@@ -113,7 +115,7 @@ public class GuiOreDictExport extends GuiContainer {
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		this.searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
 	}

@@ -32,16 +32,7 @@ public interface ExtraCellsApi {
 
 	boolean canStoreFluid(Fluid fluid);
 
-	/**
-	 * @deprecated incorrect spelling
-	 */
-	@Deprecated
-	String getVerion();
-
 	String getVersion();
-
-	@Deprecated
-	IWirelessFluidTermHandler getWirelessFluidTermHandler(ItemStack is);
 
 	IWirelessGasFluidTermHandler getWirelessTermHandler(ItemStack is);
 

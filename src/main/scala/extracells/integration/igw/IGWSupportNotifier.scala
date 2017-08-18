@@ -57,7 +57,7 @@ object IGWSupportNotifier {
   @SubscribeEvent
   def onPlayerJoin(event: TickEvent.PlayerTickEvent) {
     if (event.player.worldObj.isRemote && event.player == FMLClientHandler.instance.getClientPlayerEntity) {
-      event.player.addChatComponentMessage(ITextComponent.Serializer.jsonToComponent("[\"" + TextFormatting.GOLD + "The mod " + supportingMod + " is supporting In-Game Wiki mod. " + EnumChatFormatting.GOLD + "However, In-Game Wiki isn't installed! " + "[\"," + "{\"text\":\"Download Latest\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/igwmod_download\"}}," + "\"]\"]"))
+      event.player.addChatComponentMessage(ITextComponent.Serializer.jsonToComponent("[\"" + TextFormatting.GOLD + "The mod " + supportingMod + " is supporting In-Game Wiki mod. " + TextFormatting.GOLD + "However, In-Game Wiki isn't installed! " + "[\"," + "{\"text\":\"Download Latest\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/igwmod_download\"}}," + "\"]\"]"))
       FMLCommonHandler.instance.bus.unregister(this)
     }
   }

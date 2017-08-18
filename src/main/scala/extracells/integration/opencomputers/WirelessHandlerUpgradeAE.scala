@@ -3,6 +3,7 @@ package extracells.integration.opencomputers
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
 import extracells.item.ItemOCUpgrade
+import extracells.registries.ItemEnum
 import li.cil.oc.common.item.data.{DroneData, RobotData}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -14,9 +15,9 @@ object WirelessHandlerUpgradeAE extends IWirelessTermHandler{
   override def canHandle(itemStack: ItemStack): Boolean = {
     if (itemStack == null) return false
     val item = itemStack.getItem
-    if (item == ItemOCUpgrade) return true
-    (OCUtils.isRobot(itemStack) && OCUtils.getComponent(new RobotData(itemStack), ItemOCUpgrade) != null)||
-      (OCUtils.isDrone(itemStack) && OCUtils.getComponent(new DroneData(itemStack), ItemOCUpgrade) != null)
+    if (item == ItemEnum.OCUPGRADE.getItem) return true
+    (OCUtils.isRobot(itemStack) && OCUtils.getComponent(new RobotData(itemStack), ItemEnum.OCUPGRADE.getItem) != null)||
+      (OCUtils.isDrone(itemStack) && OCUtils.getComponent(new DroneData(itemStack), ItemEnum.OCUPGRADE.getItem) != null)
   }
 
   override def usePower(entityPlayer: EntityPlayer, v: Double, itemStack: ItemStack): Boolean = false
@@ -50,28 +51,28 @@ object WirelessHandlerUpgradeAE extends IWirelessTermHandler{
 
   def setEncryptionKeyRobot(itemStack: ItemStack, encKey: String, name: String){
     val robot = new RobotData(itemStack)
-    val component = OCUtils.getComponent(robot, ItemOCUpgrade)
+    val component = OCUtils.getComponent(robot, ItemEnum.OCUPGRADE.getItem)
     if (component != null) setEncryptionKey(component, encKey, name);
     robot.save(itemStack)
   }
 
   def getEncryptionKeyRobot(stack: ItemStack): String = {
     val robot = new RobotData(stack)
-    val component = OCUtils.getComponent(robot, ItemOCUpgrade)
+    val component = OCUtils.getComponent(robot, ItemEnum.OCUPGRADE.getItem)
     if (component == null) return ""
     getEncryptionKey(component)
   }
 
   def setEncryptionKeyDrone(itemStack: ItemStack, encKey: String, name: String){
     val robot = new RobotData(itemStack)
-    val component = OCUtils.getComponent(robot, ItemOCUpgrade)
+    val component = OCUtils.getComponent(robot, ItemEnum.OCUPGRADE.getItem)
     if (component != null) setEncryptionKey(component, encKey, name);
     robot.save(itemStack)
   }
 
   def getEncryptionKeyDrone(stack: ItemStack): String = {
     val drone = new DroneData(stack)
-    val component = OCUtils.getComponent(drone, ItemOCUpgrade)
+    val component = OCUtils.getComponent(drone, ItemEnum.OCUPGRADE.getItem)
     if (component == null) return ""
     getEncryptionKey(component)
   }

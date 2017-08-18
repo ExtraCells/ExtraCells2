@@ -32,7 +32,7 @@ public class GuiVibrationChamberFluid extends GuiContainer {
         if(widgetFluidTank != null)
         widgetFluidTank.draw(widgetFluidTank.posX, widgetFluidTank.posY, mouseX, mouseY);
         if (widgetFluidTank != null)
-            if (func_146978_c(widgetFluidTank.posX, widgetFluidTank.posY, 18, 73, mouseX, mouseY)) {
+            if (isPointInRegion(widgetFluidTank.posX, widgetFluidTank.posY, 18, 73, mouseX, mouseY)) {
                 widgetFluidTank.drawTooltip(mouseX - this.guiLeft, mouseY
                         - this.guiTop);
             }

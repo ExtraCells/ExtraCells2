@@ -36,7 +36,7 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
       return this
     }
   }
-  var fluidHandler: FluidHandler = new FluidHandler
+  var fluidHandler = new FluidHandler
 
   override def update {
     if (!hasWorldObj) return
@@ -196,7 +196,7 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
     super.hasCapability(capability, facing)
   }
 
-  private class FluidHandler extends capability.IFluidHandler{
+  protected class FluidHandler extends capability.IFluidHandler{
     override def fill(resource: FluidStack, doFill: Boolean): Int = {
       if (resource == null || resource.getFluid == null || FuelBurnTime.getBurnTime(resource.getFluid) == 0) return 0
       val filled: Int = tank.fill(resource, doFill)

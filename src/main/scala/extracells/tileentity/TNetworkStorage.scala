@@ -1,5 +1,7 @@
 package extracells.tileentity
 
+import javax.annotation.Nullable
+
 import appeng.api.networking.storage.IStorageGrid
 import appeng.api.networking.{IGrid, IGridHost}
 import appeng.api.storage.IMEMonitor
@@ -19,6 +21,7 @@ trait TNetworkStorage {
     grid.getCache(classOf[IStorageGrid])
   }
 
+  @Nullable
   def getFluidInventory(side: AEPartLocation): IMEMonitor[IAEFluidStack] = {
     val storageGrid = getStorageGrid(side)
     if (storageGrid == null)
@@ -27,7 +30,8 @@ trait TNetworkStorage {
       storageGrid.getFluidInventory
   }
 
-  def getitemInventory(side: AEPartLocation): IMEMonitor[IAEItemStack] = {
+  @Nullable
+  def getItemInventory(side: AEPartLocation): IMEMonitor[IAEItemStack] = {
     val storageGrid = getStorageGrid(side)
     if (storageGrid == null)
       null

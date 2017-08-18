@@ -9,9 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import extracells.integration.opencomputers.UpgradeItemAEBase;
-
-public class ItemOCUpgrade extends ItemECBase implements UpgradeItemAEBase {
+public class ItemOCUpgrade extends ItemECBase /*implements UpgradeItemAEBase*/ {
 
 	public ItemOCUpgrade() {
 	}
