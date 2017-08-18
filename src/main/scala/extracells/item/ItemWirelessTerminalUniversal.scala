@@ -6,26 +6,25 @@ import java.util
 import appeng.api.AEApi
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.api.{ECApi, IWirelessFluidTermHandler, IWirelessGasTermHandler}
 import extracells.integration.Integration
 import extracells.integration.WirelessCrafting.WirelessCrafting
-import extracells.integration.thaumaticenergistics.ThaumaticEnergistics
+import extracells.models.ModelManager
 import extracells.util.HandlerUniversalWirelessTerminal
 import extracells.wireless.ConfigManager
-import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{IIcon, I18n}
+import net.minecraft.util.EnumHand
+import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
+import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler with EssensiaTerminal with CraftingTerminal{
   val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
   val isWcEnabled = Integration.Mods.WIRELESSCRAFTING.isEnabled
-  var icon :IIcon = null
   def THIS = this
   if(isWcEnabled){
     ECApi.instance.registerWirelessTermHandler(this)
@@ -57,7 +56,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     super.getUnlocalizedName(itemStack).replace("item.extracells", "extracells.item")
 
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer): ItemStack = {
+  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ItemStack = {
     if(world.isRemote){
       if(entityPlayer.isSneaking)
         return itemStack
@@ -76,9 +75,9 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
       return changeMode(itemStack, entityPlayer, tag)
     val matchted = tag.getByte("type") match {
       case 0 => AEApi.instance.registries.wireless.openWirelessTerminalGui(itemStack, world, entityPlayer)
-      case 1 => ECApi.instance.openWirelessFluidTerminal(entityPlayer, itemStack, world)
-      case 2 => ECApi.instance.openWirelessGasTerminal(entityPlayer, itemStack, world)
-      case 3 => if(isTeEnabled) ThaumaticEnergistics.openEssentiaTerminal(entityPlayer, this)
+      case 1 => ECApi.instance.openWirelessFluidTerminal(entityPlayer, hand, world)
+      case 2 => ECApi.instance.openWirelessGasTerminal(entityPlayer, hand, world)
+      //case 3 => if(isTeEnabled) ThaumaticEnergistics.openEssentiaTerminal(entityPlayer, this)
       case _ =>
     }
     itemStack
@@ -141,15 +140,12 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
   }
 
   @SideOnly(Side.CLIENT)
-  override def registerIcons(iconRegister: IIconRegister) {
-    this.icon = iconRegister.registerIcon("extracells:" + "terminal.universal.wireless")
-  }
-
-  override def getIconFromDamage(dmg: Int): IIcon = this.icon
+  override def registerModel(item: Item, manager: ModelManager) =
+    manager.registerItemModel(item, 0, "terminals/universal_wireless")
 
 
   @SideOnly(Side.CLIENT)
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
+  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], advanced: Boolean) {
     val tag = ensureTagCompound(itemStack)
     if(!tag.hasKey("type"))
       tag.setByte("type", 0)
@@ -159,7 +155,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     val it = getInstalledModules(itemStack).iterator
     while (it.hasNext)
       list2.add("- " + I18n.translateToLocal("extracells.tooltip." + it.next.name.toLowerCase))
-    super.addInformation(itemStack, player, list, par4);
+    super.addInformation(itemStack, player, list, advanced);
   }
 
   def installModule(itemStack: ItemStack, module: TerminalType): Unit ={

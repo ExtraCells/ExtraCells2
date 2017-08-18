@@ -1,33 +1,10 @@
 package extracells.part;
 
-import appeng.api.AEApi;
-import appeng.api.config.RedstoneMode;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.networking.storage.IStackWatcher;
-import appeng.api.networking.storage.IStackWatcherHost;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
-import appeng.api.storage.StorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEStack;
-import appeng.api.storage.data.IItemList;
 import com.google.common.collect.Lists;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-import appeng.api.util.AECableType;
-import extracells.container.ContainerFluidEmitter;
-import extracells.gui.GuiFluidEmitter;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.other.PacketFluidSlot;
-import extracells.network.packet.part.PacketFluidEmitter;
-import extracells.render.TextureManager;
-import extracells.util.PermissionUtil;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.RenderBlocks;
+import java.io.IOException;
+import java.util.Random;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,13 +14,33 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.io.IOException;
-import java.util.Random;
+import appeng.api.AEApi;
+import appeng.api.config.RedstoneMode;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.storage.IStackWatcher;
+import appeng.api.networking.storage.IStackWatcherHost;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEStack;
+import appeng.api.storage.data.IItemList;
+import appeng.api.util.AECableType;
+import extracells.container.ContainerFluidEmitter;
+import extracells.gui.GuiFluidEmitter;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
+import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.part.PacketFluidEmitter;
+import extracells.util.PermissionUtil;
+import io.netty.buffer.ByteBuf;
 
 public class PartFluidLevelEmitter extends PartECBase implements
 		IStackWatcherHost, IFluidSlotPartOrBlock {

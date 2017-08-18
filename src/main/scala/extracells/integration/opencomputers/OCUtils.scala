@@ -2,11 +2,9 @@ package extracells.integration.opencomputers
 
 import appeng.api.parts.{IPart, IPartHost}
 import appeng.api.util.AEPartLocation
-import extracells.part.PartGasImport
 import li.cil.oc.api.API
 import li.cil.oc.common.item.data.{DroneData, RobotData}
 import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 

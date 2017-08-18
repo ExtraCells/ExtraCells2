@@ -1,10 +1,12 @@
 package extracells.api;
 
-import appeng.api.storage.ICellWorkbenchItem;
+import java.util.ArrayList;
+
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fluids.Fluid;
 
-import java.util.ArrayList;
+import appeng.api.storage.ICellWorkbenchItem;
 
 public interface IFluidStorageCell extends ICellWorkbenchItem {
 

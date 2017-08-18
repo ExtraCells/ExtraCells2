@@ -1,12 +1,13 @@
 package extracells.container;
 
-import extracells.container.slot.SlotRespective;
-import extracells.part.PartDrive;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+
+import extracells.container.slot.SlotRespective;
+import extracells.part.PartDrive;
 
 public class ContainerDrive extends Container {
 	PartDrive part;

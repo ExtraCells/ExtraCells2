@@ -1,15 +1,7 @@
 package extracells.render.item;
 
-import extracells.util.GuiUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-
-public class ItemRendererFluid implements IItemRenderer {
+//TODO:Move to IBakedModel
+/*public class ItemRendererFluid implements IItemRenderer {
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -42,4 +34,4 @@ public class ItemRendererFluid implements IItemRenderer {
 		return false;
 	}
 
-}
+}*/

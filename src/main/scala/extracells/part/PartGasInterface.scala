@@ -1,12 +1,10 @@
 package extracells.part
 
-import appeng.api.parts.{IPartCollisionHelper, IPartRenderHelper}
+import appeng.api.parts.IPartCollisionHelper
 import appeng.api.util.AECableType
-import net.minecraftforge.fml.common.Optional.Method
 import extracells.integration.mekanism.gas.GasInterfaceBase
 import mekanism.api.gas.GasTank
-import net.minecraft.client.renderer.RenderBlocks
-import net.minecraftforge.common.util.ForgeDirection
+import net.minecraftforge.fml.common.Optional.Method
 
 
 class PartGasInterface extends PartECBase with GasInterfaceBase{

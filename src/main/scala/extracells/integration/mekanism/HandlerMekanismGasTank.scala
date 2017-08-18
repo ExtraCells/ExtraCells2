@@ -7,10 +7,8 @@ import appeng.api.storage.{IMEInventory, StorageChannel}
 import extracells.api.IExternalGasStorageHandler
 import extracells.util.GasUtil
 import mekanism.api.gas.GasTank
-import net.minecraft.client.renderer.EnumFaceDirection
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
-import net.minecraftforge.common.util.ForgeDirection
 
 
 object HandlerMekanismGasTank extends IExternalGasStorageHandler{

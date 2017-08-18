@@ -2,7 +2,7 @@ package extracells.integration.igw
 
 import java.util
 
-import extracells.Extracells
+import extracells.ExtraCells
 import extracells.integration.Integration
 import extracells.registries.{BlockEnum, ItemEnum}
 import net.minecraft.item.{Item, ItemStack}
@@ -24,14 +24,14 @@ object IGW {
           WikiRegistry.registerBlockAndItemPageEntry(item.getSizedStack(1), item.getSizedStack(1).getUnlocalizedName.replace(".", "/"))
         }else if (item == ItemEnum.STORAGECOMPONET || item == ItemEnum.STORAGECASING){
           val list = new util.ArrayList[java.lang.Object]
-          item.getItem.getSubItems(item.getItem, Extracells.ModTab, list)
+          item.getItem.getSubItems(item.getItem, ExtraCells.ModTab, list)
           for (sub <- list) {
             val stack = sub.asInstanceOf[ItemStack]
             WikiRegistry.registerBlockAndItemPageEntry(stack, "extracells/item/crafting")
           }
         }else{
           val list = new util.ArrayList[java.lang.Object]
-          item.getItem.getSubItems(item.getItem, Extracells.ModTab, list)
+          item.getItem.getSubItems(item.getItem, ExtraCells.ModTab, list)
           for (sub <- list) {
             val stack = sub.asInstanceOf[ItemStack]
             WikiRegistry.registerBlockAndItemPageEntry(stack, stack.getUnlocalizedName.replace(".", "/"))
@@ -48,7 +48,7 @@ object IGW {
     for(block <- BlockEnum.values()){
 
       val list = new util.ArrayList[java.lang.Object]
-      Item.getItemFromBlock(block.getBlock).getSubItems(Item.getItemFromBlock(block.getBlock), Extracells.ModTab, list)
+      Item.getItemFromBlock(block.getBlock).getSubItems(Item.getItemFromBlock(block.getBlock), ExtraCells.ModTab, list)
       for(sub <- list){
         val stack = sub.asInstanceOf[ItemStack]
         WikiRegistry.registerBlockAndItemPageEntry(stack, stack.getUnlocalizedName.replace(".", "/").replace("tile/", ""))

@@ -5,14 +5,13 @@ import appeng.api.networking.security.MachineSource
 import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
-import net.minecraftforge.fml.common.Optional
 import extracells.integration.Integration
 import extracells.util.{FluidUtil, GasUtil, WrenchUtil}
 import mekanism.api.gas.IGasItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.util.{ChatComponentTranslation, Vec3}
 import net.minecraftforge.fluids.FluidStack
+import net.minecraftforge.fml.common.Optional
 import org.apache.commons.lang3.tuple.MutablePair
 
 

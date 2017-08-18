@@ -1,20 +1,24 @@
 package extracells.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.tileentity.TileEntityFluidInterface;
+import java.util.List;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.I18n;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
-import java.util.List;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import extracells.tileentity.TileEntityFluidInterface;
 
 public class ItemBlockECBase extends ItemBlock {
 
@@ -25,12 +29,6 @@ public class ItemBlockECBase extends ItemBlock {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int damage) {
-		return Block.getBlockFromItem(this).getIcon(0, damage);
-	}
-
-	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		return I18n.translateToLocal(getUnlocalizedName(stack) + ".name");
 	}
@@ -38,12 +36,6 @@ public class ItemBlockECBase extends ItemBlock {
 	@Override
 	public int getMetadata(int damage) {
 		return damage;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getSpriteNumber() {
-		return 0;
 	}
 
 	@Override
@@ -68,28 +60,17 @@ public class ItemBlockECBase extends ItemBlock {
 	}
 
 	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player,
-			World world, int x, int y, int z, int side, float hitX, float hitY,
-			float hitZ, int metadata) {
-
-		if (!world.setBlock(x, y, z, this.field_150939_a, metadata, 3)) {
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+		if(!super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState)){
 			return false;
 		}
 
-		if (world.getBlock(x, y, z) == this.field_150939_a) {
-			this.field_150939_a.onBlockPlacedBy(world, x, y, z, player, stack);
-			this.field_150939_a.onPostBlockPlaced(world, x, y, z, metadata);
-		}
-
 		if (getMetadata(stack.getItemDamage()) == 0 && stack.hasTagCompound()) {
-			TileEntity tile = world.getTileEntity(x, y, z);
+			TileEntity tile = world.getTileEntity(pos);
 			if (tile != null && tile instanceof TileEntityFluidInterface) {
-				((TileEntityFluidInterface) tile).readFilter(stack
-						.getTagCompound());
+				((TileEntityFluidInterface) tile).readFilter(stack.getTagCompound());
 			}
 		}
-
 		return true;
 	}
-
 }

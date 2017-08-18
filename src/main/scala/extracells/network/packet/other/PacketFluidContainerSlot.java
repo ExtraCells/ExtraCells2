@@ -1,13 +1,13 @@
 package extracells.network.packet.other;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import extracells.network.AbstractPacket;
-import extracells.tileentity.TileEntityFluidFiller;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import extracells.network.AbstractPacket;
+import extracells.tileentity.TileEntityFluidFiller;
+import io.netty.buffer.ByteBuf;
 
 public class PacketFluidContainerSlot extends AbstractPacket {
 

@@ -1,13 +1,12 @@
 
 package extracells.render.block
 
-import cpw.mods.fml.client.registry.{ISimpleBlockRenderingHandler, RenderingRegistry}
 import extracells.tileentity.TileEntityHardMeDrive
 import net.minecraft.block.Block
 import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.texture.TextureMap
-import net.minecraft.client.renderer.{RenderBlocks, Tessellator}
-import net.minecraft.util.{IIcon, ResourceLocation}
+import net.minecraft.util.ResourceLocation
 import net.minecraft.world.IBlockAccess
 import org.lwjgl.opengl.GL11
 

@@ -47,6 +47,8 @@ minecraft {
     version = "${config.version.minecraft}-${config.version.forge}"
     runDir = "../../MinecraftDebug/run_client"
 	mappings = "${config.version.mappings}"
+	
+	replace '@VERSION@', project.version
 }
 
 repositories {

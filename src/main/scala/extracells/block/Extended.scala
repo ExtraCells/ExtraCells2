@@ -1,22 +1,10 @@
 package extracells.block
 
-import net.minecraft.block.Block
-import net.minecraft.block.properties.IProperty
-import net.minecraft.block.state.IBlockState
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IBlockAccess
-import net.minecraftforge.common.property.ExtendedBlockState
-import net.minecraftforge.common.property.IExtendedBlockState
-import net.minecraftforge.common.property.IUnlistedProperty
-
-import scala.collection.convert.WrapAsScala._
-import scala.collection.mutable
-
 // Utility trait for blocks that use properties (e.g. for rotation).
 // Provides automatic conversion to and from metadata and takes care of generic
 // setup of stateful blocks with listed and unlisted properties.
-trait Extended extends Block {
-  // Keep track of our properties, used for automatic metadata conversion.
+trait Extended /*extends Block*/ {
+  /*// Keep track of our properties, used for automatic metadata conversion.
   private lazy val (listedProperties, unlistedProperties) = {
     val listed = mutable.ArrayBuffer.empty[IProperty[_ <: Comparable[_]]]
     val unlisted = mutable.ArrayBuffer.empty[IUnlistedProperty[_]]
@@ -120,5 +108,5 @@ trait Extended extends Block {
       maxIndex >>= 1
     }
     bits
-  }
+  }*/
 }

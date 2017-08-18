@@ -1,5 +1,10 @@
 package extracells.inventory;
 
+import net.minecraft.tileentity.TileEntity;
+
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -17,9 +22,6 @@ import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
 import extracells.api.IExternalGasStorageHandler;
 import extracells.part.PartFluidStorage;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 
 public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 

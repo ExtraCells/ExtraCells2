@@ -1,7 +1,22 @@
 package extracells.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.I18n;
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.Extracells;
+import extracells.ExtraCells;
 import extracells.api.ECApi;
 import extracells.container.ContainerGasTerminal;
 import extracells.gui.widget.FluidWidgetComparator;
@@ -12,19 +27,6 @@ import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 import extracells.part.PartGasTerminal;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.I18n;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 
@@ -63,7 +65,7 @@ public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
-			if (Extracells.shortenedBuckets()) {
+			if (ExtraCells.shortenedBuckets()) {
 				if (currentFluidAmount > 1000000000L)
 					amountToText = Long.toString(currentFluidAmount / 1000000000L) + "MegaB";
 				else if (currentFluidAmount > 1000000L)

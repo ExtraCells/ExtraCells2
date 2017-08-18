@@ -1,48 +1,55 @@
 package extracells.registries;
 
-import extracells.Extracells;
-import extracells.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.text.translation.I18n;
+
+import extracells.ExtraCells;
+import extracells.block.BlockCertusTank;
+import extracells.block.BlockFluidCrafter;
+import extracells.block.BlockFluidInterface;
+import extracells.block.BlockHardMEDrive;
+import extracells.block.BlockVibrationChamberFluid;
+import extracells.block.BlockWalrus;
 import extracells.integration.Integration;
 import extracells.item.ItemBlockCertusTank;
 import extracells.item.ItemBlockECBase;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.util.I18n;
-import net.minecraft.util.text.translation.I18n;
 
 public enum BlockEnum {
-	CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),
+	CERTUSTANK("certustank", new BlockCertusTank(), (block)-> new ItemBlockCertusTank(block)),
 	WALRUS("walrus", new BlockWalrus()),
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
-	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), ItemBlockECBase.class),
+	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), (block)-> new ItemBlockECBase(block)),
 	BLASTRESISTANTMEDRIVE("hardmedrive", BlockHardMEDrive.instance()),
 	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid());
 
 	private final String internalName;
 	private Block block;
-	private Class<? extends ItemBlock> itemBlockClass;
+	private ItemBlock item;
 	private Integration.Mods mod;
 
-	BlockEnum(String _internalName, Block _block, Integration.Mods _mod) {
-		this(_internalName, _block, ItemBlock.class, _mod);
+	BlockEnum(String internalName, Block block, Integration.Mods mod) {
+		this(internalName, block, (b)->new ItemBlock(b), mod);
 	}
 
-	BlockEnum(String _internalName, Block _block) {
-		this(_internalName, _block, ItemBlock.class);
+	BlockEnum(String internalName, Block block) {
+		this(internalName, block,(b)-> new ItemBlock(b));
 	}
 
-	BlockEnum(String _internalName, Block _block, Class<? extends ItemBlock> _itemBlockClass){
-		this(_internalName, _block, _itemBlockClass, null);
+	BlockEnum(String internalName, Block block, ItemFactory itemFactory){
+		this(internalName, block, itemFactory, null);
 	}
 
-	BlockEnum(String _internalName, Block _block, Class<? extends ItemBlock> _itemBlockClass, Integration.Mods _mod) {
-		this.internalName = _internalName;
-		this.block = _block;
+	BlockEnum(String internalName, Block block, ItemFactory factory, Integration.Mods mod) {
+		this.internalName = internalName;
+		this.block = block;
 		this.block.setUnlocalizedName("extracells.block." + this.internalName);
-		this.itemBlockClass = _itemBlockClass;
-		this.mod = _mod;
-		if(_mod == null || _mod.isEnabled())
-			this.block.setCreativeTab(Extracells.ModTab());
+		this.block.setRegistryName(internalName);
+		this.item = factory.createItem(block);
+		this.item.setRegistryName(block.getRegistryName());
+		this.mod = mod;
+		if(mod == null || mod.isEnabled())
+			this.block.setCreativeTab(ExtraCells.ModTab());
 	}
 
 	public Block getBlock() {
@@ -53,8 +60,8 @@ public enum BlockEnum {
 		return this.internalName;
 	}
 
-	public Class<? extends ItemBlock> getItemBlockClass() {
-		return this.itemBlockClass;
+	public ItemBlock getItem() {
+		return item;
 	}
 
 	public String getStatName() {
@@ -63,5 +70,9 @@ public enum BlockEnum {
 
 	public Integration.Mods getMod(){
 		return mod;
+	}
+
+	protected interface ItemFactory{
+		ItemBlock createItem(Block block);
 	}
 }

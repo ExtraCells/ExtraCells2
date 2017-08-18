@@ -1,18 +1,35 @@
 package extracells.proxy;
 
-import appeng.api.AEApi;
-import appeng.api.IAppEngApi;
-import appeng.api.recipes.IRecipeHandler;
-import appeng.api.recipes.IRecipeLoader;
-import cpw.mods.fml.common.registry.GameRegistry;
-import extracells.registries.BlockEnum;
-import extracells.registries.ItemEnum;
-import extracells.tileentity.*;
-import extracells.util.FuelBurnTime;
-import extracells.util.recipe.RecipeUniversalTerminal;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+
 import net.minecraftforge.fluids.FluidRegistry;
 
-import java.io.*;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+
+import appeng.api.AEApi;
+import appeng.api.IAppEngApi;
+import appeng.api.movable.IMovableRegistry;
+import appeng.api.recipes.IRecipeHandler;
+import appeng.api.recipes.IRecipeLoader;
+import extracells.registries.BlockEnum;
+import extracells.registries.ItemEnum;
+import extracells.tileentity.TileEntityCertusTank;
+import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.tileentity.TileEntityFluidFiller;
+import extracells.tileentity.TileEntityFluidInterface;
+import extracells.tileentity.TileEntityHardMeDrive;
+import extracells.tileentity.TileEntityVibrationChamberFluid;
+import extracells.tileentity.TileEntityWalrus;
+import extracells.util.FuelBurnTime;
+import extracells.util.recipe.RecipeUniversalTerminal;
 
 public class CommonProxy {
 
@@ -48,29 +65,43 @@ public class CommonProxy {
 
 	public void registerBlocks() {
 		for (BlockEnum current : BlockEnum.values()) {
-			GameRegistry.registerBlock(current.getBlock(), current.getItemBlockClass(), current.getInternalName());
+			registerBlock(current.getBlock());
+			registerItem(current.getItem());
 		}
 	}
 
 	public void registerItems() {
 		for (ItemEnum current : ItemEnum.values()) {
-			GameRegistry.registerItem(current.getItem(), current.getInternalName());
+			registerItem(current.getItem());
 		}
+	}
+
+	public void registerBlock(Block block){
+		ForgeRegistries.BLOCKS.register(block);
+	}
+
+	public void registerItem(Item item){
+		ForgeRegistries.ITEMS.register(item);
 	}
 
 	public void registerMovables() {
 		IAppEngApi api = AEApi.instance();
-		api.registries().movable().whiteListTileEntity(TileEntityCertusTank.class);
-		api.registries().movable().whiteListTileEntity(TileEntityWalrus.class);
-		api.registries().movable().whiteListTileEntity(TileEntityFluidCrafter.class);
-		api.registries().movable().whiteListTileEntity(TileEntityFluidInterface.class);
-		api.registries().movable().whiteListTileEntity(TileEntityFluidFiller.class);
-		api.registries().movable().whiteListTileEntity(TileEntityHardMeDrive.class);
-		api.registries().movable().whiteListTileEntity(TileEntityVibrationChamberFluid.class);
+		IMovableRegistry movable = api.registries().movable();
+		movable.whiteListTileEntity(TileEntityCertusTank.class);
+		movable.whiteListTileEntity(TileEntityWalrus.class);
+		movable.whiteListTileEntity(TileEntityFluidCrafter.class);
+		movable.whiteListTileEntity(TileEntityFluidInterface.class);
+		movable.whiteListTileEntity(TileEntityFluidFiller.class);
+		movable.whiteListTileEntity(TileEntityHardMeDrive.class);
+		movable.whiteListTileEntity(TileEntityVibrationChamberFluid.class);
 	}
 
 	public void registerRenderers() {
-		// Only Clientside
+		// Only Client Side
+	}
+
+	public void registerModels() {
+		// Only Client Side
 	}
 
 	public void registerTileEntities() {

@@ -3,12 +3,12 @@ package extracells.item
 import java.util
 
 import appeng.api.config.AccessRestriction
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.I18n
+import net.minecraft.util.text.translation.I18n
+import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 
 trait WirelessTermBase extends PowerItem{
@@ -51,7 +51,7 @@ trait WirelessTermBase extends PowerItem{
   }
 
   @SuppressWarnings(Array("unchecked", "rawtypes"))
-  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[_]) {
+  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[ItemStack]) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     itemList2.add(new ItemStack(item))
     val itemStack: ItemStack = new ItemStack(item)

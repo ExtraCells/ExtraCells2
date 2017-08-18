@@ -16,7 +16,6 @@ import li.cil.oc.api.internal.{Agent, Database, Drone, Robot}
 import li.cil.oc.api.machine.{Arguments, Callback, Context}
 import li.cil.oc.api.network._
 import li.cil.oc.api.prefab.ManagedEnvironment
-import li.cil.oc.integration.{appeng, ec}
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.FluidContainerRegistry
 

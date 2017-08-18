@@ -1,10 +1,11 @@
 package extracells.container;
 
-import extracells.tileentity.TileEntityFluidFiller;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+
+import extracells.tileentity.TileEntityFluidFiller;
 
 public class ContainerFluidFiller extends Container {
 	public TileEntityFluidFiller tileentity;

@@ -1,5 +1,20 @@
 package extracells.gui;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.AEApi;
 import extracells.container.ContainerPlaneFormation;
 import extracells.gui.widget.WidgetRedstoneModes;
@@ -8,17 +23,6 @@ import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketFluidPlaneFormation;
 import extracells.part.PartFluidPlaneFormation;
 import extracells.util.FluidUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
-
-import java.util.List;
 
 public class GuiFluidPlaneFormation extends GuiContainer implements
 		IFluidSlotGui {
@@ -86,7 +90,7 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 
 	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_,
 			int p_146981_3_) {
-		return this.func_146978_c(p_146981_1_.xDisplayPosition,
+		return this.isPointInRegion(p_146981_1_.xDisplayPosition,
 				p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
 	}
 
@@ -101,7 +105,7 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		Slot slot = getSlotAtPosition(mouseX, mouseY);
 
 		if (slot != null

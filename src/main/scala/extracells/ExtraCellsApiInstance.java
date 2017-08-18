@@ -1,5 +1,22 @@
 package extracells;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fml.common.Optional;
+
 import appeng.api.AEApi;
 import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
@@ -7,11 +24,19 @@ import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.*;
+import appeng.api.storage.ICellHandler;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.MEMonitorHandler;
+import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEPartLocation;
-import appeng.api.util.WorldCoord;
-import extracells.api.*;
+import extracells.api.ExtraCellsApi;
+import extracells.api.IExternalGasStorageHandler;
+import extracells.api.IPortableFluidStorageCell;
+import extracells.api.IPortableGasStorageCell;
+import extracells.api.IWirelessFluidTermHandler;
+import extracells.api.IWirelessGasFluidTermHandler;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
 import extracells.api.definitions.IPartDefinition;
@@ -29,18 +54,8 @@ import extracells.util.FuelBurnTime;
 import extracells.util.GasStorageRegistry;
 import extracells.util.GasUtil;
 import extracells.wireless.WirelessTermRegistry;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
 
 public class ExtraCellsApiInstance implements ExtraCellsApi {
 
@@ -116,12 +131,12 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	@Deprecated
 	public String getVerion() {
-		return Extracells.VERSION();
+		return ExtraCells.VERSION();
 	}
 
 	@Override
 	public String getVersion() {
-		return Extracells.VERSION();
+		return ExtraCells.VERSION();
 	}
 
 	@Override
@@ -145,12 +160,8 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public ItemStack openPortableCellGui (EntityPlayer player, ItemStack stack, World world){
-		return openPortableFluidCellGui(player, stack, world);
-	}
-
-	@Override
-	public ItemStack openPortableFluidCellGui(EntityPlayer player, ItemStack stack, World world) {
+	public ItemStack openPortableFluidCellGui(EntityPlayer player, EnumHand hand, World world) {
+		ItemStack stack = player.getHeldItem(hand);
 		if (world.isRemote || stack == null || stack.getItem() == null)
 			return stack;
 		Item item = stack.getItem();
@@ -159,7 +170,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
 		if (!(cellHandler instanceof FluidCellHandler))
 			return stack;
-		IMEInventoryHandler<IAEFluidStack> handler = ((FluidCellHandler) cellHandler).getCellInventoryPlayer(stack, player);
+		IMEInventoryHandler<IAEFluidStack> handler = ((FluidCellHandler) cellHandler).getCellInventoryPlayer(stack, player, hand);
 		if (!(handler instanceof HandlerItemStorageFluid)) {
 			return stack;
 		}
@@ -169,7 +180,8 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public ItemStack openPortableGasCellGui(EntityPlayer player, ItemStack stack, World world) {
+	public ItemStack openPortableGasCellGui(EntityPlayer player, EnumHand hand, World world) {
+		ItemStack stack = player.getHeldItem(hand);
 		if (world.isRemote || stack == null || stack.getItem() == null)
 			return stack;
 		Item item = stack.getItem();
@@ -178,7 +190,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
 		if (!(cellHandler instanceof GasCellHandler))
 			return stack;
-		IMEInventoryHandler<IAEFluidStack> handler = ((GasCellHandler) cellHandler).getCellInventoryPlayer(stack, player);
+		IMEInventoryHandler<IAEFluidStack> handler = ((GasCellHandler) cellHandler).getCellInventoryPlayer(stack, player, hand);
 		if (!(handler instanceof HandlerItemStorageGas)) {
 			return stack;
 		}
@@ -188,12 +200,8 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world) {
-		return openWirelessFluidTerminal(player, stack, world);
-	}
-
-	@Override
-	public ItemStack openWirelessFluidTerminal(EntityPlayer player, ItemStack stack, World world) {
+	public ItemStack openWirelessFluidTerminal(EntityPlayer player, EnumHand hand, World world) {
+		ItemStack stack = player.getHeldItem(hand);
 		if (world.isRemote)
 			return stack;
 		if (!isWirelessFluidTerminal(stack))
@@ -207,57 +215,29 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		} catch (Throwable ignored) {
 			return stack;
 		}
-		return openWirelessTerminal(player, stack, world, (int) player.posX, (int) player.posY, (int) player.posZ, key);
+		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 1);
 	}
 
 	@Override
-	public ItemStack openWirelessGasTerminal(EntityPlayer player, ItemStack itemStack, World world) {
+	public ItemStack openWirelessGasTerminal(EntityPlayer player, EnumHand hand, World world) {
+		ItemStack stack = player.getHeldItem(hand);
 		if (world.isRemote)
-			return itemStack;
-		if (!isWirelessFluidTerminal(itemStack))
-			return itemStack;
-		IWirelessGasFluidTermHandler handler = getWirelessTermHandler(itemStack);
-		if (!handler.hasPower(player, 1.0D, itemStack))
-			return itemStack;
+			return stack;
+		if (!isWirelessFluidTerminal(stack))
+			return stack;
+		IWirelessGasFluidTermHandler handler = getWirelessTermHandler(stack);
+		if (!handler.hasPower(player, 1.0D, stack))
+			return stack;
 		Long key;
 		try {
-			key = Long.parseLong(handler.getEncryptionKey(itemStack));
+			key = Long.parseLong(handler.getEncryptionKey(stack));
 		} catch (Throwable ignored) {
-			return itemStack;
+			return stack;
 		}
-		int x = (int) player.posX;
-		int y = (int) player.posY;
-		int z = (int) player.posZ;
-		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable().getLocatableBy(key);
-		if (securityTerminal == null)
-			return itemStack;
-		IGridNode gridNode = securityTerminal.getGridNode(AEPartLocation.INTERNAL);
-		if (gridNode == null)
-			return itemStack;
-		IGrid grid = gridNode.getGrid();
-		if (grid == null)
-			return itemStack;
-		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wirelessAccessPoint().maybeEntity().get())) {
-			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node.getMachine();
-			WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
-			int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
-			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
-				IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
-				if (gridCache != null) {
-					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
-					if (fluidInventory != null) {
-						GuiHandler.launchGui(GuiHandler.getGuiId(5), player, new Object[]{
-								fluidInventory, getWirelessTermHandler(itemStack)});
-					}
-				}
-			}
-		}
-		return itemStack;
+		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 5);
 	}
 
-	@Deprecated
-	@Override
-	public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack itemStack, World world, int x, int y, int z, Long key) {
+	private ItemStack openWirelessTerminal(EntityPlayer player, ItemStack itemStack, World world, BlockPos pos, Long key, int guiId) {
 		if (world.isRemote)
 			return itemStack;
 		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable().getLocatableBy(key);
@@ -273,14 +253,14 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wirelessAccessPoint().maybeEntity().get())) {
 			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node
 					.getMachine();
-			WorldCoord distance = accessPoint.getLocation().subtract(x, y, z);
-			int squaredDistance = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+			BlockPos distance = accessPoint.getLocation().getPos().subtract(pos);
+			int squaredDistance = distance.getX() * distance.getX() + distance.getY() * distance.getY() + distance.getZ() * distance.getZ();
 			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
 				IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
 				if (gridCache != null) {
 					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
 					if (fluidInventory != null) {
-						GuiHandler.launchGui(GuiHandler.getGuiId(1), player, new Object[]{
+						GuiHandler.launchGui(GuiHandler.getGuiId(guiId), player, new Object[]{
 								fluidInventory, getWirelessFluidTermHandler(itemStack)});
 					}
 				}

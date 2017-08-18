@@ -9,7 +9,6 @@ import appeng.api.networking.IGridNode
 import appeng.api.util.AEPartLocation
 import extracells.container.ContainerHardMEDrive
 import extracells.network.GuiHandler
-import extracells.render.block.RendererHardMEDrive
 import extracells.tileentity.TileEntityHardMeDrive
 import extracells.util.PermissionUtil
 import net.minecraft.block.state.IBlockState
@@ -20,8 +19,8 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.util.math.{BlockPos, MathHelper}
+import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
 
@@ -45,11 +44,6 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
   setUnlocalizedName("block.hardmedrive");
 
   override def createNewTileEntity(world : World, meta : Int): TileEntity = new TileEntityHardMeDrive()
-
-  override def breakBlock(world: World, pos: BlockPos, state: IBlockState) {
-    dropItems(world, pos)
-    super.breakBlock(world, pos, state)
-  }
 
   private def dropItems(world: World, pos: BlockPos) {
     val x = pos.getX
@@ -179,6 +173,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
 
   override def breakBlock(world: World, pos: BlockPos, state: IBlockState) {
     if (world.isRemote) return
+    dropItems(world, pos)
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile != null) {
       if (tile.isInstanceOf[TileEntityHardMeDrive]) {

@@ -1,14 +1,16 @@
 package extracells.gui;
 
-import extracells.container.ContainerDrive;
-import extracells.network.packet.part.PacketFluidStorage;
-import extracells.part.PartDrive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
+
+import extracells.container.ContainerDrive;
+import extracells.network.packet.part.PacketFluidStorage;
+import extracells.part.PartDrive;
 
 public class GuiDrive extends GuiContainer {
 

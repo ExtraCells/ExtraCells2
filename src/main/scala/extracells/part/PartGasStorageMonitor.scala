@@ -1,12 +1,11 @@
 package extracells.part
 
 import appeng.api.parts.IPartHost
-import net.minecraftforge.fml.common.Optional
 import extracells.integration.Integration
 import extracells.util.{FluidUtil, GasUtil, WrenchUtil}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
-import net.minecraft.util.{ChatComponentTranslation, Vec3}
+import net.minecraftforge.fml.common.Optional
 
 
 class PartGasStorageMonitor extends PartFluidStorageMonitor{

@@ -12,8 +12,8 @@ import extracells.util.FuelBurnTime
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{EnumFacing, ITickable}
 import net.minecraftforge.common.capabilities.Capability
-import net.minecraftforge.fluids.{capability, _}
 import net.minecraftforge.fluids.capability.{CapabilityFluidHandler, IFluidTankProperties}
+import net.minecraftforge.fluids.{capability, _}
 
 class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with IActionHost with TPowerStorage with ITickable {
   private[tileentity] var isFirstGridNode: Boolean = true

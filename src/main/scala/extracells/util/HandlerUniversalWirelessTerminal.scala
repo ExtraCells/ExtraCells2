@@ -2,7 +2,7 @@ package extracells.util
 
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
-import extracells.api.{IWirelessGasTermHandler, IWirelessFluidTermHandler}
+import extracells.api.{IWirelessFluidTermHandler, IWirelessGasTermHandler}
 import extracells.item.ItemWirelessTerminalUniversal
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack

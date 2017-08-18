@@ -1,14 +1,7 @@
 package extracells.render.item;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
-import org.lwjgl.opengl.GL11;
-
-public class ItemRendererWalrus implements IItemRenderer {
+//TODO: Use model.json
+/*public class ItemRendererWalrus implements IItemRenderer {
 
 	IModelCustom modelWalrus = AdvancedModelLoader
 			.loadModel(new ResourceLocation("extracells", "models/walrus.obj"));
@@ -50,4 +43,4 @@ public class ItemRendererWalrus implements IItemRenderer {
 			ItemRendererHelper helper) {
 		return true;
 	}
-}
+}*/

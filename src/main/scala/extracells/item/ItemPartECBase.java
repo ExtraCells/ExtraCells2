@@ -1,35 +1,46 @@
 package extracells.item;
 
-import appeng.api.AEApi;
-import appeng.api.config.Upgrades;
-import appeng.api.implementations.items.IItemGroup;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartItem;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.api.ECApi;
-import extracells.registries.PartEnum;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import org.apache.logging.log4j.Level;
+
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import net.minecraftforge.client.model.ModelLoader;
 
-public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import appeng.api.AEApi;
+import appeng.api.config.Upgrades;
+import appeng.api.implementations.items.IItemGroup;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartItem;
+import extracells.api.ECApi;
+import extracells.models.ModelManager;
+import extracells.registries.PartEnum;
+
+public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup {
 
 	public ItemPartECBase() {
 		setMaxDamage(0);
 		setHasSubtypes(true);
-		AEApi.instance().partHelper().setItemBusRenderer(this);
+		//AEApi.instance().partHelper().setItemBusRenderer(this);
 
 		for (PartEnum part : PartEnum.values()) {
 			Map<Upgrades, Integer> possibleUpgradesList = part.getUpgrades();
@@ -74,13 +85,7 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 				&& itemStack.getItemDamage() == PartEnum.OREDICTEXPORTBUS
 						.ordinal())
 			return super.getRarity(itemStack);
-		return EnumRarity.rare;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int getSpriteNumber() {
-		return 0;
+		return EnumRarity.RARE;
 	}
 
 	@Override
@@ -109,12 +114,19 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack is, EntityPlayer player, World world,
-			int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		return AEApi.instance().partHelper()
-				.placeBus(is, x, y, z, side, player, world);
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		return AEApi.instance().partHelper().placeBus(stack, pos, facing, playerIn, hand, worldIn);
 	}
 
 	@Override
-	public void registerIcons(IIconRegister _iconRegister) {}
+	@SideOnly(Side.CLIENT)
+	public void registerModel(Item item, ModelManager manager) {
+		for(int i = 0;i < PartEnum.values().length;i++){
+			PartEnum type = PartEnum.values()[i];
+			Optional<ModelResourceLocation> location = type.getItemModel();
+			if(location.isPresent()){
+				ModelLoader.setCustomModelResourceLocation(item, i, location.get());
+			}
+		}
+	}
 }

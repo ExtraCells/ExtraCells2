@@ -1,10 +1,15 @@
 package extracells.util.inventory;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 public class ECPrivateInventory implements IInventory {
 
@@ -26,36 +31,23 @@ public class ECPrivateInventory implements IInventory {
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 		// NOBODY needs this!
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slotId, int amount) {
-		if (this.slots[slotId] == null)
-			return null;
-		ItemStack itemstack;
-		if (this.slots[slotId].stackSize <= amount) {
-			itemstack = this.slots[slotId];
-			this.slots[slotId] = null;
-			markDirty();
-			return itemstack;
-		} else {
-			ItemStack temp = this.slots[slotId];
-			itemstack = temp.splitStack(amount);
-			this.slots[slotId] = temp;
-			if (temp.stackSize == 0) {
-				this.slots[slotId] = null;
-			} else {
-				this.slots[slotId] = temp;
-			}
-			markDirty();
-			return itemstack;
+		ItemStack itemStack = ItemStackHelper.getAndSplit(slots, slotId, amount);
+
+		if (itemStack != null) {
+			this.markDirty();
 		}
+
+		return itemStack;
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return this.customName;
 	}
 
@@ -74,13 +66,14 @@ public class ECPrivateInventory implements IInventory {
 		return this.slots[i];
 	}
 
+	@Nullable
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slotId) {
-		return this.slots[slotId];
+	public ItemStack removeStackFromSlot(int index) {
+		return ItemStackHelper.getAndRemove(slots, index);
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
 
@@ -125,7 +118,7 @@ public class ECPrivateInventory implements IInventory {
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 		// NOBODY needs this!
 	}
 
@@ -168,5 +161,32 @@ public class ECPrivateInventory implements IInventory {
 			}
 		}
 		return nbtList;
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for(int i = 0;i < slots.length;i++){
+			slots[i] = null;
+		}
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TextComponentString(getName());
 	}
 }

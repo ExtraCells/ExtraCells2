@@ -1,20 +1,7 @@
 package extracells.render.item;
 
-import extracells.render.model.ModelCertusTank;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
-
-public class ItemRendererCertusTank implements IItemRenderer {
+//TODO:Move to IBakedModel
+/*public class ItemRendererCertusTank implements IItemRenderer {
 
 	private ModelCertusTank model = new ModelCertusTank();
 
@@ -85,4 +72,4 @@ public class ItemRendererCertusTank implements IItemRenderer {
 			ItemRendererHelper helper) {
 		return true;
 	}
-}
+}*/

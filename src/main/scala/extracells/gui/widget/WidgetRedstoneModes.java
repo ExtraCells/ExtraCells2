@@ -1,20 +1,23 @@
 package extracells.gui.widget;
 
-import appeng.api.config.RedstoneMode;
 import com.google.common.base.Splitter;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.I18n;
+import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import appeng.api.config.RedstoneMode;
 
 public class WidgetRedstoneModes extends GuiButton {
 

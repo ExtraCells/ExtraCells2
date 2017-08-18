@@ -1,14 +1,7 @@
 package extracells.render.tileentity;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.AdvancedModelLoader;
-import net.minecraftforge.client.model.IModelCustom;
-import org.lwjgl.opengl.GL11;
-
-public class TileEntityRendererWalrus extends TileEntitySpecialRenderer {
+//TODO: Use model.json
+/*public class TileEntityRendererWalrus extends TileEntitySpecialRenderer {
 
 	IModelCustom modelWalrus = AdvancedModelLoader
 			.loadModel(new ResourceLocation("extracells", "models/walrus.obj"));
@@ -32,4 +25,4 @@ public class TileEntityRendererWalrus extends TileEntitySpecialRenderer {
 		this.modelWalrus.renderAll();
 		GL11.glPopMatrix();
 	}
-}
+}*/

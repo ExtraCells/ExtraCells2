@@ -5,11 +5,11 @@ import java.util
 import appeng.api.AEApi
 import appeng.api.config.Actionable
 import appeng.api.storage.data.IAEFluidStack
-import net.minecraftforge.fml.common.Optional
 import extracells.integration.Integration
 import extracells.util.GasUtil
 import mekanism.api.gas.IGasHandler
 import net.minecraftforge.fluids.{Fluid, FluidStack}
+import net.minecraftforge.fml.common.Optional
 
 class PartGasExport extends PartFluidExport{
 

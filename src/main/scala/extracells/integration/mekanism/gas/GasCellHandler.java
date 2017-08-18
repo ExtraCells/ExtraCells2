@@ -3,6 +3,7 @@ package extracells.integration.mekanism.gas;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.networking.security.PlayerSource;
@@ -34,8 +35,8 @@ public class GasCellHandler implements ICellHandler {
 		return new HandlerItemStorageGas(itemStack, saveProvider, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack));
 	}
 
-	public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player) {
-		return new HandlerItemPlayerStorageGas(itemStack, null, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack), player);
+	public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player, EnumHand hand) {
+		return new HandlerItemPlayerStorageGas(itemStack, null, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack), player, hand);
 	}
 
 	@Override

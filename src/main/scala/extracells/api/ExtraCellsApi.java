@@ -1,18 +1,20 @@
 package extracells.api;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
 import extracells.api.definitions.IPartDefinition;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public interface ExtraCellsApi {
 
@@ -47,22 +49,13 @@ public interface ExtraCellsApi {
 
 	IItemDefinition items();
 
-	@Deprecated
-	ItemStack openPortableCellGui(EntityPlayer player, ItemStack stack, World world);
+	ItemStack openPortableGasCellGui(EntityPlayer player, EnumHand hand, World world);
 
-	ItemStack openPortableGasCellGui(EntityPlayer player, ItemStack stack, World world);
+	ItemStack openPortableFluidCellGui(EntityPlayer player, EnumHand hand, World world);
 
-	ItemStack openPortableFluidCellGui(EntityPlayer player, ItemStack stack, World world);
+	ItemStack openWirelessFluidTerminal(EntityPlayer player, EnumHand hand, World world);
 
-	@Deprecated
-	ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world);
-
-	ItemStack openWirelessFluidTerminal(EntityPlayer player, ItemStack stack, World world);
-
-	ItemStack openWirelessGasTerminal(EntityPlayer player, ItemStack stack, World world);
-
-	@Deprecated
-	ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world, int x, int y, int z, Long key);
+	ItemStack openWirelessGasTerminal(EntityPlayer player, EnumHand hand, World world);
 
 	IPartDefinition parts();
 

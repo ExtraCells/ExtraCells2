@@ -1,11 +1,12 @@
 package extracells.item;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+
 import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class ItemInternalCraftingPattern extends ItemECBase implements ICraftingPatternItem {
 

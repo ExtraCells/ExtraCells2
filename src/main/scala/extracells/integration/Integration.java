@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.relauncher.Side;
 
-import extracells.Extracells;
+import extracells.ExtraCells;
 import extracells.integration.igw.IGW;
 import extracells.integration.mekanism.Mekanism;
 import extracells.integration.mekanism.gas.MekanismGas;
@@ -77,7 +77,7 @@ public class Integration {
 		}
 
 		private boolean correctSide(){
-			return Extracells.proxy().isClient() ? isOnClient() : isOnServer();
+			return ExtraCells.proxy().isClient() ? isOnClient() : isOnServer();
 		}
 		
 		

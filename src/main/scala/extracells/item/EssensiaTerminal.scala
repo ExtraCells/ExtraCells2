@@ -1,11 +1,6 @@
 package extracells.item
 
-import net.minecraftforge.fml.common.Optional
-import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.nbt.NBTTagCompound
-import thaumicenergistics.api.IThEWirelessEssentiaTerminal
-
-@Optional.Interface(iface = "thaumicenergistics.api.IThEWirelessEssentiaTerminal", modid = "thaumicenergistics", striprefs = true)
+/*@Optional.Interface(iface = "thaumicenergistics.api.IThEWirelessEssentiaTerminal", modid = "thaumicenergistics", striprefs = true)
 trait EssensiaTerminal extends Item with IThEWirelessEssentiaTerminal{
 
 
@@ -21,4 +16,4 @@ trait EssensiaTerminal extends Item with IThEWirelessEssentiaTerminal{
     return itemStack.getTagCompound
   }
 
-}
+}*/

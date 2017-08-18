@@ -6,29 +6,29 @@ import appeng.api.AEApi
 import appeng.api.config.{AccessRestriction, FuzzyMode}
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.api.{ECApi, IHandlerFluidStorage, IPortableFluidStorageCell}
+import extracells.models.ModelManager
 import extracells.util.inventory.{ECFluidFilterInventory, ECPrivateInventory}
-import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{IIcon, I18n}
+import net.minecraft.util.EnumHand
+import net.minecraft.util.text.translation.I18n
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
+import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorageCell with PowerItem {
 
   override val MAX_POWER: Double = 20000
-  private[item] var icon: IIcon = null
   def THIS = this
   setMaxStackSize(1)
   setMaxDamage(0)
 
 
-  @SuppressWarnings(Array("rawtypes", "unchecked")) override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
+  @SuppressWarnings(Array("rawtypes", "unchecked")) override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[String], par4: Boolean) {
     val list2 = list.asInstanceOf[util.List[String]]
     val handler: IMEInventoryHandler[IAEFluidStack] = AEApi.instance.registries.cell.getCellInventory(itemStack, null, StorageChannel.FLUIDS).asInstanceOf[IMEInventoryHandler[IAEFluidStack]]
 
@@ -81,10 +81,6 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
     return FuzzyMode.IGNORE_ALL
   }
 
-  override def getIconFromDamage(dmg: Int): IIcon = {
-    return this.icon
-  }
-
   def getMaxBytes(is: ItemStack): Int = {
     return 512
   }
@@ -98,11 +94,10 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
     return AccessRestriction.READ_WRITE
   }
 
-  override def getRarity(itemStack: ItemStack): EnumRarity = {
-    return EnumRarity.rare
-  }
+  override def getRarity(itemStack: ItemStack): EnumRarity = EnumRarity.RARE
 
-  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[_]) {
+
+  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[ItemStack]) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     itemList2.add(new ItemStack(item))
     val itemStack: ItemStack = new ItemStack(item)
@@ -128,15 +123,13 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
   }
 
   @SuppressWarnings(Array("rawtypes", "unchecked"))
-  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer): ItemStack = {
-    return ECApi.instance.openPortableFluidCellGui(player, itemStack, world)
+  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer, hand: EnumHand): ItemStack = {
+    return ECApi.instance.openPortableFluidCellGui(player, hand, world)
   }
 
 
   @SideOnly(Side.CLIENT)
-  override def registerIcons(iconRegister: IIconRegister) {
-    this.icon = iconRegister.registerIcon("extracells:storage.fluid.portable")
-  }
+  override def registerModel(item: Item, manager: ModelManager)=manager.registerItemModel(item, 0, "storage/fluid/portable")
 
   def setFuzzyMode(is: ItemStack, fzMode: FuzzyMode) {
     if (is == null) return

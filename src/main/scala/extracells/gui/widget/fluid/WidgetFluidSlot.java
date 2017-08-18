@@ -1,11 +1,7 @@
 package extracells.gui.widget.fluid;
 
-import net.minecraftforge.fml.common.Optional;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.other.PacketFluidSlot;
-import extracells.util.FluidUtil;
-import extracells.util.GasUtil;
-import mekanism.api.gas.GasStack;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -14,12 +10,20 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fml.common.Optional;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import java.util.List;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
+import extracells.network.packet.other.PacketFluidSlot;
+import extracells.util.FluidUtil;
+import extracells.util.GasUtil;
+import mekanism.api.gas.GasStack;
 
 public class WidgetFluidSlot extends Gui {
 

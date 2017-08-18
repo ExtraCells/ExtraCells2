@@ -1,6 +1,7 @@
 package extracells.network.packet.other;
 
 import net.minecraft.entity.player.EntityPlayer;
+
 import net.minecraftforge.fluids.Fluid;
 
 public interface IFluidSlotPartOrBlock {

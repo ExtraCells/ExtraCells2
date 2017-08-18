@@ -3,9 +3,9 @@ package extracells.item
 import appeng.api.config.PowerUnits
 import appeng.api.implementations.items.IAEItemPowerStorage
 import cofh.api.energy.IEnergyContainerItem
-import net.minecraftforge.fml.common.Optional
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraftforge.fml.common.Optional
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy", striprefs = true)
 trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem{

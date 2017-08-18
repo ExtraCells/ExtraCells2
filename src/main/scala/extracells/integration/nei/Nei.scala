@@ -1,12 +1,5 @@
 package extracells.integration.nei
 
-import java.util
-
-import codechicken.nei.api.API
-import extracells.Extracells
-import extracells.registries.{BlockEnum, ItemEnum}
-import net.minecraft.item.{Item, ItemStack}
-
 
 object Nei {
 

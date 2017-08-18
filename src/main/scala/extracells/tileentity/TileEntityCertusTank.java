@@ -258,6 +258,10 @@ public class TileEntityCertusTank extends TileBase {
 		this.tank.readFromNBT(tag);
 	}
 
+	public void setFluid(FluidStack fluidStack){
+		tank.setFluid(fluidStack);
+	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);

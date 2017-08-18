@@ -3,13 +3,13 @@ package extracells.integration.mekanism.gas
 import appeng.api.implementations.IPowerChannelState
 import appeng.api.networking.security.IActionHost
 import appeng.api.util.DimensionalCoord
-import net.minecraftforge.fml.common.Optional.{Interface, InterfaceList, Method}
 import extracells.integration.Integration.Mods.MEKANISM
 import extracells.network.packet.other.IFluidSlotPartOrBlock
 import mekanism.api.gas._
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraftforge.common.util.ForgeDirection
+import net.minecraft.util.EnumFacing
 import net.minecraftforge.fluids.Fluid
+import net.minecraftforge.fml.common.Optional.{Interface, InterfaceList, Method}
 
 @InterfaceList(Array(
   new Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true),
@@ -20,52 +20,43 @@ trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChann
   val isMekanismLoaded = MEKANISM.isEnabled
 
   @Method(modid = "MekanismAPI|gas")
-  def getGasTank(side: ForgeDirection): GasTank
+  def getGasTank(side: EnumFacing): GasTank
 
   @Method(modid = "MekanismAPI|gas")
-  override def receiveGas(side: ForgeDirection, stack: GasStack, doTransfer: Boolean): Int = getGasTank(side).receive(stack, doTransfer)
+  override def receiveGas(side: EnumFacing, stack: GasStack, doTransfer: Boolean): Int = getGasTank(side).receive(stack, doTransfer)
 
   @Method(modid = "MekanismAPI|gas")
-  override def drawGas(side: ForgeDirection, amount: Int, doTransfer: Boolean): GasStack = getGasTank(side).draw(amount, doTransfer)
+  override def drawGas(side: EnumFacing, amount: Int, doTransfer: Boolean): GasStack = getGasTank(side).draw(amount, doTransfer)
 
   @Method(modid = "MekanismAPI|gas")
-  override def drawGas(side: ForgeDirection, amount: Int): GasStack = drawGas(side, amount, true)
+  override def canDrawGas(side: EnumFacing, gas: Gas): Boolean = getGasTank(side).canDraw(gas)
 
   @Method(modid = "MekanismAPI|gas")
-  override def canDrawGas(side: ForgeDirection, gas: Gas): Boolean = getGasTank(side).canDraw(gas)
+  override def canReceiveGas(side: EnumFacing, gas: Gas): Boolean = (!hasFilter(side)) && getGasTank(side).canReceive(gas)
 
   @Method(modid = "MekanismAPI|gas")
-  override def receiveGas(side: ForgeDirection, stack: GasStack): Int = receiveGas(side, stack, true)
+  override def canTubeConnect(side: EnumFacing): Boolean = isMekanismLoaded
 
-  @Method(modid = "MekanismAPI|gas")
-  override def canReceiveGas(side: ForgeDirection, gas: Gas): Boolean = (!hasFilter(side)) && getGasTank(side).canReceive(gas)
+  def getFilter(side: EnumFacing): Int
 
-  @Method(modid = "MekanismAPI|gas")
-  override def canTubeConnect(side: ForgeDirection): Boolean = isMekanismLoaded
-
-  def getFilter(side: ForgeDirection): Int
-
-  def setFilter(side: ForgeDirection, fluid: Fluid): Unit ={
+  def setFilter(side: EnumFacing, fluid: Fluid): Unit ={
     if(fluid == null)
-      setFilter(side, -1)
+      setFilter(side, "")
     else
-      setFilter(side, fluid.getID)
+      setFilter(side, fluid.getName)
   }
 
-  def setFilter(side: ForgeDirection, fluid: Int)
+  def setFilter(side: EnumFacing, fluid: String)
 
-  def hasFilter(side: ForgeDirection) = getFilter(side) != -1
+  def hasFilter(side: EnumFacing) = getFilter(side) != -1
 
   @Method(modid = "MekanismAPI|gas")
-  def exportGas(side: ForgeDirection, gas: GasStack, pos: DimensionalCoord): Int = {
+  def exportGas(side: EnumFacing, gas: GasStack, pos: DimensionalCoord): Int = {
     val tank = getGasTank(side)
-    val x = pos.x + side.offsetX
-    val y = pos.y + side.offsetY
-    val z = pos.z + side.offsetZ
     val world = pos.getWorld
     if(world == null)
       return 0
-    val tile = world.getTileEntity(x, y, z)
+    val tile = world.getTileEntity(pos.getPos.offset(side))
     if(tile == null)
       return 0
     if(!tile.isInstanceOf[IGasHandler])
@@ -78,6 +69,6 @@ trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChann
   }
 
   override def setFluid(_index: Int, _fluid: Fluid, _player: EntityPlayer) {
-    setFilter(ForgeDirection.getOrientation(_index), _fluid)
+    setFilter(EnumFacing.getFront(_index), _fluid)
   }
 }

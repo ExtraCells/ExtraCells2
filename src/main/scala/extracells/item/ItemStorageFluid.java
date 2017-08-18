@@ -1,16 +1,8 @@
 package extracells.item;
 
-import appeng.api.AEApi;
-import appeng.api.config.FuzzyMode;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
-import extracells.api.IFluidStorageCell;
-import extracells.api.IHandlerFluidStorage;
-import extracells.registries.ItemEnum;
-import extracells.util.inventory.ECFluidFilterInventory;
-import extracells.util.inventory.ECPrivateInventory;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -18,23 +10,34 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.I18n;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import appeng.api.AEApi;
+import appeng.api.config.FuzzyMode;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.api.IFluidStorageCell;
+import extracells.api.IHandlerFluidStorage;
+import extracells.models.ModelManager;
+import extracells.registries.ItemEnum;
+import extracells.util.inventory.ECFluidFilterInventory;
+import extracells.util.inventory.ECPrivateInventory;
 
 public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 
 	public static final String[] suffixes = { "1k", "4k", "16k", "64k", "256k", "1024k", "4096k" };
-
 	public static final int[] spaces = { 1024, 4096, 16348, 65536, 262144, 1048576, 4194304 };
-
-	private IIcon[] icons;
 
 	public ItemStorageFluid() {
 		setMaxStackSize(1);
@@ -44,6 +47,7 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack itemStack, EntityPlayer player,
 			List list, boolean par4) {
 		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
@@ -99,11 +103,11 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 		return FuzzyMode.IGNORE_ALL;
 	}
 
-	@Override
+	/*@Override
 	public IIcon getIconFromDamage(int dmg) {
 		int j = MathHelper.clamp_int(dmg, 0, suffixes.length);
 		return this.icons[j];
-	}
+	}*/
 
 	@Override
 	public int getMaxBytes(ItemStack is) {
@@ -117,7 +121,7 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 
 	@Override
 	public EnumRarity getRarity(ItemStack itemStack) {
-		return EnumRarity.rare;
+		return EnumRarity.RARE;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -148,28 +152,26 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world,
-			EntityPlayer entityPlayer) {
-		if (!entityPlayer.isSneaking()) {
-			return itemStack;
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
+		if (!player.isSneaking()) {
+			return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
 		}
 		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
 		if (!(handler instanceof IHandlerFluidStorage)) {
-			return itemStack;
+			return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
 		}
 		IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
-		if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1))) {
-			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
+		if (cellHandler.usedBytes() == 0 && player.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1))) {
+			return new ActionResult<>(EnumActionResult.SUCCESS, ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4));
 		}
-		return itemStack;
+		return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
 	}
 
 	@Override
-	public void registerIcons(IIconRegister iconRegister) {
-		this.icons = new IIcon[suffixes.length];
-
+	@SideOnly(Side.CLIENT)
+	public void registerModel(Item item, ModelManager manager) {
 		for (int i = 0; i < suffixes.length; ++i) {
-			this.icons[i] = iconRegister.registerIcon("extracells:" + "storage.fluid." + suffixes[i]);
+			manager.registerItemModel(item, i, "storage/fluid/" + suffixes[i]);
 		}
 	}
 

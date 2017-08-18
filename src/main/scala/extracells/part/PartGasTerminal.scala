@@ -3,7 +3,6 @@ package extracells.part
 import appeng.api.config.Actionable
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
-import net.minecraftforge.fml.common.Optional
 import extracells.container.ContainerGasTerminal
 import extracells.gridblock.ECBaseGridBlock
 import extracells.gui.GuiGasTerminal
@@ -12,6 +11,7 @@ import extracells.util.{FluidUtil, GasUtil}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.FluidStack
+import net.minecraftforge.fml.common.Optional
 import org.apache.commons.lang3.tuple.MutablePair
 
 

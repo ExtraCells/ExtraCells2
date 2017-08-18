@@ -1,5 +1,7 @@
 package extracells.util;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
@@ -7,8 +9,6 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.ISecurityGrid;
 import appeng.api.parts.IPart;
 import appeng.api.util.AEPartLocation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class PermissionUtil {
 

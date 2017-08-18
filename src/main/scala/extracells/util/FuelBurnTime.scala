@@ -2,9 +2,9 @@ package extracells.util
 
 
 
-import net.minecraftforge.fml.common.Optional
 import extracells.integration.Integration
 import net.minecraftforge.fluids.Fluid
+import net.minecraftforge.fml.common.Optional
 
 import scala.collection.mutable
 

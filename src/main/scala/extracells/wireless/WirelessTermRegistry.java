@@ -1,10 +1,11 @@
 package extracells.wireless;
 
-import extracells.api.IWirelessGasFluidTermHandler;
-import net.minecraft.item.ItemStack;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.item.ItemStack;
+
+import extracells.api.IWirelessGasFluidTermHandler;
 
 public class WirelessTermRegistry {
 

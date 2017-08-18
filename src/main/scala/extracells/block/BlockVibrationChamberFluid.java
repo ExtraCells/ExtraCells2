@@ -1,38 +1,39 @@
 package extracells.block;
 
-import appeng.api.AEApi;
+import javax.annotation.Nullable;
+
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import appeng.api.networking.IGridNode;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import appeng.api.util.AEPartLocation;
 import extracells.container.ContainerVibrationChamberFluid;
 import extracells.gui.GuiVibrationChamberFluid;
 import extracells.network.GuiHandler;
 import extracells.tileentity.TileEntityVibrationChamberFluid;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
 
-    private IIcon[] icons = new IIcon[3];
+    //private IIcon[] icons = new IIcon[3];
 
     public BlockVibrationChamberFluid(){
-        super(Material.iron, 2.0F, 10.0F);
+        super(Material.IRON, 2.0F, 10.0F);
     }
-
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (world.isRemote)
             return false;
-        GuiHandler.launchGui(0, player, world, x, y, z);
+        GuiHandler.launchGui(0, player, world, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }
 
@@ -41,7 +42,7 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
         return new TileEntityVibrationChamberFluid();
     }
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     @Override
     public void registerBlockIcons(IIconRegister IIconRegister) {
         icons[0] = IIconRegister.registerIcon("extracells:VibrationChamberFluid");
@@ -75,26 +76,28 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
             default:
                 return icons[0];
         }
-    }
+    }*/
 
     @SideOnly(Side.CLIENT)
     @Override
-    public Object getClientGuiElement(EntityPlayer player, World world, int x, int y, int z){
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if(tileEntity != null && tileEntity instanceof  TileEntityVibrationChamberFluid)
-        return new GuiVibrationChamberFluid(player, (TileEntityVibrationChamberFluid)tileEntity);
+    public Object getClientGuiElement(EntityPlayer player, World world, BlockPos pos){
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if(tileEntity != null && tileEntity instanceof  TileEntityVibrationChamberFluid) {
+            return new GuiVibrationChamberFluid(player, (TileEntityVibrationChamberFluid) tileEntity);
+        }
         return null;
     }
 
     @Override
-    public Object getServerGuiElement(EntityPlayer player, World world, int x, int y, int z){
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if(tileEntity != null && tileEntity instanceof  TileEntityVibrationChamberFluid)
-            return new ContainerVibrationChamberFluid(player.inventory, (TileEntityVibrationChamberFluid)tileEntity);
+    public Object getServerGuiElement(EntityPlayer player, World world, BlockPos pos){
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if(tileEntity != null && tileEntity instanceof  TileEntityVibrationChamberFluid) {
+            return new ContainerVibrationChamberFluid(player.inventory, (TileEntityVibrationChamberFluid) tileEntity);
+        }
         return null;
     }
 
-    @Override
+    /*@Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
         super.onBlockPlacedBy(world, x, y, z, entity, stack);
         if(world == null)
@@ -162,21 +165,20 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
                 node.updateState();
             }
         }
-    }
+    }*/
 
     @Override
-    public void onBlockPreDestroy(World world, int x, int y, int z, int meta) {
+    public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
         if (world.isRemote)
             return;
-        TileEntity tile = world.getTileEntity(x, y, z);
+        TileEntity tile = world.getTileEntity(pos);
         if (tile != null) {
             if (tile instanceof TileEntityVibrationChamberFluid) {
-                IGridNode node = ((TileEntityVibrationChamberFluid) tile).getGridNode(ForgeDirection.UNKNOWN);
+                IGridNode node = ((TileEntityVibrationChamberFluid) tile).getGridNode(AEPartLocation.INTERNAL);
                 if (node != null) {
                     node.destroy();
                 }
             }
         }
     }
-
 }

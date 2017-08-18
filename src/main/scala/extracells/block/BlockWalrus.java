@@ -1,19 +1,27 @@
 package extracells.block;
 
-import extracells.tileentity.TileEntityWalrus;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+
+import extracells.tileentity.TileEntityWalrus;
 
 public class BlockWalrus extends BlockEC {
 
+	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+
 	public BlockWalrus() {
-		super(Material.clay, 2.0F, 10.0F);
+		super(Material.CLAY, 2.0F, 10.0F);
 	}
 
 	@Override
@@ -22,68 +30,89 @@ public class BlockWalrus extends BlockEC {
 	}
 
 	@Override
-	public int getRenderType() {
-		return -1;
-	}
-
-	@Override
 	public String getUnlocalizedName() {
 		return super.getUnlocalizedName().replace("tile.", "");
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z,
-			EntityLivingBase player, ItemStack itemstack) {
-		int l = MathHelper
-				.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+		this.setDefaultFacing(worldIn, pos, state);
+	}
 
-		if (l == 0) {
-			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-		}
+	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
+		if (!worldIn.isRemote)
+		{
+			IBlockState iblockstate = worldIn.getBlockState(pos.north());
+			IBlockState iblockstate1 = worldIn.getBlockState(pos.south());
+			IBlockState iblockstate2 = worldIn.getBlockState(pos.west());
+			IBlockState iblockstate3 = worldIn.getBlockState(pos.east());
+			EnumFacing enumfacing = state.getValue(FACING);
 
-		if (l == 1) {
-			world.setBlockMetadataWithNotify(x, y, z, 5, 2);
-		}
+			if (enumfacing == EnumFacing.NORTH && iblockstate.isFullBlock() && !iblockstate1.isFullBlock())
+			{
+				enumfacing = EnumFacing.SOUTH;
+			}
+			else if (enumfacing == EnumFacing.SOUTH && iblockstate1.isFullBlock() && !iblockstate.isFullBlock())
+			{
+				enumfacing = EnumFacing.NORTH;
+			}
+			else if (enumfacing == EnumFacing.WEST && iblockstate2.isFullBlock() && !iblockstate3.isFullBlock())
+			{
+				enumfacing = EnumFacing.EAST;
+			}
+			else if (enumfacing == EnumFacing.EAST && iblockstate3.isFullBlock() && !iblockstate2.isFullBlock())
+			{
+				enumfacing = EnumFacing.WEST;
+			}
 
-		if (l == 2) {
-			world.setBlockMetadataWithNotify(x, y, z, 3, 2);
-		}
-
-		if (l == 3) {
-			world.setBlockMetadataWithNotify(x, y, z, 4, 2);
+			worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
 		}
 	}
 
 	@Override
-	public boolean renderAsNormalBlock() {
-		return false;
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x,
-			int y, int z) {
-		switch (ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x,
-				y, z))) {
-		case NORTH:
-			setBlockBounds(0.0F, 0.0F, -1.0F, 1.0F, 1.0F, 1.0F);
-			break;
-		case EAST:
-			setBlockBounds(0.0F, 0.0F, 0.0F, 2.0F, 1.0F, 1.0F);
-			break;
-		case SOUTH:
-			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 2.0F);
-			break;
-		case WEST:
-			setBlockBounds(-1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-			break;
-		default:
-			setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-			break;
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		EnumFacing enumfacing = EnumFacing.getFront(meta);
+
+		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+		{
+			enumfacing = EnumFacing.NORTH;
 		}
+
+		return this.getDefaultState().withProperty(FACING, enumfacing);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(FACING).getIndex();
+	}
+
+	@Override
+	public IBlockState withRotation(IBlockState state, Rotation rot) {
+		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
+	}
+
+	@Override
+	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
+		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, FACING);
 	}
 }

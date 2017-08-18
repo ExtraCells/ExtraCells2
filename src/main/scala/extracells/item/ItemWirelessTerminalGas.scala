@@ -1,19 +1,16 @@
 package extracells.item
 
-import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.api.{ECApi, IWirelessGasTermHandler}
-import net.minecraft.client.renderer.texture.IIconRegister
+import extracells.models.ModelManager
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
-import net.minecraft.util.IIcon
+import net.minecraft.util.EnumHand
 import net.minecraft.world.World
+import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
-object ItemWirelessTerminalGas extends Item with IWirelessGasTermHandler with WirelessTermBase {
-  private[item] var icon: IIcon = null
+object ItemWirelessTerminalGas extends ItemECBase with IWirelessGasTermHandler with WirelessTermBase {
   def THIS = this
   ECApi.instance.registerWirelessTermHandler(this)
-
-  override def getIconFromDamage(dmg: Int): IIcon = this.icon
 
 
   override def getUnlocalizedName(itemStack: ItemStack): String =
@@ -23,13 +20,12 @@ object ItemWirelessTerminalGas extends Item with IWirelessGasTermHandler with Wi
   def isItemNormalWirelessTermToo(is: ItemStack): Boolean = false
 
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer): ItemStack =
-    ECApi.instance.openWirelessGasTerminal(entityPlayer, itemStack, world)
+  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ItemStack =
+    ECApi.instance.openWirelessGasTerminal(entityPlayer, hand, world)
 
 
   @SideOnly(Side.CLIENT)
-  override def registerIcons(iconRegister: IIconRegister) {
-    this.icon = iconRegister.registerIcon("extracells:" + "terminal.fluid.wireless")
-  }
+  override def registerModel(item: Item, manager: ModelManager) =
+    manager.registerItemModel(item, 0, "terminals/fluid_wireless")
 
 }

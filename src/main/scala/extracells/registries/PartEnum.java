@@ -2,12 +2,18 @@ package extracells.registries;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
+
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.config.Upgrades;
 import extracells.integration.Integration;
@@ -75,30 +81,34 @@ public enum PartEnum {
 	}
 
 	private String unlocalizedName;
-
 	private Class<? extends PartECBase> partClass;
-
 	private String groupName;
-
+	@SideOnly( Side.CLIENT )
+	private Optional<ModelResourceLocation> itemModel;
 	private Map<Upgrades, Integer> upgrades = new HashMap<Upgrades, Integer>();
 
-	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass) {
-		this(_unlocalizedName, _partClass, null, (Integration.Mods )null);
+	PartEnum(String name, Class<? extends PartECBase> partClass) {
+		this(name, partClass, null, (Integration.Mods )null);
 	}
 
-	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, Integration.Mods _mod) {
-		this(_unlocalizedName, _partClass, null, _mod);
+	PartEnum(String name, Class<? extends PartECBase> partClass, Integration.Mods mod) {
+		this(name, partClass, null, mod);
 	}
 
-	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName) {
-		this(_unlocalizedName, _partClass, _groupName, (Integration.Mods )null);
+	PartEnum(String name, Class<? extends PartECBase> partClass, String groupName) {
+		this(name, partClass, groupName, (Integration.Mods )null);
 	}
 
-	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName, Integration.Mods _mod) {
-		this.unlocalizedName = "extracells.part." + _unlocalizedName;
-		this.partClass = _partClass;
-		this.groupName = _groupName == null || _groupName.isEmpty() ? null : "extracells." + _groupName;
-		this.mod = _mod;
+	PartEnum(String name, Class<? extends PartECBase> partClass, String groupName, Integration.Mods mod) {
+		this.unlocalizedName = "extracells.part." + name;
+		this.partClass = partClass;
+		this.groupName = groupName == null || groupName.isEmpty() ? null : "extracells." + groupName;
+		this.mod = mod;
+		if(FMLCommonHandler.instance().getSide().isClient()){
+			itemModel = Optional.of(new ModelResourceLocation("extracells:part/" + name.replace(".", "_")));
+		}else{
+			itemModel = Optional.empty();
+		}
 	}
 
 	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName, Pair<Upgrades, Integer>... _upgrades) {
@@ -141,6 +151,11 @@ public enum PartEnum {
 		PartECBase partECBase = this.partClass.newInstance();
 		partECBase.initializePart(partStack);
 		return partECBase;
+	}
+
+	@SideOnly( Side.CLIENT )
+	public Optional<ModelResourceLocation> getItemModel() {
+		return itemModel;
 	}
 
 	public Integration.Mods getMod(){

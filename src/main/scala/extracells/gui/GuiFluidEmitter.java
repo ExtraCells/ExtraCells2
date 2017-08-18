@@ -1,5 +1,19 @@
 package extracells.gui;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+
+import net.minecraftforge.fluids.Fluid;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.config.RedstoneMode;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.widget.DigitTextField;
@@ -12,16 +26,6 @@ import extracells.part.PartFluidLevelEmitter;
 import extracells.part.PartGasLevelEmitter;
 import extracells.registries.PartEnum;
 import extracells.util.GuiUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-
-import java.util.List;
 
 public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 
@@ -132,7 +136,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 	}
 
 	@Override
-	protected void keyTyped(char key, int keyID) {
+	protected void keyTyped(char key, int keyID) throws IOException {
 		super.keyTyped(key, keyID);
 		if ("0123456789".contains(String.valueOf(key)) || keyID == Keyboard.KEY_BACK) {
 			this.amountField.textboxKeyTyped(key, keyID);
@@ -147,7 +151,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, this.fluidSlot.getPosX(), this.fluidSlot.getPosY(), 18, 18, mouseX, mouseY)){
 			if(part instanceof PartGasLevelEmitter && Integration.Mods.MEKANISMGAS.isEnabled())

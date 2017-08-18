@@ -1,10 +1,12 @@
 package extracells.util;
 
-import extracells.gui.widget.fluid.WidgetFluidSlot;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
+
 import org.lwjgl.opengl.GL11;
+
+import extracells.gui.widget.fluid.WidgetFluidSlot;
 
 public class GuiUtil {
 

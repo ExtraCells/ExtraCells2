@@ -1,16 +1,17 @@
 package extracells.wireless;
 
 
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
+import net.minecraft.nbt.NBTTagCompound;
+
 import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
 import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.util.IConfigManager;
-import net.minecraft.nbt.NBTTagCompound;
-
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Set;
 
 public class ConfigManager implements IConfigManager {
 

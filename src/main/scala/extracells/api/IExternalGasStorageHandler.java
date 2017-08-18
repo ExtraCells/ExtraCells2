@@ -1,11 +1,12 @@
 package extracells.api;
 
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEFluidStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 
 
 /**

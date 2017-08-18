@@ -1,9 +1,14 @@
 package extracells.util.inventory;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 public class ECCellInventory implements IInventory {
 
@@ -15,32 +20,34 @@ public class ECCellInventory implements IInventory {
 	private ItemStack[] slots;
 	private boolean dirty = false;
 
-	public ECCellInventory(ItemStack _storage, String _tagId, int _size,
-			int _stackLimit) {
-		this.storage = _storage;
-		this.tagId = _tagId;
-		this.size = _size;
-		this.stackLimit = _stackLimit;
-		if (!this.storage.hasTagCompound())
+	public ECCellInventory(ItemStack storage, String tagId, int size, int stackLimit) {
+		this.storage = storage;
+		this.tagId = tagId;
+		this.size = size;
+		this.stackLimit = stackLimit;
+		if (!this.storage.hasTagCompound()) {
 			this.storage.setTagCompound(new NBTTagCompound());
-		this.storage.getTagCompound().setTag(this.tagId,
-				this.storage.getTagCompound().getCompoundTag(this.tagId));
-		this.tagCompound = this.storage.getTagCompound().getCompoundTag(
-				this.tagId);
+		}
+		this.storage.getTagCompound().setTag(this.tagId, this.storage.getTagCompound().getCompoundTag(this.tagId));
+		this.tagCompound = this.storage.getTagCompound().getCompoundTag(this.tagId);
 		openInventory();
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
+		closeInventory();
+	}
+
+	private void closeInventory() {
 		if (this.dirty) {
 			for (int i = 0; i < this.slots.length; i++) {
 				this.tagCompound.removeTag("ItemStack#" + i);
 				ItemStack content = this.slots[i];
 				if (content != null) {
 					this.tagCompound.setTag("ItemStack#" + i,
-							new NBTTagCompound());
+						new NBTTagCompound());
 					content.writeToNBT(this.tagCompound
-							.getCompoundTag("ItemStack#" + i));
+						.getCompoundTag("ItemStack#" + i));
 				}
 			}
 		}
@@ -48,29 +55,17 @@ public class ECCellInventory implements IInventory {
 
 	@Override
 	public ItemStack decrStackSize(int slotId, int amount) {
-		ItemStack slotContent = this.slots[slotId];
-		if (slotContent == null)
-			return null;
-		int stackSize = slotContent.stackSize;
-		if (stackSize <= 0)
-			return null;
-		int newAmount;
-		if (amount >= stackSize) {
-			newAmount = stackSize;
-			this.slots[slotId] = null;
-		} else {
-			this.slots[slotId].stackSize -= amount;
-			newAmount = amount;
-		}
-		ItemStack toReturn = slotContent.copy();
-		toReturn.stackSize = amount;
-		markDirty();
+		ItemStack itemStack = ItemStackHelper.getAndSplit(slots, slotId, amount);
 
-		return toReturn;
+		if (itemStack != null) {
+			this.markDirty();
+		}
+
+		return itemStack;
 	}
 
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return "";
 	}
 
@@ -89,15 +84,18 @@ public class ECCellInventory implements IInventory {
 		return this.slots[slotId];
 	}
 
+	@Nullable
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slotId) {
-		return getStackInSlot(slotId);
+	public ItemStack removeStackFromSlot(int index) {
+		return ItemStackHelper.getAndRemove(slots, index);
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
+
+
 
 	@Override
 	public boolean isItemValidForSlot(int slotId, ItemStack itemStack) {
@@ -117,11 +115,19 @@ public class ECCellInventory implements IInventory {
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 		this.slots = new ItemStack[this.size];
 		for (int i = 0; i < this.slots.length; i++) {
 			this.slots[i] = ItemStack.loadItemStackFromNBT(this.tagCompound
 					.getCompoundTag("ItemStack#" + i));
+		}
+	}
+
+	private void openInventory() {
+		this.slots = new ItemStack[this.size];
+		for (int i = 0; i < this.slots.length; i++) {
+			this.slots[i] = ItemStack.loadItemStackFromNBT(this.tagCompound
+				.getCompoundTag("ItemStack#" + i));
 		}
 	}
 
@@ -132,5 +138,32 @@ public class ECCellInventory implements IInventory {
 			this.slots[slotId] = content;
 			markDirty();
 		}
+	}
+
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for(int i = 0;i < slots.length;i++){
+			slots[i] = null;
+		}
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TextComponentString(getName());
 	}
 }

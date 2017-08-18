@@ -1,32 +1,17 @@
 package extracells.block
 
-import appeng.api.AEApi
-import appeng.api.config.SecurityPermissions
-import appeng.api.implementations.items.IAEWrench
-import appeng.api.networking.IGridNode
-import appeng.api.util.AEPartLocation
-import extracells.api.IECTileEntity
-import extracells.network.GuiHandler
-import extracells.tileentity.IListenerTile
-import extracells.tileentity.TileEntityFluidFiller
+import java.util.Random
+
 import extracells.tileentity.TileEntityFluidInterface
-import extracells.util.PermissionUtil
-import net.minecraft.block.Block
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
-import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumFacing
-import net.minecraft.util.EnumHand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import javax.annotation.Nullable
-import java.util.Random
 
 class BlockFluidInterface() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
   override def breakBlock(world: World, pos: BlockPos, stat: IBlockState) {

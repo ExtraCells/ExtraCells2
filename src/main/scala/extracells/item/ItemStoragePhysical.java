@@ -1,24 +1,8 @@
 package extracells.item;
 
-import appeng.api.AEApi;
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
-import appeng.api.config.FuzzyMode;
-import appeng.api.config.PowerUnits;
-import appeng.api.implementations.items.IAEItemPowerStorage;
-import appeng.api.implementations.items.IStorageCell;
-import appeng.api.networking.security.PlayerSource;
-import appeng.api.storage.*;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IItemList;
-import cofh.api.energy.IEnergyContainerItem;
-import net.minecraftforge.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.Extracells;
-import extracells.registries.ItemEnum;
-import extracells.util.inventory.ECCellInventory;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import java.util.List;
+
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -28,14 +12,38 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.I18n;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.List;
+import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import appeng.api.AEApi;
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.FuzzyMode;
+import appeng.api.config.PowerUnits;
+import appeng.api.implementations.items.IAEItemPowerStorage;
+import appeng.api.implementations.items.IStorageCell;
+import appeng.api.storage.ICellInventory;
+import appeng.api.storage.ICellInventoryHandler;
+import appeng.api.storage.ICellRegistry;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
+import cofh.api.energy.IEnergyContainerItem;
+import extracells.models.ModelManager;
+import extracells.registries.ItemEnum;
+import extracells.util.ECConfigHandler;
+import extracells.util.inventory.ECCellInventory;
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
 public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
@@ -45,7 +53,6 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 
 	public static final int[] bytes_cell = { 262144, 1048576, 4194304, 16777216, 65536 };
 	public static final int[] types_cell = { 63, 63, 63, 63, 1 };
-	private IIcon[] icons;
 	private final int MAX_POWER = 32000;
 
 	public ItemStoragePhysical() {
@@ -80,14 +87,8 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public int getBytesPerType(ItemStack cellItem) {
-		return Extracells.dynamicTypes() ? bytes_cell[MathHelper.clamp_int(
+		return ECConfigHandler.dynamicTypes ? bytes_cell[MathHelper.clamp_int(
 				cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
-	}
-
-	@Override
-	@Deprecated
-	public int BytePerType(ItemStack cellItem) {
-		return getBytesPerType(cellItem);
 	}
 
 	private NBTTagCompound ensureTagCompound(ItemStack itemStack) {
@@ -172,10 +173,6 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 		return FuzzyMode.values()[is.getTagCompound().getInteger("fuzzyMode")];
 	}
 
-	@Override
-	public IIcon getIconFromDamage(int dmg) {
-		return this.icons[MathHelper.clamp_int(dmg, 0, suffixes.length - 1)];
-	}
 
 	@Override
 	public double getIdleDrain() {
@@ -230,7 +227,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public EnumRarity getRarity(ItemStack itemStack) {
-		return EnumRarity.epic;
+		return EnumRarity.EPIC;
 	}
 
 	@Override
@@ -293,277 +290,74 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world,
-			EntityPlayer entityPlayer) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
 		if (itemStack == null)
-			return itemStack;
-		if (itemStack.getItemDamage() == 4 && !world.isRemote && entityPlayer.isSneaking()) {
+			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
+		if (itemStack.getItemDamage() == 4 && !world.isRemote && player.isSneaking()) {
 			switch (itemStack.getTagCompound().getInteger("mode")) {
-			case 0:
-				itemStack.getTagCompound().setInteger("mode", 1);
-				entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.1"));
-				break;
-			case 1:
-				itemStack.getTagCompound().setInteger("mode", 2);
-				entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.2"));
-				break;
-			case 2:
-				itemStack.getTagCompound().setInteger("mode", 0);
-				entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.0"));
-				break;
+				case 0:
+					itemStack.getTagCompound().setInteger("mode", 1);
+					player.addChatMessage(new TextComponentTranslation("extracells.tooltip.storage.container.1"));
+					break;
+				case 1:
+					itemStack.getTagCompound().setInteger("mode", 2);
+					player.addChatMessage(new TextComponentTranslation("extracells.tooltip.storage.container.2"));
+					break;
+				case 2:
+					itemStack.getTagCompound().setInteger("mode", 0);
+					player.addChatMessage(new TextComponentTranslation("extracells.tooltip.storage.container.0"));
+					break;
 			}
-			return itemStack;
+			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 		}
-		if (!entityPlayer.isSneaking())
-			return itemStack;
+		if (!player.isSneaking())
+			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 		IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
-		if (cellInv.getUsedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
-			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage());
-		return itemStack;
+		if (cellInv.getUsedBytes() == 0 && player.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
+			return new ActionResult(EnumActionResult.SUCCESS, ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage()));
+		return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player,
-			World world, int x, int y, int z, int side, float xOffset,
-			float yOffset, float zOffset) {
-		if (itemstack == null || player == null)
-			return false;
-		if (itemstack.getItemDamage() == 4 && !player.isSneaking()) {
-			double power = getAECurrentPower(itemstack);
-			ForgeDirection face = ForgeDirection.getOrientation(side);
-			IItemList list = AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).getAvailableItems(
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (stack == null || player == null)
+			return EnumActionResult.PASS;
+		if (stack.getItemDamage() == 4 && !player.isSneaking()) {
+			double power = getAECurrentPower(stack);
+			IItemList list = AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.ITEMS).getAvailableItems(
 							AEApi.instance().storage().createItemList());
 			if (list.isEmpty())
-				return false;
+				return EnumActionResult.PASS;
 			IAEItemStack storageStack = (IAEItemStack) list.getFirstItem();
-			if (world.getBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ) == Blocks.air && storageStack.getStackSize() != 0 && power >= 20.0D) {
+			if (world.isAirBlock(pos.offset(facing)) && storageStack.getStackSize() != 0 && power >= 20.0D) {
 				if (!world.isRemote) {
 					IAEItemStack request = storageStack.copy();
 					request.setStackSize(1);
 					ItemStack block = request.getItemStack();
 					if (block.getItem() instanceof ItemBlock) {
-						ItemBlock itemblock = (ItemBlock) request.getItem();
-						if (world.getBlock(x, y, z) != Blocks.bedrock && world.getBlock(x, y, z).getBlockHardness(world, x, y, z) >= 0.0F) {
-							switch (itemstack.getTagCompound().getInteger("mode")) {
-							case 0:
-								request.setStackSize(1);
-								itemblock.onItemUseFirst(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
-								itemblock.onItemUse(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
-								AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));extractAEPower(player.getCurrentEquippedItem(), 20.0D);
-								break;
-							case 1:
-								request.setStackSize(1);
-								world.func_147480_a(x, y, z, true);
-								placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
-								AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
-								break;
-							case 2:
-
-								request.setStackSize(9);
-								if (storageStack.getStackSize() > 9
-										&& power >= 180.0D) {
-									switch (ForgeDirection.getOrientation(side)) {
-									case DOWN:
-										for (int posX = x - 1; posX < x + 2; posX++) {
-											for (int posZ = z - 1; posZ < z + 2; posZ++) {
-												if (world.getBlock(posX, y, posZ) != Blocks.bedrock && world.getBlock(posX, y, posZ).getBlockHardness(world, posX, y, posZ) >= 0.0F) {
-													world.func_147480_a(posX, y, posZ, true);
-													placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
-										break;
-									case EAST:
-										for (int posZ = z - 1; posZ < z + 2; posZ++) {
-											for (int posY = y - 1; posY < y + 2; posY++) {
-												if (world.getBlock(x, posY, posZ) != Blocks.bedrock && world.getBlock(x, posY, posZ).getBlockHardness(world, x, posY, posZ) >= 0.0F) {
-													world.func_147480_a(x, posY, posZ, true);
-													placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
-										break;
-									case NORTH:
-										for (int posX = x - 1; posX < x + 2; posX++) {
-											for (int posY = y - 1; posY < y + 2; posY++) {
-												if (world.getBlock(posX, posY, z) != Blocks.bedrock && world.getBlock(posX, posY, z).getBlockHardness(world, posX, posY, z) >= 0.0F) {
-													world.func_147480_a(posX, posY,
-															z, true);
-													placeBlock(
-															request.getItemStack(),
-															world, player, posX,
-															posY, z, side, xOffset,
-															yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
-										break;
-									case SOUTH:
-										for (int posX = x - 1; posX < x + 2; posX++) {
-											for (int posY = y - 1; posY < y + 2; posY++) {
-												if (world.getBlock(posX, posY, z) != Blocks.bedrock && world.getBlock(posX, posY, z).getBlockHardness(world, posX, posY, z) >= 0.0F) {
-													world.func_147480_a(posX, posY,
-															z, true);
-													placeBlock(
-															request.getItemStack(),
-															world, player, posX,
-															posY, z, side, xOffset,
-															yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
-										break;
-									case UNKNOWN:
-										break;
-									case UP:
-										for (int posX = x - 1; posX < x + 2; posX++) {
-											for (int posZ = z - 1; posZ < z + 2; posZ++) {
-												if (world.getBlock(posX, y, posZ) != Blocks.bedrock && world.getBlock(posX, y, posZ).getBlockHardness(world, posX, y, posZ) >= 0.0F) {
-													world.func_147480_a(posX, y,
-															posZ, true);
-													placeBlock(
-															request.getItemStack(),
-															world, player, posX, y,
-															posZ, side, xOffset,
-															yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
-										break;
-									case WEST:
-										for (int posZ = z - 1; posZ < z + 2; posZ++) {
-											for (int posY = y - 1; posY < y + 2; posY++) {
-												if (world.getBlock(x, posY, posZ) != Blocks.bedrock && world.getBlock(x, posY, posZ).getBlockHardness(world, x, posY, posZ) >= 0.0F) {
-													world.func_147480_a(x, posY,
-															posZ, true);
-													placeBlock(
-															request.getItemStack(),
-															world, player, x, posY,
-															posZ, side, xOffset,
-															yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
-										break;
-									default:
-										break;
-									}
-								}
-							}
-							return true;
+						IBlockState blockState = world.getBlockState(pos);
+						if (blockState.getBlock() != Blocks.BEDROCK && blockState.getBlockHardness(world, pos) >= 0.0F) {
+							int modeIndex = stack.getTagCompound().getInteger("mode");
+							EnumCellMode mode = EnumCellMode.get(modeIndex);
+							mode.useMode(this, stack, storageStack, request, world, pos, player, facing, hand, hitX, hitY, hitZ);
+							return EnumActionResult.SUCCESS;
 						} else {
-							return false;
+							return EnumActionResult.PASS;
 						}
 					} else {
-						player.addChatMessage(new ChatComponentTranslation(
-								"extracells.tooltip.onlyblocks"));
-						return false;
+						player.addChatMessage(new TextComponentTranslation("extracells.tooltip.onlyblocks"));
+						return EnumActionResult.PASS;
 					}
 				} else {
-					return false;
+					return EnumActionResult.PASS;
 				}
 			} else {
-				return false;
+				return EnumActionResult.PASS;
 			}
 		} else {
-			return false;
-		}
-	}
-
-	public void placeBlock(ItemStack itemstack, World world,
-			EntityPlayer player, int x, int y, int z, int side, float xOffset,
-			float yOffset, float zOffset) {
-		extractAEPower(player.getCurrentEquippedItem(), 20.0D);
-		ItemBlock itemblock = (ItemBlock) itemstack.getItem();
-		switch (ForgeDirection.getOrientation(side)) {
-		case DOWN:
-			itemblock.onItemUseFirst(itemstack, player, world, x, y++, z, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x, y++, z, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case EAST:
-			itemblock.onItemUseFirst(itemstack, player, world, x--, y, z, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x--, y, z, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case NORTH:
-			itemblock.onItemUseFirst(itemstack, player, world, x, y, z++, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x, y, z++, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case SOUTH:
-			itemblock.onItemUseFirst(itemstack, player, world, x, y, z--, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x, y, z--, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case UNKNOWN:
-			break;
-		case UP:
-			itemblock.onItemUseFirst(itemstack, player, world, x, y--, z, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x, y--, z, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case WEST:
-			itemblock.onItemUseFirst(itemstack, player, world, x++, y, z, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x++, y, z, side,
-					xOffset, yOffset, zOffset);
-			break;
-		default:
-			break;
+			return EnumActionResult.PASS;
 		}
 	}
 
@@ -593,12 +387,10 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
-	public void registerIcons(IIconRegister iconRegister) {
-		this.icons = new IIcon[suffixes.length];
-
+	@SideOnly(Side.CLIENT)
+	public void registerModel(Item item, ModelManager manager) {
 		for (int i = 0; i < suffixes.length; ++i) {
-			this.icons[i] = iconRegister.registerIcon("extracells:"
-					+ "storage.physical." + suffixes[i]);
+			manager.registerItemModel(item, i, "storage/physical/" + suffixes[i]);
 		}
 	}
 

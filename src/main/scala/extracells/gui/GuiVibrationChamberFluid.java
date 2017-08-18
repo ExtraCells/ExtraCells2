@@ -1,13 +1,15 @@
 package extracells.gui;
 
-import extracells.container.ContainerVibrationChamberFluid;
-import extracells.gui.widget.WidgetFluidTank;
-import extracells.tileentity.TileEntityVibrationChamberFluid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
+
+import extracells.container.ContainerVibrationChamberFluid;
+import extracells.gui.widget.WidgetFluidTank;
+import extracells.tileentity.TileEntityVibrationChamberFluid;
 
 public class GuiVibrationChamberFluid extends GuiContainer {
 

@@ -1,10 +1,9 @@
 package extracells.item
 
-import appeng.core.features.IFeatureHandler
-import net.minecraftforge.fml.common.Optional
 import extracells.integration.WirelessCrafting.WirelessCrafting
 import net.minecraft.item.{Item, ItemStack}
-import net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem
+import net.minecraftforge.fml.common.Optional
+import p455w0rd.wct.api.IWirelessCraftingTerminalItem
 
 @Optional.Interface(iface = "net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem", modid = "ae2wct", striprefs = true)
 trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem{
@@ -26,12 +25,6 @@ trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem{
 
     false
   }
-
-  @Optional.Method(modid = "ae2wct")
-  override def handler(): IFeatureHandler = null
-
-  @Optional.Method(modid = "ae2wct")
-  override def postInit() :Unit = {}
 
   @Optional.Method(modid = "ae2wct")
   override def isWirelessCraftingEnabled(itemStack: ItemStack): Boolean = {

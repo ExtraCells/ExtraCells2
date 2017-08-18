@@ -1,14 +1,16 @@
 package extracells.container;
 
-import cpw.mods.fml.relauncher.Side;
-import extracells.gui.GuiFluidInterface;
-import extracells.network.packet.part.PacketOreDictExport;
-import extracells.part.PartOreDictExporter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
+
+import cpw.mods.fml.relauncher.Side;
+
+import extracells.gui.GuiFluidInterface;
+import extracells.network.packet.part.PacketOreDictExport;
+import extracells.part.PartOreDictExporter;
 
 public class ContainerOreDictExport extends Container {
 	public PartOreDictExporter part;
