@@ -1,7 +1,6 @@
 package extracells.definitions;
 
 import javax.annotation.Nonnull;
-
 import java.util.Optional;
 
 import net.minecraft.item.Item;

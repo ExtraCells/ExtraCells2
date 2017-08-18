@@ -1,11 +1,4 @@
 package extracells.integration.opencomputers
-
-import appeng.api.AEApi
-import extracells.integration.Integration
-import extracells.item.ItemOCUpgrade
-import extracells.registries.ItemEnum
-import li.cil.oc.api.Driver
-import li.cil.oc.api.driver.{EnvironmentProvider, SidedBlock}
 /*object OpenComputers {
 	
 	def init{

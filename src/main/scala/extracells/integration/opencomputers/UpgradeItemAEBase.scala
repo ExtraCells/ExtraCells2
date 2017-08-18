@@ -1,15 +1,5 @@
 package extracells.integration.opencomputers
 
-import li.cil.oc.api.driver.EnvironmentProvider
-import li.cil.oc.api.driver.item.{HostAware, Slot}
-import li.cil.oc.api.internal.{Drone, Robot}
-import li.cil.oc.api.network.ManagedEnvironment
-import li.cil.oc.api.{CreativeTab, network}
-import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.item.{EnumRarity, Item, ItemStack}
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.fml.common.Optional.{Interface, InterfaceList, Method}
-
 /*@InterfaceList(Array(
   new Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = "OpenComputers", striprefs = true),
   new Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = "OpenComputers", striprefs = true)

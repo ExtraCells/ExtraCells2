@@ -1,15 +1,5 @@
 package extracells.integration.igw
 
-import java.util
-
-import extracells.ExtraCells
-import extracells.integration.Integration
-import extracells.registries.{BlockEnum, ItemEnum}
-import net.minecraft.item.{Item, ItemStack}
-import net.minecraftforge.fml.common.Optional
-
-import scala.collection.JavaConversions._
-
 object IGW {
 
   /*def initNotifier {

@@ -24,7 +24,7 @@ import extracells.util.FluidCellHandler;
 import extracells.util.NameHandler;
 import extracells.wireless.AEWirelessTermHandler;
 
-@Mod(modid = Constants.MOD_ID, version = Constants.VERSION, name = "Extra Cells", modLanguage = "scala", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
+@Mod(modid = Constants.MOD_ID, version = Constants.VERSION, name = "Extra Cells", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
 public class ExtraCells {
 	@SidedProxy(clientSide = "extracells.proxy.ClientProxy", serverSide = "extracells.proxy.CommonProxy")
 	public static CommonProxy proxy = null;

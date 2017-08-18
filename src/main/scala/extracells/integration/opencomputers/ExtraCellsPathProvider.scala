@@ -1,14 +1,5 @@
 package extracells.integration.opencomputers
 
-import extracells.item.ItemOCUpgrade
-import extracells.registries.ItemEnum
-import li.cil.oc.api.Manual
-import li.cil.oc.api.manual.PathProvider
-import li.cil.oc.api.prefab.{ItemStackTabIconRenderer, ResourceContentProvider}
-import net.minecraft.item.ItemStack
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
-
 
 /*object ExtraCellsPathProvider extends PathProvider{
   Manual.addProvider(this)

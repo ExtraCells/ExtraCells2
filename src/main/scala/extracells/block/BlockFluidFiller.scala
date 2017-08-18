@@ -19,8 +19,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
 class BlockFluidFiller() extends BlockEC(Material.IRON, 2.0F, 10.0F) {

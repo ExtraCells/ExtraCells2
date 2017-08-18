@@ -14,8 +14,8 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
 import net.minecraft.util.text.translation.I18n
+import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}

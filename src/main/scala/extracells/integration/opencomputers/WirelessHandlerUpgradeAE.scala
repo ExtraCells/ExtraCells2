@@ -2,7 +2,6 @@ package extracells.integration.opencomputers
 
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
-import extracells.item.ItemOCUpgrade
 import extracells.registries.ItemEnum
 import li.cil.oc.common.item.data.{DroneData, RobotData}
 import net.minecraft.entity.player.EntityPlayer
