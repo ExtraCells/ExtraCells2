@@ -1,0 +1,64 @@
+{
+	"textures": {
+		"particle": "blocks/certustank",
+		"up": "blocks/certustank_top",
+		"side": "blocks/certustank_side",
+		"down": "blocks/certustank_bottom"
+	},
+	"elements": [ 	 
+		{
+			"__comment": "Down",
+			"from": [ 1, 0, 1 ],
+			"to": [ 15, 0.001, 15 ],
+			"faces": {
+				"down": { "uv": [ 1, 1, 15, 15 ], "texture": "#down" },
+				"up": { "uv": [ 1, 1, 15, 15 ], "texture": "#down" }
+			}
+		},
+		{
+			"__comment": "Up",
+			"from": [ 1, 16, 1 ],
+			"to": [ 15, 16.001, 15 ],
+			"faces": {
+				"down": { "uv": [ 1, 1, 15, 15 ], "texture": "#up" },
+				"up": { "uv": [ 1, 1, 15, 15 ], "texture": "#up" }
+			}
+		},
+		{
+			"__comment": "Side",
+			"from": [ 1, 0, 1 ],
+			"to": [ 1.001, 16, 15 ],
+			"faces": {
+				"west": { "uv": [ 1, 0, 15, 16 ], "texture": "#side" },
+				"east": { "uv": [ 1, 0, 15, 16 ], "texture": "#side" }
+			}
+		},
+		{
+			"__comment": "Side",
+			"from": [ 15, 0, 1 ],
+			"to": [ 15.001, 16, 15 ],
+			"faces": {
+				"west": { "uv": [ 1, 0, 15, 16 ], "texture": "#side" },
+				"east": { "uv": [ 1, 0, 15, 16 ], "texture": "#side" }
+			}
+		},
+		{
+			"__comment": "Side",
+			"from": [ 1, 0, 1 ],
+			"to": [ 15, 16, 1.001 ],
+			"faces": {
+				"north": { "uv": [ 1, 0, 15, 16 ], "texture": "#side" },
+				"south": { "uv": [ 1, 0, 15, 16 ], "texture": "#side" }
+			}
+		},
+		{
+			"__comment": "Side",
+			"from": [ 1, 0, 15 ],
+			"to": [ 15, 16, 15.001 ],
+			"faces": {
+				"north": { "uv": [ 1, 0, 15, 16 ], "texture": "#side" },
+				"south": { "uv": [ 1, 0, 15, 16 ], "texture": "#side" }
+			}
+		}
+	]
+}
