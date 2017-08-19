@@ -98,21 +98,10 @@ repositories {
 }
 
 dependencies {
-	//compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
-    //    transitive = false
-	//}
-	//compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
-    //    transitive = false
-	//}
 	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
 	}
 	deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}"
-	//deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}:api"
-	//compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
-    //compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
-    //compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
-	//compile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:userdev"
 
 	deobfCompile "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
 	runtime "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}"
@@ -122,8 +111,7 @@ dependencies {
 	compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
 	compile name: 'p455w0rdslib', version: config.version.pl, ext: 'jar'
 	
-	deobfCompile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
-	//compile "appeng:appliedenergistics2:rv4-stable-1:dev"
+	compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
 }
 
 processResources {
