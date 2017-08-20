@@ -1,4 +1,4 @@
-ExtraCells 2
+[ExtraCells 2](https://minecraft.curseforge.com/projects/extracells2)
 ==========
 
 A mighty Add-On for Applied Energistics 2

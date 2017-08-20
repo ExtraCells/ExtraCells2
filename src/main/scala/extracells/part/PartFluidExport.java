@@ -16,8 +16,10 @@ import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
+import extracells.models.PartModels;
 import extracells.util.PermissionUtil;
 
 public class PartFluidExport extends PartFluidIO {
@@ -88,6 +90,16 @@ public class PartFluidExport extends PartFluidIO {
 			return super.onActivate(player, hand, pos);
 		}
 		return false;
+	}
+
+	@Override
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.EXPORT_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.EXPORT_ON;
+		}
+		return PartModels.EXPORT_OFF;
 	}
 
 	/*@SideOnly(Side.CLIENT)

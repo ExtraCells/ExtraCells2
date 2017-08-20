@@ -19,8 +19,10 @@ import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
+import extracells.models.PartModels;
 import extracells.util.PermissionUtil;
 
 public class PartFluidImport extends PartFluidIO implements IFluidHandler {
@@ -150,6 +152,17 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d pos) {
 		return PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this) && super.onActivate(player, enumHand, pos);
+	}
+
+	@Override
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.IMPORT_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.IMPORT_ON;
+		} else {
+			return PartModels.IMPORT_OFF;
+		}
 	}
 
 	/*@SideOnly(Side.CLIENT)

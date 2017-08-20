@@ -1,0 +1,17 @@
+{
+	"textures": {
+		"indicator": "appliedenergistics2:parts/monitor_sides_status_off"
+	},
+	"elements": [ 	 
+		{
+			"from": [ 6, 6, 4 ],
+			"to": [ 10, 10, 5 ],
+			"faces": {
+				"down": { "uv": [ 6, 11, 10, 12 ], "texture": "#indicator" },
+				"up": { "uv": [ 6, 4, 10, 5 ], "texture": "#indicator" },
+				"west": { "uv": [ 4, 6, 5, 10 ], "texture": "#indicator" },
+				"east": { "uv": [ 11, 6, 12, 10 ], "texture": "#indicator" }
+			}
+		}
+	]
+}

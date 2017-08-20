@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import extracells.models.ModelManager;
+
 public class ItemOCUpgrade extends ItemECBase /*implements UpgradeItemAEBase*/ {
 
 	public ItemOCUpgrade() {
@@ -16,7 +18,7 @@ public class ItemOCUpgrade extends ItemECBase /*implements UpgradeItemAEBase*/ {
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return super.getUnlocalizedName();
+		return getUnlocalizedName();
 	}
 
 	@Override
@@ -35,6 +37,14 @@ public class ItemOCUpgrade extends ItemECBase /*implements UpgradeItemAEBase*/ {
 	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems) {
 		for(int i = 0;i < 3;i++){
 			subItems.add(new ItemStack(item, 1, i));
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModel(Item item, ModelManager manager) {
+		for(int i = 0;i < 3;i++) {
+			manager.registerItemModel(item, i);
 		}
 	}
 }

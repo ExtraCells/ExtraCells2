@@ -11,30 +11,30 @@ import extracells.item.ItemFluidPattern;
 import extracells.item.ItemInternalCraftingPattern;
 import extracells.item.ItemOCUpgrade;
 import extracells.item.ItemPartECBase;
-import extracells.item.ItemStorageCasing;
-import extracells.item.ItemStorageComponent;
-import extracells.item.ItemStorageFluid;
-import extracells.item.ItemStorageGas;
-import extracells.item.ItemStoragePhysical;
-import extracells.item.ItemStoragePortableFluidCell;
-import extracells.item.ItemStoragePortableGasCell;
 import extracells.item.ItemWirelessTerminalFluid;
 import extracells.item.ItemWirelessTerminalGas;
 import extracells.item.ItemWirelessTerminalUniversal;
+import extracells.item.storage.ItemStorageCasing;
+import extracells.item.storage.ItemStorageCellFluid;
+import extracells.item.storage.ItemStorageCellGas;
+import extracells.item.storage.ItemStorageCellPhysical;
+import extracells.item.storage.ItemStorageCellPortableFluid;
+import extracells.item.storage.ItemStorageCellPortableGas;
+import extracells.item.storage.ItemStorageComponent;
 import extracells.util.CreativeTabEC;
 
 public enum ItemEnum {
 	PARTITEM("part.base", new ItemPartECBase()),
-	FLUIDSTORAGE("storage.fluid", new ItemStorageFluid()),
-	PHYSICALSTORAGE("storage.physical", new ItemStoragePhysical()),
-	GASSTORAGE("storage.gas", new ItemStorageGas(), Integration.Mods.MEKANISMGAS),
+	FLUIDSTORAGE("storage.fluid", new ItemStorageCellFluid()),
+	PHYSICALSTORAGE("storage.physical", new ItemStorageCellPhysical()),
+	GASSTORAGE("storage.gas", new ItemStorageCellGas(), Integration.Mods.MEKANISMGAS),
 	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern()),
 	FLUIDWIRELESSTERMINAL("terminal.fluid.wireless", ItemWirelessTerminalFluid.THIS()),
 	STORAGECOMPONET("storage.component", new ItemStorageComponent()),
 	STORAGECASING("storage.casing", new ItemStorageCasing()),
 	FLUIDITEM("fluid.item", new ItemFluid(), null, null), // Internal EC Item
-	FLUIDSTORAGEPORTABLE("storage.fluid.portable", ItemStoragePortableFluidCell.THIS()),
-	GASSTORAGEPORTABLE("storage.gas.portable", ItemStoragePortableGasCell.THIS(), Integration.Mods.MEKANISMGAS),
+	FLUIDSTORAGEPORTABLE("storage.fluid.portable", ItemStorageCellPortableFluid.THIS()),
+	GASSTORAGEPORTABLE("storage.gas.portable", ItemStorageCellPortableGas.THIS(), Integration.Mods.MEKANISMGAS),
 	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern(), null, null),// Internal EC Item
 	UNIVERSALTERMINAL("terminal.universal.wireless", ItemWirelessTerminalUniversal.THIS()),
 	GASWIRELESSTERMINAL("terminal.gas.wireless", ItemWirelessTerminalGas.THIS(), Integration.Mods.MEKANISMGAS),

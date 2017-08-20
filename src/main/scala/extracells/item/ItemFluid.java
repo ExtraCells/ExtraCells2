@@ -10,6 +10,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class ItemFluid extends ItemECBase {
 
+	public ItemFluid() {
+		setCreativeTab(null);
+	}
+
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		String fluidName = getFluidName(stack);

@@ -330,7 +330,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		BlockPos pos = hostTile.getPos();
 		TileEntity tileEntity = world.getTileEntity(pos.offset(side.getFacing()));
 		this.facingTank = null;
-		if(tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().getFacing())){
+		if(tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().getFacing())){
 			facingTank = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().getFacing());
 		}
 		if (Integration.Mods.MEKANISMGAS.isEnabled()) {

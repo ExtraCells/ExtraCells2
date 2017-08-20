@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -35,14 +36,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.implementations.items.IAEWrench;
 import extracells.block.properties.PropertyFluid;
+import extracells.models.IStateMapperRegister;
 import extracells.network.ChannelHandler;
 import extracells.registries.BlockEnum;
 import extracells.tileentity.TileEntityCertusTank;
 
-public class BlockCertusTank extends BlockEC {
+public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 
 	public static final PropertyFluid FLUID = new PropertyFluid("fluid");
 	public static final PropertyBool EMPTY = PropertyBool.create("empty");
+	public static final PropertyBool TANK_ABOVE = PropertyBool.create("above");
+	public static final PropertyBool TANK_BELOW = PropertyBool.create("below");
 	public static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.0625F, 0.0F, 0.0625F, 0.9375F, 1.0F, 0.9375F);
 
 	public BlockCertusTank() {
@@ -52,6 +56,26 @@ public class BlockCertusTank extends BlockEC {
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		return BOUNDING_BOX;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+
+	@Override
+	public boolean canRenderInLayer(BlockRenderLayer layer) {
+		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
 	}
 
 	@Override
@@ -111,9 +135,9 @@ public class BlockCertusTank extends BlockEC {
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) super.getExtendedState(state, world, pos);
 		TileEntity tileEntity = world.getTileEntity(pos);
-		if(tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
-			IFluidHandler fluidHandler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-			FluidStack fluidStack = fluidHandler.getTankProperties()[0].getContents();
+		if(tileEntity != null && tileEntity instanceof TileEntityCertusTank){
+			TileEntityCertusTank certusTank = (TileEntityCertusTank) tileEntity;
+			FluidStack fluidStack = certusTank.tank.getFluid();
 			if(fluidStack != null) {
 				extendedBlockState = extendedBlockState.withProperty(FLUID, fluidStack);
 			}
@@ -130,7 +154,9 @@ public class BlockCertusTank extends BlockEC {
 			FluidStack fluidStack = fluidHandler.getTankProperties()[0].getContents();
 			state = state.withProperty(EMPTY, fluidStack == null);
 		}
-		return state;
+		TileEntity tileAbove = world.getTileEntity(pos.up());
+		TileEntity tileBelow = world.getTileEntity(pos.down());
+		return state.withProperty(TANK_ABOVE, tileAbove instanceof TileEntityCertusTank).withProperty(TANK_BELOW, tileBelow instanceof TileEntityCertusTank);
 	}
 
 	@Override
@@ -140,7 +166,7 @@ public class BlockCertusTank extends BlockEC {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new ExtendedBlockState(this, new IProperty[]{EMPTY}, new IUnlistedProperty[]{FLUID});
+		return new ExtendedBlockState(this, new IProperty[]{EMPTY, TANK_ABOVE, TANK_BELOW}, new IUnlistedProperty[]{FLUID});
 	}
 
 	public ItemStack getDropWithNBT(World world, BlockPos pos) {
@@ -175,5 +201,11 @@ public class BlockCertusTank extends BlockEC {
 
 			ChannelHandler.sendPacketToAllPlayers(world.getTileEntity(pos).getUpdatePacket(), world);
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerStateMapper() {
+		//ModelLoader.setCustomStateMapper(this, new StateMap.Builder().build());
 	}
 }

@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import appeng.api.AEApi;
 import appeng.api.features.IRegistryContainer;
 import extracells.integration.Integration;
+import extracells.item.storage.CellDefinition;
 import extracells.network.ChannelHandler;
 import extracells.network.GuiHandler$;
 import extracells.proxy.CommonProxy;
@@ -49,6 +50,7 @@ public class ExtraCells {
 
 		proxy.registerItems();
 		proxy.registerBlocks();
+		CellDefinition.create();
 		integration.preInit();
 		proxy.registerModels();
 	}

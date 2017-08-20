@@ -1,4 +1,4 @@
-package extracells.item;
+package extracells.item.storage;
 
 import java.util.List;
 
@@ -40,14 +40,16 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import cofh.api.energy.IEnergyContainerItem;
+import extracells.item.EnumBlockContainerMode;
+import extracells.item.ItemECBase;
 import extracells.models.ModelManager;
 import extracells.registries.ItemEnum;
 import extracells.util.ECConfigHandler;
 import extracells.util.inventory.ECCellInventory;
 
+//TODO: Clean Up
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
-public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
-		IAEItemPowerStorage, IEnergyContainerItem {
+public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell, IAEItemPowerStorage, IEnergyContainerItem {
 
 	public static final String[] suffixes = { "256k", "1024k", "4096k", "16384k", "container" };
 
@@ -55,7 +57,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 	public static final int[] types_cell = { 63, 63, 63, 63, 1 };
 	private final int MAX_POWER = 32000;
 
-	public ItemStoragePhysical() {
+	public ItemStorageCellPhysical() {
 		setMaxStackSize(1);
 		setMaxDamage(0);
 		setHasSubtypes(true);
@@ -246,14 +248,12 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public int getTotalTypes(ItemStack cellItem) {
-		return types_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0,
-				suffixes.length - 1)];
+		return types_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)];
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack) {
-		return "extracells.item.storage.physical."
-				+ suffixes[itemStack.getItemDamage()];
+		return "extracells.item.storage.physical." + suffixes[itemStack.getItemDamage()];
 	}
 
 	@Override
@@ -340,7 +340,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 						IBlockState blockState = world.getBlockState(pos);
 						if (blockState.getBlock() != Blocks.BEDROCK && blockState.getBlockHardness(world, pos) >= 0.0F) {
 							int modeIndex = stack.getTagCompound().getInteger("mode");
-							EnumCellMode mode = EnumCellMode.get(modeIndex);
+							EnumBlockContainerMode mode = EnumBlockContainerMode.get(modeIndex);
 							mode.useMode(this, stack, storageStack, request, world, pos, player, facing, hand, hitX, hitY, hitZ);
 							return EnumActionResult.SUCCESS;
 						} else {
@@ -390,7 +390,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 	@SideOnly(Side.CLIENT)
 	public void registerModel(Item item, ModelManager manager) {
 		for (int i = 0; i < suffixes.length; ++i) {
-			manager.registerItemModel(item, i, "storage/physical/" + suffixes[i]);
+			manager.registerItemModel(item, i, "storage/physical/cells/" + suffixes[i]);
 		}
 	}
 

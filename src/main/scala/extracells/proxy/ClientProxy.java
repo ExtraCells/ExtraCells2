@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import extracells.models.ModelManager;
 import extracells.models.PartModels;
+import extracells.models.blocks.ModelCertusTank;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
@@ -45,6 +46,8 @@ public class ClientProxy extends CommonProxy {
 
 	@SubscribeEvent
 	public void onBakeModels(ModelBakeEvent event) {
+		ModelCertusTank.onBakeModels(event);
+		ModelManager.onBakeModels(event);
 	}
 
 	@Override
@@ -52,6 +55,13 @@ public class ClientProxy extends CommonProxy {
 		OBJLoader.INSTANCE.addDomain("extracells");
 		PartModels.registerModels();
 		ModelManager.registerModels();
+		/*ModelManager.registerCustomBlockModel(new BlockModelEntry(
+				new ModelResourceLocation(Constants.MOD_ID + ":certustank", "empty=false"),
+				new ModelResourceLocation(Constants.MOD_ID + ":certustk", "inventory"),
+				new ModelCertusTank(),
+				BlockEnum.CERTUSTANK.getBlock(),
+				false)
+		);*/
 	}
 
 	@Override

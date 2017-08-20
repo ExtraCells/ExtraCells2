@@ -101,7 +101,7 @@ dependencies {
 	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
 	}
-	deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}"
+	deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}:api"
 
 	deobfCompile "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
 	runtime "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}"
@@ -111,7 +111,11 @@ dependencies {
 	compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
 	compile name: 'p455w0rdslib', version: config.version.pl, ext: 'jar'
 	
-	compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
+	deobfCompile "appeng:appliedenergistics2:${config.version.ae}:dev"
+	
+	//compile name: 'appliedenergistics2', version: config.version.ae, classifier: "api", ext: 'jar'
+	//compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
+	//deobfCompile ":appliedenergistics2:${config.version.ae}@jar"
 }
 
 processResources {

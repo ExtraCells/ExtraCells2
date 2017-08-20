@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "above=false,below=false,empty=false": { "model": "extracells:certus_tank" },
+		"above=false,below=false,empty=true": { "model": "extracells:certus_tank" },
+		"above=true,below=false,empty=false": { "model": "extracells:certus_tank_above" },
+		"above=true,below=false,empty=true": { "model": "extracells:certus_tank_above" },
+		"above=false,below=true,empty=false": { "model": "extracells:certus_tank_below" },
+		"above=false,below=true,empty=true": { "model": "extracells:certus_tank_below" },
+		"above=true,below=true,empty=false": { "model": "extracells:certus_tank_middle" },
+		"above=true,below=true,empty=true": { "model": "extracells:certus_tank_middle" }
+    }
+}
