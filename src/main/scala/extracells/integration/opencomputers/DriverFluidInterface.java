@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import appeng.api.parts.IPartHost;
 import appeng.api.util.AEPartLocation;
 import extracells.api.IFluidInterface;
-import extracells.part.PartFluidInterface;
+import extracells.part.fluid.PartFluidInterface;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;

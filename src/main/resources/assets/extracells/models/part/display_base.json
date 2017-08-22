@@ -1,0 +1,47 @@
+{
+	"textures": {
+		"sides": "extracells:parts/terminal_side",
+		"sidesStatus": "appliedenergistics2:parts/monitor_sides_status",
+		"back": "extracells:parts/terminal_side",
+		"front": "extracells:parts/bus_border",
+		"particle": "extracells:parts/terminal_side"
+	},
+	"elements": [ 	 
+		{
+			"from": [ 2, 2, 0 ],
+			"to": [ 14, 14, 2 ],
+			"faces": {
+				"down": { "uv": [ 2, 14, 14, 16 ], "texture": "#sides" },
+				"up": { "uv": [ 2, 0, 14, 2 ], "texture": "#sides" },
+				"north": { "uv": [ 2, 2, 14, 14 ], "texture": "#front" },
+				"south": { "uv": [ 2, 2, 14, 14 ], "texture": "#back" },
+				"west": { "uv": [ 0, 2, 2, 14 ], "texture": "#sides" },
+				"east": { "uv": [ 14, 2, 16, 14 ], "texture": "#sides" }
+			}
+		},
+		{
+			"from": [ 3, 4, 2 ],
+			"to": [ 13, 12, 3 ],
+			"faces": {
+				"down": { "uv": [ 3, 13, 13, 14 ], "texture": "#sides" },
+				"up": { "uv": [ 3, 2, 13, 3 ], "texture": "#sides" },
+				"north": { "uv": [ 3, 4, 13, 12 ], "texture": "#sides" },
+				"south": { "uv": [ 3, 4, 13, 12 ], "texture": "#back" },
+				"west": { "uv": [ 2, 4, 3, 12 ], "texture": "#sides" },
+				"east": { "uv": [ 13, 4, 14, 12 ], "texture": "#sides" }
+			}
+		},
+		{
+
+			"from": [ 4, 5, 3 ],
+			"to": [ 12, 11, 4 ],
+			"faces": {
+				"down": { "uv": [ 4, 12, 12, 13 ], "texture": "#sidesStatus" },
+				"up": { "uv": [ 4, 3, 12, 4 ], "texture": "#sidesStatus" },
+				"south": { "uv": [ 4, 5, 12, 11 ], "texture": "#back" },
+				"west": { "uv": [ 3, 5, 4, 11 ], "texture": "#sidesStatus" },
+				"east": { "uv": [ 12, 5, 13, 11 ], "texture": "#sidesStatus" }
+			}
+		}
+	]
+}

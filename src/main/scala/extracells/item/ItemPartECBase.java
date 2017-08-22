@@ -31,11 +31,12 @@ import appeng.api.config.Upgrades;
 import appeng.api.implementations.items.IItemGroup;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
+import appeng.api.util.AEColor;
 import extracells.api.ECApi;
 import extracells.models.ModelManager;
 import extracells.registries.PartEnum;
 
-public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup {
+public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup, IColoredItem {
 
 	public ItemPartECBase() {
 		setMaxDamage(0);
@@ -121,12 +122,20 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerModel(Item item, ModelManager manager) {
-		for(int i = 0;i < PartEnum.values().length;i++){
-			PartEnum type = PartEnum.values()[i];
+		for(PartEnum type : PartEnum.values()){
 			Optional<ModelResourceLocation> location = type.getItemModel();
 			if(location.isPresent()){
-				ModelLoader.setCustomModelResourceLocation(item, i, location.get());
+				ModelLoader.setCustomModelResourceLocation(item, type.ordinal(), location.get());
 			}
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+		int colorIndex = tintIndex / 10;
+		int index =tintIndex % 10;
+		AEColor color = AEColor.values()[colorIndex];
+		return color.getVariantByTintIndex(index);
 	}
 }

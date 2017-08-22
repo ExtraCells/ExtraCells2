@@ -5,17 +5,12 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
-import net.minecraft.client.renderer.block.model.BlockPartFace;
-import net.minecraft.client.renderer.block.model.FaceBakery;
-import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
@@ -29,18 +24,20 @@ import org.lwjgl.util.vector.Vector3f;
 
 import extracells.block.BlockCertusTank;
 import extracells.models.BlankModel;
+import extracells.models.ModelFactory;
 
 public class ModelTankFluid extends BlankModel {
 
-	private static final FaceBakery bakery = new FaceBakery();
-	public static final Cache<Key, List<BakedQuad>> models = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build();
+	public static final Cache<Key, List<BakedQuad>> blockModels = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build();
+	public static final Cache<Key, List<BakedQuad>> itemModels = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build();
+
 
 	public ModelTankFluid() {
 	}
 
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-		if(side == null || !(state instanceof IExtendedBlockState)){
+		if(side != null || !(state instanceof IExtendedBlockState)){
 			return ImmutableList.of();
 		}
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
@@ -50,11 +47,24 @@ public class ModelTankFluid extends BlankModel {
 			amount = 1;
 		}
 		Key key = new Key(stack.getFluid(), amount, state.getValue(BlockCertusTank.TANK_ABOVE), state.getValue(BlockCertusTank.TANK_BELOW));
-		List<BakedQuad> fluidQuads = models.getIfPresent(key);
+		List<BakedQuad> fluidQuads = blockModels.getIfPresent(key);
 		if(fluidQuads == null){
-			models.put(key, fluidQuads = createQuads(key));
+			blockModels.put(key, fluidQuads = createQuads(key));
 		}
-		return Collections.singletonList(fluidQuads.get(side.getIndex()));
+		return fluidQuads;
+	}
+
+	public List<BakedQuad> getQuads(FluidStack stack) {
+		int amount = stack.amount / 500;
+		if(stack.amount > 0 && amount == 0){
+			amount = 1;
+		}
+		Key key = new Key(stack.getFluid(), amount, false, false);
+		List<BakedQuad> fluidQuads = itemModels.getIfPresent(key);
+		if(fluidQuads == null){
+			itemModels.put(key, fluidQuads = createQuads(key));
+		}
+		return fluidQuads;
 	}
 
 	private static ImmutableList<BakedQuad> createQuads(Key key){
@@ -70,91 +80,9 @@ public class ModelTankFluid extends BlankModel {
 		}
 		float minY = 0.0F;
 		if(!key.below){
-			maxY = 0.1F;
+			minY = 0.1F;
 		}
-		return bakeFluidModel(new Vector3f(1.1F, minY, 1.1F), new Vector3f(14.9F, maxY, 14.9F), sprite);
-	}
-
-	private static ImmutableList<BakedQuad> bakeFluidModel(Vector3f from, Vector3f to, TextureAtlasSprite sprite){
-		ImmutableList.Builder builder = new ImmutableList.Builder();
-		for(EnumFacing facing : EnumFacing.VALUES) {
-			float[] uvs = getFaceUvs(facing, to, from);
-			BlockFaceUV uv = new BlockFaceUV(uvs, 0);
-			BlockPartFace bpf = new BlockPartFace(facing, 0, "", uv);
-			builder.add(bakery.makeBakedQuad(from, to, bpf, sprite, facing, ModelRotation.X0_Y0, null, true, true));
-		}
-		return builder.build();
-	}
-
-	protected static float[] getFaceUvs(EnumFacing face, Vector3f to, Vector3f from) {
-		float minU;
-		float minV;
-		float maxU;
-		float maxV;
-		switch (face) {
-			case SOUTH: {
-				minU = from.x;
-				minV = from.y;
-				maxU = to.x;
-				maxV = to.y;
-				break;
-			}
-			case NORTH: {
-				minU = from.x;
-				minV = from.y;
-				maxU = to.x;
-				maxV = to.y;
-				break;
-			}
-			case WEST: {
-				minU = from.z;
-				minV = from.y;
-				maxU = to.z;
-				maxV = to.y;
-				break;
-			}
-			case EAST: {
-				minU = from.z;
-				minV = from.y;
-				maxU = to.z;
-				maxV = to.y;
-				break;
-			}
-			case UP: {
-				minU = from.x;
-				minV = from.z;
-				maxU = to.x;
-				maxV = to.z;
-				break;
-			}
-			case DOWN: {
-				minU = from.x;
-				minV = from.z;
-				maxU = to.x;
-				maxV = to.z;
-				break;
-			}
-			default: {
-				minU = 0;
-				minV = 0;
-				maxU = 16;
-				maxV = 16;
-				break;
-			}
-		}
-		if (minU < 0 || maxU > 16) {
-			minU = 0;
-			maxU = 16;
-		}
-		if (minV < 0 || maxV > 16) {
-			minV = 0;
-			maxV = 16;
-		}
-		minU = 16 - minU;
-		minV = 16 - minV;
-		maxU = 16 - maxU;
-		maxV = 16 - maxV;
-		return new float[]{minU, minV, maxU, maxV};
+		return ModelFactory.createCube(new Vector3f(1.1F, minY, 1.1F), new Vector3f(14.9F, maxY, 14.9F), sprite);
 	}
 
 	public class Key{

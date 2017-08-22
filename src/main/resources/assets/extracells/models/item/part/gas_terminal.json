@@ -1,0 +1,58 @@
+{
+  "parent": "appliedenergistics2:item/part/part",
+	"textures": {
+		"sides": "extracells:parts/terminal_side",
+		"back": "extracells:parts/terminal_side",
+		"front": "extracells:parts/bus_border",
+		"lightsBright": "extracells:parts/terminal_front_1",
+		"lightsMedium": "extracells:parts/terminal_front_2",
+		"lightsDark": "extracells:parts/terminal_front_3"
+	},
+	"elements": [ 	 
+		{
+			"from": [ 2, 2, 8 ],
+			"to": [ 14, 14, 10 ],
+			"faces": {
+				"down": { "uv": [ 2, 14, 14, 16 ], "texture": "#sides" },
+				"up": { "uv": [ 2, 0, 14, 2 ], "texture": "#sides" },
+				"north": { "uv": [ 2, 2, 14, 14 ], "texture": "#front" },
+				"south": { "uv": [ 2, 2, 14, 14 ], "texture": "#back" },
+				"west": { "uv": [ 0, 2, 2, 14 ], "texture": "#sides" },
+				"east": { "uv": [ 14, 2, 16, 14 ], "texture": "#sides" }
+			}
+		},
+		{
+			"from": [ 3, 4, 10 ],
+			"to": [ 13, 12, 11 ],
+			"faces": {
+				"down": { "uv": [ 3, 13, 13, 14 ], "texture": "#sides" },
+				"up": { "uv": [ 3, 2, 13, 3 ], "texture": "#sides" },
+				"north": { "uv": [ 3, 4, 13, 12 ], "texture": "#sides" },
+				"south": { "uv": [ 3, 4, 13, 12 ], "texture": "#back" },
+				"west": { "uv": [ 2, 4, 3, 12 ], "texture": "#sides" },
+				"east": { "uv": [ 13, 4, 14, 12 ], "texture": "#sides" }
+			}
+		},
+		{
+			"from": [2, 2, 8],
+			"to": [14, 14, 10],
+			"faces": {
+				"north": { "texture": "#lightsBright", "tintindex": 42 }
+			}
+		},
+		{
+			"from": [2, 2, 8],
+			"to": [14, 14, 10],
+			"faces": {
+				 "north": { "texture": "#lightsMedium", "tintindex": 44 }
+			}
+		 },
+		{
+			"from": [2, 2, 8],
+			"to": [14, 14, 10],
+			"faces": {
+				"north": { "texture": "#lightsDark", "tintindex": 43 }
+			}
+		}
+	]
+}

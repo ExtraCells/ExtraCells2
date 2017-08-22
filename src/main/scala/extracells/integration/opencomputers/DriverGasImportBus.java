@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.parts.IPartHost;
 import appeng.api.util.AEPartLocation;
-import extracells.part.PartGasImport;
+import extracells.part.gas.PartGasImport;
 import extracells.registries.PartEnum;
 import extracells.util.GasUtil;
 import li.cil.oc.api.Network;

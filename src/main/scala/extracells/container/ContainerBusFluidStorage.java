@@ -13,7 +13,7 @@ import appeng.api.util.DimensionalCoord;
 import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiBusFluidStorage;
-import extracells.part.PartFluidStorage;
+import extracells.part.fluid.PartFluidStorage;
 
 public class ContainerBusFluidStorage extends Container {
 

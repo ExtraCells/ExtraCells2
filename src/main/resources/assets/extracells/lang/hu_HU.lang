@@ -76,9 +76,9 @@ extracells.part.gas.terminal.name=ME Gáz Terminál
 //Blocks
 extracells.block.certustank=Certus Kvarc Tank
 extracells.block.walrus.name=Rozmár
-extracells.block.fluidcrafter.name=ME Folyadék Összeállító
-extracells.block.fluidinterface.name=ME Folyadék Interfész
-extracells.block.fluidfiller.name=ME Automatikus Folyadék Kitöltő
+tile.extracells.block.fluidcrafter.name=ME Folyadék Összeállító
+tile.extracells.block.fluidinterface.name=ME Folyadék Interfész
+tile.extracells.block.fluidfiller.name=ME Automatikus Folyadék Kitöltő
 tile.extracells.block.vibrantchamberfluid.name=Folyadék Vibrációs Kamra
 tile.extracells.block.hardmedrive.name=Robbanásálló ME Meghajtó [WIP]
 

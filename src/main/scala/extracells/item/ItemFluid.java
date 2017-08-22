@@ -1,5 +1,10 @@
 package extracells.item;
 
+import java.util.List;
+
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
@@ -8,10 +13,27 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import extracells.Constants;
+import extracells.models.ModelManager;
+
 public class ItemFluid extends ItemECBase {
 
 	public ItemFluid() {
-		setCreativeTab(null);
+		//setCreativeTab(null);
+	}
+
+	@Override
+	public void registerModel(Item item, ModelManager manager) {
+		manager.registerItemModel(item, (i) -> new ModelResourceLocation(Constants.MOD_ID + ":fluid/" + getFluidName(i), "inventory"));
+	}
+
+	@Override
+	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+		for(Fluid fluid : FluidRegistry.getRegisteredFluids().values()){
+			ItemStack itemStack = new ItemStack(itemIn);
+			setFluidName(itemStack, fluid.getName());
+			subItems.add(itemStack);
+		}
 	}
 
 	@Override
@@ -39,5 +61,7 @@ public class ItemFluid extends ItemECBase {
 		NBTTagCompound tagCompound = itemStack.getTagCompound();
 		return tagCompound.getString("fluid");
 	}
+
+
 
 }

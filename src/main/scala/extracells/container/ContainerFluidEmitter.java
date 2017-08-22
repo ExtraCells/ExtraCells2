@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import extracells.part.PartFluidLevelEmitter;
+import extracells.part.fluid.PartFluidLevelEmitter;
 
 public class ContainerFluidEmitter extends Container {
 

@@ -6,20 +6,23 @@ import net.minecraft.util.text.translation.I18n;
 
 import extracells.block.BlockCertusTank;
 import extracells.block.BlockFluidCrafter;
+import extracells.block.BlockFluidFiller;
 import extracells.block.BlockFluidInterface;
 import extracells.block.BlockHardMEDrive;
 import extracells.block.BlockVibrationChamberFluid;
 import extracells.block.BlockWalrus;
 import extracells.integration.Integration;
 import extracells.item.ItemBlockCertusTank;
-import extracells.item.ItemBlockECBase;
+import extracells.item.ItemBlockFluidFiller;
+import extracells.item.ItemBlockFluidInterface;
 import extracells.util.CreativeTabEC;
 
 public enum BlockEnum {
 	CERTUSTANK("certustank", new BlockCertusTank(), (block)-> new ItemBlockCertusTank(block)),
 	WALRUS("walrus", new BlockWalrus()),
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
-	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), (block)-> new ItemBlockECBase(block)),
+	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), (block)-> new ItemBlockFluidInterface(block)),
+	FILLER ("fluid_filler", new BlockFluidFiller(), (block)-> new ItemBlockFluidFiller(block)),
 	BLASTRESISTANTMEDRIVE("hardmedrive", BlockHardMEDrive.instance()),
 	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid());
 

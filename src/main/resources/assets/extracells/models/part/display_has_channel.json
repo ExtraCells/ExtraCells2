@@ -1,0 +1,19 @@
+{
+	"uvlMarker": true,
+	"textures": {
+		"indicator": "appliedenergistics2:parts/monitor_sides_status_has_channel"
+	},
+	"elements": [ 	 
+		{
+
+			"from": [ 4, 5, 3 ],
+			"to": [ 12, 11, 4 ],
+			"faces": {
+				"down": { "uv": [ 4, 12, 12, 13 ], "texture": "#indicator", "tintindex": 1, "uvlightmap": { "sky": 0.007, "block": 0.007 } },
+				"up": { "uv": [ 4, 3, 12, 4 ], "texture": "#indicator", "tintindex": 1, "uvlightmap": { "sky": 0.007, "block": 0.007 } },
+				"west": { "uv": [ 3, 5, 4, 11 ], "texture": "#indicator", "tintindex": 1, "uvlightmap": { "sky": 0.007, "block": 0.007 } },
+				"east": { "uv": [ 12, 5, 13, 11 ], "texture": "#indicator", "tintindex": 1, "uvlightmap": { "sky": 0.007, "block": 0.007 } }
+			}
+		}
+	]
+}

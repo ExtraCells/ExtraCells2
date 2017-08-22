@@ -18,7 +18,7 @@ import extracells.container.ContainerGasTerminal;
 import extracells.gui.GuiFluidTerminal;
 import extracells.gui.GuiGasTerminal;
 import extracells.network.AbstractPacket;
-import extracells.part.PartFluidTerminal;
+import extracells.part.fluid.PartFluidTerminal;
 import io.netty.buffer.ByteBuf;
 
 public class PacketFluidTerminal extends AbstractPacket {

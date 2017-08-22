@@ -56,10 +56,6 @@ repositories {
         name 'Mobius Repo'
         url "http://mobiusstrip.eu/maven"
     }
-    //maven {
-    //    name 'CB Repo'
-    //    url "http://chickenbones.net/maven/"
-    //}
 	
 	maven {
 		name 'Open Computers'
@@ -69,11 +65,6 @@ repositories {
 	maven {
 		url "http://dvs1.progwml6.com/files/maven"
 	}
-	
-	//maven {
-    //    name = 'IGW'
-    //    url = "http://maven.k-4u.nl/"
-    //}
 
     //ivy {
     //    name "BuildCraft"
@@ -85,7 +76,7 @@ repositories {
 		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.wc}/[module]-[revision].[ext]" 
 	}
 	
-		ivy { 
+	ivy { 
 		name 'p455w0rdslib' 
 		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.pl}/[module]-[revision].[ext]" 
 	}
@@ -94,6 +85,11 @@ repositories {
 		name 'appliedenergistics2' 
 		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.ae}/[module]-[revision].[ext]" 
 	} 
+	
+	ivy { 
+		name 'Mekanism' 
+		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.me}/[module]-[revision].[ext]" 
+	}
 
 }
 
@@ -102,6 +98,7 @@ dependencies {
         transitive = false
 	}
 	deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}:api"
+	runtime "li.cil.oc:OpenComputers:${config.version.oc}:api"
 
 	deobfCompile "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
 	runtime "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}"
@@ -111,11 +108,9 @@ dependencies {
 	compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
 	compile name: 'p455w0rdslib', version: config.version.pl, ext: 'jar'
 	
-	deobfCompile "appeng:appliedenergistics2:${config.version.ae}:dev"
+	compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
 	
-	//compile name: 'appliedenergistics2', version: config.version.ae, classifier: "api", ext: 'jar'
-	//compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
-	//deobfCompile ":appliedenergistics2:${config.version.ae}@jar"
+	compile name: 'Mekanism', version: config.version.me, classifier: "dev", ext: 'jar'
 }
 
 processResources {

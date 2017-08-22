@@ -26,11 +26,13 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
 import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
+import extracells.models.PartModels;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.util.ItemUtils;
@@ -269,65 +271,15 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 			this.filter = data.getString("filter");
 	}
 
-	/*@SideOnly(Side.CLIENT)
 	@Override
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-		rh.setTexture(TextureManager.EXPORT_SIDE.getTexture());
-		rh.setBounds(6, 6, 12, 10, 10, 13);
-		rh.renderInventoryBox(renderer);
-
-		rh.setBounds(4, 4, 13, 12, 12, 14);
-		rh.renderInventoryBox(renderer);
-
-		rh.setBounds(5, 5, 14, 11, 11, 15);
-		rh.renderInventoryBox(renderer);
-
-		IIcon side = TextureManager.EXPORT_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.EXPORT_FRONT.getTexture(), side, side);
-		rh.setBounds(6, 6, 15, 10, 10, 16);
-		rh.renderInventoryBox(renderer);
-
-		rh.setInvColor(AEColor.Black.mediumVariant);
-		ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderInventoryFace(TextureManager.EXPORT_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(6, 6, 11, 10, 10, 12);
-		renderInventoryBusLights(rh, renderer);
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.EXPORT_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.EXPORT_ON;
+		}
+		return PartModels.EXPORT_OFF;
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-		rh.setTexture(TextureManager.EXPORT_SIDE.getTexture());
-		rh.setBounds(6, 6, 12, 10, 10, 13);
-		rh.renderBlock(x, y, z, renderer);
-
-		rh.setBounds(4, 4, 13, 12, 12, 14);
-		rh.renderBlock(x, y, z, renderer);
-
-		rh.setBounds(5, 5, 14, 11, 11, 15);
-		rh.renderBlock(x, y, z, renderer);
-
-		IIcon side = TextureManager.EXPORT_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.EXPORT_FRONT.getTextures()[0], side, side);
-		rh.setBounds(6, 6, 15, 10, 10, 16);
-		rh.renderBlock(x, y, z, renderer);
-
-		ts.setColorOpaque_I(AEColor.Black.mediumVariant);
-		if (isActive())
-			ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderFace(x, y, z, TextureManager.EXPORT_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(6, 6, 11, 10, 10, 12);
-		renderStaticBusLights(x, y, z, rh, renderer);
-	}*/
 
 	@Override
 	public final TickRateModulation tickingRequest(IGridNode node,

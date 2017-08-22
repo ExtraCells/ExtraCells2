@@ -14,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 import appeng.api.AEApi;
@@ -78,28 +77,17 @@ public class BlockFluidCrafter extends BlockEC {
 	}
 
 	@Override
-	public String getLocalizedName() {
-		return I18n.translateToLocal(getUnlocalizedName() + ".name");
-	}
-
-	@Override
-	public String getUnlocalizedName() {
-		return super.getUnlocalizedName().replace("tile.", "");
-	}
-
-	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (world.isRemote)
-			return false;
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile instanceof TileEntityFluidCrafter)
-			if (!PermissionUtil.hasPermission(player,
-				SecurityPermissions.BUILD,
-				((TileEntityFluidCrafter) tile).getGridNode()))
+		if (tile instanceof TileEntityFluidCrafter) {
+			if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, ((TileEntityFluidCrafter) tile).getGridNode())) {
 				return false;
-		ItemStack current = player.inventory.getCurrentItem();
-		if (player.isSneaking() && current != null) {
-			//TODO: Buildcraft
+			}
+		}
+		if (!world.isRemote) {
+			ItemStack current = player.getHeldItem(hand);
+			if (!player.isSneaking() && current != null) {
+				//TODO: Buildcraft
 			/*try {
 				if (current.getItem() instanceof IToolWrench
 					&& ((IToolWrench) current.getItem()).canWrench(player,
@@ -113,13 +101,14 @@ public class BlockFluidCrafter extends BlockEC {
 			} catch (Throwable e) {
 				// No IToolWrench
 			}*/
-			if (current.getItem() instanceof IAEWrench && ((IAEWrench) current.getItem()).canWrench(current, player, pos)) {
-				spawnAsEntity(world, pos, new ItemStack(this));
-				world.setBlockToAir(pos);
-				return true;
+				if (current.getItem() instanceof IAEWrench && ((IAEWrench) current.getItem()).canWrench(current, player, pos)) {
+					spawnAsEntity(world, pos, new ItemStack(this));
+					world.setBlockToAir(pos);
+					return true;
+				}
 			}
+			GuiHandler.launchGui(0, player, world, pos.getX(), pos.getY(), pos.getZ());
 		}
-		GuiHandler.launchGui(0, player, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 

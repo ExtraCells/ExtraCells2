@@ -15,7 +15,7 @@ import extracells.api.IFluidInterface;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.packet.part.PacketFluidInterface;
-import extracells.part.PartFluidInterface;
+import extracells.part.fluid.PartFluidInterface;
 import extracells.tileentity.TileEntityFluidInterface;
 
 public class ContainerFluidInterface extends Container implements

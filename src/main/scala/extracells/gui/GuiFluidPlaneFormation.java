@@ -21,7 +21,7 @@ import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketFluidPlaneFormation;
-import extracells.part.PartFluidPlaneFormation;
+import extracells.part.fluid.PartFluidPlaneFormation;
 import extracells.util.FluidUtil;
 
 public class GuiFluidPlaneFormation extends GuiContainer implements

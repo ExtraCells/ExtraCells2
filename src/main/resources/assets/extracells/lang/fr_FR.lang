@@ -53,8 +53,8 @@ extracells.part.battery.name=Installation de cellule énergétique ME
 //Blocks
 extracells.block.certustank=Réservoir en Quartz Certus
 extracells.block.walrus.name=Morse
-extracells.block.fluidcrafter.name=Assembleur de fluide ME
-extracells.block.fluidinterface.name=Interface de fluide ME
+tile.extracells.block.fluidcrafter.name=Assembleur de fluide ME
+tile.extracells.block.fluidinterface.name=Interface de fluide ME
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Quantité

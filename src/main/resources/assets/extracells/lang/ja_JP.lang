@@ -97,9 +97,9 @@ extracells.part.oredict.export.name=ME 鉱石辞書搬出バス
 //Blocks
 extracells.block.certustank=ケルタクォーツタンク
 extracells.block.walrus.name=セイウチ
-extracells.block.fluidcrafter.name=ME 液体アセンブラー
-extracells.block.fluidinterface.name=ME 液体インターフェース
-extracells.block.fluidfiller.name=ME 液体自動振り分け装置
+tile.extracells.block.fluidcrafter.name=ME 液体アセンブラー
+tile.extracells.block.fluidinterface.name=ME 液体インターフェース
+tile.extracells.block.fluidfiller.name=ME 液体自動振り分け装置
 tile.extracells.block.vibrantchamberfluid.name=ME 液体振動チャンバー
 tile.extracells.block.hardmedrive.name=ME 対爆ドライブ
 

@@ -1,0 +1,8 @@
+{
+	"variants": {
+        "facing=north": { "model": "extracells:walrus.obj" },
+        "facing=south": { "model": "extracells:walrus.obj", "y": 180 },
+        "facing=west":  { "model": "extracells:walrus.obj", "y": 270 },
+        "facing=east":  { "model": "extracells:walrus.obj", "y": 90 }
+    }
+}

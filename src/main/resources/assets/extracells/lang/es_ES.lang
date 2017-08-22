@@ -57,9 +57,9 @@ extracells.part.oredict.export.name=ME Bus de Exportación de Diccionario de min
 //Blocks
 extracells.block.certustank=Tanque de Quarzo Certus
 extracells.block.walrus.name=Morsa
-extracells.block.fluidcrafter.name=ME Fluido Ensamblador
-extracells.block.fluidinterface.name=ME Interfaz de Fluidos
-extracells.block.fluidfiller.name=ME Llenado Automatico de Fluidos
+tile.extracells.block.fluidcrafter.name=ME Fluido Ensamblador
+tile.extracells.block.fluidinterface.name=ME Interfaz de Fluidos
+tile.extracells.block.fluidfiller.name=ME Llenado Automatico de Fluidos
 tile.extracells.block.vibrantchamberfluid.name=Camara de la Vibración de Fluidos
 tile.extracells.block.hardmedrive.name=ME Unidad Resistente a Explociones
 

@@ -56,9 +56,9 @@ extracells.part.oredict.export.name=ME-Ore-Dictionary-Exportbus
 //Blocks
 extracells.block.certustank=Certus-Quarz-Tank
 extracells.block.walrus.name=Walross
-extracells.block.fluidcrafter.name=ME-Flüssigkeits-Fertigungskammer
-extracells.block.fluidinterface.name=ME-Flüssigkeits-Interface
-extracells.block.fluidfiller.name=ME-Flüssigkeitsfüller
+tile.extracells.block.fluidcrafter.name=ME-Flüssigkeits-Fertigungskammer
+tile.extracells.block.fluidinterface.name=ME-Flüssigkeits-Interface
+tile.extracells.block.fluidfiller.name=ME-Flüssigkeitsfüller
 tile.extracells.block.hardmedrive.name=Explosionssicheres ME-Laufwerk
 
 //Tooltips and Chat-Messages

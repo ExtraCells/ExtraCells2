@@ -2,12 +2,13 @@ package extracells.block
 
 import java.util.Random
 
+import extracells.models.ModelManager
 import extracells.tileentity.TileEntityFluidInterface
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.item.EntityItem
 import net.minecraft.inventory.IInventory
-import net.minecraft.item.ItemStack
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
@@ -18,6 +19,8 @@ class BlockFluidInterface() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
     dropPatter(world, pos)
     super.breakBlock(world, pos, stat)
   }
+
+  override def registerModel(item: Item, manager: ModelManager)= manager.registerItemModel(item, 0, "fluid_interface")
 
   def createNewTileEntity(world: World, meta: Int): TileEntity = {
     return new TileEntityFluidInterface

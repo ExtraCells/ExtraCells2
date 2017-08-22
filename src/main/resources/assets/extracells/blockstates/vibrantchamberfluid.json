@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,state=false": { "model": "extracells:vibrantchamberfluid" },
+        "facing=south,state=false": { "model": "extracells:vibrantchamberfluid", "y": 180 },
+        "facing=west,state=false":  { "model": "extracells:vibrantchamberfluid", "y": 270 },
+        "facing=east,state=false":  { "model": "extracells:vibrantchamberfluid", "y": 90 },
+		"facing=north,state=true": { "model": "extracells:vibrantchamberfluid_on" },
+        "facing=south,state=true": { "model": "extracells:vibrantchamberfluid_on", "y": 180 },
+        "facing=west,state=true":  { "model": "extracells:vibrantchamberfluid_on", "y": 270 },
+        "facing=east,state=true":  { "model": "extracells:vibrantchamberfluid_on", "y": 90 }
+    }
+}

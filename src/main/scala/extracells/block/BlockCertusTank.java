@@ -12,7 +12,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -170,18 +169,15 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	}
 
 	public ItemStack getDropWithNBT(World world, BlockPos pos) {
-		NBTTagCompound tileEntity = new NBTTagCompound();
 		TileEntity worldTE = world.getTileEntity(pos);
 		if (worldTE != null && worldTE instanceof TileEntityCertusTank) {
 			ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlock());
-
-			((TileEntityCertusTank) worldTE).writeToNBTWithoutCoords(tileEntity);
-
-			if (!tileEntity.hasKey("Empty")) {
-				dropStack.setTagInfo("tileEntity", tileEntity);
+			IFluidHandler fluidHandler = FluidUtil.getFluidHandler(dropStack);
+			FluidStack fluidStack = ((TileEntityCertusTank) worldTE).tank.getFluid();
+			if(fluidStack != null) {
+				fluidHandler.fill(fluidStack, true);
 			}
 			return dropStack;
-
 		}
 		return null;
 	}

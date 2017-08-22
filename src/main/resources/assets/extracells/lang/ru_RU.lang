@@ -56,9 +56,9 @@ extracells.part.oredict.export.name=МЭ шина экспорта по слов
 //Blocks
 extracells.block.certustank=Резервуар из истинного кварца
 extracells.block.walrus.name=Морж
-extracells.block.fluidcrafter.name=МЭ жидкостный сборщик
-extracells.block.fluidinterface.name=МЭ жидкостный интерфейс
-extracells.block.fluidfiller.name=МЭ жидкостный авто-заполнитель
+tile.extracells.block.fluidcrafter.name=МЭ жидкостный сборщик
+tile.extracells.block.fluidinterface.name=МЭ жидкостный интерфейс
+tile.extracells.block.fluidfiller.name=МЭ жидкостный авто-заполнитель
 tile.extracells.block.vibrantchamberfluid.name=Жидкостная вибрационная камера
 tile.extracells.block.hardmedrive.name=Взрывоустойчивый МЭ накопитель
 

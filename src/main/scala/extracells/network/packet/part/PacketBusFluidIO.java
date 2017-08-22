@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.Fluid;
 import appeng.api.config.RedstoneMode;
 import extracells.gui.GuiBusFluidIO;
 import extracells.network.AbstractPacket;
-import extracells.part.PartFluidIO;
+import extracells.part.fluid.PartFluidIO;
 import io.netty.buffer.ByteBuf;
 
 public class PacketBusFluidIO extends AbstractPacket {

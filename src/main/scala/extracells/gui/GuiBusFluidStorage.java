@@ -25,8 +25,8 @@ import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketBusFluidStorage;
-import extracells.part.PartFluidStorage;
-import extracells.part.PartGasStorage;
+import extracells.part.fluid.PartFluidStorage;
+import extracells.part.gas.PartGasStorage;
 import extracells.util.FluidUtil;
 import extracells.util.GuiUtil;
 

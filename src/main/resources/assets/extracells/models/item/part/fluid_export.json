@@ -23,7 +23,7 @@
 			"from": [ 6, 6, 6 ],
 			"to": [ 10, 10, 6 ],
 			"faces": {
-				"north": { "uv": [ 6, 6, 10, 10 ], "texture": "#front_2"}
+				"north": { "uv": [ 6, 6, 10, 10 ], "texture": "#front_2", "tintindex": 114 }
 			}
 		},
 		{

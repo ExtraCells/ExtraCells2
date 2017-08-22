@@ -2,12 +2,12 @@ package extracells.models.blocks;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,6 +20,9 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,6 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import extracells.Constants;
 import extracells.block.BlockCertusTank;
 import extracells.models.BlankModel;
+import extracells.models.ModelManager;
 
 @SideOnly(Side.CLIENT)
 public class ModelCertusTank extends BlankModel {
@@ -48,7 +52,9 @@ public class ModelCertusTank extends BlankModel {
 		registry.putObject(new ModelResourceLocation(location, "above=true,below=false,empty=false"), model);
 		registry.putObject(new ModelResourceLocation(location, "above=false,below=true,empty=false"), model);
 		registry.putObject(new ModelResourceLocation(location, "above=true,below=true,empty=false"), model);
-		ModelTankFluid.models.invalidateAll();
+		registry.putObject(new ModelResourceLocation(location, "inventory"), model);
+		ModelTankFluid.blockModels.invalidateAll();
+		ModelTankFluid.itemModels.invalidateAll();
 	}
 
 	public ModelCertusTank() {
@@ -78,17 +84,36 @@ public class ModelCertusTank extends BlankModel {
 
 	@Override
 	protected ItemOverrideList createOverrides() {
-		return super.createOverrides();
+		return new TankOverrides();
+	}
+
+	private static class ItemModel extends BlankModel{
+		FluidStack stack;
+
+		public ItemModel(FluidStack fluidStack) {
+			this.stack = fluidStack;
+		}
+
+		@Override
+		public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+			List<BakedQuad> quads = new ArrayList<>();
+			quads.addAll(emptyTank.getQuads(state, side, rand));
+			if(stack != null) {
+				quads.addAll(fluid.getQuads(stack));
+			}
+			return quads;
+		}
 	}
 
 	public static class TankOverrides extends ItemOverrideList{
-		public TankOverrides(List<ItemOverride> overridesIn) {
-			super(overridesIn);
+		public TankOverrides() {
+			super(Collections.emptyList());
 		}
 
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
-			return super.handleItemState(originalModel, stack, world, entity);
+			FluidStack fluidStack = FluidUtil.getFluidContained(stack);
+			return new IPerspectiveAwareModel.MapWrapper(new ItemModel(fluidStack), ModelManager.getDefaultBlockState());
 		}
 	}
 }

@@ -13,7 +13,7 @@ import appeng.api.util.DimensionalCoord;
 import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidPlaneFormation;
-import extracells.part.PartFluidPlaneFormation;
+import extracells.part.fluid.PartFluidPlaneFormation;
 
 public class ContainerPlaneFormation extends Container {
 

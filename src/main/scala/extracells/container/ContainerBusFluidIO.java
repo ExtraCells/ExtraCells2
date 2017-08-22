@@ -13,7 +13,7 @@ import appeng.api.util.DimensionalCoord;
 import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiBusFluidIO;
-import extracells.part.PartFluidIO;
+import extracells.part.fluid.PartFluidIO;
 
 public class ContainerBusFluidIO extends Container {
 	private PartFluidIO part;

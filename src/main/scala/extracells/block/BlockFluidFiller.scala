@@ -8,6 +8,7 @@ import appeng.api.config.SecurityPermissions
 import appeng.api.implementations.items.IAEWrench
 import appeng.api.networking.IGridNode
 import appeng.api.util.AEPartLocation
+import appeng.block.storage.BlockChest
 import extracells.api.IECTileEntity
 import extracells.network.GuiHandler
 import extracells.tileentity.{IListenerTile, TileEntityFluidFiller, TileEntityFluidInterface}

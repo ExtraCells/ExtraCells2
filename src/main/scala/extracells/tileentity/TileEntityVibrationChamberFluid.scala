@@ -7,15 +7,20 @@ import appeng.api.networking.energy.IEnergyGrid
 import appeng.api.networking.security.IActionHost
 import appeng.api.util.{AECableType, AEPartLocation, DimensionalCoord}
 import extracells.api.IECTileEntity
+import extracells.container.ContainerVibrationChamberFluid
 import extracells.gridblock.ECGridBlockVibrantChamber
+import extracells.gui.GuiVibrationChamberFluid
+import extracells.network.TGuiProvider
 import extracells.util.FuelBurnTime
+import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{EnumFacing, ITickable}
 import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.fluids.capability.{CapabilityFluidHandler, IFluidTankProperties}
 import net.minecraftforge.fluids.{capability, _}
+import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
-class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with IActionHost with TPowerStorage with ITickable {
+class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with IActionHost with TPowerStorage with ITickable with TGuiProvider {
   private[tileentity] var isFirstGridNode: Boolean = true
   private final val gridBlock = new ECGridBlockVibrantChamber(this)
   private[tileentity] var node: IGridNode = null
@@ -182,6 +187,11 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
   def getBurnTimeTotal: Int = {
     return burnTimeTotal
   }
+
+  @SideOnly(Side.CLIENT)
+  override def getClientGuiElement(player: EntityPlayer, any: Any*): AnyRef = new GuiVibrationChamberFluid(player, this)
+
+  override def getServerGuiElement(player: EntityPlayer, any: Any*): AnyRef = new ContainerVibrationChamberFluid(player.inventory, this)
 
   override def getCapability[T](capability: Capability[T], facing: EnumFacing): T = {
     if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){

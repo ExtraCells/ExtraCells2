@@ -22,8 +22,8 @@ import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketFluidEmitter;
-import extracells.part.PartFluidLevelEmitter;
-import extracells.part.PartGasLevelEmitter;
+import extracells.part.fluid.PartFluidLevelEmitter;
+import extracells.part.gas.PartGasLevelEmitter;
 import extracells.registries.PartEnum;
 import extracells.util.GuiUtil;
 

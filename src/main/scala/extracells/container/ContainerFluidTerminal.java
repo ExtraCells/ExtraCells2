@@ -26,7 +26,7 @@ import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidTerminal;
 import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.network.packet.part.PacketFluidTerminal;
-import extracells.part.PartFluidTerminal;
+import extracells.part.fluid.PartFluidTerminal;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
 

@@ -11,10 +11,10 @@ import scala.collection.mutable
 object FuelBurnTime {
   val fluidBurnTimes = new mutable.HashMap[Fluid, Integer]
 
-  def registerFuel(fluid: Fluid, burnTime: Int): Unit ={
-    if(!fluidBurnTimes.contains(fluid))
-      fluidBurnTimes.put(fluid, burnTime)
-
+  def registerFuel(fluid: Fluid, burnTime: Int): Unit = {
+    if (!fluidBurnTimes.contains(fluid)) {
+    fluidBurnTimes.put(fluid, burnTime)
+   }
   }
 
   def getBurnTime(fluid: Fluid): Int ={

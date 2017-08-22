@@ -1,8 +1,16 @@
 package extracells.network
 
-import appeng.api.parts.IPartHost
+import appeng.api.config.SecurityPermissions
+import appeng.api.implementations.guiobjects.IGuiItem
+import appeng.api.networking.energy.IEnergyGrid
+import appeng.api.networking.{IGrid, IGridNode}
+import appeng.api.networking.security.{IActionHost, ISecurityGrid}
+import appeng.api.parts.{IPart, IPartHost}
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
+import appeng.api.util.{AEPartLocation, DimensionalCoord}
+import appeng.core.sync.GuiBridge
+import appeng.util.Platform
 import extracells.ExtraCells
 import extracells.api._
 import extracells.block.TGuiBlock
@@ -12,6 +20,8 @@ import extracells.part.PartECBase
 import extracells.registries.BlockEnum
 import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
+import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -20,52 +30,52 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object GuiHandler extends IGuiHandler {
 
-	 def getContainer(ID: Int, player: EntityPlayer, args: Array[Any]) : Any = {
+	def getContainer(ID: Int, player: EntityPlayer, args: Array[Any]): Any = {
 		ID match {
-		case 0 =>
-			val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-			new ContainerFluidStorage(fluidInventory, player)
-		case 1 =>
-			val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-			val handler = args.apply(1).asInstanceOf[IWirelessFluidTermHandler]
-			new ContainerFluidStorage(fluidInventory2, player, handler)
-		case 3 =>
-			val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-			val storageCell =  args.apply(1).asInstanceOf[IPortableFluidStorageCell]
-			new ContainerFluidStorage(fluidInventory3, player, storageCell)
-		case 4 =>
-			val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-			new ContainerGasStorage(fluidInventory, player)
-		case 5 =>
-			val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-			val handler = args.apply(1).asInstanceOf[IWirelessGasTermHandler]
-			new ContainerGasStorage(fluidInventory2, player, handler)
-		case 6 =>
-			val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-			val storageCell =  args.apply(1).asInstanceOf[IPortableGasStorageCell]
-			new ContainerGasStorage(fluidInventory3, player, storageCell)
-		case _ =>
-			null
+			case 0 =>
+				val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+				new ContainerFluidStorage(fluidInventory, player)
+			case 1 =>
+				val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+				val handler = args.apply(1).asInstanceOf[IWirelessFluidTermHandler]
+				new ContainerFluidStorage(fluidInventory2, player, handler)
+			case 3 =>
+				val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+				val storageCell = args.apply(1).asInstanceOf[IPortableFluidStorageCell]
+				new ContainerFluidStorage(fluidInventory3, player, storageCell)
+			case 4 =>
+				val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+				new ContainerGasStorage(fluidInventory, player)
+			case 5 =>
+				val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+				val handler = args.apply(1).asInstanceOf[IWirelessGasTermHandler]
+				new ContainerGasStorage(fluidInventory2, player, handler)
+			case 6 =>
+				val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+				val storageCell = args.apply(1).asInstanceOf[IPortableGasStorageCell]
+				new ContainerGasStorage(fluidInventory3, player, storageCell)
+			case _ =>
+				null
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	def getGui(ID: Int, player: EntityPlayer) : Any = {
+	def getGui(ID: Int, player: EntityPlayer): Any = {
 		ID match {
-		case 0 =>
-			new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
-		case 1 =>
-			new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
-		case 3 =>
-			new GuiFluidStorage(player, "extracells.item.storage.fluid.portable.name");
-		case 4 =>
-			new GuiGasStorage(player, "extracells.part.gas.terminal.name");
-		case 5 =>
-			new GuiGasStorage(player, "extracells.part.gas.terminal.name");
-		case 6 =>
-			new GuiGasStorage(player, "extracells.item.storage.gas.portable.name");
-		case _ =>
-			null;
+			case 0 =>
+				new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+			case 1 =>
+				new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+			case 3 =>
+				new GuiFluidStorage(player, "extracells.item.storage.fluid.portable.name");
+			case 4 =>
+				new GuiGasStorage(player, "extracells.part.gas.terminal.name");
+			case 5 =>
+				new GuiGasStorage(player, "extracells.part.gas.terminal.name");
+			case 6 =>
+				new GuiGasStorage(player, "extracells.item.storage.gas.portable.name");
+			case _ =>
+				null;
 		}
 	}
 
@@ -73,34 +83,71 @@ object GuiHandler extends IGuiHandler {
 
 	def getGuiId(part: PartECBase) = part.getFacing().ordinal()
 
-	def getPartContainer(side: EnumFacing, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : Any =
+	def getPartContainer(side: EnumFacing, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any =
 		world.getTileEntity(new BlockPos(x, y, z)).asInstanceOf[IPartHost].getPart(side).asInstanceOf[PartECBase]
 			.getServerGuiElement(player)
 
 
-	def getPartGui(side: EnumFacing, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : Any =
+	def getPartGui(side: EnumFacing, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any =
 		world.getTileEntity(new BlockPos(x, y, z)).asInstanceOf[IPartHost].getPart(side).asInstanceOf[PartECBase]
 			.getClientGuiElement(player)
 
-	def launchGui(ID: Int, player: EntityPlayer,  args: Array[Any]) {
+	def launchGui(ID: Int, player: EntityPlayer, args: Array[Any]) {
 		temp = args
 		player.openGui(ExtraCells.instance, ID, null, 0, 0, 0);
 	}
 
-	def launchGui(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z:Int) : Any =
-		player.openGui(ExtraCells.instance, ID, world, x, y, z);
+	def launchGui(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any = {
+		if(1 == 1){
 
+		}
+		player.openGui(ExtraCells.instance, ID, world, x, y, z);
+	}
+
+	def hasPermissions(pos: BlockPos, side: AEPartLocation, player: EntityPlayer): Boolean = {
+		val world: World = player.getEntityWorld
+		val tileEntity: TileEntity = world.getTileEntity(pos)
+		if(tileEntity == null){
+			return true;
+		}else if(tileEntity.isInstanceOf[TGuiProvider]){
+			return securityCheck(tileEntity, player)
+		}else if(tileEntity.isInstanceOf[IPartHost]){
+			val part:IPart = tileEntity.asInstanceOf[IPartHost].getPart(side)
+			if(part != null){
+				return securityCheck(part, player)
+			}
+		}
+		false
+	}
+
+	private def securityCheck(te: Any, player: EntityPlayer): Boolean = {
+		if (te.isInstanceOf[IActionHost]) {
+			val gn = te.asInstanceOf[IActionHost].getActionableNode
+			if (gn != null) {
+				val g = gn.getGrid
+				if (g != null) {
+					val requirePower = false
+					if (requirePower) {
+						val eg: IEnergyGrid = g.getCache(classOf[IEnergyGrid])
+						if (!eg.isNetworkPowered) return false
+					}
+					val sg: ISecurityGrid = g.getCache(classOf[ISecurityGrid])
+					if (sg.hasPermission(player, SecurityPermissions.BUILD)) return true
+				}
+			}
+			return false
+		}
+		true
+	}
 
 	var temp: Array[Any] = Array[Any]()
 
 	override def getClientGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : AnyRef =  {
-		val gui: Any = getGuiBlockElement(player, world, x, y, z)
+		val gui = getGuiBlockElement(player, world, x, y, z)
 		if (gui != null)
 			return gui.asInstanceOf[AnyRef]
-		val side = null;
-		if(ID < 5){
-			side == EnumFacing.VALUES(ID);
-		}
+		var side: EnumFacing = null;
+		if(ID < 5) side = EnumFacing.getFront(ID)
 		val pos = new BlockPos(x, y, z);
 		if (world.getBlockState(pos).getBlock == BlockEnum.FLUIDCRAFTER.getBlock()) {
 			val tileEntity = world.getTileEntity(pos);
@@ -113,7 +160,7 @@ object GuiHandler extends IGuiHandler {
 			if (tileEntity == null)
 				return null
 			if (tileEntity.isInstanceOf[TileEntityFluidInterface])
-				return new GuiFluidInterface(player,tileEntity.asInstanceOf[IFluidInterface])
+				return new GuiFluidInterface(player, tileEntity.asInstanceOf[IFluidInterface])
 			else if (tileEntity.isInstanceOf[TileEntityFluidFiller])
 				return new GuiFluidFiller(player, tileEntity.asInstanceOf[TileEntityFluidFiller])
 			return null;
@@ -127,9 +174,9 @@ object GuiHandler extends IGuiHandler {
 		val con: Any = getContainerBlockElement(player, world, x, y, z)
 		if (con != null)
 			return con.asInstanceOf[AnyRef]
-		val side = null;
+		var side: EnumFacing = null;
 		if(ID < 5){
-			side == EnumFacing.VALUES(ID);
+			side = EnumFacing.getFront(ID);
 		}
 		val pos = new BlockPos(x, y, z);
 		if (world.getBlockState(pos).getBlock == BlockEnum.FLUIDCRAFTER.getBlock()) {
@@ -168,12 +215,14 @@ object GuiHandler extends IGuiHandler {
 	}
 
 	def getContainerBlockElement(player: EntityPlayer, world: World, x:Int, y: Int, z: Int): Any = {
-		if(world == null || player == null)
+		if (world == null || player == null) {
 			return null
+		}
 		val pos = new BlockPos(x, y, z);
 		val block = world.getBlockState(pos).getBlock();
-		if (block  == null)
+		if (block == null) {
 			return null
+		}
 		block match{
 			case guiBlock: TGuiBlock => return guiBlock.getServerGuiElement(player, world, pos)
 			case _ => return null

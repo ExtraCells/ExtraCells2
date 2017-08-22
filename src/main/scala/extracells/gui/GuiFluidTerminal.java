@@ -25,7 +25,7 @@ import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidTerminal;
-import extracells.part.PartFluidTerminal;
+import extracells.part.fluid.PartFluidTerminal;
 import extracells.util.ECConfigHandler;
 
 public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui {

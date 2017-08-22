@@ -21,7 +21,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
 import extracells.api.IExternalGasStorageHandler;
-import extracells.part.PartFluidStorage;
+import extracells.part.fluid.PartFluidStorage;
 
 public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 

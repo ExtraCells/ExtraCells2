@@ -1,0 +1,8 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "extracells:blocks/vibration_chamber_fluid",
+        "front": "extracells:blocks/vibration_chamber_fluid_front_on",
+        "side": "extracells:blocks/vibration_chamber_fluid"
+    }
+}

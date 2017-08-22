@@ -25,9 +25,9 @@ import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketBusFluidIO;
-import extracells.part.PartFluidIO;
-import extracells.part.PartGasExport;
-import extracells.part.PartGasImport;
+import extracells.part.fluid.PartFluidIO;
+import extracells.part.gas.PartGasExport;
+import extracells.part.gas.PartGasImport;
 import extracells.util.FluidUtil;
 
 public class GuiBusFluidIO extends GuiContainer implements

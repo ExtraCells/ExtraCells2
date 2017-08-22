@@ -56,9 +56,9 @@ extracells.part.oredict.export.name=ME礦物表輸出匯流排
 //Blocks
 extracells.block.certustank=賽特斯石英水槽
 extracells.block.walrus.name=海象
-extracells.block.fluidcrafter.name=ME流體裝配室
-extracells.block.fluidinterface.name=ME流體介面
-extracells.block.fluidfiller.name=ME流體自動過濾器
+tile.extracells.block.fluidcrafter.name=ME流體裝配室
+tile.extracells.block.fluidinterface.name=ME流體介面
+tile.extracells.block.fluidfiller.name=ME流體自動過濾器
 tile.extracells.block.vibrantchamberfluid.name=流體諧振倉
 tile.extracells.block.hardmedrive.name=防爆ME驅動器
 

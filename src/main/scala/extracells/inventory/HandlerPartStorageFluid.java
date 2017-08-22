@@ -32,7 +32,7 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.integration.Capabilities;
-import extracells.part.PartFluidStorage;
+import extracells.part.fluid.PartFluidStorage;
 import extracells.util.FluidUtil;
 
 public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IMEMonitorHandlerReceiver<IAEFluidStack> {

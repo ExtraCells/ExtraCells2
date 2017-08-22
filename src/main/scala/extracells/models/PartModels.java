@@ -21,7 +21,11 @@ public enum PartModels implements IPartModel {
 	IMPORT_BASE("import_base"),
 	IMPORT_HAS_CHANNEL(IMPORT_BASE, "import_has_channel"),
 	IMPORT_OFF(IMPORT_BASE, "import_off"),
-	IMPORT_ON(IMPORT_BASE, "import_on");
+	IMPORT_ON(IMPORT_BASE, "import_on"),
+	DISPLAY_BASE("display_base"),
+	TERMINAL_OFF(DISPLAY_BASE, "display_status_off", "terminal_off"),
+	TERMINAL_ON(DISPLAY_BASE, "display_status_on", "terminal_on"),
+	TERMINAL_HAS_CHANNEL(TERMINAL_ON, "display_has_channel");
 
 	boolean requireConnection;
 	List<ResourceLocation> locations;

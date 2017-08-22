@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import appeng.api.config.RedstoneMode;
 import extracells.gui.GuiFluidEmitter;
 import extracells.network.AbstractPacket;
-import extracells.part.PartFluidLevelEmitter;
+import extracells.part.fluid.PartFluidLevelEmitter;
 import io.netty.buffer.ByteBuf;
 
 public class PacketFluidEmitter extends AbstractPacket {

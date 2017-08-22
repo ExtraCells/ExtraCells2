@@ -12,7 +12,7 @@ import appeng.api.config.AccessRestriction;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.network.AbstractPacket;
-import extracells.part.PartFluidStorage;
+import extracells.part.fluid.PartFluidStorage;
 import io.netty.buffer.ByteBuf;
 
 public class PacketBusFluidStorage extends AbstractPacket {
