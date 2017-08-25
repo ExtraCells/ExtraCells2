@@ -1,16 +1,16 @@
-group=ae2:ItemMaterial.EngProcessor -> engProcessor
-group=ae2:ItemMaterial.LogicProcessor -> logProcessor
-group=ae2:ItemMaterial.CalcProcessor -> calcProcessor
+group=ae2:material.EngProcessor -> engProcessor
+group=ae2:material.LogicProcessor -> logProcessor
+group=ae2:material.CalcProcessor -> calcProcessor
 group=oredictionary:dustGlowstone -> dustGlowstone
 group=oredictionary:dyeBlue -> lapis
 group=oredictionary:dyeYellow -> flower
-group=ae2:BlockQuartzGlass -> glassQuartz
-group=oredictionary:crystalCertusQuartz ae2:ItemMaterial.CertusQuartzCrystalCharged ae2:ItemMaterial.PurifiedCertusQuartzCrystal -> certusCrystal
+group=ae2:quartz_glass -> glassQuartz
+group=oredictionary:crystalCertusQuartz ae2:material.CertusQuartzCrystalCharged ae2:material.PurifiedCertusQuartzCrystal -> certusCrystal
 
 shaped=
 	dustGlowstone engProcessor dustGlowstone,
-	ae2:ItemMaterial.Cell64kPart logProcessor ae2:ItemMaterial.Cell64kPart,
-	dustGlowstone ae2:ItemMaterial.Cell64kPart dustGlowstone
+	ae2:material.Cell64kPart logProcessor ae2:material.Cell64kPart,
+	dustGlowstone ae2:material.Cell64kPart dustGlowstone
 	-> ec:cell256kPart
 shaped=
 	dustGlowstone engProcessor dustGlowstone,

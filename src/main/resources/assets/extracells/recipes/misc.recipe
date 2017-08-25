@@ -2,22 +2,22 @@ group= oredictionary:dyeBlue -> lapis
 group= ae2:CableDense -> densecable
 
 shaped=
-	ae2:BlockQuartzGlass ae2:BlockQuartzGlass ae2:BlockQuartzGlass,
-	ae2:BlockQuartzGlass _ ae2:BlockQuartzGlass,
-	ae2:BlockQuartzGlass ae2:BlockQuartzGlass ae2:BlockQuartzGlass
+	ae2:quartz_glass ae2:quartz_glass ae2:quartz_glass,
+	ae2:quartz_glass _ ae2:quartz_glass,
+	ae2:quartz_glass ae2:quartz_glass ae2:quartz_glass
 	-> ec:certusTank
 
 shapeless=
-	ae2:BlockMolecularAssembler ec:cell1kPartFluid
+	ae2:molecular_assembler ec:cell1kPartFluid
 	-> ec:fluidCrafter
 
 shaped=
-	ae2:BlockQuartzGlass mc:bucket ae2:BlockQuartzGlass
+	ae2:quartz_glass mc:bucket ae2:quartz_glass
 	-> ec:fluidPattern
 
 shaped=
 	mc:iron_ingot lapis mc:iron_ingot,
-	ae2:ItemMaterial.AnnihilationCore _ ae2:ItemMaterial.FormationCore,
+	ae2:material.AnnihilationCore _ ae2:material.FormationCore,
 	mc:iron_ingot lapis mc:iron_ingot
 	-> ec:interface
 
@@ -32,15 +32,15 @@ shaped=
     -> ec:walrus
 
 shaped=
-	ae2:ItemMaterial.Wireless,
+	ae2:material.Wireless,
 	ec:partFluidTerminal,
-	ae2:BlockDenseEnergyCell
+	ae2:dense_energy_cell
 	-> ec:wirelessFluidTerminal
 
 shaped=
-	ae2:ItemMaterial.Wireless,
+	ae2:material.Wireless,
 	ec:partGasTerminal,
-	ae2:BlockDenseEnergyCell
+	ae2:dense_energy_cell
 	-> ec:wirelessGasTerminal
 
 shapeless=
@@ -50,11 +50,11 @@ shapeless=
 shaped= 
 	mc:iron_ingot mc:iron_ingot mc:iron_ingot,
 	mc:iron_ingot ec:certusTank mc:iron_ingot,
-	mc:iron_ingot ae2:BlockVibrationChamber mc:iron_ingot
+	mc:iron_ingot ae2:vibration_chamber mc:iron_ingot
 	-> ec:blockVibrationChamberFluid
 
 shaped=
 	mc:obsidian densecable mc:obsidian,
-	mc:obsidian ae2:BlockDrive mc:obsidian,
+	mc:obsidian ae2:drive mc:obsidian,
 	mc:obsidian mc:obsidian mc:obsidian,
 	-> ec:hardMEDrive

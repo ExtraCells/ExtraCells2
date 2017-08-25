@@ -4,12 +4,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import appeng.api.implementations.ICraftingPatternItem;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
+import extracells.models.IItemModelRegister;
+import extracells.models.ModelManager;
 
-public class ItemInternalCraftingPattern extends Item implements ICraftingPatternItem {
+public class ItemInternalCraftingPattern extends Item implements ICraftingPatternItem, IItemModelRegister {
 
 	@Override
 	public ICraftingPatternDetails getPatternForItem(ItemStack is, World w) {
@@ -32,5 +37,11 @@ public class ItemInternalCraftingPattern extends Item implements ICraftingPatter
 		default:
 			return null;
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerModel(Item item, ModelManager manager) {
+		manager.registerItemModel(item, 0);
 	}
 }

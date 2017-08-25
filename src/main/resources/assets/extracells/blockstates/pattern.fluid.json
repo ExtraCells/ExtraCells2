@@ -1,0 +1,13 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "inventory": {
+            "model": "forge:forgebucket",
+            "textures": {
+                "base": "extracells:items/fluid.pattern",
+                "fluid": "extracells:items/fluid.pattern.contents"
+            },
+            "transform": "forge:default-item"
+        }
+    }
+}

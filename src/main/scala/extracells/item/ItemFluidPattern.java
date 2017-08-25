@@ -1,5 +1,6 @@
 package extracells.item;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -8,39 +9,51 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple;
 
 import extracells.registries.ItemEnum;
 
 public class ItemFluidPattern extends ItemECBase {
 
+	@Nullable
 	public static Fluid getFluid(ItemStack itemStack) {
-		if (!itemStack.hasTagCompound())
-			itemStack.setTagCompound(new NBTTagCompound());
-
-		return FluidRegistry.getFluid(itemStack.getTagCompound().getString("fluidID"));
+		FluidStack fluidStack = FluidUtil.getFluidContained(itemStack);
+		if (fluidStack == null) {
+			return null;
+		}
+		return fluidStack.getFluid();
 	}
 
 	public static ItemStack getPatternForFluid(Fluid fluid) {
 		ItemStack itemStack = new ItemStack(ItemEnum.FLUIDPATTERN.getItem(), 1);
-		itemStack.setTagCompound(new NBTTagCompound());
-		if (fluid != null)
-			itemStack.getTagCompound().setString("fluidID", fluid.getName());
+		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(itemStack);
+		if(fluidHandler == null){
+			return itemStack;
+		}
+		fluidHandler.fill(new FluidStack(fluid, Fluid.BUCKET_VOLUME), true);
 		return itemStack;
 	}
 
 	public ItemFluidPattern() {
 		setMaxStackSize(1);
 		setHasSubtypes(true);
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
+		return new FluidHandlerItemStackSimple(stack, Fluid.BUCKET_VOLUME);
 	}
 
 	@Override
@@ -60,9 +73,7 @@ public class ItemFluidPattern extends ItemECBase {
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
 		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-			ItemStack itemStack = new ItemStack(this);
-			itemStack.setTagInfo("fluidID", new NBTTagString(fluid.getName()));
-			itemList.add(itemStack);
+			itemList.add(getPatternForFluid(fluid));
 		}
 	}
 
