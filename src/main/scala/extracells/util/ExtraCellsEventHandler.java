@@ -1,7 +1,6 @@
 package extracells.util;
 
 import net.minecraft.inventory.Container;
-import net.minecraft.tileentity.TileEntity;
 
 import net.minecraftforge.event.world.BlockEvent;
 
@@ -19,19 +18,17 @@ public class ExtraCellsEventHandler {
 
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent event) {
-		TileEntity tile = event.getWorld().getTileEntity(event.getPos());
-		if (tile instanceof IECTileEntity) {
-			if (!PermissionUtil.hasPermission(event.getPlayer(),
-					SecurityPermissions.BUILD,
-					((IECTileEntity) tile).getGridNode(AEPartLocation.INTERNAL)))
+		IECTileEntity tileEntity = TileUtil.getTile(event.getWorld(), event.getPos(), IECTileEntity.class);
+		if (tileEntity != null) {
+			if (!PermissionUtil.hasPermission(event.getPlayer(), SecurityPermissions.BUILD, tileEntity.getGridNode(AEPartLocation.INTERNAL))) {
 				event.setCanceled(true);
+			}
 		}
 	}
 
 	@SubscribeEvent
 	public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-		if (event.phase == TickEvent.Phase.START && event.side == Side.SERVER
-				&& event.player != null) {
+		if (event.phase == TickEvent.Phase.START && event.side == Side.SERVER && event.player != null) {
 			if (event.player.openContainer != null) {
 				Container con = event.player.openContainer;
 				if (con instanceof ContainerFluidStorage) {

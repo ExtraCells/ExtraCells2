@@ -30,7 +30,7 @@ extracells.item.storage.component.fluid.4096k.name=4096k ME流體儲存元件
 extracells.item.storage.casing.physical.name=高級儲存外殼
 extracells.item.storage.casing.fluid.name=流體儲存外殼
 extracells.item.terminal.fluid.wireless.name=無線ME流體終端
-extracells.item.fluid.pattern=ME流體模板[WIP]
+extracells.item.fluid.pattern=ME流體模板
 
 //Creative Tab
 itemGroup.Extra_Cells=更多儲存元件2

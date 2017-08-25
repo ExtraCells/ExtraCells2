@@ -48,7 +48,7 @@ extracells.item.storage.casing.gas.name=Encaixe de Armazenamento de Gases ME
 extracells.item.terminal.fluid.wireless.name=Terminal de Fluidos Sem Fio
 extracells.item.terminal.gas.wireless.name=Terminal de Gases Sem Fio
 extracells.item.terminal.universal.wireless.name=Terminal Universal Sem Fio
-extracells.item.fluid.pattern=Padrão de Fluidos ME [WIP]
+extracells.item.fluid.pattern=Padrão de Fluidos ME
 extracells.item.oc.upgrade.name=Melhoria ME
 
 //Creative Tab

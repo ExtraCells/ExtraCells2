@@ -36,7 +36,7 @@ public class ItemFluid extends Item implements IItemModelRegister {
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
 		super.getSubItems(itemIn, tab, subItems);
-		for(Fluid fluid : FluidRegistry.getRegisteredFluids().values()){
+		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
 			ItemStack itemStack = new ItemStack(itemIn);
 			setFluidName(itemStack, fluid.getName());
 			subItems.add(itemStack);
@@ -46,7 +46,7 @@ public class ItemFluid extends Item implements IItemModelRegister {
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		String fluidName = getFluidName(stack);
-		if(fluidName.isEmpty()){
+		if (fluidName.isEmpty()) {
 			return "null";
 		}
 		Fluid fluid = FluidRegistry.getFluid(fluidName);
@@ -57,18 +57,17 @@ public class ItemFluid extends Item implements IItemModelRegister {
 		return "null";
 	}
 
-	public static void setFluidName(ItemStack itemStack, String fluidName){
+	public static void setFluidName(ItemStack itemStack, String fluidName) {
 		itemStack.setTagInfo("fluid", new NBTTagString(fluidName));
 	}
 
-	public static String getFluidName(ItemStack itemStack){
-		if(!itemStack.hasTagCompound()){
+	public static String getFluidName(ItemStack itemStack) {
+		if (!itemStack.hasTagCompound()) {
 			return "";
 		}
 		NBTTagCompound tagCompound = itemStack.getTagCompound();
 		return tagCompound.getString("fluid");
 	}
-
 
 
 }

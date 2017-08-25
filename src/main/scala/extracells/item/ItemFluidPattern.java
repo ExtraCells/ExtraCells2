@@ -23,6 +23,9 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStackSimple;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import extracells.registries.ItemEnum;
 
 public class ItemFluidPattern extends ItemECBase {
@@ -39,7 +42,7 @@ public class ItemFluidPattern extends ItemECBase {
 	public static ItemStack getPatternForFluid(Fluid fluid) {
 		ItemStack itemStack = new ItemStack(ItemEnum.FLUIDPATTERN.getItem(), 1);
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(itemStack);
-		if(fluidHandler == null){
+		if (fluidHandler == null) {
 			return itemStack;
 		}
 		fluidHandler.fill(new FluidStack(fluid, Fluid.BUCKET_VOLUME), true);
@@ -59,10 +62,11 @@ public class ItemFluidPattern extends ItemECBase {
 	@Override
 	public String getItemStackDisplayName(ItemStack itemStack) {
 		Fluid fluid = getFluid(itemStack);
-		if (fluid == null)
+		if (fluid == null) {
 			return I18n.translateToLocal(getUnlocalizedName(itemStack));
+		}
 		return I18n.translateToLocal(getUnlocalizedName(itemStack))
-				+ ": " + fluid.getLocalizedName(new FluidStack(fluid, 1));
+			+ ": " + fluid.getLocalizedName(new FluidStack(fluid, 1));
 	}
 
 	@Override
@@ -71,7 +75,9 @@ public class ItemFluidPattern extends ItemECBase {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
+		super.getSubItems(item, creativeTab, itemList);
 		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
 			itemList.add(getPatternForFluid(fluid));
 		}
@@ -84,8 +90,9 @@ public class ItemFluidPattern extends ItemECBase {
 
 	@Override
 	public ActionResult onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
-		if (entityPlayer.isSneaking())
+		if (entityPlayer.isSneaking()) {
 			return new ActionResult(EnumActionResult.SUCCESS, ItemEnum.FLUIDPATTERN.getSizedStack(itemStack.stackSize));
+		}
 		return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 	}
 }

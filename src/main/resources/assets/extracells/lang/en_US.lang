@@ -48,7 +48,7 @@ extracells.item.storage.casing.gas.name=Gas Storage Housing
 extracells.item.terminal.fluid.wireless.name=Wireless Fluid Terminal
 extracells.item.terminal.gas.wireless.name=Wireless Gas Terminal
 extracells.item.terminal.universal.wireless.name=Wireless Universal Terminal
-extracells.item.fluid.pattern=ME Fluid Pattern [WIP]
+extracells.item.fluid.pattern=ME Fluid Pattern
 extracells.item.oc.upgrade.name=ME Upgrade
 
 //Creative Tab

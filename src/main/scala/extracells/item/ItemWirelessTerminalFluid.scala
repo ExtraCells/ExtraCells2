@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 object ItemWirelessTerminalFluid extends ItemECBase with IWirelessFluidTermHandler with WirelessTermBase {
   def THIS = this
+
   ECApi.instance.registerWirelessTermHandler(this)
 
 

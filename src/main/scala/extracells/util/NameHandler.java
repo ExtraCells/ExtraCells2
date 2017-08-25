@@ -136,10 +136,6 @@ public class NameHandler implements ISubItemResolver {
 			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.DRIVE.ordinal());
 		if (fullName.equals("partInterface"))
 			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.INTERFACE.ordinal());
-		if (fullName.equals("partStorageMonitor"))//TODO: Remve
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDMONITOR.ordinal());
-		if (fullName.equals("partConversionMonitor"))//TODO: Remve
-			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDCONVERSIONMONITOR.ordinal());
 		if (fullName.equals("partFluidStorageMonitor"))
 			return new ResolverResult(ItemEnum.PARTITEM.getInternalName(), PartEnum.FLUIDMONITOR.ordinal());
 		if (fullName.equals("partFluidConversionMonitor"))

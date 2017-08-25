@@ -30,7 +30,7 @@ extracells.item.storage.component.fluid.4096k.name=4096kб МЭ жидкостн
 extracells.item.storage.casing.physical.name=Продвинутый корпус хранилища
 extracells.item.storage.casing.fluid.name=Жидкостный корпус хранилища
 extracells.item.terminal.fluid.wireless.name=Беспроводной МЭ жидкостный терминал
-extracells.item.fluid.pattern=МЭ жидкостный шаблон [WIP]
+extracells.item.fluid.pattern=МЭ жидкостный шаблон
 
 //Creative Tab
 itemGroup.Extra_Cells=Extra Cells

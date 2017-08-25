@@ -91,11 +91,13 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 
 	@Override
 	@SuppressWarnings("unchecked")
+	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
 		for (int i = 0; i < PartEnum.values().length; i++) {
 			PartEnum part = PartEnum.values()[i];
-			if(part.getMod() == null || part.getMod().isEnabled())
+			if(part.getMod() == null || part.getMod().isEnabled()) {
 				itemList.add(new ItemStack(item, 1, i));
+			}
 		}
 	}
 

@@ -30,7 +30,7 @@ extracells.item.storage.component.fluid.4096k.name=4096k ME Almacenamiento de Co
 extracells.item.storage.casing.physical.name=Almacenamiento Avanzado de Vivienda
 extracells.item.storage.casing.fluid.name=Almacenamiento de Fluidos en Vivienda
 extracells.item.terminal.fluid.wireless.name=Inalambrico ME Terminal de Fluidos
-extracells.item.fluid.pattern=ME Fluido Patrón [WIP]
+extracells.item.fluid.pattern=ME Fluido Patrón
 extracells.item.oc.upgrade.name=ME Mejora
 
 //Creative Tab

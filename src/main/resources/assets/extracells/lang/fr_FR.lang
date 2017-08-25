@@ -30,7 +30,7 @@ extracells.item.storage.component.fluid.4096k.name=Composant de stockage de flui
 extracells.item.storage.casing.physical.name=Boîtier avancé de stockage ME
 extracells.item.storage.casing.fluid.name=Boîtier de stockage de fluide ME
 extracells.item.terminal.fluid.wireless.name=Terminal de fluide ME sans fil
-extracells.item.fluid.pattern=Modèle de fluide ME [WIP]
+extracells.item.fluid.pattern=Modèle de fluide ME
 
 //Creative Tab
 itemGroup.Extra_Cells=Extra Cells 2

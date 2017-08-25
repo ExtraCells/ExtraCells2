@@ -46,7 +46,7 @@ extracells.item.storage.casing.physical.name=Fejlett Tároló Ház
 extracells.item.storage.casing.fluid.name=Folyadék Tároló Ház
 extracells.item.storage.casing.gas.name=Gáz Tároló Ház
 extracells.item.terminal.fluid.wireless.name=Vezetéknélküli ME Folyadék Terminál
-extracells.item.fluid.pattern=ME Folyadék Minta [WIP]
+extracells.item.fluid.pattern=ME Folyadék Minta
 extracells.item.oc.upgrade.name=ME Fejlesztés
 
 //Creative Tab
