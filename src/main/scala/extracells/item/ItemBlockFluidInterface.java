@@ -17,8 +17,16 @@ public class ItemBlockFluidInterface extends ItemBlock {
 	public ItemBlockFluidInterface(Block block) {
 		super(block);
 		setMaxDamage(0);
-		setHasSubtypes(true);
-		setUnlocalizedName("extracells.block.fluidinterface");
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack stack) {
+		return getUnlocalizedName();
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return "tile.extracells.block.fluidinterface";
 	}
 
 	@Override

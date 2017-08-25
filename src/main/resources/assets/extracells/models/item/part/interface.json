@@ -1,0 +1,32 @@
+{
+	"parent": "appliedenergistics2:item/part/part",
+	"textures": {
+		"sides": "extracells:parts/interface_side",
+		"front": "extracells:parts/fluid_interface"
+	},
+	"elements": [ 	 
+		{
+			"from": [ 2, 2, 8 ],
+			"to": [ 14, 14, 10 ],
+			"faces": {
+				"down": { "uv": [ 2, 14, 14, 16 ], "texture": "#sides" },
+				"up": { "uv": [ 2, 0, 14, 2 ], "texture": "#sides" },
+				"north": { "uv": [ 2, 2, 14, 14 ], "texture": "#front" },
+				"south": { "uv": [ 2, 2, 14, 14 ], "texture": "#sides" },
+				"west": { "uv": [ 0, 2, 2, 14 ], "texture": "#sides" },
+				"east": { "uv": [ 14, 2, 16, 14 ], "texture": "#sides" }
+			}
+		},
+		{
+			"from": [ 5, 5, 10 ],
+			"to": [ 11, 11, 12 ],
+			"faces": {
+				"down": { "uv": [ 5, 12, 11, 14 ], "texture": "#sides" },
+				"up": { "uv": [ 5, 2, 11, 4 ], "texture": "#sides" },
+				"south": { "uv": [ 5, 5, 11, 11 ], "texture": "#sides" },
+				"west": { "uv": [ 2, 5, 4, 11 ], "texture": "#sides" },
+				"east": { "uv": [ 12, 5, 14, 11 ], "texture": "#sides" }
+			}
+		}
+	]
+}

@@ -16,13 +16,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.items.IAEWrench;
-import appeng.api.networking.IGridNode;
 import extracells.network.GuiHandler;
 import extracells.tileentity.TileEntityFluidCrafter;
 import extracells.util.PermissionUtil;
+import extracells.util.TileUtil;
 
 public class BlockFluidCrafter extends BlockEC {
 
@@ -78,71 +77,53 @@ public class BlockFluidCrafter extends BlockEC {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (world.isRemote) {
+			return true;
+		}
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile instanceof TileEntityFluidCrafter) {
-			if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, ((TileEntityFluidCrafter) tile).getGridNode())) {
-				return false;
+		if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, tile)) {
+			return false;
+		}
+		ItemStack current = player.getHeldItem(hand);
+		if (!player.isSneaking() && current != null) {
+			//TODO: Buildcraft
+		/*try {
+			if (current.getItem() instanceof IToolWrench
+				&& ((IToolWrench) current.getItem()).canWrench(player,
+				x, y, z)) {
+				dropBlockAsItem(world, x, y, z, new ItemStack(this));
+				world.setBlockToAir(x, y, z);
+				((IToolWrench) current.getItem()).wrenchUsed(player, x, y,
+					z);
+				return true;
+			}
+		} catch (Throwable e) {
+			// No IToolWrench
+		}*/
+			if (current.getItem() instanceof IAEWrench && ((IAEWrench) current.getItem()).canWrench(current, player, pos)) {
+				spawnAsEntity(world, pos, new ItemStack(this));
+				world.setBlockToAir(pos);
+				return true;
 			}
 		}
-		if (!world.isRemote) {
-			ItemStack current = player.getHeldItem(hand);
-			if (!player.isSneaking() && current != null) {
-				//TODO: Buildcraft
-			/*try {
-				if (current.getItem() instanceof IToolWrench
-					&& ((IToolWrench) current.getItem()).canWrench(player,
-					x, y, z)) {
-					dropBlockAsItem(world, x, y, z, new ItemStack(this));
-					world.setBlockToAir(x, y, z);
-					((IToolWrench) current.getItem()).wrenchUsed(player, x, y,
-						z);
-					return true;
-				}
-			} catch (Throwable e) {
-				// No IToolWrench
-			}*/
-				if (current.getItem() instanceof IAEWrench && ((IAEWrench) current.getItem()).canWrench(current, player, pos)) {
-					spawnAsEntity(world, pos, new ItemStack(this));
-					world.setBlockToAir(pos);
-					return true;
-				}
-			}
-			GuiHandler.launchGui(0, player, world, pos.getX(), pos.getY(), pos.getZ());
-		}
+		GuiHandler.launchGui(0, player, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		if (world.isRemote)
+		if (world.isRemote) {
 			return;
-		TileEntity tile = world.getTileEntity(pos);
-		if (tile != null) {
-			if (tile instanceof TileEntityFluidCrafter) {
-				IGridNode node = ((TileEntityFluidCrafter) tile).getGridNode();
-				if (placer != null && placer instanceof EntityPlayer) {
-					EntityPlayer player = (EntityPlayer) placer;
-					node.setPlayerID(AEApi.instance().registries().players()
-						.getID(player));
-				}
-				node.updateState();
-			}
 		}
+		TileUtil.setOwner(world, pos, placer);
 	}
 
 	@Override
 	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
-		if (world.isRemote)
+		if (world.isRemote) {
 			return;
-		TileEntity tile = world.getTileEntity(pos);
-		if (tile != null) {
-			if (tile instanceof TileEntityFluidCrafter) {
-				IGridNode node = ((TileEntityFluidCrafter) tile).getGridNode();
-				if (node != null) {
-					node.destroy();
-				}
-			}
 		}
+		TileUtil.destroy(world, pos);
 	}
 
 }

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
@@ -80,6 +81,11 @@ public class ModelCertusTank extends BlankModel {
 			quads.addAll(model.getQuads(state, side, rand));
 		}
 		return quads;
+	}
+
+	@Override
+	public TextureAtlasSprite getParticleTexture() {
+		return emptyTank.getParticleTexture();
 	}
 
 	@Override

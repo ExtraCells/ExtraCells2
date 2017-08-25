@@ -283,18 +283,22 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 	@Override
 	public void registerListener() {
 		IStorageGrid storage = getStorageGrid();
-		if (storage == null)
+		if (storage == null) {
 			return;
-		postChange(storage.getFluidInventory(), null, null);
-		storage.getFluidInventory().addListener(this, null);
+		}
+		IMEMonitor<IAEFluidStack> fluidInventory = storage.getFluidInventory();
+		postChange(fluidInventory, null, null);
+		fluidInventory.addListener(this, null);
 	}
 
 	@Override
 	public void removeListener() {
 		IStorageGrid storage = getStorageGrid();
-		if (storage == null)
+		if (storage == null) {
 			return;
-		storage.getFluidInventory().removeListener(this);
+		}
+		IMEMonitor<IAEFluidStack> fluidInventory = storage.getFluidInventory();
+		fluidInventory.removeListener(this);
 	}
 
 	@Override

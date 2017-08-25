@@ -15,7 +15,9 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.networking.events.MENetworkPowerStorage;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
+import extracells.models.PartModels;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
@@ -182,5 +184,16 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 	/*	AbstractPacket.writeString(this.battery != null ? this.battery
 				.getItem().getIconIndex(this.battery).getIconName() : "none",
 				data);*/
+	}
+
+	@Override
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.BATTERY_PLANE_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.BATTERY_PLANE_ON;
+		} else {
+			return PartModels.BATTERY_PLANE_OFF;
+		}
 	}
 }

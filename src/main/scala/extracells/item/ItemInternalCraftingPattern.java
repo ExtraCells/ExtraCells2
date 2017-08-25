@@ -1,5 +1,6 @@
 package extracells.item;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -8,7 +9,7 @@ import appeng.api.networking.crafting.ICraftingPatternDetails;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 
-public class ItemInternalCraftingPattern extends ItemECBase implements ICraftingPatternItem {
+public class ItemInternalCraftingPattern extends Item implements ICraftingPatternItem {
 
 	@Override
 	public ICraftingPatternDetails getPatternForItem(ItemStack is, World w) {
@@ -32,5 +33,4 @@ public class ItemInternalCraftingPattern extends ItemECBase implements ICrafting
 			return null;
 		}
 	}
-
 }

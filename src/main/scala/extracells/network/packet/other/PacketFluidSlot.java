@@ -32,9 +32,9 @@ public class PacketFluidSlot extends AbstractPacket {
 		this.fluid = _fluid;
 	}
 
-	public PacketFluidSlot(List<Fluid> _filterFluids) {
+	public PacketFluidSlot(List<Fluid> filterFluids) {
 		this.mode = 1;
-		this.filterFluids = _filterFluids;
+		this.filterFluids = filterFluids;
 	}
 
 	@Override

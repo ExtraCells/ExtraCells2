@@ -216,8 +216,9 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 
 	@Override
 	public IGridNode getActionableNode() {
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
 			return null;
+		}
 		if (this.node == null) {
 			this.node = AEApi.instance().createGridNode(this.gridBlock);
 		}
@@ -235,8 +236,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 
 	@Override
 	public IGridNode getGridNode(AEPartLocation dir) {
-		if (FMLCommonHandler.instance().getSide().isClient()
-				&& (getWorld() == null || getWorld().isRemote))
+		if (FMLCommonHandler.instance().getSide().isClient() && (getWorld() == null || getWorld().isRemote))
 			return null;
 		if (this.isFirstGetGridNode) {
 			this.isFirstGetGridNode = false;

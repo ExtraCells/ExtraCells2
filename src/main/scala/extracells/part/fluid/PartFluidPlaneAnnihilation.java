@@ -23,10 +23,12 @@ import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.gridblock.ECBaseGridBlock;
+import extracells.models.PartModels;
 import extracells.part.PartECBase;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
@@ -120,6 +122,17 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 				monitor.injectItems(toInject, Actionable.MODULATE, new MachineSource(this));
 				world.setBlockToAir(offsetPos);
 			}
+		}
+	}
+
+	@Override
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.ANNIHILATION_PLANE_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.ANNIHILATION_PLANE_ON;
+		} else {
+			return PartModels.ANNIHILATION_PLANE_OFF;
 		}
 	}
 

@@ -1,0 +1,30 @@
+{
+	"textures": {
+		"lightsBright": "extracells:parts/storage.monitor_1",
+		"lightsMedium": "extracells:parts/storage.monitor_2",
+		"lightsDark": "extracells:parts/storage.monitor_3"
+	},
+  "elements": [
+    {
+      "from": [2, 2, 0],
+      "to": [14, 14, 2],
+      "faces": {
+        "north": { "texture": "#lightsBright", "tintindex": 2 }
+      }
+    },
+    {
+      "from": [2, 2, 0],
+      "to": [14, 14, 2],
+      "faces": {
+        "north": { "texture": "#lightsMedium", "tintindex": 3 }
+      }
+    },
+    {
+      "from": [2, 2, 0],
+      "to": [14, 14, 2],
+      "faces": {
+        "north": { "texture": "#lightsDark", "tintindex": 1 }
+      }
+    }
+  ]
+}

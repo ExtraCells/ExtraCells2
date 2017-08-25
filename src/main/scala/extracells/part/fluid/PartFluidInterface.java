@@ -56,6 +56,7 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageMonitorable;
@@ -72,6 +73,7 @@ import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gui.GuiFluidInterface;
 import extracells.integration.Capabilities;
+import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.part.PartECBase;
 import extracells.registries.ItemEnum;
@@ -873,45 +875,16 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 		this.listeners.remove(listener);
 	}
 
-	/*@SideOnly(Side.CLIENT)
 	@Override
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.BUS_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.INTERFACE.getTextures()[0], side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderInventoryBox(renderer);
-
-		rh.renderInventoryFace(TextureManager.INTERFACE.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setTexture(side);
-		rh.setBounds(5, 5, 12, 11, 11, 14);
-		rh.renderInventoryBox(renderer);
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.STORAGE_INTERFACE_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.STORAGE_INTERFACE_ON;
+		} else {
+			return PartModels.STORAGE_INTERFACE_OFF;
+		}
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.BUS_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.INTERFACE.getTextures()[0], side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderBlock(x, y, z, renderer);
-
-		ts.setBrightness(20971520);
-		rh.renderFace(x, y, z, TextureManager.INTERFACE.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setTexture(side);
-		rh.setBounds(5, 5, 12, 11, 11, 14);
-		rh.renderBlock(x, y, z, renderer);
-	}*/
 
 	@Override
 	public void setFilter(AEPartLocation side, Fluid fluid) {
@@ -926,8 +899,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 	}
 
 	@Override
-	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
-		setFilter(AEPartLocation.fromOrdinal(_index), _fluid);
+	public void setFluid(int index, Fluid fluid, EntityPlayer player) {
+		setFilter(AEPartLocation.fromOrdinal(index), fluid);
 	}
 
 	@Override

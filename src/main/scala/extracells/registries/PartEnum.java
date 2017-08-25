@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -20,6 +19,7 @@ import extracells.integration.Integration;
 import extracells.part.PartBattery;
 import extracells.part.PartDrive;
 import extracells.part.PartECBase;
+import extracells.part.PartOreDictExporter;
 import extracells.part.fluid.PartFluidConversionMonitor;
 import extracells.part.fluid.PartFluidExport;
 import extracells.part.fluid.PartFluidImport;
@@ -37,7 +37,6 @@ import extracells.part.gas.PartGasLevelEmitter;
 import extracells.part.gas.PartGasStorage;
 import extracells.part.gas.PartGasStorageMonitor;
 import extracells.part.gas.PartGasTerminal;
-import extracells.part.PartOreDictExporter;
 
 public enum PartEnum {
 	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
@@ -65,7 +64,7 @@ public enum PartEnum {
 
 
 	private static Pair<Upgrades, Integer> generatePair(Upgrades _upgrade, int integer) {
-		return new MutablePair<Upgrades, Integer>(_upgrade, integer);
+		return Pair.of(_upgrade, integer);
 	}
 
 	public static int getPartID(Class<? extends PartECBase> partClass) {

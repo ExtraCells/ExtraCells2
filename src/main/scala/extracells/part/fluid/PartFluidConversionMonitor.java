@@ -12,8 +12,10 @@ import net.minecraftforge.fluids.IFluidContainerItem;
 
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.MachineSource;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
+import extracells.models.PartModels;
 import extracells.util.FluidUtil;
 
 public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
@@ -108,83 +110,15 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 		return false;
 	}
 
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
-		rh.setTexture(side);
-		rh.setBounds(4, 4, 13, 12, 12, 14);
-		rh.renderInventoryBox(renderer);
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderInventoryBox(renderer);
-
-		ts.setBrightness(13 << 20 | 13 << 4);
-
-		rh.setInvColor(0xFFFFFF);
-		rh.renderInventoryFace(TextureManager.BUS_BORDER.getTexture(),
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(3, 3, 15, 13, 13, 16);
-		rh.setInvColor(AEColor.Transparent.blackVariant);
-		rh.renderInventoryFace(
-				TextureManager.CONVERSION_MONITOR.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-		rh.setInvColor(AEColor.Transparent.mediumVariant);
-		rh.renderInventoryFace(
-				TextureManager.CONVERSION_MONITOR.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		rh.setInvColor(AEColor.Transparent.whiteVariant);
-		rh.renderInventoryFace(
-				TextureManager.CONVERSION_MONITOR.getTextures()[2],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(5, 5, 12, 11, 11, 13);
-		renderInventoryBusLights(rh, renderer);
-	}
-
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
-		rh.setTexture(side);
-		rh.setBounds(4, 4, 13, 12, 12, 14);
-		rh.renderBlock(x, y, z, renderer);
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderBlock(x, y, z, renderer);
-
-		if (isActive())
-			Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
-
-		ts.setColorOpaque_I(0xFFFFFF);
-		rh.renderFace(x, y, z, TextureManager.BUS_BORDER.getTexture(),
-				ForgeDirection.SOUTH, renderer);
-
-		IPartHost host = getHost();
-		rh.setBounds(3, 3, 15, 13, 13, 16);
-		ts.setColorOpaque_I(host.getColor().mediumVariant);
-		rh.renderFace(x, y, z,
-				TextureManager.CONVERSION_MONITOR.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-		ts.setColorOpaque_I(host.getColor().whiteVariant);
-		rh.renderFace(x, y, z,
-				TextureManager.CONVERSION_MONITOR.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		ts.setColorOpaque_I(host.getColor().blackVariant);
-		rh.renderFace(x, y, z,
-				TextureManager.CONVERSION_MONITOR.getTextures()[2],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(5, 5, 12, 11, 11, 13);
-		renderStaticBusLights(x, y, z, rh, renderer);
-	}*/
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.CONVERSION_MONITOR_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.CONVERSION_MONITOR_ON;
+		} else {
+			return PartModels.CONVERSION_MONITOR_OFF;
+		}
+	}
 
 }

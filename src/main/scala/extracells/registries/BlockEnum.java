@@ -1,5 +1,7 @@
 package extracells.registries;
 
+import java.util.function.Function;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.text.translation.I18n;
@@ -22,7 +24,7 @@ public enum BlockEnum {
 	WALRUS("walrus", new BlockWalrus()),
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
 	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), (block)-> new ItemBlockFluidInterface(block)),
-	FILLER ("fluid_filler", new BlockFluidFiller(), (block)-> new ItemBlockFluidFiller(block)),
+	FILLER ("fluidfiller", new BlockFluidFiller(), (block)-> new ItemBlockFluidFiller(block)),
 	BLASTRESISTANTMEDRIVE("hardmedrive", BlockHardMEDrive.instance()),
 	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid());
 
@@ -39,16 +41,16 @@ public enum BlockEnum {
 		this(internalName, block,(b)-> new ItemBlock(b));
 	}
 
-	BlockEnum(String internalName, Block block, ItemFactory itemFactory){
+	BlockEnum(String internalName, Block block, Function<Block, ItemBlock> itemFactory){
 		this(internalName, block, itemFactory, null);
 	}
 
-	BlockEnum(String internalName, Block block, ItemFactory factory, Integration.Mods mod) {
+	BlockEnum(String internalName, Block block, Function<Block, ItemBlock> factory, Integration.Mods mod) {
 		this.internalName = internalName;
 		this.block = block;
 		this.block.setUnlocalizedName("extracells.block." + this.internalName);
 		this.block.setRegistryName(internalName);
-		this.item = factory.createItem(block);
+		this.item = factory.apply(block);
 		this.item.setRegistryName(block.getRegistryName());
 		this.mod = mod;
 		if(mod == null || mod.isEnabled())
@@ -73,9 +75,5 @@ public enum BlockEnum {
 
 	public Integration.Mods getMod(){
 		return mod;
-	}
-
-	protected interface ItemFactory{
-		ItemBlock createItem(Block block);
 	}
 }

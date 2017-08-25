@@ -27,6 +27,7 @@ import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.events.MENetworkStorageEvent;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
@@ -37,6 +38,7 @@ import appeng.api.util.AECableType;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.inventory.HandlerPartStorageFluid;
+import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketBusFluidStorage;
@@ -191,52 +193,16 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		this.handler.setAccessRestriction(this.access);
 	}
 
-	/*@SideOnly(Side.CLIENT)
 	@Override
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.STORAGE_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.STORAGE_FRONT.getTextures()[0], side, side);
-		rh.setBounds(2, 2, 15, 14, 14, 16);
-		rh.renderInventoryBox(renderer);
-
-		rh.setBounds(4, 4, 14, 12, 12, 15);
-		rh.renderInventoryBox(renderer);
-		rh.setBounds(2, 2, 15, 14, 14, 16);
-		rh.setInvColor(AEColor.Cyan.blackVariant);
-		ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderInventoryFace(TextureManager.STORAGE_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderInventoryBusLights(rh, renderer);
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.STORAGE_BUS_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.STORAGE_BUS_ON;
+		} else {
+			return PartModels.STORAGE_BUS_OFF;
+		}
 	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.STORAGE_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.STORAGE_FRONT.getTexture(), side, side);
-		rh.setBounds(2, 2, 15, 14, 14, 16);
-		rh.renderBlock(x, y, z, renderer);
-
-		ts.setColorOpaque_I(getHost().getColor().blackVariant);
-		if (isActive())
-			ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderFace(x, y, z, TextureManager.STORAGE_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		rh.setBounds(4, 4, 14, 12, 12, 15);
-		rh.renderBlock(x, y, z, renderer);
-
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderStaticBusLights(x, y, z, rh, renderer);
-	}*/
 
 	@Override
 	public void saveChanges(IMEInventory cellInventory) {
@@ -251,10 +217,10 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	}
 
 	@Override
-	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
-		this.filterFluids[_index] = _fluid;
+	public void setFluid(int index, Fluid fluid, EntityPlayer player) {
+		this.filterFluids[index] = fluid;
 		this.handler.setPrioritizedFluids(this.filterFluids);
-		sendInformation(_player);
+		sendInformation(player);
 		saveData();
 	}
 

@@ -1,5 +1,6 @@
 package extracells.part;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -54,18 +55,26 @@ import mekanism.api.gas.IGasHandler;
 
 public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowerChannelState {
 
+	@Nullable
 	private IGridNode node;
+	@Nullable
 	private AEPartLocation side;
+	@Nullable
 	private IPartHost host;
+	@Nullable
 	protected TileEntity tile;
+	@Nullable
 	private ECBaseGridBlock gridBlock;
 	private double powerUsage;
+	@Nullable
 	private TileEntity hostTile;
+	@Nullable
 	private IFluidHandler facingTank;
 	private Object facingGasTank;
 	private boolean redstonePowered;
 	private boolean isActive;
 	private boolean isPowerd = false;
+	@Nullable
 	private EntityPlayer owner;
 
 	@Override

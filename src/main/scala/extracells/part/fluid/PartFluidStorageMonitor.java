@@ -3,11 +3,23 @@ package extracells.part.fluid;
 import java.io.IOException;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -19,6 +31,10 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.lwjgl.opengl.GL11;
 
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -28,12 +44,14 @@ import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
+import extracells.models.PartModels;
 import extracells.part.PartECBase;
 import extracells.util.FluidUtil;
 import extracells.util.WrenchUtil;
@@ -261,73 +279,78 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		return true;
 	}
 
-	/*@Override
+	@Override
 	@SideOnly(Side.CLIENT)
-	public void renderDynamic(double x, double y, double z,
-			IPartRenderHelper rh, RenderBlocks renderer) {
-		if (this.fluid == null)
+	public void renderDynamic(double x, double y, double z, float partialTicks, int destroyStage) {
+		if (this.fluid == null) {
 			return;
+		}
 
-		if (this.dspList == null)
+		if (this.dspList == null) {
 			this.dspList = GLAllocation.generateDisplayLists(1);
+		}
 
-		Tessellator tess = Tessellator.instance;
-
-		if (!isActive())
+		if (!isActive()) {
 			return;
+		}
 
-		IAEFluidStack ais = FluidUtil.createAEFluidStack(this.fluid);
-		ais.setStackSize(this.amount);
-		if (ais != null) {
-			GL11.glPushMatrix();
-			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+		IAEFluidStack aeFluidStack = FluidUtil.createAEFluidStack(this.fluid);
+		aeFluidStack.setStackSize(this.amount);
+		if (aeFluidStack != null) {
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
 
-			GL11.glNewList((Integer) this.dspList, GL11.GL_COMPILE_AND_EXECUTE);
-			this.renderFluid(tess, ais);
-			GL11.glEndList();
+			GlStateManager.glNewList((Integer) this.dspList, GL11.GL_COMPILE_AND_EXECUTE);
+			Tessellator tess = Tessellator.getInstance();
+			this.renderFluid(tess, aeFluidStack);
+			GlStateManager.glEndList();
 
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	private void renderFluid(Tessellator tess, IAEFluidStack fluidStack) {
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		ForgeDirection d = this.getFacing();
-		GL11.glTranslated(d.offsetX * 0.77, d.offsetY * 0.77, d.offsetZ * 0.77);
+		EnumFacing facing = this.getSide().getFacing();
 
-		if (d == ForgeDirection.UP) {
+		moveToFace( facing );
+		rotateToFace( facing, (byte)1);
+		/*EnumFacing d = this.getFacing();
+		GL11.glTranslated(d.getFrontOffsetX() * 0.77, d.getFrontOffsetY() * 0.77, d.getFrontOffsetZ() * 0.77);
+
+		if (d == EnumFacing.UP) {
 			GL11.glScalef(1.0f, -1.0f, 1.0f);
 			GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
 			GL11.glRotatef(90.0F, 0, 0, 1);
 		}
 
-		if (d == ForgeDirection.DOWN) {
+		if (d == EnumFacing.DOWN) {
 			GL11.glScalef(1.0f, -1.0f, 1.0f);
 			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 			GL11.glRotatef(-90.0F, 0, 0, 1);
 		}
 
-		if (d == ForgeDirection.EAST) {
+		if (d == EnumFacing.EAST) {
 			GL11.glScalef(-1.0f, -1.0f, -1.0f);
 			GL11.glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
 		}
 
-		if (d == ForgeDirection.WEST) {
+		if (d == EnumFacing.WEST) {
 			GL11.glScalef(-1.0f, -1.0f, -1.0f);
 			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
 		}
 
-		if (d == ForgeDirection.NORTH) {
+		if (d == EnumFacing.NORTH) {
 			GL11.glScalef(-1.0f, -1.0f, -1.0f);
 		}
 
-		if (d == ForgeDirection.SOUTH) {
+		if (d == EnumFacing.SOUTH) {
 			GL11.glScalef(-1.0f, -1.0f, -1.0f);
 			GL11.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
-		}
+		}*/
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		try {
 
 			int br = 16 << 20 | 16 << 4;
@@ -336,45 +359,44 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,
 					var11 * 0.8F, var12 * 0.8F);
 
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+			GlStateManager.disableLighting();
+			GlStateManager.disableRescaleNormal();
 			// RenderHelper.enableGUIStandardItemLighting();
-			tess.setColorOpaque_F(1.0f, 1.0f, 1.0f);
 
-			IIcon fluidIcon = this.fluid.getIcon();
-			if (fluidIcon != null) {
-				GL11.glTranslatef(0.0f, 0.14f, -0.24f);
-				GL11.glScalef(1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f);
-				GL11.glTranslated(-8.6F, -16.3, -1.2F);
-				Minecraft.getMinecraft().renderEngine
-						.bindTexture(TextureMap.locationBlocksTexture);
-				Tessellator cake = Tessellator.instance;
-				cake.startDrawingQuads();
-				try {
-					cake.setBrightness(255);
-					cake.setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f);
-					cake.addVertexWithUV(0, 16, 0, fluidIcon.getMinU(),
-							fluidIcon.getMaxV());
-					cake.addVertexWithUV(16, 16, 0, fluidIcon.getMaxU(),
-							fluidIcon.getMaxV());
-					cake.addVertexWithUV(16, 0, 0, fluidIcon.getMaxU(),
-							fluidIcon.getMinV());
-					cake.addVertexWithUV(0, 0, 0, fluidIcon.getMinU(),
-							fluidIcon.getMinV());
-				} finally {
-					cake.draw();
+			Minecraft mc = Minecraft.getMinecraft();
+
+			ResourceLocation fluidStill = fluid.getStill();
+
+			if(fluidStill != null){
+				TextureMap textureMap = mc.getTextureMapBlocks();
+				TextureAtlasSprite fluidIcon = textureMap.getAtlasSprite(fluidStill.toString());
+				if (fluidIcon != null) {
+					GL11.glTranslatef(0.0f, 0.14f, -0.24f);
+					GL11.glScalef(1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f);
+					GL11.glTranslated(-8.6F, -16.3, -1.2F);
+					mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+					VertexBuffer buffer = tess.getBuffer();
+					buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+					try {
+						buffer.pos(0, 16, 0).tex(fluidIcon.getMinU(), fluidIcon.getMaxV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+						buffer.pos(16, 16, 0).tex(fluidIcon.getMaxU(), fluidIcon.getMaxV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+						buffer.pos(16, 0, 0).tex(fluidIcon.getMaxU(), fluidIcon.getMinV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+						buffer.pos(0, 0, 0).tex(fluidIcon.getMinU(), fluidIcon.getMinV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+					} finally {
+						tess.draw();
+					}
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
-		GL11.glTranslatef(0.0f, 0.14f, -0.24f);
-		GL11.glScalef(1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f);
+		GlStateManager.translate(0.0f, 0.14f, -0.24f);
+		GlStateManager.scale(1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f);
 
 		long qty = fluidStack.getStackSize();
 		if (qty > 999999999999L)
@@ -388,86 +410,60 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		else if (qty > 9999)
 			msg = Long.toString(qty / 1000) + 'B';
 
-		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 		int width = fr.getStringWidth(msg);
-		GL11.glTranslatef(-0.5f * width, 0.0f, -1.0f);
+		GlStateManager.translate(-0.5f * width, 0.0f, -1.0f);
 		fr.drawString(msg, 0, 0, 0);
 
-		GL11.glPopAttrib();
+		GlStateManager.popAttrib();
+	}
+
+	private static void moveToFace(EnumFacing face) {
+		GlStateManager.translate( face.getFrontOffsetX() * 0.77, face.getFrontOffsetY() * 0.77, face.getFrontOffsetZ() * 0.77 );
+	}
+
+	private static void rotateToFace(EnumFacing face, byte spin) {
+		switch( face ) {
+			case UP:
+				GlStateManager.scale( 1.0f, -1.0f, 1.0f );
+				GlStateManager.rotate( 90.0f, 1.0f, 0.0f, 0.0f );
+				GlStateManager.rotate( spin * 90.0F, 0, 0, 1 );
+				break;
+			case DOWN:
+				GlStateManager.scale( 1.0f, -1.0f, 1.0f );
+				GlStateManager.rotate( -90.0f, 1.0f, 0.0f, 0.0f );
+				GlStateManager.rotate( spin * -90.0F, 0, 0, 1 );
+				break;
+			case EAST:
+				GlStateManager.scale( -1.0f, -1.0f, -1.0f );
+				GlStateManager.rotate( -90.0f, 0.0f, 1.0f, 0.0f );
+				break;
+			case WEST:
+				GlStateManager.scale( -1.0f, -1.0f, -1.0f );
+				GlStateManager.rotate( 90.0f, 0.0f, 1.0f, 0.0f );
+				break;
+			case NORTH:
+				GlStateManager.scale( -1.0f, -1.0f, -1.0f );
+				break;
+			case SOUTH:
+				GlStateManager.scale( -1.0f, -1.0f, -1.0f );
+				GlStateManager.rotate( 180.0f, 0.0f, 1.0f, 0.0f );
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
-		rh.setTexture(side);
-		rh.setBounds(4, 4, 13, 12, 12, 14);
-		rh.renderInventoryBox(renderer);
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderInventoryBox(renderer);
-
-		ts.setBrightness(13 << 20 | 13 << 4);
-
-		rh.setInvColor(0xFFFFFF);
-		rh.renderInventoryFace(TextureManager.BUS_BORDER.getTexture(),
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(3, 3, 15, 13, 13, 16);
-		rh.setInvColor(AEColor.Transparent.blackVariant);
-		rh.renderInventoryFace(TextureManager.STORAGE_MONITOR.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-		rh.setInvColor(AEColor.Transparent.mediumVariant);
-		rh.renderInventoryFace(TextureManager.STORAGE_MONITOR.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		rh.setInvColor(AEColor.Transparent.whiteVariant);
-		rh.renderInventoryFace(TextureManager.STORAGE_MONITOR.getTextures()[2],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(5, 5, 12, 11, 11, 13);
-		renderInventoryBusLights(rh, renderer);
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.STORAGE_MONITOR_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.STORAGE_MONITOR_ON;
+		} else {
+			return PartModels.STORAGE_MONITOR_OFF;
+		}
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.TERMINAL_SIDE.getTexture();
-		rh.setTexture(side);
-		rh.setBounds(4, 4, 13, 12, 12, 14);
-		rh.renderBlock(x, y, z, renderer);
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderBlock(x, y, z, renderer);
-
-		if (isActive())
-			Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
-
-		ts.setColorOpaque_I(0xFFFFFF);
-		rh.renderFace(x, y, z, TextureManager.BUS_BORDER.getTexture(),
-				ForgeDirection.SOUTH, renderer);
-
-		IPartHost host = getHost();
-		rh.setBounds(3, 3, 15, 13, 13, 16);
-		ts.setColorOpaque_I(host.getColor().mediumVariant);
-		rh.renderFace(x, y, z, TextureManager.STORAGE_MONITOR.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-		ts.setColorOpaque_I(host.getColor().whiteVariant);
-		rh.renderFace(x, y, z, TextureManager.STORAGE_MONITOR.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		ts.setColorOpaque_I(host.getColor().blackVariant);
-		rh.renderFace(x, y, z, TextureManager.STORAGE_MONITOR.getTextures()[2],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(5, 5, 12, 11, 11, 13);
-		renderStaticBusLights(x, y, z, rh, renderer);
-	}*/
 
 	@Override
 	public boolean requireDynamicRender() {
@@ -497,10 +493,11 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	public void writeToStream(ByteBuf data) throws IOException {
 		super.writeToStream(data);
 		data.writeLong(this.amount);
-		if (this.fluid == null)
-			data.writeInt(-1);
-		else
+		if (this.fluid == null) {
+			ByteBufUtils.writeUTF8String(data, "");
+		} else {
 			ByteBufUtils.writeUTF8String(data, fluid.getName());
+		}
 		data.writeBoolean(this.locked);
 
 	}

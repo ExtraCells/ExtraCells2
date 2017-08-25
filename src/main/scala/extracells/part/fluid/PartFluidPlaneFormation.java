@@ -31,12 +31,14 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.container.ContainerPlaneFormation;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiFluidPlaneFormation;
+import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.part.PartECBase;
@@ -152,6 +154,17 @@ public class PartFluidPlaneFormation extends PartECBase implements
 		this.fluid = FluidRegistry.getFluid(data.getString("fluid"));
 	}
 
+	@Override
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return PartModels.FORMATION_PLANE_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return PartModels.FORMATION_PLANE_ON;
+		} else {
+			return PartModels.FORMATION_PLANE_OFF;
+		}
+	}
+
 	/*@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
@@ -212,10 +225,10 @@ public class PartFluidPlaneFormation extends PartECBase implements
 	}
 
 	@Override
-	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
-		this.fluid = _fluid;
+	public void setFluid(int index, Fluid fluid, EntityPlayer player) {
+		this.fluid = fluid;
 		new PacketFluidSlot(Lists.newArrayList(this.fluid))
-				.sendPacketToPlayer(_player);
+				.sendPacketToPlayer(player);
 		saveData();
 	}
 

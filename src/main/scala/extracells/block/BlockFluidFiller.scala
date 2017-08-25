@@ -12,7 +12,7 @@ import appeng.block.storage.BlockChest
 import extracells.api.IECTileEntity
 import extracells.network.GuiHandler
 import extracells.tileentity.{IListenerTile, TileEntityFluidFiller, TileEntityFluidInterface}
-import extracells.util.PermissionUtil
+import extracells.util.{PermissionUtil, TileUtil}
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
@@ -33,7 +33,7 @@ class BlockFluidFiller() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
     val x: Int = pos.getX
     val y: Int = pos.getY
     val z: Int = pos.getZ
-    if (world.isRemote) return false
+    if (world.isRemote) return true
     val rand: Random = new Random
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile.isInstanceOf[IECTileEntity]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[IECTileEntity]).getGridNode(AEPartLocation.INTERNAL))) return false
@@ -73,16 +73,9 @@ class BlockFluidFiller() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
   override def onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, entity: EntityLivingBase, stack: ItemStack) {
     super.onBlockPlacedBy(world, pos, state, entity, stack)
     if (world.isRemote) return
+    TileUtil.setOwner(world, pos, entity)
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile != null) {
-      if (tile.isInstanceOf[IECTileEntity]) {
-        val node: IGridNode = (tile.asInstanceOf[IECTileEntity]).getGridNode(AEPartLocation.INTERNAL)
-        if (entity != null && entity.isInstanceOf[EntityPlayer]) {
-          val player: EntityPlayer = entity.asInstanceOf[EntityPlayer]
-          node.setPlayerID(AEApi.instance.registries.players.getID(player))
-        }
-        node.updateState()
-      }
       if (tile.isInstanceOf[IListenerTile]) (tile.asInstanceOf[IListenerTile]).registerListener()
     }
   }
@@ -92,14 +85,9 @@ class BlockFluidFiller() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
       super.breakBlock(world, pos, state)
       return
     }
+    TileUtil.destroy(world, pos)
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile != null) {
-      if (tile.isInstanceOf[IECTileEntity]) {
-        val node: IGridNode = (tile.asInstanceOf[IECTileEntity]).getGridNode(AEPartLocation.INTERNAL)
-        if (node != null) {
-          node.destroy()
-        }
-      }
       if (tile.isInstanceOf[IListenerTile]) (tile.asInstanceOf[IListenerTile]).removeListener()
     }
     super.breakBlock(world, pos, state)

@@ -6,5 +6,5 @@ import net.minecraftforge.fluids.Fluid;
 
 public interface IFluidSlotPartOrBlock {
 
-	void setFluid(int _index, Fluid _fluid, EntityPlayer _player);
+	void setFluid(int index, Fluid fluid, EntityPlayer player);
 }

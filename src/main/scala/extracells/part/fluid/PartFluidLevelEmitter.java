@@ -29,14 +29,15 @@ import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
-import appeng.parts.automation.PartLevelEmitter;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.GuiFluidEmitter;
+import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketFluidEmitter;
@@ -44,8 +45,8 @@ import extracells.part.PartECBase;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
-public class PartFluidLevelEmitter extends PartECBase implements
-		IStackWatcherHost, IFluidSlotPartOrBlock {
+//TODO: Rewrite
+public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPartOrBlock {
 
 	private Fluid fluid;
 	private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;
@@ -112,20 +113,16 @@ public class PartFluidLevelEmitter extends PartECBase implements
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
-		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
-				(IPart) this)) {
+		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this)) {
 			return super.onActivate(player, hand, pos);
 		}
 		return false;
 	}
 
 	@Override
-	public void onStackChange(IItemList o, IAEStack fullStack,
-			IAEStack diffStack, BaseActionSource src, StorageChannel chan) {
-		if (chan == StorageChannel.FLUIDS && diffStack != null
-				&& ((IAEFluidStack) diffStack).getFluid() == this.fluid) {
-			this.currentAmount = fullStack != null ? fullStack.getStackSize()
-					: 0;
+	public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, BaseActionSource src, StorageChannel chan) {
+		if (chan == StorageChannel.FLUIDS && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == this.fluid) {
+			this.currentAmount = fullStack != null ? fullStack.getStackSize() : 0;
 
 			IGridNode node = getGridNode();
 			if (node != null) {
@@ -166,41 +163,26 @@ public class PartFluidLevelEmitter extends PartECBase implements
 		return true;
 	}
 
-	/*@SideOnly(Side.CLIENT)
 	@Override
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[0]);
-		rh.setBounds(7, 7, 11, 9, 9, 14);
-		rh.renderInventoryBox(renderer);
-
-		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[1]);
-		rh.setBounds(7, 7, 14, 9, 9, 16);
-		rh.renderInventoryBox(renderer);
+	public IPartModel getStaticModels() {
+		if(isActive() && isPowered()) {
+			return clientRedstoneOutput ? PartModels.EMITTER_ON_HAS_CHANNEL : PartModels.EMITTER_OFF_HAS_CHANNEL;
+		} else if(isPowered()) {
+			return clientRedstoneOutput ? PartModels.EMITTER_ON_ON : PartModels.EMITTER_OFF_ON;
+		} else {
+			return clientRedstoneOutput ? PartModels.EMITTER_ON_OFF :PartModels.EMITTER_OFF_OFF;
+		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		rh.setTexture(TextureManager.LEVEL_FRONT.getTextures()[0]);
-		rh.setBounds(7, 7, 11, 9, 9, 14);
-		rh.renderBlock(x, y, z, renderer);
-		rh.setTexture(this.clientRedstoneOutput ? TextureManager.LEVEL_FRONT
-				.getTextures()[2] : TextureManager.LEVEL_FRONT.getTextures()[1]);
-		rh.setBounds(7, 7, 14, 9, 9, 16);
-		rh.renderBlock(x, y, z, renderer);
-	}*/
-
-	@Override
-	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
-		PartLevelEmitter
-		this.fluid = _fluid;
-		if (this.watcher == null)
+	public void setFluid(int index, Fluid fluid, EntityPlayer player) {
+		this.fluid = fluid;
+		if (this.watcher == null) {
 			return;
+		}
 		this.watcher.reset();
 		updateWatcher(this.watcher);
-		new PacketFluidSlot(Lists.newArrayList(this.fluid))
-				.sendPacketToPlayer(_player);
+		new PacketFluidSlot(Lists.newArrayList(this.fluid)).sendPacketToPlayer(player);
 		saveData();
 	}
 

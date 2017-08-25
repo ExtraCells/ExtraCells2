@@ -59,7 +59,7 @@ public enum ItemEnum {
 		this.item.setRegistryName(this.internalName);
 		this.mod = mod;
 		if ((creativeTab != null) && (mod == null || mod.isEnabled()))
-			this.item.setCreativeTab(CreativeTabEC.INSTANCE);
+			this.item.setCreativeTab(creativeTab);
 	}
 
 	public ItemStack getDamagedStack(int damage) {

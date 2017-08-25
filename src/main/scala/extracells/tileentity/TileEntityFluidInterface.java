@@ -638,8 +638,8 @@ public class TileEntityFluidInterface extends TileBase implements
 	}
 
 	@Override
-	public void setFluid(int _index, Fluid _fluid, EntityPlayer _player) {
-		setFilter(AEPartLocation.fromOrdinal(_index), _fluid);
+	public void setFluid(int index, Fluid fluid, EntityPlayer player) {
+		setFilter(AEPartLocation.fromOrdinal(index), fluid);
 	}
 
 	@Override
