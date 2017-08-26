@@ -35,7 +35,6 @@ public class ItemFluid extends Item implements IItemModelRegister {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-		super.getSubItems(itemIn, tab, subItems);
 		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
 			ItemStack itemStack = new ItemStack(itemIn);
 			setFluidName(itemStack, fluid.getName());

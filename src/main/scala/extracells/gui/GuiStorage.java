@@ -1,4 +1,4 @@
-package extracells.gui.gas;
+package extracells.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,41 +12,46 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
+import net.minecraftforge.fluids.Fluid;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.api.ECApi;
-import extracells.container.gas.ContainerGasStorage;
+import appeng.api.storage.data.IItemList;
+import extracells.container.ContainerStorage;
 import extracells.container.IFluidSelectorContainer;
+import extracells.container.StorageType;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.fluid.AbstractFluidWidget;
 import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
-import extracells.network.packet.part.PacketFluidStorage;
+import extracells.network.packet.part.PacketStorageOpenContainer;
 import extracells.util.ECConfigHandler;
+import extracells.util.NetworkUtil;
 
-public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
+public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 
 	private EntityPlayer player;
+	private StorageType storageType;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
-	private ContainerGasStorage containerGasStorage;
+	private ContainerStorage container;
 	private final String guiName;
 
-	public GuiGasStorage(EntityPlayer _player, String _guiName) {
-		super(new ContainerGasStorage(_player));
-		this.containerGasStorage = (ContainerGasStorage) this.inventorySlots;
-		this.containerGasStorage.setGui(this);
-		this.player = _player;
+	public GuiStorage(ContainerStorage container, String guiName) {
+		super(container);
+		this.container = container;
+		this.player = container.getPlayer();
+		this.storageType = container.getStorageType();
 		this.xSize = 176;
 		this.ySize = 204;
-		this.guiName = _guiName;
-		new PacketFluidStorage(this.player).sendPacketToServer();
+		this.guiName = guiName;
+		NetworkUtil.sendToServer(new PacketStorageOpenContainer());
 	}
 
 	@Override
@@ -54,9 +59,10 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,
-				this.ySize);
+			this.ySize);
 		this.searchbar.drawTextBox();
-		new PacketFluidStorage(this.player).sendPacketToServer();
+		//TODO: ?????
+		//new PacketFluidStorage(this.player).sendPacketToServer();
 	}
 
 	@Override
@@ -68,38 +74,35 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
 			if (ECConfigHandler.shortenedBuckets) {
 				if (currentFluidAmount > 1000000000L)
-					amountToText = Long
-							.toString(currentFluidAmount / 1000000000L)
-							+ "Mega";
+					amountToText = Long.toString(currentFluidAmount / 1000000000L) + storageType.getMega();
 				else if (currentFluidAmount > 1000000L)
-					amountToText = Long.toString(currentFluidAmount / 1000000L)
-							+ "Kilo";
+					amountToText = Long.toString(currentFluidAmount / 1000000L) + storageType.getKilo();
 				else if (currentFluidAmount > 9999L) {
-					amountToText = Long.toString(currentFluidAmount / 1000L);
+					amountToText = Long.toString(currentFluidAmount / 1000L) + storageType.getBuckets();
 				}
 			}
 
 			this.fontRendererObj.drawString(
-					I18n.translateToLocal("extracells.tooltip.amount")
-							+ ": " + amountToText, 45, 91, 0x000000);
+				I18n.translateToLocal("extracells.tooltip.amount")
+					+ ": " + amountToText, 45, 91, 0x000000);
 			this.fontRendererObj.drawString(
-					I18n.translateToLocal("extracells.tooltip.fluid")
-							+ ": "
-							+ this.currentFluid.getFluid().getLocalizedName(
-									this.currentFluid.getFluidStack()), 45, 101,
-					0x000000);
+				I18n.translateToLocal("extracells.tooltip.fluid")
+					+ ": "
+					+ this.currentFluid.getFluid().getLocalizedName(
+					this.currentFluid.getFluidStack()), 45, 101,
+				0x000000);
 		}
 	}
 
 	public void drawWidgets(int mouseX, int mouseY) {
 		int listSize = this.fluidWidgets.size();
-		if (!this.containerGasStorage.getFluidStackList().isEmpty()) {
+		if (!this.container.getFluidStackList().isEmpty()) {
 			outerLoop: for (int y = 0; y < 4; y++) {
 				for (int x = 0; x < 9; x++) {
 					int widgetIndex = y * 9 + x + this.currentScroll * 9;
 					if (0 <= widgetIndex && widgetIndex < listSize) {
 						AbstractFluidWidget widget = this.fluidWidgets
-								.get(widgetIndex);
+							.get(widgetIndex);
 						widget.drawWidget(x * 18 + 7, y * 18 + 17);
 					} else {
 						break outerLoop;
@@ -112,7 +115,7 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 					int widgetIndex = y * 9 + x;
 					if (0 <= widgetIndex && widgetIndex < listSize) {
 						this.fluidWidgets.get(widgetIndex).drawTooltip(
-								x * 18 + 7, y * 18 - 1, mouseX, mouseY);
+							x * 18 + 7, y * 18 - 1, mouseX, mouseY);
 					} else {
 						break;
 					}
@@ -135,12 +138,12 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 
 	@Override
 	public IFluidSelectorContainer getContainer() {
-		return this.containerGasStorage;
+		return this.container;
 	}
 
 	@Override
 	public IAEFluidStack getCurrentFluid() {
-		return this.containerGasStorage.getSelectedFluidStack();
+		return this.container.getSelectedFluidStack();
 	}
 
 	@Override
@@ -161,7 +164,7 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
 		this.searchbar = new GuiTextField(0, this.fontRendererObj,
-				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
+			this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 
 			private int xPos = 0;
 			private int yPos = 0;
@@ -171,7 +174,7 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 			@Override
 			public void mouseClicked(int x, int y, int mouseBtn) {
 				boolean flag = x >= this.xPos && x < this.xPos + this.width
-						&& y >= this.yPos && y < this.yPos + this.height;
+					&& y >= this.yPos && y < this.yPos + this.height;
 				if (flag && mouseBtn == 3)
 					setText("");
 			}
@@ -205,20 +208,30 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 		}
 	}
 
+	public void updateFluids(IItemList<IAEFluidStack> fluidStacks) {
+		container.updateFluidList(fluidStacks);
+		updateFluids();
+	}
+
 	public void updateFluids() {
 		this.fluidWidgets = new ArrayList<AbstractFluidWidget>();
-		for (IAEFluidStack fluidStack : this.containerGasStorage.getFluidStackList()) {
-			if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(this.searchbar.getText().toLowerCase()) && ECApi.instance().isGas(fluidStack.getFluid())) {
+		for (IAEFluidStack fluidStack : this.container.getFluidStackList()) {
+			if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(this.searchbar.getText().toLowerCase()) && storageType.canSee(fluidStack.getFluidStack())) {
 				this.fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
 			}
 		}
 		updateSelectedFluid();
 	}
 
+	public void receiveSelectedFluid(Fluid selectedFluid) {
+		container.receiveSelectedFluid(selectedFluid);
+		updateSelectedFluid();
+	}
+
 	public void updateSelectedFluid() {
 		this.currentFluid = null;
-		for (IAEFluidStack stack : this.containerGasStorage.getFluidStackList()) {
-			if (stack.getFluid() == this.containerGasStorage.getSelectedFluid())
+		for (IAEFluidStack stack : this.container.getFluidStackList()) {
+			if (stack.getFluid() == this.container.getSelectedFluid())
 				this.currentFluid = stack;
 		}
 	}

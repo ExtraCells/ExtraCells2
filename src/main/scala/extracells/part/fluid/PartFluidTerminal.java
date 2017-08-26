@@ -34,7 +34,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.container.ContainerTerminal;
-import extracells.container.TerminalType;
+import extracells.container.StorageType;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiTerminal;
 import extracells.models.PartModels;
@@ -166,7 +166,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
 	@Override
 	public Object getClientGuiElement(EntityPlayer player) {
-		return new GuiTerminal(this, player, TerminalType.FLUID);
+		return new GuiTerminal(this, player, StorageType.FLUID);
 	}
 
 	public IInventory getInventory() {
@@ -180,7 +180,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
 	@Override
 	public Object getServerGuiElement(EntityPlayer player) {
-		return new ContainerTerminal(this, player, TerminalType.FLUID);
+		return new ContainerTerminal(this, player, StorageType.FLUID);
 	}
 
 	@Override

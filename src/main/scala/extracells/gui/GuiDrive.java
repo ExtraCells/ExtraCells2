@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import extracells.container.ContainerDrive;
-import extracells.network.packet.part.PacketFluidStorage;
 import extracells.part.PartDrive;
 
 public class GuiDrive extends GuiContainer {
@@ -23,7 +22,6 @@ public class GuiDrive extends GuiContainer {
 		this.player = _player;
 		this.xSize = 176;
 		this.ySize = 163;
-		new PacketFluidStorage(this.player).sendPacketToServer();
 	}
 
 	@Override

@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.apache.logging.log4j.Level;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +20,6 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.client.model.ModelLoader;
 
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,6 +32,7 @@ import appeng.api.util.AEColor;
 import extracells.api.ECApi;
 import extracells.models.ModelManager;
 import extracells.registries.PartEnum;
+import extracells.util.Log;
 
 public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup, IColoredItem {
 
@@ -59,13 +57,11 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 					itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
 					.newInstance(itemStack);
 		} catch (Throwable ex) {
-			FMLLog.log(
-					Level.ERROR,
-					ex,
-					"ExtraCells2 severe error - could not create AE2 Part from ItemStack! This should not happen!\n"
-							+ "[ExtraCells2 SEVERE] Contact Leonelf/M3gaFr3ak with the following stack trace.\n"
-							+ "[ExtraCells2 SEVERE] Offending item: '%s'",
-					itemStack.toString());
+			Log.error(
+				"ExtraCells2 severe error - could not create AE2 Part from ItemStack! This should not happen!\n"
+					+ "[ExtraCells2 SEVERE] Contact Leonelf/M3gaFr3ak with the following stack trace.\n"
+					+ "[ExtraCells2 SEVERE] Offending item: '%s'",
+				itemStack.toString(), ex);
 			return null;
 		}
 	}

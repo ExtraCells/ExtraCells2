@@ -3,7 +3,7 @@ package extracells.part.gas
 import appeng.api.config.Actionable
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
-import extracells.container.{ContainerTerminal, TerminalType}
+import extracells.container.{ContainerTerminal, StorageType}
 import extracells.gridblock.ECBaseGridBlock
 import extracells.gui.GuiTerminal
 import extracells.integration.Integration.Mods
@@ -92,14 +92,14 @@ class PartGasTerminal extends PartFluidTerminal{
   }
   override def getServerGuiElement(player: EntityPlayer): AnyRef = {
     if (mekLoaded)
-      new ContainerTerminal(this, player, TerminalType.GAS)
+      new ContainerTerminal(this, player, StorageType.GAS)
     else
       null
   }
 
   override def getClientGuiElement(player: EntityPlayer): AnyRef = {
     if (mekLoaded)
-      new GuiTerminal(this, player, TerminalType.GAS)
+      new GuiTerminal(this, player, StorageType.GAS)
     else
       null
   }

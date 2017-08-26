@@ -23,7 +23,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.container.ContainerTerminal;
 import extracells.container.IFluidSelectorContainer;
-import extracells.container.TerminalType;
+import extracells.container.StorageType;
 import extracells.gui.widget.FluidWidgetComparator;
 import extracells.gui.widget.fluid.AbstractFluidWidget;
 import extracells.gui.widget.fluid.IFluidSelectorGui;
@@ -43,9 +43,9 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
 	private ContainerTerminal containerTerminal;
-	private TerminalType type;
+	private StorageType type;
 
-	public GuiTerminal(PartFluidTerminal terminal, EntityPlayer player, TerminalType type) {
+	public GuiTerminal(PartFluidTerminal terminal, EntityPlayer player, StorageType type) {
 		super(new ContainerTerminal(terminal, player, type));
 		this.containerTerminal = (ContainerTerminal) this.inventorySlots;
 		this.terminal = terminal;

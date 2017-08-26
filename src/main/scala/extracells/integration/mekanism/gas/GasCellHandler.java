@@ -91,7 +91,7 @@ public class GasCellHandler implements ICellHandler {
 			}
 		}
 		if (monitorable != null) {
-			GuiHandler.launchGui(GuiHandler.getGuiId(4), player, new Object[]{monitorable.getFluidInventory()});
+			GuiHandler.launchGui(GuiHandler.getGuiId(4), player, EnumHand.MAIN_HAND, new Object[]{monitorable.getFluidInventory()});
 		}
 	}
 

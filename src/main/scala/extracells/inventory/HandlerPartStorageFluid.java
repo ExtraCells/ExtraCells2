@@ -256,12 +256,14 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			}
 		}
 		this.tank = null;
-		EnumFacing orientation = this.node.getFacing();
 		TileEntity hostTile = this.node.getHostTile();
-		if (hostTile == null)
+		if (hostTile == null) {
 			return;
-		if (hostTile.getWorld() == null)
+		}
+		EnumFacing orientation = this.node.getFacing();
+		if (hostTile.getWorld() == null) {
 			return;
+		}
 		TileEntity tileEntity = hostTile.getWorld().getTileEntity(
 				hostTile.getPos().offset(orientation));
 		this.tile = tileEntity;

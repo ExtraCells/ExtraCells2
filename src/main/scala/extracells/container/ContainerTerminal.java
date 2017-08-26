@@ -35,9 +35,9 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 	private IItemList<IAEFluidStack> fluidStackList;
 	private Fluid selectedFluid;
 	private EntityPlayer player;
-	private TerminalType type;
+	private StorageType type;
 
-	public ContainerTerminal(PartFluidTerminal terminal, EntityPlayer player, TerminalType type) {
+	public ContainerTerminal(PartFluidTerminal terminal, EntityPlayer player, StorageType type) {
 		this.terminal = terminal;
 		this.player = player;
 		this.type = type;

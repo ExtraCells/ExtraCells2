@@ -29,7 +29,6 @@ import extracells.network.handler.part.HandlerBusFluidStorage;
 import extracells.network.handler.part.HandlerFluidEmitter;
 import extracells.network.handler.part.HandlerFluidInterface;
 import extracells.network.handler.part.HandlerFluidPlaneFormation;
-import extracells.network.handler.part.HandlerFluidStorage;
 import extracells.network.packet.PacketId;
 import extracells.network.packet.other.PacketFluidContainerSlot;
 import extracells.network.packet.other.PacketFluidSlotSelect;
@@ -39,8 +38,11 @@ import extracells.network.packet.part.PacketBusFluidStorage;
 import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.network.packet.part.PacketFluidInterface;
 import extracells.network.packet.part.PacketFluidPlaneFormation;
-import extracells.network.packet.part.PacketFluidStorage;
 import extracells.network.packet.part.PacketOreDictExport;
+import extracells.network.packet.part.PacketStorageOpenContainer;
+import extracells.network.packet.part.PacketStorageSelectFluid;
+import extracells.network.packet.part.PacketStorageUpdateFluid;
+import extracells.network.packet.part.PacketStorageUpdateState;
 import extracells.network.packet.part.PacketTerminalOpenContainer;
 import extracells.network.packet.part.PacketTerminalSelectFluidClient;
 import extracells.network.packet.part.PacketTerminalSelectFluidServer;
@@ -135,11 +137,6 @@ public class PacketHandler {
 		wrapper.registerMessage(HandlerFluidPlaneFormation.class,
 				PacketFluidPlaneFormation.class, 4, Side.SERVER);
 
-		wrapper.registerMessage(HandlerFluidStorage.class,
-				PacketFluidStorage.class, 5, Side.CLIENT);
-		wrapper.registerMessage(HandlerFluidStorage.class,
-				PacketFluidStorage.class, 5, Side.SERVER);
-
 		wrapper.registerMessage(HandlerFluidInterface.class,
 				PacketFluidInterface.class, 7, Side.CLIENT);
 		wrapper.registerMessage(HandlerFluidInterface.class,
@@ -154,6 +151,7 @@ public class PacketHandler {
 		PacketId.EXPORT_ORE.registerHandler(new PacketOreDictExport.HandlerServer());
 		PacketId.TERMINAL_SELECT_FLUID.registerHandler(new PacketTerminalSelectFluidServer.Handler());
 		PacketId.TERMINAL_OPEN_CONTAINER.registerHandler(new PacketTerminalOpenContainer.Handler());
+		PacketId.STORAGE_OPEN_CONTAINER.registerHandler(new PacketStorageOpenContainer.Handler());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -162,6 +160,9 @@ public class PacketHandler {
 		PacketId.EXPORT_ORE.registerHandler(new PacketOreDictExport.HandlerClient());
 		PacketId.TERMINAL_UPDATE_FLUID.registerHandler(new PacketTerminalUpdateFluid.Handler());
 		PacketId.TERMINAL_SELECT_FLUID.registerHandler(new PacketTerminalSelectFluidClient.Handler());
+		PacketId.STORAGE_SELECT_FLUID.registerHandler(new PacketStorageSelectFluid.Handler());
+		PacketId.STORAGE_UPDATE_FLUID.registerHandler(new PacketStorageUpdateFluid.Handler());
+		PacketId.STORAGE_UPDATE_STATE.registerHandler(new PacketStorageUpdateState.Handler());
 	}
 
 	public static void sendPacketToAllPlayers(AbstractPacket packet) {

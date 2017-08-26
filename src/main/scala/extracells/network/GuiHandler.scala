@@ -18,15 +18,15 @@ import extracells.container._
 import extracells.container.fluid.{ContainerFluidCrafter, ContainerFluidFiller, ContainerFluidInterface, ContainerFluidStorage}
 import extracells.container.gas.ContainerGasStorage
 import extracells.gui._
-import extracells.gui.fluid.{GuiFluidCrafter, GuiFluidFiller, GuiFluidInterface, GuiFluidStorage}
-import extracells.gui.gas.GuiGasStorage
+import extracells.gui.fluid.{GuiFluidCrafter, GuiFluidFiller, GuiFluidInterface}
 import extracells.part.PartECBase
 import extracells.registries.BlockEnum
 import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
+import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.EnumFacing
+import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.network.IGuiHandler
@@ -38,26 +38,26 @@ object GuiHandler extends IGuiHandler {
 		ID match {
 			case 0 =>
 				val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-				new ContainerFluidStorage(fluidInventory, player)
+				new ContainerFluidStorage(fluidInventory, player, hand)
 			case 1 =>
 				val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
 				val handler = args.apply(1).asInstanceOf[IWirelessFluidTermHandler]
-				new ContainerFluidStorage(fluidInventory2, player, handler)
+				new ContainerFluidStorage(fluidInventory2, player, handler, hand)
 			case 3 =>
 				val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
 				val storageCell = args.apply(1).asInstanceOf[IPortableFluidStorageCell]
-				new ContainerFluidStorage(fluidInventory3, player, storageCell)
+				new ContainerFluidStorage(fluidInventory3, player, storageCell, hand)
 			case 4 =>
 				val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
-				new ContainerGasStorage(fluidInventory, player)
+				new ContainerGasStorage(fluidInventory, player, hand)
 			case 5 =>
 				val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
 				val handler = args.apply(1).asInstanceOf[IWirelessGasTermHandler]
-				new ContainerGasStorage(fluidInventory2, player, handler)
+				new ContainerGasStorage(fluidInventory2, player, handler, hand)
 			case 6 =>
 				val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
 				val storageCell = args.apply(1).asInstanceOf[IPortableGasStorageCell]
-				new ContainerGasStorage(fluidInventory3, player, storageCell)
+				new ContainerGasStorage(fluidInventory3, player, storageCell, hand)
 			case _ =>
 				null
 		}
@@ -67,17 +67,17 @@ object GuiHandler extends IGuiHandler {
 	def getGui(ID: Int, player: EntityPlayer): Any = {
 		ID match {
 			case 0 =>
-				new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+				new GuiStorage(new ContainerFluidStorage(player, hand), "extracells.part.fluid.terminal.name");
 			case 1 =>
-				new GuiFluidStorage(player, "extracells.part.fluid.terminal.name");
+				new GuiStorage(new ContainerFluidStorage(player, hand), "extracells.part.fluid.terminal.name");
 			case 3 =>
-				new GuiFluidStorage(player, "extracells.item.storage.fluid.portable.name");
+				new GuiStorage(new ContainerFluidStorage(player, hand), "extracells.item.storage.fluid.portable.name");
 			case 4 =>
-				new GuiGasStorage(player, "extracells.part.gas.terminal.name");
+				new GuiStorage(new ContainerGasStorage(player, hand), "extracells.part.gas.terminal.name");
 			case 5 =>
-				new GuiGasStorage(player, "extracells.part.gas.terminal.name");
+				new GuiStorage(new ContainerGasStorage(player, hand), "extracells.part.gas.terminal.name");
 			case 6 =>
-				new GuiGasStorage(player, "extracells.item.storage.gas.portable.name");
+				new GuiStorage(new ContainerGasStorage(player, hand), "extracells.item.storage.gas.portable.name");
 			case _ =>
 				null;
 		}
@@ -96,15 +96,13 @@ object GuiHandler extends IGuiHandler {
 		world.getTileEntity(new BlockPos(x, y, z)).asInstanceOf[IPartHost].getPart(side).asInstanceOf[PartECBase]
 			.getClientGuiElement(player)
 
-	def launchGui(ID: Int, player: EntityPlayer, args: Array[Any]) {
+	def launchGui(ID: Int, player: EntityPlayer, hand: EnumHand, args: Array[Any]) {
 		temp = args
-		player.openGui(ExtraCells.instance, ID, null, 0, 0, 0);
+		this.hand = hand
+		player.openGui(ExtraCells.instance, ID, player.getEntityWorld, 0, 0, 0);
 	}
 
 	def launchGui(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any = {
-		if(1 == 1){
-
-		}
 		player.openGui(ExtraCells.instance, ID, world, x, y, z);
 	}
 
@@ -145,6 +143,7 @@ object GuiHandler extends IGuiHandler {
 	}
 
 	var temp: Array[Any] = Array[Any]()
+	var hand: EnumHand = null;
 
 	override def getClientGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : AnyRef =  {
 		val gui = getGuiBlockElement(player, world, x, y, z)
@@ -183,14 +182,15 @@ object GuiHandler extends IGuiHandler {
 			side = EnumFacing.getFront(ID);
 		}
 		val pos = new BlockPos(x, y, z);
-		if (world.getBlockState(pos).getBlock == BlockEnum.FLUIDCRAFTER.getBlock()) {
+		val blockState: IBlockState = world.getBlockState(pos)
+		if (blockState.getBlock == BlockEnum.FLUIDCRAFTER.getBlock()) {
 			val tileEntity = world.getTileEntity(pos)
 			if (tileEntity == null || !(tileEntity.isInstanceOf[TileEntityFluidCrafter]))
 				return null
 			return new ContainerFluidCrafter(player.inventory,
 					tileEntity.asInstanceOf[TileEntityFluidCrafter].getInventory())
 		}
-		if (world.getBlockState(pos).getBlock == BlockEnum.ECBASEBLOCK.getBlock()) {
+		if (blockState.getBlock == BlockEnum.ECBASEBLOCK.getBlock()) {
 			val tileEntity = world.getTileEntity(pos)
 			if (tileEntity == null)
 				return null

@@ -8,8 +8,8 @@ import extracells.api.ECApi;
 import extracells.util.FluidUtil;
 import extracells.util.GasUtil;
 
-public enum TerminalType {
-	GAS("gas"){
+public enum StorageType {
+	GAS("gas", "Kilo", "Mega", ""){
 		@Override
 		public boolean isEmpty(ItemStack stack){
 			return GasUtil.isEmpty(stack);
@@ -24,8 +24,13 @@ public enum TerminalType {
 		public boolean canSee(FluidStack fluidStack) {
 			return ECApi.instance().isGasStack(fluidStack);
 		}
+
+		@Override
+		public boolean isContainer(ItemStack stack) {
+			return GasUtil.isGasContainer(stack);
+		}
 	},
-	FLUID("fluid"){
+	FLUID("fluid", "KiloB", "MegaB", "B"){
 		@Override
 		public boolean isEmpty(ItemStack stack){
 			return FluidUtil.isEmpty(stack);
@@ -40,16 +45,39 @@ public enum TerminalType {
 		public boolean canSee(FluidStack fluidStack) {
 			return ECApi.instance().canFluidSeeInTerminal(fluidStack.getFluid());
 		}
+
+		@Override
+		public boolean isContainer(ItemStack stack) {
+			return FluidUtil.isFluidContainer(stack);
+		}
 	};
 
 	String name;
+	String kilo;
+	String mega;
+	String buckets;
 
-	TerminalType(String name) {
+	StorageType(String name, String kilo, String mega, String buckets) {
 		this.name = name;
+		this.kilo = kilo;
+		this.mega = mega;
+		this.buckets = buckets;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getBuckets() {
+		return buckets;
+	}
+
+	public String getKilo() {
+		return kilo;
+	}
+
+	public String getMega() {
+		return mega;
 	}
 
 	public abstract boolean isEmpty(ItemStack stack);
@@ -57,4 +85,6 @@ public enum TerminalType {
 	public abstract boolean isFilled(ItemStack stack);
 
 	public abstract boolean canSee(FluidStack fluidStack);
+
+	public abstract boolean isContainer(ItemStack stack);
 }

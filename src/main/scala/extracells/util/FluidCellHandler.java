@@ -91,7 +91,7 @@ public class FluidCellHandler implements ICellHandler {
 			}
 		}
 		if (monitorable != null) {
-			GuiHandler.launchGui(GuiHandler.getGuiId(0), player, new Object[]{monitorable.getFluidInventory()});
+			GuiHandler.launchGui(GuiHandler.getGuiId(0), player, EnumHand.MAIN_HAND, new Object[]{monitorable.getFluidInventory()});
 		}
 	}
 

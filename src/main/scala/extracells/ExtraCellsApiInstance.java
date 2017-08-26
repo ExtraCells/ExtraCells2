@@ -161,7 +161,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 			return stack;
 		}
 		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannel.FLUIDS);
-		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, new Object[]{fluidInventory, item});
+		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, hand, new Object[]{fluidInventory, item});
 		return stack;
 	}
 
@@ -181,7 +181,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 			return stack;
 		}
 		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannel.FLUIDS);
-		GuiHandler.launchGui(GuiHandler.getGuiId(6), player, new Object[]{fluidInventory, item});
+		GuiHandler.launchGui(GuiHandler.getGuiId(6), player, hand, new Object[]{fluidInventory, item});
 		return stack;
 	}
 
@@ -201,7 +201,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		} catch (Throwable ignored) {
 			return stack;
 		}
-		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 1);
+		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 1, hand);
 	}
 
 	@Override
@@ -220,10 +220,10 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		} catch (Throwable ignored) {
 			return stack;
 		}
-		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 5);
+		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 5, hand);
 	}
 
-	private ItemStack openWirelessTerminal(EntityPlayer player, ItemStack itemStack, World world, BlockPos pos, Long key, int guiId) {
+	private ItemStack openWirelessTerminal(EntityPlayer player, ItemStack itemStack, World world, BlockPos pos, Long key, int guiId, EnumHand hand) {
 		if (world.isRemote)
 			return itemStack;
 		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable().getLocatableBy(key);
@@ -246,7 +246,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 				if (gridCache != null) {
 					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
 					if (fluidInventory != null) {
-						GuiHandler.launchGui(GuiHandler.getGuiId(guiId), player, new Object[]{fluidInventory, getWirelessTermHandler(itemStack)});
+						GuiHandler.launchGui(GuiHandler.getGuiId(guiId), player, hand, new Object[]{fluidInventory, getWirelessTermHandler(itemStack)});
 					}
 				}
 			}
