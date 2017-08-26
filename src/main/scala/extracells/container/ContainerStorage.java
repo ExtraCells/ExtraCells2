@@ -9,6 +9,9 @@ import net.minecraft.util.EnumHand;
 
 import net.minecraftforge.fluids.Fluid;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import appeng.api.AEApi;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
@@ -21,10 +24,12 @@ import extracells.api.IWirelessGasFluidTermHandler;
 import extracells.container.slot.SlotOutput;
 import extracells.container.slot.SlotPlayerInventory;
 import extracells.container.slot.SlotRespective;
+import extracells.gui.GuiStorage;
 import extracells.inventory.HandlerItemStorageFluid;
 import extracells.network.packet.part.PacketStorageSelectFluid;
 import extracells.network.packet.part.PacketStorageUpdateFluid;
 import extracells.network.packet.part.PacketStorageUpdateState;
+import extracells.util.GuiUtil;
 import extracells.util.NetworkUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
@@ -235,6 +240,18 @@ public abstract class ContainerStorage extends Container implements
 			}
 		} else {
 			this.selectedFluidStack = null;
+		}
+		updateGui();
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void updateGui(){
+		if(player.worldObj.isRemote){
+			GuiStorage guiStorage = GuiUtil.getGui(GuiStorage.class);
+			if(guiStorage == null){
+				return;
+			}
+			guiStorage.updateSelectedFluid();
 		}
 	}
 

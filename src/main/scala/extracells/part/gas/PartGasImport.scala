@@ -9,7 +9,7 @@ import appeng.api.storage.data.IAEFluidStack
 import extracells.integration.Integration
 import extracells.integration.mekanism.gas.MekanismGas
 import extracells.part.fluid.PartFluidImport
-import extracells.util.{FluidUtil, GasUtil}
+import extracells.util.{FluidHelper, GasUtil}
 import mekanism.api.gas.{Gas, GasStack, IGasHandler}
 import net.minecraft.util.EnumFacing
 import net.minecraftforge.fluids.{Fluid, FluidStack}
@@ -88,7 +88,7 @@ class PartGasImport extends PartFluidImport with IGasHandler{
       drained = facingTank.drawGas(side.getOpposite, toDrain, false)
     }
     if (drained == null || drained.amount <= 0 || drained.getGas == null) return false
-    val toFill: IAEFluidStack = FluidUtil.createAEFluidStack(GasUtil.getFluidStack(drained))
+    val toFill: IAEFluidStack = FluidHelper.createAEFluidStack(GasUtil.getFluidStack(drained))
     val notInjected: IAEFluidStack = injectGas(toFill, Actionable.MODULATE)
     if (notInjected != null) {
       val amount: Int = (toFill.getStackSize - notInjected.getStackSize).toInt

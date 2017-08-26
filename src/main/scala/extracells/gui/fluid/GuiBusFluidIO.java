@@ -28,7 +28,7 @@ import extracells.network.packet.part.PacketBusFluidIO;
 import extracells.part.fluid.PartFluidIO;
 import extracells.part.gas.PartGasExport;
 import extracells.part.gas.PartGasImport;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 
 public class GuiBusFluidIO extends GuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
@@ -187,7 +187,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 	}
 
 	public boolean shiftClick(ItemStack itemStack) {
-		FluidStack containerFluid = FluidUtil.getFluidFromContainer(itemStack);
+		FluidStack containerFluid = FluidHelper.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
 			if (fluidSlot.canRender() && fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid)) {

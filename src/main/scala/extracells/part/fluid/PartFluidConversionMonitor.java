@@ -1,6 +1,6 @@
 package extracells.part.fluid;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,43 +16,42 @@ import appeng.api.parts.IPartModel;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.models.PartModels;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 
 public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
-		boolean b = super.onActivate(player, hand, pos);
-		if (b)
-			return b;
+		boolean wasActivated = super.onActivate(player, hand, pos);
+		if (wasActivated)
+			return wasActivated;
 		if (player == null || player.worldObj == null)
 			return true;
 		if (player.worldObj.isRemote)
 			return true;
-		ItemStack s = player.getHeldItem(hand);
+		ItemStack heldItem = player.getHeldItem(hand);
 		IMEMonitor<IAEFluidStack> mon = getFluidStorage();
-		if (this.locked && s != null && mon != null) {
-			ItemStack s2 = s.copy();
-			s2.stackSize = 1;
-			if (FluidUtil.isFilled(s2)) {
-				FluidStack f = FluidUtil.getFluidFromContainer(s2);
+		if (this.locked && heldItem != null && mon != null) {
+			ItemStack itemStack = heldItem.copy();
+			itemStack.stackSize = 1;
+			if (FluidHelper.isDrainableFilledContainer(itemStack)) {
+				FluidStack f = FluidHelper.getFluidFromContainer(itemStack);
 				if (f == null)
 					return true;
-				IAEFluidStack fl = FluidUtil.createAEFluidStack(f);
-				IAEFluidStack not = mon.injectItems(fl.copy(),
+				IAEFluidStack fluidStack = FluidHelper.createAEFluidStack(f);
+				IAEFluidStack injectItems = mon.injectItems(fluidStack.copy(),
 						Actionable.SIMULATE, new MachineSource(this));
-				if (mon.canAccept(fl)
-						&& (not == null || not.getStackSize() == 0L)) {
-					mon.injectItems(fl, Actionable.MODULATE, new MachineSource(
+				if (mon.canAccept(fluidStack)
+						&& (injectItems == null || injectItems.getStackSize() == 0L)) {
+					mon.injectItems(fluidStack, Actionable.MODULATE, new MachineSource(
 							this));
 
-					MutablePair<Integer, ItemStack> empty1 = FluidUtil
-							.drainStack(s2, f);
-					ItemStack empty = empty1.right;
+					Pair<Integer, ItemStack> emptyStack = FluidHelper.drainStack(itemStack, f);
+					ItemStack empty = emptyStack.getRight();
 					if (empty != null) {
 						dropItems(getHost().getTile().getWorld(), getHost().getTile().getPos().offset(getFacing()), empty);
 					}
-					ItemStack s3 = s.copy();
+					ItemStack s3 = heldItem.copy();
 					s3.stackSize = s3.stackSize - 1;
 					if (s3.stackSize == 0) {
 						player.inventory.setInventorySlotContents(
@@ -63,38 +62,38 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 					}
 				}
 				return true;
-			} else if (FluidUtil.isEmpty(s2)) {
+			} else if (FluidHelper.isFillableContainerWithRoom(itemStack)) {
 				if (this.fluid == null)
 					return true;
 				IAEFluidStack extract;
-				if (s2.getItem() instanceof IFluidContainerItem) {
-					extract = mon.extractItems(FluidUtil.createAEFluidStack(
-							this.fluid, ((IFluidContainerItem) s2.getItem())
-									.getCapacity(s2)), Actionable.SIMULATE,
+				if (itemStack.getItem() instanceof IFluidContainerItem) {
+					extract = mon.extractItems(FluidHelper.createAEFluidStack(
+							this.fluid, ((IFluidContainerItem) itemStack.getItem())
+									.getCapacity(itemStack)), Actionable.SIMULATE,
 							new MachineSource(this));
 				} else
 					extract = mon.extractItems(
-							FluidUtil.createAEFluidStack(this.fluid),
+							FluidHelper.createAEFluidStack(this.fluid),
 							Actionable.SIMULATE, new MachineSource(this));
 				if (extract != null) {
-					mon.extractItems(FluidUtil
+					mon.extractItems(FluidHelper
 							.createAEFluidStack(new FluidStack(this.fluid,
 									(int) extract.getStackSize())),
 							Actionable.MODULATE, new MachineSource(this));
-					MutablePair<Integer, ItemStack> empty1 = FluidUtil
-							.fillStack(s2, extract.getFluidStack());
-					if (empty1.left == 0) {
-						mon.injectItems(FluidUtil
+					Pair<Integer, ItemStack> empty1 = FluidHelper
+							.fillStack(itemStack, extract.getFluidStack());
+					if (empty1.getKey() == 0) {
+						mon.injectItems(FluidHelper
 								.createAEFluidStack(new FluidStack(this.fluid,
 										(int) extract.getStackSize())),
 								Actionable.MODULATE, new MachineSource(this));
 						return true;
 					}
-					ItemStack empty = empty1.right;
+					ItemStack empty = empty1.getRight();
 					if (empty != null) {
 						dropItems(getHost().getTile().getWorld(), getHost().getTile().getPos().offset(getFacing()), empty);
 					}
-					ItemStack s3 = s.copy();
+					ItemStack s3 = heldItem.copy();
 					s3.stackSize = s3.stackSize - 1;
 					if (s3.stackSize == 0) {
 						player.inventory.setInventorySlotContents(

@@ -7,6 +7,7 @@ import java.io.File;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -39,6 +40,10 @@ public class ExtraCells {
 	public static final Integration integration = new Integration();
 	public static int bcBurnTimeMultiplicator = 4;
 	private File configFolder;
+
+	public ExtraCells() {
+		FluidRegistry.enableUniversalBucket();
+	}
 
 	@Nullable
 	private static PacketHandler packetHandler;

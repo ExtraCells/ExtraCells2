@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import extracells.api.ECApi;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 import extracells.util.GasUtil;
 
 public enum StorageType {
@@ -33,12 +33,12 @@ public enum StorageType {
 	FLUID("fluid", "KiloB", "MegaB", "B"){
 		@Override
 		public boolean isEmpty(ItemStack stack){
-			return FluidUtil.isEmpty(stack);
+			return FluidHelper.isEmpty(stack);
 		}
 
 		@Override
 		public boolean isFilled(ItemStack stack){
-			return FluidUtil.isFilled(stack);
+			return FluidHelper.isFilled(stack);
 		}
 
 		@Override
@@ -48,7 +48,7 @@ public enum StorageType {
 
 		@Override
 		public boolean isContainer(ItemStack stack) {
-			return FluidUtil.isFluidContainer(stack);
+			return FluidHelper.isFluidContainer(stack);
 		}
 	};
 

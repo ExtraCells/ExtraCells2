@@ -18,7 +18,7 @@ import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.tileentity.TileEntityFluidInterface;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
@@ -120,7 +120,7 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 				if (data == null)
 					part.setFilter(dir, null);
 				else{
-					FluidStack fluid = FluidUtil.getFluidFromContainer(data);
+					FluidStack fluid = FluidHelper.getFluidFromContainer(data);
 					if(fluid == null || fluid.getFluid() == null)
 						return new Object[]{false, "not a fluid container"};
 					part.setFilter(dir, fluid.getFluid());

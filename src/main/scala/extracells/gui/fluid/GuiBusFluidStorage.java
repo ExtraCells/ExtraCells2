@@ -27,7 +27,7 @@ import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketBusFluidStorage;
 import extracells.part.fluid.PartFluidStorage;
 import extracells.part.gas.PartGasStorage;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 import extracells.util.GuiUtil;
 
 public class GuiBusFluidStorage extends GuiContainer implements
@@ -174,7 +174,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 	}
 
 	public void shiftClick(ItemStack itemStack) {
-		FluidStack containerFluid = FluidUtil.getFluidFromContainer(itemStack);
+		FluidStack containerFluid = FluidHelper.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
 			if (fluidSlot.getFluid() == null || fluid != null && fluidSlot.getFluid() == fluid) {

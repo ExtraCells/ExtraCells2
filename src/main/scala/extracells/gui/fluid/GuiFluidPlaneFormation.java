@@ -22,7 +22,7 @@ import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketFluidPlaneFormation;
 import extracells.part.fluid.PartFluidPlaneFormation;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 
 public class GuiFluidPlaneFormation extends GuiContainer implements
 		IFluidSlotGui {
@@ -135,7 +135,7 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 	}
 
 	public void shiftClick(ItemStack itemStack) {
-		FluidStack containerFluid = FluidUtil.getFluidFromContainer(itemStack);
+		FluidStack containerFluid = FluidHelper.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 
 		if (this.fluidSlot.getFluid() == null || fluid != null

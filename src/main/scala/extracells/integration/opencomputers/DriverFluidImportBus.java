@@ -10,7 +10,7 @@ import appeng.api.parts.IPartHost;
 import appeng.api.util.AEPartLocation;
 import extracells.part.fluid.PartFluidImport;
 import extracells.registries.PartEnum;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.NamedBlock;
 import li.cil.oc.api.internal.Database;
@@ -112,7 +112,7 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 				if (data == null)
 					part.filterFluids[slot] = null;
 				else{
-					FluidStack fluid = FluidUtil.getFluidFromContainer(data);
+					FluidStack fluid = FluidHelper.getFluidFromContainer(data);
 					if(fluid == null || fluid.getFluid() == null)
 						return new Object[]{false, "not a fluid container"};
 					part.filterFluids[slot] = fluid.getFluid();

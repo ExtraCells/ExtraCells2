@@ -33,7 +33,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.integration.Capabilities;
 import extracells.part.fluid.PartFluidStorage;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 
 public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IMEMonitorHandlerReceiver<IAEFluidStack> {
 
@@ -124,7 +124,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
 		if (drained == toDrain.amount)
 			return request;
-		return FluidUtil.createAEFluidStack(toDrain.getFluid().getName(), drained);
+		return FluidHelper.createAEFluidStack(toDrain.getFluid().getName(), drained);
 	}
 
 	@Override
@@ -222,7 +222,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		filled = Math.min(filled, maxFill);
 		if (filled == toFill.amount)
 			return null;
-		return FluidUtil.createAEFluidStack(toFill.getFluid().getName(), toFill.amount - filled);
+		return FluidHelper.createAEFluidStack(toFill.getFluid().getName(), toFill.amount - filled);
 	}
 
 	@Override

@@ -12,8 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-import net.minecraftforge.fluids.Fluid;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -220,11 +218,6 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 				this.fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
 			}
 		}
-		updateSelectedFluid();
-	}
-
-	public void receiveSelectedFluid(Fluid selectedFluid) {
-		container.receiveSelectedFluid(selectedFluid);
 		updateSelectedFluid();
 	}
 

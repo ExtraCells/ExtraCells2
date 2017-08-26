@@ -2,15 +2,13 @@ package extracells.network.packet.part;
 
 import java.io.IOException;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import net.minecraftforge.fluids.Fluid;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import extracells.gui.GuiStorage;
-import extracells.network.IPacketHandlerClient;
+import extracells.container.ContainerStorage;
+import extracells.container.fluid.ContainerFluidStorage;
+import extracells.network.IPacketHandlerServer;
 import extracells.network.PacketBufferEC;
 import extracells.network.packet.Packet;
 import extracells.network.packet.PacketId;
@@ -33,17 +31,16 @@ public class PacketStorageSelectFluid extends Packet {
 		return PacketId.STORAGE_SELECT_FLUID;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public static class Handler implements IPacketHandlerClient{
+	public static class Handler implements IPacketHandlerServer{
 		@Override
-		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
+		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			Fluid fluid = data.readFluid();
-			GuiStorage guiTerminal = GuiUtil.getGui(GuiStorage.class);
-			if(fluid == null || guiTerminal == null){
+			ContainerStorage containerStorage = GuiUtil.getContainer(player, ContainerFluidStorage.class);
+			if(fluid == null || containerStorage == null){
 				return;
 			}
 
-			guiTerminal.receiveSelectedFluid(fluid);
+			containerStorage.receiveSelectedFluid(fluid);
 		}
 	}
 }

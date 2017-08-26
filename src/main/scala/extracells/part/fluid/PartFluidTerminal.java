@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -40,7 +40,7 @@ import extracells.gui.GuiTerminal;
 import extracells.models.PartModels;
 import extracells.network.packet.part.PacketTerminalSelectFluidClient;
 import extracells.part.PartECBase;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
@@ -60,7 +60,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	};
 
 	protected boolean isItemValidForInputSlot(int i, ItemStack itemStack) {
-		return FluidUtil.isFluidContainer(itemStack);
+		return FluidHelper.isFluidContainer(itemStack);
 	}
 	protected MachineSource machineSource = new MachineSource(this);
 
@@ -103,7 +103,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 		if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize())
 			return;
 		ItemStack container = this.inventory.getStackInSlot(0);
-		if (!FluidUtil.isFluidContainer(container))
+		if (!FluidHelper.isFluidContainer(container))
 			return;
 		container = container.copy();
 		container.stackSize = 1;
@@ -115,28 +115,30 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 		if (monitor == null)
 			return;
 
-		if (FluidUtil.isEmpty(container)) {
-			if (this.currentFluid == null)
+		if (FluidHelper.isFillableContainerWithRoom(container)) {
+			if (this.currentFluid == null) {
 				return;
-			int capacity = FluidUtil.getCapacity(container);
-			IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource);
+			}
+			int capacity = FluidHelper.getCapacity(container, currentFluid);
+			IAEFluidStack result = monitor.extractItems(FluidHelper.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource);
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
-			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(this.currentFluid, proposedAmount));
-			if(filledContainer.getLeft() > proposedAmount)
+			Pair<Integer, ItemStack> filledContainer = FluidHelper.fillStack(container, new FluidStack(this.currentFluid, proposedAmount));
+			if(filledContainer.getLeft() > proposedAmount) {
 				return;
+			}
 			if (fillSecondSlot(filledContainer.getRight())) {
-				monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, filledContainer.getLeft()), Actionable.MODULATE, this.machineSource);
+				monitor.extractItems(FluidHelper.createAEFluidStack(this.currentFluid, filledContainer.getLeft()), Actionable.MODULATE, this.machineSource);
 				decreaseFirstSlot();
 			}
 		} else {
-			FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
-			IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
+			FluidStack containerFluid = FluidHelper.getFluidFromContainer(container);
+			IAEFluidStack notInjected = monitor.injectItems(FluidHelper.createAEFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
 			if (notInjected != null)
 				return;
-			MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
+			Pair<Integer, ItemStack> drainedContainer = FluidHelper.drainStack(container, containerFluid);
 			ItemStack emptyContainer = drainedContainer.getRight();
 			if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
-				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, this.machineSource);
+				monitor.injectItems(FluidHelper.createAEFluidStack(containerFluid), Actionable.MODULATE, this.machineSource);
 				decreaseFirstSlot();
 			}
 		}

@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL12;
 
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlotSelect;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 import extracells.util.GasUtil;
 import extracells.util.NetworkUtil;
 import mekanism.api.gas.GasStack;
@@ -185,7 +185,7 @@ public class WidgetFluidSlot extends Gui {
 	}
 
 	public void mouseClicked(ItemStack stack) {
-		FluidStack fluidStack = FluidUtil.getFluidFromContainer(stack);
+		FluidStack fluidStack = FluidHelper.getFluidFromContainer(stack);
 		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
 		NetworkUtil.sendToServer(new PacketFluidSlotSelect(part, id, fluid));
 	}

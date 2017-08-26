@@ -3,7 +3,7 @@ package extracells.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
@@ -44,7 +44,7 @@ import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
 import extracells.gridblock.ECFluidGridBlock;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 
 public class TileEntityFluidFiller extends TileBase implements IActionHost,
 		ICraftingProvider, IECTileEntity,
@@ -205,15 +205,15 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 			Fluid fluid = fluidStack.getFluid();
 			if (fluid == null)
 				continue;
-			int maxCapacity = FluidUtil.getCapacity(this.containerItem);
+			int maxCapacity = FluidHelper.getCapacity(this.containerItem);
 			if (maxCapacity == 0)
 				continue;
-			MutablePair<Integer, ItemStack> filled = FluidUtil.fillStack(
+			Pair<Integer, ItemStack> filled = FluidHelper.fillStack(
 					this.containerItem.copy(), new FluidStack(fluid,
 							maxCapacity));
-			if (filled.right == null)
+			if (filled.getRight() == null)
 				continue;
-			ItemStack pattern = getPattern(this.containerItem, filled.right);
+			ItemStack pattern = getPattern(this.containerItem, filled.getRight());
 			ICraftingPatternItem patter = (ICraftingPatternItem) pattern
 					.getItem();
 			craftingTracker.addCraftingOption(this,
@@ -229,7 +229,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 			return false;
 		ItemStack filled = patternDetails.getCondensedOutputs()[0]
 				.getItemStack();
-		FluidStack fluid = FluidUtil.getFluidFromContainer(filled);
+		FluidStack fluid = FluidHelper.getFluidFromContainer(filled);
 		IStorageGrid storage = getStorageGrid();
 		if (storage == null)
 			return false;
@@ -239,7 +239,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 				.createFluidStack(
 						new FluidStack(
 								fluid.getFluid(),
-								FluidUtil.getCapacity(patternDetails
+								FluidHelper.getCapacity(patternDetails
 										.getCondensedInputs()[0].getItemStack())));
 		IAEFluidStack extracted = storage.getFluidInventory()
 				.extractItems(fluidStack.copy(), Actionable.SIMULATE,

@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import extracells.gui.widget.fluid.WidgetFluidSlot.IConfigurable;
 import extracells.network.packet.other.PacketFluidContainerSlot;
 import extracells.tileentity.TileEntityFluidFiller;
-import extracells.util.FluidUtil;
+import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
 public class WidgetSlotFluidContainer extends Gui {
@@ -95,7 +95,7 @@ public class WidgetSlotFluidContainer extends Gui {
 	}
 
 	public void mouseClicked(ItemStack stack) {
-		if (stack != null && stack.getItem() != null && FluidUtil.isEmpty(stack)) {
+		if (stack != null && stack.getItem() != null && FluidHelper.isEmpty(stack)) {
 			NetworkUtil.sendToServer(new PacketFluidContainerSlot(this.fluidFiller, stack));
 		}
 	}
