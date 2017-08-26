@@ -86,15 +86,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		if (this.node != null) {
 			if (this.owner != null)
 				this.node.setPlayerID(AEApi.instance().registries().players()
-						.getID(this.owner));
+					.getID(this.owner));
 			this.node.updateState();
 		}
 		setPower(null);
 		onNeighborChanged();
 	}
-
-	/*@Override
-	public abstract int cableConnectionRenderTo();*/
 
 	@Override
 	public boolean canBePlacedOn(BusSupport what) {

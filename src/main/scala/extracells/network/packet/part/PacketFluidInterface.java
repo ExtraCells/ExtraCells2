@@ -12,8 +12,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.util.AEPartLocation;
-import extracells.container.ContainerFluidInterface;
-import extracells.gui.GuiFluidInterface;
+import extracells.container.fluid.ContainerFluidInterface;
+import extracells.gui.fluid.GuiFluidInterface;
 import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 

@@ -1,6 +1,15 @@
 package extracells.util;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+
 import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
 
@@ -28,5 +37,32 @@ public class GuiUtil {
 			return true;
 		}
 		return false;
+	}
+
+	@Nullable
+	@SideOnly(Side.CLIENT)
+	public static <G> G getGui(Class<G> guiClass) {
+		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+		if (guiClass.isInstance(gui)) {
+			return guiClass.cast(gui);
+		} else {
+			return null;
+		}
+	}
+
+	@Nullable
+	@SideOnly(Side.CLIENT)
+	public static GuiScreen getGui() {
+		return Minecraft.getMinecraft().currentScreen;
+	}
+
+	@Nullable
+	public static <C> C getContainer(EntityPlayer player, Class<C> containerClass) {
+		Container container = player.openContainer;
+		if (containerClass.isInstance(container)) {
+			return containerClass.cast(container);
+		} else {
+			return null;
+		}
 	}
 }

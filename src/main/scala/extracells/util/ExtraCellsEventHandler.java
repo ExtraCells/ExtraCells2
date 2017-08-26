@@ -11,8 +11,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.util.AEPartLocation;
 import extracells.api.IECTileEntity;
-import extracells.container.ContainerFluidStorage;
-import extracells.container.ContainerGasStorage;
+import extracells.container.fluid.ContainerFluidStorage;
+import extracells.container.gas.ContainerGasStorage;
 
 public class ExtraCellsEventHandler {
 

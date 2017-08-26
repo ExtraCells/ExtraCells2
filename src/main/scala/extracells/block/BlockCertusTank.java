@@ -18,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -36,9 +37,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import appeng.api.implementations.items.IAEWrench;
 import extracells.block.properties.PropertyFluid;
 import extracells.models.IStateMapperRegister;
-import extracells.network.ChannelHandler;
+import extracells.network.PacketHandler;
 import extracells.registries.BlockEnum;
 import extracells.tileentity.TileEntityCertusTank;
+import extracells.util.TileUtil;
 
 public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 
@@ -131,6 +133,21 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	}
 
 	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+		ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlock());
+		TileEntityCertusTank tileEntityCertusTank = TileUtil.getTile(world, pos, TileEntityCertusTank.class);
+		if(tileEntityCertusTank == null){
+			return dropStack;
+		}
+		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(dropStack);
+		FluidStack fluidStack = tileEntityCertusTank.tank.getFluid();
+		if(fluidStack != null) {
+			fluidHandler.fill(fluidStack, true);
+		}
+		return dropStack;
+	}
+
+	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) super.getExtendedState(state, world, pos);
 		TileEntity tileEntity = world.getTileEntity(pos);
@@ -195,7 +212,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
 		if (!world.isRemote) {
 
-			ChannelHandler.sendPacketToAllPlayers(world.getTileEntity(pos).getUpdatePacket(), world);
+			PacketHandler.sendPacketToAllPlayers(world.getTileEntity(pos).getUpdatePacket(), world);
 		}
 	}
 

@@ -23,7 +23,7 @@ import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
 import extracells.api.IFluidStorageCell;
 import extracells.api.IHandlerFluidStorage;
-import extracells.container.ContainerFluidStorage;
+import extracells.container.fluid.ContainerFluidStorage;
 
 public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 

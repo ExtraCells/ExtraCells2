@@ -25,12 +25,13 @@ import appeng.api.parts.IPartHost;
 import appeng.api.parts.PartItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
-import extracells.container.ContainerBusFluidIO;
-import extracells.gui.GuiBusFluidIO;
+import extracells.container.fluid.ContainerBusFluidIO;
+import extracells.gui.fluid.GuiBusFluidIO;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketBusFluidIO;
 import extracells.part.PartECBase;
+import extracells.util.NetworkUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
@@ -221,24 +222,8 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		return super.readFromStream(data);
 	}
 
-	/*@SideOnly(Side.CLIENT)
-	@Override
-	public final void renderDynamic(double x, double y, double z,
-			IPartRenderHelper rh, RenderBlocks renderer) {}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public abstract void renderInventory(IPartRenderHelper rh,
-			RenderBlocks renderer);
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public abstract void renderStatic(int x, int y, int z,
-			IPartRenderHelper rh, RenderBlocks renderer);*/
-
 	public void sendInformation(EntityPlayer player) {
-		new PacketFluidSlot(Arrays.asList(this.filterFluids))
-				.sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(Arrays.asList(this.filterFluids)), player);
 		new PacketBusFluidIO(this.redstoneMode).sendPacketToPlayer(player);
 		new PacketBusFluidIO(this.filterSize).sendPacketToPlayer(player);
 	}
@@ -246,8 +231,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 	@Override
 	public final void setFluid(int index, Fluid fluid, EntityPlayer player) {
 		this.filterFluids[index] = fluid;
-		new PacketFluidSlot(Arrays.asList(this.filterFluids))
-				.sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(Arrays.asList(this.filterFluids)), player);
 		saveData();
 	}
 

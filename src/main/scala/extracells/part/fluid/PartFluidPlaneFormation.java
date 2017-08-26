@@ -1,6 +1,6 @@
 package extracells.part.fluid;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
@@ -37,12 +37,13 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.container.ContainerPlaneFormation;
 import extracells.gridblock.ECBaseGridBlock;
-import extracells.gui.GuiFluidPlaneFormation;
+import extracells.gui.fluid.GuiFluidPlaneFormation;
 import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.part.PartECBase;
 import extracells.util.FluidUtil;
+import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 
@@ -165,70 +166,14 @@ public class PartFluidPlaneFormation extends PartECBase implements
 		}
 	}
 
-	/*@SideOnly(Side.CLIENT)
-	@Override
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		IIcon side = TextureManager.PANE_SIDE.getTexture();
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderInventoryBox(renderer);
-		rh.setBounds(3, 3, 14, 13, 13, 16);
-		rh.setInvColor(AEColor.Cyan.blackVariant);
-		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-		Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
-		rh.setInvColor(ColorUtil.getInvertedInt(AEColor.Cyan.mediumVariant));
-		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		rh.setInvColor(ColorUtil.getInvertedInt(AEColor.Cyan.whiteVariant));
-		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[2],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderInventoryBusLights(rh, renderer);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-		IIcon side = TextureManager.PANE_SIDE.getTexture();
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderBlock(x, y, z, renderer);
-		rh.setBounds(3, 3, 14, 13, 13, 16);
-		IPartHost host = getHost();
-		if (host != null) {
-			ts.setColorOpaque_I(host.getColor().blackVariant);
-			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[0],
-					ForgeDirection.SOUTH, renderer);
-			if (isActive())
-				ts.setBrightness(13 << 20 | 13 << 4);
-			ts.setColorOpaque_I(ColorUtil.getInvertedInt(host.getColor().mediumVariant));
-			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[1],
-					ForgeDirection.SOUTH, renderer);
-			ts.setColorOpaque_I(ColorUtil.getInvertedInt(host.getColor().whiteVariant));
-			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[2],
-					ForgeDirection.SOUTH, renderer);
-		}
-
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderStaticBusLights(x, y, z, rh, renderer);
-	}*/
-
-	public void sendInformation(EntityPlayer _player) {
-		new PacketFluidSlot(Lists.newArrayList(this.fluid))
-				.sendPacketToPlayer(_player);
+	public void sendInformation(EntityPlayer player) {
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.fluid)), player);
 	}
 
 	@Override
 	public void setFluid(int index, Fluid fluid, EntityPlayer player) {
 		this.fluid = fluid;
-		new PacketFluidSlot(Lists.newArrayList(this.fluid))
-				.sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.fluid)), player);
 		saveData();
 	}
 

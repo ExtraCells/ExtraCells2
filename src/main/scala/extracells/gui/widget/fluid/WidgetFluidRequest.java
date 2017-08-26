@@ -16,11 +16,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.lwjgl.opengl.GL11;
 
-import extracells.gui.GuiFluidTerminal;
+import extracells.gui.GuiTerminal;
 
 public class WidgetFluidRequest extends AbstractFluidWidget {
 
-	public WidgetFluidRequest(GuiFluidTerminal guiFluidTerminal, Fluid fluid) {
+	public WidgetFluidRequest(GuiTerminal guiFluidTerminal, Fluid fluid) {
 		super(guiFluidTerminal, 18, 18, fluid);
 	}
 

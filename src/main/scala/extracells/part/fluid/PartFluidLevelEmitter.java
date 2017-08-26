@@ -1,6 +1,6 @@
 package extracells.part.fluid;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
 import java.util.Random;
@@ -35,13 +35,14 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
-import extracells.container.ContainerFluidEmitter;
-import extracells.gui.GuiFluidEmitter;
+import extracells.container.fluid.ContainerFluidEmitter;
+import extracells.gui.fluid.GuiFluidEmitter;
 import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.part.PartECBase;
+import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
@@ -182,7 +183,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		}
 		this.watcher.reset();
 		updateWatcher(this.watcher);
-		new PacketFluidSlot(Lists.newArrayList(this.fluid)).sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.fluid)), player);
 		saveData();
 	}
 
@@ -198,10 +199,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	public void syncClientGui(EntityPlayer player) {
 		new PacketFluidEmitter(this.mode, player).sendPacketToPlayer(player);
-		new PacketFluidEmitter(this.wantedAmount, player)
-				.sendPacketToPlayer(player);
-		new PacketFluidSlot(Lists.newArrayList(this.fluid))
-				.sendPacketToPlayer(player);
+		new PacketFluidEmitter(this.wantedAmount, player).sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.fluid)), player);
 	}
 
 	public void toggleMode(EntityPlayer player) {

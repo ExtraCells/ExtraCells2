@@ -316,39 +316,6 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 
 		moveToFace( facing );
 		rotateToFace( facing, (byte)1);
-		/*EnumFacing d = this.getFacing();
-		GL11.glTranslated(d.getFrontOffsetX() * 0.77, d.getFrontOffsetY() * 0.77, d.getFrontOffsetZ() * 0.77);
-
-		if (d == EnumFacing.UP) {
-			GL11.glScalef(1.0f, -1.0f, 1.0f);
-			GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-			GL11.glRotatef(90.0F, 0, 0, 1);
-		}
-
-		if (d == EnumFacing.DOWN) {
-			GL11.glScalef(1.0f, -1.0f, 1.0f);
-			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-			GL11.glRotatef(-90.0F, 0, 0, 1);
-		}
-
-		if (d == EnumFacing.EAST) {
-			GL11.glScalef(-1.0f, -1.0f, -1.0f);
-			GL11.glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-		}
-
-		if (d == EnumFacing.WEST) {
-			GL11.glScalef(-1.0f, -1.0f, -1.0f);
-			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
-		}
-
-		if (d == EnumFacing.NORTH) {
-			GL11.glScalef(-1.0f, -1.0f, -1.0f);
-		}
-
-		if (d == EnumFacing.SOUTH) {
-			GL11.glScalef(-1.0f, -1.0f, -1.0f);
-			GL11.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
-		}*/
 
 		GlStateManager.pushMatrix();
 		try {

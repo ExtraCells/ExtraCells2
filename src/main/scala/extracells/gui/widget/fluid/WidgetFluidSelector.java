@@ -21,8 +21,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 	private int color;
 	private int borderThickness;
 
-	public WidgetFluidSelector(IFluidSelectorGui guiFluidTerminal,
-			IAEFluidStack stack) {
+	public WidgetFluidSelector(IFluidSelectorGui guiFluidTerminal, IAEFluidStack stack) {
 		super(guiFluidTerminal, 18, 18, stack.getFluidStack().getFluid());
 		this.amount = stack.getStackSize();
 		this.color = 0xFF00FFFF;
@@ -111,8 +110,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		if (this.fluid != null
 				&& isPointInRegion(posX, posY, this.height, this.width, mouseX,
 						mouseY)) {
-			((IFluidSelectorGui) this.guiFluidTerminal).getContainer()
-					.setSelectedFluid(this.fluid);
+			((IFluidSelectorGui) this.guiFluidTerminal).getContainer().setSelectedFluid(this.fluid);
 		}
 	}
 

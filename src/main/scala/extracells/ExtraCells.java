@@ -1,5 +1,8 @@
 package extracells;
 
+import com.google.common.base.Preconditions;
+
+import javax.annotation.Nullable;
 import java.io.File;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -16,8 +19,8 @@ import appeng.api.AEApi;
 import appeng.api.features.IRegistryContainer;
 import extracells.integration.Integration;
 import extracells.item.storage.CellDefinition;
-import extracells.network.ChannelHandler;
 import extracells.network.GuiHandler$;
+import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 import extracells.util.ECConfigHandler;
 import extracells.util.ExtraCellsEventHandler;
@@ -37,8 +40,17 @@ public class ExtraCells {
 	public static int bcBurnTimeMultiplicator = 4;
 	private File configFolder;
 
+	@Nullable
+	private static PacketHandler packetHandler;
+
+	public static PacketHandler getPacketHandler() {
+		Preconditions.checkState(packetHandler != null);
+		return packetHandler;
+	}
+
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		packetHandler = new PacketHandler();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler$.MODULE$);
 
 		// Config
@@ -68,7 +80,7 @@ public class ExtraCells {
 		proxy.registerTileEntities();
 		proxy.registerFluidBurnTimes();
 		proxy.addRecipes(configFolder);
-		ChannelHandler.registerMessages();
+		PacketHandler.registerMessages();
 		//RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId))
 		integration.init();
 	}

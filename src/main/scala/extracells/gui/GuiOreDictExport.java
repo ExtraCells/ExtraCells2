@@ -11,14 +11,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
-import net.minecraftforge.fml.relauncher.Side;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import extracells.container.ContainerOreDictExport;
 import extracells.network.packet.part.PacketOreDictExport;
 import extracells.part.PartOreDictExporter;
+import extracells.util.NetworkUtil;
 
 public class GuiOreDictExport extends GuiContainer {
 
@@ -48,8 +47,7 @@ public class GuiOreDictExport extends GuiContainer {
 
 	@Override
 	protected void actionPerformed(GuiButton guibutton) {
-		new PacketOreDictExport(this.player, filter, Side.SERVER)
-				.sendPacketToServer();
+		NetworkUtil.sendToServer(new PacketOreDictExport(filter));
 	}
 
 	@Override

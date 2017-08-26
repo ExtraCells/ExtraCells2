@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fluids.Fluid;
 
 import appeng.api.config.RedstoneMode;
-import extracells.gui.GuiBusFluidIO;
+import extracells.gui.fluid.GuiBusFluidIO;
 import extracells.network.AbstractPacket;
 import extracells.part.fluid.PartFluidIO;
 import io.netty.buffer.ByteBuf;

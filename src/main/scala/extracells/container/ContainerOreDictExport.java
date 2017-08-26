@@ -6,11 +6,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 
-import net.minecraftforge.fml.relauncher.Side;
-
-import extracells.gui.GuiFluidInterface;
+import extracells.gui.fluid.GuiFluidInterface;
 import extracells.network.packet.part.PacketOreDictExport;
 import extracells.part.PartOreDictExporter;
+import extracells.util.NetworkUtil;
 
 public class ContainerOreDictExport extends Container {
 	public PartOreDictExporter part;
@@ -23,8 +22,7 @@ public class ContainerOreDictExport extends Container {
 		bindPlayerInventory(player.inventory);
 		TileEntity tile = this.part.getHostTile();
 		if (tile != null && tile.hasWorldObj() && !tile.getWorld().isRemote) {
-			new PacketOreDictExport(player, this.part.filter, Side.CLIENT)
-					.sendPacketToPlayer(player);
+			NetworkUtil.sendToPlayer(new PacketOreDictExport(this.part.filter), player);
 		}
 	}
 

@@ -23,7 +23,7 @@ import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
 import extracells.api.IGasStorageCell;
 import extracells.api.IHandlerFluidStorage;
-import extracells.container.ContainerFluidStorage;
+import extracells.container.fluid.ContainerFluidStorage;
 
 public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 

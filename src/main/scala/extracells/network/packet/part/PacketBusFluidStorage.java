@@ -9,8 +9,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.config.AccessRestriction;
-import extracells.container.ContainerBusFluidStorage;
-import extracells.gui.GuiBusFluidStorage;
+import extracells.container.fluid.ContainerBusFluidStorage;
+import extracells.gui.fluid.GuiBusFluidStorage;
 import extracells.network.AbstractPacket;
 import extracells.part.fluid.PartFluidStorage;
 import io.netty.buffer.ByteBuf;

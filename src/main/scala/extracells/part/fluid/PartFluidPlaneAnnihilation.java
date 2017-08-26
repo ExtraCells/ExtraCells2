@@ -136,60 +136,6 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 		}
 	}
 
-	/*@SideOnly(Side.CLIENT)
-	@Override
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		IIcon side = TextureManager.PANE_SIDE.getTexture();
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderInventoryBox(renderer);
-		rh.setBounds(3, 3, 14, 13, 13, 16);
-		rh.setInvColor(AEColor.Cyan.blackVariant);
-		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-		Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
-		rh.setInvColor(AEColor.Cyan.mediumVariant);
-		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		rh.setInvColor(AEColor.Cyan.whiteVariant);
-		rh.renderInventoryFace(TextureManager.PANE_FRONT.getTextures()[2],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderInventoryBusLights(rh, renderer);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-		IIcon side = TextureManager.PANE_SIDE.getTexture();
-		rh.setTexture(side, side, side, TextureManager.BUS_BORDER.getTexture(),
-				side, side);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.renderBlock(x, y, z, renderer);
-		rh.setBounds(3, 3, 14, 13, 13, 16);
-		IPartHost host = getHost();
-		if (host != null) {
-			ts.setColorOpaque_I(host.getColor().blackVariant);
-			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[0],
-					ForgeDirection.SOUTH, renderer);
-			if (isActive())
-				ts.setBrightness(13 << 20 | 13 << 4);
-			ts.setColorOpaque_I(host.getColor().mediumVariant);
-			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[1],
-					ForgeDirection.SOUTH, renderer);
-			ts.setColorOpaque_I(host.getColor().whiteVariant);
-			rh.renderFace(x, y, z, TextureManager.PANE_FRONT.getTextures()[2],
-					ForgeDirection.SOUTH, renderer);
-		}
-
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderStaticBusLights(x, y, z, rh, renderer);
-	}*/
-
 	@Override
 	@SuppressWarnings("unused")
 	@MENetworkEventSubscribe

@@ -156,67 +156,12 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.IMPORT_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.IMPORT_ON;
 		} else {
 			return PartModels.IMPORT_OFF;
 		}
 	}
-
-	/*@SideOnly(Side.CLIENT)
-	@Override
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.IMPORT_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.IMPORT_FRONT.getTexture(), side, side);
-		rh.setBounds(4, 4, 14, 12, 12, 16);
-		rh.renderInventoryBox(renderer);
-
-		rh.setTexture(side);
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		rh.renderInventoryBox(renderer);
-		rh.setBounds(6, 6, 12, 10, 10, 13);
-		rh.renderInventoryBox(renderer);
-
-		rh.setBounds(4, 4, 14, 12, 12, 16);
-		rh.setInvColor(AEColor.Cyan.blackVariant);
-		ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderInventoryFace(TextureManager.IMPORT_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(6, 6, 11, 10, 10, 12);
-		renderInventoryBusLights(rh, renderer);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.IMPORT_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.IMPORT_FRONT.getTextures()[0], side, side);
-		rh.setBounds(4, 4, 14, 12, 12, 16);
-		rh.renderBlock(x, y, z, renderer);
-
-		ts.setColorOpaque_I(getHost().getColor().blackVariant);
-		if (isActive())
-			ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderFace(x, y, z, TextureManager.IMPORT_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setTexture(side);
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		rh.renderBlock(x, y, z, renderer);
-		rh.setBounds(6, 6, 12, 10, 10, 13);
-		rh.renderBlock(x, y, z, renderer);
-
-		rh.setBounds(6, 6, 11, 10, 10, 12);
-		renderStaticBusLights(x, y, z, rh, renderer);
-	}*/
 }

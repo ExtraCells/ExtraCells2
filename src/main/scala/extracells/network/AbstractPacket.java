@@ -129,19 +129,19 @@ public abstract class AbstractPacket implements IMessage {
 	public abstract void readData(ByteBuf in);
 
 	public void sendPacketToAllPlayers() {
-		ChannelHandler.sendPacketToAllPlayers(this);
+		PacketHandler.sendPacketToAllPlayers(this);
 	}
 
 	public void sendPacketToPlayer(EntityPlayer player) {
-		ChannelHandler.sendPacketToPlayer(this, player);
+		PacketHandler.sendPacketToPlayer(this, player);
 	}
 
 	public void sendPacketToPlayersAround(NetworkRegistry.TargetPoint point) {
-		ChannelHandler.sendPacketToPlayersAround(this, point);
+		PacketHandler.sendPacketToPlayersAround(this, point);
 	}
 
 	public void sendPacketToServer() {
-		ChannelHandler.sendPacketToServer(this);
+		PacketHandler.sendPacketToServer(this);
 	}
 
 	@Override

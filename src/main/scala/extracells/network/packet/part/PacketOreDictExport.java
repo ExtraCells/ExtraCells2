@@ -1,79 +1,58 @@
 package extracells.network.packet.part;
 
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
-import extracells.network.AbstractPacket;
-import io.netty.buffer.ByteBuf;
+import extracells.network.IPacketHandlerClient;
+import extracells.network.IPacketHandlerServer;
+import extracells.network.packet.Packet;
+import extracells.network.PacketBufferEC;
+import extracells.network.packet.PacketId;
 
-public class PacketOreDictExport extends AbstractPacket {
+public class PacketOreDictExport extends Packet {
 
 	private String filter;
-	private Side side;
 
-	public PacketOreDictExport() {}
-
-	public PacketOreDictExport(EntityPlayer _player, String filter, Side side) {
-		super(_player);
-		this.mode = 0;
+	public PacketOreDictExport(String filter) {
 		this.filter = filter;
-		this.side = side;
 	}
 
 	@Override
-	public void execute() {
-		switch (this.mode) {
-		case 0:
-			if (this.side.isClient())
-				try {
-					handleClient();
-				} catch (Throwable e) {}
-			else
-				handleServer();
-			break;
-		}
+	public PacketId getPacketId() {
+		return PacketId.EXPORT_ORE;
+	}
+
+	@Override
+	protected void writeData(PacketBufferEC data) throws IOException {
+		data.writeString(filter);
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void handleClient() {
-		GuiOreDictExport.updateFilter(this.filter);
-	}
-
-	private void handleServer() {
-		Container con = this.player.openContainer;
-		if (con != null && con instanceof ContainerOreDictExport) {
-			ContainerOreDictExport c = (ContainerOreDictExport) con;
-			c.part.filter = this.filter;
+	public static class HandlerClient implements IPacketHandlerClient{
+		@Override
+		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
+			String filter = data.readString();
+			GuiOreDictExport.updateFilter(filter);
 		}
 	}
 
-	@Override
-	public void readData(ByteBuf in) {
-		switch (this.mode) {
-		case 0:
-			if (in.readBoolean())
-				this.side = Side.SERVER;
-			else
-				this.side = Side.CLIENT;
-			this.filter = ByteBufUtils.readUTF8String(in);
-			break;
-		}
-	}
-
-	@Override
-	public void writeData(ByteBuf out) {
-		switch (this.mode) {
-		case 0:
-			out.writeBoolean(this.side.isServer());
-			ByteBufUtils.writeUTF8String(out, this.filter);
-			break;
-
+	public static class HandlerServer implements IPacketHandlerServer{
+		@Override
+		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
+			String filter = data.readString();
+			Container con = player.openContainer;
+			if (con != null && con instanceof ContainerOreDictExport) {
+				ContainerOreDictExport c = (ContainerOreDictExport) con;
+				c.part.filter = filter;
+			}
 		}
 	}
 }

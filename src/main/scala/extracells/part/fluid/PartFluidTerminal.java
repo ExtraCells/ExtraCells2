@@ -33,14 +33,15 @@ import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
-import extracells.container.ContainerFluidTerminal;
-import extracells.container.ContainerGasTerminal;
+import extracells.container.ContainerTerminal;
+import extracells.container.TerminalType;
 import extracells.gridblock.ECBaseGridBlock;
-import extracells.gui.GuiFluidTerminal;
+import extracells.gui.GuiTerminal;
 import extracells.models.PartModels;
-import extracells.network.packet.part.PacketFluidTerminal;
+import extracells.network.packet.part.PacketTerminalSelectFluidClient;
 import extracells.part.PartECBase;
 import extracells.util.FluidUtil;
+import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
@@ -80,13 +81,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 		return stack;
 	}
 
-	public void addContainer(ContainerFluidTerminal containerTerminalFluid) {
+	public void addContainer(ContainerTerminal containerTerminalFluid) {
 		this.containers.add(containerTerminalFluid);
-		sendCurrentFluid();
-	}
-
-	public void addContainer(ContainerGasTerminal containerTerminalGas) {
-		this.containers.add(containerTerminalGas);
 		sendCurrentFluid();
 	}
 
@@ -170,7 +166,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
 	@Override
 	public Object getClientGuiElement(EntityPlayer player) {
-		return new GuiFluidTerminal(this, player);
+		return new GuiTerminal(this, player, TerminalType.FLUID);
 	}
 
 	public IInventory getInventory() {
@@ -184,7 +180,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
 	@Override
 	public Object getServerGuiElement(EntityPlayer player) {
-		return new ContainerFluidTerminal(this, player);
+		return new ContainerTerminal(this, player, TerminalType.FLUID);
 	}
 
 	@Override
@@ -210,12 +206,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 		this.inventory.readFromNBT(data.getTagList("inventory", 10));
 	}
 
-	public void removeContainer(ContainerFluidTerminal containerTerminalFluid) {
+	public void removeContainer(ContainerTerminal containerTerminalFluid) {
 		this.containers.remove(containerTerminalFluid);
-	}
-
-	public void removeContainer(ContainerGasTerminal containerTerminalGas) {
-		this.containers.remove(containerTerminalGas);
 	}
 
 	@Nonnull
@@ -238,18 +230,15 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	}
 
 	public void sendCurrentFluid(Object container) {
-		if(container instanceof ContainerFluidTerminal){
-			ContainerFluidTerminal containerFluidTerminal = (ContainerFluidTerminal) container;
-			new PacketFluidTerminal(containerFluidTerminal.getPlayer(), this.currentFluid).sendPacketToPlayer(containerFluidTerminal.getPlayer());
-		}else if(container instanceof ContainerGasTerminal){
-			ContainerGasTerminal containerGasTerminal = (ContainerGasTerminal) container;
-			new PacketFluidTerminal(containerGasTerminal.getPlayer(), this.currentFluid).sendPacketToPlayer(containerGasTerminal.getPlayer());
+		if(container instanceof ContainerTerminal){
+			ContainerTerminal containerFluidTerminal = (ContainerTerminal) container;
+			NetworkUtil.sendToPlayer(new PacketTerminalSelectFluidClient(currentFluid), containerFluidTerminal.getPlayer());
 		}
 
 	}
 
-	public void setCurrentFluid(Fluid _currentFluid) {
-		this.currentFluid = _currentFluid;
+	public void setCurrentFluid(Fluid currentFluid) {
+		this.currentFluid = currentFluid;
 		sendCurrentFluid();
 	}
 

@@ -1,7 +1,8 @@
 package extracells.part.fluid;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,14 +36,15 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
-import extracells.container.ContainerBusFluidStorage;
-import extracells.gui.GuiBusFluidStorage;
+import extracells.container.fluid.ContainerBusFluidStorage;
+import extracells.gui.fluid.GuiBusFluidStorage;
 import extracells.inventory.HandlerPartStorageFluid;
 import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketBusFluidStorage;
 import extracells.part.PartECBase;
+import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
@@ -210,8 +212,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	}
 
 	public void sendInformation(EntityPlayer player) {
-		new PacketFluidSlot(Arrays.asList(this.filterFluids))
-				.sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.copyOf(this.filterFluids)), player);
 		new PacketBusFluidStorage(player, this.access, true)
 				.sendPacketToPlayer(player);
 	}

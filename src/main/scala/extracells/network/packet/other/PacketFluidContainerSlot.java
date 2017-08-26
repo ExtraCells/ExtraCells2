@@ -1,60 +1,53 @@
 package extracells.network.packet.other;
 
-import net.minecraft.entity.player.EntityPlayer;
+import java.io.IOException;
+
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-
-import extracells.network.AbstractPacket;
+import extracells.network.IPacketHandlerServer;
+import extracells.network.packet.Packet;
+import extracells.network.PacketBufferEC;
+import extracells.network.packet.PacketId;
 import extracells.tileentity.TileEntityFluidFiller;
-import io.netty.buffer.ByteBuf;
 
-public class PacketFluidContainerSlot extends AbstractPacket {
+public class PacketFluidContainerSlot extends Packet {
 
 	private ItemStack container;
 	private TileEntityFluidFiller fluidFiller;
 
-	public PacketFluidContainerSlot() {}
-
-	public PacketFluidContainerSlot(TileEntityFluidFiller _fluidFiller,
-			ItemStack _container, EntityPlayer _player) {
-		super(_player);
-		this.mode = 0;
-		this.fluidFiller = _fluidFiller;
-		this.container = _container;
+	public PacketFluidContainerSlot(TileEntityFluidFiller fluidFiller, ItemStack container) {
+		this.fluidFiller = fluidFiller;
+		this.container = container;
 	}
 
 	@Override
-	public void execute() {
-		switch (this.mode) {
-		case 0:
-			this.container.stackSize = 1;
-			this.fluidFiller.containerItem = this.container;
-			if (this.fluidFiller.hasWorldObj()) {
+	public PacketId getPacketId() {
+		return PacketId.FLUID_CONTAINER_SLOT;
+	}
+
+	@Override
+	protected void writeData(PacketBufferEC data) throws IOException {
+		data.writeTile(this.fluidFiller);
+		data.writeItemStackToBuffer(this.container);
+	}
+
+	public static class Handler implements IPacketHandlerServer{
+		@Override
+		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
+			TileEntityFluidFiller fluidFiller = data.readTile(player.worldObj, TileEntityFluidFiller.class);
+			ItemStack container = data.readItemStackFromBuffer();
+
+			if(fluidFiller == null){
+				return;
+			}
+
+			container.stackSize = 1;
+			fluidFiller.containerItem = container;
+			if (fluidFiller.hasWorldObj()) {
 				fluidFiller.updateBlock();
 			}
-			this.fluidFiller.postUpdateEvent();
-			break;
-		}
-	}
-
-	@Override
-	public void readData(ByteBuf in) {
-		switch (this.mode) {
-		case 0:
-			this.fluidFiller = (TileEntityFluidFiller) readTileEntity(in);
-			this.container = ByteBufUtils.readItemStack(in);
-			break;
-		}
-	}
-
-	@Override
-	public void writeData(ByteBuf out) {
-		switch (this.mode) {
-		case 0:
-			writeTileEntity(this.fluidFiller, out);
-			ByteBufUtils.writeItemStack(out, this.container);
-			break;
+			fluidFiller.postUpdateEvent();
 		}
 	}
 }

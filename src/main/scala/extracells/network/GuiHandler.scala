@@ -15,7 +15,11 @@ import extracells.ExtraCells
 import extracells.api._
 import extracells.block.TGuiBlock
 import extracells.container._
+import extracells.container.fluid.{ContainerFluidCrafter, ContainerFluidFiller, ContainerFluidInterface, ContainerFluidStorage}
+import extracells.container.gas.ContainerGasStorage
 import extracells.gui._
+import extracells.gui.fluid.{GuiFluidCrafter, GuiFluidFiller, GuiFluidInterface, GuiFluidStorage}
+import extracells.gui.gas.GuiGasStorage
 import extracells.part.PartECBase
 import extracells.registries.BlockEnum
 import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
