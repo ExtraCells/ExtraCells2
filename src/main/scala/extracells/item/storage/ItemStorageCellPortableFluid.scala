@@ -151,15 +151,4 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
     extractAEPower(is, amount)
     return true
   }
-
-  override def onUpdate(stack: ItemStack, worldIn: World, entityIn: Entity, itemSlot: Int, isSelected: Boolean): Unit = {
-    if(!worldIn.isRemote && isSelected && entityIn.isInstanceOf[EntityPlayer]){
-      val player = entityIn.asInstanceOf[EntityPlayer];
-      val container: ContainerFluidStorage = GuiUtil.getContainer(player, classOf[ContainerFluidStorage]);
-      if(container != null){
-        container.forceFluidUpdate()
-        container.doWork()
-      }
-    }
-  }
 }

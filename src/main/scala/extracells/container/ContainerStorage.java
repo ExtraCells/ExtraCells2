@@ -123,6 +123,12 @@ public abstract class ContainerStorage extends Container implements
 			this.inventory.setInventorySlotContents(0, null);
 	}
 
+	@Override
+	public void detectAndSendChanges() {
+		doWork();
+		super.detectAndSendChanges();
+	}
+
 	public abstract void doWork();
 
 	public boolean fillSecondSlot(ItemStack itemStack) {
