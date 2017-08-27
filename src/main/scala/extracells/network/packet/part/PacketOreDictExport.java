@@ -13,8 +13,8 @@ import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
 import extracells.network.IPacketHandlerClient;
 import extracells.network.IPacketHandlerServer;
-import extracells.network.packet.Packet;
 import extracells.network.PacketBufferEC;
+import extracells.network.packet.Packet;
 import extracells.network.packet.PacketId;
 
 public class PacketOreDictExport extends Packet {

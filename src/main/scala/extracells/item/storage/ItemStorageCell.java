@@ -24,8 +24,6 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.api.IHandlerFluidStorage;
 import extracells.item.ItemECBase;
-import extracells.item.storage.CellDefinition;
-import extracells.item.storage.StorageType;
 import extracells.models.ModelManager;
 import extracells.registries.ItemEnum;
 

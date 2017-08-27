@@ -1,20 +1,15 @@
 package extracells.network
 
 import appeng.api.config.SecurityPermissions
-import appeng.api.implementations.guiobjects.IGuiItem
 import appeng.api.networking.energy.IEnergyGrid
-import appeng.api.networking.{IGrid, IGridNode}
 import appeng.api.networking.security.{IActionHost, ISecurityGrid}
 import appeng.api.parts.{IPart, IPartHost}
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
-import appeng.api.util.{AEPartLocation, DimensionalCoord}
-import appeng.core.sync.GuiBridge
-import appeng.util.Platform
+import appeng.api.util.AEPartLocation
 import extracells.ExtraCells
 import extracells.api._
 import extracells.block.TGuiBlock
-import extracells.container._
 import extracells.container.fluid.{ContainerFluidCrafter, ContainerFluidFiller, ContainerFluidInterface, ContainerFluidStorage}
 import extracells.container.gas.ContainerGasStorage
 import extracells.gui._
@@ -24,10 +19,9 @@ import extracells.registries.BlockEnum
 import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemStack
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.network.IGuiHandler
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}

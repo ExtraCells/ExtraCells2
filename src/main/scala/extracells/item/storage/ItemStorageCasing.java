@@ -11,7 +11,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import extracells.integration.Integration;
 import extracells.item.ItemECBase;
-import extracells.item.storage.CellDefinition;
 import extracells.models.ModelManager;
 
 public class ItemStorageCasing extends ItemECBase {

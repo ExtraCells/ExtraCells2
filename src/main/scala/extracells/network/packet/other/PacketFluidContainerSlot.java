@@ -6,8 +6,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 import extracells.network.IPacketHandlerServer;
-import extracells.network.packet.Packet;
 import extracells.network.PacketBufferEC;
+import extracells.network.packet.Packet;
 import extracells.network.packet.PacketId;
 import extracells.tileentity.TileEntityFluidFiller;
 

@@ -7,13 +7,10 @@ import appeng.api.config.{AccessRestriction, FuzzyMode}
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
 import extracells.api.{ECApi, IHandlerFluidStorage, IPortableFluidStorageCell}
-import extracells.container.fluid.ContainerFluidStorage
 import extracells.item.{ItemECBase, PowerItem}
 import extracells.models.ModelManager
-import extracells.util.GuiUtil
 import extracells.util.inventory.{ECFluidFilterInventory, ECPrivateInventory}
 import net.minecraft.creativetab.CreativeTabs
-import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.{EnumRarity, Item, ItemStack}

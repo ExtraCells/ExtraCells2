@@ -8,8 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 
 import extracells.network.IPacketHandlerServer;
-import extracells.network.packet.Packet;
 import extracells.network.PacketBufferEC;
+import extracells.network.packet.Packet;
 import extracells.network.packet.PacketId;
 import extracells.part.PartECBase;
 

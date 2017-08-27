@@ -11,8 +11,8 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.gui.GuiTerminal;
 import extracells.network.IPacketHandlerClient;
-import extracells.network.packet.Packet;
 import extracells.network.PacketBufferEC;
+import extracells.network.packet.Packet;
 import extracells.network.packet.PacketId;
 import extracells.util.GuiUtil;
 
