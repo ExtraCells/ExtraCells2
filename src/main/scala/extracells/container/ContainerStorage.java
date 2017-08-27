@@ -125,6 +125,7 @@ public abstract class ContainerStorage extends Container implements
 
 	@Override
 	public void detectAndSendChanges() {
+		forceFluidUpdate();
 		doWork();
 		super.detectAndSendChanges();
 	}

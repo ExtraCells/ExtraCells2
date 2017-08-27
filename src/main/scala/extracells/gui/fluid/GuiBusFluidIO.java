@@ -24,11 +24,12 @@ import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
-import extracells.network.packet.part.PacketBusFluidIO;
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidIO;
 import extracells.part.gas.PartGasExport;
 import extracells.part.gas.PartGasImport;
 import extracells.util.FluidHelper;
+import extracells.util.NetworkUtil;
 
 public class GuiBusFluidIO extends GuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
@@ -57,7 +58,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 7, 79, 57, this, (byte) 1));
 		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 8, 97, 57, this, (byte) 2));
 
-		new PacketBusFluidIO(this.player, this.part).sendPacketToServer();
+		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_IO_INFO));
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;
 		this.xSize = this.hasNetworkTool ? 246 : 211;
 		this.ySize = 184;
@@ -67,8 +68,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 	@Override
 	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
-		new PacketBusFluidIO(this.player, (byte) button.id, this.part)
-				.sendPacketToServer();
+		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_IO_REDSTONE_LOOP));
 	}
 
 	public void changeConfig(byte _filterSize) {
@@ -209,7 +209,8 @@ public class GuiBusFluidIO extends GuiContainer implements
 	}
 
 	public void updateRedstoneMode(RedstoneMode mode) {
-		if (this.redstoneControlled && this.buttonList.size() > 0)
+		if (this.redstoneControlled && this.buttonList.size() > 0) {
 			((WidgetRedstoneModes) this.buttonList.get(0)).setRedstoneMode(mode);
+		}
 	}
 }

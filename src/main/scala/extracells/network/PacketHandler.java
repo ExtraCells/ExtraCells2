@@ -24,21 +24,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import extracells.network.handler.part.HandlerBusFluidIO;
 import extracells.network.handler.part.HandlerBusFluidStorage;
-import extracells.network.handler.part.HandlerFluidEmitter;
 import extracells.network.handler.part.HandlerFluidInterface;
 import extracells.network.handler.part.HandlerFluidPlaneFormation;
 import extracells.network.packet.PacketId;
 import extracells.network.packet.other.PacketFluidContainerSlot;
 import extracells.network.packet.other.PacketFluidSlotSelect;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
-import extracells.network.packet.part.PacketBusFluidIO;
 import extracells.network.packet.part.PacketBusFluidStorage;
-import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.network.packet.part.PacketFluidInterface;
 import extracells.network.packet.part.PacketFluidPlaneFormation;
 import extracells.network.packet.part.PacketOreDictExport;
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.network.packet.part.PacketStorageOpenContainer;
 import extracells.network.packet.part.PacketStorageSelectFluid;
 import extracells.network.packet.part.PacketStorageUpdateFluid;
@@ -117,20 +114,10 @@ public class PacketHandler {
 	public static SimpleNetworkWrapper wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL_ID+"_0");
 
 	public static void registerMessages() {
-		wrapper.registerMessage(HandlerBusFluidIO.class,
-				PacketBusFluidIO.class, 1, Side.CLIENT);
-		wrapper.registerMessage(HandlerBusFluidIO.class,
-				PacketBusFluidIO.class, 1, Side.SERVER);
-
 		wrapper.registerMessage(HandlerBusFluidStorage.class,
 				PacketBusFluidStorage.class, 2, Side.CLIENT);
 		wrapper.registerMessage(HandlerBusFluidStorage.class,
 				PacketBusFluidStorage.class, 2, Side.SERVER);
-
-		wrapper.registerMessage(HandlerFluidEmitter.class,
-				PacketFluidEmitter.class, 3, Side.CLIENT);
-		wrapper.registerMessage(HandlerFluidEmitter.class,
-				PacketFluidEmitter.class, 3, Side.SERVER);
 
 		wrapper.registerMessage(HandlerFluidPlaneFormation.class,
 				PacketFluidPlaneFormation.class, 4, Side.CLIENT);
@@ -153,6 +140,7 @@ public class PacketHandler {
 		PacketId.TERMINAL_OPEN_CONTAINER.registerHandler(new PacketTerminalOpenContainer.Handler());
 		PacketId.STORAGE_OPEN_CONTAINER.registerHandler(new PacketStorageOpenContainer.Handler());
 		PacketId.STORAGE_SELECT_FLUID.registerHandler(new PacketStorageSelectFluid.Handler());
+		PacketId.PART_CONFIG.registerHandler(new PacketPartConfig.HandlerServer());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -163,6 +151,7 @@ public class PacketHandler {
 		PacketId.TERMINAL_SELECT_FLUID.registerHandler(new PacketTerminalSelectFluidClient.Handler());
 		PacketId.STORAGE_UPDATE_FLUID.registerHandler(new PacketStorageUpdateFluid.Handler());
 		PacketId.STORAGE_UPDATE_STATE.registerHandler(new PacketStorageUpdateState.Handler());
+		PacketId.PART_CONFIG.registerHandler(new PacketPartConfig.HandlerClient());
 	}
 
 	public static void sendPacketToAllPlayers(AbstractPacket packet) {

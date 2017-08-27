@@ -25,11 +25,12 @@ import appeng.api.parts.IPartHost;
 import appeng.api.parts.PartItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
+import appeng.api.util.DimensionalCoord;
 import extracells.container.fluid.ContainerBusFluidIO;
 import extracells.gui.fluid.GuiBusFluidIO;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
-import extracells.network.packet.part.PacketBusFluidIO;
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.PartECBase;
 import extracells.util.NetworkUtil;
 import extracells.util.inventory.ECPrivateInventory;
@@ -155,11 +156,12 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 	}
 
 	public void loopRedstoneMode(EntityPlayer player) {
-		if (this.redstoneMode.ordinal() + 1 < RedstoneMode.values().length)
+		if (this.redstoneMode.ordinal() + 1 < RedstoneMode.values().length) {
 			this.redstoneMode = RedstoneMode.values()[this.redstoneMode.ordinal() + 1];
-		else
+		} else {
 			this.redstoneMode = RedstoneMode.values()[0];
-		new PacketBusFluidIO(this.redstoneMode).sendPacketToPlayer(player);
+		}
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_REDSTONE_MODE, redstoneMode.toString()), player);
 		saveData();
 	}
 
@@ -187,12 +189,16 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 			}
 		}
 
-		try {
-			if (getHost().getLocation().getWorld().isRemote)
-				return;
-		} catch (Throwable ignored) {}
-		new PacketBusFluidIO(this.filterSize).sendPacketToAllPlayers();
-		new PacketBusFluidIO(this.redstoneControlled).sendPacketToAllPlayers();
+		IPartHost host = getHost();
+		if (host == null
+			|| host.getLocation() == null
+			|| host.getLocation().getWorld() == null
+			|| host.getLocation().getWorld().isRemote) {
+			return;
+		}
+		DimensionalCoord coord = getLocation();
+		NetworkUtil.sendNetworkPacket(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_FILTER, Byte.toString(filterSize)), coord.getPos(), coord.getWorld());
+		NetworkUtil.sendNetworkPacket(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_REDSTONE, Boolean.toString(redstoneControlled)), coord.getPos(), coord.getWorld());
 		saveData();
 	}
 
@@ -224,8 +230,8 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 
 	public void sendInformation(EntityPlayer player) {
 		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(Arrays.asList(this.filterFluids)), player);
-		new PacketBusFluidIO(this.redstoneMode).sendPacketToPlayer(player);
-		new PacketBusFluidIO(this.filterSize).sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_FILTER, Byte.toString(filterSize)), player);
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_REDSTONE, Boolean.toString(redstoneControlled)), player);
 	}
 
 	@Override

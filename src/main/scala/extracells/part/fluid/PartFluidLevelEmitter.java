@@ -40,7 +40,7 @@ import extracells.gui.fluid.GuiFluidEmitter;
 import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
-import extracells.network.packet.part.PacketFluidEmitter;
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.PartECBase;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
@@ -191,15 +191,14 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		this.wantedAmount = _wantedAmount;
 		if (this.wantedAmount < 0)
 			this.wantedAmount = 0;
-		new PacketFluidEmitter(this.wantedAmount, player)
-				.sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_AMOUNT, Long.toString(wantedAmount)), player);
 		notifyTargetBlock(getHostTile(), getFacing());
 		saveData();
 	}
 
 	public void syncClientGui(EntityPlayer player) {
-		new PacketFluidEmitter(this.mode, player).sendPacketToPlayer(player);
-		new PacketFluidEmitter(this.wantedAmount, player).sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_MODE, mode.toString()), player);
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_AMOUNT, Long.toString(wantedAmount)), player);
 		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.fluid)), player);
 	}
 
@@ -214,7 +213,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		}
 
 		notifyTargetBlock(getHostTile(), getFacing());
-		new PacketFluidEmitter(this.mode, player).sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_MODE, mode.toString()), player);
 		saveData();
 	}
 

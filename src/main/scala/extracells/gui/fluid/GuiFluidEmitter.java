@@ -21,11 +21,12 @@ import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
-import extracells.network.packet.part.PacketFluidEmitter;
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidLevelEmitter;
 import extracells.part.gas.PartGasLevelEmitter;
 import extracells.registries.PartEnum;
 import extracells.util.GuiUtil;
+import extracells.util.NetworkUtil;
 
 public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 
@@ -42,7 +43,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		this.player = _player;
 		this.part = _part;
 		this.fluidSlot = new WidgetFluidSlot(this.player, this.part, 79, 36);
-		new PacketFluidEmitter(false, this.part, this.player).sendPacketToServer();
+		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(false)));
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 			modifyAmount(+100);
 			break;
 		case 6:
-			new PacketFluidEmitter(true, this.part, this.player).sendPacketToServer();
+			NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(true)));
 			break;
 
 		}
@@ -140,14 +141,15 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		super.keyTyped(key, keyID);
 		if ("0123456789".contains(String.valueOf(key)) || keyID == Keyboard.KEY_BACK) {
 			this.amountField.textboxKeyTyped(key, keyID);
-			new PacketFluidEmitter(this.amountField.getText(), this.part, this.player).sendPacketToServer();
+			String text = amountField.getText();
+			NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_AMOUNT, text.isEmpty() ? "0" : text));
 		}
 	}
 
 	private void modifyAmount(int amount) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 			amount *= 100;
-		new PacketFluidEmitter(amount, this.part, this.player).sendPacketToServer();
+		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_AMOUNT_CHANGE, Integer.toString(amount)));
 	}
 
 	@Override
