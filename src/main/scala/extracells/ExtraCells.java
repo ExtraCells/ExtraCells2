@@ -85,7 +85,7 @@ public class ExtraCells {
 		proxy.registerTileEntities();
 		proxy.registerFluidBurnTimes();
 		proxy.addRecipes(configFolder);
-		PacketHandler.registerMessages();
+		proxy.registerPackets();
 		//RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId))
 		integration.init();
 	}
