@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -12,8 +13,6 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
-import org.lwjgl.opengl.GL11;
 
 import appeng.api.AEApi;
 import extracells.container.ContainerPlaneFormation;
@@ -52,7 +51,7 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float alpha, int mouseX,
 			int mouseY) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 184);
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
@@ -122,13 +121,13 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 			int mouseY) {
 		if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18,
 				mouseX, mouseY)) {
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GlStateManager.disableLighting();
+			GlStateManager.disableDepth();
 			drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1,
 					fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17,
 					-0x7F000001, -0x7F000001);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GlStateManager.enableLighting();
+			GlStateManager.enableDepth();
 			return true;
 		}
 		return false;

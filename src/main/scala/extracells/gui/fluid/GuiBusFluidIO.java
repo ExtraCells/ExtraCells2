@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -14,8 +15,6 @@ import net.minecraft.util.ResourceLocation;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
-import org.lwjgl.opengl.GL11;
 
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
@@ -50,23 +49,13 @@ public class GuiBusFluidIO extends GuiContainer implements
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
 				int index = y + x * 3;
-				byte b = (byte) ((index % 1) + 1);
+				byte b = (byte) (((index + 1) % 2) + 1);
 				if (index == 4) {
 					b = 0;
 				}
 				fluidSlotList.add(new WidgetFluidSlot(player, part, y + x * 3, 61 + x * 18, 21 + y * 18, this, b));
 			}
 		}
-
-		/*this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 0, 61, 21, this, (byte) 2));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 1, 79, 21, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 2, 97, 21, this, (byte) 2));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 3, 61, 39, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 4, 79, 39, this, (byte) 0));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 5, 97, 39, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 6, 61, 57, this, (byte) 2));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 7, 79, 57, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 8, 97, 57, this, (byte) 2));*/
 
 		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_IO_INFO));
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;
@@ -88,7 +77,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float alpha, int mouseX,
 			int mouseY) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 184);
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
@@ -165,13 +154,13 @@ public class GuiBusFluidIO extends GuiContainer implements
 
 	private void renderBackground(Slot slot) {
 		if (slot.getStack() == null && (slot.slotNumber < 4 || slot.slotNumber > 39)) {
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+			GlStateManager.disableLighting();
+			GlStateManager.enableBlend();
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
 			this.mc.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
 			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 208, 16, 16);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LIGHTING);
+			GlStateManager.disableBlend();
+			GlStateManager.enableLighting();
 
 		}
 	}
@@ -179,11 +168,11 @@ public class GuiBusFluidIO extends GuiContainer implements
 	public boolean renderOverlay(WidgetFluidSlot fluidSlot, int mouseX,
 			int mouseY) {
 		if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GlStateManager.disableLighting();
+			GlStateManager.disableDepth();
 			drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1, fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17, -0x7F000001, -0x7F000001);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GlStateManager.enableLighting();
+			GlStateManager.enableDepth();
 			return true;
 		}
 		return false;

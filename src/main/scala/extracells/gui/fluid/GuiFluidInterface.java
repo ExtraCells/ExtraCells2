@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -51,7 +52,7 @@ public class GuiFluidInterface extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float f, int mouseX,
 			int mouseY) {
 		drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,
 				this.ySize);
@@ -144,16 +145,16 @@ public class GuiFluidInterface extends GuiContainer {
 
 	private void renderBackground(Slot slot) {
 		if (slot.getStack() == null && slot.slotNumber < 9) {
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+			GlStateManager.disableLighting();
+			GlStateManager.enableBlend();
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
 			this.mc.getTextureManager().bindTexture(
 					new ResourceLocation("appliedenergistics2",
 							"textures/guis/states.png"));
 			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition,
 					this.guiTop + slot.yDisplayPosition, 240, 128, 16, 16);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LIGHTING);
+			GlStateManager.disableBlend();
+			GlStateManager.enableLighting();
 
 		}
 	}
@@ -169,20 +170,20 @@ public class GuiFluidInterface extends GuiContainer {
 						.getCondensedOutputs()[0].getItemStack().copy();
 
 				this.zLevel = 160.0F;
-				GL11.glDisable(GL11.GL_LIGHTING);
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				GL11.glColor3f(1, 1, 1);
-				GL11.glDisable(GL11.GL_LIGHTING);
-				GL11.glColor3f(1.0F, 1.0F, 1.0F);
+				GlStateManager.disableLighting();
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GlStateManager.color(1, 1, 1);
+				GlStateManager.disableLighting();
+				GlStateManager.color(1.0F, 1.0F, 1.0F);
 				Minecraft.getMinecraft().renderEngine
 						.bindTexture(this.guiTexture);
 				drawTexturedModalRect(slot.xDisplayPosition,
 						slot.yDisplayPosition, slot.xDisplayPosition,
 						slot.yDisplayPosition, 18, 18);
-				GL11.glEnable(GL11.GL_LIGHTING);
+				GlStateManager.enableLighting();
 
-				GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+				GlStateManager.translate(0.0F, 0.0F, 32.0F);
 				this.zLevel = 150.0F;
 				RenderItem itemRender = mc.getRenderItem();
 				itemRender.zLevel = 100.0F;
@@ -191,7 +192,7 @@ public class GuiFluidInterface extends GuiContainer {
 					font = output.getItem().getFontRenderer(output);
 				if (font == null)
 					font = Minecraft.getMinecraft().fontRendererObj;
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GlStateManager.enableDepth();
 				itemRender.renderItemAndEffectIntoGUI(output, slot.xDisplayPosition, slot.yDisplayPosition);
 				itemRender.renderItemOverlayIntoGUI(font, output, slot.xDisplayPosition, slot.yDisplayPosition, null);
 				this.zLevel = 0.0F;
@@ -201,14 +202,14 @@ public class GuiFluidInterface extends GuiContainer {
 				int j = slot.yDisplayPosition;
 				if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, i, j,
 						16, 16, mouseX, mouseY)) {
-					GL11.glDisable(GL11.GL_LIGHTING);
-					GL11.glDisable(GL11.GL_DEPTH_TEST);
-					GL11.glColorMask(true, true, true, false);
+					GlStateManager.disableLighting();
+					GlStateManager.disableDepth();
+					GlStateManager.colorMask(true, true, true, false);
 					this.drawGradientRect(i, j, i + 16, j + 16, -2130706433,
 							-2130706433);
-					GL11.glColorMask(true, true, true, true);
-					GL11.glEnable(GL11.GL_LIGHTING);
-					GL11.glEnable(GL11.GL_DEPTH_TEST);
+					GlStateManager.colorMask(true, true, true, true);
+					GlStateManager.enableLighting();
+					GlStateManager.enableDepth();
 				}
 			}
 		}

@@ -215,7 +215,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Nullable
 	public final DimensionalCoord getLocation() {
-		if (tile == null) {
+		if (tile == null || tile.getWorld() == null || tile.getWorld().provider == null) {
 			return null;
 		}
 		return new DimensionalCoord(this.tile.getWorld(), this.tile.getPos());

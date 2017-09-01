@@ -114,6 +114,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerPackets() {
+		super.registerPackets();
 		PacketHandler.registerClientPackets();
 	}
 }

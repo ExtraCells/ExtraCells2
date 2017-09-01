@@ -4,11 +4,10 @@ import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-
-import org.lwjgl.opengl.GL11;
 
 import extracells.container.fluid.ContainerFluidFiller;
 import extracells.gui.widget.WidgetSlotFluidContainer;
@@ -33,7 +32,7 @@ public class GuiFluidFiller extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
@@ -52,14 +51,14 @@ public class GuiFluidFiller extends GuiContainer {
 		if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, i, j, 16, 16,
 				mouseX, mouseY)) {
 			this.fluidContainerSlot.drawWidgetWithRect(i, j);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			GL11.glColorMask(true, true, true, false);
+			GlStateManager.disableLighting();
+			GlStateManager.disableDepth();
+			GlStateManager.colorMask(true, true, true, false);
 			this.drawGradientRect(i, j, i + 16, j + 16, -2130706433,
 					-2130706433);
-			GL11.glColorMask(true, true, true, true);
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GlStateManager.colorMask(true, true, true, true);
+			GlStateManager.enableLighting();
+			GlStateManager.enableDepth();
 		} else
 			this.fluidContainerSlot.drawWidget();
 	}

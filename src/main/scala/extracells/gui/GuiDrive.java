@@ -2,11 +2,10 @@ package extracells.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
 
 import extracells.container.ContainerDrive;
 import extracells.part.PartDrive;
@@ -27,7 +26,7 @@ public class GuiDrive extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float alpha, int sizeX,
 			int sizeY) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
 		drawTexturedModalRect(this.guiLeft, this.guiTop - 18, 0, 0, this.xSize,
 				this.ySize);
@@ -38,17 +37,16 @@ public class GuiDrive extends GuiContainer {
 
 	private void renderBackground(Slot slot) {
 		if (slot.getStack() == null && slot.slotNumber < 6) {
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
+			GlStateManager.disableLighting();
+			GlStateManager.enableBlend();
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
 			this.mc.getTextureManager().bindTexture(
 					new ResourceLocation("appliedenergistics2",
 							"textures/guis/states.png"));
 			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition,
 					this.guiTop + slot.yDisplayPosition, 240, 0, 16, 16);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LIGHTING);
-
+			GlStateManager.disableBlend();
+			GlStateManager.enableLighting();
 		}
 	}
 }
