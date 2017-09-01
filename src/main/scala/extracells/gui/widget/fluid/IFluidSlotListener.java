@@ -1,10 +1,10 @@
-package extracells.network.packet.other;
+package extracells.gui.widget.fluid;
 
 import net.minecraft.entity.player.EntityPlayer;
 
 import net.minecraftforge.fluids.Fluid;
 
-public interface IFluidSlotPartOrBlock {
+public interface IFluidSlotListener {
 
 	void setFluid(int index, Fluid fluid, EntityPlayer player);
 }

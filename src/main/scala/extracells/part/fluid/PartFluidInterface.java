@@ -72,9 +72,9 @@ import extracells.container.fluid.ContainerFluidInterface;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gui.fluid.GuiFluidInterface;
+import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.integration.Capabilities;
 import extracells.models.PartModels;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.part.PartECBase;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
@@ -83,7 +83,7 @@ import extracells.util.ItemUtils;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
-public class PartFluidInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotPartOrBlock, IStorageMonitorable, IGridTickable, ICraftingProvider {
+public class PartFluidInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotListener, IStorageMonitorable, IGridTickable, ICraftingProvider {
 
 	private class FluidInterfaceInventory implements IInventory {
 

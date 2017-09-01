@@ -59,16 +59,16 @@ import extracells.container.IContainerListener;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gridblock.ECFluidGridBlock;
+import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.integration.Capabilities;
 import extracells.integration.waila.IWailaTile;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
 import extracells.util.EmptyMeItemMonitor;
 import extracells.util.ItemUtils;
 
 public class TileEntityFluidInterface extends TileBase implements
 		IActionHost, IECTileEntity, IFluidInterface,
-		IFluidSlotPartOrBlock, IStorageMonitorable,
+	IFluidSlotListener, IStorageMonitorable,
 		ICraftingProvider, IWailaTile, ITickable {
 
 	List<IContainerListener> listeners = new ArrayList<IContainerListener>();

@@ -3,8 +3,8 @@ package extracells.integration.mekanism.gas
 import appeng.api.implementations.IPowerChannelState
 import appeng.api.networking.security.IActionHost
 import appeng.api.util.{AEPartLocation, DimensionalCoord}
+import extracells.gui.widget.fluid.IFluidSlotListener
 import extracells.integration.Integration.Mods.MEKANISM
-import extracells.network.packet.other.IFluidSlotPartOrBlock
 import mekanism.api.gas._
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.EnumFacing
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Optional.{Interface, InterfaceList, Method}
   new Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true),
   new Interface(iface = "mekanism.api.gas.ITubeConnection", modid = "MekanismAPI|gas", striprefs = true)
 ))
-trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChannelState with IActionHost with IFluidSlotPartOrBlock{
+trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChannelState with IActionHost with IFluidSlotListener {
 
   val isMekanismLoaded = MEKANISM.isEnabled
 

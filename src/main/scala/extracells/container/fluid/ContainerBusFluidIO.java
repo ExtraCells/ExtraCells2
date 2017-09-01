@@ -21,8 +21,9 @@ public class ContainerBusFluidIO extends Container {
 
 	public ContainerBusFluidIO(PartFluidIO part, EntityPlayer player) {
 		this.part = part;
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 4; i++) {
 			addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), i, 187, i * 18 + 8));
+		}
 		bindPlayerInventory(player.inventory);
 
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {

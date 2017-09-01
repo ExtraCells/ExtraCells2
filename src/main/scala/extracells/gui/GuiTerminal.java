@@ -72,20 +72,17 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 			long currentFluidAmount = this.currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
 			if (ECConfigHandler.shortenedBuckets) {
-				if (currentFluidAmount > 1000000000L)
-					amountToText = Long
-						.toString(currentFluidAmount / 1000000000L) + "MegaB";
-				else if (currentFluidAmount > 1000000L)
-					amountToText = Long.toString(currentFluidAmount / 1000000L) + "KiloB";
-				else if (currentFluidAmount > 9999L) {
-					amountToText = Long.toString(currentFluidAmount / 1000L) + "B";
+				if (currentFluidAmount > 1000000000L) {
+					amountToText = Long.toString(currentFluidAmount / 1000000000L) + type.getMega();
+				} else if (currentFluidAmount > 1000000L) {
+					amountToText = Long.toString(currentFluidAmount / 1000000L) + type.getKilo();
+				} else if (currentFluidAmount > 9999L) {
+					amountToText = Long.toString(currentFluidAmount / 1000L) + type.getBuckets();
 				}
 			}
 
-			this.fontRendererObj.drawString(
-				I18n.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
-			this.fontRendererObj.drawString(
-				I18n.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
+			this.fontRendererObj.drawString(I18n.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
+			this.fontRendererObj.drawString(I18n.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
 		}
 	}
 

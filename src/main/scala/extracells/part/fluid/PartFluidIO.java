@@ -28,7 +28,7 @@ import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.container.fluid.ContainerBusFluidIO;
 import extracells.gui.fluid.GuiBusFluidIO;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
+import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.PartECBase;
@@ -38,7 +38,7 @@ import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
 
 public abstract class PartFluidIO extends PartECBase implements IGridTickable,
-		IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
+	IInventoryUpdateReceiver, IFluidSlotListener {
 
 	public Fluid[] filterFluids = new Fluid[9];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;

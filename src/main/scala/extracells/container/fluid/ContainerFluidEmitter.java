@@ -6,10 +6,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import extracells.part.fluid.PartFluidLevelEmitter;
+import extracells.util.FluidHelper;
 
 public class ContainerFluidEmitter extends Container {
 
@@ -44,13 +44,11 @@ public class ContainerFluidEmitter extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack itemstack = null;
 		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack fluidItem = slot.getStack().copy();
 			fluidItem.stackSize = 1;
-			FluidStack fluidStack = FluidContainerRegistry
-					.getFluidForFilledItem(fluidItem);
+			FluidStack fluidStack = FluidHelper.getFluidFromContainer(fluidItem);
 			if (fluidStack == null) {
 				return null;
 			}

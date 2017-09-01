@@ -1,13 +1,11 @@
 package extracells.gui.fluid;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -16,49 +14,47 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-import org.lwjgl.opengl.GL11;
-
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import extracells.container.fluid.ContainerBusFluidStorage;
+import extracells.gui.GuiBase;
+import extracells.gui.ISlotRenderer;
+import extracells.gui.SlotUpgradeRenderer;
 import extracells.gui.widget.WidgetStorageDirection;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
-import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidStorage;
-import extracells.part.gas.PartGasStorage;
 import extracells.util.FluidHelper;
-import extracells.util.GuiUtil;
 import extracells.util.NetworkUtil;
 
-public class GuiBusFluidStorage extends GuiContainer implements
+public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
-	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/storagebusfluid.png");
 	private EntityPlayer player;
 	private byte filterSize;
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 	private boolean hasNetworkTool;
 	private final PartFluidStorage part;
 
-	public GuiBusFluidStorage(PartFluidStorage _part, EntityPlayer _player) {
-		super(new ContainerBusFluidStorage(_part, _player));
-		part = _part;
+	public GuiBusFluidStorage(PartFluidStorage part, EntityPlayer _player) {
+		super(new ResourceLocation("extracells", "textures/gui/storagebusfluid.png"), new ContainerBusFluidStorage(part, _player));
+		this.part = part;
 		((ContainerBusFluidStorage) this.inventorySlots).setGui(this);
 		this.player = _player;
 
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 6; j++) {
-				this.fluidSlotList.add(new WidgetFluidSlot(this.player, part, i * 6 + j, 18 * i + 7, 18 * j + 17));
+				WidgetFluidSlot fluidSlot = new WidgetFluidSlot(widgetManager, this.part, i * 6 + j, 18 * i + 7, 18 * j + 17);
+				fluidSlotList.add(fluidSlot);
+				widgetManager.add(fluidSlot);
 			}
 		}
 
-		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_INFO));
+		NetworkUtil.sendToServer(new PacketPartConfig(this.part, PacketPartConfig.FLUID_STORAGE_INFO));
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;
 		this.xSize = this.hasNetworkTool ? 246 : 211;
 		this.ySize = 222;
-
 	}
 
 	@Override
@@ -94,27 +90,30 @@ public class GuiBusFluidStorage extends GuiContainer implements
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float alpha, int mouseX, int mouseY) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
+	protected void drawBackground() {
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 222);
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
 		if (this.hasNetworkTool)
 			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
-		for (Object s : this.inventorySlots.inventorySlots) {
-			renderBackground((Slot) s);
+	}
+
+	@Override
+	protected boolean hasSlotRenders() {
+		return true;
+	}
+
+	@Nullable
+	@Override
+	protected ISlotRenderer getSlotRenderer(Slot slot) {
+		if (slot.getStack() == null && (slot.slotNumber < 4 || slot.slotNumber > 39)) {
+			return SlotUpgradeRenderer.INSTANCE;
 		}
+		return null;
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		boolean overlayRendered = false;
-		for (byte i = 0; i < 54; i++) {
-			this.fluidSlotList.get(i).drawWidget();
-			if (!overlayRendered && this.fluidSlotList.get(i).canRender())
-				overlayRendered = GuiUtil.renderOverlay((int)this.zLevel, this.guiLeft, this.guiTop, this.fluidSlotList.get(i), mouseX, mouseY);
-		}
 
 		for (Object button : this.buttonList) {
 			if (button instanceof WidgetStorageDirection)
@@ -156,39 +155,14 @@ public class GuiBusFluidStorage extends GuiContainer implements
 		if (slot != null && slot.getStack() != null && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack()))
 			return;
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
-		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
-			if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
-				if(part instanceof PartGasStorage && Integration.Mods.MEKANISMGAS.isEnabled())
-					fluidSlot.mouseClickedGas(this.player.inventory.getItemStack());
-				else
-					fluidSlot.mouseClicked(this.player.inventory.getItemStack());
-				break;
-			}
-		}
-	}
-
-	private void renderBackground(Slot slot) {
-		if (slot.getStack() == null && (slot.slotNumber == 0 || slot.slotNumber > 36)) {
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-			this.mc.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
-			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 208, 16, 16);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_LIGHTING);
-
-		}
 	}
 
 	public void shiftClick(ItemStack itemStack) {
 		FluidStack containerFluid = FluidHelper.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
-			if (fluidSlot.getFluid() == null || fluid != null && fluidSlot.getFluid() == fluid) {
-				if(part instanceof PartGasStorage && Integration.Mods.MEKANISMGAS.isEnabled())
-					fluidSlot.mouseClickedGas(itemStack);
-				else
-					fluidSlot.mouseClicked(itemStack);
+			if (fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid)) {
+				fluidSlot.handleContainer(itemStack);
 				return;
 			}
 		}

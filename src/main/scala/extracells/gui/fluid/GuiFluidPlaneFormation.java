@@ -3,9 +3,6 @@ package extracells.gui.fluid;
 import java.io.IOException;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -16,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.AEApi;
 import extracells.container.ContainerPlaneFormation;
+import extracells.gui.GuiBase;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
@@ -24,11 +22,9 @@ import extracells.part.fluid.PartFluidPlaneFormation;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
-public class GuiFluidPlaneFormation extends GuiContainer implements
+public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> implements
 		IFluidSlotGui {
 
-	private static final ResourceLocation guiTexture = new ResourceLocation(
-			"extracells", "textures/gui/paneformation.png");
 	private PartFluidPlaneFormation part;
 	private EntityPlayer player;
 	private WidgetFluidSlot fluidSlot;
@@ -36,11 +32,11 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 
 	public GuiFluidPlaneFormation(PartFluidPlaneFormation _part,
 			EntityPlayer _player) {
-		super(new ContainerPlaneFormation(_part, _player));
+		super(new ResourceLocation("extracells", "textures/gui/paneformation.png"), new ContainerPlaneFormation(_part, _player));
 		((ContainerPlaneFormation) this.inventorySlots).setGui(this);
 		this.part = _part;
 		this.player = _player;
-		this.fluidSlot = new WidgetFluidSlot(this.player, this.part, 0, 79, 39);
+		widgetManager.add(fluidSlot = new WidgetFluidSlot(widgetManager, this.part, 0, 79, 39));
 		NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_PLANE_FORMATION_INFO), player);
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;
 		this.xSize = this.hasNetworkTool ? 246 : 211;
@@ -49,29 +45,23 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float alpha, int mouseX,
-			int mouseY) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
+	protected void drawBackground() {
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 184);
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
-		if (this.hasNetworkTool)
-			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178,
-					93, 68, 68);
-
+		if (this.hasNetworkTool) {
+			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
+		}
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		this.fluidSlot.drawWidget();
-		renderOverlay(this.fluidSlot, mouseX, mouseY);
 
 		for (Object button : this.buttonList) {
 			if (button instanceof WidgetRedstoneModes)
 				((WidgetRedstoneModes) button).drawTooltip(this.guiLeft,
-						this.guiTop, (this.width - this.xSize) / 2,
-						(this.height - this.ySize) / 2);
+					this.guiTop, (this.width - this.xSize) / 2,
+					(this.height - this.ySize) / 2);
 		}
 	}
 
@@ -112,34 +102,15 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 				&& AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack()))
 			return;
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
-		if (isPointInRegion(this.fluidSlot.getPosX(), this.fluidSlot.getPosY(),
-				18, 18, mouseX, mouseY))
-			this.fluidSlot.mouseClicked(this.player.inventory.getItemStack());
-	}
-
-	public boolean renderOverlay(WidgetFluidSlot fluidSlot, int mouseX,
-			int mouseY) {
-		if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18,
-				mouseX, mouseY)) {
-			GlStateManager.disableLighting();
-			GlStateManager.disableDepth();
-			drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1,
-					fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17,
-					-0x7F000001, -0x7F000001);
-			GlStateManager.enableLighting();
-			GlStateManager.enableDepth();
-			return true;
-		}
-		return false;
 	}
 
 	public void shiftClick(ItemStack itemStack) {
 		FluidStack containerFluid = FluidHelper.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 
-		if (this.fluidSlot.getFluid() == null || fluid != null
-				&& this.fluidSlot.getFluid() == fluid)
-			this.fluidSlot.mouseClicked(itemStack);
+		if (this.fluidSlot.getFluid() == null || fluid != null && this.fluidSlot.getFluid() == fluid) {
+			this.fluidSlot.handleFluidContainer(itemStack);
+		}
 	}
 
 	@Override

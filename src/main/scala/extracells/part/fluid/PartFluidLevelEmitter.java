@@ -37,8 +37,8 @@ import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
 import extracells.container.fluid.ContainerFluidEmitter;
 import extracells.gui.fluid.GuiFluidEmitter;
+import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.models.PartModels;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.PartECBase;
@@ -47,7 +47,7 @@ import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
 //TODO: Rewrite
-public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPartOrBlock {
+public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotListener {
 
 	private Fluid fluid;
 	private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;

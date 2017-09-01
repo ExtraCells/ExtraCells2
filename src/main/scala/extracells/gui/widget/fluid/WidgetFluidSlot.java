@@ -1,13 +1,8 @@
 package extracells.gui.widget.fluid;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,18 +12,24 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
+import extracells.gui.widget.AbstractWidget;
+import extracells.gui.widget.WidgetManager;
+import extracells.integration.Integration;
 import extracells.network.packet.other.PacketFluidSlotSelect;
+import extracells.part.gas.PartGasExport;
+import extracells.part.gas.PartGasImport;
 import extracells.util.FluidHelper;
 import extracells.util.GasUtil;
 import extracells.util.NetworkUtil;
 import mekanism.api.gas.GasStack;
 
-public class WidgetFluidSlot extends Gui {
+@SideOnly(Side.CLIENT)
+public class WidgetFluidSlot extends AbstractWidget {
 
 	public interface IConfigurable {
 
@@ -38,137 +39,67 @@ public class WidgetFluidSlot extends Gui {
 	private int id;
 	private int posX, posY;
 	private Fluid fluid;
-	private static final ResourceLocation guiTexture = new ResourceLocation(
-			"extracells", "textures/gui/busiofluid.png");
-	private IFluidSlotPartOrBlock part;
-	private EntityPlayer player;
+	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
+	private IFluidSlotListener listener;
 	private IConfigurable configurable;
 
 	private byte configOption;
 
-	public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPartOrBlock _part,
-			int _posX, int _posY) {
-		this(_player, _part, 0, _posX, _posY, null, (byte) 0);
+	public WidgetFluidSlot(WidgetManager widgetManager, IFluidSlotListener listener, int posX, int posY) {
+		this(widgetManager, listener, 0, posX, posY, null, (byte) 0);
 	}
 
-	public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPartOrBlock _part,
-			int _id, int _posX, int _posY) {
-		this(_player, _part, _id, _posX, _posY, null, (byte) 0);
+	public WidgetFluidSlot(WidgetManager widgetManager, IFluidSlotListener listener, int id, int posX, int posY) {
+		this(widgetManager, listener, id, posX, posY, null, (byte) 0);
 	}
 
-	public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPartOrBlock _part,
-			int _id, int _posX, int _posY, IConfigurable _configurable,
-			byte _configOption) {
-		this.player = _player;
-		this.part = _part;
-		this.id = _id;
-		this.posX = _posX;
-		this.posY = _posY;
-		this.configurable = _configurable;
-		this.configOption = _configOption;
+	public WidgetFluidSlot(WidgetManager widgetManager, IFluidSlotListener listener, int id, int posX, int posY, IConfigurable configurable, byte configOption) {
+		super(widgetManager, posX, posY);
+		this.width = 18;
+		this.height = 18;
+		this.listener = listener;
+		this.id = id;
+		this.posX = posX;
+		this.posY = posY;
+		this.configurable = configurable;
+		this.configOption = configOption;
 	}
 
-	public boolean canRender() {
+	public boolean isVisable() {
 		return this.configurable == null || this.configurable.getConfigState() >= this.configOption;
 	}
 
-	@SuppressWarnings("rawtypes")
-	protected void drawHoveringText(List list, int x, int y,
-			FontRenderer fontrenderer) {
-		boolean lighting_enabled = GL11.glIsEnabled(GL11.GL_LIGHTING);
-		if (!list.isEmpty()) {
-			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-			RenderHelper.disableStandardItemLighting();
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			int k = 0;
-
-			for (Object string : list) {
-				String s = (String) string;
-				int l = fontrenderer.getStringWidth(s);
-
-				if (l > k) {
-					k = l;
-				}
-			}
-
-			int i1 = x + 12;
-			int j1 = y - 12;
-			int k1 = 8;
-
-			if (list.size() > 1) {
-				k1 += 2 + (list.size() - 1) * 10;
-			}
-
-			this.zLevel = 300.0F;
-			int l1 = -267386864;
-			this.drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
-			this.drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4,
-					l1, l1);
-			this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1,
-					l1);
-			this.drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
-			this.drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3,
-					l1, l1);
-			int i2 = 1347420415;
-			int j2 = (i2 & 16711422) >> 1 | i2 & -16777216;
-			this.drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3
-					- 1, i2, j2);
-			this.drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1
-					+ 3 - 1, i2, j2);
-			this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2,
-					i2);
-			this.drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3,
-					j2, j2);
-
-			for (int k2 = 0; k2 < list.size(); ++k2) {
-				String s1 = (String) list.get(k2);
-				fontrenderer.drawStringWithShadow(s1, i1, j1, -1);
-
-				if (k2 == 0) {
-					j1 += 2;
-				}
-
-				j1 += 10;
-			}
-
-			this.zLevel = 0.0F;
-			if (lighting_enabled)
-				GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-			RenderHelper.enableStandardItemLighting();
-			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		}
-	}
-
-	public void drawTooltip() {
-		if (canRender()) {
-
-		}
-	}
-
-	public void drawWidget() {
-		if (!canRender()) {
+	@Override
+	public void draw(int mouseX, int mouseY) {
+		if (!isVisable()) {
 			return;
 		}
+		TextureManager textureManager = manager.mc.getTextureManager();
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
-		drawTexturedModalRect(this.posX, this.posY, 79, 39, 18, 18);
-		GlStateManager.enableLighting();
+		textureManager.bindTexture(guiTexture);
+		manager.gui.drawTexturedModalRect(this.posX, this.posY, 79, 39, 18, 18);
 
-		if (this.fluid == null)
-			return;
+		if (this.fluid != null) {
+			drawFluid(textureManager);
+		}
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
-		GlStateManager.disableLighting();
-		GlStateManager.color(1.0F, 1.0F, 1.0F);
-		drawTexturedModalRect(this.posX + 1, this.posY + 1, sprite, 16, 16);
-		GlStateManager.enableLighting();
+		if (isMouseOver(mouseX, mouseY)) {
+			GlStateManager.disableDepth();
+			manager.gui.drawGradientRect(xPos + 1, yPos + 1, xPos + 17, yPos + 17, -0x7F000001, -0x7F000001);
+			GlStateManager.enableDepth();
+		}
 		GlStateManager.disableBlend();
+		GlStateManager.enableLighting();
+	}
+
+	private void drawFluid(TextureManager textureManager) {
+		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		TextureAtlasSprite sprite = manager.mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
+		GlStateManager.color(1.0F, 1.0F, 1.0F);
+		manager.gui.drawTexturedModalRect(this.posX + 1, this.posY + 1, sprite, 16, 16);
 	}
 
 	public Fluid getFluid() {
@@ -183,21 +114,39 @@ public class WidgetFluidSlot extends Gui {
 		return this.posY;
 	}
 
-	public void mouseClicked(ItemStack stack) {
+	@Override
+	public void handleMouseClick(int mouseX, int mouseY, int mouseButton) {
+		EntityPlayer player = manager.mc.thePlayer;
+		ItemStack stack = player.inventory.getItemStack();
+		handleContainer(stack);
+	}
+
+	public void handleContainer(ItemStack stack) {
+		if (!isVisable()) {
+			return;
+		}
+		if ((listener instanceof PartGasImport || listener instanceof PartGasExport) && Integration.Mods.MEKANISMGAS.isEnabled()) {
+			handleGasContainer(stack);
+		} else {
+			handleFluidContainer(stack);
+		}
+	}
+
+	public void handleFluidContainer(ItemStack stack) {
 		FluidStack fluidStack = FluidHelper.getFluidFromContainer(stack);
 		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
-		NetworkUtil.sendToServer(new PacketFluidSlotSelect(part, id, fluid));
+		NetworkUtil.sendToServer(new PacketFluidSlotSelect(listener, id, fluid));
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")
-	public void mouseClickedGas(ItemStack stack) {
+	public void handleGasContainer(ItemStack stack) {
 		GasStack gasStack = GasUtil.getGasFromContainer(stack);
 		FluidStack fluidStack = GasUtil.getFluidStack(gasStack);
 		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
-		NetworkUtil.sendToServer(new PacketFluidSlotSelect(part, id, fluid));
+		NetworkUtil.sendToServer(new PacketFluidSlotSelect(listener, id, fluid));
 	}
 
-	public void setFluid(Fluid _fluid) {
-		this.fluid = _fluid;
+	public void setFluid(Fluid fluid) {
+		this.fluid = fluid;
 	}
 }

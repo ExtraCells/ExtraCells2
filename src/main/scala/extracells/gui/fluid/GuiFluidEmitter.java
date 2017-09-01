@@ -3,10 +3,7 @@ package extracells.gui.fluid;
 import java.io.IOException;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -16,33 +13,30 @@ import org.lwjgl.input.Keyboard;
 
 import appeng.api.config.RedstoneMode;
 import extracells.container.fluid.ContainerFluidEmitter;
+import extracells.gui.GuiBase;
+import extracells.gui.widget.AbstractWidget;
 import extracells.gui.widget.DigitTextField;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
-import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidLevelEmitter;
-import extracells.part.gas.PartGasLevelEmitter;
 import extracells.registries.PartEnum;
-import extracells.util.GuiUtil;
 import extracells.util.NetworkUtil;
 
-public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
+public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements IFluidSlotGui {
 
 	public static final int xSize = 176;
 	public static final int ySize = 166;
 	private DigitTextField amountField;
 	private PartFluidLevelEmitter part;
 	private EntityPlayer player;
-	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png");
-	private WidgetFluidSlot fluidSlot;
 
 	public GuiFluidEmitter(PartFluidLevelEmitter _part, EntityPlayer _player) {
-		super(new ContainerFluidEmitter(_part, _player));
+		super(new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png"), new ContainerFluidEmitter(_part, _player));
 		this.player = _player;
 		this.part = _part;
-		this.fluidSlot = new WidgetFluidSlot(this.player, this.part, 79, 36);
+		widgetManager.add(new WidgetFluidSlot(widgetManager, this.part, 79, 36));
 		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(false)));
 	}
 
@@ -75,20 +69,9 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
-		int posX = (this.width - xSize) / 2;
-		int posY = (this.height - ySize) / 2;
-		drawTexturedModalRect(posX, posY, 0, 0, xSize, ySize);
-	}
-
-	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		this.fontRendererObj.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
-		this.fluidSlot.drawWidget();
 		((WidgetRedstoneModes) this.buttonList.get(6)).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
-		GuiUtil.renderOverlay((int)this.zLevel, this.guiLeft, this.guiTop, this.fluidSlot, mouseX, mouseY);
 	}
 
 	@Override
@@ -152,19 +135,6 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_AMOUNT_CHANGE, Integer.toString(amount)));
 	}
 
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseBtn);
-		if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, this.fluidSlot.getPosX(), this.fluidSlot.getPosY(), 18, 18, mouseX, mouseY)){
-			if(part instanceof PartGasLevelEmitter && Integration.Mods.MEKANISMGAS.isEnabled())
-				this.fluidSlot.mouseClickedGas(this.player.inventory.getItemStack());
-			else
-				this.fluidSlot.mouseClicked(this.player.inventory.getItemStack());
-		}
-
-
-	}
-
 	public void setAmountField(long amount) {
 		this.amountField.setText(Long.toString(amount));
 	}
@@ -174,11 +144,16 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 	}
 
 	@Override
-	public void updateFluids(List<Fluid> _fluids) {
-		if (_fluids == null || _fluids.isEmpty()) {
-			this.fluidSlot.setFluid(null);
-			return;
+	public void updateFluids(List<Fluid> fluids) {
+		for (AbstractWidget widget : widgetManager.getWidgets()) {
+			if (widget instanceof WidgetFluidSlot) {
+				WidgetFluidSlot fluidSlot = (WidgetFluidSlot) widget;
+				if (fluids == null || fluids.isEmpty()) {
+					fluidSlot.setFluid(null);
+					return;
+				}
+				fluidSlot.setFluid(fluids.get(0));
+			}
 		}
-		this.fluidSlot.setFluid(_fluids.get(0));
 	}
 }

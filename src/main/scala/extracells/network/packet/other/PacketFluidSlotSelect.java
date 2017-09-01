@@ -7,6 +7,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import net.minecraftforge.fluids.Fluid;
 
+import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.network.packet.IPacketHandlerServer;
 import extracells.network.packet.Packet;
 import extracells.network.packet.PacketBufferEC;
@@ -17,9 +18,9 @@ public class PacketFluidSlotSelect extends Packet {
 
 	private int index;
 	private Fluid fluid;
-	private IFluidSlotPartOrBlock partOrBlock;
+	private IFluidSlotListener partOrBlock;
 
-	public PacketFluidSlotSelect(IFluidSlotPartOrBlock partOrBlock, int index, Fluid fluid) {
+	public PacketFluidSlotSelect(IFluidSlotListener partOrBlock, int index, Fluid fluid) {
 		this.partOrBlock = partOrBlock;
 		this.index = index;
 		this.fluid = fluid;
@@ -46,19 +47,19 @@ public class PacketFluidSlotSelect extends Packet {
 	public static class Handler implements IPacketHandlerServer{
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
-			IFluidSlotPartOrBlock partOrBlock;
+			IFluidSlotListener listener;
 
 			if (data.readBoolean()) {
-				partOrBlock = data.readPart(player.worldObj);
+				listener = data.readPart(player.worldObj);
 			}else {
-				partOrBlock = data.readTile(player.worldObj, IFluidSlotPartOrBlock.class);
+				listener = data.readTile(player.worldObj, IFluidSlotListener.class);
 			}
 			int index = data.readVarIntFromBuffer();
 			Fluid fluid = data.readFluid();
-			if(partOrBlock == null){
+			if (listener == null) {
 				return;
 			}
-			partOrBlock.setFluid(index, fluid, player);
+			listener.setFluid(index, fluid, player);
 		}
 	}
 }

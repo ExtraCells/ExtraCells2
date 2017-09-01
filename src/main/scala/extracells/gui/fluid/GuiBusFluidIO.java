@@ -1,13 +1,11 @@
 package extracells.gui.fluid;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -19,41 +17,40 @@ import net.minecraftforge.fluids.FluidStack;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import extracells.container.fluid.ContainerBusFluidIO;
+import extracells.gui.GuiBase;
+import extracells.gui.ISlotRenderer;
+import extracells.gui.SlotUpgradeRenderer;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
-import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidIO;
-import extracells.part.gas.PartGasExport;
-import extracells.part.gas.PartGasImport;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
-public class GuiBusFluidIO extends GuiContainer implements
+public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
-	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
 	private PartFluidIO part;
-	private EntityPlayer player;
 	private byte filterSize;
 	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 	private boolean redstoneControlled;
 	private boolean hasNetworkTool;
 
 	public GuiBusFluidIO(PartFluidIO _terminal, EntityPlayer _player) {
-		super(new ContainerBusFluidIO(_terminal, _player));
+		super(new ResourceLocation("extracells", "textures/gui/busiofluid.png"), new ContainerBusFluidIO(_terminal, _player));
 		((ContainerBusFluidIO) this.inventorySlots).setGui(this);
 		this.part = _terminal;
-		this.player = _player;
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
-				int index = y + x * 3;
-				byte b = (byte) (((index + 1) % 2) + 1);
-				if (index == 4) {
-					b = 0;
+				int id = y + x * 3;
+				byte configOption = (byte) (((id + 1) % 2) + 1);
+				if (id == 4) {
+					configOption = 0;
 				}
-				fluidSlotList.add(new WidgetFluidSlot(player, part, y + x * 3, 61 + x * 18, 21 + y * 18, this, b));
+				WidgetFluidSlot fluidSlot = new WidgetFluidSlot(widgetManager, part, id, 61 + x * 18, 21 + y * 18, this, configOption);
+				widgetManager.add(fluidSlot);
+				fluidSlotList.add(fluidSlot);
 			}
 		}
 
@@ -75,29 +72,17 @@ public class GuiBusFluidIO extends GuiContainer implements
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float alpha, int mouseX,
-			int mouseY) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
+	protected void drawBackground() {
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 184);
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
-		if (this.hasNetworkTool)
-			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178,
-					93, 68, 68);
-		for (Object s : this.inventorySlots.inventorySlots) {
-			renderBackground((Slot) s);
+		if (this.hasNetworkTool) {
+			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
 		}
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		boolean overlayRendered = false;
-		for (byte i = 0; i < 9; i++) {
-			this.fluidSlotList.get(i).drawWidget();
-			if (!overlayRendered && this.fluidSlotList.get(i).canRender()) overlayRendered = renderOverlay(this.fluidSlotList.get(i), mouseX, mouseY);
-		}
-
 		for (Object button : this.buttonList) {
 			if (button instanceof WidgetRedstoneModes)
 				((WidgetRedstoneModes) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
@@ -138,44 +123,27 @@ public class GuiBusFluidIO extends GuiContainer implements
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		Slot slot = getSlotAtPosition(mouseX, mouseY);
 
-		if (slot != null && slot.getStack() != null && slot.getStack().isItemEqual(AEApi.instance().definitions().items().networkTool().maybeStack(1).get()))
-			return;
-		super.mouseClicked(mouseX, mouseY, mouseBtn);
-		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
-			if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
-				if((part instanceof PartGasImport || part instanceof PartGasExport) && Integration.Mods.MEKANISMGAS.isEnabled())
-					fluidSlot.mouseClickedGas(this.player.inventory.getItemStack());
-				else
-					fluidSlot.mouseClicked(this.player.inventory.getItemStack());
-				break;
+		if (slot != null) {
+			ItemStack itemStack = slot.getStack();
+			if (itemStack != null && itemStack.isItemEqual(AEApi.instance().definitions().items().networkTool().maybeStack(1).get())) {
+				return;
 			}
 		}
+		super.mouseClicked(mouseX, mouseY, mouseBtn);
 	}
 
-	private void renderBackground(Slot slot) {
+	@Override
+	protected boolean hasSlotRenders() {
+		return true;
+	}
+
+	@Nullable
+	@Override
+	protected ISlotRenderer getSlotRenderer(Slot slot) {
 		if (slot.getStack() == null && (slot.slotNumber < 4 || slot.slotNumber > 39)) {
-			GlStateManager.disableLighting();
-			GlStateManager.enableBlend();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
-			this.mc.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
-			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 208, 16, 16);
-			GlStateManager.disableBlend();
-			GlStateManager.enableLighting();
-
+			return SlotUpgradeRenderer.INSTANCE;
 		}
-	}
-
-	public boolean renderOverlay(WidgetFluidSlot fluidSlot, int mouseX,
-			int mouseY) {
-		if (isPointInRegion(fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
-			GlStateManager.disableLighting();
-			GlStateManager.disableDepth();
-			drawGradientRect(fluidSlot.getPosX() + 1, fluidSlot.getPosY() + 1, fluidSlot.getPosX() + 17, fluidSlot.getPosY() + 17, -0x7F000001, -0x7F000001);
-			GlStateManager.enableLighting();
-			GlStateManager.enableDepth();
-			return true;
-		}
-		return false;
+		return null;
 	}
 
 	public void setRedstoneControlled(boolean _redstoneControlled) {
@@ -189,11 +157,8 @@ public class GuiBusFluidIO extends GuiContainer implements
 		FluidStack containerFluid = FluidHelper.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
-			if (fluidSlot.canRender() && fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid)) {
-				if((part instanceof PartGasImport || part instanceof PartGasExport) && Integration.Mods.MEKANISMGAS.isEnabled())
-					fluidSlot.mouseClickedGas(itemStack);
-				else
-					fluidSlot.mouseClicked(itemStack);
+			if (fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid)) {
+				fluidSlot.handleContainer(itemStack);
 				return true;
 			}
 		}

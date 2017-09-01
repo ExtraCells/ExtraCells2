@@ -38,8 +38,8 @@ import appeng.api.util.AECableType;
 import extracells.container.ContainerPlaneFormation;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.fluid.GuiFluidPlaneFormation;
+import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.models.PartModels;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.part.PartECBase;
 import extracells.util.FluidHelper;
@@ -48,7 +48,7 @@ import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 
 public class PartFluidPlaneFormation extends PartECBase implements
-		IFluidSlotPartOrBlock, IGridTickable {
+	IFluidSlotListener, IGridTickable {
 
 	private Fluid fluid;
 	// TODO redstone control
