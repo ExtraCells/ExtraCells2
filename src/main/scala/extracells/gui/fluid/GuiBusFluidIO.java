@@ -47,8 +47,18 @@ public class GuiBusFluidIO extends GuiContainer implements
 		((ContainerBusFluidIO) this.inventorySlots).setGui(this);
 		this.part = _terminal;
 		this.player = _player;
+		for (int x = 0; x < 3; x++) {
+			for (int y = 0; y < 3; y++) {
+				int index = y + x * 3;
+				byte b = (byte) ((index % 1) + 1);
+				if (index == 4) {
+					b = 0;
+				}
+				fluidSlotList.add(new WidgetFluidSlot(player, part, y + x * 3, 61 + x * 18, 21 + y * 18, this, b));
+			}
+		}
 
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 0, 61, 21, this, (byte) 2));
+		/*this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 0, 61, 21, this, (byte) 2));
 		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 1, 79, 21, this, (byte) 1));
 		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 2, 97, 21, this, (byte) 2));
 		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 3, 61, 39, this, (byte) 1));
@@ -56,7 +66,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 5, 97, 39, this, (byte) 1));
 		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 6, 61, 57, this, (byte) 2));
 		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 7, 79, 57, this, (byte) 1));
-		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 8, 97, 57, this, (byte) 2));
+		this.fluidSlotList.add(new WidgetFluidSlot(this.player, this.part, 8, 97, 57, this, (byte) 2));*/
 
 		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_IO_INFO));
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;

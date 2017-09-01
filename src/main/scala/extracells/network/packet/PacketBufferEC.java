@@ -1,4 +1,4 @@
-package extracells.network;
+package extracells.network.packet;
 
 import javax.annotation.Nullable;
 import java.io.IOException;

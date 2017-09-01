@@ -10,9 +10,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.gui.GuiStorage;
-import extracells.network.IPacketHandlerClient;
-import extracells.network.PacketBufferEC;
+import extracells.network.packet.IPacketHandlerClient;
 import extracells.network.packet.Packet;
+import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
 import extracells.util.GuiUtil;
 

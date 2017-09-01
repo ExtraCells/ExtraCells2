@@ -8,9 +8,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import extracells.container.ContainerStorage;
-import extracells.network.IPacketHandlerClient;
-import extracells.network.PacketBufferEC;
+import extracells.network.packet.IPacketHandlerClient;
 import extracells.network.packet.Packet;
+import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
 import extracells.util.GuiUtil;
 

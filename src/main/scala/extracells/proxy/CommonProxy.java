@@ -19,6 +19,7 @@ import appeng.api.IAppEngApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeHandler;
 import appeng.api.recipes.IRecipeLoader;
+import extracells.network.PacketHandler;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.tileentity.TileEntityCertusTank;
@@ -124,5 +125,9 @@ public class CommonProxy {
 
 	public boolean isServer(){
 		return true;
+	}
+
+	public void registerPackets() {
+		PacketHandler.registerServerPackets();
 	}
 }

@@ -213,7 +213,11 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		return isActive() ? 15 : 0;
 	}
 
+	@Nullable
 	public final DimensionalCoord getLocation() {
+		if (tile == null) {
+			return null;
+		}
 		return new DimensionalCoord(this.tile.getWorld(), this.tile.getPos());
 	}
 

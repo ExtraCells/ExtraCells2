@@ -24,11 +24,12 @@ import extracells.gui.widget.WidgetStorageDirection;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.integration.Integration;
 import extracells.network.packet.other.IFluidSlotGui;
-import extracells.network.packet.part.PacketBusFluidStorage;
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidStorage;
 import extracells.part.gas.PartGasStorage;
 import extracells.util.FluidHelper;
 import extracells.util.GuiUtil;
+import extracells.util.NetworkUtil;
 
 public class GuiBusFluidStorage extends GuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
@@ -52,7 +53,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 			}
 		}
 
-		new PacketBusFluidStorage(this.player, part).sendPacketToServer();
+		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_INFO));
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;
 		this.xSize = this.hasNetworkTool ? 246 : 211;
 		this.ySize = 222;
@@ -63,21 +64,26 @@ public class GuiBusFluidStorage extends GuiContainer implements
 	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		if (button instanceof WidgetStorageDirection) {
+			AccessRestriction restriction;
 			switch (((WidgetStorageDirection) button).getAccessRestriction()) {
 			case NO_ACCESS:
-				new PacketBusFluidStorage(this.player, AccessRestriction.READ, false).sendPacketToServer();
+				restriction = AccessRestriction.READ;
 				break;
 			case READ:
-				new PacketBusFluidStorage(this.player, AccessRestriction.READ_WRITE, false).sendPacketToServer();
+				restriction = AccessRestriction.READ_WRITE;
 				break;
 			case READ_WRITE:
-				new PacketBusFluidStorage(this.player, AccessRestriction.WRITE, false).sendPacketToServer();
+				restriction = AccessRestriction.WRITE;
 				break;
 			case WRITE:
-				new PacketBusFluidStorage(this.player, AccessRestriction.NO_ACCESS, false).sendPacketToServer();
+				restriction = AccessRestriction.NO_ACCESS;
 				break;
 			default:
+				restriction = null;
 				break;
+			}
+			if (restriction != null) {
+				NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_ACCESS, restriction.toString()), player);
 			}
 		}
 	}

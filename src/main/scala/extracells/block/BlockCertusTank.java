@@ -37,7 +37,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import appeng.api.implementations.items.IAEWrench;
 import extracells.block.properties.PropertyFluid;
 import extracells.models.IStateMapperRegister;
-import extracells.network.PacketHandler;
 import extracells.registries.BlockEnum;
 import extracells.tileentity.TileEntityCertusTank;
 import extracells.util.TileUtil;
@@ -212,7 +211,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
 		if (!world.isRemote) {
 
-			PacketHandler.sendPacketToAllPlayers(world.getTileEntity(pos).getUpdatePacket(), world);
+			world.notifyBlockUpdate(pos, state, state, 0);
 		}
 	}
 

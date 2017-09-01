@@ -14,6 +14,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import extracells.Constants;
@@ -22,6 +23,9 @@ import extracells.models.PartModels;
 import extracells.models.blocks.FluidItemModel;
 import extracells.models.blocks.ModelCertusTank;
 import extracells.models.blocks.ModelWalrus;
+import extracells.network.PacketHandler;
+import extracells.render.tileentity.TileEntityRendererWalrus;
+import extracells.tileentity.TileEntityWalrus;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
@@ -39,15 +43,15 @@ public class ClientProxy extends CommonProxy {
 				new ItemRendererFluidPattern());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.WALRUS.getBlock()),
 				new ItemRendererWalrus());
-		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDITEM.getItem(), new ItemRendererFluid());
+		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDITEM.getItem(), new ItemRendererFluid());*/
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRendererWalrus());*/
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRendererWalrus());
 		ModelManager.registerItemAndBlockColors();
 		//RendererHardMEDrive.registerRenderer();
 	}
 
 	@SubscribeEvent
-	public void registerTextures(TextureStitchEvent.Pre event) {
+	public void registerTextures(TextureStitchEvent event) {
 		TextureMap map = event.getMap();
 		map.setTextureEntry(new TextureAtlasSprite(Constants.MOD_ID + ":blocks/walrus"){
 			public void loadSprite(PngSizeInfo sizeInfo, boolean p_188538_2_) throws IOException {
@@ -106,5 +110,10 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public boolean isServer(){
 		return false;
+	}
+
+	@Override
+	public void registerPackets() {
+		PacketHandler.registerClientPackets();
 	}
 }

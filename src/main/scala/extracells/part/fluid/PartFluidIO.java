@@ -190,13 +190,13 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		}
 
 		IPartHost host = getHost();
+		DimensionalCoord coord = getLocation();
 		if (host == null
-			|| host.getLocation() == null
-			|| host.getLocation().getWorld() == null
-			|| host.getLocation().getWorld().isRemote) {
+			|| coord == null
+			|| coord.getWorld() == null
+			|| coord.getWorld().isRemote) {
 			return;
 		}
-		DimensionalCoord coord = getLocation();
 		NetworkUtil.sendNetworkPacket(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_FILTER, Byte.toString(filterSize)), coord.getPos(), coord.getWorld());
 		NetworkUtil.sendNetworkPacket(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_REDSTONE, Boolean.toString(redstoneControlled)), coord.getPos(), coord.getWorld());
 		saveData();

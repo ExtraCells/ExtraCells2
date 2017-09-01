@@ -1,4 +1,4 @@
-package extracells.network;
+package extracells.network.packet;
 
 public interface IPacketHandler {
 }

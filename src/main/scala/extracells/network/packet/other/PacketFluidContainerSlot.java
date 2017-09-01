@@ -5,9 +5,9 @@ import java.io.IOException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
-import extracells.network.IPacketHandlerServer;
-import extracells.network.PacketBufferEC;
+import extracells.network.packet.IPacketHandlerServer;
 import extracells.network.packet.Packet;
+import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
 import extracells.tileentity.TileEntityFluidFiller;
 

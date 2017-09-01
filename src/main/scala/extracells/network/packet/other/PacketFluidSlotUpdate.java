@@ -10,9 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import net.minecraftforge.fluids.Fluid;
 
-import extracells.network.IPacketHandlerClient;
-import extracells.network.PacketBufferEC;
+import extracells.network.packet.IPacketHandlerClient;
 import extracells.network.packet.Packet;
+import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
 
 public class PacketFluidSlotUpdate extends Packet {

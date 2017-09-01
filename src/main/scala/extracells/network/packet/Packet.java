@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 
-import extracells.network.PacketBufferEC;
 import extracells.network.PacketHandler;
 import extracells.util.Log;
 import io.netty.buffer.Unpooled;

@@ -18,6 +18,7 @@ import extracells.gui.fluid.GuiFluidInterface;
 import extracells.network.packet.part.PacketFluidInterface;
 import extracells.part.fluid.PartFluidInterface;
 import extracells.tileentity.TileEntityFluidInterface;
+import extracells.util.NetworkUtil;
 
 public class ContainerFluidInterface extends Container implements
 	IContainerListener {
@@ -140,26 +141,14 @@ public class ContainerFluidInterface extends Container implements
 
 	@Override
 	public void updateContainer() {
-		new PacketFluidInterface(new FluidStack[] {
-				this.fluidInterface.getFluidTank(
-						AEPartLocation.fromOrdinal(0)).getFluid(),
-				this.fluidInterface.getFluidTank(
-					AEPartLocation.fromOrdinal(1)).getFluid(),
-				this.fluidInterface.getFluidTank(
-					AEPartLocation.fromOrdinal(2)).getFluid(),
-				this.fluidInterface.getFluidTank(
-					AEPartLocation.fromOrdinal(3)).getFluid(),
-				this.fluidInterface.getFluidTank(
-					AEPartLocation.fromOrdinal(4)).getFluid(),
-				this.fluidInterface.getFluidTank(
-					AEPartLocation.fromOrdinal(5)).getFluid() },
-				new String[] { getFluidName(AEPartLocation.fromOrdinal(0)),
-						getFluidName(AEPartLocation.fromOrdinal(1)),
-						getFluidName(AEPartLocation.fromOrdinal(2)),
-						getFluidName(AEPartLocation.fromOrdinal(3)),
-						getFluidName(AEPartLocation.fromOrdinal(4)),
-						getFluidName(AEPartLocation.fromOrdinal(5)) },
-				this.player).sendPacketToPlayer(this.player);
+		FluidStack[] fluidStacks = new FluidStack[6];
+		String[] fluidNames = new String[6];
+		for (int i = 0; i < 6; i++) {
+			AEPartLocation location = AEPartLocation.fromOrdinal(i);
+			fluidStacks[i] = fluidInterface.getFluidTank(location).getFluid();
+			fluidNames[i] = getFluidName(location);
+		}
+		NetworkUtil.sendToPlayer(new PacketFluidInterface(fluidStacks, fluidNames), this.player);
 
 	}
 

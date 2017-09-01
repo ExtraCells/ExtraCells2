@@ -11,10 +11,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
-import extracells.network.IPacketHandlerClient;
-import extracells.network.IPacketHandlerServer;
-import extracells.network.PacketBufferEC;
+import extracells.network.packet.IPacketHandlerClient;
+import extracells.network.packet.IPacketHandlerServer;
 import extracells.network.packet.Packet;
+import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
 
 public class PacketOreDictExport extends Packet {

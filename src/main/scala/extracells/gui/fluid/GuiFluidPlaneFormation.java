@@ -20,9 +20,10 @@ import extracells.container.ContainerPlaneFormation;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
-import extracells.network.packet.part.PacketFluidPlaneFormation;
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidPlaneFormation;
 import extracells.util.FluidHelper;
+import extracells.util.NetworkUtil;
 
 public class GuiFluidPlaneFormation extends GuiContainer implements
 		IFluidSlotGui {
@@ -41,8 +42,7 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 		this.part = _part;
 		this.player = _player;
 		this.fluidSlot = new WidgetFluidSlot(this.player, this.part, 0, 79, 39);
-		new PacketFluidPlaneFormation(this.player, this.part)
-				.sendPacketToServer();
+		NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_PLANE_FORMATION_INFO), player);
 		this.hasNetworkTool = this.inventorySlots.getInventory().size() > 40;
 		this.xSize = this.hasNetworkTool ? 246 : 211;
 		this.ySize = 184;

@@ -8,18 +8,23 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import appeng.api.config.AccessRestriction;
 import appeng.api.config.RedstoneMode;
 import extracells.gui.fluid.GuiBusFluidIO;
+import extracells.gui.fluid.GuiBusFluidStorage;
 import extracells.gui.fluid.GuiFluidEmitter;
-import extracells.network.IPacketHandlerClient;
-import extracells.network.IPacketHandlerServer;
-import extracells.network.PacketBufferEC;
+import extracells.network.packet.IPacketHandlerClient;
+import extracells.network.packet.IPacketHandlerServer;
 import extracells.network.packet.Packet;
+import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
 import extracells.part.PartECBase;
 import extracells.part.fluid.PartFluidIO;
 import extracells.part.fluid.PartFluidLevelEmitter;
+import extracells.part.fluid.PartFluidPlaneFormation;
+import extracells.part.fluid.PartFluidStorage;
 import extracells.util.GuiUtil;
+import extracells.util.NetworkUtil;
 
 public class PacketPartConfig extends Packet {
 	public static final String FLUID_EMITTER_TOGGLE = "FluidEmitter.Toggle";
@@ -32,6 +37,11 @@ public class PacketPartConfig extends Packet {
 	public static final String FLUID_IO_REDSTONE_MODE = "FluidIO.Redstone.Mode";
 	public static final String FLUID_IO_INFO = "FluidIO.Info";
 	public static final String FLUID_IO_FILTER = "FluidIO.Filter";
+
+	public static final String FLUID_STORAGE_INFO = "FluidStorage.Info";
+	public static final String FLUID_STORAGE_ACCESS = "FluidStorage.Access";
+
+	public static final String FLUID_PLANE_FORMATION_INFO = "FluidPlaneFormation.Info";
 
 	private PartECBase part;
 	private String name;
@@ -103,6 +113,13 @@ public class PacketPartConfig extends Packet {
 					return;
 				}
 				gui.updateRedstoneMode(redstoneMode);
+			} else if (name.equals(FLUID_STORAGE_ACCESS)) {
+				AccessRestriction access = AccessRestriction.valueOf(name);
+				GuiBusFluidStorage gui = GuiUtil.getGui(GuiBusFluidStorage.class);
+				if (gui == null || access == null) {
+					return;
+				}
+				gui.updateAccessRestriction(access);
 			}
 		}
 	}
@@ -130,6 +147,17 @@ public class PacketPartConfig extends Packet {
 				((PartFluidIO) part).sendInformation(player);
 			} else if (name.equals(FLUID_IO_REDSTONE_LOOP) && part instanceof PartFluidIO) {
 				((PartFluidIO) part).loopRedstoneMode(player);
+			} else if (name.equals(FLUID_STORAGE_ACCESS) && part instanceof PartFluidStorage) {
+				AccessRestriction access = AccessRestriction.valueOf(name);
+				if (access == null) {
+					return;
+				}
+				((PartFluidStorage) part).updateAccess(access);
+				NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_ACCESS, name), player);
+			} else if (name.equals(FLUID_STORAGE_INFO) && part instanceof PartFluidStorage) {
+				((PartFluidStorage) part).sendInformation(player);
+			} else if (name.equals(FLUID_PLANE_FORMATION_INFO) && part instanceof PartFluidPlaneFormation) {
+				((PartFluidPlaneFormation) part).sendInformation(player);
 			}
 		}
 	}

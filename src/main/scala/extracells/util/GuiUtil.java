@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 
@@ -59,6 +60,19 @@ public class GuiUtil {
 	@Nullable
 	public static <C> C getContainer(EntityPlayer player, Class<C> containerClass) {
 		Container container = player.openContainer;
+		if (containerClass.isInstance(container)) {
+			return containerClass.cast(container);
+		} else {
+			return null;
+		}
+	}
+
+	@Nullable
+	public static <C> C getContainer(@Nullable GuiContainer gui, Class<C> containerClass) {
+		if (gui == null) {
+			return null;
+		}
+		Container container = gui.inventorySlots;
 		if (containerClass.isInstance(container)) {
 			return containerClass.cast(container);
 		} else {

@@ -26,8 +26,8 @@ public abstract class BlockEC extends BlockContainer implements IItemModelRegist
 
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
-    }
+		return EnumBlockRenderType.INVISIBLE;
+	}
 
     @Override
     public void registerModel(Item item, ModelManager manager) {

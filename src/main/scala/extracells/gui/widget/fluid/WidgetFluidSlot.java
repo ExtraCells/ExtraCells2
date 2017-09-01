@@ -68,8 +68,7 @@ public class WidgetFluidSlot extends Gui {
 	}
 
 	public boolean canRender() {
-		return this.configurable == null
-				|| this.configurable.getConfigState() >= this.configOption;
+		return this.configurable == null || this.configurable.getConfigState() >= this.configOption;
 	}
 
 	@SuppressWarnings("rawtypes")

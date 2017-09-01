@@ -1,12 +1,9 @@
 package extracells.network.packet;
 
-import extracells.network.IPacketHandler;
-import extracells.network.IPacketHandlerClient;
-import extracells.network.IPacketHandlerServer;
-
 public enum PacketId {
 	FLUID_SLOT,
 	FLUID_CONTAINER_SLOT,
+	FLUID_INTERFACE,
 	EXPORT_ORE,
 	UPDATE,
 	CONTAINER_UPDATE,

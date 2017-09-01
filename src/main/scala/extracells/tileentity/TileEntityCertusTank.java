@@ -16,8 +16,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-import extracells.network.PacketHandler;
-
 public class TileEntityCertusTank extends TileBase {
 
 	private FluidStack lastBeforeUpdate = null;
@@ -58,8 +56,7 @@ public class TileEntityCertusTank extends TileBase {
 			if (current != null) {
 				if (this.lastBeforeUpdate != null) {
 					if (Math.abs(current.amount - this.lastBeforeUpdate.amount) >= 500) {
-						PacketHandler.sendPacketToAllPlayers(
-								getUpdatePacket(), this.worldObj);
+						updateBlock();
 						this.lastBeforeUpdate = current.copy();
 					} else if (this.lastBeforeUpdate.amount < this.tank
 							.getCapacity()
@@ -67,18 +64,15 @@ public class TileEntityCertusTank extends TileBase {
 							|| this.lastBeforeUpdate.amount == this.tank
 									.getCapacity()
 							&& current.amount < this.tank.getCapacity()) {
-						PacketHandler.sendPacketToAllPlayers(
-								getUpdatePacket(), this.worldObj);
+						updateBlock();
 						this.lastBeforeUpdate = current.copy();
 					}
 				} else {
-					PacketHandler.sendPacketToAllPlayers(
-							getUpdatePacket(), this.worldObj);
+					updateBlock();
 					this.lastBeforeUpdate = current.copy();
 				}
 			} else if (this.lastBeforeUpdate != null) {
-				PacketHandler.sendPacketToAllPlayers(getUpdatePacket(),
-						this.worldObj);
+				updateBlock();
 				this.lastBeforeUpdate = null;
 			}
 		}

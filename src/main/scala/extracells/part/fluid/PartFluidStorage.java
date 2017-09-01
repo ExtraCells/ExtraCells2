@@ -42,7 +42,7 @@ import extracells.inventory.HandlerPartStorageFluid;
 import extracells.models.PartModels;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
-import extracells.network.packet.part.PacketBusFluidStorage;
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.PartECBase;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
@@ -213,8 +213,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
 	public void sendInformation(EntityPlayer player) {
 		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.copyOf(this.filterFluids)), player);
-		new PacketBusFluidStorage(player, this.access, true)
-				.sendPacketToPlayer(player);
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_STORAGE_ACCESS, access.toString()), player);
 	}
 
 	@Override

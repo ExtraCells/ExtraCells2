@@ -8,9 +8,9 @@ import net.minecraftforge.fluids.Fluid;
 
 import extracells.container.ContainerStorage;
 import extracells.container.fluid.ContainerFluidStorage;
-import extracells.network.IPacketHandlerServer;
-import extracells.network.PacketBufferEC;
+import extracells.network.packet.IPacketHandlerServer;
 import extracells.network.packet.Packet;
+import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
 import extracells.util.GuiUtil;
 
