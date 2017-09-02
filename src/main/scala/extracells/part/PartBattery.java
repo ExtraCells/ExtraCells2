@@ -17,13 +17,13 @@ import appeng.api.networking.events.MENetworkPowerStorage;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
+import extracells.inventory.ECPrivateInventory;
+import extracells.inventory.IInventoryListener;
 import extracells.models.PartModels;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
 
 public class PartBattery extends PartECBase implements IAEPowerStorage,
-		IInventoryUpdateReceiver {
+	IInventoryListener {
 
 	//private IIcon batteryIcon = TextureManager.BATTERY_FRONT.getTexture();
 	private ItemStack battery;

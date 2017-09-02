@@ -46,9 +46,10 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 		return 5.0F;
 	}
 
-	private boolean checkItem(IAEItemStack s) {
-		if (s == null || this.filter.equals(""))
+	private boolean isItemValid(IAEItemStack s) {
+		if (s == null || this.filter.equals("")) {
 			return false;
+		}
 		int[] ids = OreDictionary.getOreIDs(s.getItemStack());
 		for (int id : ids) {
 			String name = OreDictionary.getOreName(id);
@@ -84,7 +85,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 		IStorageGrid storage = getStorageGrid();
 		IAEItemStack stack = null;
 		for (IAEItemStack s : storage.getItemInventory().getStorageList()) {
-			if (checkItem(s.copy())) {
+			if (isItemValid(s.copy())) {
 				stack = s.copy();
 				break;
 			}

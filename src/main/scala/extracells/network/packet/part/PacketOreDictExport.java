@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,6 +15,7 @@ import extracells.network.packet.IPacketHandlerServer;
 import extracells.network.packet.Packet;
 import extracells.network.packet.PacketBufferEC;
 import extracells.network.packet.PacketId;
+import extracells.util.GuiUtil;
 
 public class PacketOreDictExport extends Packet {
 
@@ -40,6 +40,9 @@ public class PacketOreDictExport extends Packet {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
 			String filter = data.readString();
+			if (filter == null) {
+				return;
+			}
 			GuiOreDictExport.updateFilter(filter);
 		}
 	}
@@ -48,11 +51,11 @@ public class PacketOreDictExport extends Packet {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			String filter = data.readString();
-			Container con = player.openContainer;
-			if (con != null && con instanceof ContainerOreDictExport) {
-				ContainerOreDictExport c = (ContainerOreDictExport) con;
-				c.part.filter = filter;
+			ContainerOreDictExport container = GuiUtil.getContainer(player, ContainerOreDictExport.class);
+			if (filter == null || container == null) {
+				return;
 			}
+			container.setFilter(filter);
 		}
 	}
 }

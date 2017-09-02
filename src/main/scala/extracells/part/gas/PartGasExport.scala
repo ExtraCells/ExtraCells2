@@ -62,14 +62,14 @@ class PartGasExport extends PartFluidExport{
     import scala.collection.JavaConversions._
     for (fluid <- filter) {
       if (fluid != null) {
-        val stack: IAEFluidStack = extractGasFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
+        val stack: IAEFluidStack = extractGas(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
 
         if (stack != null) {
           val gasStack = GasUtil.getGasStack(stack.getFluidStack)
           if (gasStack != null && facingTank.canReceiveGas(getFacing.getOpposite, gasStack.getGas)) {
             val filled: Int = facingTank.receiveGas(getFacing.getOpposite, gasStack, true)
             if (filled > 0) {
-              extractGasFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
+              extractGas(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
               return true
             }
           }

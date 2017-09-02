@@ -7,7 +7,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -116,9 +115,5 @@ public abstract class AbstractFluidWidget extends Gui {
 
 	public void setFluid(Fluid fluid) {
 		this.fluid = fluid;
-	}
-
-	public void setFluid(int fluidID) {
-		this.fluid = FluidRegistry.getFluid(fluidID);
 	}
 }

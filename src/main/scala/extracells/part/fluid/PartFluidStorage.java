@@ -39,17 +39,17 @@ import appeng.api.util.AECableType;
 import extracells.container.fluid.ContainerBusFluidStorage;
 import extracells.gui.fluid.GuiBusFluidStorage;
 import extracells.gui.widget.fluid.IFluidSlotListener;
+import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.HandlerPartStorageFluid;
+import extracells.inventory.IInventoryListener;
 import extracells.models.PartModels;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.PartECBase;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotListener {
+public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryListener, IFluidSlotListener {
 
 	private HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
 	private int priority = 0;

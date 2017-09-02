@@ -37,16 +37,16 @@ import extracells.container.ContainerTerminal;
 import extracells.container.StorageType;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiTerminal;
+import extracells.inventory.ECPrivateInventory;
+import extracells.inventory.IInventoryListener;
 import extracells.models.PartModels;
 import extracells.network.packet.part.PacketTerminalSelectFluidClient;
 import extracells.part.PartECBase;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
 
-public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryUpdateReceiver {
+public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryListener {
 
 	protected Fluid currentFluid;
 	private List<Object> containers = new ArrayList<Object>();

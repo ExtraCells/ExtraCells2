@@ -1,4 +1,4 @@
-package extracells.util.inventory;
+package extracells.inventory;
 
 import javax.annotation.Nullable;
 
@@ -16,23 +16,18 @@ public class ECPrivateInventory implements IInventory {
 	public ItemStack[] slots;
 	public String customName;
 	private int stackLimit;
-	private IInventoryUpdateReceiver receiver;
+	@Nullable
+	private IInventoryListener listener;
 
-	public ECPrivateInventory(String _customName, int _size, int _stackLimit) {
-		this(_customName, _size, _stackLimit, null);
+	public ECPrivateInventory(String customName, int size, int stackLimit) {
+		this(customName, size, stackLimit, null);
 	}
 
-	public ECPrivateInventory(String _customName, int _size, int _stackLimit,
-			IInventoryUpdateReceiver _receiver) {
-		this.slots = new ItemStack[_size];
-		this.customName = _customName;
-		this.stackLimit = _stackLimit;
-		this.receiver = _receiver;
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player) {
-		// NOBODY needs this!
+	public ECPrivateInventory(String customName, int size, int stackLimit, IInventoryListener listener) {
+		this.slots = new ItemStack[size];
+		this.customName = customName;
+		this.stackLimit = stackLimit;
+		this.listener = listener;
 	}
 
 	@Override
@@ -44,11 +39,6 @@ public class ECPrivateInventory implements IInventory {
 		}
 
 		return itemStack;
-	}
-
-	@Override
-	public String getName() {
-		return this.customName;
 	}
 
 	@Override
@@ -73,8 +63,18 @@ public class ECPrivateInventory implements IInventory {
 	}
 
 	@Override
+	public String getName() {
+		return this.customName;
+	}
+
+	@Override
 	public boolean hasCustomName() {
 		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TextComponentString(getName());
 	}
 
 	/**
@@ -95,8 +95,7 @@ public class ECPrivateInventory implements IInventory {
 		if (stackLimit > slot.getMaxStackSize())
 			stackLimit = slot.getMaxStackSize();
 		ItemStack added = slot.copy();
-		added.stackSize = slot.stackSize + amount > stackLimit ? stackLimit
-				: amount;
+		added.stackSize = slot.stackSize + amount > stackLimit ? stackLimit : amount;
 		slot.stackSize += added.stackSize;
 		return added;
 	}
@@ -113,12 +112,18 @@ public class ECPrivateInventory implements IInventory {
 
 	@Override
 	public void markDirty() {
-		if (this.receiver != null)
-			this.receiver.onInventoryChanged();
+		if (this.listener != null) {
+			this.listener.onInventoryChanged();
+		}
 	}
 
 	@Override
 	public void openInventory(EntityPlayer player) {
+		// NOBODY needs this!
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
 		// NOBODY needs this!
 	}
 
@@ -140,11 +145,11 @@ public class ECPrivateInventory implements IInventory {
 	}
 
 	@Override
-	public void setInventorySlotContents(int slotId, ItemStack itemstack) {
-		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit()) {
-			itemstack.stackSize = getInventoryStackLimit();
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+			stack.stackSize = getInventoryStackLimit();
 		}
-		this.slots[slotId] = itemstack;
+		this.slots[index] = stack;
 
 		markDirty();
 	}
@@ -170,7 +175,6 @@ public class ECPrivateInventory implements IInventory {
 
 	@Override
 	public void setField(int id, int value) {
-
 	}
 
 	@Override
@@ -183,10 +187,5 @@ public class ECPrivateInventory implements IInventory {
 		for(int i = 0;i < slots.length;i++){
 			slots[i] = null;
 		}
-	}
-
-	@Override
-	public ITextComponent getDisplayName() {
-		return new TextComponentString(getName());
 	}
 }

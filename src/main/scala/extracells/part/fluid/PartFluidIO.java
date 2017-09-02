@@ -29,16 +29,16 @@ import appeng.api.util.DimensionalCoord;
 import extracells.container.fluid.ContainerBusFluidIO;
 import extracells.gui.fluid.GuiBusFluidIO;
 import extracells.gui.widget.fluid.IFluidSlotListener;
+import extracells.inventory.ECPrivateInventory;
+import extracells.inventory.IInventoryListener;
+import extracells.inventory.UpgradeInventory;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.PartECBase;
 import extracells.util.NetworkUtil;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable,
-	IInventoryUpdateReceiver, IFluidSlotListener {
+public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryListener, IFluidSlotListener {
 
 	public Fluid[] filterFluids = new Fluid[9];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -46,22 +46,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 	protected byte speedState;
 	protected boolean redstoneControlled;
 	private boolean lastRedstone;
-	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4,
-			1, this) {
-
-		@Override
-		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-			if (itemStack == null)
-				return false;
-			if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(itemStack))
-				return true;
-			else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack))
-				return true;
-			else if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack))
-				return true;
-			return false;
-		}
-	};
+	private UpgradeInventory upgradeInventory = new UpgradeInventory(this);
 
 	@Override
 	public void getDrops( List<ItemStack> drops, boolean wrenched) {

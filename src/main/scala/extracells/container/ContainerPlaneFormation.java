@@ -21,21 +21,18 @@ public class ContainerPlaneFormation extends Container {
 
 	public ContainerPlaneFormation(PartFluidPlaneFormation part,
 			EntityPlayer player) {
-		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0,
-				187, 8));
+		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
 		bindPlayerInventory(player.inventory);
 
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack stack = player.inventory.getStackInSlot(i);
-			if (stack != null
-					&& AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
+			if (stack != null && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
 				DimensionalCoord coord = part.getHost().getLocation();
 				IGuiItem guiItem = (IGuiItem) stack.getItem();
 				INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.getPos());
 				for (int j = 0; j < 3; j++) {
 					for (int k = 0; k < 3; k++) {
-						addSlotToContainer(new SlotNetworkTool(networkTool, j
-								+ k * 3, 187 + k * 18, j * 18 + 102));
+						addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
 					}
 				}
 				return;

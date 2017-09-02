@@ -25,18 +25,18 @@ import extracells.container.slot.SlotOutput;
 import extracells.container.slot.SlotPlayerInventory;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiStorage;
+import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.HandlerItemStorageFluid;
+import extracells.inventory.IInventoryListener;
 import extracells.network.packet.part.PacketStorageSelectFluid;
 import extracells.network.packet.part.PacketStorageUpdateFluid;
 import extracells.network.packet.part.PacketStorageUpdateState;
 import extracells.util.GuiUtil;
 import extracells.util.NetworkUtil;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
 
 public abstract class ContainerStorage extends Container implements
 	IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer,
-	IInventoryUpdateReceiver, IStorageContainer {
+	IInventoryListener, IStorageContainer {
 
 	protected EnumHand hand = EnumHand.MAIN_HAND;
 	protected StorageType storageType;

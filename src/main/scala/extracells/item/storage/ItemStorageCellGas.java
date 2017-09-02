@@ -12,9 +12,9 @@ import net.minecraftforge.fluids.FluidRegistry;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.StorageChannel;
 import extracells.api.IGasStorageCell;
+import extracells.inventory.ECFluidFilterInventory;
+import extracells.inventory.ECPrivateInventory;
 import extracells.item.ItemFluid;
-import extracells.util.inventory.ECFluidFilterInventory;
-import extracells.util.inventory.ECPrivateInventory;
 
 public class ItemStorageCellGas extends ItemStorageCell implements IGasStorageCell {
 

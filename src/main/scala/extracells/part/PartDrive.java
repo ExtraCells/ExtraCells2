@@ -32,13 +32,13 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import extracells.container.ContainerDrive;
 import extracells.gui.GuiDrive;
+import extracells.inventory.ECPrivateInventory;
+import extracells.inventory.IInventoryListener;
 import extracells.util.PermissionUtil;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
 
 public class PartDrive extends PartECBase implements ICellContainer,
-		IInventoryUpdateReceiver {
+	IInventoryListener {
 
 	private int priority = 0; // TODO
 	private short[] blinkTimers; // TODO

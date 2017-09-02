@@ -7,9 +7,9 @@ import appeng.api.config.{AccessRestriction, FuzzyMode}
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
 import extracells.api.{ECApi, IHandlerFluidStorage, IPortableGasStorageCell}
-import extracells.item.{ItemECBase, PowerItem}
+import extracells.inventory.{ECFluidFilterInventory, ECPrivateInventory}
+import extracells.item.{ItemECBase, ItemFluid, PowerItem}
 import extracells.models.ModelManager
-import extracells.util.inventory.{ECFluidFilterInventory, ECPrivateInventory}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
@@ -63,10 +63,10 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
     val stacks: Array[ItemStack] = inventory.slots
     val filter: util.ArrayList[Fluid] = new util.ArrayList[Fluid]
     if (stacks.length == 0) return null
-    for (s <- stacks) {
-      if (s != null) {
-        val f: Fluid = FluidRegistry.getFluid(s.getItemDamage)
-        if (f != null) filter.add(f)
+    for (stack <- stacks) {
+      if (stack != null) {
+        val fluid: Fluid = FluidRegistry.getFluid(ItemFluid.getFluidName(stack))
+        if (fluid != null) filter.add(fluid)
       }
     }
     filter

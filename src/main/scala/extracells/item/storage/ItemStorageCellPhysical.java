@@ -40,12 +40,12 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 import cofh.api.energy.IEnergyContainerItem;
+import extracells.inventory.ECCellInventory;
 import extracells.item.EnumBlockContainerMode;
 import extracells.item.ItemECBase;
 import extracells.models.ModelManager;
 import extracells.registries.ItemEnum;
 import extracells.util.ECConfigHandler;
-import extracells.util.inventory.ECCellInventory;
 
 //TODO: Clean Up
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")

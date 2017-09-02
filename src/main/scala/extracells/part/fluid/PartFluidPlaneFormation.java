@@ -39,13 +39,13 @@ import extracells.container.ContainerPlaneFormation;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.fluid.GuiFluidPlaneFormation;
 import extracells.gui.widget.fluid.IFluidSlotListener;
+import extracells.inventory.ECPrivateInventory;
 import extracells.models.PartModels;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.part.PartECBase;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
-import extracells.util.inventory.ECPrivateInventory;
 
 public class PartFluidPlaneFormation extends PartECBase implements
 	IFluidSlotListener, IGridTickable {

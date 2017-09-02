@@ -21,9 +21,9 @@ import extracells.util.NetworkUtil;
 
 public class GuiOreDictExport extends GuiContainer {
 
-	public static void updateFilter(String _filter) {
+	public static void updateFilter(String newFilter) {
 		if (filter != null) {
-			filter = _filter;
+			filter = newFilter;
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui != null && gui instanceof GuiOreDictExport) {
 				GuiOreDictExport g = (GuiOreDictExport) gui;
@@ -77,8 +77,6 @@ public class GuiOreDictExport extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.guiLeft = (this.width - this.xSize) / 2;
-		this.guiTop = (this.height - this.ySize) / 2;
 		this.buttonList.add(new GuiButton(1,
 				this.guiLeft + this.xSize / 2 - 44, this.guiTop + 35, 88, 20,
 				I18n.translateToLocal("extracells.tooltip.save")));
@@ -106,8 +104,9 @@ public class GuiOreDictExport extends GuiContainer {
 
 	@Override
 	protected void keyTyped(char key, int keyID) {
-		if (keyID == Keyboard.KEY_ESCAPE)
+		if (keyID == Keyboard.KEY_ESCAPE) {
 			this.mc.thePlayer.closeScreen();
+		}
 		this.searchbar.textboxKeyTyped(key, keyID);
 		filter = this.searchbar.getText();
 	}

@@ -25,10 +25,10 @@ import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
 import extracells.gridblock.ECGridBlockHardMEDrive;
-import extracells.util.inventory.ECPrivateInventory;
-import extracells.util.inventory.IInventoryUpdateReceiver;
+import extracells.inventory.ECPrivateInventory;
+import extracells.inventory.IInventoryListener;
 
-public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryUpdateReceiver{
+public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryListener {
 
     private  int priority = 0;
     boolean isFirstGridNode = true;

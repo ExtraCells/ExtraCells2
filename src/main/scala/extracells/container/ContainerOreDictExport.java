@@ -6,14 +6,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 
-import extracells.gui.fluid.GuiFluidInterface;
 import extracells.network.packet.part.PacketOreDictExport;
 import extracells.part.PartOreDictExporter;
 import extracells.util.NetworkUtil;
 
 public class ContainerOreDictExport extends Container {
 	public PartOreDictExporter part;
-	public GuiFluidInterface gui;
 	EntityPlayer player;
 
 	public ContainerOreDictExport(EntityPlayer player, PartOreDictExporter _part) {
@@ -38,6 +36,10 @@ public class ContainerOreDictExport extends Container {
 			this.addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18,
 					142));
 		}
+	}
+
+	public void setFilter(String filter) {
+		part.filter = filter;
 	}
 
 	@Override

@@ -70,6 +70,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	private TileEntity hostTile;
 	@Nullable
 	private IFluidHandler facingTank;
+	@Nullable
 	private Object facingGasTank;
 	private boolean redstonePowered;
 	private boolean isActive;
@@ -79,14 +80,15 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Override
 	public void addToWorld() {
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
 			return;
+		}
 		this.gridBlock = new ECBaseGridBlock(this);
 		this.node = AEApi.instance().createGridNode(this.gridBlock);
 		if (this.node != null) {
-			if (this.owner != null)
-				this.node.setPlayerID(AEApi.instance().registries().players()
-					.getID(this.owner));
+			if (this.owner != null) {
+				this.node.setPlayerID(AEApi.instance().registries().players().getID(this.owner));
+			}
 			this.node.updateState();
 		}
 		setPower(null);
@@ -103,34 +105,48 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		return false;
 	}
 
-	protected final IAEFluidStack extractFluid(IAEFluidStack toExtract,
-			Actionable action) {
-		if (this.gridBlock == null || this.facingTank == null)
+	protected final IAEFluidStack extractFluid(IAEFluidStack toExtract, Actionable action) {
+		if (this.gridBlock == null || this.facingTank == null) {
 			return null;
+		}
 		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
-		if (monitor == null)
+		if (monitor == null) {
 			return null;
+		}
 		return monitor.extractItems(toExtract, action, new MachineSource(this));
 	}
 
-	protected final IAEFluidStack extractGasFluid(IAEFluidStack toExtract,
-											   Actionable action) {
-		if (this.gridBlock == null || this.facingGasTank == null)
-			return null;
+	protected final IAEFluidStack injectFluid(IAEFluidStack toInject, Actionable action) {
+		if (this.gridBlock == null || this.facingTank == null) {
+			return toInject;
+		}
 		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
-		if (monitor == null)
+		if (monitor == null) {
+			return toInject;
+		}
+		return monitor.injectItems(toInject, action, new MachineSource(this));
+	}
+
+	protected final IAEFluidStack extractGas(IAEFluidStack toExtract, Actionable action) {
+		if (this.gridBlock == null || this.facingGasTank == null) {
 			return null;
+		}
+		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
+		if (monitor == null) {
+			return null;
+		}
 		return monitor.extractItems(toExtract, action, new MachineSource(this));
 	}
 
-	protected final IAEFluidStack extractGas(IAEFluidStack toExtract,
-											   Actionable action) {
-		if (this.gridBlock == null || this.facingGasTank == null)
-			return null;
+	protected final IAEFluidStack injectGas(IAEFluidStack toInject, Actionable action) {
+		if (this.gridBlock == null || this.facingGasTank == null) {
+			return toInject;
+		}
 		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
-		if (monitor == null)
-			return null;
-		return monitor.extractItems(toExtract, action, new MachineSource(this));
+		if (monitor == null) {
+			return toInject;
+		}
+		return monitor.injectItems(toInject, action, new MachineSource(this));
 	}
 
 	@Override
@@ -140,11 +156,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Override
 	public abstract void getBoxes(IPartCollisionHelper bch);
-
-	/*@Override
-	public IIcon getBreakingTexture() {
-		return TextureManager.BUS_SIDE.getTexture();
-	}*/
 
 	@Override
 	public AECableType getCableConnectionType(AEPartLocation aePartLocation) {
@@ -251,29 +262,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		}
 	}
 
-	protected final IAEFluidStack injectFluid(IAEFluidStack toInject,
-			Actionable action) {
-		if (this.gridBlock == null || this.facingTank == null) {
-			return toInject;
-		}
-		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
-		if (monitor == null) {
-			return toInject;
-		}
-		return monitor.injectItems(toInject, action, new MachineSource(this));
-	}
-
-	protected final IAEFluidStack injectGas(IAEFluidStack toInject, Actionable action) {
-		if (this.gridBlock == null || this.facingGasTank == null) {
-			return toInject;
-		}
-		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
-		if (monitor == null) {
-			return toInject;
-		}
-		return monitor.injectItems(toInject, action, new MachineSource(this));
-	}
-
 	@Override
 	public boolean isActive() {
 		return this.node != null ? this.node.isActive() : this.isActive;
@@ -334,26 +322,32 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Override
 	public void onNeighborChanged() {
-		if (this.hostTile == null)
+		if (hostTile == null) {
 			return;
-		World world = this.hostTile.getWorld();
-		BlockPos pos = hostTile.getPos();
-		TileEntity tileEntity = world.getTileEntity(pos.offset(side.getFacing()));
-		this.facingTank = null;
-		if(tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().getFacing())){
-			facingTank = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite().getFacing());
 		}
-		if (Integration.Mods.MEKANISMGAS.isEnabled()) {
-			updateCheckGasTank(tileEntity);
+		World world = hostTile.getWorld();
+		BlockPos pos = hostTile.getPos();
+		EnumFacing facing = side.getFacing();
+		TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
+		if (tileEntity != null) {
+			if (tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite())) {
+				facingTank = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+			} else {
+				facingTank = null;
+			}
+			if (Integration.Mods.MEKANISMGAS.isEnabled()) {
+				updateCheckGasTank(tileEntity);
+			}
 		}
 		this.redstonePowered = world.isBlockIndirectlyGettingPowered(pos) > 0 || world.isBlockIndirectlyGettingPowered(pos.up()) > 0;
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")
 	private void updateCheckGasTank(TileEntity tile) {
-		this.facingGasTank = null;
-		if (tile != null && tile instanceof IGasHandler){
+		if (tile instanceof IGasHandler) {
 			this.facingGasTank = tile;
+		} else {
+			this.facingGasTank = null;
 		}
 	}
 
@@ -389,66 +383,10 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Override
 	public void removeFromWorld() {
-		if (this.node != null)
+		if (this.node != null) {
 			this.node.destroy();
-	}
-
-	@Override
-	public void renderDynamic(double x, double y, double z, float partialTicks, int destroyStage) {
-	}
-
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public abstract void renderInventory(IPartRenderHelper rh, RenderBlocks renderer);
-
-	@SideOnly(Side.CLIENT)
-	public void renderInventoryBusLights(IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		rh.setInvColor(0xFFFFFF);
-		IIcon otherIcon = TextureManager.BUS_COLOR.getTextures()[0];
-		IIcon side = TextureManager.BUS_SIDE.getTexture();
-		rh.setTexture(otherIcon, otherIcon, side, side, otherIcon, otherIcon);
-		rh.renderInventoryBox(renderer);
-
-		ts.setBrightness(13 << 20 | 13 << 4);
-		rh.setInvColor(AEColor.Transparent.blackVariant);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.UP, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.DOWN, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.NORTH, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.EAST, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.SOUTH, renderer);
-		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.WEST, renderer);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public abstract void renderStatic(int x, int y, int z,
-			IPartRenderHelper rh, RenderBlocks renderer);
-
-	@SideOnly(Side.CLIENT)
-	public void renderStaticBusLights(int x, int y, int z,
-			IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
-
-		IIcon otherIcon = TextureManager.BUS_COLOR.getTextures()[0];
-		IIcon side = TextureManager.BUS_SIDE.getTexture();
-		rh.setTexture(otherIcon, otherIcon, side, side, otherIcon, otherIcon);
-		rh.renderBlock(x, y, z, renderer);
-
-		if (isActive()) {
-			ts.setBrightness(13 << 20 | 13 << 4);
-			ts.setColorOpaque_I(this.host.getColor().blackVariant);
-		} else {
-			ts.setColorOpaque_I(0x000000);
 		}
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.UP, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.DOWN, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.NORTH, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.EAST, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.SOUTH, renderer);
-		rh.renderFace(x, y, z, TextureManager.BUS_COLOR.getTextures()[1], EnumFacing.WEST, renderer);
-	}*/
+	}
 
 	@Override
 	public boolean requireDynamicRender() {
@@ -456,17 +394,20 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	}
 
 	protected final void saveData() {
-		if (this.host != null)
+		if (this.host != null) {
 			this.host.markForSave();
+		}
 	}
 
 	@Override
 	public void securityBreak() {
-		getHost().removePart(this.side, false); // TODO drop item
+		if (host != null) {
+			host.removePart(this.side, false); // TODO drop item
+		}
 	}
 
-	protected void setActive(boolean _active) {
-		this.isActive = _active;
+	protected void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	@Override

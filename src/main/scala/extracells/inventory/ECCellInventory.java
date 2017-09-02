@@ -1,4 +1,4 @@
-package extracells.util.inventory;
+package extracells.inventory;
 
 import javax.annotation.Nullable;
 
