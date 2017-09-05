@@ -107,14 +107,14 @@ public class PacketPartConfig extends Packet {
 				}
 				gui.changeConfig(filterSize);
 			} else if (name.equals(FLUID_IO_REDSTONE_MODE) && part instanceof PartFluidIO) {
-				RedstoneMode redstoneMode = RedstoneMode.valueOf(name);
+				RedstoneMode redstoneMode = RedstoneMode.valueOf(value);
 				GuiBusFluidIO gui = GuiUtil.getGui(GuiBusFluidIO.class);
 				if (gui == null) {
 					return;
 				}
 				gui.updateRedstoneMode(redstoneMode);
 			} else if (name.equals(FLUID_STORAGE_ACCESS)) {
-				AccessRestriction access = AccessRestriction.valueOf(name);
+				AccessRestriction access = AccessRestriction.valueOf(value);
 				GuiBusFluidStorage gui = GuiUtil.getGui(GuiBusFluidStorage.class);
 				if (gui == null || access == null) {
 					return;
@@ -148,12 +148,12 @@ public class PacketPartConfig extends Packet {
 			} else if (name.equals(FLUID_IO_REDSTONE_LOOP) && part instanceof PartFluidIO) {
 				((PartFluidIO) part).loopRedstoneMode(player);
 			} else if (name.equals(FLUID_STORAGE_ACCESS) && part instanceof PartFluidStorage) {
-				AccessRestriction access = AccessRestriction.valueOf(name);
+				AccessRestriction access = AccessRestriction.valueOf(value);
 				if (access == null) {
 					return;
 				}
 				((PartFluidStorage) part).updateAccess(access);
-				NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_ACCESS, name), player);
+				NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_ACCESS, value), player);
 			} else if (name.equals(FLUID_STORAGE_INFO) && part instanceof PartFluidStorage) {
 				((PartFluidStorage) part).sendInformation(player);
 			} else if (name.equals(FLUID_PLANE_FORMATION_INFO) && part instanceof PartFluidPlaneFormation) {

@@ -2,7 +2,7 @@ package extracells.util.recipe
 
 import appeng.api.features.INetworkEncodable
 import appeng.api.implementations.items.IAEItemPowerStorage
-import extracells.item.{ItemWirelessTerminalUniversal, TerminalType}
+import extracells.item.{ItemWirelessTerminalUniversal, WirelessTerminalType}
 import extracells.registries.ItemEnum
 import extracells.util.UniversalTerminal
 import net.minecraft.inventory.InventoryCrafting
@@ -23,7 +23,7 @@ object RecipeUniversalTerminal extends IRecipe{
     var hasWireless = false
     var isUniversal = false
     var hasTerminal = false
-    var terminals = List[TerminalType]()
+    var terminals = List[WirelessTerminalType]()
     var terminal: ItemStack = null
     val size = inventory.getSizeInventory
     var i = 0
@@ -81,7 +81,7 @@ object RecipeUniversalTerminal extends IRecipe{
 
   override def getCraftingResult(inventory : InventoryCrafting): ItemStack = {
     var isUniversal = false
-    var terminals = List[TerminalType]()
+    var terminals = List[WirelessTerminalType]()
     var terminal: ItemStack = null
     val size = inventory.getSizeInventory
     var i = 0

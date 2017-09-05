@@ -1,13 +1,10 @@
 package extracells.gui;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -17,31 +14,28 @@ import org.lwjgl.input.Keyboard;
 import extracells.container.ContainerOreDictExport;
 import extracells.network.packet.part.PacketOreDictExport;
 import extracells.part.PartOreDictExporter;
+import extracells.util.GuiUtil;
 import extracells.util.NetworkUtil;
 
-public class GuiOreDictExport extends GuiContainer {
+public class GuiOreDictExport extends GuiBase {
 
 	public static void updateFilter(String newFilter) {
 		if (filter != null) {
 			filter = newFilter;
-			Gui gui = Minecraft.getMinecraft().currentScreen;
-			if (gui != null && gui instanceof GuiOreDictExport) {
-				GuiOreDictExport g = (GuiOreDictExport) gui;
-				if (g.searchbar != null)
-					g.searchbar.setText(filter);
+			GuiOreDictExport gui = GuiUtil.getGui(GuiOreDictExport.class);
+			if (gui != null) {
+				gui.setFilter(filter);
 			}
 		}
 	}
 
-	private ResourceLocation guiTexture = new ResourceLocation("extracells",
-			"textures/gui/oredictexport.png");
 	private EntityPlayer player;
 	private static String filter = "";
-
+	@Nullable
 	private GuiTextField searchbar;
 
 	public GuiOreDictExport(EntityPlayer player, PartOreDictExporter _part) {
-		super(new ContainerOreDictExport(player, _part));
+		super(new ResourceLocation("extracells", "textures/gui/oredictexport.png"), new ContainerOreDictExport(player, _part));
 		this.player = player;
 	}
 
@@ -50,14 +44,16 @@ public class GuiOreDictExport extends GuiContainer {
 		NetworkUtil.sendToServer(new PacketOreDictExport(filter));
 	}
 
+	public void setFilter(String filter) {
+		if (searchbar == null) {
+			return;
+		}
+		searchbar.setText(filter);
+	}
+
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float f, int mouseX,
-			int mouseY) {
-		drawDefaultBackground();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
-		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,
-				this.ySize);
+	protected void drawBackground() {
+		super.drawBackground();
 		this.searchbar.drawTextBox();
 	}
 

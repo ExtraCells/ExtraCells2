@@ -1,16 +1,17 @@
-package extracells.item;
+package extracells.item.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import extracells.tileentity.TileEntityFluidInterface;
+import extracells.util.TileUtil;
 
 public class ItemBlockFluidInterface extends ItemBlock {
 
@@ -35,10 +36,11 @@ public class ItemBlockFluidInterface extends ItemBlock {
 			return false;
 		}
 
-		if (stack.hasTagCompound()) {
-			TileEntity tile = world.getTileEntity(pos);
-			if (tile != null && tile instanceof TileEntityFluidInterface) {
-				((TileEntityFluidInterface) tile).readFilter(stack.getTagCompound());
+		NBTTagCompound tagCompound = stack.getTagCompound();
+		if (tagCompound != null) {
+			TileEntityFluidInterface fluidInterface = TileUtil.getTile(world, pos, TileEntityFluidInterface.class);
+			if (fluidInterface != null) {
+				fluidInterface.readFilter(tagCompound);
 			}
 		}
 		return true;

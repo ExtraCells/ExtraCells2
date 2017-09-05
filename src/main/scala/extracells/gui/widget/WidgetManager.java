@@ -42,8 +42,15 @@ public class WidgetManager {
 	}
 
 	public void drawWidgets(int mouseX, int mouseY) {
+		mouseX -= gui.getGuiLeft();
+		mouseY -= gui.getGuiTop();
+		boolean overlay = false;
 		for (AbstractWidget widget : widgets) {
-			widget.draw(mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+			widget.draw(mouseX, mouseY);
+			if (!overlay && widget.isMouseOver(mouseX, mouseY)) {
+				widget.drawOverlay(mouseX, mouseY);
+				overlay = true;
+			}
 		}
 	}
 

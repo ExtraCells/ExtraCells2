@@ -62,8 +62,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	@Nullable
 	private IPartHost host;
 	@Nullable
-	protected TileEntity tile;
-	@Nullable
 	private ECBaseGridBlock gridBlock;
 	private double powerUsage;
 	@Nullable
@@ -226,10 +224,10 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Nullable
 	public final DimensionalCoord getLocation() {
-		if (tile == null || tile.getWorld() == null || tile.getWorld().provider == null) {
+		if (hostTile == null || hostTile.getWorld() == null || hostTile.getWorld().provider == null) {
 			return null;
 		}
-		return new DimensionalCoord(this.tile.getWorld(), this.tile.getPos());
+		return new DimensionalCoord(hostTile.getWorld(), hostTile.getPos());
 	}
 
 	public double getPowerUsage() {
@@ -414,7 +412,6 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	public void setPartHostInfo(AEPartLocation location, IPartHost iPartHost, TileEntity tileEntity) {
 		this.side = location;
 		this.host = iPartHost;
-		this.tile = tileEntity;
 		this.hostTile = tileEntity;
 		setPower(null);
 	}

@@ -28,4 +28,5 @@ object ItemWirelessTerminalFluid extends ItemECBase with IWirelessFluidTermHandl
   override def registerModel(item: Item, manager: ModelManager) =
     manager.registerItemModel(item, 0, "terminals/fluid_wireless")
 
+
 }

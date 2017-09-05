@@ -114,9 +114,9 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
       if (host != null) host.markForUpdate
       return true
     }
-    if (WrenchUtil.canWrench(s, player, this.tile.getPos)) {
+    if (WrenchUtil.canWrench(s, player, getHostTile.getPos)) {
       this.locked = !this.locked
-      WrenchUtil.wrenchUsed(s, player, this.tile.getPos)
+      WrenchUtil.wrenchUsed(s, player, getHostTile.getPos)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
       if (this.locked) player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))

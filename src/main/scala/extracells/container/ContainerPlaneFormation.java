@@ -58,8 +58,8 @@ public class ContainerPlaneFormation extends Container {
 		return true;
 	}
 
-	public void setGui(GuiFluidPlaneFormation _gui) {
-		this.gui = _gui;
+	public void setGui(GuiFluidPlaneFormation gui) {
+		this.gui = gui;
 	}
 
 	@Override
@@ -67,29 +67,28 @@ public class ContainerPlaneFormation extends Container {
 		if (this.gui != null)
 			this.gui.shiftClick(getSlot(slotnumber).getStack());
 
-		ItemStack itemstack = null;
+		ItemStack transferredStack = null;
 		Slot slot = this.inventorySlots.get(slotnumber);
 
 		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
+			ItemStack stack = slot.getStack();
+			transferredStack = stack.copy();
 
 			if (slotnumber < 36) {
-				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(),
-						true)) {
+				if (!mergeItemStack(stack, 36, this.inventorySlots.size(), true)) {
 					return null;
 				}
-			} else if (!mergeItemStack(itemstack1, 0, 36, false)) {
+			} else if (!mergeItemStack(stack, 0, 36, false)) {
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0) {
+			if (stack.stackSize == 0) {
 				slot.putStack(null);
 			} else {
 				slot.onSlotChanged();
 			}
 		}
 
-		return itemstack;
+		return transferredStack;
 	}
 }

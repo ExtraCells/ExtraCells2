@@ -2,6 +2,7 @@ package extracells.gridblock;
 
 import java.util.EnumSet;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -20,19 +21,17 @@ import extracells.tileentity.TileEntityFluidFiller;
 
 public class ECFluidGridBlock implements IGridBlock {
 
+	protected final IECTileEntity host;
 	protected IGrid grid;
 	protected int usedChannels;
-	protected IECTileEntity host;
 
-	public ECFluidGridBlock(IECTileEntity _host) {
-		this.host = _host;
+	public ECFluidGridBlock(IECTileEntity host) {
+		this.host = host;
 	}
 
 	@Override
 	public final EnumSet<EnumFacing> getConnectableSides() {
-		return EnumSet.of(EnumFacing.DOWN, EnumFacing.UP,
-				EnumFacing.NORTH, EnumFacing.EAST,
-				EnumFacing.SOUTH, EnumFacing.WEST);
+		return EnumSet.allOf(EnumFacing.class);
 	}
 
 	@Override
@@ -67,11 +66,13 @@ public class ECFluidGridBlock implements IGridBlock {
 			return null;
 		}
 		IBlockState blockState = loc.getWorld().getBlockState(loc.getPos());
-		return new ItemStack(blockState.getBlock(), 1, blockState.getBlock().getMetaFromState(blockState));
+		Block block = blockState.getBlock();
+		return new ItemStack(block, 1, block.getMetaFromState(blockState));
 	}
 
 	@Override
-	public void gridChanged() {}
+	public void gridChanged() {
+	}
 
 	@Override
 	public final boolean isWorldAccessible() {
@@ -79,23 +80,23 @@ public class ECFluidGridBlock implements IGridBlock {
 	}
 
 	@Override
-	public void onGridNotification(GridNotification notification) {}
+	public void onGridNotification(GridNotification notification) {
+	}
 
 	@Override
-	public final void setNetworkStatus(IGrid _grid, int _usedChannels) {
-		if (this.grid != null && this.host instanceof IListenerTile
-				&& this.grid != _grid) {
-			((IListenerTile) this.host).updateGrid(this.grid, _grid);
-			this.grid = _grid;
-			this.usedChannels = _usedChannels;
-			if (this.host instanceof TileEntityFluidFiller
-					&& this.grid.getCache(IStorageGrid.class) != null)
-				((TileEntityFluidFiller) this.host).postChange(
-						((IStorageGrid) this.grid.getCache(IStorageGrid.class))
-								.getFluidInventory(), null, null);
+	public final void setNetworkStatus(IGrid grid, int usedChannels) {
+		if (this.grid != null && this.host instanceof IListenerTile && this.grid != grid) {
+			((IListenerTile) this.host).updateGrid(this.grid, grid);
+			this.grid = grid;
+			this.usedChannels = usedChannels;
+			if (this.host instanceof TileEntityFluidFiller && this.grid.getCache(IStorageGrid.class) != null) {
+				TileEntityFluidFiller fluidFiller = (TileEntityFluidFiller) host;
+				IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+				fluidFiller.postChange(storageGrid.getFluidInventory(), null, null);
+			}
 		} else {
-			this.grid = _grid;
-			this.usedChannels = _usedChannels;
+			this.grid = grid;
+			this.usedChannels = usedChannels;
 		}
 	}
 }

@@ -25,6 +25,7 @@ import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidStorage;
+import extracells.registries.PartEnum;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
@@ -80,7 +81,7 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 				break;
 			}
 			if (restriction != null) {
-				NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_ACCESS, restriction.toString()), player);
+				NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_ACCESS, restriction.toString()));
 			}
 		}
 	}
@@ -114,6 +115,9 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
+		fontRendererObj.drawString(PartEnum.FLUIDSTORAGE.getStatName().replace("ME ", ""), 8, 6, 4210752);
+		fontRendererObj.drawString(player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 3, 4210752);
 
 		for (Object button : this.buttonList) {
 			if (button instanceof WidgetStorageDirection)

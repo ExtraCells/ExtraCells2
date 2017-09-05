@@ -1,4 +1,4 @@
-package extracells.item;
+package extracells.item.block;
 
 import java.util.List;
 
@@ -39,23 +39,19 @@ public class ItemBlockCertusTank extends ItemBlock {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean advanced) {
-		if (stack != null && stack.hasTagCompound()) {
-			FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-			if (fluidStack != null) {
-				list.add(fluidStack.amount + "mB");
-			}
+		FluidStack fluidStack = FluidUtil.getFluidContained(stack);
+		if (fluidStack != null) {
+			list.add(fluidStack.amount + "mB");
 		}
 	}
 
 	@Override
 	public String getItemStackDisplayName(ItemStack itemStack) {
 		if (itemStack != null) {
-			if (itemStack.hasTagCompound()) {
-				FluidStack fluidStack = FluidUtil.getFluidContained(itemStack);
+			FluidStack fluidStack = FluidUtil.getFluidContained(itemStack);
 
-				if (fluidStack != null && fluidStack.getFluid() != null) {
-					return I18n.translateToLocal(getUnlocalizedName(itemStack)) + " - " + fluidStack.getFluid().getLocalizedName(fluidStack);
-				}
+			if (fluidStack != null && fluidStack.getFluid() != null) {
+				return I18n.translateToLocal(getUnlocalizedName(itemStack)) + " - " + fluidStack.getFluid().getLocalizedName(fluidStack);
 			}
 			return I18n.translateToLocal(getUnlocalizedName(itemStack));
 		}

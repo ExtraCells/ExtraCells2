@@ -14,9 +14,9 @@ import extracells.block.BlockHardMEDrive;
 import extracells.block.BlockVibrationChamberFluid;
 import extracells.block.BlockWalrus;
 import extracells.integration.Integration;
-import extracells.item.ItemBlockCertusTank;
-import extracells.item.ItemBlockFluidFiller;
-import extracells.item.ItemBlockFluidInterface;
+import extracells.item.block.ItemBlockCertusTank;
+import extracells.item.block.ItemBlockFluidFiller;
+import extracells.item.block.ItemBlockFluidInterface;
 import extracells.util.CreativeTabEC;
 
 public enum BlockEnum {

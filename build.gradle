@@ -110,7 +110,7 @@ dependencies {
 	
 	compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
 	
-	compile name: 'Mekanism', version: config.version.me, classifier: "dev", ext: 'jar'
+	compile name: 'Mekanism', version: config.version.me, classifier: "api", ext: 'jar'
 }
 
 processResources {

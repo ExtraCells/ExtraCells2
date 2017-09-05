@@ -187,9 +187,9 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 				host.markForUpdate();
 			return true;
 		}
-		if (WrenchUtil.canWrench(s, player, this.tile.getPos())) {
+		if (WrenchUtil.canWrench(s, player, getHostTile().getPos())) {
 			this.locked = !this.locked;
-			WrenchUtil.wrenchUsed(s, player, this.tile.getPos());
+			WrenchUtil.wrenchUsed(s, player, getHostTile().getPos());
 			IPartHost host = getHost();
 			if (host != null)
 				host.markForUpdate();

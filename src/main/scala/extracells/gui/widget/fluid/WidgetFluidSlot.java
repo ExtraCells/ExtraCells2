@@ -37,7 +37,6 @@ public class WidgetFluidSlot extends AbstractWidget {
 	}
 
 	private int id;
-	private int posX, posY;
 	private Fluid fluid;
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
 	private IFluidSlotListener listener;
@@ -59,8 +58,6 @@ public class WidgetFluidSlot extends AbstractWidget {
 		this.height = 18;
 		this.listener = listener;
 		this.id = id;
-		this.posX = posX;
-		this.posY = posY;
 		this.configurable = configurable;
 		this.configOption = configOption;
 	}
@@ -80,18 +77,25 @@ public class WidgetFluidSlot extends AbstractWidget {
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 		textureManager.bindTexture(guiTexture);
-		manager.gui.drawTexturedModalRect(this.posX, this.posY, 79, 39, 18, 18);
+		manager.gui.drawTexturedModalRect(xPos, yPos, 79, 39, 18, 18);
 
 		if (this.fluid != null) {
 			drawFluid(textureManager);
 		}
 
-		if (isMouseOver(mouseX, mouseY)) {
-			GlStateManager.disableDepth();
-			manager.gui.drawGradientRect(xPos + 1, yPos + 1, xPos + 17, yPos + 17, -0x7F000001, -0x7F000001);
-			GlStateManager.enableDepth();
-		}
 		GlStateManager.disableBlend();
+		GlStateManager.enableLighting();
+	}
+
+	@Override
+	public void drawOverlay(int mouseX, int mouseY) {
+		GlStateManager.color(1.0F, 1.0F, 1.0F);
+		TextureManager textureManager = manager.mc.getTextureManager();
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		textureManager.bindTexture(guiTexture);
+		manager.gui.drawGradientRect(xPos + 1, yPos + 1, xPos + 17, yPos + 17, -0x7F000001, -0x7F000001);
+		GlStateManager.enableDepth();
 		GlStateManager.enableLighting();
 	}
 
@@ -99,19 +103,11 @@ public class WidgetFluidSlot extends AbstractWidget {
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		TextureAtlasSprite sprite = manager.mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
-		manager.gui.drawTexturedModalRect(this.posX + 1, this.posY + 1, sprite, 16, 16);
+		manager.gui.drawTexturedModalRect(this.xPos + 1, this.yPos + 1, sprite, 16, 16);
 	}
 
 	public Fluid getFluid() {
 		return this.fluid;
-	}
-
-	public int getPosX() {
-		return this.posX;
-	}
-
-	public int getPosY() {
-		return this.posY;
 	}
 
 	@Override

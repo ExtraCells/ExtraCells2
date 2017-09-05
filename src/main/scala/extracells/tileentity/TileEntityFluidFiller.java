@@ -156,8 +156,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 	public void onListUpdate() {}
 
 	@Override
-	public void postChange(IBaseMonitor<IAEFluidStack> monitor,
-			Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+	public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
 		List<Fluid> oldFluids = new ArrayList<Fluid>(this.fluids);
 		boolean mustUpdate = false;
 		this.fluids.clear();

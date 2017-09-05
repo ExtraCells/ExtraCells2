@@ -1,7 +1,7 @@
 package extracells.item;
 
-public enum TerminalType {
-    ITEM,
+public enum WirelessTerminalType {
+	ITEM,
     FLUID,
     GAS,
     ESSENTIA,

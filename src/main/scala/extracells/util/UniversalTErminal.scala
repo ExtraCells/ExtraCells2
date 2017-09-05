@@ -3,7 +3,7 @@ package extracells.util
 import appeng.api.AEApi
 import extracells.integration.Integration.Mods
 import extracells.integration.WirelessCrafting.WirelessCrafting
-import extracells.item.TerminalType
+import extracells.item.WirelessTerminalType
 import extracells.registries.{ItemEnum, PartEnum}
 import net.minecraft.item.ItemStack
 
@@ -110,7 +110,7 @@ object UniversalTerminal {
     false
   }
 
-  def getTerminalType(stack: ItemStack): TerminalType = {
+  def getTerminalType(stack: ItemStack): WirelessTerminalType = {
     if(stack == null)
       return null
     val item = stack.getItem
@@ -119,13 +119,13 @@ object UniversalTerminal {
       return null
     val aeterm = AEApi.instance.definitions.parts.terminal.maybeStack(1).get
     if(item == aeterm.getItem && meta == aeterm.getItemDamage)
-      return TerminalType.ITEM
+      return WirelessTerminalType.ITEM
     val ecterm = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
     if(item == ecterm.getItem && meta == ecterm.getItemDamage)
-      return TerminalType.FLUID
+      return WirelessTerminalType.FLUID
     val ectermgas = ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal)
     if(item == ectermgas.getItem && meta == ectermgas.getItemDamage)
-      return TerminalType.GAS
+      return WirelessTerminalType.GAS
     /*if(Mods.THAUMATICENERGISTICS.isEnabled){
       val thterm = ThaumaticEnergistics.getTerminal
       if(item == thterm.getItem && meta == thterm.getItemDamage)
@@ -133,13 +133,13 @@ object UniversalTerminal {
     }*/
     val aeterm2 = AEApi.instance.definitions.items.wirelessTerminal.maybeStack(1).get
     if(item == aeterm2.getItem && meta == aeterm2.getItemDamage)
-      return TerminalType.ITEM
+      return WirelessTerminalType.ITEM
     val ecterm2 = ItemEnum.FLUIDWIRELESSTERMINAL.getDamagedStack(0)
     if(item == ecterm2.getItem && meta == ecterm2.getItemDamage)
-      return TerminalType.FLUID
+      return WirelessTerminalType.FLUID
     val ectermgas2 = ItemEnum.GASWIRELESSTERMINAL.getDamagedStack(0)
     if(item == ectermgas2.getItem && meta == ectermgas2.getItemDamage)
-      return TerminalType.GAS
+      return WirelessTerminalType.GAS
     /*if(Mods.THAUMATICENERGISTICS.isEnabled){
       val thterm = ThaumaticEnergistics.getWirelessTerminal
       if(item == thterm.getItem && meta == thterm.getItemDamage)

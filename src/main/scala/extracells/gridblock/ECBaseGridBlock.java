@@ -21,13 +21,12 @@ import extracells.part.PartECBase;
 
 public class ECBaseGridBlock implements IGridBlock {
 
-	protected AEColor color;
+	protected final PartECBase host;
 	protected IGrid grid;
 	protected int usedChannels;
-	protected PartECBase host;
 
-	public ECBaseGridBlock(PartECBase _host) {
-		this.host = _host;
+	public ECBaseGridBlock(PartECBase host) {
+		this.host = host;
 	}
 
 	@Override
@@ -42,21 +41,24 @@ public class ECBaseGridBlock implements IGridBlock {
 
 	public IMEMonitor<IAEFluidStack> getFluidMonitor() {
 		IGridNode node = this.host.getGridNode();
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		IGrid grid = node.getGrid();
-		if (grid == null)
+		if (grid == null) {
 			return null;
+		}
 		IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-		if (storageGrid == null)
+		if (storageGrid == null) {
 			return null;
+		}
 		return storageGrid.getFluidInventory();
 
 	}
 
 	@Override
 	public final AEColor getGridColor() {
-		return this.color == null ? AEColor.TRANSPARENT : this.color;
+		return AEColor.TRANSPARENT;
 	}
 
 	@Override
@@ -80,7 +82,8 @@ public class ECBaseGridBlock implements IGridBlock {
 	}
 
 	@Override
-	public void gridChanged() {}
+	public void gridChanged() {
+	}
 
 	@Override
 	public final boolean isWorldAccessible() {
@@ -88,11 +91,12 @@ public class ECBaseGridBlock implements IGridBlock {
 	}
 
 	@Override
-	public void onGridNotification(GridNotification notification) {}
+	public void onGridNotification(GridNotification notification) {
+	}
 
 	@Override
-	public final void setNetworkStatus(IGrid _grid, int _usedChannels) {
-		this.grid = _grid;
-		this.usedChannels = _usedChannels;
+	public final void setNetworkStatus(IGrid grid, int usedChannels) {
+		this.grid = grid;
+		this.usedChannels = usedChannels;
 	}
 }

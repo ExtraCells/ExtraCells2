@@ -82,4 +82,5 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem{
     return itemStack.getTagCompound
   }
 
+
 }

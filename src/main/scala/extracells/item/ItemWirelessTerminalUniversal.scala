@@ -87,51 +87,51 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     val installed = getInstalledModules(itemStack)
     val matchted = tag.getByte("type") match {
       case 0 =>
-        if(installed.contains(TerminalType.FLUID))
+        if (installed.contains(WirelessTerminalType.FLUID))
           tag.setByte("type", 1)
-        else if(isMekEnabled && installed.contains(TerminalType.GAS))
+        else if (isMekEnabled && installed.contains(WirelessTerminalType.GAS))
           tag.setByte("type", 2)
-        else if(isTeEnabled && installed.contains(TerminalType.ESSENTIA))
+        else if (isTeEnabled && installed.contains(WirelessTerminalType.ESSENTIA))
           tag.setByte("type", 3)
-        else if(isWcEnabled && installed.contains(TerminalType.CRAFTING))
+        else if (isWcEnabled && installed.contains(WirelessTerminalType.CRAFTING))
           tag.setByte("type", 4)
       case 1 =>
-        if(isMekEnabled && installed.contains(TerminalType.GAS))
+        if (isMekEnabled && installed.contains(WirelessTerminalType.GAS))
           tag.setByte("type", 2)
-        else if(isTeEnabled && installed.contains(TerminalType.ESSENTIA))
+        else if (isTeEnabled && installed.contains(WirelessTerminalType.ESSENTIA))
           tag.setByte("type", 3)
-        else if(isWcEnabled && installed.contains(TerminalType.CRAFTING))
+        else if (isWcEnabled && installed.contains(WirelessTerminalType.CRAFTING))
           tag.setByte("type", 4)
-        else if(installed.contains(TerminalType.ITEM))
+        else if (installed.contains(WirelessTerminalType.ITEM))
           tag.setByte("type", 0)
       case 2 =>
-        if(isTeEnabled && installed.contains(TerminalType.ESSENTIA))
+        if (isTeEnabled && installed.contains(WirelessTerminalType.ESSENTIA))
           tag.setByte("type", 3)
-        else if(isWcEnabled && installed.contains(TerminalType.CRAFTING))
+        else if (isWcEnabled && installed.contains(WirelessTerminalType.CRAFTING))
           tag.setByte("type", 4)
-        else if(installed.contains(TerminalType.ITEM))
+        else if (installed.contains(WirelessTerminalType.ITEM))
           tag.setByte("type", 0)
-        else if(installed.contains(TerminalType.FLUID))
+        else if (installed.contains(WirelessTerminalType.FLUID))
           tag.setByte("type", 1)
       case 3 =>
-        if(isWcEnabled && installed.contains(TerminalType.CRAFTING))
+        if (isWcEnabled && installed.contains(WirelessTerminalType.CRAFTING))
           tag.setByte("type", 4)
-        else if(installed.contains(TerminalType.ITEM))
+        else if (installed.contains(WirelessTerminalType.ITEM))
           tag.setByte("type", 0)
-        else if(installed.contains(TerminalType.FLUID))
+        else if (installed.contains(WirelessTerminalType.FLUID))
           tag.setByte("type", 1)
-        else if(isMekEnabled && installed.contains(TerminalType.GAS))
+        else if (isMekEnabled && installed.contains(WirelessTerminalType.GAS))
           tag.setByte("type", 2)
       case _ =>
-        if(installed.contains(TerminalType.ITEM))
+        if (installed.contains(WirelessTerminalType.ITEM))
           tag.setByte("type", 0)
-        else if(installed.contains(TerminalType.FLUID))
+        else if (installed.contains(WirelessTerminalType.FLUID))
           tag.setByte("type", 1)
-        else if(isMekEnabled && installed.contains(TerminalType.GAS))
+        else if (isMekEnabled && installed.contains(WirelessTerminalType.GAS))
           tag.setByte("type", 2)
-        else if(isTeEnabled && installed.contains(TerminalType.ESSENTIA))
+        else if (isTeEnabled && installed.contains(WirelessTerminalType.ESSENTIA))
           tag.setByte("type", 3)
-        else if(isWcEnabled && installed.contains(TerminalType.CRAFTING))
+        else if (isWcEnabled && installed.contains(WirelessTerminalType.CRAFTING))
           tag.setByte("type", 4)
         else
           tag.setByte("type", 0)
@@ -150,7 +150,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     if(!tag.hasKey("type"))
       tag.setByte("type", 0)
     val list2 = list.asInstanceOf[util.List[String]];
-    list2.add(I18n.translateToLocal("extracells.tooltip.mode") + ": " + I18n.translateToLocal("extracells.tooltip." + TerminalType.values().apply(tag.getByte("type")).toString.toLowerCase))
+    list2.add(I18n.translateToLocal("extracells.tooltip.mode") + ": " + I18n.translateToLocal("extracells.tooltip." + WirelessTerminalType.values().apply(tag.getByte("type")).toString.toLowerCase))
     list2.add(I18n.translateToLocal("extracells.tooltip.installed"))
     val it = getInstalledModules(itemStack).iterator
     while (it.hasNext)
@@ -158,7 +158,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     super.addInformation(itemStack, player, list, advanced);
   }
 
-  def installModule(itemStack: ItemStack, module: TerminalType): Unit ={
+  def installModule(itemStack: ItemStack, module: WirelessTerminalType): Unit = {
     if(isInstalled(itemStack, module))
       return
     val install = (1 << module.ordinal).toByte
@@ -172,9 +172,9 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     tag.setByte("modules", installed)
   }
 
-  def getInstalledModules(itemStack: ItemStack) :util.EnumSet[TerminalType] = {
+  def getInstalledModules(itemStack: ItemStack): util.EnumSet[WirelessTerminalType] = {
     if(itemStack == null || itemStack.getItem == null)
-      return util.EnumSet.noneOf(classOf[TerminalType])
+      return util.EnumSet.noneOf(classOf[WirelessTerminalType])
     val tag = ensureTagCompound(itemStack)
     val installed: Byte = {
       if(tag.hasKey("modules"))
@@ -182,15 +182,15 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
       else
         0
     }
-    val set = util.EnumSet.noneOf(classOf[TerminalType])
-    for(x <- TerminalType.values){
+    val set = util.EnumSet.noneOf(classOf[WirelessTerminalType])
+    for (x <- WirelessTerminalType.values) {
       if(1 == (installed >> x.ordinal) % 2)
         set.add(x)
     }
     set
   }
 
-  def isInstalled(itemStack: ItemStack, module: TerminalType): Boolean ={
+  def isInstalled(itemStack: ItemStack, module: WirelessTerminalType): Boolean = {
     if(itemStack == null || itemStack.getItem == null)
       return false
     val tag = ensureTagCompound(itemStack)

@@ -1,8 +1,7 @@
 package extracells.part.fluid;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -212,7 +211,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	}
 
 	public void sendInformation(EntityPlayer player) {
-		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.copyOf(this.filterFluids)), player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(Arrays.asList(this.filterFluids)), player);
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_STORAGE_ACCESS, access.toString()), player);
 	}
 

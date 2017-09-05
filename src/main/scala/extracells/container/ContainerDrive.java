@@ -50,8 +50,7 @@ public class ContainerDrive extends Container {
 			itemstack = itemstack1.copy();
 
 			if (slotnumber < 36) {
-				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(),
-						true)) {
+				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(), true)) {
 					return null;
 				}
 			} else if (!mergeItemStack(itemstack1, 0, 36, false)) {

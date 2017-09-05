@@ -30,12 +30,19 @@ public abstract class AbstractWidget {
 
 	public abstract void draw(int mouseX, int mouseY);
 
+	/**
+	 * Only called if the mouse is over the widget.
+	 */
+	public void drawOverlay(int mouseX, int mouseY) {
+
+	}
+
 	public List<String> getToolTip(int mouseX, int mouseY) {
 		return Collections.emptyList();
 	}
 
 	public boolean isMouseOver(int mouseX, int mouseY) {
-		return mouseX >= xPos && mouseX <= xPos + this.width && mouseY >= yPos && mouseY <= yPos + this.height;
+		return mouseX >= xPos && mouseX </*=*/ xPos + this.width && mouseY >= yPos && mouseY </*=*/ yPos + this.height;
 	}
 
 	public void handleMouseClick(int mouseX, int mouseY, int mouseButton) {

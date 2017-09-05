@@ -30,6 +30,7 @@ import appeng.api.parts.IPartModel;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
+import appeng.api.util.DimensionalCoord;
 import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
 import extracells.models.PartModels;
@@ -106,11 +107,12 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	}
 
 	public IAEItemStack exportStack(IAEItemStack stack0) {
-		if (this.tile == null || !this.tile.hasWorldObj() || stack0 == null)
+		DimensionalCoord location = getLocation();
+		if (location == null || stack0 == null)
 			return null;
 		EnumFacing facing = getFacing();
-		BlockPos pos = tile.getPos();
-		TileEntity tile = this.tile.getWorld().getTileEntity(pos.offset(facing));
+		BlockPos pos = location.getPos();
+		TileEntity tile = location.getWorld().getTileEntity(pos.offset(facing));
 		if (tile == null)
 			return null;
 		IAEItemStack stack = stack0.copy();

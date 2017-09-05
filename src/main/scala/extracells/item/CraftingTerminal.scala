@@ -29,7 +29,7 @@ trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem{
   @Optional.Method(modid = "ae2wct")
   override def isWirelessCraftingEnabled(itemStack: ItemStack): Boolean = {
     if (this == ItemWirelessTerminalUniversal)
-      ItemWirelessTerminalUniversal.isInstalled(itemStack, TerminalType.CRAFTING)
+      ItemWirelessTerminalUniversal.isInstalled(itemStack, WirelessTerminalType.CRAFTING)
     else
       true
   }
