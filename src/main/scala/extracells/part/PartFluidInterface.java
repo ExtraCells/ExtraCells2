@@ -939,30 +939,13 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 			FluidStack s = this.tank.drain(125, false);
 			if (s != null) {
 				IAEFluidStack notAdded = storage.getFluidInventory()
-						.injectItems(
-								AEApi.instance().storage()
-										.createFluidStack(s.copy()),
-								Actionable.SIMULATE, new MachineSource(this));
-				if (notAdded != null) {
-					int toAdd = (int) (s.amount - notAdded.getStackSize());
-					storage.getFluidInventory().injectItems(
-							AEApi.instance()
-									.storage()
-									.createFluidStack(
-											this.tank.drain(toAdd, true)),
-							Actionable.MODULATE, new MachineSource(this));
-					this.doNextUpdate = true;
-					this.needBreake = false;
-				} else {
-					storage.getFluidInventory().injectItems(
-							AEApi.instance()
-									.storage()
-									.createFluidStack(
-											this.tank.drain(s.amount, true)),
-							Actionable.MODULATE, new MachineSource(this));
-					this.doNextUpdate = true;
-					this.needBreake = false;
-				}
+						.injectItems(AEApi.instance().storage().createFluidStack(s.copy()),
+								Actionable.MODULATE, new MachineSource(this));
+				int leftOver = 0;
+				if (notAdded != null) leftOver = (int) notAdded.getStackSize();
+				this.tank.drain(s.amount - leftOver, true);
+				this.doNextUpdate = true;
+				this.needBreake = false;
 			}
 		}
 		if ((this.tank.getFluid() == null || this.tank.getFluid().getFluid() == FluidRegistry
