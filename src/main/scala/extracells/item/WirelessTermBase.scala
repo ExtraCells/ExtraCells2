@@ -70,7 +70,7 @@ trait WirelessTermBase extends PowerItem{
     if (!itemStack.hasTagCompound) itemStack.setTagCompound(new NBTTagCompound)
     val encryptionKey: String = itemStack.getTagCompound.getString("key")
     val aeCurrentPower: Double = getAECurrentPower(itemStack)
-    list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / this.MAX_POWER * 1e4) / 1e2 + "%")
+    list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + Math.ceil(aeCurrentPower).asInstanceOf[Int] + " AE - " + Math.floor(aeCurrentPower / this.MAX_POWER * 1e4) / 1e2 + "%")
     list2.add(StatCollector.translateToLocal(if (encryptionKey != null && !encryptionKey.isEmpty) "gui.appliedenergistics2.Linked" else "gui.appliedenergistics2.Unlinked"))
   }
 }
