@@ -7,10 +7,13 @@ import appeng.api.config.SecurityPermissions
 import appeng.api.implementations.items.IAEWrench
 import appeng.api.networking.IGridNode
 import appeng.api.util.AEPartLocation
+import extracells.block.properties.PropertyDrive
 import extracells.container.ContainerHardMEDrive
+import extracells.models.drive.DriveSlotsState
 import extracells.network.GuiHandler
 import extracells.tileentity.TileEntityHardMeDrive
-import extracells.util.PermissionUtil
+import extracells.util.{PermissionUtil, TileUtil}
+import net.minecraft.block.properties.IProperty
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
@@ -20,8 +23,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.{BlockPos, MathHelper}
-import net.minecraft.util.{EnumFacing, EnumHand}
-import net.minecraft.world.World
+import net.minecraft.util.{BlockRenderLayer, EnumFacing, EnumHand}
+import net.minecraft.world.{IBlockAccess, World}
+import net.minecraftforge.common.property.{ExtendedBlockState, IExtendedBlockState, IUnlistedProperty}
 
 
 object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ROCK, 2.0F, 1000000.0F) with TGuiBlock{
@@ -185,6 +189,17 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
     }
 
     super.breakBlock(world, pos, state)
+  }
+
+  override def getBlockLayer: BlockRenderLayer = BlockRenderLayer.CUTOUT
+
+  override protected def createBlockState = new ExtendedBlockState(this, new Array[IProperty[_ <: Comparable[_]]](0), Array[IUnlistedProperty[_]](PropertyDrive.INSTANCE))
+
+  override def getExtendedState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState = {
+    val te = TileUtil.getTile(world, pos, classOf[TileEntityHardMeDrive])
+    if (te == null) return super.getExtendedState(state, world, pos)
+    val extState = super.getExtendedState(state, world, pos).asInstanceOf[IExtendedBlockState]
+    extState.withProperty(PropertyDrive.INSTANCE, DriveSlotsState.fromChestOrDrive(te))
   }
 
 }

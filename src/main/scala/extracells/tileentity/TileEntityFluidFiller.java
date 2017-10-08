@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,6 +20,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -43,12 +48,13 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
+import extracells.container.fluid.ContainerFluidFiller;
 import extracells.gridblock.ECFluidGridBlock;
+import extracells.gui.fluid.GuiFluidFiller;
+import extracells.network.IGuiProvider;
 import extracells.util.FluidHelper;
 
-public class TileEntityFluidFiller extends TileBase implements IActionHost,
-		ICraftingProvider, IECTileEntity,
-		IMEMonitorHandlerReceiver<IAEFluidStack>, IListenerTile, ITickable {
+public class TileEntityFluidFiller extends TileBase implements IActionHost, ICraftingProvider, IECTileEntity, IMEMonitorHandlerReceiver<IAEFluidStack>, IListenerTile, ITickable, IGuiProvider {
 
 	private ECFluidGridBlock gridBlock;
 	private IGridNode node = null;
@@ -367,5 +373,16 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 			tagCompound.setTag("nodes", nodeTag);
 		}
 		return tagCompound;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public GuiContainer getClientGuiElement(EntityPlayer player, Object... args) {
+		return new GuiFluidFiller(player, this);
+	}
+
+	@Override
+	public Container getServerGuiElement(EntityPlayer player, Object... args) {
+		return new ContainerFluidFiller(player.inventory, this);
 	}
 }

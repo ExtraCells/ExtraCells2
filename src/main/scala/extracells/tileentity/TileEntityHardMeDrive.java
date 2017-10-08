@@ -4,7 +4,9 @@ package extracells.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +14,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.events.MENetworkEventSubscribe;
+import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.ICellHandler;
@@ -24,21 +29,26 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
+import extracells.container.ContainerHardMEDrive;
 import extracells.gridblock.ECGridBlockHardMEDrive;
+import extracells.gui.GuiHardMEDrive;
 import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.IInventoryListener;
+import extracells.models.drive.IDrive;
+import extracells.network.IGuiProvider;
 
-public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryListener {
+public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryListener, IDrive, IGuiProvider {
 
-    private  int priority = 0;
+	private int priority = 0;
+	private boolean isPowerd;
+
     boolean isFirstGridNode = true;
     byte[] cellStatuses = new byte[3];
     List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();
     List<IMEInventoryHandler> itemHandlers = new ArrayList<IMEInventoryHandler>();
     private final ECGridBlockHardMEDrive gridBlock = new ECGridBlockHardMEDrive(this);
 
-    private ECPrivateInventory inventory = new ECPrivateInventory(
-            "extracells.part.drive", 3, 1, this) {
+	private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.drive", 3, 1, this) {
 
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 
@@ -124,8 +134,8 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
     //TODO
     boolean isActive(){
-        return  true;
-    }
+		return true;
+	}
 
     public int getColorByStatus(int status) {
         switch (status) {
@@ -174,7 +184,10 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
             }
             updateBlock();
         }
-    }
+		if (worldObj.isRemote) {
+			worldObj.markBlockRangeForRenderUpdate(pos, pos);
+		}
+	}
 
     private List<IMEInventoryHandler> updateHandlers(StorageChannel channel) {
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
@@ -213,6 +226,53 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
             tag.setByte("status#" + i, aCellStati);
             i++;
         }
-        return tag;
-    }
+		tag.setBoolean("isPowerd", isPowerd);
+		return tag;
+	}
+
+	@Override
+	public int getCellCount() {
+		return 3;
+	}
+
+	@Override
+	public int getCellStatus(int index) {
+		return cellStatuses[index];
+	}
+
+	@Override
+	public boolean isPowered() {
+		return isPowerd;
+	}
+
+	@Override
+	public GuiContainer getClientGuiElement(EntityPlayer player, Object... args) {
+		return new GuiHardMEDrive(player.inventory, this);
+	}
+
+	@Override
+	public Container getServerGuiElement(EntityPlayer player, Object... args) {
+		return new ContainerHardMEDrive(player.inventory, this);
+	}
+
+	@MENetworkEventSubscribe
+	@SuppressWarnings("unused")
+	public void setPower(MENetworkPowerStatusChange notUsed) {
+		if (this.node != null) {
+			IGrid grid = this.node.getGrid();
+			if (grid != null) {
+				IEnergyGrid energy = grid.getCache(IEnergyGrid.class);
+				if (energy != null) {
+					this.isPowerd = energy.isNetworkPowered();
+				}
+			}
+			updateBlock();
+		}
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
+		isPowerd = tag.getBoolean("isPowerd");
+	}
 }

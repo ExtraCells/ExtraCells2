@@ -10,7 +10,7 @@ import extracells.api.IECTileEntity
 import extracells.container.ContainerVibrationChamberFluid
 import extracells.gridblock.ECGridBlockVibrantChamber
 import extracells.gui.GuiVibrationChamberFluid
-import extracells.network.TGuiProvider
+import extracells.network.IGuiProvider
 import extracells.util.FuelBurnTime
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.nbt.NBTTagCompound
@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.capability.{CapabilityFluidHandler, IFluidTankP
 import net.minecraftforge.fluids.{capability, _}
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
-class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with IActionHost with TPowerStorage with ITickable with TGuiProvider {
+class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with IActionHost with TPowerStorage with ITickable with IGuiProvider {
   private[tileentity] var isFirstGridNode: Boolean = true
   private final val gridBlock = new ECGridBlockVibrantChamber(this)
   private[tileentity] var node: IGridNode = null
@@ -189,9 +189,9 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
   }
 
   @SideOnly(Side.CLIENT)
-  override def getClientGuiElement(player: EntityPlayer, any: Any*): AnyRef = new GuiVibrationChamberFluid(player, this)
+  override def getClientGuiElement(player: EntityPlayer, args: AnyRef*) = new GuiVibrationChamberFluid(player, this)
 
-  override def getServerGuiElement(player: EntityPlayer, any: Any*): AnyRef = new ContainerVibrationChamberFluid(player.inventory, this)
+  override def getServerGuiElement(player: EntityPlayer, args: AnyRef*) = new ContainerVibrationChamberFluid(player.inventory, this)
 
   override def getCapability[T](capability: Capability[T], facing: EnumFacing): T = {
     if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){

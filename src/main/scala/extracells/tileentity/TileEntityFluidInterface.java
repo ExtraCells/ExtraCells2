@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
@@ -31,6 +33,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -56,12 +60,15 @@ import extracells.api.IECTileEntity;
 import extracells.api.IFluidInterface;
 import extracells.api.crafting.IFluidCraftingPatternDetails;
 import extracells.container.IContainerListener;
+import extracells.container.fluid.ContainerFluidInterface;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gridblock.ECFluidGridBlock;
+import extracells.gui.fluid.GuiFluidInterface;
 import extracells.gui.widget.fluid.IFluidSlotListener;
 import extracells.integration.Capabilities;
 import extracells.integration.waila.IWailaTile;
+import extracells.network.IGuiProvider;
 import extracells.registries.ItemEnum;
 import extracells.util.EmptyMeItemMonitor;
 import extracells.util.ItemUtils;
@@ -69,7 +76,7 @@ import extracells.util.ItemUtils;
 public class TileEntityFluidInterface extends TileBase implements
 		IActionHost, IECTileEntity, IFluidInterface,
 	IFluidSlotListener, IStorageMonitorable,
-		ICraftingProvider, IWailaTile, ITickable {
+	ICraftingProvider, IWailaTile, ITickable, IGuiProvider {
 
 	List<IContainerListener> listeners = new ArrayList<IContainerListener>();
 	private ECFluidGridBlock gridBlock;
@@ -1100,5 +1107,16 @@ public class TileEntityFluidInterface extends TileBase implements
 				return resource.amount;
 			return (int) (resource.amount - notRemoved.getStackSize());
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public GuiContainer getClientGuiElement(EntityPlayer player, Object... args) {
+		return new GuiFluidInterface(player, this);
+	}
+
+	@Override
+	public Container getServerGuiElement(EntityPlayer player, Object... args) {
+		return new ContainerFluidInterface(player, this);
 	}
 }

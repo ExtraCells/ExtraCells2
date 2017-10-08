@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -19,6 +21,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -41,10 +45,13 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
 import extracells.api.IECTileEntity;
+import extracells.container.fluid.ContainerFluidCrafter;
 import extracells.crafting.CraftingPattern;
 import extracells.gridblock.ECFluidGridBlock;
+import extracells.gui.fluid.GuiFluidCrafter;
+import extracells.network.IGuiProvider;
 
-public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICraftingProvider, ICraftingWatcherHost, IECTileEntity, ITickable {
+public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICraftingProvider, ICraftingWatcherHost, IECTileEntity, ITickable, IGuiProvider {
 
 	private class FluidCrafterInventory implements IInventory {
 
@@ -532,4 +539,14 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 		return tagCompound;
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public GuiContainer getClientGuiElement(EntityPlayer player, Object... args) {
+		return new GuiFluidCrafter(player.inventory, inventory);
+	}
+
+	@Override
+	public Container getServerGuiElement(EntityPlayer player, Object... args) {
+		return new ContainerFluidCrafter(player.inventory, inventory);
+	}
 }

@@ -10,14 +10,10 @@ import appeng.api.util.AEPartLocation
 import extracells.ExtraCells
 import extracells.api._
 import extracells.block.TGuiBlock
-import extracells.container.fluid.{ContainerFluidCrafter, ContainerFluidFiller, ContainerFluidInterface, ContainerFluidStorage}
+import extracells.container.fluid.ContainerFluidStorage
 import extracells.container.gas.ContainerGasStorage
 import extracells.gui._
-import extracells.gui.fluid.{GuiFluidCrafter, GuiFluidFiller, GuiFluidInterface}
 import extracells.part.PartECBase
-import extracells.registries.BlockEnum
-import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
-import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.BlockPos
@@ -105,7 +101,7 @@ object GuiHandler extends IGuiHandler {
 		val tileEntity: TileEntity = world.getTileEntity(pos)
 		if(tileEntity == null){
 			return true;
-		}else if(tileEntity.isInstanceOf[TGuiProvider]){
+		} else if (tileEntity.isInstanceOf[IGuiProvider]) {
 			return securityCheck(tileEntity, player)
 		}else if(tileEntity.isInstanceOf[IPartHost]){
 			val part:IPart = tileEntity.asInstanceOf[IPartHost].getPart(side)
@@ -139,32 +135,25 @@ object GuiHandler extends IGuiHandler {
 	var temp: Array[Any] = Array[Any]()
 	var hand: EnumHand = null;
 
-	override def getClientGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : AnyRef =  {
+	override def getClientGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): AnyRef = {
 		val gui = getGuiBlockElement(player, world, x, y, z)
 		if (gui != null)
 			return gui.asInstanceOf[AnyRef]
 		var side: EnumFacing = null;
-		if(ID < 5) side = EnumFacing.getFront(ID)
+		if (ID < 5) side = EnumFacing.getFront(ID)
 		val pos = new BlockPos(x, y, z);
-		if (world.getBlockState(pos).getBlock == BlockEnum.FLUIDCRAFTER.getBlock()) {
-			val tileEntity = world.getTileEntity(pos);
-			if (tileEntity == null || !(tileEntity.isInstanceOf[TileEntityFluidCrafter]))
-				return null
-			return new GuiFluidCrafter(player.inventory, tileEntity.asInstanceOf[TileEntityFluidCrafter].getInventory())
+		val tileEntity = world.getTileEntity(pos)
+		if (tileEntity == null)
+			return null
+		else if (tileEntity.isInstanceOf[IGuiProvider])
+			return tileEntity.asInstanceOf[IGuiProvider].getClientGuiElement(player)
+		else if (tileEntity.isInstanceOf[IPartHost]) {
+			if (world != null && side != null) {
+				return getPartGui(side, player, world, x, y, z).asInstanceOf[AnyRef]
+			}
+			getGui(ID - 6, player).asInstanceOf[AnyRef]
 		}
-		if (world != null && world.getBlockState(pos).getBlock == BlockEnum.ECBASEBLOCK.getBlock()) {
-			val tileEntity = world.getTileEntity(pos)
-			if (tileEntity == null)
-				return null
-			if (tileEntity.isInstanceOf[TileEntityFluidInterface])
-				return new GuiFluidInterface(player, tileEntity.asInstanceOf[IFluidInterface])
-			else if (tileEntity.isInstanceOf[TileEntityFluidFiller])
-				return new GuiFluidFiller(player, tileEntity.asInstanceOf[TileEntityFluidFiller])
-			return null;
-		}
-		if (world != null && side != null)
-			return getPartGui(side, player, world, x, y, z).asInstanceOf[AnyRef]
-		getGui(ID - 6, player).asInstanceOf[AnyRef]
+		return null;
 	}
 
 	override def getServerGuiElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int) : AnyRef =  {
@@ -176,27 +165,18 @@ object GuiHandler extends IGuiHandler {
 			side = EnumFacing.getFront(ID);
 		}
 		val pos = new BlockPos(x, y, z);
-		val blockState: IBlockState = world.getBlockState(pos)
-		if (blockState.getBlock == BlockEnum.FLUIDCRAFTER.getBlock()) {
-			val tileEntity = world.getTileEntity(pos)
-			if (tileEntity == null || !(tileEntity.isInstanceOf[TileEntityFluidCrafter]))
-				return null
-			return new ContainerFluidCrafter(player.inventory,
-					tileEntity.asInstanceOf[TileEntityFluidCrafter].getInventory())
-		}
-		if (blockState.getBlock == BlockEnum.ECBASEBLOCK.getBlock()) {
-			val tileEntity = world.getTileEntity(pos)
-			if (tileEntity == null)
-				return null
-			if (tileEntity.isInstanceOf[TileEntityFluidInterface])
-				return new ContainerFluidInterface(player, tileEntity.asInstanceOf[IFluidInterface]);
-			else if (tileEntity.isInstanceOf[TileEntityFluidFiller])
-				return new ContainerFluidFiller(player.inventory, tileEntity.asInstanceOf[TileEntityFluidFiller])
+		val tileEntity = world.getTileEntity(pos)
+		if (tileEntity == null)
 			return null
+		else if (tileEntity.isInstanceOf[IGuiProvider])
+			return tileEntity.asInstanceOf[IGuiProvider].getServerGuiElement(player)
+		else if (tileEntity.isInstanceOf[IPartHost]) {
+			if (world != null && side != null) {
+				return getPartContainer(side, player, world, x, y, z).asInstanceOf[AnyRef]
+			}
+			getContainer(ID - 6, player, temp).asInstanceOf[AnyRef]
 		}
-		if (world != null && side != null)
-			return getPartContainer(side, player, world, x, y, z).asInstanceOf[AnyRef]
-		getContainer(ID - 6, player, temp).asInstanceOf[AnyRef]
+		return null;
 	}
 
 	def getGuiBlockElement(player: EntityPlayer, world: World, x:Int, y: Int, z: Int): Any = {

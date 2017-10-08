@@ -36,6 +36,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.container.ContainerPlaneFormation;
+import extracells.container.IUpgradeable;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.fluid.GuiFluidPlaneFormation;
 import extracells.gui.widget.fluid.IFluidSlotListener;
@@ -47,8 +48,7 @@ import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 
-public class PartFluidPlaneFormation extends PartECBase implements
-	IFluidSlotListener, IGridTickable {
+public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotListener, IGridTickable, IUpgradeable {
 
 	private Fluid fluid;
 	// TODO redstone control

@@ -1,0 +1,32 @@
+{
+  "uvlMarker": true,
+  "textures": {
+    "front": "extracells:blocks/hard_me_drive_cell_states"
+  },
+  "elements": [
+    {
+      "name": "Cell Backdrop",
+      "from": [
+        9.0,
+        13.0,
+        0.0
+      ],
+      "to": [
+        15.0,
+        15.0,
+        1.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front",
+          "uv": [
+            0,
+            10,
+            6,
+            12
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -26,6 +26,7 @@ import appeng.api.parts.PartItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
+import extracells.container.IUpgradeable;
 import extracells.container.fluid.ContainerBusFluidIO;
 import extracells.gui.fluid.GuiBusFluidIO;
 import extracells.gui.widget.fluid.IFluidSlotListener;
@@ -38,7 +39,7 @@ import extracells.part.PartECBase;
 import extracells.util.NetworkUtil;
 import io.netty.buffer.ByteBuf;
 
-public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryListener, IFluidSlotListener {
+public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryListener, IFluidSlotListener, IUpgradeable {
 
 	public Fluid[] filterFluids = new Fluid[9];
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;

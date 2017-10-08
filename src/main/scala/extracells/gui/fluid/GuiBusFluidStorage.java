@@ -41,7 +41,7 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	public GuiBusFluidStorage(PartFluidStorage part, EntityPlayer _player) {
 		super(new ResourceLocation("extracells", "textures/gui/storagebusfluid.png"), new ContainerBusFluidStorage(part, _player));
 		this.part = part;
-		((ContainerBusFluidStorage) this.inventorySlots).setGui(this);
+		container.setGui(this);
 		this.player = _player;
 
 		for (int i = 0; i < 9; i++) {
@@ -130,11 +130,9 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 		return this.filterSize;
 	}
 
-	protected Slot getSlotAtPosition(int p_146975_1_, int p_146975_2_) {
-		for (int k = 0; k < this.inventorySlots.inventorySlots.size(); ++k) {
-			Slot slot = this.inventorySlots.inventorySlots.get(k);
-
-			if (this.isMouseOverSlot(slot, p_146975_1_, p_146975_2_)) {
+	protected Slot getSlotAtPosition(int mouseX, int mouseY) {
+		for (Slot slot : container.inventorySlots) {
+			if (this.isMouseOverSlot(slot, mouseX, mouseY)) {
 				return slot;
 			}
 		}

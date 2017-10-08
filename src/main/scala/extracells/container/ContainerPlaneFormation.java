@@ -1,21 +1,15 @@
 package extracells.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import appeng.api.AEApi;
-import appeng.api.implementations.guiobjects.IGuiItem;
-import appeng.api.implementations.guiobjects.INetworkTool;
-import appeng.api.util.DimensionalCoord;
-import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.fluid.GuiFluidPlaneFormation;
 import extracells.part.fluid.PartFluidPlaneFormation;
 
-public class ContainerPlaneFormation extends Container {
+public class ContainerPlaneFormation extends ContainerUpgradeable {
 
 	private GuiFluidPlaneFormation gui;
 
@@ -23,21 +17,7 @@ public class ContainerPlaneFormation extends Container {
 			EntityPlayer player) {
 		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
 		bindPlayerInventory(player.inventory);
-
-		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-			ItemStack stack = player.inventory.getStackInSlot(i);
-			if (stack != null && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
-				DimensionalCoord coord = part.getHost().getLocation();
-				IGuiItem guiItem = (IGuiItem) stack.getItem();
-				INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.getPos());
-				for (int j = 0; j < 3; j++) {
-					for (int k = 0; k < 3; k++) {
-						addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
-					}
-				}
-				return;
-			}
-		}
+		bindUpgradeInventory(player.inventory, part);
 	}
 
 	protected void bindPlayerInventory(IInventory inventoryPlayer) {

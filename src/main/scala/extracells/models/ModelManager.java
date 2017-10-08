@@ -4,13 +4,14 @@ import com.google.common.base.Preconditions;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.BlockColors;
@@ -21,11 +22,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.IBlockAccess;
 
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.model.IModelState;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,6 +36,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import extracells.block.IColoredBlock;
 import extracells.item.IColoredItem;
+import extracells.models.blocks.FluidItemModel;
+import extracells.models.drive.HardDriveModel;
 import extracells.util.ModelUtil;
 
 @SideOnly(Side.CLIENT)
@@ -41,8 +46,7 @@ public class ModelManager {
 	private static final ModelManager INSTANCE = new ModelManager();
 
 	/* CUSTOM MODELS*/
-	private static final List<BlockModelEntry> customBlockModels = new ArrayList<>();
-	private static final List<ModelEntry> customModels = new ArrayList<>();
+	private static final Map<String, IModel> customModels = new HashMap<>();
 	/* ITEM AND BLOCK REGISTERS*/
 	private static final List<IItemModelRegister> itemModelRegisters = new ArrayList<>();
 	private static final List<IStateMapperRegister> stateMapperRegisters = new ArrayList<>();
@@ -157,32 +161,18 @@ public class ModelManager {
 		return defaultItemState;
 	}
 
-	public static void registerCustomBlockModel(BlockModelEntry index) {
-		customBlockModels.add(index);
-		if (index.addStateMapper) {
-			StateMapperBase ignoreState = new BlockModeStateMapper(index);
-			ModelLoader.setCustomStateMapper(index.block, ignoreState);
-		}
+	public static void addModel(String path, IModel model) {
+		customModels.put(path, model);
 	}
 
-	public static void registerCustomModel(ModelEntry index) {
-		customModels.add(index);
+	public static void init() {
+		addModel("models/block/builtin/hard_drive", new HardDriveModel());
+		OBJLoader.INSTANCE.addDomain("extracells");
+		ModelLoaderRegistry.registerLoader(new FluidItemModel.ModelLoader());
+		ModelLoaderRegistry.registerLoader(new ECModelLoader(customModels));
 	}
 
 	public static void onBakeModels(ModelBakeEvent event) {
-		//register custom models
-		IRegistry<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
-		for (final BlockModelEntry entry : customBlockModels) {
-			registry.putObject(entry.blockModelLocation, entry.model);
-			if (entry.itemModelLocation != null) {
-				registry.putObject(entry.itemModelLocation, entry.model);
-			}
-		}
-
-		for (final ModelEntry entry : customModels) {
-			registry.putObject(entry.modelLocation, entry.model);
-		}
-
 		//load default item and block model states
 		defaultItemState = ModelUtil.loadModelState(new ResourceLocation("minecraft:models/item/generated"));
 		defaultBlockState = ModelUtil.loadModelState(new ResourceLocation("minecraft:models/block/block"));

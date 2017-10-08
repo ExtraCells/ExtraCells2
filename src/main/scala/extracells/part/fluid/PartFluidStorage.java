@@ -35,6 +35,7 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
+import extracells.container.IUpgradeable;
 import extracells.container.fluid.ContainerBusFluidStorage;
 import extracells.gui.fluid.GuiBusFluidStorage;
 import extracells.gui.widget.fluid.IFluidSlotListener;
@@ -48,7 +49,7 @@ import extracells.part.PartECBase;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryListener, IFluidSlotListener {
+public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryListener, IFluidSlotListener, IUpgradeable {
 
 	private HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
 	private int priority = 0;

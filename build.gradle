@@ -30,7 +30,7 @@ buildProps.withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}b" + getBuildNumber()
+version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}a" + getBuildNumber()
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
@@ -63,8 +63,14 @@ repositories {
 	}
 	
 	maven {
+		name 'prog'
 		url "http://dvs1.progwml6.com/files/maven"
 	}
+	
+	maven {
+        name 'amadornes'
+        url "http://maven.amadornes.com/"
+    }
 
     //ivy {
     //    name "BuildCraft"
@@ -91,6 +97,7 @@ repositories {
 		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.me}/[module]-[revision].[ext]" 
 	}
 
+
 }
 
 dependencies {
@@ -110,7 +117,8 @@ dependencies {
 	
 	compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
 	
-	compile name: 'Mekanism', version: config.version.me, classifier: "api", ext: 'jar'
+	deobfCompile name: 'Mekanism', version: config.version.me, ext: 'jar'
+	deobfCompile "MCMultiPart:MCMultiPart-experimental:${config.mcmp_version}:universal"
 }
 
 processResources {
