@@ -307,7 +307,10 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 		if (itemStack == null) {
 			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 		}
-		if (itemStack.getItemDamage() == 4 && !world.isRemote && player.isSneaking()) {
+		if (itemStack.getItemDamage() == 4 && player.isSneaking()) {
+			if (world.isRemote) {
+				return new ActionResult(EnumActionResult.SUCCESS, itemStack);
+			}
 			switch (itemStack.getTagCompound().getInteger("mode")) {
 				case 0:
 					itemStack.getTagCompound().setInteger("mode", 1);
