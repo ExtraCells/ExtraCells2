@@ -12,13 +12,11 @@ import extracells.part.PartDrive;
 
 public class GuiDrive extends GuiContainer {
 
-	private EntityPlayer player;
 	private ResourceLocation guiTexture = new ResourceLocation("extracells",
 		"textures/gui/drive.png");
 
 	public GuiDrive(PartDrive _part, EntityPlayer _player) {
 		super(new ContainerDrive(_part, _player));
-		this.player = _player;
 		this.xSize = 176;
 		this.ySize = 163;
 	}

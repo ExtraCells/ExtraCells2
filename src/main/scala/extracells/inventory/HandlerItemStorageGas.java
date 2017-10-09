@@ -23,7 +23,6 @@ import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
 import extracells.api.IGasStorageCell;
 import extracells.api.IHandlerFluidStorage;
-import extracells.container.fluid.ContainerFluidStorage;
 
 public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 
@@ -32,7 +31,6 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 	private ArrayList<Fluid> prioritizedFluids = new ArrayList<Fluid>();
 	private int totalTypes;
 	private int totalBytes;
-	private List<ContainerFluidStorage> containers = new ArrayList<ContainerFluidStorage>();
 	private ISaveProvider saveProvider;
 
 	public HandlerItemStorageGas(ItemStack _storageStack,

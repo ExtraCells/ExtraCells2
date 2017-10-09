@@ -30,11 +30,9 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 	public static final int ySize = 166;
 	private DigitTextField amountField;
 	private PartFluidLevelEmitter part;
-	private EntityPlayer player;
 
 	public GuiFluidEmitter(PartFluidLevelEmitter _part, EntityPlayer _player) {
 		super(new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png"), new ContainerFluidEmitter(_part, _player));
-		this.player = _player;
 		this.part = _part;
 		widgetManager.add(new WidgetFluidSlot(widgetManager, this.part, 79, 36));
 		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(false)));

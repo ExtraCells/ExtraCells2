@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 
@@ -31,7 +30,6 @@ import extracells.util.NetworkUtil;
 
 public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 
-	private EntityPlayer player;
 	private StorageType storageType;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
@@ -44,7 +42,6 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 	public GuiStorage(ContainerStorage container, String guiName) {
 		super(container);
 		this.container = container;
-		this.player = container.getPlayer();
 		this.storageType = container.getStorageType();
 		this.xSize = 176;
 		this.ySize = 204;

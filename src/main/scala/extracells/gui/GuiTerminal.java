@@ -36,7 +36,6 @@ import extracells.util.NetworkUtil;
 public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 
 	private PartFluidTerminal terminal;
-	private EntityPlayer player;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
@@ -49,7 +48,6 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 		super(new ContainerTerminal(terminal, player, type));
 		this.containerTerminal = (ContainerTerminal) this.inventorySlots;
 		this.terminal = terminal;
-		this.player = player;
 		this.xSize = 176;
 		this.ySize = 204;
 		this.type = type;

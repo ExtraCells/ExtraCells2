@@ -29,14 +29,12 @@ public class GuiOreDictExport extends GuiBase {
 		}
 	}
 
-	private EntityPlayer player;
 	private static String filter = "";
 	@Nullable
 	private GuiTextField searchbar;
 
 	public GuiOreDictExport(EntityPlayer player, PartOreDictExporter _part) {
 		super(new ResourceLocation("extracells", "textures/gui/oredictexport.png"), new ContainerOreDictExport(player, _part));
-		this.player = player;
 	}
 
 	@Override

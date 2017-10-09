@@ -22,7 +22,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.MachineSource;
@@ -52,7 +51,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 
 	private Fluid fluid;
 	// TODO redstone control
-	private RedstoneMode redstoneMode;
+	//private RedstoneMode redstoneMode;
 	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1,
 		1) {
 

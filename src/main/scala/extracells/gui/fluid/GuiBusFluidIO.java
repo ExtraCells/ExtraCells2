@@ -37,10 +37,10 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 	private boolean redstoneControlled;
 	private boolean hasNetworkTool;
 
-	public GuiBusFluidIO(PartFluidIO _terminal, EntityPlayer _player) {
-		super(new ResourceLocation("extracells", "textures/gui/busiofluid.png"), new ContainerBusFluidIO(_terminal, _player));
+	public GuiBusFluidIO(PartFluidIO terminal, EntityPlayer player) {
+		super(new ResourceLocation("extracells", "textures/gui/busiofluid.png"), new ContainerBusFluidIO(terminal, player));
 		((ContainerBusFluidIO) this.inventorySlots).setGui(this);
-		this.part = _terminal;
+		this.part = terminal;
 		for (int x = 0; x < 3; x++) {
 			for (int y = 0; y < 3; y++) {
 				int id = y + x * 3;

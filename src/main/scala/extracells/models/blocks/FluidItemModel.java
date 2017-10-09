@@ -11,7 +11,6 @@ import java.util.List;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -33,7 +32,6 @@ import extracells.models.BlankModel;
 import extracells.registries.ItemEnum;
 
 public class FluidItemModel implements IModel {
-	private static final FaceBakery bakery = new FaceBakery();
 
 	public static class ModelLoader implements ICustomModelLoader {
 		@Override
