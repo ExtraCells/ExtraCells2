@@ -16,6 +16,7 @@ import extracells.api.IPortableFluidStorageCell;
 import extracells.api.IWirelessFluidTermHandler;
 import extracells.container.ContainerStorage;
 import extracells.container.StorageType;
+import extracells.util.AEUtils;
 import extracells.util.FluidHelper;
 
 public class ContainerFluidStorage extends ContainerStorage {
@@ -55,7 +56,7 @@ public class ContainerFluidStorage extends ContainerStorage {
 				return;
 			int capacity = FluidHelper.getCapacity(container, selectedFluid);
 			//Tries to simulate the extraction of fluid from storage.
-			IAEFluidStack result = this.monitor.extractItems(FluidHelper.createAEFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
+			IAEFluidStack result = this.monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
 
 			//Calculates the amount of fluid to fill container with.
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
@@ -68,7 +69,7 @@ public class ContainerFluidStorage extends ContainerStorage {
 
 			//Moves it to second slot and commits extraction to grid.
 			if (fillSecondSlot(filledContainer.getRight())) {
-				this.monitor.extractItems(FluidHelper.createAEFluidStack(
+				this.monitor.extractItems(AEUtils.createFluidStack(
 						this.selectedFluid, filledContainer.getLeft()),
 						Actionable.MODULATE,
 						new PlayerSource(this.player, null));
@@ -80,7 +81,7 @@ public class ContainerFluidStorage extends ContainerStorage {
 
 			//Tries to inject fluid to network.
 			IAEFluidStack notInjected = this.monitor.injectItems(
-					FluidHelper.createAEFluidStack(containerFluid),
+				AEUtils.createFluidStack(containerFluid),
 					Actionable.SIMULATE, new PlayerSource(this.player, null));
 			if (notInjected != null)
 				return;
@@ -104,7 +105,7 @@ public class ContainerFluidStorage extends ContainerStorage {
 					.drainStack(container, containerFluid);
 			if (fillSecondSlot(drainedContainer.getRight())) {
 				this.monitor.injectItems(
-						FluidHelper.createAEFluidStack(containerFluid),
+					AEUtils.createFluidStack(containerFluid),
 						Actionable.MODULATE,
 						new PlayerSource(this.player, null));
 				decreaseFirstSlot();

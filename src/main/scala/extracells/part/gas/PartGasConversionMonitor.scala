@@ -7,7 +7,7 @@ import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import extracells.integration.Integration
 import extracells.part.fluid.PartFluidConversionMonitor
-import extracells.util.{FluidHelper, GasUtil, WrenchUtil}
+import extracells.util.{AEUtils, GasUtil, WrenchUtil}
 import mekanism.api.gas.IGasItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -45,7 +45,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
         val g = GasUtil.getGasFromContainer(s2)
         val f = GasUtil.getFluidStack(g)
         if (f == null) return true
-        val fl = FluidHelper.createAEFluidStack(f)
+        val fl = AEUtils.createFluidStack(f)
         val not: IAEFluidStack = mon.injectItems(fl.copy, Actionable.SIMULATE, new MachineSource(this))
         if (mon.canAccept(fl) && (not == null || not.getStackSize == 0L)) {
           mon.injectItems(fl, Actionable.MODULATE, new MachineSource(this))
@@ -74,10 +74,10 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
         else
           return true
         if (extract != null) {
-          mon.extractItems(FluidHelper.createAEFluidStack(new FluidStack(this.fluid, extract.getStackSize.toInt)), Actionable.MODULATE, new MachineSource(this))
+          mon.extractItems(AEUtils.createFluidStack(new FluidStack(this.fluid, extract.getStackSize.toInt)), Actionable.MODULATE, new MachineSource(this))
           val empty1: MutablePair[Integer, ItemStack] = GasUtil.fillStack(s2, GasUtil.getGasStack(extract.getFluidStack))
           if (empty1.left == 0) {
-            mon.injectItems(FluidHelper.createAEFluidStack(new FluidStack(this.fluid, extract.getStackSize.toInt)), Actionable.MODULATE, new MachineSource(this))
+            mon.injectItems(AEUtils.createFluidStack(new FluidStack(this.fluid, extract.getStackSize.toInt)), Actionable.MODULATE, new MachineSource(this))
             return true
           }
           val empty: ItemStack = empty1.right
@@ -107,7 +107,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
     if (s == null) {
       if (this.locked) return false
       if (this.fluid == null) return true
-      if (this.watcher != null) this.watcher.remove(FluidHelper.createAEFluidStack(this.fluid))
+      if (this.watcher != null) this.watcher.remove(AEUtils.createFluidStack(this.fluid))
       this.fluid = null
       this.amount = 0L
       val host: IPartHost = getHost
@@ -125,7 +125,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
     }
     if (this.locked) return false
     if (GasUtil.isFilled(s)) {
-      if (this.fluid != null && this.watcher != null) this.watcher.remove(FluidHelper.createAEFluidStack(this.fluid))
+      if (this.fluid != null && this.watcher != null) this.watcher.remove(AEUtils.createFluidStack(this.fluid))
       val gas = GasUtil.getGasFromContainer(s)
       val fluidStack = GasUtil.getFluidStack(gas)
       this.fluid = {
@@ -134,7 +134,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
         else
           fluidStack.getFluid
       }
-      if (this.watcher != null) this.watcher.add(FluidHelper.createAEFluidStack(this.fluid))
+      if (this.watcher != null) this.watcher.add(AEUtils.createFluidStack(this.fluid))
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
       return true

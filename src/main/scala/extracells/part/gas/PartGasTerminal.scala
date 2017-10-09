@@ -8,7 +8,7 @@ import extracells.gridblock.ECBaseGridBlock
 import extracells.gui.GuiTerminal
 import extracells.integration.Integration.Mods
 import extracells.part.fluid.PartFluidTerminal
-import extracells.util.{FluidHelper, GasUtil}
+import extracells.util.{AEUtils, GasUtil}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraftforge.fluids.FluidStack
@@ -49,7 +49,7 @@ class PartGasTerminal extends PartFluidTerminal{
     if (GasUtil.isEmpty(container) || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack).getFluid == this.currentFluid && doNextFill)) {
       if (this.currentFluid == null) return
       val capacity: Int = GasUtil.getCapacity(container)
-      val result: IAEFluidStack = monitor.extractItems(FluidHelper.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource)
+      val result: IAEFluidStack = monitor.extractItems(AEUtils.createFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource)
       var proposedAmount: Int = 0
       if (result == null)
         proposedAmount = 0
@@ -64,10 +64,10 @@ class PartGasTerminal extends PartFluidTerminal{
         doNextFill = false
       }else if (container.stackSize == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight)) {
         this.inventory.setInventorySlotContents(0, filledContainer.getRight)
-        monitor.extractItems(FluidHelper.createAEFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
+        monitor.extractItems(AEUtils.createFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
         doNextFill = true
       }else if (fillSecondSlot(filledContainer.getRight)) {
-        monitor.extractItems(FluidHelper.createAEFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
+        monitor.extractItems(AEUtils.createFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
         decreaseFirstSlot
         doNextFill = false
       }

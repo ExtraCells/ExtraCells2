@@ -30,7 +30,7 @@ import appeng.api.util.AECableType;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.models.PartModels;
 import extracells.part.PartECBase;
-import extracells.util.FluidHelper;
+import extracells.util.AEUtils;
 import extracells.util.PermissionUtil;
 
 public class PartFluidPlaneAnnihilation extends PartECBase {
@@ -94,7 +94,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 			FluidStack drained = block.drain(world, offsetPos, false);
 			if (drained == null)
 				return;
-			IAEFluidStack toInject = FluidHelper.createAEFluidStack(drained);
+			IAEFluidStack toInject = AEUtils.createFluidStack(drained);
 			IAEFluidStack notInjected = monitor.injectItems(toInject,
 					Actionable.SIMULATE, new MachineSource(this));
 			if (notInjected != null)
@@ -103,8 +103,8 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 			block.drain(world, offsetPos, true);
 		} else if (meta == 0) {
 			if (fluidBlock == Blocks.FLOWING_WATER) {
-				IAEFluidStack toInject = FluidHelper
-						.createAEFluidStack(FluidRegistry.WATER);
+				IAEFluidStack toInject = AEUtils
+					.createFluidStack(FluidRegistry.WATER);
 				IAEFluidStack notInjected = monitor.injectItems(toInject,
 						Actionable.SIMULATE, new MachineSource(this));
 				if (notInjected != null)
@@ -113,8 +113,8 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 						new MachineSource(this));
 				world.setBlockToAir(offsetPos);
 			} else if (fluidBlock == Blocks.FLOWING_LAVA) {
-				IAEFluidStack toInject = FluidHelper
-						.createAEFluidStack(FluidRegistry.LAVA);
+				IAEFluidStack toInject = AEUtils
+					.createFluidStack(FluidRegistry.LAVA);
 				IAEFluidStack notInjected = monitor.injectItems(toInject,
 						Actionable.SIMULATE, new MachineSource(this));
 				if (notInjected != null)

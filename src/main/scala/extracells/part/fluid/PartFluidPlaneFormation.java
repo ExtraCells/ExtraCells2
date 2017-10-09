@@ -44,7 +44,7 @@ import extracells.inventory.ECPrivateInventory;
 import extracells.models.PartModels;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.part.PartECBase;
-import extracells.util.FluidHelper;
+import extracells.util.AEUtils;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 
@@ -91,14 +91,13 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 		Block worldBlock = world.getBlockState(pos).getBlock();
 		if (worldBlock != null && worldBlock != Blocks.AIR)
 			return;
-		IAEFluidStack canDrain = monitor.extractItems(FluidHelper
-				.createAEFluidStack(this.fluid,
+		IAEFluidStack canDrain = monitor.extractItems(AEUtils.createFluidStack(this.fluid,
 						FluidContainerRegistry.BUCKET_VOLUME),
 				Actionable.SIMULATE, new MachineSource(this));
 		if (canDrain == null
 				|| canDrain.getStackSize() < FluidContainerRegistry.BUCKET_VOLUME)
 			return;
-		monitor.extractItems(FluidHelper.createAEFluidStack(this.fluid,
+		monitor.extractItems(AEUtils.createFluidStack(this.fluid,
 				FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE,
 				new MachineSource(this));
 		Block fluidWorldBlock = this.fluid.getBlock();

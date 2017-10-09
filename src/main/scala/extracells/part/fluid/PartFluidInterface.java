@@ -78,8 +78,8 @@ import extracells.models.PartModels;
 import extracells.part.PartECBase;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
+import extracells.util.AEUtils;
 import extracells.util.EmptyMeItemMonitor;
-import extracells.util.FluidHelper;
 import extracells.util.ItemUtils;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
@@ -355,11 +355,11 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 		FluidStack copy = resource.copy();
 		if (doFill) {
 			notRemoved = storage.getFluidInventory().injectItems(
-				FluidHelper.createAEFluidStack(resource),
+				AEUtils.createFluidStack(resource),
 				Actionable.MODULATE, new MachineSource(this));
 		} else {
 			notRemoved = storage.getFluidInventory().injectItems(
-				FluidHelper.createAEFluidStack(resource),
+				AEUtils.createFluidStack(resource),
 				Actionable.SIMULATE, new MachineSource(this));
 		}
 		if (notRemoved == null) {
@@ -752,7 +752,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			for (Fluid fluid : fluids.keySet()) {
 				Long amount = fluids.get(fluid);
 				IAEFluidStack extractFluid = storage.getFluidInventory()
-					.extractItems(FluidHelper.createAEFluidStack(fluid, (int) (amount + 0)), Actionable.SIMULATE, new MachineSource(this));
+					.extractItems(AEUtils.createFluidStack(fluid, (int) (amount + 0)), Actionable.SIMULATE, new MachineSource(this));
 				if (extractFluid == null
 					|| extractFluid.getStackSize() != amount) {
 					return false;
@@ -761,7 +761,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			for (Fluid fluid : fluids.keySet()) {
 				Long amount = fluids.get(fluid);
 				IAEFluidStack extractFluid = storage.getFluidInventory()
-					.extractItems(FluidHelper.createAEFluidStack(fluid, (int) (amount + 0)), Actionable.MODULATE, new MachineSource(this));
+					.extractItems(AEUtils.createFluidStack(fluid, (int) (amount + 0)), Actionable.MODULATE, new MachineSource(this));
 				this.export.add(extractFluid);
 			}
 			for (IAEItemStack fluidStack : patter.getCondensedInputs()) {
@@ -960,7 +960,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			&& FluidRegistry.getFluid(this.fluidFilter) != this.tank.getFluid().getFluid()) {
 			FluidStack drainedFluid = this.tank.drain(125, false);
 			if (drainedFluid != null) {
-				IAEFluidStack notAdded = storage.getFluidInventory().injectItems(FluidHelper.createAEFluidStack(drainedFluid.copy()), Actionable.MODULATE, new MachineSource(this));
+				IAEFluidStack notAdded = storage.getFluidInventory().injectItems(AEUtils.createFluidStack(drainedFluid.copy()), Actionable.MODULATE, new MachineSource(this));
 				int leftOver = 0;
 				if (notAdded != null) {
 					leftOver = (int) notAdded.getStackSize();
@@ -991,7 +991,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 				.fill(storage
 						.getFluidInventory()
 						.extractItems(
-							FluidHelper.createAEFluidStack(
+							AEUtils.createFluidStack(
 										FluidRegistry
 											.getFluid(this.fluidFilter),
 								accepted),

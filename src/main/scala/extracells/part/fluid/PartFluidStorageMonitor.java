@@ -53,6 +53,7 @@ import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
 import extracells.models.PartModels;
 import extracells.part.PartECBase;
+import extracells.util.AEUtils;
 import extracells.util.FluidHelper;
 import extracells.util.WrenchUtil;
 import io.netty.buffer.ByteBuf;
@@ -178,8 +179,9 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 				return false;
 			if (this.fluid == null)
 				return true;
-			if (this.watcher != null)
-				this.watcher.remove(FluidHelper.createAEFluidStack(this.fluid));
+			if (this.watcher != null) {
+				this.watcher.remove(AEUtils.createFluidStack(this.fluid));
+			}
 			this.fluid = null;
 			this.amount = 0L;
 			IPartHost host = getHost();
@@ -204,11 +206,13 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		if (this.locked)
 			return false;
 		if (!FluidHelper.isEmpty(s)) {
-			if (this.fluid != null && this.watcher != null)
-				this.watcher.remove(FluidHelper.createAEFluidStack(this.fluid));
+			if (this.fluid != null && this.watcher != null) {
+				this.watcher.remove(AEUtils.createFluidStack(this.fluid));
+			}
 			this.fluid = FluidHelper.getFluidFromContainer(s).getFluid();
-			if (this.watcher != null)
-				this.watcher.add(FluidHelper.createAEFluidStack(this.fluid));
+			if (this.watcher != null) {
+				this.watcher.add(AEUtils.createFluidStack(this.fluid));
+			}
 			IPartHost host = getHost();
 			if (host != null)
 				host.markForUpdate();
@@ -294,7 +298,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			return;
 		}
 
-		IAEFluidStack aeFluidStack = FluidHelper.createAEFluidStack(this.fluid);
+		IAEFluidStack aeFluidStack = AEUtils.createFluidStack(this.fluid);
 		aeFluidStack.setStackSize(this.amount);
 		if (aeFluidStack != null) {
 			GlStateManager.pushMatrix();
@@ -440,8 +444,9 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	@Override
 	public void updateWatcher(IStackWatcher w) {
 		this.watcher = w;
-		if (this.fluid != null)
-			w.add(FluidHelper.createAEFluidStack(this.fluid));
+		if (this.fluid != null) {
+			w.add(AEUtils.createFluidStack(this.fluid));
+		}
 		onStackChange(null, null, null, null, null);
 	}
 

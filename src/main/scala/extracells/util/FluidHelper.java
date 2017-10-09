@@ -8,33 +8,13 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-import appeng.api.AEApi;
-import appeng.api.storage.data.IAEFluidStack;
-
 public class FluidHelper {
-
-	public static IAEFluidStack createAEFluidStack(Fluid fluid) {
-		return createAEFluidStack(new FluidStack(fluid, Fluid.BUCKET_VOLUME));
-	}
-
-	public static IAEFluidStack createAEFluidStack(Fluid fluid, long amount) {
-		return createAEFluidStack(new FluidStack(fluid, 1)).setStackSize(amount);
-	}
-
-	public static IAEFluidStack createAEFluidStack(FluidStack fluid) {
-		return AEApi.instance().storage().createFluidStack(fluid);
-	}
-
-	public static IAEFluidStack createAEFluidStack(String fluidName, long amount) {
-		return createAEFluidStack(FluidRegistry.getFluid(fluidName), amount);
-	}
 
 	public static Pair<Integer, ItemStack> drainStack(ItemStack itemStack, FluidStack fluid) {
 		if (itemStack == null) {

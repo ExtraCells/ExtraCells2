@@ -42,6 +42,7 @@ import extracells.inventory.IInventoryListener;
 import extracells.models.PartModels;
 import extracells.network.packet.part.PacketTerminalSelectFluidClient;
 import extracells.part.PartECBase;
+import extracells.util.AEUtils;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
@@ -120,25 +121,25 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 				return;
 			}
 			int capacity = FluidHelper.getCapacity(container, currentFluid);
-			IAEFluidStack result = monitor.extractItems(FluidHelper.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource);
+			IAEFluidStack result = monitor.extractItems(AEUtils.createFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource);
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
 			Pair<Integer, ItemStack> filledContainer = FluidHelper.fillStack(container, new FluidStack(this.currentFluid, proposedAmount));
 			if(filledContainer.getLeft() > proposedAmount) {
 				return;
 			}
 			if (fillSecondSlot(filledContainer.getRight())) {
-				monitor.extractItems(FluidHelper.createAEFluidStack(this.currentFluid, filledContainer.getLeft()), Actionable.MODULATE, this.machineSource);
+				monitor.extractItems(AEUtils.createFluidStack(this.currentFluid, filledContainer.getLeft()), Actionable.MODULATE, this.machineSource);
 				decreaseFirstSlot();
 			}
 		} else {
 			FluidStack containerFluid = FluidHelper.getFluidFromContainer(container);
-			IAEFluidStack notInjected = monitor.injectItems(FluidHelper.createAEFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
+			IAEFluidStack notInjected = monitor.injectItems(AEUtils.createFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
 			if (notInjected != null)
 				return;
 			Pair<Integer, ItemStack> drainedContainer = FluidHelper.drainStack(container, containerFluid);
 			ItemStack emptyContainer = drainedContainer.getRight();
 			if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
-				monitor.injectItems(FluidHelper.createAEFluidStack(containerFluid), Actionable.MODULATE, this.machineSource);
+				monitor.injectItems(AEUtils.createFluidStack(containerFluid), Actionable.MODULATE, this.machineSource);
 				decreaseFirstSlot();
 			}
 		}

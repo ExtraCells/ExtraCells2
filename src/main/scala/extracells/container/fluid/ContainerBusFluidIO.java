@@ -34,6 +34,7 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
+		//TODO: Remove this
 		if (this.guiBusFluidIO != null && this.guiBusFluidIO.shiftClick(getSlot(slotnumber).getStack()))
 			return this.inventorySlots.get(slotnumber).getStack();
 
@@ -45,8 +46,7 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 			itemstack = itemstack1.copy();
 
 			if (slotnumber < 36) {
-				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(),
-						true)) {
+				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(), true)) {
 					return null;
 				}
 			} else if (!mergeItemStack(itemstack1, 0, 36, false)) {

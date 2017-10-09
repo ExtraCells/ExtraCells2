@@ -16,6 +16,7 @@ import appeng.api.parts.IPartModel;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.models.PartModels;
+import extracells.util.AEUtils;
 import extracells.util.FluidHelper;
 
 public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
@@ -38,7 +39,7 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 				FluidStack f = FluidHelper.getFluidFromContainer(itemStack);
 				if (f == null)
 					return true;
-				IAEFluidStack fluidStack = FluidHelper.createAEFluidStack(f);
+				IAEFluidStack fluidStack = AEUtils.createFluidStack(f);
 				IAEFluidStack injectItems = mon.injectItems(fluidStack.copy(),
 						Actionable.SIMULATE, new MachineSource(this));
 				if (mon.canAccept(fluidStack)
@@ -67,24 +68,22 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 					return true;
 				IAEFluidStack extract;
 				if (itemStack.getItem() instanceof IFluidContainerItem) {
-					extract = mon.extractItems(FluidHelper.createAEFluidStack(
+					extract = mon.extractItems(AEUtils.createFluidStack(
 							this.fluid, ((IFluidContainerItem) itemStack.getItem())
 									.getCapacity(itemStack)), Actionable.SIMULATE,
 							new MachineSource(this));
 				} else
 					extract = mon.extractItems(
-							FluidHelper.createAEFluidStack(this.fluid),
+						AEUtils.createFluidStack(this.fluid),
 							Actionable.SIMULATE, new MachineSource(this));
 				if (extract != null) {
-					mon.extractItems(FluidHelper
-							.createAEFluidStack(new FluidStack(this.fluid,
+					mon.extractItems(AEUtils.createFluidStack(new FluidStack(this.fluid,
 									(int) extract.getStackSize())),
 							Actionable.MODULATE, new MachineSource(this));
 					Pair<Integer, ItemStack> empty1 = FluidHelper
 							.fillStack(itemStack, extract.getFluidStack());
 					if (empty1.getKey() == 0) {
-						mon.injectItems(FluidHelper
-								.createAEFluidStack(new FluidStack(this.fluid,
+						mon.injectItems(AEUtils.createFluidStack(new FluidStack(this.fluid,
 										(int) extract.getStackSize())),
 								Actionable.MODULATE, new MachineSource(this));
 						return true;

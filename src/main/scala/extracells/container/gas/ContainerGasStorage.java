@@ -18,7 +18,7 @@ import extracells.api.IPortableGasStorageCell;
 import extracells.api.IWirelessGasTermHandler;
 import extracells.container.ContainerStorage;
 import extracells.container.StorageType;
-import extracells.util.FluidHelper;
+import extracells.util.AEUtils;
 import extracells.util.GasUtil;
 import mekanism.api.gas.GasStack;
 
@@ -67,7 +67,7 @@ public class ContainerGasStorage extends ContainerStorage {
 				return;
 			int capacity = GasUtil.getCapacity(container);
 			//Tries to simulate the extraction of fluid from storage.
-			IAEFluidStack result = this.monitor.extractItems(FluidHelper.createAEFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
+			IAEFluidStack result = this.monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
 
 			//Calculates the amount of fluid to fill container with.
 			int proposedAmount = result == null ? 0 :  gasStack == null ? (int) Math.min(capacity, result.getStackSize()) : (int) Math.min(capacity - gasStack.amount, result.getStackSize());
@@ -80,11 +80,11 @@ public class ContainerGasStorage extends ContainerStorage {
 			//Moves it to second slot and commits extraction to grid.
 			if (container.stackSize == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight())) {
 				this.inventory.setInventorySlotContents(0, filledContainer.getRight());
-				monitor.extractItems(FluidHelper.createAEFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
+				monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
 				doNextFill = true;
 
 			}else if (fillSecondSlot(filledContainer.getRight())){
-				monitor.extractItems(FluidHelper.createAEFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
+				monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
 				decreaseFirstSlot();
 				doNextFill = false;
 			}

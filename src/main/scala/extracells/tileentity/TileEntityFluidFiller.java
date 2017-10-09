@@ -52,6 +52,7 @@ import extracells.container.fluid.ContainerFluidFiller;
 import extracells.gridblock.ECFluidGridBlock;
 import extracells.gui.fluid.GuiFluidFiller;
 import extracells.network.IGuiProvider;
+import extracells.util.AEUtils;
 import extracells.util.FluidHelper;
 
 public class TileEntityFluidFiller extends TileBase implements IActionHost, ICraftingProvider, IECTileEntity, IMEMonitorHandlerReceiver<IAEFluidStack>, IListenerTile, ITickable, IGuiProvider {
@@ -238,8 +239,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		IStorageGrid storage = getStorageGrid();
 		if (storage == null)
 			return false;
-		IAEFluidStack fluidStack = FluidHelper
-			.createAEFluidStack(
+		IAEFluidStack fluidStack = AEUtils.createFluidStack(
 						new FluidStack(
 								fluid.getFluid(),
 								FluidHelper.getCapacity(patternDetails
