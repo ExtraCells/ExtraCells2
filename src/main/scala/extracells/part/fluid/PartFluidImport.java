@@ -1,10 +1,6 @@
 package extracells.part.fluid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
@@ -13,7 +9,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
-import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
@@ -23,9 +18,12 @@ import appeng.api.parts.IPartModel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.models.PartModels;
+import extracells.util.AEUtils;
 import extracells.util.PermissionUtil;
 
 public class PartFluidImport extends PartFluidIO implements IFluidHandler {
+
+	public static final int AMOUNT_PER_TRANSFER = 125;
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
@@ -39,26 +37,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 		}
 		boolean empty = true;
 
-		List<Fluid> filter = new ArrayList<Fluid>();
-		filter.add(this.filterFluids[4]);
-
-		if (this.filterSize >= 1) {
-			for (byte i = 1; i < 9; i += 2) {
-				if (i != 4) {
-					filter.add(this.filterFluids[i]);
-				}
-			}
-		}
-
-		if (this.filterSize >= 2) {
-			for (byte i = 0; i < 9; i += 2) {
-				if (i != 4) {
-					filter.add(this.filterFluids[i]);
-				}
-			}
-		}
-
-		for (Fluid fluid : filter) {
+		for (Fluid fluid : getActiveFilters()) {
 			if (fluid != null) {
 				empty = false;
 
@@ -86,10 +65,10 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 		if (resource == null || redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL) {
 			return 0;
 		}
-		int drainAmount = Math.min(125 + this.speedState * 125, resource.amount);
+		int drainAmount = Math.min(AMOUNT_PER_TRANSFER + this.speedState * AMOUNT_PER_TRANSFER, resource.amount);
 		FluidStack toFill = new FluidStack(resource.getFluid(), drainAmount);
 		Actionable action = doFill ? Actionable.MODULATE : Actionable.SIMULATE;
-		IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), action);
+		IAEFluidStack filled = injectFluid(AEUtils.createFluidStack(toFill), action);
 		if (filled == null) {
 			return toFill.amount;
 		}
@@ -99,7 +78,6 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	protected boolean fillToNetwork(Fluid fluid, int toDrain) {
 		FluidStack drained;
 		IFluidHandler facingTank = getFacingTank();
-		EnumFacing side = getFacing();
 		if (fluid == null) {
 			drained = facingTank.drain(toDrain, false);
 		} else {
@@ -110,13 +88,11 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 			return false;
 		}
 
-		IAEFluidStack toFill = AEApi.instance().storage()
-			.createFluidStack(drained);
+		IAEFluidStack toFill = AEUtils.createFluidStack(drained);
 		IAEFluidStack notInjected = injectFluid(toFill, Actionable.MODULATE);
 
 		if (notInjected != null) {
-			int amount = (int) (toFill.getStackSize() - notInjected
-				.getStackSize());
+			int amount = (int) (toFill.getStackSize() - notInjected.getStackSize());
 			if (amount > 0) {
 				if (fluid == null) {
 					facingTank.drain(amount, true);

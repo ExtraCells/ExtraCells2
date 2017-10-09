@@ -1,6 +1,7 @@
 package extracells.part.fluid;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,13 +42,13 @@ import io.netty.buffer.ByteBuf;
 
 public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryListener, IFluidSlotListener, IUpgradeable {
 
-	public Fluid[] filterFluids = new Fluid[9];
+	public final Fluid[] filterFluids = new Fluid[9];
+	private final UpgradeInventory upgradeInventory = new UpgradeInventory(this);
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 	protected byte filterSize;
 	protected byte speedState;
 	protected boolean redstoneControlled;
 	//private boolean lastRedstone;
-	private UpgradeInventory upgradeInventory = new UpgradeInventory(this);
 
 	@Override
 	public void getDrops(List<ItemStack> drops, boolean wrenched) {
@@ -160,6 +161,28 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 		boolean activate = super.onActivate(player, enumHand, pos);
 		onInventoryChanged();
 		return activate;
+	}
+
+	public List<Fluid> getActiveFilters() {
+		List<Fluid> filter = new ArrayList<Fluid>();
+		filter.add(this.filterFluids[4]);
+
+		if (this.filterSize >= 1) {
+			for (byte i = 1; i < 9; i += 2) {
+				if (i != 4) {
+					filter.add(this.filterFluids[i]);
+				}
+			}
+		}
+
+		if (this.filterSize >= 2) {
+			for (byte i = 0; i < 9; i += 2) {
+				if (i != 4) {
+					filter.add(this.filterFluids[i]);
+				}
+			}
+		}
+		return filter;
 	}
 
 	@Override

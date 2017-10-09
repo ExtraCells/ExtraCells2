@@ -244,6 +244,9 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 		notifyTargetBlock(getHostTile(), getFacing());
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_MODE, mode.toString()), player);
+		if (getHost() != null) {
+			getHost().markForUpdate();
+		}
 		saveData();
 	}
 

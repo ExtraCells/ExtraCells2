@@ -49,9 +49,8 @@ import extracells.util.PermissionUtil;
 
 public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryListener {
 
-	protected Fluid currentFluid;
-	private List<Object> containers = new ArrayList<Object>();
-	protected ECPrivateInventory inventory = new ECPrivateInventory(
+	private final List<Object> containers = new ArrayList<Object>();
+	protected final ECPrivateInventory inventory = new ECPrivateInventory(
 		"extracells.part.fluid.terminal", 2, 64, this) {
 
 		@Override
@@ -59,6 +58,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 			return isItemValidForInputSlot(i, itemStack);
 		}
 	};
+	protected Fluid currentFluid;
 
 	protected boolean isItemValidForInputSlot(int i, ItemStack itemStack) {
 		return FluidHelper.isFluidContainer(itemStack);

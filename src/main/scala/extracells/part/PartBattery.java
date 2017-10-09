@@ -22,8 +22,7 @@ import extracells.inventory.IInventoryListener;
 import extracells.models.PartModels;
 import io.netty.buffer.ByteBuf;
 
-public class PartBattery extends PartECBase implements IAEPowerStorage,
-	IInventoryListener {
+public class PartBattery extends PartECBase implements IAEPowerStorage, IInventoryListener {
 
 	//private IIcon batteryIcon = TextureManager.BATTERY_FRONT.getTexture();
 	private ItemStack battery;

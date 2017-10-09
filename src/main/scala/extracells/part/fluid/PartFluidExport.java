@@ -1,8 +1,5 @@
 package extracells.part.fluid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
@@ -11,7 +8,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPart;
@@ -20,6 +16,7 @@ import appeng.api.parts.IPartModel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.models.PartModels;
+import extracells.util.AEUtils;
 import extracells.util.PermissionUtil;
 
 public class PartFluidExport extends PartFluidIO {
@@ -35,28 +32,10 @@ public class PartFluidExport extends PartFluidIO {
 		if (facingTank == null || !isActive()) {
 			return false;
 		}
-		List<Fluid> filter = new ArrayList<Fluid>();
-		filter.add(this.filterFluids[4]);
 
-		if (this.filterSize >= 1) {
-			for (byte i = 1; i < 9; i += 2) {
-				if (i != 4) {
-					filter.add(this.filterFluids[i]);
-				}
-			}
-		}
-
-		if (this.filterSize >= 2) {
-			for (byte i = 0; i < 9; i += 2) {
-				if (i != 4) {
-					filter.add(this.filterFluids[i]);
-				}
-			}
-		}
-
-		for (Fluid fluid : filter) {
+		for (Fluid fluid : getActiveFilters()) {
 			if (fluid != null) {
-				IAEFluidStack stack = extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, rate * TicksSinceLastCall)), Actionable.SIMULATE);
+				IAEFluidStack stack = extractFluid(AEUtils.createFluidStack(new FluidStack(fluid, rate * TicksSinceLastCall)), Actionable.SIMULATE);
 
 				if (stack == null) {
 					continue;
@@ -64,7 +43,7 @@ public class PartFluidExport extends PartFluidIO {
 				int filled = facingTank.fill(stack.getFluidStack(), true);
 
 				if (filled > 0) {
-					extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE);
+					extractFluid(AEUtils.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE);
 					return true;
 				}
 			}

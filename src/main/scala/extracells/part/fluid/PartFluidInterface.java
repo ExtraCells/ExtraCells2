@@ -236,22 +236,16 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 		}
 	}
 
-	List<IContainerListener> listeners = new ArrayList<IContainerListener>();
-	private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
-	private HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
-	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
-	private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
-	public final FluidInterfaceInventory inventory = new FluidInterfaceInventory();
-
-	private boolean update = false;
-	private List<IAEStack> export = new ArrayList<IAEStack>();
-	private List<IAEStack> removeFromExport = new ArrayList<IAEStack>();
-
-	private List<IAEStack> addToExport = new ArrayList<IAEStack>();
-	private IAEItemStack toExport = null;
-
+	private final List<IContainerListener> listeners = new ArrayList<IContainerListener>();
+	private final List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
+	private final HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
+	//private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
+	//private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
+	private final List<IAEStack> export = new ArrayList<IAEStack>();
+	private final List<IAEStack> removeFromExport = new ArrayList<IAEStack>();
+	private final List<IAEStack> addToExport = new ArrayList<IAEStack>();
 	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orElse(null);
-	private FluidTank tank = new FluidTank(10000) {
+	private final FluidTank tank = new FluidTank(10000) {
 		@Override
 		public FluidTank readFromNBT(NBTTagCompound nbt) {
 			if (!nbt.hasKey("Empty")) {
@@ -263,6 +257,12 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			return this;
 		}
 	};
+
+	public final FluidInterfaceInventory inventory = new FluidInterfaceInventory();
+
+	private boolean update = false;
+	private IAEItemStack toExport = null;
+
 	private String fluidFilter = "";
 	public boolean doNextUpdate = false;
 	private boolean needBreake = false;
@@ -575,7 +575,6 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 
 	@Override
 	public void provideCrafting(ICraftingProviderHelper craftingTracker) {
-		this.patternHandlers = new ArrayList<ICraftingPatternDetails>();
 		this.patternConvert.clear();
 
 		for (ItemStack currentPatternStack : this.inventory.inv) {

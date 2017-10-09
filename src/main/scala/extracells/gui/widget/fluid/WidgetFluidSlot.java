@@ -151,7 +151,7 @@ public class WidgetFluidSlot extends AbstractWidget {
 		if (fluid == null) {
 			return Collections.emptyList();
 		}
-		return Collections.singletonList(I18n.translateToLocal(fluid.getUnlocalizedName()));
+		return Collections.singletonList(I18n.translateToLocal(fluid.getLocalizedName(new FluidStack(fluid, Fluid.BUCKET_VOLUME))));
 	}
 
 	public void setFluid(Fluid fluid) {

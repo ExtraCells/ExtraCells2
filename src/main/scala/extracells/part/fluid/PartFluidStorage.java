@@ -51,18 +51,18 @@ import extracells.util.PermissionUtil;
 
 public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryListener, IFluidSlotListener, IUpgradeable {
 
-	private HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
-	private int priority = 0;
-	protected HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
-	private Fluid[] filterFluids = new Fluid[54];
-	private AccessRestriction access = AccessRestriction.READ_WRITE;
-	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this) {
+	private final HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
+	private final Fluid[] filterFluids = new Fluid[54];
+	private final ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 			return itemStack != null && AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack);
 		}
 	};
+	private int priority = 0;
+	protected HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
+	private AccessRestriction access = AccessRestriction.READ_WRITE;
 
 	@Override
 	public void getDrops(List<ItemStack> drops, boolean wrenched) {
