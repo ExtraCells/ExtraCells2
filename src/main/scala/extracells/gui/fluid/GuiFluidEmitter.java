@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,16 +27,20 @@ import extracells.util.NetworkUtil;
 
 public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements IFluidSlotGui {
 
+	//TODO: Clean Up / Add own Button Class
+	public static final String[] BUTTON_NAMES = {"-1", "-10", "-100", "+1", "+10", "+100"};
+	public static final String[] SHIFT_NAMES = {"-100", "-1000", "-10000", "+100", "+1000", "+10000"};
+
 	public static final int xSize = 176;
 	public static final int ySize = 166;
 	private DigitTextField amountField;
 	private PartFluidLevelEmitter part;
 
-	public GuiFluidEmitter(PartFluidLevelEmitter _part, EntityPlayer _player) {
-		super(new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png"), new ContainerFluidEmitter(_part, _player));
-		this.part = _part;
+	public GuiFluidEmitter(PartFluidLevelEmitter part, EntityPlayer player) {
+		super(new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png"), new ContainerFluidEmitter(part, player));
+		this.part = part;
 		widgetManager.add(new WidgetFluidSlot(widgetManager, this.part, 79, 36));
-		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(false)));
+		NetworkUtil.sendToServer(new PacketPartConfig(this.part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(false)));
 	}
 
 	@Override
@@ -74,10 +79,6 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 
 	@Override
 	public void drawScreen(int x, int y, float f) {
-
-		String[] buttonNames = {"-1", "-10", "-100", "+1", "+10", "+100"};
-		String[] shiftNames = {"-100", "-1000", "-10000", "+100", "+1000", "+10000"};
-
 		for (int i = 0; i < this.buttonList.size(); i++) {
 			if (i == 6) {
 				break;
@@ -85,14 +86,19 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 			GuiButton currentButton = this.buttonList.get(i);
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-				currentButton.displayString = shiftNames[i] + "mB";
+				currentButton.displayString = SHIFT_NAMES[i] + "mB";
 			} else {
-				currentButton.displayString = buttonNames[i] + "mB";
+				currentButton.displayString = BUTTON_NAMES[i] + "mB";
 			}
 		}
 
 		super.drawScreen(x, y, f);
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		this.amountField.drawTextBox();
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
 	}
 
 	@Override
@@ -120,11 +126,13 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 
 	@Override
 	protected void keyTyped(char key, int keyID) throws IOException {
-		super.keyTyped(key, keyID);
-		if ("0123456789".contains(String.valueOf(key)) || keyID == Keyboard.KEY_BACK) {
-			this.amountField.textboxKeyTyped(key, keyID);
-			String text = amountField.getText();
-			NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_AMOUNT, text.isEmpty() ? "0" : text));
+		if (!this.checkHotbarKeys(key)) {
+			if ((keyID == Keyboard.KEY_DELETE || keyID == Keyboard.KEY_RIGHT || keyID == Keyboard.KEY_LEFT || keyID == Keyboard.KEY_BACK || Character.isDigit(key)) && this.amountField.textboxKeyTyped(key, keyID)) {
+				String text = amountField.getText();
+				NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_AMOUNT, text.isEmpty() ? "0" : text));
+			} else {
+				super.keyTyped(key, keyID);
+			}
 		}
 	}
 

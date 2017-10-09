@@ -157,8 +157,8 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 			IGrid grid = node.getGrid();
 			if (grid != null && this.wasChanged()) {
 				grid.postEvent(new MENetworkCellArrayUpdate());
-				node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
-				node.getGrid().postEvent(new MENetworkCellArrayUpdate());
+				grid.postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
+				grid.postEvent(new MENetworkCellArrayUpdate());
 			}
 			getHost().markForUpdate();
 		}
@@ -174,9 +174,9 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 				onNeighborChanged();
 				getHost().markForUpdate();
 			}
+			node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
+			node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 		}
-		node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
-		node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 	}
 
 	@Override

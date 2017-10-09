@@ -40,14 +40,6 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 		return 2.0F;
 	}
 
-	@SuppressWarnings("unused")
-	@MENetworkEventSubscribe
-	public void channelChanged(MENetworkChannelChanged e) {
-		if (e.node == getGridNode()) {
-			onNeighborChanged();
-		}
-	}
-
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
 		bch.addBox(2, 2, 14, 14, 14, 16);
@@ -107,22 +99,9 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 			monitor.injectItems(toInject, Actionable.MODULATE, new MachineSource(this));
 			block.drain(world, offsetPos, true);
 		} else if (meta == 0) {
-			if (fluidBlock == Blocks.FLOWING_WATER) {
-				IAEFluidStack toInject = AEUtils
-					.createFluidStack(FluidRegistry.WATER);
-				IAEFluidStack notInjected = monitor.injectItems(toInject,
-					Actionable.SIMULATE, new MachineSource(this));
-				if (notInjected != null) {
-					return;
-				}
-				monitor.injectItems(toInject, Actionable.MODULATE,
-					new MachineSource(this));
-				world.setBlockToAir(offsetPos);
-			} else if (fluidBlock == Blocks.FLOWING_LAVA) {
-				IAEFluidStack toInject = AEUtils
-					.createFluidStack(FluidRegistry.LAVA);
-				IAEFluidStack notInjected = monitor.injectItems(toInject,
-					Actionable.SIMULATE, new MachineSource(this));
+			IAEFluidStack toInject = getFluidStack(fluidBlock);
+			if (toInject != null) {
+				IAEFluidStack notInjected = monitor.injectItems(toInject, Actionable.SIMULATE, new MachineSource(this));
 				if (notInjected != null) {
 					return;
 				}
@@ -130,6 +109,10 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 				world.setBlockToAir(offsetPos);
 			}
 		}
+	}
+
+	private static IAEFluidStack getFluidStack(Block fluidBlock) {
+		return fluidBlock == Blocks.FLOWING_WATER ? AEUtils.createFluidStack(FluidRegistry.WATER) : fluidBlock == Blocks.FLOWING_LAVA ? AEUtils.createFluidStack(FluidRegistry.LAVA) : null;
 	}
 
 	@Override
@@ -140,6 +123,14 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 			return PartModels.ANNIHILATION_PLANE_ON;
 		} else {
 			return PartModels.ANNIHILATION_PLANE_OFF;
+		}
+	}
+
+	@SuppressWarnings("unused")
+	@MENetworkEventSubscribe
+	public void channelChanged(MENetworkChannelChanged e) {
+		if (e.node == getGridNode()) {
+			onNeighborChanged();
 		}
 	}
 

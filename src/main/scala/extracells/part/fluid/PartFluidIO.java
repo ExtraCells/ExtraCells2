@@ -46,7 +46,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 	protected byte filterSize;
 	protected byte speedState;
 	protected boolean redstoneControlled;
-	private boolean lastRedstone;
+	//private boolean lastRedstone;
 	private UpgradeInventory upgradeInventory = new UpgradeInventory(this);
 
 	@Override
@@ -198,8 +198,8 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 	@Override
 	public void onNeighborChanged() {
 		super.onNeighborChanged();
-		boolean redstonePowered = isRedstonePowered();
-		this.lastRedstone = redstonePowered;
+		/*boolean redstonePowered = isRedstonePowered();
+		this.lastRedstone = redstonePowered;*/
 	}
 
 	@Override

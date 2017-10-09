@@ -1,18 +1,15 @@
 package extracells.util;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelBlock;
-import net.minecraft.client.renderer.block.model.ModelBlockDefinition;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
@@ -24,8 +21,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelUtil {
-
-	private static final Map<ResourceLocation, ModelBlockDefinition> blockDefinitions = Maps.newHashMap();
 
 	public static SimpleModelState loadModelState(ResourceLocation location) {
 		return new SimpleModelState(IPerspectiveAwareModel.MapWrapper.getTransforms(loadTransformFromJson(location)));

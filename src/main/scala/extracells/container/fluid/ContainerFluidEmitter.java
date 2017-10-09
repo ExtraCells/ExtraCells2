@@ -8,19 +8,21 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fluids.FluidStack;
 
+import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidLevelEmitter;
 import extracells.util.FluidHelper;
+import extracells.util.NetworkUtil;
 
 public class ContainerFluidEmitter extends Container {
 
-	PartFluidLevelEmitter part;
-	EntityPlayer player;
+	private final PartFluidLevelEmitter part;
+	private final EntityPlayer player;
+	private long clientAmount = -1;
 
-	public ContainerFluidEmitter(PartFluidLevelEmitter _part,
-		EntityPlayer _player) {
+	public ContainerFluidEmitter(PartFluidLevelEmitter part, EntityPlayer player) {
 		super();
-		this.part = _part;
-		this.player = _player;
+		this.part = part;
+		this.player = player;
 		bindPlayerInventory(this.player.inventory);
 	}
 
@@ -34,6 +36,15 @@ public class ContainerFluidEmitter extends Container {
 
 		for (int i = 0; i < 9; i++) {
 			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
+		}
+	}
+
+	@Override
+	public void detectAndSendChanges() {
+		super.detectAndSendChanges();
+		if (clientAmount != part.getWantedAmount()) {
+			clientAmount = part.getWantedAmount();
+			NetworkUtil.sendToPlayer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_AMOUNT, Long.toString(clientAmount)), player);
 		}
 	}
 

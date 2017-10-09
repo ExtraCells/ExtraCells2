@@ -91,8 +91,8 @@ public class TileEntityFluidInterface extends TileBase implements
 	private boolean update = false;
 	private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
 	private HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
-	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
-	private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
+	//private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
+	//private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
 	public final FluidInterfaceInventory inventory;
 	private IAEItemStack toExport = null;
 
@@ -103,7 +103,7 @@ public class TileEntityFluidInterface extends TileBase implements
 
 	private List<IAEStack> addToExport = new ArrayList<IAEStack>();
 
-	private List<IAEItemStack> watcherList = new ArrayList<IAEItemStack>();
+	//private List<IAEItemStack> watcherList = new ArrayList<IAEItemStack>();
 
 	private boolean isFirstGetGridNode = true;
 

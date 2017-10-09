@@ -20,6 +20,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
@@ -46,10 +48,9 @@ import extracells.util.NetworkUtil;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
-//TODO: Rewrite
 public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotListener {
 
-	private Fluid fluid;
+	private Fluid selectedFluid;
 	private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;
 	private IStackWatcher watcher;
 	private long wantedAmount;
@@ -85,7 +86,14 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		return new ContainerFluidEmitter(this, player);
 	}
 
-	private boolean isPowering() {
+	private boolean isLevelEmitterOn() {
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+			return clientRedstoneOutput;
+		}
+		IGridNode gridNode = getGridNode();
+		if (gridNode == null || !gridNode.isActive()) {
+			return false;
+		}
 		switch (this.mode) {
 			case LOW_SIGNAL:
 				return this.wantedAmount >= this.currentAmount;
@@ -98,7 +106,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	@Override
 	public int isProvidingStrongPower() {
-		return isPowering() ? 15 : 0;
+		return isLevelEmitterOn() ? 15 : 0;
 	}
 
 	@Override
@@ -122,7 +130,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	@Override
 	public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, BaseActionSource src, StorageChannel chan) {
-		if (chan == StorageChannel.FLUIDS && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == this.fluid) {
+		if (chan == StorageChannel.FLUIDS && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == this.selectedFluid) {
 			this.currentAmount = fullStack != null ? fullStack.getStackSize() : 0;
 
 			IGridNode node = getGridNode();
@@ -136,7 +144,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	@Override
 	public void randomDisplayTick(World world, BlockPos blockPos, Random random) {
-		if (this.clientRedstoneOutput) {
+		if (isLevelEmitterOn()) {
 			EnumFacing facing = getFacing();
 			double d0 = facing.getFrontOffsetX() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
 			double d1 = facing.getFrontOffsetY() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
@@ -148,7 +156,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		this.fluid = FluidRegistry.getFluid(data.getString("fluid"));
+		this.selectedFluid = FluidRegistry.getFluid(data.getString("fluid"));
 		this.mode = RedstoneMode.values()[data.getInteger("mode")];
 		this.wantedAmount = data.getLong("wantedAmount");
 		if (this.wantedAmount < 0) {
@@ -167,25 +175,32 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	}
 
 	@Override
-	public IPartModel getStaticModels() {
-		if (isActive() && isPowered()) {
-			return clientRedstoneOutput ? PartModels.EMITTER_ON_HAS_CHANNEL : PartModels.EMITTER_OFF_HAS_CHANNEL;
-		} else if (isPowered()) {
-			return clientRedstoneOutput ? PartModels.EMITTER_ON_ON : PartModels.EMITTER_OFF_ON;
+	public void writeToNBT(NBTTagCompound data) {
+		super.writeToNBT(data);
+		if (this.selectedFluid != null) {
+			data.setString("fluid", this.selectedFluid.getName());
 		} else {
-			return clientRedstoneOutput ? PartModels.EMITTER_ON_OFF : PartModels.EMITTER_OFF_OFF;
+			data.removeTag("fluid");
 		}
+		data.setInteger("mode", this.mode.ordinal());
+		data.setLong("wantedAmount", this.wantedAmount);
+	}
+
+	@Override
+	public void writeToStream(ByteBuf data) throws IOException {
+		super.writeToStream(data);
+		data.writeBoolean(isLevelEmitterOn());
 	}
 
 	@Override
 	public void setFluid(int index, Fluid fluid, EntityPlayer player) {
-		this.fluid = fluid;
+		this.selectedFluid = fluid;
 		if (this.watcher == null) {
 			return;
 		}
 		this.watcher.reset();
 		updateWatcher(this.watcher);
-		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.fluid)), player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.selectedFluid)), player);
 		saveData();
 	}
 
@@ -194,7 +209,6 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		if (this.wantedAmount < 0) {
 			this.wantedAmount = 0;
 		}
-		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_AMOUNT, Long.toString(wantedAmount)), player);
 		notifyTargetBlock(getHostTile(), getFacing());
 		saveData();
 	}
@@ -202,7 +216,11 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	public void syncClientGui(EntityPlayer player) {
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_MODE, mode.toString()), player);
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_AMOUNT, Long.toString(wantedAmount)), player);
-		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.fluid)), player);
+		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.selectedFluid)), player);
+	}
+
+	public long getWantedAmount() {
+		return wantedAmount;
 	}
 
 	public void toggleMode(EntityPlayer player) {
@@ -223,27 +241,19 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	@Override
 	public void updateWatcher(IStackWatcher newWatcher) {
 		this.watcher = newWatcher;
-		if (this.fluid != null) {
-			this.watcher.add(AEApi.instance().storage()
-				.createFluidStack(new FluidStack(this.fluid, 1)));
+		if (this.selectedFluid != null) {
+			this.watcher.add(AEApi.instance().storage().createFluidStack(new FluidStack(this.selectedFluid, 1)));
 		}
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound data) {
-		super.writeToNBT(data);
-		if (this.fluid != null) {
-			data.setString("fluid", this.fluid.getName());
+	public IPartModel getStaticModels() {
+		if (isActive() && isPowered()) {
+			return isLevelEmitterOn() ? PartModels.EMITTER_ON_HAS_CHANNEL : PartModels.EMITTER_OFF_HAS_CHANNEL;
+		} else if (isPowered()) {
+			return isLevelEmitterOn() ? PartModels.EMITTER_ON_ON : PartModels.EMITTER_OFF_ON;
 		} else {
-			data.removeTag("fluid");
+			return isLevelEmitterOn() ? PartModels.EMITTER_ON_OFF : PartModels.EMITTER_OFF_OFF;
 		}
-		data.setInteger("mode", this.mode.ordinal());
-		data.setLong("wantedAmount", this.wantedAmount);
-	}
-
-	@Override
-	public void writeToStream(ByteBuf data) throws IOException {
-		super.writeToStream(data);
-		data.writeBoolean(isPowering());
 	}
 }

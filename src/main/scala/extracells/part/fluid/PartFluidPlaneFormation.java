@@ -17,7 +17,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.AEApi;
@@ -94,16 +93,12 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 		if (worldBlock != null && worldBlock != Blocks.AIR) {
 			return;
 		}
-		IAEFluidStack canDrain = monitor.extractItems(AEUtils.createFluidStack(this.fluid,
-			FluidContainerRegistry.BUCKET_VOLUME),
-			Actionable.SIMULATE, new MachineSource(this));
-		if (canDrain == null
-			|| canDrain.getStackSize() < FluidContainerRegistry.BUCKET_VOLUME) {
+		IAEFluidStack fluidStack = AEUtils.createFluidStack(this.fluid, Fluid.BUCKET_VOLUME);
+		IAEFluidStack canDrain = monitor.extractItems(fluidStack, Actionable.SIMULATE, new MachineSource(this));
+		if (canDrain == null || canDrain.getStackSize() < Fluid.BUCKET_VOLUME) {
 			return;
 		}
-		monitor.extractItems(AEUtils.createFluidStack(this.fluid,
-			FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE,
-			new MachineSource(this));
+		monitor.extractItems(fluidStack, Actionable.MODULATE, new MachineSource(this));
 		Block fluidWorldBlock = this.fluid.getBlock();
 		world.setBlockState(pos, fluidWorldBlock.getDefaultState());
 		world.notifyBlockUpdate(pos, fluidWorldBlock.getDefaultState(), fluidWorldBlock.getDefaultState(), 0);
