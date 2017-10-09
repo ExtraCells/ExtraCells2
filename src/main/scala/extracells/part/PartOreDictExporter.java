@@ -222,8 +222,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 				for (int i = 0; i < inv.getSizeInventory(); i++) {
 					if (inv.isItemValidForSlot(i, stack.getItemStack())) {
 						if (inv.getStackInSlot(i) == null) {
-							inv.setInventorySlotContents(i,
-								stack.getItemStack());
+							inv.setInventorySlotContents(i, stack.getItemStack());
 							return stack0;
 						} else if (ItemUtils.areItemEqualsIgnoreStackSize(
 							inv.getStackInSlot(i), stack.getItemStack())) {

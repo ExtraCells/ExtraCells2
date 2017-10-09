@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -89,8 +89,9 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 		}
 		World world = hostTile.getWorld();
 		BlockPos pos = hostTile.getPos().offset(facing);
-		Block worldBlock = world.getBlockState(pos).getBlock();
-		if (worldBlock != null && worldBlock != Blocks.AIR) {
+		IBlockState blockState = world.getBlockState(pos);
+		Block worldBlock = blockState.getBlock();
+		if (worldBlock != null && worldBlock.isAir(blockState, world, pos)) {
 			return;
 		}
 		IAEFluidStack fluidStack = AEUtils.createFluidStack(this.fluid, Fluid.BUCKET_VOLUME);
