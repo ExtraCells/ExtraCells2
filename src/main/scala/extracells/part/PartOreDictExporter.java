@@ -2,6 +2,8 @@ package extracells.part;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -9,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 
@@ -48,36 +51,96 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	}
 
 	private boolean isItemValid(IAEItemStack s) {
-		if (s == null || this.filter.equals("")) {
+		if (s == null || this.filter.equals(""))
 			return false;
-		}
+
 		int[] ids = OreDictionary.getOreIDs(s.getItemStack());
-		for (int id : ids) {
-			String name = OreDictionary.getOreName(id);
-			if (this.filter.startsWith("*") && this.filter.endsWith("*")) {
-				String filter2 = this.filter.replace("*", "");
-				if (filter2.equals(""))
-					return true;
-				if (name.contains(filter2))
-					return true;
-				continue;
-			} else if (this.filter.startsWith("*")) {
-				String filter2 = this.filter.replace("*", "");
-				if (name.endsWith(filter2))
-					return true;
-				continue;
-			} else if (this.filter.endsWith("*")) {
-				String filter2 = this.filter.replace("*", "");
-				if (name.startsWith(filter2))
-					return true;
-				continue;
+		ResourceLocation identifier = s.getItem().getRegistryName();
+
+		String[] filters = StringUtils.split(this.filter, '&');
+
+		boolean result = true;
+		for (String filter : filters) {
+			filter = filter.trim();
+
+			boolean exclude = filter.startsWith("!");
+			if (exclude) {
+				filter = filter.substring(1);
+			}
+
+			if (filter.startsWith("@")) {
+				filter = filter.substring(1);
+				if (!checkFilter(exclude, filter, identifier.getResourceDomain())) {
+					result = false;
+				}
+			} else if (filter.startsWith("~")) {
+				filter = filter.substring(1);
+				if (!checkFilter(exclude, filter, identifier.getResourcePath())) {
+					result = false;
+				}
 			} else {
-				if (name.equals(this.filter))
-					return true;
-				continue;
+				if (ids.length == 0) {
+					result = false;
+				} else {
+					boolean oreDictResult = true;
+					for (int id : ids) {
+						if (!checkFilter(exclude, filter, OreDictionary.getOreName(id))) {
+							oreDictResult = false;
+						} else if (!exclude) {
+							oreDictResult = true;
+							break;
+						}
+					}
+
+					if (!oreDictResult) {
+						result = false;
+					}
+				}
 			}
 		}
-		return false;
+
+		return result;
+	}
+
+	private boolean checkFilter(Boolean exclude, String filter, String name) {
+		if (filter.startsWith("*") && filter.endsWith("*")) {
+			filter = filter.replace("*", "");
+			if (filter.equals("")) {
+				return true;
+			}
+
+			if (exclude && name.contains(filter)) {
+				return false;
+			}
+			if (!exclude && !name.contains(filter)) {
+				return false;
+			}
+		} else if (filter.startsWith("*")) {
+			filter = filter.replace("*", "");
+			if (exclude && name.endsWith(filter)) {
+				return false;
+			}
+			if (!exclude && !name.endsWith(filter)) {
+				return false;
+			}
+		} else if (filter.endsWith("*")) {
+			filter = filter.replace("*", "");
+			if (exclude && name.startsWith(filter)) {
+				return false;
+			}
+			if (!exclude && !name.startsWith(filter)) {
+				return false;
+			}
+		} else {
+			if (exclude && name.equals(filter)) {
+				return false;
+			}
+			if (!exclude && !name.equals(filter)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public boolean doWork(int rate, int TicksSinceLastCall) {

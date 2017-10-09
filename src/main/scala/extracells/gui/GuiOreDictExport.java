@@ -77,7 +77,7 @@ public class GuiOreDictExport extends GuiBase {
 				this.guiLeft + this.xSize / 2 - 44, this.guiTop + 35, 88, 20,
 				I18n.translateToLocal("extracells.tooltip.save")));
 		this.searchbar = new GuiTextField(0, this.fontRendererObj, this.guiLeft
-				+ this.xSize / 2 - 44, this.guiTop + 20, 88, 10) {
+			+ this.xSize / 2 - 75, this.guiTop + 20, 150, 10) {
 
 			private int xPos = 0;
 			private int yPos = 0;
@@ -94,7 +94,7 @@ public class GuiOreDictExport extends GuiBase {
 		};
 		this.searchbar.setEnableBackgroundDrawing(true);
 		this.searchbar.setFocused(true);
-		this.searchbar.setMaxStringLength(15);
+		this.searchbar.setMaxStringLength(128);
 		this.searchbar.setText(filter);
 	}
 
