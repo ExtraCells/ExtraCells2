@@ -140,7 +140,7 @@ object GuiHandler extends IGuiHandler {
 		if (gui != null)
 			return gui.asInstanceOf[AnyRef]
 		var side: EnumFacing = null;
-		if (ID < 5) side = EnumFacing.getFront(ID)
+		if (ID <= 5) side = EnumFacing.getFront(ID)
 		val pos = new BlockPos(x, y, z);
 		val tileEntity = world.getTileEntity(pos)
 		if (tileEntity == null)
@@ -161,7 +161,7 @@ object GuiHandler extends IGuiHandler {
 		if (con != null)
 			return con.asInstanceOf[AnyRef]
 		var side: EnumFacing = null;
-		if(ID < 5){
+		if (ID <= 5) {
 			side = EnumFacing.getFront(ID);
 		}
 		val pos = new BlockPos(x, y, z);
