@@ -68,29 +68,33 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Override
 	public void addFluidToShowBlacklist(Class<? extends Fluid> clazz) {
-		if (clazz == null || clazz == Fluid.class)
+		if (clazz == null || clazz == Fluid.class) {
 			return;
+		}
 		this.blacklistShowClass.add(clazz);
 	}
 
 	@Override
 	public void addFluidToShowBlacklist(Fluid fluid) {
-		if (fluid == null)
+		if (fluid == null) {
 			return;
+		}
 		this.blacklistShowFluid.add(fluid);
 	}
 
 	@Override
 	public void addFluidToStorageBlacklist(Class<? extends Fluid> clazz) {
-		if (clazz == null || clazz == Fluid.class)
+		if (clazz == null || clazz == Fluid.class) {
 			return;
+		}
 		this.blacklistStorageClass.add(clazz);
 	}
 
 	@Override
 	public void addFluidToStorageBlacklist(Fluid fluid) {
-		if (fluid == null)
+		if (fluid == null) {
 			return;
+		}
 		this.blacklistStorageFluid.add(fluid);
 	}
 
@@ -101,26 +105,32 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Override
 	public boolean canFluidSeeInTerminal(Fluid fluid) {
-		if (fluid == null)
+		if (fluid == null) {
 			return false;
-		if (this.blacklistShowFluid.contains(fluid))
+		}
+		if (this.blacklistShowFluid.contains(fluid)) {
 			return false;
+		}
 		for (Class<? extends Fluid> clazz : this.blacklistShowClass) {
-			if (clazz.isInstance(fluid))
+			if (clazz.isInstance(fluid)) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	@Override
 	public boolean canStoreFluid(Fluid fluid) {
-		if (fluid == null)
+		if (fluid == null) {
 			return false;
-		if (this.blacklistStorageFluid.contains(fluid))
+		}
+		if (this.blacklistStorageFluid.contains(fluid)) {
 			return false;
+		}
 		for (Class<? extends Fluid> clazz : this.blacklistStorageClass) {
-			if (clazz.isInstance(fluid))
+			if (clazz.isInstance(fluid)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -148,14 +158,17 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	public ItemStack openPortableFluidCellGui(EntityPlayer player, EnumHand hand, World world) {
 		ItemStack stack = player.getHeldItem(hand);
-		if (world.isRemote || stack == null || stack.getItem() == null)
+		if (world.isRemote || stack == null || stack.getItem() == null) {
 			return stack;
+		}
 		Item item = stack.getItem();
-		if (!(item instanceof IPortableFluidStorageCell))
+		if (!(item instanceof IPortableFluidStorageCell)) {
 			return stack;
+		}
 		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
-		if (!(cellHandler instanceof FluidCellHandler))
+		if (!(cellHandler instanceof FluidCellHandler)) {
 			return stack;
+		}
 		IMEInventoryHandler<IAEFluidStack> handler = ((FluidCellHandler) cellHandler).getCellInventoryPlayer(stack, player, hand);
 		if (!(handler instanceof HandlerItemStorageFluid)) {
 			return stack;
@@ -168,14 +181,17 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	public ItemStack openPortableGasCellGui(EntityPlayer player, EnumHand hand, World world) {
 		ItemStack stack = player.getHeldItem(hand);
-		if (world.isRemote || stack == null || stack.getItem() == null)
+		if (world.isRemote || stack == null || stack.getItem() == null) {
 			return stack;
+		}
 		Item item = stack.getItem();
-		if (!(item instanceof IPortableGasStorageCell))
+		if (!(item instanceof IPortableGasStorageCell)) {
 			return stack;
+		}
 		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
-		if (!(cellHandler instanceof GasCellHandler))
+		if (!(cellHandler instanceof GasCellHandler)) {
 			return stack;
+		}
 		IMEInventoryHandler<IAEFluidStack> handler = ((GasCellHandler) cellHandler).getCellInventoryPlayer(stack, player, hand);
 		if (!(handler instanceof HandlerItemStorageGas)) {
 			return stack;
@@ -188,13 +204,16 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	public ItemStack openWirelessFluidTerminal(EntityPlayer player, EnumHand hand, World world) {
 		ItemStack stack = player.getHeldItem(hand);
-		if (world.isRemote)
+		if (world.isRemote) {
 			return stack;
-		if (!isWirelessFluidTerminal(stack))
+		}
+		if (!isWirelessFluidTerminal(stack)) {
 			return stack;
+		}
 		IWirelessGasFluidTermHandler handler = getWirelessTermHandler(stack);
-		if (!handler.hasPower(player, 1.0D, stack))
+		if (!handler.hasPower(player, 1.0D, stack)) {
 			return stack;
+		}
 		Long key;
 		try {
 			key = Long.parseLong(handler.getEncryptionKey(stack));
@@ -207,13 +226,16 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	public ItemStack openWirelessGasTerminal(EntityPlayer player, EnumHand hand, World world) {
 		ItemStack stack = player.getHeldItem(hand);
-		if (world.isRemote)
+		if (world.isRemote) {
 			return stack;
-		if (!isWirelessFluidTerminal(stack))
+		}
+		if (!isWirelessFluidTerminal(stack)) {
 			return stack;
+		}
 		IWirelessGasFluidTermHandler handler = getWirelessTermHandler(stack);
-		if (!handler.hasPower(player, 1.0D, stack))
+		if (!handler.hasPower(player, 1.0D, stack)) {
 			return stack;
+		}
 		Long key;
 		try {
 			key = Long.parseLong(handler.getEncryptionKey(stack));
@@ -224,21 +246,25 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	private ItemStack openWirelessTerminal(EntityPlayer player, ItemStack itemStack, World world, BlockPos pos, Long key, int guiId, EnumHand hand) {
-		if (world.isRemote)
+		if (world.isRemote) {
 			return itemStack;
+		}
 		IGridHost securityTerminal = (IGridHost) AEApi.instance().registries().locatable().getLocatableBy(key);
-		if (securityTerminal == null)
+		if (securityTerminal == null) {
 			return itemStack;
+		}
 		IGridNode gridNode = securityTerminal
-				.getGridNode(AEPartLocation.INTERNAL);
-		if (gridNode == null)
+			.getGridNode(AEPartLocation.INTERNAL);
+		if (gridNode == null) {
 			return itemStack;
+		}
 		IGrid grid = gridNode.getGrid();
-		if (grid == null)
+		if (grid == null) {
 			return itemStack;
+		}
 		for (IGridNode node : grid.getMachines((Class<? extends IGridHost>) AEApi.instance().definitions().blocks().wirelessAccessPoint().maybeEntity().get())) {
 			IWirelessAccessPoint accessPoint = (IWirelessAccessPoint) node
-					.getMachine();
+				.getMachine();
 			BlockPos distance = accessPoint.getLocation().getPos().subtract(pos);
 			int squaredDistance = distance.getX() * distance.getX() + distance.getY() * distance.getY() + distance.getZ() * distance.getZ();
 			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
@@ -305,7 +331,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Override
 	public IAEFluidStack createFluidStackFromGas(Object gasStack) {
-		return isMekEnabled() ? createFluidStackFromGasStack(gasStack): null;
+		return isMekEnabled() ? createFluidStackFromGasStack(gasStack) : null;
 	}
 
 	@Override
@@ -315,8 +341,9 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Override
 	public void addExternalStorageInterface(IExternalGasStorageHandler esh) {
-		if(isMekEnabled())
+		if (isMekEnabled()) {
 			GasStorageRegistry.addExternalStorageInterface(esh);
+		}
 	}
 
 	@Override
@@ -325,12 +352,12 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")
-	private IAEFluidStack createFluidStackFromGasStack(Object gasStack){
+	private IAEFluidStack createFluidStackFromGasStack(Object gasStack) {
 		return gasStack instanceof GasStack ? GasUtil.createAEFluidStack((GasStack) gasStack) : null;
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")
-	private Fluid createFluidFromGas(Object gas){
+	private Fluid createFluidFromGas(Object gas) {
 		return gas instanceof Gas ? MekanismGas.getFluidGasMap().containsKey(gas) ? MekanismGas.getFluidGasMap().get(gas) : null : null;
 	}
 
@@ -344,7 +371,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		return fluid instanceof MekanismGas.GasFluid;
 	}
 
-	private boolean isMekEnabled(){
+	private boolean isMekEnabled() {
 		return Integration.Mods.MEKANISMGAS.isEnabled();
 	}
 }

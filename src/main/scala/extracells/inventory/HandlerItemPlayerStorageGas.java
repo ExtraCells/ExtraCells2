@@ -13,40 +13,40 @@ import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.storage.ISaveProvider;
 
-public class HandlerItemPlayerStorageGas extends HandlerItemStorageGas{
+public class HandlerItemPlayerStorageGas extends HandlerItemStorageGas {
 
-    private final EntityPlayer player;
-    private final EnumHand hand;
+	private final EntityPlayer player;
+	private final EnumHand hand;
 
-    public HandlerItemPlayerStorageGas(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Fluid> _filter, EntityPlayer _player, EnumHand hand) {
-        super(_storageStack, _saveProvider, _filter);
-        this.player = _player;
-        this.hand = hand;
-    }
+	public HandlerItemPlayerStorageGas(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Fluid> _filter, EntityPlayer _player, EnumHand hand) {
+		super(_storageStack, _saveProvider, _filter);
+		this.player = _player;
+		this.hand = hand;
+	}
 
-    public HandlerItemPlayerStorageGas(ItemStack _storageStack,
-                                         ISaveProvider _saveProvider, EntityPlayer _player, EnumHand hand) {
-        super(_storageStack, _saveProvider);
-        this.player = _player;
-        this.hand = hand;
-    }
+	public HandlerItemPlayerStorageGas(ItemStack _storageStack,
+		ISaveProvider _saveProvider, EntityPlayer _player, EnumHand hand) {
+		super(_storageStack, _saveProvider);
+		this.player = _player;
+		this.hand = hand;
+	}
 
-    @Override
-    protected void writeFluidToSlot(int i, FluidStack fluidStack) {
-        ItemStack item = player.getHeldItem(hand);
-        if (item == null) {
-            return;
-        }
-        if (!item.hasTagCompound()) {
-            item.setTagCompound(new NBTTagCompound());
-        }
-        NBTTagCompound fluidTag = new NBTTagCompound();
-        if (fluidStack != null && fluidStack.amount > 0) {
-            fluidStack.writeToNBT(fluidTag);
-            item.getTagCompound().setTag("Fluid#" + i, fluidTag);
-        } else {
-            item.getTagCompound().removeTag("Fluid#" + i);
-        }
-        this.fluidStacks.set(i, fluidStack);
-    }
+	@Override
+	protected void writeFluidToSlot(int i, FluidStack fluidStack) {
+		ItemStack item = player.getHeldItem(hand);
+		if (item == null) {
+			return;
+		}
+		if (!item.hasTagCompound()) {
+			item.setTagCompound(new NBTTagCompound());
+		}
+		NBTTagCompound fluidTag = new NBTTagCompound();
+		if (fluidStack != null && fluidStack.amount > 0) {
+			fluidStack.writeToNBT(fluidTag);
+			item.getTagCompound().setTag("Fluid#" + i, fluidTag);
+		} else {
+			item.getTagCompound().removeTag("Fluid#" + i);
+		}
+		this.fluidStacks.set(i, fluidStack);
+	}
 }

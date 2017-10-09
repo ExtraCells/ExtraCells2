@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 
 
-object HandlerUniversalWirelessTerminal extends IWirelessTermHandler with IWirelessFluidTermHandler with IWirelessGasTermHandler{
+object HandlerUniversalWirelessTerminal extends IWirelessTermHandler with IWirelessFluidTermHandler with IWirelessGasTermHandler {
   override def getConfigManager(is: ItemStack): IConfigManager = ItemWirelessTerminalUniversal.getConfigManager(is)
 
   override def canHandle(is: ItemStack): Boolean = ItemWirelessTerminalUniversal.canHandle(is)

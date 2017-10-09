@@ -17,7 +17,7 @@ public class ContainerFluidCrafter extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				addSlotToContainer(new SlotRespective(tileentity, j + i * 3,
-						62 + j * 18, 17 + i * 18));
+					62 + j * 18, 17 + i * 18));
 			}
 		}
 		bindPlayerInventory(player);
@@ -27,7 +27,7 @@ public class ContainerFluidCrafter extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 84));
+					8 + j * 18, i * 18 + 84));
 			}
 		}
 
@@ -48,7 +48,7 @@ public class ContainerFluidCrafter extends Container {
 
 	@Override
 	protected void retrySlotClick(int par1, int par2, boolean par3,
-			EntityPlayer par4EntityPlayer) {
+		EntityPlayer par4EntityPlayer) {
 		// DON'T DO ANYTHING, YOU SHITTY METHOD!
 	}
 
@@ -61,11 +61,13 @@ public class ContainerFluidCrafter extends Container {
 			itemstack = itemstack1.copy();
 			if (this.tileentity.isItemValidForSlot(0, itemstack1)) {
 				if (slotnumber < 10) {
-					if (!mergeItemStack(itemstack1, 10, 36, false))
+					if (!mergeItemStack(itemstack1, 10, 36, false)) {
 						return null;
+					}
 				} else if (slotnumber >= 10 && slotnumber <= 36) {
-					if (!mergeItemStack(itemstack1, 0, 1, false))
+					if (!mergeItemStack(itemstack1, 0, 1, false)) {
 						return null;
+					}
 				}
 				if (itemstack1.stackSize == 0) {
 					slot.putStack(null);

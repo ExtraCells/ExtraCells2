@@ -1,7 +1,6 @@
 package extracells.util
 
 
-
 import extracells.integration.Integration
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fml.common.Optional
@@ -13,16 +12,16 @@ object FuelBurnTime {
 
   def registerFuel(fluid: Fluid, burnTime: Int): Unit = {
     if (!fluidBurnTimes.contains(fluid)) {
-    fluidBurnTimes.put(fluid, burnTime)
-   }
+      fluidBurnTimes.put(fluid, burnTime)
+    }
   }
 
-  def getBurnTime(fluid: Fluid): Int ={
-    if(fluid == null)
+  def getBurnTime(fluid: Fluid): Int = {
+    if (fluid == null)
       return 0
-    if(fluidBurnTimes.contains(fluid))
+    if (fluidBurnTimes.contains(fluid))
       return fluidBurnTimes.get(fluid).get
-    if(Integration.Mods.BCFUEL.isEnabled)
+    if (Integration.Mods.BCFUEL.isEnabled)
       return getBCBurnTime(fluid)
     0
   }

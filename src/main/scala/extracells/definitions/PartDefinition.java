@@ -12,79 +12,79 @@ public class PartDefinition implements IPartDefinition {
 	@Override
 	public IItemDefinition partBattery() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.BATTERY.ordinal());
+			PartEnum.BATTERY.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partConversionMonitor() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDCONVERSIONMONITOR.ordinal());
+			PartEnum.FLUIDCONVERSIONMONITOR.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partDrive() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.DRIVE.ordinal());
+			PartEnum.DRIVE.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partFluidAnnihilationPlane() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDPANEANNIHILATION.ordinal());
+			PartEnum.FLUIDPANEANNIHILATION.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partFluidExportBus() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDIMPORT.ordinal());
+			PartEnum.FLUIDIMPORT.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partFluidFormationPlane() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDPANEFORMATION.ordinal());
+			PartEnum.FLUIDPANEFORMATION.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partFluidImportBus() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDEXPORT.ordinal());
+			PartEnum.FLUIDEXPORT.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partFluidLevelEmitter() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDLEVELEMITTER.ordinal());
+			PartEnum.FLUIDLEVELEMITTER.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partFluidStorageBus() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDSTORAGE.ordinal());
+			PartEnum.FLUIDSTORAGE.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partFluidTerminal() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDTERMINAL.ordinal());
+			PartEnum.FLUIDTERMINAL.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partInterface() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.INTERFACE.ordinal());
+			PartEnum.INTERFACE.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partOreDictExportBus() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.OREDICTEXPORTBUS.ordinal());
+			PartEnum.OREDICTEXPORTBUS.ordinal());
 	}
 
 	@Override
 	public IItemDefinition partStorageMonitor() {
 		return new ItemItemDefinitions(ItemEnum.PARTITEM.getItem(),
-				PartEnum.FLUIDMONITOR.ordinal());
+			PartEnum.FLUIDMONITOR.ordinal());
 	}
 
 }

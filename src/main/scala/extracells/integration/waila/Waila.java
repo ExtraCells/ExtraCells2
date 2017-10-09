@@ -24,9 +24,9 @@ public class Waila {
 		final IWailaDataProvider tileCertusTank = new TileCertusTankWailaDataProvider();
 
 		registrar.registerBodyProvider(tileCertusTank,
-				TileEntityCertusTank.class);
+			TileEntityCertusTank.class);
 		registrar.registerNBTProvider(tileCertusTank,
-				TileEntityCertusTank.class);
+			TileEntityCertusTank.class);
 
 		final IWailaDataProvider blocks = new BlockWailaDataProvider();
 

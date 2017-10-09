@@ -46,7 +46,7 @@ public class FluidItemModel implements IModel {
 		public IModel loadModel(ResourceLocation modelLocation) throws Exception {
 			String fluidName = modelLocation.getResourcePath().replace("models/item/fluid/", "");
 			Fluid fluid = FluidRegistry.getFluid(fluidName);
-			if(fluid == null){
+			if (fluid == null) {
 				fluid = FluidRegistry.WATER;
 			}
 			return new FluidItemModel(fluid);
@@ -54,7 +54,7 @@ public class FluidItemModel implements IModel {
 
 		@Override
 		public void onResourceManagerReload(IResourceManager resourceManager) {
-			for(Fluid fluid : FluidRegistry.getRegisteredFluids().values()){
+			for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
 				ModelBakery.registerItemVariants(ItemEnum.FLUIDITEM.getItem(), new ResourceLocation(Constants.MOD_ID + ":fluid/" + fluid.getName()));
 			}
 		}
@@ -79,7 +79,7 @@ public class FluidItemModel implements IModel {
 	@Override
 	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 		TextureAtlasSprite sprite = bakedTextureGetter.apply(fluid.getStill());
-		if(sprite == null){
+		if (sprite == null) {
 			return new FluidItemBakedModel(ImmutableList.of());
 		}
 
@@ -91,7 +91,7 @@ public class FluidItemModel implements IModel {
 		return TRSRTransformation.identity();
 	}
 
-	private class FluidItemBakedModel extends BlankModel{
+	private class FluidItemBakedModel extends BlankModel {
 		ImmutableList<BakedQuad> quads;
 
 		public FluidItemBakedModel(ImmutableList<BakedQuad> quads) {
@@ -100,7 +100,7 @@ public class FluidItemModel implements IModel {
 
 		@Override
 		public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-			if(side != EnumFacing.UP){
+			if (side != EnumFacing.UP) {
 				return ImmutableList.of();
 			}
 			return quads;

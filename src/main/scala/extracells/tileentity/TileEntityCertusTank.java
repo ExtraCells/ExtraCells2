@@ -35,7 +35,7 @@ public class TileEntityCertusTank extends TileBase {
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandler());
 		}
 		return super.getCapability(capability, facing);
@@ -43,7 +43,7 @@ public class TileEntityCertusTank extends TileBase {
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return true;
 		}
 		return super.hasCapability(capability, facing);
@@ -59,11 +59,11 @@ public class TileEntityCertusTank extends TileBase {
 						updateBlock();
 						this.lastBeforeUpdate = current.copy();
 					} else if (this.lastBeforeUpdate.amount < this.tank
-							.getCapacity()
-							&& current.amount == this.tank.getCapacity()
-							|| this.lastBeforeUpdate.amount == this.tank
-									.getCapacity()
-							&& current.amount < this.tank.getCapacity()) {
+						.getCapacity()
+						&& current.amount == this.tank.getCapacity()
+						|| this.lastBeforeUpdate.amount == this.tank
+						.getCapacity()
+						&& current.amount < this.tank.getCapacity()) {
 						updateBlock();
 						this.lastBeforeUpdate = current.copy();
 					}
@@ -80,7 +80,7 @@ public class TileEntityCertusTank extends TileBase {
 
 	/* Multiblock stuff */
 	public FluidStack drain(FluidStack fluid, boolean doDrain,
-			boolean findMainTank) {
+		boolean findMainTank) {
 		if (findMainTank) {
 			int yOff = 0;
 			TileEntity offTE = this.worldObj.getTileEntity(pos);
@@ -90,7 +90,7 @@ public class TileEntityCertusTank extends TileBase {
 					Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
 					if (offFluid != null && offFluid == fluid.getFluid()) {
 						mainTank = (TileEntityCertusTank) this.worldObj
-								.getTileEntity(pos.up(yOff));
+							.getTileEntity(pos.up(yOff));
 						yOff++;
 						offTE = this.worldObj.getTileEntity(pos.up(yOff));
 						continue;
@@ -100,7 +100,7 @@ public class TileEntityCertusTank extends TileBase {
 			}
 
 			return mainTank != null ? mainTank.drain(fluid, doDrain, false)
-					: null;
+				: null;
 		}
 
 		FluidStack drained = this.tank.drain(fluid.amount, doDrain);
@@ -112,15 +112,16 @@ public class TileEntityCertusTank extends TileBase {
 				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
 				FluidStack externallyDrained = tank.drain(new FluidStack(
 						fluid.getFluid(), fluid.amount
-								- (drained != null ? drained.amount : 0)),
-						doDrain, false);
+						- (drained != null ? drained.amount : 0)),
+					doDrain, false);
 
-				if (externallyDrained != null)
+				if (externallyDrained != null) {
 					return new FluidStack(fluid.getFluid(),
-							(drained != null ? drained.amount : 0)
-									+ externallyDrained.amount);
-				else
+						(drained != null ? drained.amount : 0)
+							+ externallyDrained.amount);
+				} else {
 					return drained;
+				}
 			}
 		}
 
@@ -137,7 +138,7 @@ public class TileEntityCertusTank extends TileBase {
 					Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
 					if (offFluid == null || offFluid == fluid.getFluid()) {
 						mainTank = (TileEntityCertusTank) this.worldObj
-								.getTileEntity(pos.down(yOff));
+							.getTileEntity(pos.down(yOff));
 						yOff++;
 						offTE = this.worldObj.getTileEntity(pos.down(yOff));
 						continue;
@@ -157,8 +158,8 @@ public class TileEntityCertusTank extends TileBase {
 			if (offTE instanceof TileEntityCertusTank) {
 				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
 				return filled
-						+ tank.fill(new FluidStack(fluid.getFluid(), fluid.amount
-								- filled), doFill, false);
+					+ tank.fill(new FluidStack(fluid.getFluid(), fluid.amount
+					- filled), doFill, false);
 			}
 		}
 
@@ -173,12 +174,12 @@ public class TileEntityCertusTank extends TileBase {
 	public Fluid getFluid() {
 		FluidStack tankFluid = this.tank.getFluid();
 		return tankFluid != null && tankFluid.amount > 0 ? tankFluid.getFluid()
-				: null;
+			: null;
 	}
 
 	public Fluid getRenderFluid() {
 		return this.tank.getFluid() != null ? this.tank.getFluid().getFluid()
-				: null;
+			: null;
 	}
 
 	public float getRenderScale() {
@@ -186,8 +187,9 @@ public class TileEntityCertusTank extends TileBase {
 	}
 
 	public IFluidTankProperties[] getTankInfo(boolean goToMainTank) {
-		if (!goToMainTank)
+		if (!goToMainTank) {
 			return this.tank.getTankProperties();
+		}
 
 		int amount = 0, capacity = 0;
 		Fluid fluid = null;
@@ -221,8 +223,9 @@ public class TileEntityCertusTank extends TileBase {
 						capacity += info.getCapacity();
 						if (info.getContents() != null) {
 							amount += info.getContents().amount;
-							if (info.getContents().getFluid() != null)
+							if (info.getContents().getFluid() != null) {
 								fluid = info.getContents().getFluid();
+							}
 						}
 					}
 					yOff++;
@@ -233,7 +236,7 @@ public class TileEntityCertusTank extends TileBase {
 			break;
 		}
 
-		return new IFluidTankProperties[] { new FluidTankProperties(fluid != null ? new FluidStack(fluid, amount) : null, capacity) };
+		return new IFluidTankProperties[]{new FluidTankProperties(fluid != null ? new FluidStack(fluid, amount) : null, capacity)};
 	}
 
 	@Override
@@ -252,7 +255,7 @@ public class TileEntityCertusTank extends TileBase {
 		this.tank.readFromNBT(tag);
 	}
 
-	public void setFluid(FluidStack fluidStack){
+	public void setFluid(FluidStack fluidStack) {
 		tank.setFluid(fluidStack);
 	}
 
@@ -267,7 +270,7 @@ public class TileEntityCertusTank extends TileBase {
 		this.tank.writeToNBT(tag);
 	}
 
-	private class FluidHandler implements net.minecraftforge.fluids.capability.IFluidHandler{
+	private class FluidHandler implements net.minecraftforge.fluids.capability.IFluidHandler {
 		@Override
 		public IFluidTankProperties[] getTankProperties() {
 			return TileEntityCertusTank.this.getTankInfo(true);
@@ -276,8 +279,9 @@ public class TileEntityCertusTank extends TileBase {
 		@Override
 		public int fill(FluidStack resource, boolean doFill) {
 			if (resource == null || tank.getFluid() != null
-				&& resource.getFluid() != tank.getFluid().getFluid())
+				&& resource.getFluid() != tank.getFluid().getFluid()) {
 				return 0;
+			}
 			return TileEntityCertusTank.this.fill(resource, doFill, true);
 		}
 
@@ -285,8 +289,9 @@ public class TileEntityCertusTank extends TileBase {
 		@Override
 		public FluidStack drain(FluidStack resource, boolean doDrain) {
 			if (tank.getFluid() == null || resource == null
-				|| resource.getFluid() != tank.getFluid().getFluid())
+				|| resource.getFluid() != tank.getFluid().getFluid()) {
 				return null;
+			}
 
 			return TileEntityCertusTank.this.drain(resource, doDrain, true);
 		}
@@ -294,8 +299,9 @@ public class TileEntityCertusTank extends TileBase {
 		@Nullable
 		@Override
 		public FluidStack drain(int maxDrain, boolean doDrain) {
-			if (tank.getFluid() == null)
+			if (tank.getFluid() == null) {
 				return null;
+			}
 
 			return drain(new FluidStack(tank.getFluid(), maxDrain), doDrain);
 		}

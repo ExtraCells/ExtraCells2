@@ -96,7 +96,6 @@ public class ECCellInventory implements IInventory {
 	}
 
 
-
 	@Override
 	public boolean isItemValidForSlot(int slotId, ItemStack itemStack) {
 		return true;
@@ -119,7 +118,7 @@ public class ECCellInventory implements IInventory {
 		this.slots = new ItemStack[this.size];
 		for (int i = 0; i < this.slots.length; i++) {
 			this.slots[i] = ItemStack.loadItemStackFromNBT(this.tagCompound
-					.getCompoundTag("ItemStack#" + i));
+				.getCompoundTag("ItemStack#" + i));
 		}
 	}
 
@@ -157,7 +156,7 @@ public class ECCellInventory implements IInventory {
 
 	@Override
 	public void clear() {
-		for(int i = 0;i < slots.length;i++){
+		for (int i = 0; i < slots.length; i++) {
 			slots[i] = null;
 		}
 	}

@@ -37,7 +37,7 @@ public class PacketFluidSlotUpdate extends Packet {
 		}
 	}
 
-	public static class Handler implements IPacketHandlerClient{
+	public static class Handler implements IPacketHandlerClient {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
 			List<Fluid> filterFluids = new LinkedList<>();

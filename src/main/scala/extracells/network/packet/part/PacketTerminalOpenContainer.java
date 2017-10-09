@@ -29,12 +29,12 @@ public class PacketTerminalOpenContainer extends Packet {
 		return PacketId.TERMINAL_OPEN_CONTAINER;
 	}
 
-	public static class Handler implements IPacketHandlerServer{
+	public static class Handler implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			PartFluidTerminal terminalFluid = data.readPart(player.worldObj);
 			ContainerTerminal containerTerminal = GuiUtil.getContainer(player, ContainerTerminal.class);
-			if(terminalFluid == null){
+			if (terminalFluid == null) {
 				return;
 			}
 

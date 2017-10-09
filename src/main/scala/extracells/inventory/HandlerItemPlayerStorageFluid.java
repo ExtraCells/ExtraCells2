@@ -18,15 +18,15 @@ public class HandlerItemPlayerStorageFluid extends HandlerItemStorageFluid {
 	private final EnumHand hand;
 
 	public HandlerItemPlayerStorageFluid(ItemStack _storageStack,
-			ISaveProvider _saveProvider, ArrayList<Fluid> _filter,
-			EntityPlayer _player, EnumHand hand) {
+		ISaveProvider _saveProvider, ArrayList<Fluid> _filter,
+		EntityPlayer _player, EnumHand hand) {
 		super(_storageStack, _saveProvider, _filter);
 		this.player = _player;
 		this.hand = hand;
 	}
 
 	public HandlerItemPlayerStorageFluid(ItemStack _storageStack,
-			ISaveProvider _saveProvider, EntityPlayer _player, EnumHand hand) {
+		ISaveProvider _saveProvider, EntityPlayer _player, EnumHand hand) {
 		super(_storageStack, _saveProvider);
 		this.player = _player;
 		this.hand = hand;

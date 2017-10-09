@@ -19,19 +19,19 @@ public class ECConfigHandler {
 		this.config = configuration;
 	}
 
-	public void reload(){
+	public void reload() {
 		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true);
 		dynamicTypes = config.get("Storage Cells", "dynamicTypes", true, "Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true);
 		ExtraCells.integration.loadConfig(config);
 
-		if(config.hasChanged()){
+		if (config.hasChanged()) {
 			config.save();
 		}
 	}
 
 	@SubscribeEvent
-	public void onChangeConfig(ConfigChangedEvent.OnConfigChangedEvent event){
-		if(!event.getModID().equals(Constants.MOD_ID)){
+	public void onChangeConfig(ConfigChangedEvent.OnConfigChangedEvent event) {
+		if (!event.getModID().equals(Constants.MOD_ID)) {
 			return;
 		}
 		reload();

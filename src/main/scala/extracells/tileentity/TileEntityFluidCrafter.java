@@ -58,7 +58,8 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 		private ItemStack[] inv = new ItemStack[9];
 
 		@Override
-		public void closeInventory(EntityPlayer player) {}
+		public void closeInventory(EntityPlayer player) {
+		}
 
 		@Override
 		public ItemStack decrStackSize(int slot, int amt) {
@@ -112,7 +113,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 		public boolean isItemValidForSlot(int slot, ItemStack stack) {
 			if (stack.getItem() instanceof ICraftingPatternItem) {
 				ICraftingPatternDetails details = ((ICraftingPatternItem) stack
-						.getItem()).getPatternForItem(stack, getWorld());
+					.getItem()).getPatternForItem(stack, getWorld());
 				return details != null && details.isCraftable();
 			}
 			return false;
@@ -124,10 +125,12 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 		}
 
 		@Override
-		public void markDirty() {}
+		public void markDirty() {
+		}
 
 		@Override
-		public void openInventory(EntityPlayer player) {}
+		public void openInventory(EntityPlayer player) {
+		}
 
 		public void readFromNBT(NBTTagCompound tagCompound) {
 
@@ -243,8 +246,9 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 
 	@Override
 	public IGridNode getGridNode(AEPartLocation dir) {
-		if (FMLCommonHandler.instance().getSide().isClient() && (getWorld() == null || getWorld().isRemote))
+		if (FMLCommonHandler.instance().getSide().isClient() && (getWorld() == null || getWorld().isRemote)) {
 			return null;
+		}
 		if (this.isFirstGetGridNode) {
 			this.isFirstGetGridNode = false;
 			getActionableNode().updateState();
@@ -291,9 +295,9 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 		for (int i = 0; this.inventory.inv.length > i; i++) {
 			ItemStack currentPatternStack = this.inventory.inv[i];
 			ItemStack oldItem = this.oldStack[i];
-			if(currentPatternStack != null && oldItem != null && ItemStack.areItemStacksEqual(currentPatternStack, oldItem)){
+			if (currentPatternStack != null && oldItem != null && ItemStack.areItemStacksEqual(currentPatternStack, oldItem)) {
 				ICraftingPatternDetails pa = oldHandler[i];
-				if(pa != null){
+				if (pa != null) {
 					patternHandlerSlot[i] = pa;
 					patternHandlers.add(pa);
 					if (pa.getCondensedInputs().length == 0) {
@@ -305,25 +309,25 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 				}
 			}
 			if (currentPatternStack != null
-					&& currentPatternStack.getItem() != null
-					&& currentPatternStack.getItem() instanceof ICraftingPatternItem) {
+				&& currentPatternStack.getItem() != null
+				&& currentPatternStack.getItem() instanceof ICraftingPatternItem) {
 				ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack
-						.getItem();
+					.getItem();
 
 				if (currentPattern != null
-						&& currentPattern.getPatternForItem(
-								currentPatternStack, getWorld()) != null
-						&& currentPattern.getPatternForItem(
-								currentPatternStack, getWorld())
-								.isCraftable()) {
+					&& currentPattern.getPatternForItem(
+					currentPatternStack, getWorld()) != null
+					&& currentPattern.getPatternForItem(
+					currentPatternStack, getWorld())
+					.isCraftable()) {
 					ICraftingPatternDetails pattern = new CraftingPattern(
-							currentPattern.getPatternForItem(
-									currentPatternStack, getWorld()));
+						currentPattern.getPatternForItem(
+							currentPatternStack, getWorld()));
 					this.patternHandlers.add(pattern);
 					this.patternHandlerSlot[i] = pattern;
 					if (pattern.getCondensedInputs().length == 0) {
 						craftingTracker.setEmitable(pattern
-								.getCondensedOutputs()[0]);
+							.getCondensedOutputs()[0]);
 					} else {
 						craftingTracker.addCraftingOption(this, pattern);
 					}
@@ -336,9 +340,10 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 
 	@Override
 	public boolean pushPattern(ICraftingPatternDetails patternDetails,
-			InventoryCrafting table) {
-		if (this.isBusy)
+		InventoryCrafting table) {
+		if (this.isBusy) {
 			return false;
+		}
 		if (patternDetails instanceof CraftingPattern) {
 			CraftingPattern patter = (CraftingPattern) patternDetails;
 			HashMap<Fluid, Long> fluids = new HashMap<Fluid, Long>();
@@ -352,11 +357,13 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 				}
 			}
 			IGrid grid = this.node.getGrid();
-			if (grid == null)
+			if (grid == null) {
 				return false;
+			}
 			IStorageGrid storage = grid.getCache(IStorageGrid.class);
-			if (storage == null)
+			if (storage == null) {
 				return false;
+			}
 			for (Fluid fluid : fluids.keySet()) {
 				Long amount = fluids.get(fluid);
 				IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))), Actionable.SIMULATE, new MachineSource(this));
@@ -405,8 +412,9 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 
 	@Override
 	public void update() {
-		if (getWorld() == null || getWorld().provider == null)
+		if (getWorld() == null || getWorld().provider == null) {
 			return;
+		}
 		if (this.update) {
 			this.update = false;
 			if (getGridNode() != null && getGridNode().getGrid() != null) {
@@ -414,18 +422,22 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 			}
 		}
 		if (this.isBusy && this.finishCraftingTime <= System.currentTimeMillis() && getWorld() != null && !getWorld().isRemote) {
-			if (this.node == null || this.returnStack == null)
+			if (this.node == null || this.returnStack == null) {
 				return;
+			}
 			IGrid grid = this.node.getGrid();
-			if (grid == null)
+			if (grid == null) {
 				return;
+			}
 			IStorageGrid storage = grid.getCache(IStorageGrid.class);
-			if (storage == null)
+			if (storage == null) {
 				return;
+			}
 			storage.getItemInventory().injectItems(AEApi.instance().storage().createItemStack(this.returnStack), Actionable.MODULATE, new MachineSource(this));
 			for (ItemStack s : this.optionalReturnStack) {
-				if (s == null)
+				if (s == null) {
 					continue;
+				}
 				storage.getItemInventory().injectItems(AEApi.instance().storage().createItemStack(s), Actionable.MODULATE, new MachineSource(this));
 			}
 			this.optionalReturnStack = new ItemStack[0];
@@ -440,11 +452,13 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 			if (!this.requestedItems.isEmpty()) {
 				for (IAEItemStack s : this.requestedItems) {
 					IGrid grid = this.node.getGrid();
-					if (grid == null)
+					if (grid == null) {
 						break;
+					}
 					ICraftingGrid crafting = grid.getCache(ICraftingGrid.class);
-					if (crafting == null)
+					if (crafting == null) {
 						break;
+					}
 					if (!crafting.isRequesting(s)) {
 						this.removeList.add(s);
 						continue;
@@ -463,8 +477,9 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 								}
 							}
 							IStorageGrid storage = grid.getCache(IStorageGrid.class);
-							if (storage == null)
+							if (storage == null) {
 								break;
+							}
 							boolean doBreak = false;
 							for (Fluid fluid : fluids.keySet()) {
 								Long amount = fluids.get(fluid);
@@ -474,8 +489,9 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 									break;
 								}
 							}
-							if (doBreak)
+							if (doBreak) {
 								break;
+							}
 							for (Fluid fluid : fluids.keySet()) {
 								Long amount = fluids.get(fluid);
 								IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))), Actionable.MODULATE, new MachineSource(this));
@@ -511,7 +527,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 				if (crafting != null) {
 					if (crafting.isRequesting(patter.getCondensedOutputs()[0])) {
 						this.requestedItems
-								.add(patter.getCondensedOutputs()[0]);
+							.add(patter.getCondensedOutputs()[0]);
 					}
 				}
 			}
@@ -528,8 +544,9 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
 		this.inventory.writeToNBT(tagCompound);
-		if (!hasWorldObj())
+		if (!hasWorldObj()) {
 			return tagCompound;
+		}
 		IGridNode node = getGridNode();
 		if (node != null) {
 			NBTTagCompound nodeTag = new NBTTagCompound();

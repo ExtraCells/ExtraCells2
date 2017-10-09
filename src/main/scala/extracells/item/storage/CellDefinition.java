@@ -5,7 +5,7 @@ import java.util.Locale;
 import net.minecraft.item.EnumRarity;
 
 public enum CellDefinition {
-	PHYSICAL(EnumRarity.EPIC){
+	PHYSICAL(EnumRarity.EPIC) {
 		@Override
 		protected void create(StorageRegistry.Builder components, StorageRegistry.Builder cells) {
 			components.add(this, 256, 1024, 4096, 16384);
@@ -25,9 +25,9 @@ public enum CellDefinition {
 		this.rarity = rarity;
 	}
 
-	public static void create(){
+	public static void create() {
 		StorageRegistry.Builder componentBuilder = new StorageRegistry.Builder("components");
-		for(CellDefinition definition : values()){
+		for (CellDefinition definition : values()) {
 			StorageRegistry.Builder cellBuilder = new StorageRegistry.Builder("cells");
 			definition.create(componentBuilder, cellBuilder);
 			definition.cells = cellBuilder.build();
@@ -36,13 +36,13 @@ public enum CellDefinition {
 		components = componentBuilder.build();
 	}
 
-	protected void create(StorageRegistry.Builder components, StorageRegistry.Builder cells){
+	protected void create(StorageRegistry.Builder components, StorageRegistry.Builder cells) {
 		components.add(this, 1, 4, 16, 64, 256, 1024, 4096);
 		cells.add(this, 1, 4, 16, 64, 256, 1024, 4096);
 	}
 
-	public static CellDefinition get(int index){
-		if(values().length <= index){
+	public static CellDefinition get(int index) {
+		if (values().length <= index) {
 			return values()[0];
 		}
 		return values()[index];

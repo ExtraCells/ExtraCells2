@@ -38,8 +38,9 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 	@Override
 	public boolean worksWith(World world, BlockPos pos, EnumFacing facing) {
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile == null)
+		if (tile == null) {
 			return false;
+		}
 		PartFluidInterface partFluidInterface = OCUtils.getPart(world, pos, AEPartLocation.INTERNAL);
 		return partFluidInterface != null || tile instanceof IFluidInterface;
 	}
@@ -47,87 +48,98 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 	@Override
 	public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile == null || (!(tile instanceof IPartHost || tile instanceof IFluidInterface)))
+		if (tile == null || (!(tile instanceof IPartHost || tile instanceof IFluidInterface))) {
 			return null;
+		}
 		return new Enviroment(tile);
 	}
 
-	public class Enviroment extends ManagedEnvironment implements NamedBlock{
-		
+	public class Enviroment extends ManagedEnvironment implements NamedBlock {
+
 		protected final TileEntity tile;
 		protected final IPartHost host;
-		
-		public Enviroment(TileEntity tile){
-			this.tile =  tile;
+
+		public Enviroment(TileEntity tile) {
+			this.tile = tile;
 			this.host = tile instanceof IPartHost ? (IPartHost) tile : null;
 			setNode(Network.newNode(this, Visibility.Network).
-	                withComponent("me_interface").
-	                create());
+				withComponent("me_interface").
+				create());
 		}
 
 		@Callback(doc = "function(side:number):table -- Get the configuration of the fluid interface on the specified direction.")
-		public Object[] getFluidInterfaceConfiguration(Context context, Arguments args){
+		public Object[] getFluidInterfaceConfiguration(Context context, Arguments args) {
 			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
-			if (dir == null || dir == AEPartLocation.INTERNAL)
+			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
-			if (tile instanceof TileEntityFluidInterface){
+			}
+			if (tile instanceof TileEntityFluidInterface) {
 				TileEntityFluidInterface fluidInterface = (TileEntityFluidInterface) tile;
 				Fluid fluid = fluidInterface.getFilter(dir);
-				if (fluid == null)
+				if (fluid == null) {
 					return new Object[]{null};
+				}
 				return new Object[]{new FluidStack(fluid, 1000)};
 			}
 			PartFluidInterface part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
-			if (part == null)
+			if (part == null) {
 				return new Object[]{null, "no interface"};
+			}
 			Fluid fluid = part.getFilter(dir);
-			if (fluid == null)
+			if (fluid == null) {
 				return new Object[]{null};
+			}
 			return new Object[]{new FluidStack(fluid, 1000)};
-			
+
 		}
-		
+
 		@Callback(doc = "function(side:number[, database:address, entry:number]):boolean -- Configure the filter in fluid interface on the specified direction.")
-		public Object[] setFluidInterfaceConfiguration(Context context, Arguments args){
+		public Object[] setFluidInterfaceConfiguration(Context context, Arguments args) {
 			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
-			if (dir == null || dir == AEPartLocation.INTERNAL)
+			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
+			}
 			IFluidInterface part = tile instanceof IFluidInterface ? (IFluidInterface) tile : OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
-			if (part == null)
+			if (part == null) {
 				return new Object[]{null, "no export bus"};
+			}
 			String address;
 			int entry;
-			if (args.count() == 3){
+			if (args.count() == 3) {
 				address = args.checkString(1);
 				entry = args.checkInteger(2);
-			}else{
+			} else {
 				part.setFilter(dir, null);
 				context.pause(0.5);
 				return new Object[]{true};
 			}
 			Node node = node().network().node(address);
-			if (node == null)
+			if (node == null) {
 				throw new IllegalArgumentException("no such component");
-			if (!(node instanceof Component))
+			}
+			if (!(node instanceof Component)) {
 				throw new IllegalArgumentException("no such component");
+			}
 			Component component = (Component) node;
 			Environment env = node.host();
-			if (!(env instanceof Database))
+			if (!(env instanceof Database)) {
 				throw new IllegalArgumentException("not a database");
+			}
 			Database database = (Database) env;
-			try{
+			try {
 				ItemStack data = database.getStackInSlot(entry - 1);
-				if (data == null)
+				if (data == null) {
 					part.setFilter(dir, null);
-				else{
+				} else {
 					FluidStack fluid = FluidHelper.getFluidFromContainer(data);
-					if(fluid == null || fluid.getFluid() == null)
+					if (fluid == null || fluid.getFluid() == null) {
 						return new Object[]{false, "not a fluid container"};
+					}
 					part.setFilter(dir, fluid.getFluid());
 				}
 				context.pause(0.5);
 				return new Object[]{true};
-			}catch(Throwable e){
+			} catch (Throwable e) {
 				return new Object[]{false, "invalid slot"};
 			}
 		}
@@ -141,17 +153,20 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 		public int priority() {
 			return 0;
 		}
-		
+
 	}
 
 	@Override
 	public Class<?> getEnvironment(ItemStack stack) {
-		if(stack == null)
+		if (stack == null) {
 			return null;
-		if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.INTERFACE.ordinal())
+		}
+		if (stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.INTERFACE.ordinal()) {
 			return Enviroment.class;
-		if(stack.getItem() == Item.getItemFromBlock(BlockEnum.ECBASEBLOCK.getBlock()) && stack.getItemDamage() == 0)
+		}
+		if (stack.getItem() == Item.getItemFromBlock(BlockEnum.ECBASEBLOCK.getBlock()) && stack.getItemDamage() == 0) {
 			return Enviroment.class;
+		}
 		return null;
 	}
 }

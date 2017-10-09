@@ -31,10 +31,10 @@ public class ModelWalrus extends BlankModel {
 	static EnumMap<EnumFacing, IBakedModel> bakedModels = new EnumMap(EnumFacing.class);
 	static EnumMap<EnumFacing, IModel> models = new EnumMap(EnumFacing.class);
 
-	public static void onBakeModels(ModelBakeEvent event){
+	public static void onBakeModels(ModelBakeEvent event) {
 		IRegistry<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
-		for(EnumFacing facing : EnumFacing.VALUES) {
-			ModelResourceLocation location = new ModelResourceLocation(Constants.MOD_ID +  ":walrus", "facing=" + facing.getName());
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			ModelResourceLocation location = new ModelResourceLocation(Constants.MOD_ID + ":walrus", "facing=" + facing.getName());
 			models.put(facing, ModelLoaderRegistry.getModelOrMissing(location));
 			registry.putObject(location, new ModelWalrus());
 		}
@@ -46,7 +46,7 @@ public class ModelWalrus extends BlankModel {
 		EnumFacing facing = state.getValue(BlockWalrus.FACING);
 		IBakedModel bakedModel = bakedModels.get(facing);
 		if (bakedModel == null) {
-			ResourceLocation modelLocation = new ResourceLocation(Constants.MOD_ID,"block/walrus.obj");
+			ResourceLocation modelLocation = new ResourceLocation(Constants.MOD_ID, "block/walrus.obj");
 			IModel model = ModelLoaderRegistry.getModelOrMissing(modelLocation);
 			model = ModelProcessingHelper.retexture(model, ImmutableMap.of("#builtin/white", Constants.MOD_ID + ":blocks/walrus"));
 			//model = ModelProcessingHelper.customData(model, ImmutableMap.of("flip-v", "true"));

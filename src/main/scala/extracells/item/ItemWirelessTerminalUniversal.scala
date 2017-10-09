@@ -21,27 +21,27 @@ import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
-object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with CraftingTerminal{
+object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with CraftingTerminal {
   val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
   val isWcEnabled = Integration.Mods.WIRELESSCRAFTING.isEnabled
+
   def THIS = this
-  if(isWcEnabled){
+
+  if (isWcEnabled) {
     ECApi.instance.registerWirelessTermHandler(this)
     AEApi.instance.registries.wireless.registerWirelessHandler(this)
-  }else{
+  } else {
     ECApi.instance.registerWirelessTermHandler(HandlerUniversalWirelessTerminal)
     AEApi.instance.registries.wireless.registerWirelessHandler(HandlerUniversalWirelessTerminal)
   }
-
-
 
 
   override def isItemNormalWirelessTermToo(is: ItemStack): Boolean = true
 
   override def getConfigManager(itemStack: ItemStack): IConfigManager = {
     val nbt = ensureTagCompound(itemStack)
-    if(!nbt.hasKey("settings"))
+    if (!nbt.hasKey("settings"))
       nbt.setTag("settings", new NBTTagCompound)
     val tag = nbt.getCompoundTag("settings")
     new ConfigManager(tag)
@@ -57,21 +57,21 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
 
   override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
-    if(world.isRemote){
-      if(entityPlayer.isSneaking)
+    if (world.isRemote) {
+      if (entityPlayer.isSneaking)
         return new ActionResult(EnumActionResult.SUCCESS, itemStack)
       val tag = ensureTagCompound(itemStack)
-      if(!tag.hasKey("type"))
+      if (!tag.hasKey("type"))
         tag.setByte("type", 0)
-      if(tag.getByte("type") == 4 && isWcEnabled)
+      if (tag.getByte("type") == 4 && isWcEnabled)
         WirelessCrafting.openCraftingTerminal(entityPlayer)
       return new ActionResult(EnumActionResult.SUCCESS, itemStack)
     }
 
     val tag = ensureTagCompound(itemStack)
-    if(!tag.hasKey("type"))
+    if (!tag.hasKey("type"))
       tag.setByte("type", 0)
-    if(entityPlayer.isSneaking)
+    if (entityPlayer.isSneaking)
       return new ActionResult(EnumActionResult.SUCCESS, changeMode(itemStack, entityPlayer, tag))
     val matchted = tag.getByte("type") match {
       case 0 => AEApi.instance.registries.wireless.openWirelessTerminalGui(itemStack, world, entityPlayer)
@@ -83,7 +83,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     new ActionResult(EnumActionResult.SUCCESS, itemStack)
   }
 
-  def changeMode(itemStack: ItemStack, player: EntityPlayer, tag :NBTTagCompound): ItemStack = {
+  def changeMode(itemStack: ItemStack, player: EntityPlayer, tag: NBTTagCompound): ItemStack = {
     val installed = getInstalledModules(itemStack)
     val matchted = tag.getByte("type") match {
       case 0 =>
@@ -147,7 +147,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
   @SideOnly(Side.CLIENT)
   override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[String], advanced: Boolean) {
     val tag = ensureTagCompound(itemStack)
-    if(!tag.hasKey("type"))
+    if (!tag.hasKey("type"))
       tag.setByte("type", 0)
     val list2 = list.asInstanceOf[util.List[String]];
     list2.add(I18n.translateToLocal("extracells.tooltip.mode") + ": " + I18n.translateToLocal("extracells.tooltip." + WirelessTerminalType.values().apply(tag.getByte("type")).toString.toLowerCase))
@@ -159,48 +159,48 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
   }
 
   def installModule(itemStack: ItemStack, module: WirelessTerminalType): Unit = {
-    if(isInstalled(itemStack, module))
+    if (isInstalled(itemStack, module))
       return
     val install = (1 << module.ordinal).toByte
     val tag = ensureTagCompound(itemStack)
     val installed: Byte = {
-      if(tag.hasKey("modules"))
+      if (tag.hasKey("modules"))
         (tag.getByte("modules") + install).toByte
       else
-      install
+        install
     }
     tag.setByte("modules", installed)
   }
 
   def getInstalledModules(itemStack: ItemStack): util.EnumSet[WirelessTerminalType] = {
-    if(itemStack == null || itemStack.getItem == null)
+    if (itemStack == null || itemStack.getItem == null)
       return util.EnumSet.noneOf(classOf[WirelessTerminalType])
     val tag = ensureTagCompound(itemStack)
     val installed: Byte = {
-      if(tag.hasKey("modules"))
+      if (tag.hasKey("modules"))
         tag.getByte("modules")
       else
         0
     }
     val set = util.EnumSet.noneOf(classOf[WirelessTerminalType])
     for (x <- WirelessTerminalType.values) {
-      if(1 == (installed >> x.ordinal) % 2)
+      if (1 == (installed >> x.ordinal) % 2)
         set.add(x)
     }
     set
   }
 
   def isInstalled(itemStack: ItemStack, module: WirelessTerminalType): Boolean = {
-    if(itemStack == null || itemStack.getItem == null)
+    if (itemStack == null || itemStack.getItem == null)
       return false
     val tag = ensureTagCompound(itemStack)
     val installed: Byte = {
-      if(tag.hasKey("modules"))
+      if (tag.hasKey("modules"))
         tag.getByte("modules")
       else
         0
     }
-    if(1 == (installed >> module.ordinal) % 2)
+    if (1 == (installed >> module.ordinal) % 2)
       true
     else
       false

@@ -12,8 +12,8 @@ import appeng.api.util.AEPartLocation
 trait TNetworkStorage {
 
   def getStorageGrid(side: AEPartLocation): IStorageGrid = {
-    if(!this.isInstanceOf[IGridHost])
-      return  null
+    if (!this.isInstanceOf[IGridHost])
+      return null
     val host = this.asInstanceOf[IGridHost]
     if (host.getGridNode(side) == null) return null
     val grid: IGrid = host.getGridNode(side).getGrid

@@ -6,9 +6,10 @@ public class ECApi {
 		if (instance == null) {
 			try {
 				instance = (ExtraCellsApi) Class
-						.forName("extracells.ExtraCellsApiInstance")
-						.getField("instance").get(null);
-			} catch (Exception e) {}
+					.forName("extracells.ExtraCellsApiInstance")
+					.getField("instance").get(null);
+			} catch (Exception e) {
+			}
 		}
 		return instance;
 	}

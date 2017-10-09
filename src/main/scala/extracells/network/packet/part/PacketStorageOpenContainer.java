@@ -26,7 +26,7 @@ public class PacketStorageOpenContainer extends Packet {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			ContainerStorage containerStorage = GuiUtil.getContainer(player, ContainerStorage.class);
-			if(containerStorage == null){
+			if (containerStorage == null) {
 				return;
 			}
 

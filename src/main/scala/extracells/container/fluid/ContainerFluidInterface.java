@@ -27,12 +27,12 @@ public class ContainerFluidInterface extends Container implements
 	EntityPlayer player;
 
 	public ContainerFluidInterface(EntityPlayer player,
-			IFluidInterface fluidInterface) {
+		IFluidInterface fluidInterface) {
 		this.player = player;
 		this.fluidInterface = fluidInterface;
 		for (int j = 0; j < 9; j++) {
 			addSlotToContainer(new SlotRespective(
-					fluidInterface.getPatternInventory(), j, 8 + j * 18, 115));
+				fluidInterface.getPatternInventory(), j, 8 + j * 18, 115));
 		}
 		bindPlayerInventory(player.inventory);
 		if (fluidInterface instanceof TileEntityFluidInterface) {
@@ -51,7 +51,7 @@ public class ContainerFluidInterface extends Container implements
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 149));
+					8 + j * 18, i * 18 + 149));
 			}
 		}
 
@@ -78,7 +78,7 @@ public class ContainerFluidInterface extends Container implements
 		super.onContainerClosed(player);
 		if (this.fluidInterface instanceof TileEntityFluidInterface) {
 			((TileEntityFluidInterface) this.fluidInterface)
-					.removeListener(this);
+				.removeListener(this);
 		} else if (this.fluidInterface instanceof PartFluidInterface) {
 			((PartFluidInterface) this.fluidInterface).removeListener(this);
 		}
@@ -86,7 +86,7 @@ public class ContainerFluidInterface extends Container implements
 
 	@Override
 	protected void retrySlotClick(int p_75133_1_, int p_75133_2_,
-			boolean p_75133_3_, EntityPlayer p_75133_4_) {
+		boolean p_75133_3_, EntityPlayer p_75133_4_) {
 
 	}
 
@@ -102,11 +102,12 @@ public class ContainerFluidInterface extends Container implements
 			if (itemstack.getItem() instanceof ICraftingPatternItem) {
 				if (slotnumber < 9) {
 					if (!mergeItemStack(itemstack1,
-							this.inventorySlots.size() - 9,
-							this.inventorySlots.size(), false)) {
+						this.inventorySlots.size() - 9,
+						this.inventorySlots.size(), false)) {
 						if (!mergeItemStack(itemstack1, 9,
-								this.inventorySlots.size() - 9, false))
+							this.inventorySlots.size() - 9, false)) {
 							return null;
+						}
 					}
 				} else if (!mergeItemStack(itemstack1, 0, 9, false)) {
 					return null;
@@ -121,11 +122,11 @@ public class ContainerFluidInterface extends Container implements
 
 			if (slotnumber < this.inventorySlots.size() - 9) {
 				if (!mergeItemStack(itemstack1, this.inventorySlots.size() - 9,
-						this.inventorySlots.size(), true)) {
+					this.inventorySlots.size(), true)) {
 					return null;
 				}
 			} else if (!mergeItemStack(itemstack1, 9,
-					this.inventorySlots.size() - 9, false)) {
+				this.inventorySlots.size() - 9, false)) {
 				return null;
 			}
 

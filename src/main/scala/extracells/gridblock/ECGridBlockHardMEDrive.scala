@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 
 
-class ECGridBlockHardMEDrive(host: TileEntityHardMeDrive) extends IGridBlock{
+class ECGridBlockHardMEDrive(host: TileEntityHardMeDrive) extends IGridBlock {
   protected var grid: IGrid = null
   protected var usedChannels: Int = 0
 

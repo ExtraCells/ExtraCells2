@@ -123,7 +123,7 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
     node
   }
 
-  def getGridNodeWithoutUpdate: IGridNode ={
+  def getGridNodeWithoutUpdate: IGridNode = {
     if (isFirstGridNode && hasWorldObj && !worldObj.isRemote) {
       isFirstGridNode = false
       try {
@@ -194,19 +194,20 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
   override def getServerGuiElement(player: EntityPlayer, args: AnyRef*) = new ContainerVibrationChamberFluid(player.inventory, this)
 
   override def getCapability[T](capability: Capability[T], facing: EnumFacing): T = {
-    if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+    if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
       return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(fluidHandler)
     }
-    super.getCapability(capability, facing) }
+    super.getCapability(capability, facing)
+  }
 
   override def hasCapability(capability: Capability[_], facing: EnumFacing): Boolean = {
-    if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY){
+    if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
       return true
     }
     super.hasCapability(capability, facing)
   }
 
-  protected class FluidHandler extends capability.IFluidHandler{
+  protected class FluidHandler extends capability.IFluidHandler {
     override def fill(resource: FluidStack, doFill: Boolean): Int = {
       if (resource == null || resource.getFluid == null || FuelBurnTime.getBurnTime(resource.getFluid) == 0) return 0
       val filled: Int = tank.fill(resource, doFill)
@@ -220,5 +221,6 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
 
     override def getTankProperties: Array[IFluidTankProperties] = tank.getTankProperties
   }
+
 }
 

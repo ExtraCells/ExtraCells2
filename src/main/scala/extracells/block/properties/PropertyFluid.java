@@ -3,20 +3,18 @@ package extracells.block.properties;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.FluidStack;
 
-public class PropertyFluid implements IUnlistedProperty<FluidStack>{
+public class PropertyFluid implements IUnlistedProperty<FluidStack> {
 	private final String name;
 
 	public PropertyFluid(String name) {
 		this.name = name;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public Class<FluidStack> getType()
-	{
+	public Class<FluidStack> getType() {
 		return FluidStack.class;
 	}
 

@@ -35,8 +35,9 @@ public abstract class DriverBase<P extends IPart> implements SidedBlock, Environ
 	@Override
 	public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 		TileEntity tile = world.getTileEntity(pos);
-		if (tile == null || (!(tile instanceof IPartHost)))
+		if (tile == null || (!(tile instanceof IPartHost))) {
 			return null;
+		}
 		return createEnvironment((IPartHost) tile);
 	}
 
@@ -44,10 +45,12 @@ public abstract class DriverBase<P extends IPart> implements SidedBlock, Environ
 
 	@Override
 	public Class<?> getEnvironment(ItemStack stack) {
-		if(stack == null)
+		if (stack == null) {
 			return null;
-		if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == part.ordinal())
+		}
+		if (stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == part.ordinal()) {
 			return environmentClass;
+		}
 		return null;
 	}
 }

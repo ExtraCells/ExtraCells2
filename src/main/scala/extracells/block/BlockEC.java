@@ -13,24 +13,24 @@ import extracells.util.CreativeTabEC;
 
 public abstract class BlockEC extends BlockContainer implements IItemModelRegister {
 
-    protected BlockEC(Material material, float hardness, float resistance) {
-        super(material);
-        setHardness(hardness);
-        setResistance(resistance);
-        setCreativeTab(CreativeTabEC.INSTANCE);
-    }
+	protected BlockEC(Material material, float hardness, float resistance) {
+		super(material);
+		setHardness(hardness);
+		setResistance(resistance);
+		setCreativeTab(CreativeTabEC.INSTANCE);
+	}
 
-    protected BlockEC(Material material) {
-        super(material);
-    }
+	protected BlockEC(Material material) {
+		super(material);
+	}
 
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
 		return EnumBlockRenderType.MODEL;
 	}
 
-    @Override
-    public void registerModel(Item item, ModelManager manager) {
-        manager.registerItemModel(item, 0);
-    }
+	@Override
+	public void registerModel(Item item, ModelManager manager) {
+		manager.registerItemModel(item, 0);
+	}
 }

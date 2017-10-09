@@ -24,7 +24,9 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorageCell with PowerItem {
 
   override val MAX_POWER: Double = 20000
+
   def THIS = this
+
   setMaxStackSize(1)
   setMaxDamage(0)
 
@@ -129,7 +131,7 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
   }
 
   @SideOnly(Side.CLIENT)
-  override def registerModel(item: Item, manager: ModelManager)=
+  override def registerModel(item: Item, manager: ModelManager) =
     manager.registerItemModel(item, 0, "storage/fluid/portable")
 
 

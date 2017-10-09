@@ -9,36 +9,36 @@ import extracells.tileentity.TileEntityVibrationChamberFluid;
 
 public class ContainerVibrationChamberFluid extends Container {
 
-    public TileEntityVibrationChamberFluid tileentity;
+	public TileEntityVibrationChamberFluid tileentity;
 
-    public ContainerVibrationChamberFluid(InventoryPlayer player,
-                                TileEntityVibrationChamberFluid tileentity) {
-        this.tileentity = tileentity;
+	public ContainerVibrationChamberFluid(InventoryPlayer player,
+		TileEntityVibrationChamberFluid tileentity) {
+		this.tileentity = tileentity;
 
-        bindPlayerInventory(player);
-    }
+		bindPlayerInventory(player);
+	}
 
-    protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-                        8 + j * 18, i * 18 + 84));
-            }
-        }
+	protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 9; j++) {
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
+					8 + j * 18, i * 18 + 84));
+			}
+		}
 
-        for (int i = 0; i < 9; i++) {
-            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
-        }
-    }
+		for (int i = 0; i < 9; i++) {
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142));
+		}
+	}
 
-    @Override
-    public boolean canInteractWith(EntityPlayer entityplayer) {
-        return tileentity.hasWorldObj() && tileentity.getWorld().getTileEntity(tileentity.getPos()) == this.tileentity;
-    }
+	@Override
+	public boolean canInteractWith(EntityPlayer entityplayer) {
+		return tileentity.hasWorldObj() && tileentity.getWorld().getTileEntity(tileentity.getPos()) == this.tileentity;
+	}
 
-    @Override
-    protected void retrySlotClick(int par1, int par2, boolean par3,
-                                  EntityPlayer par4EntityPlayer) {
-        // DON'T DO ANYTHING, YOU SHITTY METHOD!
-    }
+	@Override
+	protected void retrySlotClick(int par1, int par2, boolean par3,
+		EntityPlayer par4EntityPlayer) {
+		// DON'T DO ANYTHING, YOU SHITTY METHOD!
+	}
 }

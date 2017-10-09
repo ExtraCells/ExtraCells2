@@ -28,9 +28,9 @@ import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.property.{ExtendedBlockState, IExtendedBlockState, IUnlistedProperty}
 
 
-object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ROCK, 2.0F, 1000000.0F) with TGuiBlock{
+object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ROCK, 2.0F, 1000000.0F) with TGuiBlock {
 
-  override def getServerGuiElement(player: EntityPlayer, world: World,  pos: BlockPos): Any = {
+  override def getServerGuiElement(player: EntityPlayer, world: World, pos: BlockPos): Any = {
     val tile = world.getTileEntity(pos)
     if (tile == null || player == null) return null
     tile match {
@@ -47,7 +47,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
 
   setUnlocalizedName("block.hardmedrive");
 
-  override def createNewTileEntity(world : World, meta : Int): TileEntity = new TileEntityHardMeDrive()
+  override def createNewTileEntity(world: World, meta: Int): TileEntity = new TileEntityHardMeDrive()
 
   private def dropItems(world: World, pos: BlockPos) {
     val x = pos.getX

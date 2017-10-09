@@ -43,27 +43,27 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 	@Override
 	public void actionPerformed(GuiButton button) {
 		switch (button.id) {
-		case 0:
-			modifyAmount(-1);
-			break;
-		case 1:
-			modifyAmount(-10);
-			break;
-		case 2:
-			modifyAmount(-100);
-			break;
-		case 3:
-			modifyAmount(+1);
-			break;
-		case 4:
-			modifyAmount(+10);
-			break;
-		case 5:
-			modifyAmount(+100);
-			break;
-		case 6:
-			NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(true)));
-			break;
+			case 0:
+				modifyAmount(-1);
+				break;
+			case 1:
+				modifyAmount(-10);
+				break;
+			case 2:
+				modifyAmount(-100);
+				break;
+			case 3:
+				modifyAmount(+1);
+				break;
+			case 4:
+				modifyAmount(+10);
+				break;
+			case 5:
+				modifyAmount(+100);
+				break;
+			case 6:
+				NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(true)));
+				break;
 
 		}
 	}
@@ -77,12 +77,13 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 	@Override
 	public void drawScreen(int x, int y, float f) {
 
-		String[] buttonNames = { "-1", "-10", "-100", "+1", "+10", "+100" };
-		String[] shiftNames = { "-100", "-1000", "-10000", "+100", "+1000", "+10000" };
+		String[] buttonNames = {"-1", "-10", "-100", "+1", "+10", "+100"};
+		String[] shiftNames = {"-100", "-1000", "-10000", "+100", "+1000", "+10000"};
 
 		for (int i = 0; i < this.buttonList.size(); i++) {
-			if (i == 6)
+			if (i == 6) {
 				break;
+			}
 			GuiButton currentButton = this.buttonList.get(i);
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
@@ -130,8 +131,9 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 	}
 
 	private void modifyAmount(int amount) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 			amount *= 100;
+		}
 		NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_EMITTER_AMOUNT_CHANGE, Integer.toString(amount)));
 	}
 

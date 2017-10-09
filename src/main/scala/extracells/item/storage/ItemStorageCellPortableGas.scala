@@ -24,7 +24,9 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCell with PowerItem {
 
   override val MAX_POWER: Double = 20000
+
   def THIS = this
+
   setMaxStackSize(1)
   setMaxDamage(0)
 
@@ -57,7 +59,6 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
   override def getDurabilityForDisplay(itemStack: ItemStack): Double = 1 - getAECurrentPower(itemStack) / ItemStorageCellPortableFluid.MAX_POWER
 
 
-
   def getFilter(stack: ItemStack): util.ArrayList[Fluid] = {
     val inventory: ECFluidFilterInventory = new ECFluidFilterInventory("", 63, stack)
     val stacks: Array[ItemStack] = inventory.slots
@@ -82,7 +83,6 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
 
 
   def getMaxBytes(is: ItemStack): Int = 512
-
 
 
   def getMaxTypes(unused: ItemStack): Int = 3
@@ -122,7 +122,7 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
     new ActionResult(EnumActionResult.SUCCESS, ECApi.instance.openPortableGasCellGui(player, hand, world))
 
   @SideOnly(Side.CLIENT)
-  override def registerModel(item: Item, manager: ModelManager)=
+  override def registerModel(item: Item, manager: ModelManager) =
     manager.registerItemModel(item, 0, "storage/gas/portable")
 
 

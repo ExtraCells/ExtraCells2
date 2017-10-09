@@ -77,11 +77,11 @@ public class CommonProxy {
 		}
 	}
 
-	public void registerBlock(Block block){
+	public void registerBlock(Block block) {
 		ForgeRegistries.BLOCKS.register(block);
 	}
 
-	public void registerItem(Item item){
+	public void registerItem(Item item) {
 		ForgeRegistries.ITEMS.register(item);
 	}
 
@@ -119,11 +119,11 @@ public class CommonProxy {
 		FuelBurnTime.registerFuel(FluidRegistry.LAVA, 800);
 	}
 
-	public boolean isClient(){
+	public boolean isClient() {
 		return false;
 	}
 
-	public boolean isServer(){
+	public boolean isServer() {
 		return true;
 	}
 

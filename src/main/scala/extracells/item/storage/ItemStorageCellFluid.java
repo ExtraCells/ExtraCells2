@@ -81,13 +81,15 @@ public class ItemStorageCellFluid extends ItemStorageCell implements IFluidStora
 
 	@Override
 	public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
-		if (is == null)
+		if (is == null) {
 			return;
+		}
 		NBTTagCompound tag;
-		if (is.hasTagCompound())
+		if (is.hasTagCompound()) {
 			tag = is.getTagCompound();
-		else
+		} else {
 			tag = new NBTTagCompound();
+		}
 		tag.setString("fuzzyMode", fzMode.name());
 		is.setTagCompound(tag);
 

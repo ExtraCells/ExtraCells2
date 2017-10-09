@@ -28,13 +28,13 @@ public class ContainerOreDictExport extends Container {
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
 				this.addSlotToContainer(new Slot(inventoryPlayer,
-						j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+					j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 			}
 		}
 
 		for (int i = 0; i < 9; ++i) {
 			this.addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18,
-					142));
+				142));
 		}
 	}
 
@@ -49,7 +49,7 @@ public class ContainerOreDictExport extends Container {
 
 	@Override
 	protected void retrySlotClick(int p_75133_1_, int p_75133_2_,
-			boolean p_75133_3_, EntityPlayer p_75133_4_) {
+		boolean p_75133_3_, EntityPlayer p_75133_4_) {
 
 	}
 

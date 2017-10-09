@@ -30,7 +30,7 @@ import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
 public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implements
-		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
+	WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
 	private EntityPlayer player;
 	private byte filterSize;
@@ -64,21 +64,21 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 		if (button instanceof WidgetStorageDirection) {
 			AccessRestriction restriction;
 			switch (((WidgetStorageDirection) button).getAccessRestriction()) {
-			case NO_ACCESS:
-				restriction = AccessRestriction.READ;
-				break;
-			case READ:
-				restriction = AccessRestriction.READ_WRITE;
-				break;
-			case READ_WRITE:
-				restriction = AccessRestriction.WRITE;
-				break;
-			case WRITE:
-				restriction = AccessRestriction.NO_ACCESS;
-				break;
-			default:
-				restriction = null;
-				break;
+				case NO_ACCESS:
+					restriction = AccessRestriction.READ;
+					break;
+				case READ:
+					restriction = AccessRestriction.READ_WRITE;
+					break;
+				case READ_WRITE:
+					restriction = AccessRestriction.WRITE;
+					break;
+				case WRITE:
+					restriction = AccessRestriction.NO_ACCESS;
+					break;
+				default:
+					restriction = null;
+					break;
 			}
 			if (restriction != null) {
 				NetworkUtil.sendToServer(new PacketPartConfig(part, PacketPartConfig.FLUID_STORAGE_ACCESS, restriction.toString()));
@@ -94,8 +94,9 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	protected void drawBackground() {
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 222);
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
-		if (this.hasNetworkTool)
+		if (this.hasNetworkTool) {
 			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
+		}
 	}
 
 	@Override
@@ -120,8 +121,9 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 		fontRendererObj.drawString(player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 3, 4210752);
 
 		for (Object button : this.buttonList) {
-			if (button instanceof WidgetStorageDirection)
+			if (button instanceof WidgetStorageDirection) {
 				((WidgetStorageDirection) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
+			}
 		}
 	}
 
@@ -154,8 +156,9 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		Slot slot = getSlotAtPosition(mouseX, mouseY);
 
-		if (slot != null && slot.getStack() != null && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack()))
+		if (slot != null && slot.getStack() != null && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack())) {
 			return;
+		}
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 	}
 
@@ -171,8 +174,9 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	}
 
 	public void updateAccessRestriction(AccessRestriction mode) {
-		if (this.buttonList.size() > 0)
+		if (this.buttonList.size() > 0) {
 			((WidgetStorageDirection) this.buttonList.get(0)).setAccessRestriction(mode);
+		}
 	}
 
 	@Override

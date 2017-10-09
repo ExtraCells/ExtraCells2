@@ -12,12 +12,12 @@ import mekanism.api.gas.IGasHandler
 import net.minecraftforge.fluids.{Fluid, FluidStack}
 import net.minecraftforge.fml.common.Optional
 
-class PartGasExport extends PartFluidExport{
+class PartGasExport extends PartFluidExport {
 
   private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
 
-  override def doWork(rate: Int, tickSinceLastCall: Int): Boolean ={
+  override def doWork(rate: Int, tickSinceLastCall: Int): Boolean = {
     if (isMekanismEnabled)
       work(rate, tickSinceLastCall)
     else
@@ -26,10 +26,10 @@ class PartGasExport extends PartFluidExport{
 
 
   @Optional.Method(modid = "MekanismAPI|gas")
-  protected  def work(rate: Int, ticksSinceLastCall: Int): Boolean ={
+  protected def work(rate: Int, ticksSinceLastCall: Int): Boolean = {
     val facingTank: IGasHandler = getFacingGasTank
     if (facingTank == null || !isActive) return false
-    val filter  = new util.ArrayList[Fluid]
+    val filter = new util.ArrayList[Fluid]
     filter.add(this.filterFluids(4))
 
     if (this.filterSize >= 1) {
@@ -78,7 +78,6 @@ class PartGasExport extends PartFluidExport{
     }
     return false
   }
-
 
 
 }

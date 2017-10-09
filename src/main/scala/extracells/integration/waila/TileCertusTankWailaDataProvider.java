@@ -23,76 +23,79 @@ public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile,
-			NBTTagCompound tag, World world, BlockPos blockPos) {
+		NBTTagCompound tag, World world, BlockPos blockPos) {
 		if (tile instanceof TileEntityCertusTank) {
-			if (((TileEntityCertusTank) tile).tank.getFluid() == null)
+			if (((TileEntityCertusTank) tile).tank.getFluid() == null) {
 				tag.setString("fluidName", "");
-			else {
+			} else {
 				tag.setString("fluidName",
-						((TileEntityCertusTank) tile).tank.getFluid().getFluid().getName());
+					((TileEntityCertusTank) tile).tank.getFluid().getFluid().getName());
 				tag.setInteger("currentFluid",
-						((TileEntityCertusTank) tile).tank.getFluidAmount());
+					((TileEntityCertusTank) tile).tank.getFluidAmount());
 			}
 			tag.setInteger("maxFluid",
-					((TileEntityCertusTank) tile).tank.getCapacity());
+				((TileEntityCertusTank) tile).tank.getCapacity());
 		}
 		return tag;
 	}
 
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> list,
-			IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		NBTTagCompound tag = accessor.getNBTData();
-		if (tag == null)
+		if (tag == null) {
 			return list;
+		}
 		if (tag.hasKey("fluidName")) {
 			String fluidName = tag.getString("fluidName");
 			if (fluidName.isEmpty()) {
 				list.add(I18n
-						.translateToLocal("extracells.tooltip.fluid")
-						+ ": "
-						+ I18n
-								.translateToLocal("extracells.tooltip.empty1"));
+					.translateToLocal("extracells.tooltip.fluid")
+					+ ": "
+					+ I18n
+					.translateToLocal("extracells.tooltip.empty1"));
 				list.add(I18n
-						.translateToLocal("extracells.tooltip.amount")
-						+ ": 0mB / " + tag.getInteger("maxFluid") + "mB");
+					.translateToLocal("extracells.tooltip.amount")
+					+ ": 0mB / " + tag.getInteger("maxFluid") + "mB");
 				return list;
 			} else {
 				Fluid fluid = FluidRegistry.getFluid(fluidName);
 				list.add(I18n
-						.translateToLocal("extracells.tooltip.fluid")
-						+ ": "
-						+ fluid.getLocalizedName(new FluidStack(fluid, Fluid.BUCKET_VOLUME)));
-			}
-		} else
-			return list;
-		if (tag.hasKey("maxFluid") && tag.hasKey("currentFluid"))
-			list.add(I18n
-					.translateToLocal("extracells.tooltip.amount")
+					.translateToLocal("extracells.tooltip.fluid")
 					+ ": "
-					+ tag.getInteger("currentFluid")
-					+ "mB / "
-					+ tag.getInteger("maxFluid") + "mB");
+					+ fluid.getLocalizedName(new FluidStack(fluid, Fluid.BUCKET_VOLUME)));
+			}
+		} else {
+			return list;
+		}
+		if (tag.hasKey("maxFluid") && tag.hasKey("currentFluid")) {
+			list.add(I18n
+				.translateToLocal("extracells.tooltip.amount")
+				+ ": "
+				+ tag.getInteger("currentFluid")
+				+ "mB / "
+				+ tag.getInteger("maxFluid") + "mB");
+		}
 		return list;
 	}
 
 	@Override
 	public List<String> getWailaHead(ItemStack itemStack,
-			List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+		List<String> currenttip, IWailaDataAccessor accessor,
+		IWailaConfigHandler config) {
 		return currenttip;
 	}
 
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+		IWailaConfigHandler config) {
 		return accessor.getStack();
 	}
 
 	@Override
 	public List<String> getWailaTail(ItemStack itemStack,
-			List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+		List<String> currenttip, IWailaDataAccessor accessor,
+		IWailaConfigHandler config) {
 		return currenttip;
 	}
 }

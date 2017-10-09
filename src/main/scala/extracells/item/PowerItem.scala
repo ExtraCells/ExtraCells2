@@ -8,9 +8,9 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraftforge.fml.common.Optional
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy", striprefs = true)
-trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem{
+trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem {
 
-  val MAX_POWER :Double
+  val MAX_POWER: Double
 
   @Optional.Method(modid = "CoFHAPI|energy")
   override def extractEnergy(container: ItemStack, maxExtract: Int, simulate: Boolean): Int = {
@@ -44,10 +44,10 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem{
     }
     else {
       val currentAEPower = getAECurrentPower(container)
-      if ( currentAEPower < getAEMaxPower(container)){
+      if (currentAEPower < getAEMaxPower(container)) {
         val leftOver = PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)))
         (maxReceive - leftOver).toInt
-      }else
+      } else
         0
     }
   }

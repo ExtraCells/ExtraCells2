@@ -36,7 +36,7 @@ public class PacketOreDictExport extends Packet {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static class HandlerClient implements IPacketHandlerClient{
+	public static class HandlerClient implements IPacketHandlerClient {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
 			String filter = data.readString();
@@ -47,7 +47,7 @@ public class PacketOreDictExport extends Packet {
 		}
 	}
 
-	public static class HandlerServer implements IPacketHandlerServer{
+	public static class HandlerServer implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			String filter = data.readString();

@@ -24,7 +24,7 @@ public class BlockItemDefinitions implements ITileDefinition {
 	}
 
 	public BlockItemDefinitions(Block block,
-			Class<? extends TileEntity> blockTileEntity) {
+		Class<? extends TileEntity> blockTileEntity) {
 		this(block, 0, blockTileEntity);
 	}
 
@@ -33,7 +33,7 @@ public class BlockItemDefinitions implements ITileDefinition {
 	}
 
 	public BlockItemDefinitions(Block block, int meta,
-			Class<? extends TileEntity> blockTileEntity) {
+		Class<? extends TileEntity> blockTileEntity) {
 		this.block = block;
 		this.meta = meta;
 		this.blockTileEntity = blockTileEntity;

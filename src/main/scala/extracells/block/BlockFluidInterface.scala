@@ -20,7 +20,7 @@ class BlockFluidInterface() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
     super.breakBlock(world, pos, stat)
   }
 
-  override def registerModel(item: Item, manager: ModelManager)= manager.registerItemModel(item, 0, "fluid_interface")
+  override def registerModel(item: Item, manager: ModelManager) = manager.registerItemModel(item, 0, "fluid_interface")
 
   def createNewTileEntity(world: World, meta: Int): TileEntity = {
     return new TileEntityFluidInterface
@@ -57,7 +57,8 @@ class BlockFluidInterface() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
         }
       }
       {
-        i += 1; i - 1
+        i += 1;
+        i - 1
       }
     }
   }

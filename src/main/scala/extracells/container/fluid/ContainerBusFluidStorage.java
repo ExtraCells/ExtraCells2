@@ -47,8 +47,9 @@ public class ContainerBusFluidStorage extends ContainerUpgradeable {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		if (this.guiBusFluidStorage != null)
+		if (this.guiBusFluidStorage != null) {
 			this.guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
+		}
 
 		ItemStack itemstack = null;
 		Slot slot = this.inventorySlots.get(slotnumber);

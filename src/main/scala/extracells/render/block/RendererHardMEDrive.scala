@@ -2,7 +2,7 @@
 package extracells.render.block
 
 
-object RendererHardMEDrive/* extends ISimpleBlockRenderingHandler*/ {
+object RendererHardMEDrive /* extends ISimpleBlockRenderingHandler*/ {
 
   /*var renderID = 0
 

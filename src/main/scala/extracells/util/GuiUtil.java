@@ -14,11 +14,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiUtil {
 
 	public static boolean isPointInRegion(float guiLeft, int guiTop, int top,
-			int left, int height, int width, int pointX, int pointY) {
+		int left, int height, int width, int pointX, int pointY) {
 		pointX -= guiLeft;
 		pointY -= guiTop;
 		return pointX >= top - 1 && pointX < top + height + 1
-				&& pointY >= left - 1 && pointY < left + width + 1;
+			&& pointY >= left - 1 && pointY < left + width + 1;
 	}
 
 	@Nullable

@@ -13,13 +13,13 @@ import net.minecraft.world.World
 import net.minecraftforge.common.ForgeHooks
 
 
-object RecipeUniversalTerminal extends IRecipe{
+object RecipeUniversalTerminal extends IRecipe {
 
   val THIS = this
 
   val itemUniversal = ItemWirelessTerminalUniversal
 
-  override def matches(inventory : InventoryCrafting, world : World): Boolean = {
+  override def matches(inventory: InventoryCrafting, world: World): Boolean = {
     var hasWireless = false
     var isUniversal = false
     var hasTerminal = false
@@ -27,46 +27,46 @@ object RecipeUniversalTerminal extends IRecipe{
     var terminal: ItemStack = null
     val size = inventory.getSizeInventory
     var i = 0
-    for(i <- 0 until size){
+    for (i <- 0 until size) {
       val stack = inventory.getStackInSlot(i)
-      if(stack != null){
+      if (stack != null) {
         val item = stack.getItem
-        if(item == itemUniversal){
-          if(hasWireless)
+        if (item == itemUniversal) {
+          if (hasWireless)
             return false
-          else{
+          else {
             hasWireless = true
             isUniversal = true
             terminal = stack
           }
-        }else if(UniversalTerminal.isWirelessTerminal(stack)){
-          if(hasWireless)
+        } else if (UniversalTerminal.isWirelessTerminal(stack)) {
+          if (hasWireless)
             return false
           hasWireless = true
           terminal = stack
-        }else if(UniversalTerminal.isTerminal(stack)){
+        } else if (UniversalTerminal.isTerminal(stack)) {
           hasTerminal = true
           val typeTerminal = UniversalTerminal.getTerminalType(stack)
-          if(terminals.contains(typeTerminal)){
+          if (terminals.contains(typeTerminal)) {
             return false
-          }else{
+          } else {
             terminals ++= List(typeTerminal)
           }
         }
       }
     }
-    if(!(hasTerminal && hasWireless))
-     return false
-    if(isUniversal){
-      for(x <- terminals){
-        if(itemUniversal.isInstalled(terminal, x))
+    if (!(hasTerminal && hasWireless))
+      return false
+    if (isUniversal) {
+      for (x <- terminals) {
+        if (itemUniversal.isInstalled(terminal, x))
           return false
       }
       true
-    }else{
+    } else {
       val terminalType = UniversalTerminal.getTerminalType(terminal)
-      for(x <- terminals){
-        if(x == terminalType)
+      for (x <- terminals) {
+        if (x == terminalType)
           return false
       }
       true
@@ -79,58 +79,58 @@ object RecipeUniversalTerminal extends IRecipe{
 
   override def getRecipeSize: Int = 2
 
-  override def getCraftingResult(inventory : InventoryCrafting): ItemStack = {
+  override def getCraftingResult(inventory: InventoryCrafting): ItemStack = {
     var isUniversal = false
     var terminals = List[WirelessTerminalType]()
     var terminal: ItemStack = null
     val size = inventory.getSizeInventory
     var i = 0
-    for(i <- 0 until size){
+    for (i <- 0 until size) {
       val stack = inventory.getStackInSlot(i)
-      if(stack != null){
+      if (stack != null) {
         val item = stack.getItem
-        if(item == itemUniversal){
-            isUniversal = true
-            terminal = stack.copy
-        }else if(UniversalTerminal.isWirelessTerminal(stack)){
+        if (item == itemUniversal) {
+          isUniversal = true
           terminal = stack.copy
-        }else if(UniversalTerminal.isTerminal(stack)){
+        } else if (UniversalTerminal.isWirelessTerminal(stack)) {
+          terminal = stack.copy
+        } else if (UniversalTerminal.isTerminal(stack)) {
           val typeTerminal = UniversalTerminal.getTerminalType(stack)
-        terminals ++= List(typeTerminal)
+          terminals ++= List(typeTerminal)
 
         }
       }
     }
-    if(isUniversal){
-      for(x <- terminals)
+    if (isUniversal) {
+      for (x <- terminals)
         itemUniversal.installModule(terminal, x)
-    }else{
+    } else {
       val terminalType = UniversalTerminal.getTerminalType(terminal)
       val itemTerminal = terminal.getItem
       val t = new ItemStack(itemUniversal)
-      if(itemTerminal.isInstanceOf[INetworkEncodable]){
+      if (itemTerminal.isInstanceOf[INetworkEncodable]) {
         val key = itemTerminal.asInstanceOf[INetworkEncodable].getEncryptionKey(terminal)
-        if(key != null)
+        if (key != null)
           itemUniversal.setEncryptionKey(t, key, null)
       }
-      if(itemTerminal.isInstanceOf[IAEItemPowerStorage]){
+      if (itemTerminal.isInstanceOf[IAEItemPowerStorage]) {
         val power = itemTerminal.asInstanceOf[IAEItemPowerStorage].getAECurrentPower(terminal)
         itemUniversal.injectAEPower(t, power)
       }
-      if(terminal.hasTagCompound){
+      if (terminal.hasTagCompound) {
         val nbt = terminal.getTagCompound
-        if(!t.hasTagCompound)
+        if (!t.hasTagCompound)
           t.setTagCompound(new NBTTagCompound)
-        if(nbt.hasKey("BoosterSlot")){
+        if (nbt.hasKey("BoosterSlot")) {
           t.getTagCompound.setTag("BoosterSlot", nbt.getTag("BoosterSlot"))
         }
-        if(nbt.hasKey("MagnetSlot"))
+        if (nbt.hasKey("MagnetSlot"))
           t.getTagCompound.setTag("MagnetSlot", nbt.getTag("MagnetSlot"));
       }
       itemUniversal.installModule(t, terminalType)
       t.getTagCompound.setByte("type", terminalType.ordinal.toByte)
       terminal = t
-      for(x <- terminals)
+      for (x <- terminals)
         itemUniversal.installModule(terminal, x)
     }
     terminal

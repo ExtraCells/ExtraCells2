@@ -20,11 +20,11 @@ import extracells.item.block.ItemBlockFluidInterface;
 import extracells.util.CreativeTabEC;
 
 public enum BlockEnum {
-	CERTUSTANK("certustank", new BlockCertusTank(), (block)-> new ItemBlockCertusTank(block)),
+	CERTUSTANK("certustank", new BlockCertusTank(), (block) -> new ItemBlockCertusTank(block)),
 	WALRUS("walrus", new BlockWalrus()),
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
-	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), (block)-> new ItemBlockFluidInterface(block)),
-	FILLER ("fluidfiller", new BlockFluidFiller(), (block)-> new ItemBlockFluidFiller(block)),
+	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), (block) -> new ItemBlockFluidInterface(block)),
+	FILLER("fluidfiller", new BlockFluidFiller(), (block) -> new ItemBlockFluidFiller(block)),
 	BLASTRESISTANTMEDRIVE("hardmedrive", BlockHardMEDrive.instance()),
 	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid());
 
@@ -34,14 +34,14 @@ public enum BlockEnum {
 	private Integration.Mods mod;
 
 	BlockEnum(String internalName, Block block, Integration.Mods mod) {
-		this(internalName, block, (b)->new ItemBlock(b), mod);
+		this(internalName, block, (b) -> new ItemBlock(b), mod);
 	}
 
 	BlockEnum(String internalName, Block block) {
-		this(internalName, block,(b)-> new ItemBlock(b));
+		this(internalName, block, (b) -> new ItemBlock(b));
 	}
 
-	BlockEnum(String internalName, Block block, Function<Block, ItemBlock> itemFactory){
+	BlockEnum(String internalName, Block block, Function<Block, ItemBlock> itemFactory) {
 		this(internalName, block, itemFactory, null);
 	}
 
@@ -53,8 +53,9 @@ public enum BlockEnum {
 		this.item = factory.apply(block);
 		this.item.setRegistryName(block.getRegistryName());
 		this.mod = mod;
-		if(mod == null || mod.isEnabled())
+		if (mod == null || mod.isEnabled()) {
 			this.block.setCreativeTab(CreativeTabEC.INSTANCE);
+		}
 	}
 
 	public Block getBlock() {
@@ -73,7 +74,7 @@ public enum BlockEnum {
 		return I18n.translateToLocal(this.block.getUnlocalizedName() + ".name");
 	}
 
-	public Integration.Mods getMod(){
+	public Integration.Mods getMod() {
 		return mod;
 	}
 }

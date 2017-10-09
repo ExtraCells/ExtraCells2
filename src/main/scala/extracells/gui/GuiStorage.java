@@ -71,11 +71,11 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 			long currentFluidAmount = this.currentFluid.getStackSize();
 			String amountToText = Long.toString(currentFluidAmount) + "mB";
 			if (ECConfigHandler.shortenedBuckets) {
-				if (currentFluidAmount > 1000000000L)
+				if (currentFluidAmount > 1000000000L) {
 					amountToText = Long.toString(currentFluidAmount / 1000000000L) + storageType.getMega();
-				else if (currentFluidAmount > 1000000L)
+				} else if (currentFluidAmount > 1000000L) {
 					amountToText = Long.toString(currentFluidAmount / 1000000L) + storageType.getKilo();
-				else if (currentFluidAmount > 9999L) {
+				} else if (currentFluidAmount > 9999L) {
 					amountToText = Long.toString(currentFluidAmount / 1000L) + storageType.getBuckets();
 				}
 			}
@@ -95,7 +95,8 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 	public void drawWidgets(int mouseX, int mouseY) {
 		int listSize = this.fluidWidgets.size();
 		if (!this.container.getFluidStackList().isEmpty()) {
-			outerLoop: for (int y = 0; y < 4; y++) {
+			outerLoop:
+			for (int y = 0; y < 4; y++) {
 				for (int x = 0; x < 9; x++) {
 					int widgetIndex = y * 9 + x + this.currentScroll * 9;
 					if (0 <= widgetIndex && widgetIndex < listSize) {
@@ -127,10 +128,12 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 				this.currentScroll--;
 			}
 
-			if (this.currentScroll < 0)
+			if (this.currentScroll < 0) {
 				this.currentScroll = 0;
-			if (listSize / 9 < 4 && this.currentScroll < listSize / 9 + 4)
+			}
+			if (listSize / 9 < 4 && this.currentScroll < listSize / 9 + 4) {
 				this.currentScroll = 0;
+			}
 		}
 	}
 
@@ -173,8 +176,9 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 			public void mouseClicked(int x, int y, int mouseBtn) {
 				boolean flag = x >= this.xPos && x < this.xPos + this.width
 					&& y >= this.yPos && y < this.yPos + this.height;
-				if (flag && mouseBtn == 3)
+				if (flag && mouseBtn == 3) {
 					setText("");
+				}
 			}
 		};
 		this.searchbar.setEnableBackgroundDrawing(false);
@@ -184,8 +188,9 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 
 	@Override
 	protected void keyTyped(char key, int keyID) {
-		if (keyID == Keyboard.KEY_ESCAPE)
+		if (keyID == Keyboard.KEY_ESCAPE) {
 			this.mc.thePlayer.closeScreen();
+		}
 		this.searchbar.textboxKeyTyped(key, keyID);
 		updateFluids();
 	}
@@ -224,8 +229,9 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 	public void updateSelectedFluid() {
 		this.currentFluid = null;
 		for (IAEFluidStack stack : this.container.getFluidStackList()) {
-			if (stack.getFluid() == this.container.getSelectedFluid())
+			if (stack.getFluid() == this.container.getSelectedFluid()) {
 				this.currentFluid = stack;
+			}
 		}
 	}
 }

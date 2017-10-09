@@ -23,7 +23,7 @@ import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
 public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> implements
-		IFluidSlotGui {
+	IFluidSlotGui {
 
 	private PartFluidPlaneFormation part;
 	private EntityPlayer player;
@@ -31,7 +31,7 @@ public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> imp
 	private boolean hasNetworkTool;
 
 	public GuiFluidPlaneFormation(PartFluidPlaneFormation _part,
-			EntityPlayer _player) {
+		EntityPlayer _player) {
 		super(new ResourceLocation("extracells", "textures/gui/paneformation.png"), new ContainerPlaneFormation(_part, _player));
 		((ContainerPlaneFormation) this.inventorySlots).setGui(this);
 		this.part = _part;
@@ -58,10 +58,11 @@ public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> imp
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		for (Object button : this.buttonList) {
-			if (button instanceof WidgetRedstoneModes)
+			if (button instanceof WidgetRedstoneModes) {
 				((WidgetRedstoneModes) button).drawTooltip(this.guiLeft,
 					this.guiTop, (this.width - this.xSize) / 2,
 					(this.height - this.ySize) / 2);
+			}
 		}
 	}
 
@@ -78,19 +79,19 @@ public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> imp
 	}
 
 	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_,
-			int p_146981_3_) {
+		int p_146981_3_) {
 		return this.isPointInRegion(p_146981_1_.xDisplayPosition,
-				p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
+			p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
 	}
 
 	protected boolean isPointInRegion(int top, int left, int height, int width,
-			int pointX, int pointY) {
+		int pointX, int pointY) {
 		int k1 = this.guiLeft;
 		int l1 = this.guiTop;
 		pointX -= k1;
 		pointY -= l1;
 		return pointX >= top - 1 && pointX < top + height + 1
-				&& pointY >= left - 1 && pointY < left + width + 1;
+			&& pointY >= left - 1 && pointY < left + width + 1;
 	}
 
 	@Override
@@ -98,9 +99,10 @@ public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> imp
 		Slot slot = getSlotAtPosition(mouseX, mouseY);
 
 		if (slot != null
-				&& slot.getStack() != null
-				&& AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack()))
+			&& slot.getStack() != null
+			&& AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack())) {
 			return;
+		}
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 	}
 

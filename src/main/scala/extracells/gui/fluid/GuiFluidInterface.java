@@ -35,8 +35,9 @@ public class GuiFluidInterface extends GuiBase<ContainerFluidInterface> {
 		this.partSide = side;
 		((ContainerFluidInterface) this.inventorySlots).gui = this;
 		for (int i = 0; i < 6; i++) {
-			if (this.partSide != null && this.partSide != AEPartLocation.INTERNAL && this.partSide.ordinal() != i)
+			if (this.partSide != null && this.partSide != AEPartLocation.INTERNAL && this.partSide.ordinal() != i) {
 				continue;
+			}
 			int xPos = i * 20 + 30;
 			AEPartLocation location = AEPartLocation.fromOrdinal(i);
 			widgetManager.add(new WidgetFluidTank(widgetManager, fluidInterface.getFluidTank(location), xPos, 16, location));

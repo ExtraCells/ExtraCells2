@@ -9,14 +9,14 @@ import extracells.util.FluidHelper;
 import extracells.util.GasUtil;
 
 public enum StorageType {
-	GAS("gas", "Kilo", "Mega", ""){
+	GAS("gas", "Kilo", "Mega", "") {
 		@Override
-		public boolean isEmpty(ItemStack stack){
+		public boolean isEmpty(ItemStack stack) {
 			return GasUtil.isEmpty(stack);
 		}
 
 		@Override
-		public boolean isFilled(ItemStack stack){
+		public boolean isFilled(ItemStack stack) {
 			return GasUtil.isFilled(stack);
 		}
 
@@ -30,14 +30,14 @@ public enum StorageType {
 			return GasUtil.isGasContainer(stack);
 		}
 	},
-	FLUID("fluid", "KiloB", "MegaB", "B"){
+	FLUID("fluid", "KiloB", "MegaB", "B") {
 		@Override
-		public boolean isEmpty(ItemStack stack){
+		public boolean isEmpty(ItemStack stack) {
 			return FluidHelper.isEmpty(stack);
 		}
 
 		@Override
-		public boolean isFilled(ItemStack stack){
+		public boolean isFilled(ItemStack stack) {
 			return FluidHelper.isFilled(stack);
 		}
 

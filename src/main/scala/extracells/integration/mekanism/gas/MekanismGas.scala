@@ -10,7 +10,7 @@ import scala.collection.JavaConversions._
 
 object MekanismGas {
 
-  private var fluidGas:Map[Gas, Fluid] = Map()
+  private var fluidGas: Map[Gas, Fluid] = Map()
 
   def init {
     val api = AEApi.instance.partHelper
@@ -19,23 +19,23 @@ object MekanismGas {
     AEApi.instance().registries().cell().addCellHandler(new GasCellHandler())
   }
 
-  def getFluidGasMap  = mapAsJavaMap(fluidGas)
+  def getFluidGasMap = mapAsJavaMap(fluidGas)
 
-  def postInit{
+  def postInit {
     val it = GasRegistry.getRegisteredGasses.iterator
-    while(it.hasNext){
+    while (it.hasNext) {
       val g = it.next
       val fluid = new GasFluid(g)
-      if((!FluidRegistry.isFluidRegistered(fluid)) && FluidRegistry.registerFluid(fluid))
+      if ((!FluidRegistry.isFluidRegistered(fluid)) && FluidRegistry.registerFluid(fluid))
         fluidGas += (g -> fluid)
     }
     ECApi.instance.addFluidToShowBlacklist(classOf[GasFluid])
     ECApi.instance.addFluidToStorageBlacklist(classOf[GasFluid])
   }
 
-  class GasFluid(gas: Gas) extends Fluid("ec.internal." + gas.getName, gas.getIcon, gas.getIcon){
+  class GasFluid(gas: Gas) extends Fluid("ec.internal." + gas.getName, gas.getIcon, gas.getIcon) {
 
-    override def getLocalizedName (stack: FluidStack) =  gas.getLocalizedName
+    override def getLocalizedName(stack: FluidStack) = gas.getLocalizedName
 
     def getGas = gas
   }

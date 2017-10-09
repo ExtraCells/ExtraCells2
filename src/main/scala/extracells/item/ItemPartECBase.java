@@ -45,7 +45,7 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 			Map<Upgrades, Integer> possibleUpgradesList = part.getUpgrades();
 			for (Upgrades upgrade : possibleUpgradesList.keySet()) {
 				upgrade.registerItem(new ItemStack(this, 1, part.ordinal()),
-						possibleUpgradesList.get(upgrade));
+					possibleUpgradesList.get(upgrade));
 			}
 		}
 	}
@@ -54,8 +54,8 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 	public IPart createPartFromItemStack(ItemStack itemStack) {
 		try {
 			return PartEnum.values()[MathHelper.clamp_int(
-					itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
-					.newInstance(itemStack);
+				itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
+				.newInstance(itemStack);
 		} catch (Throwable ex) {
 			Log.error(
 				"ExtraCells2 severe error - could not create AE2 Part from ItemStack! This should not happen!\n"
@@ -68,20 +68,23 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		if (stack == null)
+		if (stack == null) {
 			return super.getItemStackDisplayName(null);
-		if (stack.getItemDamage() == PartEnum.INTERFACE.ordinal())
+		}
+		if (stack.getItemDamage() == PartEnum.INTERFACE.ordinal()) {
 			return ECApi.instance().blocks().blockInterface().maybeItem().get().getItemStackDisplayName(
-							ECApi.instance().blocks().blockInterface().maybeStack(1).get());
+				ECApi.instance().blocks().blockInterface().maybeStack(1).get());
+		}
 		return super.getItemStackDisplayName(stack);
 	}
 
 	@Override
 	public EnumRarity getRarity(ItemStack itemStack) {
 		if (itemStack != null
-				&& itemStack.getItemDamage() == PartEnum.OREDICTEXPORTBUS
-						.ordinal())
+			&& itemStack.getItemDamage() == PartEnum.OREDICTEXPORTBUS
+			.ordinal()) {
 			return super.getRarity(itemStack);
+		}
 		return EnumRarity.RARE;
 	}
 
@@ -91,7 +94,7 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
 		for (int i = 0; i < PartEnum.values().length; i++) {
 			PartEnum part = PartEnum.values()[i];
-			if(part.getMod() == null || part.getMod().isEnabled()) {
+			if (part.getMod() == null || part.getMod().isEnabled()) {
 				itemList.add(new ItemStack(item, 1, i));
 			}
 		}
@@ -99,17 +102,17 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 
 	@Override
 	public String getUnlocalizedGroupName(Set<ItemStack> otherItems,
-			ItemStack itemStack) {
+		ItemStack itemStack) {
 		return PartEnum.values()[MathHelper.clamp_int(
-				itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
-				.getGroupName();
+			itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
+			.getGroupName();
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack) {
 		return PartEnum.values()[MathHelper.clamp_int(
-				itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
-				.getUnlocalizedName();
+			itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
+			.getUnlocalizedName();
 	}
 
 	@Override
@@ -120,9 +123,9 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerModel(Item item, ModelManager manager) {
-		for(PartEnum type : PartEnum.values()){
+		for (PartEnum type : PartEnum.values()) {
 			Optional<ModelResourceLocation> location = type.getItemModel();
-			if(location.isPresent()){
+			if (location.isPresent()) {
 				ModelLoader.setCustomModelResourceLocation(item, type.ordinal(), location.get());
 			}
 		}
@@ -132,7 +135,7 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
 		int colorIndex = tintIndex / 10;
-		int index =tintIndex % 10;
+		int index = tintIndex % 10;
 		AEColor color = AEColor.values()[colorIndex];
 		return color.getVariantByTintIndex(index);
 	}

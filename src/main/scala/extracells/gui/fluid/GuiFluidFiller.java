@@ -18,7 +18,7 @@ public class GuiFluidFiller extends GuiContainer {
 	public static final int xSize = 176;
 	public static final int ySize = 166;
 	private ResourceLocation guiTexture = new ResourceLocation("extracells",
-			"textures/gui/fluidfiller.png");
+		"textures/gui/fluidfiller.png");
 	private WidgetSlotFluidContainer fluidContainerSlot;
 	private EntityPlayer player;
 
@@ -26,7 +26,7 @@ public class GuiFluidFiller extends GuiContainer {
 		super(new ContainerFluidFiller(player.inventory, tileentity));
 		this.player = player;
 		this.fluidContainerSlot = new WidgetSlotFluidContainer(player,
-				tileentity, 80, 35);
+			tileentity, 80, 35);
 	}
 
 	@Override
@@ -42,37 +42,39 @@ public class GuiFluidFiller extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		this.fontRendererObj
-				.drawString(
-						I18n.translateToLocal(
-								"extracells.block.fluidfiller.name").replace(
-								"ME ", ""), 5, 5, 0x000000);
+			.drawString(
+				I18n.translateToLocal(
+					"extracells.block.fluidfiller.name").replace(
+					"ME ", ""), 5, 5, 0x000000);
 		int i = this.fluidContainerSlot.getPosX();
 		int j = this.fluidContainerSlot.getPosY();
 		if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, i, j, 16, 16,
-				mouseX, mouseY)) {
+			mouseX, mouseY)) {
 			this.fluidContainerSlot.drawWidgetWithRect(i, j);
 			GlStateManager.disableLighting();
 			GlStateManager.disableDepth();
 			GlStateManager.colorMask(true, true, true, false);
 			this.drawGradientRect(i, j, i + 16, j + 16, -2130706433,
-					-2130706433);
+				-2130706433);
 			GlStateManager.colorMask(true, true, true, true);
 			GlStateManager.enableLighting();
 			GlStateManager.enableDepth();
-		} else
+		} else {
 			this.fluidContainerSlot.drawWidget();
+		}
 	}
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
-		if (this.fluidContainerSlot != null)
+		if (this.fluidContainerSlot != null) {
 			if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop,
-					this.fluidContainerSlot.getPosX(),
-					this.fluidContainerSlot.getPosY(), 18, 18, mouseX, mouseY)) {
+				this.fluidContainerSlot.getPosX(),
+				this.fluidContainerSlot.getPosY(), 18, 18, mouseX, mouseY)) {
 				this.fluidContainerSlot.mouseClicked(this.player.inventory
-						.getItemStack());
+					.getItemStack());
 
 			}
+		}
 	}
 }

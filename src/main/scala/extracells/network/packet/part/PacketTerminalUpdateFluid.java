@@ -34,12 +34,12 @@ public class PacketTerminalUpdateFluid extends Packet {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static class Handler implements IPacketHandlerClient{
+	public static class Handler implements IPacketHandlerClient {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
 			IItemList<IAEFluidStack> fluidStackList = data.readAEFluidStacks();
 			GuiTerminal gui = GuiUtil.getGui(GuiTerminal.class);
-			if(fluidStackList == null || gui == null){
+			if (fluidStackList == null || gui == null) {
 				return;
 			}
 

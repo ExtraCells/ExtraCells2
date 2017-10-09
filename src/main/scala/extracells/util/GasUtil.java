@@ -20,7 +20,7 @@ public class GasUtil {
 
 	public static IAEFluidStack createAEFluidStack(Gas gas) {
 		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas),
-				FluidContainerRegistry.BUCKET_VOLUME));
+			FluidContainerRegistry.BUCKET_VOLUME));
 	}
 
 	public static IAEFluidStack createAEFluidStack(GasStack gasStack) {
@@ -34,28 +34,30 @@ public class GasUtil {
 
 	public static IAEFluidStack createAEFluidStack(Gas gas, long amount) {
 		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas), 1)).setStackSize(
-				amount);
+			amount);
 	}
 
 	public static MutablePair<Integer, ItemStack> drainStack(ItemStack itemStack, GasStack gas) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return null;
+		}
 		Item item = itemStack.getItem();
 		if (item instanceof IGasItem) {
 			GasStack drained = ((IGasItem) item).removeGas(itemStack,
-					gas.amount);
+				gas.amount);
 			int amountDrained = drained != null
-					&& drained.getGas() == gas.getGas() ? drained.amount
-					: 0;
+				&& drained.getGas() == gas.getGas() ? drained.amount
+				: 0;
 			return new MutablePair<Integer, ItemStack>(amountDrained, itemStack);
 		}
 		return null;
 	}
 
 	public static MutablePair<Integer, ItemStack> fillStack(
-			ItemStack itemStack, GasStack gas) {
-		if (itemStack == null)
+		ItemStack itemStack, GasStack gas) {
+		if (itemStack == null) {
 			return null;
+		}
 		Item item = itemStack.getItem();
 		if (item instanceof IGasItem) {
 			int filled = ((IGasItem) item).addGas(itemStack, gas);
@@ -66,8 +68,9 @@ public class GasUtil {
 	}
 
 	public static int getCapacity(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return 0;
+		}
 		Item item = itemStack.getItem();
 		if (item instanceof IGasItem) {
 			return ((IGasItem) item).getMaxGas(itemStack);
@@ -76,8 +79,9 @@ public class GasUtil {
 	}
 
 	public static GasStack getGasFromContainer(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return null;
+		}
 
 		ItemStack container = itemStack.copy();
 		Item item = container.getItem();
@@ -88,8 +92,9 @@ public class GasUtil {
 	}
 
 	public static boolean isEmpty(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return false;
+		}
 		Item item = itemStack.getItem();
 		if (item instanceof IGasItem) {
 			GasStack content = ((IGasItem) item).getGas(itemStack);
@@ -99,8 +104,9 @@ public class GasUtil {
 	}
 
 	public static boolean isFilled(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return false;
+		}
 		Item item = itemStack.getItem();
 		if (item instanceof IGasItem) {
 			GasStack content = ((IGasItem) item).getGas(itemStack);
@@ -110,50 +116,60 @@ public class GasUtil {
 	}
 
 	public static boolean isGasContainer(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return false;
+		}
 		Item item = itemStack.getItem();
 		return item instanceof IGasItem;
 	}
 
 	public static GasStack getGasStack(FluidStack fluidStack) {
-		if(fluidStack == null) return null;
+		if (fluidStack == null) {
+			return null;
+		}
 		Fluid fluid = fluidStack.getFluid();
-		if(fluid instanceof  MekanismGas.GasFluid){
-			return new GasStack(((MekanismGas.GasFluid)fluid).getGas(), fluidStack.amount);
+		if (fluid instanceof MekanismGas.GasFluid) {
+			return new GasStack(((MekanismGas.GasFluid) fluid).getGas(), fluidStack.amount);
 		}
 		return null;
 	}
 
 	public static GasStack getGasStack(IAEFluidStack fluidStack) {
-		if(fluidStack == null) return null;
+		if (fluidStack == null) {
+			return null;
+		}
 		Fluid fluid = fluidStack.getFluid();
-		if(fluid instanceof  MekanismGas.GasFluid){
-			return new GasStack(((MekanismGas.GasFluid)fluid).getGas(), (int) fluidStack.getStackSize());
+		if (fluid instanceof MekanismGas.GasFluid) {
+			return new GasStack(((MekanismGas.GasFluid) fluid).getGas(), (int) fluidStack.getStackSize());
 		}
 		return null;
 	}
 
 	public static FluidStack getFluidStack(GasStack gasStack) {
-		if (gasStack == null) return null;
+		if (gasStack == null) {
+			return null;
+		}
 		Fluid fluid = MekanismGas.getFluidGasMap().get(gasStack.getGas());
-		if (fluid == null) return null;
+		if (fluid == null) {
+			return null;
+		}
 		return new FluidStack(fluid, gasStack.amount);
 	}
 
-	public static boolean isGas(FluidStack fluidStack){
+	public static boolean isGas(FluidStack fluidStack) {
 		return fluidStack != null && isGas(fluidStack.getFluid());
 	}
 
-	public static boolean isGas(Fluid fluid){
+	public static boolean isGas(Fluid fluid) {
 		return fluid != null && fluid instanceof MekanismGas.GasFluid;
 	}
 
-	public static Gas getGas(Fluid fluid){
-		if(fluid == null)
+	public static Gas getGas(Fluid fluid) {
+		if (fluid == null) {
 			return null;
-		if(fluid instanceof  MekanismGas.GasFluid){
-			return ((MekanismGas.GasFluid)fluid).getGas();
+		}
+		if (fluid instanceof MekanismGas.GasFluid) {
+			return ((MekanismGas.GasFluid) fluid).getGas();
 		}
 		return null;
 	}

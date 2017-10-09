@@ -19,40 +19,40 @@ import appeng.api.util.AEPartLocation;
 
 public class TileUtil {
 
-	public static void setOwner(World world, BlockPos pos, EntityLivingBase owner){
-		if(!(owner instanceof EntityPlayer)){
+	public static void setOwner(World world, BlockPos pos, EntityLivingBase owner) {
+		if (!(owner instanceof EntityPlayer)) {
 			return;
 		}
 		setOwner(world, pos, (EntityPlayer) owner);
 	}
 
-	public static void setOwner(World world, BlockPos pos, EntityPlayer owner){
+	public static void setOwner(World world, BlockPos pos, EntityPlayer owner) {
 		IGridNode node = getNode(world, pos);
-		if(node == null){
+		if (node == null) {
 			return;
 		}
 		int playerID = AEApi.instance().registries().players().getID(owner);
-		node.setPlayerID( playerID );
+		node.setPlayerID(playerID);
 		node.updateState();
 	}
 
-	public static void destroy(World world, BlockPos pos){
+	public static void destroy(World world, BlockPos pos) {
 		IGridNode node = getNode(world, pos);
-		if(node == null){
+		if (node == null) {
 			return;
 		}
 		node.destroy();
 	}
 
 	@Nullable
-	public static IGridNode getNode(World world, BlockPos pos){
+	public static IGridNode getNode(World world, BlockPos pos) {
 		return getNode(world, pos, AEPartLocation.INTERNAL);
 	}
 
 	@Nullable
-	public static IGridNode getNode(World world, BlockPos pos, AEPartLocation location){
+	public static IGridNode getNode(World world, BlockPos pos, AEPartLocation location) {
 		IGridHost gridHost = getTile(world, pos, IGridHost.class);
-		if(gridHost != null){
+		if (gridHost != null) {
 			return gridHost.getGridNode(location);
 		}
 		return null;
@@ -68,7 +68,7 @@ public class TileUtil {
 		}
 	}
 
-	public interface ITileAction<T>  {
+	public interface ITileAction<T> {
 		void actOnTile(T tile);
 	}
 

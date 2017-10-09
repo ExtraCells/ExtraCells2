@@ -11,14 +11,14 @@ import net.minecraft.inventory.Slot
 import net.minecraft.util.ResourceLocation
 
 class GuiHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDrive)
-  extends GuiContainer(new ContainerHardMEDrive(inventory, tile)){
+  extends GuiContainer(new ContainerHardMEDrive(inventory, tile)) {
 
 
   xSize = 176
   ySize = 166
   private val guiTexture = new ResourceLocation("extracells", "textures/gui/hardmedrive.png")
 
-  override def drawGuiContainerBackgroundLayer(f : Float, i : Int, j : Int) = {
+  override def drawGuiContainerBackgroundLayer(f: Float, i: Int, j: Int) = {
     drawDefaultBackground();
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     Minecraft.getMinecraft().renderEngine.bindTexture(guiTexture);
@@ -31,7 +31,7 @@ class GuiHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDrive)
     }
   }
 
-  override  def drawGuiContainerForegroundLayer(i: Int, j: Int) =
+  override def drawGuiContainerForegroundLayer(i: Int, j: Int) =
     fontRendererObj.drawString(BlockEnum.BLASTRESISTANTMEDRIVE.getStatName, 5, 5, 0x000000)
 
   private def renderBackground(slot: Slot) {

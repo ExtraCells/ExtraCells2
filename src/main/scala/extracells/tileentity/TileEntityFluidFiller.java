@@ -76,14 +76,16 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	@MENetworkEventSubscribe
 	public void cellUpdate(MENetworkCellArrayUpdate event) {
 		IStorageGrid storage = getStorageGrid();
-		if (storage != null)
+		if (storage != null) {
 			postChange(storage.getFluidInventory(), null, null);
+		}
 	}
 
 	@Override
 	public IGridNode getActionableNode() {
-		if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
 			return null;
+		}
 		if (this.node == null) {
 			this.node = AEApi.instance().createGridNode(this.gridBlock);
 		}
@@ -103,8 +105,9 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	@Override
 	public IGridNode getGridNode(AEPartLocation location) {
 		if (FMLCommonHandler.instance().getSide().isClient()
-				&& (worldObj == null || worldObj.isRemote))
+			&& (worldObj == null || worldObj.isRemote)) {
 			return null;
+		}
 		if (this.isFirstGetGridNode) {
 			this.isFirstGetGridNode = false;
 			getActionableNode().updateState();
@@ -120,7 +123,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	}
 
 	private ItemStack getPattern(ItemStack emptyContainer,
-			ItemStack filledContainer) {
+		ItemStack filledContainer) {
 		NBTTagList in = new NBTTagList();
 		NBTTagList out = new NBTTagList();
 		in.appendTag(emptyContainer.writeToNBT(new NBTTagCompound()));
@@ -141,11 +144,13 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 
 	private IStorageGrid getStorageGrid() {
 		this.node = getGridNode(AEPartLocation.INTERNAL);
-		if (this.node == null)
+		if (this.node == null) {
 			return null;
+		}
 		IGrid grid = this.node.getGrid();
-		if (grid == null)
+		if (grid == null) {
 			return null;
+		}
 		return grid.getCache(IStorageGrid.class);
 	}
 
@@ -160,7 +165,8 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	}
 
 	@Override
-	public void onListUpdate() {}
+	public void onListUpdate() {
+	}
 
 	@Override
 	public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
@@ -168,90 +174,99 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		boolean mustUpdate = false;
 		this.fluids.clear();
 		for (IAEFluidStack fluid : ((IMEMonitor<IAEFluidStack>) monitor)
-				.getStorageList()) {
-			if (!oldFluids.contains(fluid.getFluid()))
+			.getStorageList()) {
+			if (!oldFluids.contains(fluid.getFluid())) {
 				mustUpdate = true;
-			else
+			} else {
 				oldFluids.remove(fluid.getFluid());
+			}
 			this.fluids.add(fluid.getFluid());
 		}
 		if (!(oldFluids.isEmpty() && !mustUpdate)) {
 			if (getGridNode(AEPartLocation.INTERNAL) != null
-					&& getGridNode(AEPartLocation.INTERNAL).getGrid() != null) {
+				&& getGridNode(AEPartLocation.INTERNAL).getGrid() != null) {
 				getGridNode(AEPartLocation.INTERNAL).getGrid().postEvent(
-						new MENetworkCraftingPatternChange(this,
-								getGridNode(AEPartLocation.INTERNAL)));
+					new MENetworkCraftingPatternChange(this,
+						getGridNode(AEPartLocation.INTERNAL)));
 			}
 		}
 	}
 
 	public void postUpdateEvent() {
 		if (getGridNode(AEPartLocation.INTERNAL) != null
-				&& getGridNode(AEPartLocation.INTERNAL).getGrid() != null) {
+			&& getGridNode(AEPartLocation.INTERNAL).getGrid() != null) {
 			getGridNode(AEPartLocation.INTERNAL).getGrid().postEvent(
-					new MENetworkCraftingPatternChange(this,
-							getGridNode(AEPartLocation.INTERNAL)));
+				new MENetworkCraftingPatternChange(this,
+					getGridNode(AEPartLocation.INTERNAL)));
 		}
 	}
 
 	@MENetworkEventSubscribe
 	public void powerUpdate(MENetworkPowerStatusChange event) {
 		IStorageGrid storage = getStorageGrid();
-		if (storage != null)
+		if (storage != null) {
 			postChange(storage.getFluidInventory(), null, null);
+		}
 	}
 
 	@Override
 	public void provideCrafting(ICraftingProviderHelper craftingTracker) {
 		IStorageGrid storage = getStorageGrid();
-		if (storage == null)
+		if (storage == null) {
 			return;
+		}
 		IMEMonitor<IAEFluidStack> fluidStorage = storage.getFluidInventory();
 		for (IAEFluidStack fluidStack : fluidStorage.getStorageList()) {
 			Fluid fluid = fluidStack.getFluid();
-			if (fluid == null)
+			if (fluid == null) {
 				continue;
+			}
 			int maxCapacity = FluidHelper.getCapacity(this.containerItem);
-			if (maxCapacity == 0)
+			if (maxCapacity == 0) {
 				continue;
+			}
 			Pair<Integer, ItemStack> filled = FluidHelper.fillStack(
-					this.containerItem.copy(), new FluidStack(fluid,
-							maxCapacity));
-			if (filled.getRight() == null)
+				this.containerItem.copy(), new FluidStack(fluid,
+					maxCapacity));
+			if (filled.getRight() == null) {
 				continue;
+			}
 			ItemStack pattern = getPattern(this.containerItem, filled.getRight());
 			ICraftingPatternItem patter = (ICraftingPatternItem) pattern
-					.getItem();
+				.getItem();
 			craftingTracker.addCraftingOption(this,
-					patter.getPatternForItem(pattern, worldObj));
+				patter.getPatternForItem(pattern, worldObj));
 		}
 
 	}
 
 	@Override
 	public boolean pushPattern(ICraftingPatternDetails patternDetails,
-			InventoryCrafting table) {
-		if (this.returnStack != null)
+		InventoryCrafting table) {
+		if (this.returnStack != null) {
 			return false;
+		}
 		ItemStack filled = patternDetails.getCondensedOutputs()[0]
-				.getItemStack();
+			.getItemStack();
 		FluidStack fluid = FluidHelper.getFluidFromContainer(filled);
 		IStorageGrid storage = getStorageGrid();
-		if (storage == null)
+		if (storage == null) {
 			return false;
+		}
 		IAEFluidStack fluidStack = AEUtils.createFluidStack(
-						new FluidStack(
-								fluid.getFluid(),
-								FluidHelper.getCapacity(patternDetails
-										.getCondensedInputs()[0].getItemStack())));
+			new FluidStack(
+				fluid.getFluid(),
+				FluidHelper.getCapacity(patternDetails
+					.getCondensedInputs()[0].getItemStack())));
 		IAEFluidStack extracted = storage.getFluidInventory()
-				.extractItems(fluidStack.copy(), Actionable.SIMULATE,
-						new MachineSource(this));
+			.extractItems(fluidStack.copy(), Actionable.SIMULATE,
+				new MachineSource(this));
 		if (extracted == null
-				|| extracted.getStackSize() != fluidStack.getStackSize())
+			|| extracted.getStackSize() != fluidStack.getStackSize()) {
 			return false;
+		}
 		storage.getFluidInventory().extractItems(fluidStack,
-				Actionable.MODULATE, new MachineSource(this));
+			Actionable.MODULATE, new MachineSource(this));
 		this.returnStack = filled;
 		this.ticksToFinish = 40;
 		return true;
@@ -260,20 +275,23 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
-		if (tagCompound.hasKey("container"))
+		if (tagCompound.hasKey("container")) {
 			this.containerItem = ItemStack.loadItemStackFromNBT(tagCompound
-					.getCompoundTag("container"));
-		else if (tagCompound.hasKey("isContainerEmpty")
-				&& tagCompound.getBoolean("isContainerEmpty"))
+				.getCompoundTag("container"));
+		} else if (tagCompound.hasKey("isContainerEmpty")
+			&& tagCompound.getBoolean("isContainerEmpty")) {
 			this.containerItem = null;
-		if (tagCompound.hasKey("return"))
+		}
+		if (tagCompound.hasKey("return")) {
 			this.returnStack = ItemStack.loadItemStackFromNBT(tagCompound
-					.getCompoundTag("return"));
-		else if (tagCompound.hasKey("isReturnEmpty")
-				&& tagCompound.getBoolean("isReturnEmpty"))
+				.getCompoundTag("return"));
+		} else if (tagCompound.hasKey("isReturnEmpty")
+			&& tagCompound.getBoolean("isReturnEmpty")) {
 			this.returnStack = null;
-		if (tagCompound.hasKey("time"))
+		}
+		if (tagCompound.hasKey("time")) {
 			this.ticksToFinish = tagCompound.getInteger("time");
+		}
 		if (hasWorldObj()) {
 			IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 			if (tagCompound.hasKey("nodes") && node != null) {
@@ -313,23 +331,26 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 
 	@Override
 	public void update() {
-		if (worldObj == null)
+		if (worldObj == null) {
 			return;
-		if (this.ticksToFinish > 0)
+		}
+		if (this.ticksToFinish > 0) {
 			this.ticksToFinish = this.ticksToFinish - 1;
+		}
 		if (this.ticksToFinish <= 0 && this.returnStack != null) {
 			IStorageGrid storage = getStorageGrid();
-			if (storage == null)
+			if (storage == null) {
 				return;
+			}
 			IAEItemStack toInject = AEApi.instance().storage()
-					.createItemStack(this.returnStack);
+				.createItemStack(this.returnStack);
 			if (storage.getItemInventory().canAccept(toInject.copy())) {
 				IAEItemStack nodAdded = storage.getItemInventory().injectItems(
-						toInject.copy(), Actionable.SIMULATE,
-						new MachineSource(this));
+					toInject.copy(), Actionable.SIMULATE,
+					new MachineSource(this));
 				if (nodAdded == null) {
 					storage.getItemInventory().injectItems(toInject,
-							Actionable.MODULATE, new MachineSource(this));
+						Actionable.MODULATE, new MachineSource(this));
 					this.returnStack = null;
 				}
 			}
@@ -340,30 +361,35 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	public void updateGrid(IGrid oldGrid, IGrid newGrid) {
 		if (oldGrid != null) {
 			IStorageGrid storage = oldGrid.getCache(IStorageGrid.class);
-			if (storage != null)
+			if (storage != null) {
 				storage.getFluidInventory().removeListener(this);
+			}
 		}
 		if (newGrid != null) {
 			IStorageGrid storage = newGrid.getCache(IStorageGrid.class);
-			if (storage != null)
+			if (storage != null) {
 				storage.getFluidInventory().addListener(this, null);
+			}
 		}
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
 		super.writeToNBT(tagCompound);
-		if (this.containerItem != null)
+		if (this.containerItem != null) {
 			tagCompound.setTag("container", this.containerItem.writeToNBT(new NBTTagCompound()));
-		else
+		} else {
 			tagCompound.setBoolean("isContainerEmpty", true);
-		if (this.returnStack != null)
+		}
+		if (this.returnStack != null) {
 			tagCompound.setTag("return", this.returnStack.writeToNBT(new NBTTagCompound()));
-		else
+		} else {
 			tagCompound.setBoolean("isReturnEmpty", true);
+		}
 		tagCompound.setInteger("time", this.ticksToFinish);
-		if (!hasWorldObj())
+		if (!hasWorldObj()) {
 			return tagCompound;
+		}
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 		if (node != null) {
 			NBTTagCompound nodeTag = new NBTTagCompound();

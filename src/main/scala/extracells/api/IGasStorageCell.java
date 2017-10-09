@@ -11,10 +11,9 @@ import appeng.api.storage.ICellWorkbenchItem;
 public interface IGasStorageCell extends ICellWorkbenchItem {
 
 	/**
-	 *
 	 * @param ItemStack
 	 * @return the Fluid Filter. An empty ArrayList or null if the cell accepts
-	 *         all Gas
+	 * all Gas
 	 */
 	ArrayList<Fluid> getFilter(ItemStack is);
 

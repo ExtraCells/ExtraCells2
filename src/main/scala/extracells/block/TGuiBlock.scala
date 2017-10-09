@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 trait TGuiBlock {
 
   @SideOnly(Side.CLIENT)
-  def getClientGuiElement(player: EntityPlayer, world: World, pos: BlockPos) : Any = null
+  def getClientGuiElement(player: EntityPlayer, world: World, pos: BlockPos): Any = null
 
   def getServerGuiElement(player: EntityPlayer, world: World, pos: BlockPos): Any = null
 

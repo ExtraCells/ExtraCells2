@@ -27,26 +27,27 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 	@Override
 	public boolean drawTooltip(int posX, int posY, int mouseX, int mouseY) {
 		if (this.fluid == null
-				|| !isPointInRegion(posX, posY, this.height, this.width,
-						mouseX, mouseY))
+			|| !isPointInRegion(posX, posY, this.height, this.width,
+			mouseX, mouseY)) {
 			return false;
+		}
 
 		List<String> description = new ArrayList<String>();
 		description
-				.add(I18n
-						.translateToLocal("gui.tooltips.appliedenergistics2.Craftable"));
+			.add(I18n
+				.translateToLocal("gui.tooltips.appliedenergistics2.Craftable"));
 		description.add(this.fluid.getLocalizedName(new FluidStack(this.fluid,
-				1)));
+			1)));
 		drawHoveringText(description, mouseX - this.guiFluidTerminal.guiLeft(),
-				mouseY - this.guiFluidTerminal.guiTop() + 18,
-				Minecraft.getMinecraft().fontRendererObj);
+			mouseY - this.guiFluidTerminal.guiTop() + 18,
+			Minecraft.getMinecraft().fontRendererObj);
 		return true;
 	}
 
 	@Override
 	public void drawWidget(int posX, int posY) {
 		Minecraft.getMinecraft().renderEngine
-				.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -58,8 +59,8 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 			String str = I18n.translateToLocal("extracells.gui.craft");
 			str = WordUtils.capitalize(str.toLowerCase());
 			Minecraft.getMinecraft().fontRendererObj.drawString(
-					TextFormatting.WHITE + str, 52 + posX - str.length(),
-					posY + 24, 0);
+				TextFormatting.WHITE + str, 52 + posX - str.length(),
+				posY + 24, 0);
 		}
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);

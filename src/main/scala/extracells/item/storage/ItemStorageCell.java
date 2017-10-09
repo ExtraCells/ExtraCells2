@@ -66,7 +66,7 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 	public EnumRarity getRarity(ItemStack itemStack) {
 		return EnumRarity.RARE;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs creativeTab, List listSubItems) {
@@ -88,7 +88,7 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 		}
 		return itemStack.getItem() == this;
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
 		if (!player.isSneaking()) {

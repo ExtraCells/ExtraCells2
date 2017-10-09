@@ -19,7 +19,7 @@ import appeng.api.storage.data.IAEItemStack;
 import extracells.item.storage.ItemStorageCellPhysical;
 
 public enum EnumBlockContainerMode {
-	PLACE{
+	PLACE {
 		@Override
 		public void useMode(ItemStorageCellPhysical storagePhysical, ItemStack itemStack, IAEItemStack storageStack, IAEItemStack request, World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, float hitX, float hitY, float hitZ) {
 			super.useMode(storagePhysical, itemStack, storageStack, request, world, pos, player, side, hand, hitX, hitY, hitZ);
@@ -30,7 +30,7 @@ public enum EnumBlockContainerMode {
 			storagePhysical.extractAEPower(player.getHeldItem(hand), 20.0D);
 		}
 	},
-	TRADE{
+	TRADE {
 		@Override
 		public void useMode(ItemStorageCellPhysical storagePhysical, ItemStack itemStack, IAEItemStack storageStack, IAEItemStack request, World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, float hitX, float hitY, float hitZ) {
 			super.useMode(storagePhysical, itemStack, storageStack, request, world, pos, player, side, hand, hitX, hitY, hitZ);
@@ -39,7 +39,7 @@ public enum EnumBlockContainerMode {
 			placeBlock(storagePhysical, request.getItemStack(), world, player, pos, side, hand, hitX, hitY, hitZ);
 		}
 	},
-	TRADE_BIG{
+	TRADE_BIG {
 		@Override
 		public void useMode(ItemStorageCellPhysical storagePhysical, ItemStack itemStack, IAEItemStack storageStack, IAEItemStack request, World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, float hitX, float hitY, float hitZ) {
 			super.useMode(storagePhysical, itemStack, storageStack, request, world, pos, player, side, hand, hitX, hitY, hitZ);
@@ -63,25 +63,25 @@ public enum EnumBlockContainerMode {
 		}
 	};
 
-	public static EnumBlockContainerMode get(int modeIndex){
-		if(values().length <= modeIndex){
+	public static EnumBlockContainerMode get(int modeIndex) {
+		if (values().length <= modeIndex) {
 			return values()[0];
 		}
 		return values()[modeIndex];
 	}
 
-	public void useMode(ItemStorageCellPhysical storagePhysical, ItemStack itemStack, IAEItemStack storageStack, IAEItemStack request, World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, float hitX, float hitY, float hitZ){
+	public void useMode(ItemStorageCellPhysical storagePhysical, ItemStack itemStack, IAEItemStack storageStack, IAEItemStack request, World world, BlockPos pos, EntityPlayer player, EnumFacing side, EnumHand hand, float hitX, float hitY, float hitZ) {
 		IMEInventoryHandler cellInventory = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
 		cellInventory.extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
 	}
 
 	public void placeBlocks(ItemStorageCellPhysical storagePhysical, ItemStack itemstack, World world, EntityPlayer player, BlockPos pos, EnumFacing side, EnumHand hand, float hitX, float hitY, float hitZ, BlockPos minOffset, BlockPos maxOffset) {
-		for(int xOffset = minOffset.getX();xOffset <= maxOffset.getX();xOffset++){
-			for(int yOffset = minOffset.getY();yOffset <= maxOffset.getY();yOffset++){
-				for(int zOffset = minOffset.getZ();zOffset <= maxOffset.getZ();zOffset++){
+		for (int xOffset = minOffset.getX(); xOffset <= maxOffset.getX(); xOffset++) {
+			for (int yOffset = minOffset.getY(); yOffset <= maxOffset.getY(); yOffset++) {
+				for (int zOffset = minOffset.getZ(); zOffset <= maxOffset.getZ(); zOffset++) {
 					BlockPos position = pos.add(xOffset, yOffset, zOffset);
 					IBlockState blockState = world.getBlockState(position);
-					if(blockState.getBlock() != Blocks.BEDROCK && blockState.getBlockHardness(world, pos) >= 0.0F) {
+					if (blockState.getBlock() != Blocks.BEDROCK && blockState.getBlockHardness(world, pos) >= 0.0F) {
 						world.destroyBlock(position, true);
 						placeBlock(storagePhysical, itemstack, world, player, position, side, hand, hitX, hitY, hitZ);
 					}
@@ -95,7 +95,7 @@ public enum EnumBlockContainerMode {
 		ItemBlock itemblock = (ItemBlock) itemstack.getItem();
 		BlockPos position = pos.offset(side.getOpposite());
 		itemblock.onItemUseFirst(itemstack, player, world, position, side, xOffset, yOffset, zOffset, hand);
-		itemblock.onItemUse(itemstack, player, world,  position, hand, side, xOffset, yOffset, zOffset);
+		itemblock.onItemUse(itemstack, player, world, position, hand, side, xOffset, yOffset, zOffset);
 	}
 
 }

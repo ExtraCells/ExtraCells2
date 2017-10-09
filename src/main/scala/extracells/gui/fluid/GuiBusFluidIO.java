@@ -29,7 +29,7 @@ import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
 public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
-		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
+	WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
 	private PartFluidIO part;
 	private byte filterSize;
@@ -84,8 +84,9 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		for (Object button : this.buttonList) {
-			if (button instanceof WidgetRedstoneModes)
+			if (button instanceof WidgetRedstoneModes) {
 				((WidgetRedstoneModes) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
+			}
 		}
 	}
 
@@ -116,7 +117,7 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 		pointX -= k1;
 		pointY -= l1;
 		return pointX >= top - 1 && pointX < top + height + 1
-				&& pointY >= left - 1 && pointY < left + width + 1;
+			&& pointY >= left - 1 && pointY < left + width + 1;
 	}
 
 	@Override
@@ -149,8 +150,9 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 	public void setRedstoneControlled(boolean _redstoneControlled) {
 		this.redstoneControlled = _redstoneControlled;
 		this.buttonList.clear();
-		if (this.redstoneControlled)
+		if (this.redstoneControlled) {
 			this.buttonList.add(new WidgetRedstoneModes(0, this.guiLeft - 18, this.guiTop, 16, 16, this.part.getRedstoneMode()));
+		}
 	}
 
 	public boolean shiftClick(ItemStack itemStack) {

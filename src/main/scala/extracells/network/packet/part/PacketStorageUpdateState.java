@@ -32,12 +32,12 @@ public class PacketStorageUpdateState extends Packet {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static class Handler implements IPacketHandlerClient{
+	public static class Handler implements IPacketHandlerClient {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
 			boolean hasTermHandler = data.readBoolean();
 			ContainerStorage containerStorage = GuiUtil.getContainer(player, ContainerStorage.class);
-			if(containerStorage == null){
+			if (containerStorage == null) {
 				return;
 			}
 

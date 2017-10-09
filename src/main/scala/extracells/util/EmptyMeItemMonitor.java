@@ -68,7 +68,8 @@ public class EmptyMeItemMonitor implements IMEMonitor<IAEItemStack> {
 	}
 
 	@Override
-	public void removeListener(IMEMonitorHandlerReceiver<IAEItemStack> l) {}
+	public void removeListener(IMEMonitorHandlerReceiver<IAEItemStack> l) {
+	}
 
 	@Override
 	public boolean validForPass(int i) {

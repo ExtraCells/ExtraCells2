@@ -14,7 +14,7 @@ public class ContainerPlaneFormation extends ContainerUpgradeable {
 	private GuiFluidPlaneFormation gui;
 
 	public ContainerPlaneFormation(PartFluidPlaneFormation part,
-			EntityPlayer player) {
+		EntityPlayer player) {
 		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
 		bindPlayerInventory(player.inventory);
 		bindUpgradeInventory(player.inventory, part);
@@ -24,7 +24,7 @@ public class ContainerPlaneFormation extends ContainerUpgradeable {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 102));
+					8 + j * 18, i * 18 + 102));
 			}
 		}
 
@@ -44,8 +44,9 @@ public class ContainerPlaneFormation extends ContainerUpgradeable {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		if (this.gui != null)
+		if (this.gui != null) {
 			this.gui.shiftClick(getSlot(slotnumber).getStack());
+		}
 
 		ItemStack transferredStack = null;
 		Slot slot = this.inventorySlots.get(slotnumber);

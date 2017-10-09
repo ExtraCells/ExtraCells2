@@ -34,12 +34,12 @@ public class PacketTerminalSelectFluidClient extends Packet {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static class Handler implements IPacketHandlerClient{
+	public static class Handler implements IPacketHandlerClient {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
 			Fluid fluid = data.readFluid();
 			GuiTerminal guiTerminal = GuiUtil.getGui(GuiTerminal.class);
-			if(fluid == null || guiTerminal == null){
+			if (fluid == null || guiTerminal == null) {
 				return;
 			}
 

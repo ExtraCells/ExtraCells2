@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Optional.{Interface, Method}
 
 
 @Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true)
-class PartGasImport extends PartFluidImport with IGasHandler{
+class PartGasImport extends PartFluidImport with IGasHandler {
 
   private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
@@ -84,7 +84,7 @@ class PartGasImport extends PartFluidImport with IGasHandler{
     if (gasType == null) {
       drained = facingTank.drawGas(side.getOpposite, toDrain, false)
     }
-    else if (facingTank.canDrawGas(side.getOpposite, gasType)){
+    else if (facingTank.canDrawGas(side.getOpposite, gasType)) {
       drained = facingTank.drawGas(side.getOpposite, toDrain, false)
     }
     if (drained == null || drained.amount <= 0 || drained.getGas == null) return false
@@ -109,19 +109,19 @@ class PartGasImport extends PartFluidImport with IGasHandler{
 
   @Method(modid = "MekanismAPI|gas")
   override def receiveGas(side: EnumFacing, stack: GasStack, doTransfer: Boolean): Int = {
-    if (stack == null || stack.amount <= 0 || ! canReceiveGas(side, stack.getGas))
+    if (stack == null || stack.amount <= 0 || !canReceiveGas(side, stack.getGas))
       return 0
     val amount = Math.min(stack.amount, 125 + this.speedState * 125)
     val gasStack = GasUtil.createAEFluidStack(stack.getGas, amount)
     val notInjected = {
       if (getGridBlock == null) {
         gasStack
-      }else{
+      } else {
         val monitor: IMEMonitor[IAEFluidStack] = getGridBlock.getFluidMonitor
         if (monitor == null)
           gasStack
         else
-          monitor.injectItems(gasStack, if (true)  Actionable.MODULATE else Actionable.SIMULATE, new MachineSource(this))
+          monitor.injectItems(gasStack, if (true) Actionable.MODULATE else Actionable.SIMULATE, new MachineSource(this))
       }
     }
     if (notInjected == null)
@@ -140,10 +140,10 @@ class PartGasImport extends PartFluidImport with IGasHandler{
   override def canReceiveGas(side: EnumFacing, gasType: Gas): Boolean = {
     val fluid = MekanismGas.getFluidGasMap.get(gasType)
     var isEmpty = true
-    for(filter <- filterFluids){
-      if(filter != null){
+    for (filter <- filterFluids) {
+      if (filter != null) {
         isEmpty = false
-        if(filter == fluid)
+        if (filter == fluid)
           return true
       }
     }

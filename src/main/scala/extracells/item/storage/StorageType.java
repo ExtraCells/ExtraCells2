@@ -37,7 +37,7 @@ public class StorageType {
 		return definition;
 	}
 
-	public String getModelName(){
+	public String getModelName() {
 		return "storage/" + definition + "/" + storageName + "/" + size + "k";
 	}
 }

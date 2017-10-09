@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumFacing
 
 
-class ECGridBlockVibrantChamber(host: TileEntityVibrationChamberFluid) extends IGridBlock{
+class ECGridBlockVibrantChamber(host: TileEntityVibrationChamberFluid) extends IGridBlock {
   protected var grid: IGrid = null
   protected var usedChannels: Int = 0
 

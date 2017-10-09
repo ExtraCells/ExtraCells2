@@ -16,31 +16,31 @@ public class BlockDefinition implements IBlockDefinition {
 	@Override
 	public ITileDefinition blockInterface() {
 		return new BlockItemDefinitions(BlockEnum.ECBASEBLOCK.getBlock(),
-				TileEntityFluidInterface.class);
+			TileEntityFluidInterface.class);
 	}
 
 	@Override
 	public ITileDefinition certusTank() {
 		return new BlockItemDefinitions(BlockEnum.CERTUSTANK.getBlock(),
-				TileEntityCertusTank.class);
+			TileEntityCertusTank.class);
 	}
 
 	@Override
 	public ITileDefinition fluidCrafter() {
 		return new BlockItemDefinitions(BlockEnum.FLUIDCRAFTER.getBlock(),
-				TileEntityFluidCrafter.class);
+			TileEntityFluidCrafter.class);
 	}
 
 	@Override
 	public ITileDefinition fluidFiller() {
 		return new BlockItemDefinitions(BlockEnum.FLUIDCRAFTER.getBlock(), 1,
-				TileEntityFluidFiller.class);
+			TileEntityFluidFiller.class);
 	}
 
 	@Override
 	public ITileDefinition walrus() {
 		return new BlockItemDefinitions(BlockEnum.WALRUS.getBlock(),
-				TileEntityWalrus.class);
+			TileEntityWalrus.class);
 	}
 
 }

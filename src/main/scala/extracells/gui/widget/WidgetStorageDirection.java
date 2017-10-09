@@ -24,7 +24,7 @@ public class WidgetStorageDirection extends GuiButton {
 	private AccessRestriction access;
 
 	public WidgetStorageDirection(int ID, int xPos, int yPos, int width,
-			int height, AccessRestriction mode) {
+		int height, AccessRestriction mode) {
 		super(ID, xPos, yPos, width, height, "");
 		this.access = mode;
 	}
@@ -35,34 +35,34 @@ public class WidgetStorageDirection extends GuiButton {
 		mouseDragged(minecraftInstance, x, y);
 
 		minecraftInstance.getTextureManager().bindTexture(
-				new ResourceLocation("appliedenergistics2",
-						"textures/guis/states.png"));
+			new ResourceLocation("appliedenergistics2",
+				"textures/guis/states.png"));
 		drawTexturedModalRect(this.xPosition, this.yPosition, 240, 240, 16, 16);
 
 		switch (this.access) {
-		case NO_ACCESS:
-			drawTexturedModalRect(this.xPosition, this.yPosition, 96, 0, 16, 16);
-			break;
-		case READ:
-			drawTexturedModalRect(this.xPosition, this.yPosition, 16, 144, 16,
+			case NO_ACCESS:
+				drawTexturedModalRect(this.xPosition, this.yPosition, 96, 0, 16, 16);
+				break;
+			case READ:
+				drawTexturedModalRect(this.xPosition, this.yPosition, 16, 144, 16,
 					16);
-			break;
-		case READ_WRITE:
-			drawTexturedModalRect(this.xPosition, this.yPosition, 32, 144, 16,
+				break;
+			case READ_WRITE:
+				drawTexturedModalRect(this.xPosition, this.yPosition, 32, 144, 16,
 					16);
-			break;
-		case WRITE:
-			drawTexturedModalRect(this.xPosition, this.yPosition, 0, 144, 16,
+				break;
+			case WRITE:
+				drawTexturedModalRect(this.xPosition, this.yPosition, 0, 144, 16,
 					16);
-			break;
-		default:
-			break;
+				break;
+			default:
+				break;
 		}
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected void drawHoveringText(List list, int x, int y,
-			FontRenderer fontrenderer) {
+		FontRenderer fontrenderer) {
 		if (!list.isEmpty()) {
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			RenderHelper.disableStandardItemLighting();
@@ -92,22 +92,22 @@ public class WidgetStorageDirection extends GuiButton {
 			int l1 = -267386864;
 			this.drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
 			this.drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4,
-					l1, l1);
+				l1, l1);
 			this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1,
-					l1);
+				l1);
 			this.drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
 			this.drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3,
-					l1, l1);
+				l1, l1);
 			int i2 = 1347420415;
 			int j2 = (i2 & 16711422) >> 1 | i2 & -16777216;
 			this.drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3
-					- 1, i2, j2);
+				- 1, i2, j2);
 			this.drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1
-					+ 3 - 1, i2, j2);
+				+ 3 - 1, i2, j2);
 			this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2,
-					i2);
+				i2);
 			this.drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3,
-					j2, j2);
+				j2, j2);
 
 			for (int k2 = 0; k2 < list.size(); ++k2) {
 				String s1 = (String) list.get(k2);
@@ -131,27 +131,27 @@ public class WidgetStorageDirection extends GuiButton {
 	public void drawTooltip(int mouseX, int mouseY, int guiXPos, int guiYPos) {
 		List<String> description = new ArrayList<String>();
 		description.add(I18n
-				.translateToLocal("gui.tooltips.appliedenergistics2.IOMode"));
+			.translateToLocal("gui.tooltips.appliedenergistics2.IOMode"));
 		String explanation = "";
 		switch (this.access) {
-		case NO_ACCESS:
-			explanation = I18n
+			case NO_ACCESS:
+				explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.Disabled");
-			break;
-		case READ:
-			explanation = I18n
+				break;
+			case READ:
+				explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.Read");
-			break;
-		case READ_WRITE:
-			explanation = I18n
+				break;
+			case READ_WRITE:
+				explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.ReadWrite");
-			break;
-		case WRITE:
-			explanation = I18n
+				break;
+			case WRITE:
+				explanation = I18n
 					.translateToLocal("gui.tooltips.appliedenergistics2.Write");
-			break;
-		default:
-			break;
+				break;
+			default:
+				break;
 		}
 
 		for (String current : Splitter.fixedLength(30).split(explanation)) {
@@ -161,10 +161,10 @@ public class WidgetStorageDirection extends GuiButton {
 		Minecraft mc = Minecraft.getMinecraft();
 
 		if (mouseX >= this.xPosition && mouseX <= this.xPosition + this.width
-				&& mouseY >= this.yPosition
-				&& mouseY <= this.yPosition + this.height) {
+			&& mouseY >= this.yPosition
+			&& mouseY <= this.yPosition + this.height) {
 			drawHoveringText(description, mouseX - guiXPos, mouseY - guiYPos,
-					mc.fontRendererObj);
+				mc.fontRendererObj);
 		}
 	}
 

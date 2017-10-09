@@ -80,20 +80,19 @@ public class ECPrivateInventory implements IInventory {
 	/**
 	 * Increases the stack size of a slot.
 	 *
-	 * @param slotId
-	 *        ID of the slot
-	 * @param amount
-	 *        amount to be drained
-	 *
+	 * @param slotId ID of the slot
+	 * @param amount amount to be drained
 	 * @return the added Stack
 	 */
 	public ItemStack incrStackSize(int slotId, int amount) {
 		ItemStack slot = this.slots[slotId];
-		if (slot == null)
+		if (slot == null) {
 			return null;
+		}
 		int stackLimit = getInventoryStackLimit();
-		if (stackLimit > slot.getMaxStackSize())
+		if (stackLimit > slot.getMaxStackSize()) {
 			stackLimit = slot.getMaxStackSize();
+		}
 		ItemStack added = slot.copy();
 		added.stackSize = slot.stackSize + amount > stackLimit ? stackLimit : amount;
 		slot.stackSize += added.stackSize;
@@ -128,8 +127,8 @@ public class ECPrivateInventory implements IInventory {
 	}
 
 	public void readFromNBT(NBTTagList nbtList) {
-		if(nbtList == null){
-			for(int i = 0; i < slots.length; i++){
+		if (nbtList == null) {
+			for (int i = 0; i < slots.length; i++) {
 				slots[i] = null;
 			}
 			return;
@@ -184,7 +183,7 @@ public class ECPrivateInventory implements IInventory {
 
 	@Override
 	public void clear() {
-		for(int i = 0;i < slots.length;i++){
+		for (int i = 0; i < slots.length; i++) {
 			slots[i] = null;
 		}
 	}

@@ -19,12 +19,12 @@ import net.minecraftforge.fml.common.Optional
 import org.apache.commons.lang3.tuple.MutablePair
 
 
-class PartGasConversionMonitor extends PartFluidConversionMonitor{
+class PartGasConversionMonitor extends PartFluidConversionMonitor {
 
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
   override def onActivate(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
-    if(isMekEnabled)
+    if (isMekEnabled)
       onActivateGas(player, hand, pos)
     else
       false

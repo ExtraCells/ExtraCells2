@@ -94,10 +94,10 @@ public enum PartModels implements IPartModel {
 	PartModels(boolean requireConnection, Object... modelNames) {
 		this.requireConnection = requireConnection;
 		ImmutableList.Builder builder = new ImmutableList.Builder();
-		for(Object o : modelNames){
-			if(o instanceof IPartModel){
+		for (Object o : modelNames) {
+			if (o instanceof IPartModel) {
 				builder.addAll(((IPartModel) o).getModels());
-			}else {
+			} else {
 				builder.add(new ResourceLocation(Constants.MOD_ID, "part/" + o.toString()));
 			}
 		}
@@ -115,9 +115,9 @@ public enum PartModels implements IPartModel {
 		return locations;
 	}
 
-	public static void registerModels(){
+	public static void registerModels() {
 		IPartModels partModels = AEApi.instance().registries().partModels();
-		for(PartModels model : values()){
+		for (PartModels model : values()) {
 			partModels.registerModels(model.getModels());
 		}
 	}

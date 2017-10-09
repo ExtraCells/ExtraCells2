@@ -14,7 +14,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 
-public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter>{
+public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter> {
 
 	public DriverOreDictExportBus() {
 		super(PartEnum.OREDICTEXPORTBUS, Enviroment.class);
@@ -25,43 +25,47 @@ public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter>{
 		return new Enviroment(host);
 	}
 
-	public class Enviroment extends ManagedEnvironment implements NamedBlock{
-		
+	public class Enviroment extends ManagedEnvironment implements NamedBlock {
+
 		protected final TileEntity tile;
 		protected final IPartHost host;
-		
-		public Enviroment(IPartHost host){
+
+		public Enviroment(IPartHost host) {
 			tile = (TileEntity) host;
 			this.host = host;
 			setNode(Network.newNode(this, Visibility.Network).
-	                withComponent("me_exportbus").
-	                create());
+				withComponent("me_exportbus").
+				create());
 		}
 
 		@Callback(doc = "function(side:number):string -- Get the configuration of the ore dict export bus pointing in the specified direction.")
-		public Object[] getOreConfiguration(Context context, Arguments args){
+		public Object[] getOreConfiguration(Context context, Arguments args) {
 			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
-			if (dir == null || dir == AEPartLocation.INTERNAL)
+			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
+			}
 			PartOreDictExporter part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
-			if (part == null)
+			if (part == null) {
 				return new Object[]{null, "no export bus"};
+			}
 			return new Object[]{part.filter};
 		}
-		
+
 		@Callback(doc = "function(side:number[, filter:string]):boolean -- Set the configuration of the ore dict export bus pointing in the specified direction.")
-		public Object[] setOreConfiguration(Context context, Arguments args){
+		public Object[] setOreConfiguration(Context context, Arguments args) {
 			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
-			if (dir == null || dir == AEPartLocation.INTERNAL)
+			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
+			}
 			PartOreDictExporter part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
-			if (part == null)
+			if (part == null) {
 				return new Object[]{false, "no export bus"};
+			}
 			part.filter = args.optString(1, "");
 			context.pause(0.5);
 			return new Object[]{true};
 		}
-		
+
 
 		@Override
 		public String preferredName() {
@@ -71,8 +75,8 @@ public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter>{
 		@Override
 		public int priority() {
 			return 0;
-		}	
-		
+		}
+
 	}
 
 }

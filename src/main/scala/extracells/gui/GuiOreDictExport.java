@@ -61,12 +61,12 @@ public class GuiOreDictExport extends GuiBase {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		this.fontRendererObj.drawString(
-				I18n.translateToLocal(
-						"extracells.part.oredict.export.name").replace("ME ",
-						""), 8, 5, 0x000000);
+			I18n.translateToLocal(
+				"extracells.part.oredict.export.name").replace("ME ",
+				""), 8, 5, 0x000000);
 		this.fontRendererObj.drawString(
-				I18n.translateToLocal("container.inventory"), 8,
-				this.ySize - 94, 0x000000);
+			I18n.translateToLocal("container.inventory"), 8,
+			this.ySize - 94, 0x000000);
 
 	}
 
@@ -74,8 +74,8 @@ public class GuiOreDictExport extends GuiBase {
 	public void initGui() {
 		super.initGui();
 		this.buttonList.add(new GuiButton(1,
-				this.guiLeft + this.xSize / 2 - 44, this.guiTop + 35, 88, 20,
-				I18n.translateToLocal("extracells.tooltip.save")));
+			this.guiLeft + this.xSize / 2 - 44, this.guiTop + 35, 88, 20,
+			I18n.translateToLocal("extracells.tooltip.save")));
 		this.searchbar = new GuiTextField(0, this.fontRendererObj, this.guiLeft
 			+ this.xSize / 2 - 75, this.guiTop + 20, 150, 10) {
 
@@ -87,9 +87,10 @@ public class GuiOreDictExport extends GuiBase {
 			@Override
 			public void mouseClicked(int x, int y, int mouseBtn) {
 				boolean flag = x >= this.xPos && x < this.xPos + this.width
-						&& y >= this.yPos && y < this.yPos + this.height;
-				if (flag && mouseBtn == 3)
+					&& y >= this.yPos && y < this.yPos + this.height;
+				if (flag && mouseBtn == 3) {
 					setText("");
+				}
 			}
 		};
 		this.searchbar.setEnableBackgroundDrawing(true);

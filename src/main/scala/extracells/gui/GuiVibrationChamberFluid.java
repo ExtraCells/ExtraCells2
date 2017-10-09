@@ -9,8 +9,8 @@ import extracells.tileentity.TileEntityVibrationChamberFluid;
 
 public class GuiVibrationChamberFluid extends GuiBase<ContainerVibrationChamberFluid> {
 
-    public WidgetFluidTank widgetFluidTank;
-    private TileEntityVibrationChamberFluid tileEntity;
+	public WidgetFluidTank widgetFluidTank;
+	private TileEntityVibrationChamberFluid tileEntity;
 
 	public GuiVibrationChamberFluid(EntityPlayer player, TileEntityVibrationChamberFluid tileEntity) {
 		super(new ResourceLocation("extracells", "textures/gui/vibrationchamberfluid.png"), new ContainerVibrationChamberFluid(player.inventory, tileEntity));
@@ -18,10 +18,10 @@ public class GuiVibrationChamberFluid extends GuiBase<ContainerVibrationChamberF
 		widgetManager.add(new WidgetFluidTank(widgetManager, this.tileEntity.getTank(), 79, 6));
 	}
 
-    @Override
+	@Override
 	protected void drawBackground() {
 		super.drawBackground();
 		//int burnTime = tileEntity.getBurntTimeScaled(52);
-        //drawTexturedModalRect(posX + 105, posY + 17 + 54 - burnTime, 176, 0 + 54 - burnTime, 3, burnTime);
-    }
+		//drawTexturedModalRect(posX + 105, posY + 17 + 54 - burnTime, 176, 0 + 54 - burnTime, 3, burnTime);
+	}
 }

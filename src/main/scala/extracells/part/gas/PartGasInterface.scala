@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing
 import net.minecraftforge.fml.common.Optional.Method
 
 
-class PartGasInterface extends PartECBase with GasInterfaceBase{
+class PartGasInterface extends PartECBase with GasInterfaceBase {
   var fluidFilter = ""
 
   override def getCableConnectionLength(aeCableType: AECableType): Float = ???

@@ -41,9 +41,9 @@ public class ModelCertusTank extends BlankModel {
 	public static IBakedModel emptyTankMiddle;
 	public static ModelTankFluid fluid = new ModelTankFluid();
 
-	public static void onBakeModels(ModelBakeEvent event){
+	public static void onBakeModels(ModelBakeEvent event) {
 		IRegistry<ModelResourceLocation, IBakedModel> registry = event.getModelRegistry();
-		ResourceLocation location = new ResourceLocation(Constants.MOD_ID,"certustank");
+		ResourceLocation location = new ResourceLocation(Constants.MOD_ID, "certustank");
 		emptyTank = registry.getObject(new ModelResourceLocation(location, "above=false,below=false,empty=true"));
 		emptyTankAbove = registry.getObject(new ModelResourceLocation(location, "above=true,below=false,empty=true"));
 		emptyTankBelow = registry.getObject(new ModelResourceLocation(location, "above=false,below=true,empty=true"));
@@ -65,17 +65,17 @@ public class ModelCertusTank extends BlankModel {
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
 		BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
 		List<BakedQuad> quads = new ArrayList<>();
-		if(layer == BlockRenderLayer.TRANSLUCENT) {
+		if (layer == BlockRenderLayer.TRANSLUCENT) {
 			quads.addAll(fluid.getQuads(state, side, rand));
-		}else{
+		} else {
 			IBakedModel model = emptyTank;
 			boolean below = state.getValue(BlockCertusTank.TANK_BELOW);
 			boolean above = state.getValue(BlockCertusTank.TANK_ABOVE);
-			if(above && !below){
+			if (above && !below) {
 				model = emptyTankAbove;
-			}else if(!above && below){
+			} else if (!above && below) {
 				model = emptyTankBelow;
-			}else if(above && below) {
+			} else if (above && below) {
 				model = emptyTankMiddle;
 			}
 			quads.addAll(model.getQuads(state, side, rand));
@@ -93,7 +93,7 @@ public class ModelCertusTank extends BlankModel {
 		return new TankOverrides();
 	}
 
-	private static class ItemModel extends BlankModel{
+	private static class ItemModel extends BlankModel {
 		FluidStack stack;
 
 		public ItemModel(FluidStack fluidStack) {
@@ -104,14 +104,14 @@ public class ModelCertusTank extends BlankModel {
 		public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
 			List<BakedQuad> quads = new ArrayList<>();
 			quads.addAll(emptyTank.getQuads(state, side, rand));
-			if(stack != null) {
+			if (stack != null) {
 				quads.addAll(fluid.getQuads(stack));
 			}
 			return quads;
 		}
 	}
 
-	public static class TankOverrides extends ItemOverrideList{
+	public static class TankOverrides extends ItemOverrideList {
 		public TankOverrides() {
 			super(Collections.emptyList());
 		}

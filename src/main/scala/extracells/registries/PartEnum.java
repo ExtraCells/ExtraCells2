@@ -69,8 +69,9 @@ public enum PartEnum {
 
 	public static int getPartID(Class<? extends PartECBase> partClass) {
 		for (int i = 0; i < values().length; i++) {
-			if (values()[i].getPartClass() == partClass)
+			if (values()[i].getPartClass() == partClass) {
 				return i;
+			}
 		}
 		return -1;
 	}
@@ -82,12 +83,12 @@ public enum PartEnum {
 	private String unlocalizedName;
 	private Class<? extends PartECBase> partClass;
 	private String groupName;
-	@SideOnly( Side.CLIENT )
+	@SideOnly(Side.CLIENT)
 	private Optional<ModelResourceLocation> itemModel;
 	private Map<Upgrades, Integer> upgrades = new HashMap<Upgrades, Integer>();
 
 	PartEnum(String name, Class<? extends PartECBase> partClass) {
-		this(name, partClass, null, (Integration.Mods )null);
+		this(name, partClass, null, (Integration.Mods) null);
 	}
 
 	PartEnum(String name, Class<? extends PartECBase> partClass, Integration.Mods mod) {
@@ -95,7 +96,7 @@ public enum PartEnum {
 	}
 
 	PartEnum(String name, Class<? extends PartECBase> partClass, String groupName) {
-		this(name, partClass, groupName, (Integration.Mods )null);
+		this(name, partClass, groupName, (Integration.Mods) null);
 	}
 
 	PartEnum(String name, Class<? extends PartECBase> partClass, String groupName, Integration.Mods mod) {
@@ -103,15 +104,15 @@ public enum PartEnum {
 		this.partClass = partClass;
 		this.groupName = groupName == null || groupName.isEmpty() ? null : "extracells." + groupName;
 		this.mod = mod;
-		if(FMLCommonHandler.instance().getSide().isClient()){
+		if (FMLCommonHandler.instance().getSide().isClient()) {
 			itemModel = Optional.of(new ModelResourceLocation("extracells:part/" + name.replace(".", "_")));
-		}else{
+		} else {
 			itemModel = Optional.empty();
 		}
 	}
 
 	PartEnum(String _unlocalizedName, Class<? extends PartECBase> _partClass, String _groupName, Pair<Upgrades, Integer>... _upgrades) {
-		this(_unlocalizedName, _partClass, _groupName, (Integration.Mods )null);
+		this(_unlocalizedName, _partClass, _groupName, (Integration.Mods) null);
 		for (Pair<Upgrades, Integer> pair : _upgrades) {
 			this.upgrades.put(pair.getKey(), pair.getValue());
 		}
@@ -146,18 +147,18 @@ public enum PartEnum {
 	}
 
 	public PartECBase newInstance(ItemStack partStack)
-			throws IllegalAccessException, InstantiationException {
+		throws IllegalAccessException, InstantiationException {
 		PartECBase partECBase = this.partClass.newInstance();
 		partECBase.initializePart(partStack);
 		return partECBase;
 	}
 
-	@SideOnly( Side.CLIENT )
+	@SideOnly(Side.CLIENT)
 	public Optional<ModelResourceLocation> getItemModel() {
 		return itemModel;
 	}
 
-	public Integration.Mods getMod(){
+	public Integration.Mods getMod() {
 		return mod;
 	}
 }

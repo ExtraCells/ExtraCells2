@@ -38,7 +38,7 @@ public class ItemStorageComponent extends ItemECBase implements IStorageComponen
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
 		for (StorageType type : CellDefinition.components) {
-			if(type.getDefinition() == CellDefinition.GAS && !Integration.Mods.MEKANISMGAS.isEnabled()){
+			if (type.getDefinition() == CellDefinition.GAS && !Integration.Mods.MEKANISMGAS.isEnabled()) {
 				continue;
 			}
 			itemList.add(new ItemStack(item, 1, type.getMeta()));
@@ -60,7 +60,7 @@ public class ItemStorageComponent extends ItemECBase implements IStorageComponen
 	@SideOnly(Side.CLIENT)
 	public void registerModel(Item item, ModelManager manager) {
 		for (StorageType type : CellDefinition.components) {
-			if(type.getDefinition() == CellDefinition.GAS && !Integration.Mods.MEKANISMGAS.isEnabled()){
+			if (type.getDefinition() == CellDefinition.GAS && !Integration.Mods.MEKANISMGAS.isEnabled()) {
 				continue;
 			}
 			manager.registerItemModel(item, type.getMeta(), type.getModelName());

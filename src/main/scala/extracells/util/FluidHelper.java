@@ -21,7 +21,7 @@ public class FluidHelper {
 			return null;
 		}
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(itemStack);
-		if(fluidHandler == null){
+		if (fluidHandler == null) {
 			return null;
 		}
 		FluidStack drained = fluidHandler.drain(fluid, true);
@@ -33,7 +33,7 @@ public class FluidHelper {
 			return null;
 		}
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(itemStack);
-		if(fluidHandler == null){
+		if (fluidHandler == null) {
 			return null;
 		}
 		int filled = fluidHandler.fill(fluid, true);
@@ -41,14 +41,15 @@ public class FluidHelper {
 	}
 
 	public static int getCapacity(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return 0;
+		}
 		Item item = itemStack.getItem();
 		if (item instanceof IFluidContainerItem) {
 			return ((IFluidContainerItem) item).getCapacity(itemStack);
 		} else if (FluidContainerRegistry.isEmptyContainer(itemStack)) {
 			for (FluidContainerRegistry.FluidContainerData data : FluidContainerRegistry
-					.getRegisteredFluidContainerData()) {
+				.getRegisteredFluidContainerData()) {
 				if (data != null && data.emptyContainer.isItemEqual(itemStack)) {
 					FluidStack interior = data.fluid;
 					return interior != null ? interior.amount : 0;
@@ -68,7 +69,7 @@ public class FluidHelper {
 	}
 
 	public static FluidStack getFluidFromContainer(ItemStack itemStack) {
-		if (itemStack == null){
+		if (itemStack == null) {
 			return null;
 		}
 		return FluidUtil.getFluidContained(itemStack);

@@ -11,7 +11,7 @@ import net.minecraft.util.text.translation.I18n
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 
-trait WirelessTermBase extends PowerItem{
+trait WirelessTermBase extends PowerItem {
 
   setMaxStackSize(1)
   override val MAX_POWER: Double = 1600000

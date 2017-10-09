@@ -58,7 +58,7 @@ public class BlockFluidCrafter extends BlockEC {
 				float rz = rand.nextFloat() * 0.8F + 0.1F;
 
 				EntityItem entityItem = new EntityItem(world, pos.getX() + rx, pos.getY() + ry, pos.getZ()
-						+ rz, item.copy());
+					+ rz, item.copy());
 
 				if (item.hasTagCompound()) {
 					entityItem.getEntityItem().setTagCompound(

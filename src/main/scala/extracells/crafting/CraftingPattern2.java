@@ -18,13 +18,16 @@ public class CraftingPattern2 extends CraftingPattern {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null)
+		if (obj == null) {
 			return false;
-		if (this.getClass() != obj.getClass())
+		}
+		if (this.getClass() != obj.getClass()) {
 			return false;
+		}
 		CraftingPattern other = (CraftingPattern) obj;
-		if (this.pattern != null && other.pattern != null)
+		if (this.pattern != null && other.pattern != null) {
 			return this.pattern.equals(other.pattern);
+		}
 		return false;
 	}
 
@@ -34,10 +37,10 @@ public class CraftingPattern2 extends CraftingPattern {
 		if (s.length == 0) {
 			s = new IAEItemStack[1];
 			s[0] = AEApi
-					.instance()
-					.storage()
-					.createItemStack(
-							new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+				.instance()
+				.storage()
+				.createItemStack(
+					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 			this.needExtra = true;
 		}
 		return s;
@@ -53,10 +56,10 @@ public class CraftingPattern2 extends CraftingPattern {
 				s2[i] = s[i];
 			}
 			s2[s.length] = AEApi
-					.instance()
-					.storage()
-					.createItemStack(
-							new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+				.instance()
+				.storage()
+				.createItemStack(
+					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 			return s2;
 		}
 		return s;
@@ -68,20 +71,21 @@ public class CraftingPattern2 extends CraftingPattern {
 		if (in.length == 0) {
 			in = new IAEItemStack[1];
 			in[0] = AEApi
-					.instance()
-					.storage()
-					.createItemStack(
-							new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+				.instance()
+				.storage()
+				.createItemStack(
+					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 		} else {
 			for (IAEItemStack s : in) {
-				if (s != null)
+				if (s != null) {
 					return in;
+				}
 			}
 			in[0] = AEApi
-					.instance()
-					.storage()
-					.createItemStack(
-							new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+				.instance()
+				.storage()
+				.createItemStack(
+					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 		}
 		return in;
 	}
@@ -90,24 +94,25 @@ public class CraftingPattern2 extends CraftingPattern {
 	public IAEItemStack[] getOutputs() {
 		IAEItemStack[] out = super.getOutputs();
 		getCondensedInputs();
-		if (!this.needExtra)
+		if (!this.needExtra) {
 			return out;
+		}
 		if (out.length == 0) {
 			out = new IAEItemStack[1];
 			out[0] = AEApi
-					.instance()
-					.storage()
-					.createItemStack(
-							new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+				.instance()
+				.storage()
+				.createItemStack(
+					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 		} else {
 			for (int i = 0; i < out.length; i++) {
 				if (out[i] == null) {
 					out[i] = AEApi
-							.instance()
-							.storage()
-							.createItemStack(
-									new ItemStack(ItemEnum.FLUIDPATTERN
-											.getItem()));
+						.instance()
+						.storage()
+						.createItemStack(
+							new ItemStack(ItemEnum.FLUIDPATTERN
+								.getItem()));
 					return out;
 				}
 			}
@@ -116,10 +121,10 @@ public class CraftingPattern2 extends CraftingPattern {
 				s2[i] = out[i];
 			}
 			s2[out.length] = AEApi
-					.instance()
-					.storage()
-					.createItemStack(
-							new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+				.instance()
+				.storage()
+				.createItemStack(
+					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 			return s2;
 		}
 		return out;
@@ -128,8 +133,9 @@ public class CraftingPattern2 extends CraftingPattern {
 	@Override
 	public ItemStack getPattern() {
 		ItemStack p = this.pattern.getPattern();
-		if (p == null)
+		if (p == null) {
 			return null;
+		}
 		ItemStack s = new ItemStack(ItemEnum.CRAFTINGPATTERN.getItem(), 1, 1);
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setTag("item", p.writeToNBT(new NBTTagCompound()));

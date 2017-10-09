@@ -116,11 +116,13 @@ public abstract class ContainerStorage extends Container implements
 
 	public void decreaseFirstSlot() {
 		ItemStack slot = this.inventory.getStackInSlot(0);
-		if (slot == null)
+		if (slot == null) {
 			return;
+		}
 		slot.stackSize--;
-		if (slot.stackSize <= 0)
+		if (slot.stackSize <= 0) {
 			this.inventory.setInventorySlotContents(0, null);
+		}
 	}
 
 	@Override
@@ -133,8 +135,9 @@ public abstract class ContainerStorage extends Container implements
 	public abstract void doWork();
 
 	public boolean fillSecondSlot(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return false;
+		}
 		ItemStack handItem = player.getHeldItem(hand);
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
 		if (secondSlot == null) {
@@ -157,8 +160,9 @@ public abstract class ContainerStorage extends Container implements
 			return true;
 		} else {
 			if (!secondSlot.isItemEqual(itemStack)
-				|| !ItemStack.areItemStackTagsEqual(itemStack, secondSlot))
+				|| !ItemStack.areItemStackTagsEqual(itemStack, secondSlot)) {
 				return false;
+			}
 			if (this.handler != null) {
 				if (!this.handler.hasPower(this.player, 20.0D,
 					handItem)) {
@@ -216,8 +220,9 @@ public abstract class ContainerStorage extends Container implements
 		super.onContainerClosed(entityPlayer);
 		if (!entityPlayer.worldObj.isRemote) {
 			this.monitor.removeListener(this);
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 2; i++) {
 				this.player.dropItem(this.inventorySlots.get(i).getStack(), false);
+			}
 		}
 	}
 
@@ -252,10 +257,10 @@ public abstract class ContainerStorage extends Container implements
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void updateGui(){
-		if(player.worldObj.isRemote){
+	private void updateGui() {
+		if (player.worldObj.isRemote) {
 			GuiStorage guiStorage = GuiUtil.getGui(GuiStorage.class);
-			if(guiStorage == null){
+			if (guiStorage == null) {
 				return;
 			}
 			guiStorage.updateSelectedFluid();
@@ -294,8 +299,9 @@ public abstract class ContainerStorage extends Container implements
 			itemstack = itemstack1.copy();
 			if (this.inventory.isItemValidForSlot(0, itemstack1)) {
 				if (slotnumber == 0 || slotnumber == 1) {
-					if (!mergeItemStack(itemstack1, 2, 36, false))
+					if (!mergeItemStack(itemstack1, 2, 36, false)) {
 						return null;
+					}
 				} else if (!mergeItemStack(itemstack1, 0, 1, false)) {
 					return null;
 				}

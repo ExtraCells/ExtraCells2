@@ -11,12 +11,13 @@ import extracells.part.PartDrive;
 
 public class ContainerDrive extends Container {
 	PartDrive part;
+
 	public ContainerDrive(PartDrive part, EntityPlayer player) {
 		this.part = part;
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 3; j++) {
 				addSlotToContainer(new SlotRespective(part.getInventory(), j
-						+ i * 3, 18 + 71 - i * 18, j * 18 - 4));
+					+ i * 3, 18 + 71 - i * 18, j * 18 - 4));
 			}
 		}
 		bindPlayerInventory(player.inventory);
@@ -26,7 +27,7 @@ public class ContainerDrive extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 63));
+					8 + j * 18, i * 18 + 63));
 			}
 		}
 

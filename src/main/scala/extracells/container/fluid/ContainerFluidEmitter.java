@@ -17,7 +17,7 @@ public class ContainerFluidEmitter extends Container {
 	EntityPlayer player;
 
 	public ContainerFluidEmitter(PartFluidLevelEmitter _part,
-			EntityPlayer _player) {
+		EntityPlayer _player) {
 		super();
 		this.part = _part;
 		this.player = _player;
@@ -28,7 +28,7 @@ public class ContainerFluidEmitter extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 84));
+					8 + j * 18, i * 18 + 84));
 			}
 		}
 

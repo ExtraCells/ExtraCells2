@@ -17,7 +17,7 @@ import extracells.api.crafting.IFluidCraftingPatternDetails;
 import extracells.registries.ItemEnum;
 
 public class CraftingPattern implements IFluidCraftingPatternDetails,
-		Comparable<CraftingPattern> {
+	Comparable<CraftingPattern> {
 
 	protected final ICraftingPatternDetails pattern;
 
@@ -34,10 +34,12 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 	}
 
 	public int compareInt(int int1, int int2) {
-		if (int1 == int2)
+		if (int1 == int2) {
 			return 0;
-		if (int1 < int2)
+		}
+		if (int1 < int2) {
 			return -1;
+		}
 		return 1;
 	}
 
@@ -48,13 +50,16 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null)
+		if (obj == null) {
 			return false;
-		if (this.getClass() != obj.getClass())
+		}
+		if (this.getClass() != obj.getClass()) {
 			return false;
+		}
 		CraftingPattern other = (CraftingPattern) obj;
-		if (this.pattern != null && other.pattern != null)
+		if (this.pattern != null && other.pattern != null) {
 			return this.pattern.equals(other.pattern);
+		}
 		return false;
 	}
 
@@ -95,29 +100,31 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 		for (int i = 0; i < input.length; i++) {
 			IAEItemStack stack = input[i];
 			if (stack != null
-					&& FluidContainerRegistry.isFilledContainer(stack
-							.getItemStack())) {
+				&& FluidContainerRegistry.isFilledContainer(stack
+				.getItemStack())) {
 				try {
 					craftingInv.setInventorySlotContents(i,
-							input[i].getItemStack());
-				} catch (Throwable e) {}
+						input[i].getItemStack());
+				} catch (Throwable e) {
+				}
 			} else if (stack != null
-					&& stack.getItem() instanceof IFluidContainerItem) {
+				&& stack.getItem() instanceof IFluidContainerItem) {
 				try {
 					craftingInv.setInventorySlotContents(i,
-							input[i].getItemStack());
-				} catch (Throwable e) {}
+						input[i].getItemStack());
+				} catch (Throwable e) {
+				}
 			}
 		}
 		ItemStack returnStack = this.pattern.getOutput(craftingInv, world);
 		for (int i = 0; i < input.length; i++) {
 			IAEItemStack stack = input[i];
 			if (stack != null
-					&& FluidContainerRegistry.isFilledContainer(stack
-							.getItemStack())) {
+				&& FluidContainerRegistry.isFilledContainer(stack
+				.getItemStack())) {
 				craftingInv.setInventorySlotContents(i, null);
 			} else if (stack != null
-					&& stack.getItem() instanceof IFluidContainerItem) {
+				&& stack.getItem() instanceof IFluidContainerItem) {
 				craftingInv.setInventorySlotContents(i, null);
 			}
 		}
@@ -132,8 +139,9 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 	@Override
 	public ItemStack getPattern() {
 		ItemStack p = this.pattern.getPattern();
-		if (p == null)
+		if (p == null) {
 			return null;
+		}
 		ItemStack s = new ItemStack(ItemEnum.CRAFTINGPATTERN.getItem());
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setTag("item", p.writeToNBT(new NBTTagCompound()));
@@ -153,12 +161,12 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 
 	@Override
 	public boolean isValidItemForSlot(int slotIndex, ItemStack itemStack,
-			World world) {
+		World world) {
 		return this.pattern.isValidItemForSlot(slotIndex, itemStack, world);
 	}
 
 	public IAEItemStack[] removeFluidContainers(IAEItemStack[] requirements,
-			boolean isCondenced) {
+		boolean isCondenced) {
 
 		IAEItemStack[] returnStack = new IAEItemStack[requirements.length];
 
@@ -174,23 +182,23 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 				FluidStack fluid = null;
 				if (FluidContainerRegistry.isFilledContainer(current)) {
 					fluid = FluidContainerRegistry
-							.getFluidForFilledItem(current);
+						.getFluidForFilledItem(current);
 				} else if (currentRequirement.getItem() instanceof IFluidContainerItem) {
 					fluid = ((IFluidContainerItem) currentRequirement.getItem())
-							.getFluid(current);
+						.getFluid(current);
 				}
 				if (fluid == null) {
 					returnStack[i] = currentRequirement;
 				} else {
 					removed++;
 					fluidStacks[i] = AEApi
-							.instance()
-							.storage()
-							.createFluidStack(
-									new FluidStack(
-											fluid.getFluid(),
-											(int) (fluid.amount * currentRequirement
-													.getStackSize())));
+						.instance()
+						.storage()
+						.createFluidStack(
+							new FluidStack(
+								fluid.getFluid(),
+								(int) (fluid.amount * currentRequirement
+									.getStackSize())));
 				}
 			}
 			i++;
@@ -207,7 +215,7 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 			}
 			int i3 = 0;
 			IAEItemStack[] items = new IAEItemStack[requirements.length
-					- removed];
+				- removed];
 			for (IAEItemStack item : returnStack) {
 				if (item != null) {
 					items[i3] = item;
@@ -228,7 +236,7 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return this.pattern.hashCode();
 	}
 

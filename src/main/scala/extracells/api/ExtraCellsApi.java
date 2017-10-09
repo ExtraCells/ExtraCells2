@@ -74,7 +74,7 @@ public interface ExtraCellsApi {
 	 *
 	 * @param fluidStack
 	 * @return GasStack
-     */
+	 */
 	Object createGasStack(IAEFluidStack fluidStack);
 
 	/**
@@ -82,7 +82,7 @@ public interface ExtraCellsApi {
 	 *
 	 * @param gasStack
 	 * @return FluidStack
-     */
+	 */
 	IAEFluidStack createFluidStackFromGas(Object gasStack);
 
 	/**
@@ -90,7 +90,7 @@ public interface ExtraCellsApi {
 	 *
 	 * @param gas
 	 * @return Fluid
-     */
+	 */
 	Fluid getGasFluid(Object gas);
 
 	/**
@@ -98,14 +98,13 @@ public interface ExtraCellsApi {
 	 *
 	 * @param esh storage handler
 	 */
-	void addExternalStorageInterface( IExternalGasStorageHandler esh );
+	void addExternalStorageInterface(IExternalGasStorageHandler esh);
 
 	/**
 	 * @param te       tile entity
 	 * @param opposite direction
 	 * @param mySrc    source
-	 *
 	 * @return the handler for a given tile / forge direction
 	 */
-	IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, BaseActionSource mySrc );
+	IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, BaseActionSource mySrc);
 }

@@ -20,10 +20,10 @@ public enum PacketId {
 	private IPacketHandlerClient handlerClient;
 
 	public void registerHandler(IPacketHandler handler) {
-		if(handler instanceof IPacketHandlerServer){
+		if (handler instanceof IPacketHandlerServer) {
 			registerHandler((IPacketHandlerServer) handler);
 		}
-		if(handler instanceof IPacketHandlerClient){
+		if (handler instanceof IPacketHandlerClient) {
 			registerHandler((IPacketHandlerClient) handler);
 		}
 	}

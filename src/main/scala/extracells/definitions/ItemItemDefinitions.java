@@ -28,10 +28,10 @@ public class ItemItemDefinitions implements IItemDefinition {
 		return Optional.ofNullable(this.item);
 	}
 
-    @Override
-    public Optional<ItemStack> maybeStack(int stackSize) {
-        return Optional.of(new ItemStack(this.item, stackSize, this.meta));
-    }
+	@Override
+	public Optional<ItemStack> maybeStack(int stackSize) {
+		return Optional.of(new ItemStack(this.item, stackSize, this.meta));
+	}
 
 	@Override
 	public boolean isEnabled() {
@@ -39,9 +39,9 @@ public class ItemItemDefinitions implements IItemDefinition {
 	}
 
 	@Override
-    public boolean isSameAs(ItemStack comparableStack) {
-        return comparableStack != null && comparableStack.isItemEqual(maybeStack(1).get());
-    }
+	public boolean isSameAs(ItemStack comparableStack) {
+		return comparableStack != null && comparableStack.isItemEqual(maybeStack(1).get());
+	}
 
 	@Nonnull
 	@Override

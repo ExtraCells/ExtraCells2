@@ -39,8 +39,8 @@ trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChann
 
   def getFilter(side: AEPartLocation): String
 
-  def setFilter(side: AEPartLocation, fluid: Fluid): Unit ={
-    if(fluid == null)
+  def setFilter(side: AEPartLocation, fluid: Fluid): Unit = {
+    if (fluid == null)
       setFilter(side, "")
     else
       setFilter(side, fluid.getName)
@@ -54,15 +54,15 @@ trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChann
   def exportGas(side: EnumFacing, gas: GasStack, pos: DimensionalCoord): Int = {
     val tank = getGasTank(side)
     val world = pos.getWorld
-    if(world == null)
+    if (world == null)
       return 0
     val tile = world.getTileEntity(pos.getPos.offset(side))
-    if(tile == null)
+    if (tile == null)
       return 0
-    if(!tile.isInstanceOf[IGasHandler])
+    if (!tile.isInstanceOf[IGasHandler])
       return 0
     val gasHandler = tile.asInstanceOf[IGasHandler]
-    if(gasHandler.canReceiveGas(side.getOpposite, gas.getGas))
+    if (gasHandler.canReceiveGas(side.getOpposite, gas.getGas))
       gasHandler.receiveGas(side.getOpposite, gas, true)
     else
       0

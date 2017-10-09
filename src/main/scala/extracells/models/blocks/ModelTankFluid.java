@@ -37,18 +37,18 @@ public class ModelTankFluid extends BlankModel {
 
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-		if(side != null || !(state instanceof IExtendedBlockState)){
+		if (side != null || !(state instanceof IExtendedBlockState)) {
 			return ImmutableList.of();
 		}
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 		FluidStack stack = extendedBlockState.getValue(BlockCertusTank.FLUID);
 		int amount = stack.amount / 500;
-		if(stack.amount > 0 && amount == 0){
+		if (stack.amount > 0 && amount == 0) {
 			amount = 1;
 		}
 		Key key = new Key(stack.getFluid(), amount, state.getValue(BlockCertusTank.TANK_ABOVE), state.getValue(BlockCertusTank.TANK_BELOW));
 		List<BakedQuad> fluidQuads = blockModels.getIfPresent(key);
-		if(fluidQuads == null){
+		if (fluidQuads == null) {
 			blockModels.put(key, fluidQuads = createQuads(key));
 		}
 		return fluidQuads;
@@ -56,36 +56,36 @@ public class ModelTankFluid extends BlankModel {
 
 	public List<BakedQuad> getQuads(FluidStack stack) {
 		int amount = stack.amount / 500;
-		if(stack.amount > 0 && amount == 0){
+		if (stack.amount > 0 && amount == 0) {
 			amount = 1;
 		}
 		Key key = new Key(stack.getFluid(), amount, false, false);
 		List<BakedQuad> fluidQuads = itemModels.getIfPresent(key);
-		if(fluidQuads == null){
+		if (fluidQuads == null) {
 			itemModels.put(key, fluidQuads = createQuads(key));
 		}
 		return fluidQuads;
 	}
 
-	private static ImmutableList<BakedQuad> createQuads(Key key){
-		float maxY = (float )key.amount / 4.0F;
+	private static ImmutableList<BakedQuad> createQuads(Key key) {
+		float maxY = (float) key.amount / 4.0F;
 		ResourceLocation resourceLocation = key.fluid.getStill();
 		TextureMap textureMap = Minecraft.getMinecraft().getTextureMapBlocks();
 		TextureAtlasSprite sprite = textureMap.getAtlasSprite(resourceLocation.toString());
-		if(sprite == null){
+		if (sprite == null) {
 			return ImmutableList.of();
 		}
-		if(maxY == 16.0F && !key.above){
+		if (maxY == 16.0F && !key.above) {
 			maxY = 15.9F;
 		}
 		float minY = 0.0F;
-		if(!key.below){
+		if (!key.below) {
 			minY = 0.1F;
 		}
 		return ModelFactory.createCube(new Vector3f(1.1F, minY, 1.1F), new Vector3f(14.9F, maxY, 14.9F), sprite);
 	}
 
-	public class Key{
+	public class Key {
 		public Fluid fluid;
 		public int amount;
 		public boolean above;
@@ -100,7 +100,7 @@ public class ModelTankFluid extends BlankModel {
 
 		@Override
 		public boolean equals(Object obj) {
-			if(!(obj instanceof Key)){
+			if (!(obj instanceof Key)) {
 				return false;
 			}
 			Key key = (Key) obj;

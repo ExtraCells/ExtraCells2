@@ -70,7 +70,7 @@ public class FluidCellHandler implements ICellHandler {
 		IStorageMonitorable monitorable = null;
 		if (chest != null && chest instanceof TileEntity) {
 			TileEntity tileEntity = (TileEntity) chest;
-			if(tileEntity.hasCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, null)){
+			if (tileEntity.hasCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, null)) {
 				IStorageMonitorableAccessor accessor = tileEntity.getCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, null);
 				monitorable = accessor.getInventory(new PlayerSource(player, chest));
 			}

@@ -135,12 +135,12 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 		ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlock());
 		TileEntityCertusTank tileEntityCertusTank = TileUtil.getTile(world, pos, TileEntityCertusTank.class);
-		if(tileEntityCertusTank == null){
+		if (tileEntityCertusTank == null) {
 			return dropStack;
 		}
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(dropStack);
 		FluidStack fluidStack = tileEntityCertusTank.tank.getFluid();
-		if(fluidStack != null) {
+		if (fluidStack != null) {
 			fluidHandler.fill(fluidStack, true);
 		}
 		return dropStack;
@@ -150,10 +150,10 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		IExtendedBlockState extendedBlockState = (IExtendedBlockState) super.getExtendedState(state, world, pos);
 		TileEntity tileEntity = world.getTileEntity(pos);
-		if(tileEntity != null && tileEntity instanceof TileEntityCertusTank){
+		if (tileEntity != null && tileEntity instanceof TileEntityCertusTank) {
 			TileEntityCertusTank certusTank = (TileEntityCertusTank) tileEntity;
 			FluidStack fluidStack = certusTank.tank.getFluid();
-			if(fluidStack != null) {
+			if (fluidStack != null) {
 				extendedBlockState = extendedBlockState.withProperty(FLUID, fluidStack);
 			}
 		}
@@ -164,7 +164,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	@SideOnly(Side.CLIENT)
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		TileEntity tileEntity = world.getTileEntity(pos);
-		if(tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)){
+		if (tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
 			IFluidHandler fluidHandler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 			FluidStack fluidStack = fluidHandler.getTankProperties()[0].getContents();
 			state = state.withProperty(EMPTY, fluidStack == null);
@@ -190,7 +190,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 			ItemStack dropStack = new ItemStack(BlockEnum.CERTUSTANK.getBlock());
 			IFluidHandler fluidHandler = FluidUtil.getFluidHandler(dropStack);
 			FluidStack fluidStack = ((TileEntityCertusTank) worldTE).tank.getFluid();
-			if(fluidStack != null) {
+			if (fluidStack != null) {
 				fluidHandler.fill(fluidStack, true);
 			}
 			return dropStack;

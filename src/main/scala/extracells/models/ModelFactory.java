@@ -15,15 +15,15 @@ import org.lwjgl.util.vector.Vector3f;
 public class ModelFactory {
 	private static final FaceBakery bakery = new FaceBakery();
 
-	public static ImmutableList<BakedQuad> createCube(Vector3f from, Vector3f to, TextureAtlasSprite sprite){
+	public static ImmutableList<BakedQuad> createCube(Vector3f from, Vector3f to, TextureAtlasSprite sprite) {
 		ImmutableList.Builder builder = new ImmutableList.Builder();
-		for(EnumFacing facing : EnumFacing.VALUES) {
+		for (EnumFacing facing : EnumFacing.VALUES) {
 			builder.add(createQuad(facing, from, to, sprite));
 		}
 		return builder.build();
 	}
 
-	public static BakedQuad createQuad(EnumFacing facing, Vector3f from, Vector3f to, TextureAtlasSprite sprite){
+	public static BakedQuad createQuad(EnumFacing facing, Vector3f from, Vector3f to, TextureAtlasSprite sprite) {
 		float[] uvs = getFaceUvs(facing, to, from);
 		BlockFaceUV uv = new BlockFaceUV(uvs, 0);
 		BlockPartFace bpf = new BlockPartFace(facing, 0, "", uv);

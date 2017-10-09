@@ -27,8 +27,8 @@ public abstract class TileBase extends TileEntity {
 		handleUpdateTag(pkt.getNbtCompound());
 	}
 
-	public void updateBlock(){
-		if(worldObj == null || pos == null){
+	public void updateBlock() {
+		if (worldObj == null || pos == null) {
 			return;
 		}
 		IBlockState blockState = worldObj.getBlockState(pos);
@@ -36,7 +36,7 @@ public abstract class TileBase extends TileEntity {
 	}
 
 	public IStorageGrid getStorageGrid(AEPartLocation side) {
-		if(!(this instanceof IGridHost)){
+		if (!(this instanceof IGridHost)) {
 			return null;
 		}
 		IGridHost host = (IGridHost) this;

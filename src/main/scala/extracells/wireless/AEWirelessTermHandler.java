@@ -12,9 +12,10 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 	@Override
 	public boolean canHandle(ItemStack is) {
 		IWirelessGasFluidTermHandler handler = WirelessTermRegistry
-				.getWirelessTermHandler(is);
-		if (handler == null)
+			.getWirelessTermHandler(is);
+		if (handler == null) {
 			return false;
+		}
 		return !handler.isItemNormalWirelessTermToo(is);
 	}
 
@@ -26,34 +27,38 @@ public class AEWirelessTermHandler implements IWirelessTermHandler {
 	@Override
 	public String getEncryptionKey(ItemStack item) {
 		IWirelessGasFluidTermHandler handler = WirelessTermRegistry
-				.getWirelessTermHandler(item);
-		if (handler == null)
+			.getWirelessTermHandler(item);
+		if (handler == null) {
 			return null;
+		}
 		return handler.getEncryptionKey(item);
 	}
 
 	@Override
 	public boolean hasPower(EntityPlayer player, double amount, ItemStack is) {
 		IWirelessGasFluidTermHandler handler = WirelessTermRegistry
-				.getWirelessTermHandler(is);
-		if (handler == null)
+			.getWirelessTermHandler(is);
+		if (handler == null) {
 			return false;
+		}
 		return handler.hasPower(player, amount, is);
 	}
 
 	@Override
 	public void setEncryptionKey(ItemStack item, String encKey, String name) {
 		IWirelessGasFluidTermHandler handler = WirelessTermRegistry.getWirelessTermHandler(item);
-		if (handler == null)
+		if (handler == null) {
 			return;
+		}
 		handler.setEncryptionKey(item, encKey, name);
 	}
 
 	@Override
 	public boolean usePower(EntityPlayer player, double amount, ItemStack is) {
 		IWirelessGasFluidTermHandler handler = WirelessTermRegistry.getWirelessTermHandler(is);
-		if (handler == null)
+		if (handler == null) {
 			return false;
+		}
 		return handler.usePower(player, amount, is);
 	}
 

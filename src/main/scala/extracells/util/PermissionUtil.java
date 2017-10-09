@@ -16,7 +16,7 @@ import appeng.api.util.AEPartLocation;
 
 public class PermissionUtil {
 
-	public static boolean hasPermission(@Nullable EntityPlayer player, @Nullable SecurityPermissions permission, @Nullable  IGrid grid) {
+	public static boolean hasPermission(@Nullable EntityPlayer player, @Nullable SecurityPermissions permission, @Nullable IGrid grid) {
 		if (grid != null) {
 			return hasPermission(player, permission, (ISecurityGrid) grid.getCache(ISecurityGrid.class));
 		}
@@ -28,8 +28,9 @@ public class PermissionUtil {
 	}
 
 	public static boolean hasPermission(@Nullable EntityPlayer player, @Nullable SecurityPermissions permission, @Nullable IGridHost host, @Nonnull AEPartLocation side) {
-		if (host != null)
+		if (host != null) {
 			return hasPermission(player, permission, host.getGridNode(side));
+		}
 		return true;
 	}
 

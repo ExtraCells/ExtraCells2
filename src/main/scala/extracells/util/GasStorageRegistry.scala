@@ -17,8 +17,8 @@ object GasStorageRegistry {
   }
 
   def getHandler(te: TileEntity, opposite: EnumFacing, mySrc: BaseActionSource): IExternalGasStorageHandler = {
-    for(x <- handler){
-      if(x.canHandle(te, opposite, mySrc))
+    for (x <- handler) {
+      if (x.canHandle(te, opposite, mySrc))
         return x
     }
     null

@@ -32,13 +32,13 @@ public class PacketFluidContainerSlot extends Packet {
 		data.writeItemStackToBuffer(this.container);
 	}
 
-	public static class Handler implements IPacketHandlerServer{
+	public static class Handler implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			TileEntityFluidFiller fluidFiller = data.readTile(player.worldObj, TileEntityFluidFiller.class);
 			ItemStack container = data.readItemStackFromBuffer();
 
-			if(fluidFiller == null){
+			if (fluidFiller == null) {
 				return;
 			}
 

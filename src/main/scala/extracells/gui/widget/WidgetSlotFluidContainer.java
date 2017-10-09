@@ -20,14 +20,14 @@ public class WidgetSlotFluidContainer extends Gui {
 
 	private int posX, posY;
 	private static final ResourceLocation guiTexture = new ResourceLocation(
-			"extracells", "textures/gui/busiofluid.png");
+		"extracells", "textures/gui/busiofluid.png");
 	private TileEntityFluidFiller fluidFiller;
 	private EntityPlayer player;
 	private IConfigurable configurable;
 	private byte configOption;
 
 	public WidgetSlotFluidContainer(EntityPlayer _player,
-			TileEntityFluidFiller _fluidFiller, int _posX, int _posY) {
+		TileEntityFluidFiller _fluidFiller, int _posX, int _posY) {
 		this.player = _player;
 		this.fluidFiller = _fluidFiller;
 		this.posX = _posX;
@@ -36,7 +36,7 @@ public class WidgetSlotFluidContainer extends Gui {
 
 	public boolean canRender() {
 		return this.configurable == null
-				|| this.configurable.getConfigState() >= this.configOption;
+			|| this.configurable.getConfigState() >= this.configOption;
 	}
 
 	public void drawTooltip() {
@@ -52,10 +52,12 @@ public class WidgetSlotFluidContainer extends Gui {
 		RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 		itemRender.zLevel = 100.0F;
 		FontRenderer font = null;
-		if (container != null)
+		if (container != null) {
 			font = container.getItem().getFontRenderer(container);
-		if (font == null)
+		}
+		if (font == null) {
 			font = Minecraft.getMinecraft().fontRendererObj;
+		}
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		itemRender.renderItemAndEffectIntoGUI(container, this.posX, this.posY);
 		// itemRender.renderItemOverlayIntoGUI(font,
@@ -72,10 +74,12 @@ public class WidgetSlotFluidContainer extends Gui {
 		RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 		itemRender.zLevel = 100.0F;
 		FontRenderer font = null;
-		if (container != null)
+		if (container != null) {
 			font = container.getItem().getFontRenderer(container);
-		if (font == null)
+		}
+		if (font == null) {
 			font = Minecraft.getMinecraft().fontRendererObj;
+		}
 		drawRect(i, j, i + 16, j + 16, -2130706433);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		itemRender.renderItemAndEffectIntoGUI(container, this.posX, this.posY);

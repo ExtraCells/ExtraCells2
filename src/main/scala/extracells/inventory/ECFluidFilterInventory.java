@@ -27,8 +27,9 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return false;
+		}
 		if (itemStack.getItem() == ItemEnum.FLUIDITEM.getItem()) {
 			String fluidName = ItemFluid.getFluidName(itemStack);
 			for (ItemStack slotStack : this.slots) {
@@ -64,8 +65,7 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
 		NBTTagCompound tag;
 		if (this.cellItem.hasTagCompound()) {
 			tag = this.cellItem.getTagCompound();
-		}
-		else {
+		} else {
 			tag = new NBTTagCompound();
 		}
 		tag.setTag("filter", writeToNBT());

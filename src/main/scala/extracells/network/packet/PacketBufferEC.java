@@ -23,7 +23,7 @@ import extracells.part.PartECBase;
 import extracells.util.TileUtil;
 import io.netty.buffer.ByteBuf;
 
-public class PacketBufferEC extends PacketBuffer{
+public class PacketBufferEC extends PacketBuffer {
 
 	public PacketBufferEC(ByteBuf wrapped) {
 		super(wrapped);
@@ -72,7 +72,7 @@ public class PacketBufferEC extends PacketBuffer{
 
 	public void writePart(PartECBase part) {
 		IPartHost host = part.getHost();
-		if(host == null || host.getTile() == null){
+		if (host == null || host.getTile() == null) {
 			writeBoolean(false);
 			return;
 		}
@@ -84,20 +84,20 @@ public class PacketBufferEC extends PacketBuffer{
 
 	@Nullable
 	public <P extends IPart> P readPart(World world) {
-		if(!readBoolean()){
+		if (!readBoolean()) {
 			return null;
 		}
 		BlockPos pos = readBlockPos();
 		AEPartLocation location = AEPartLocation.fromOrdinal(readByte());
 		IPartHost host = TileUtil.getTile(world, pos, IPartHost.class);
-		if(host == null){
+		if (host == null) {
 			return null;
 		}
 		return (P) host.getPart(location);
 	}
 
 	public void writeTile(TileEntity tileEntity) {
-		if(tileEntity == null){
+		if (tileEntity == null) {
 			writeBoolean(false);
 			return;
 		}
@@ -112,7 +112,7 @@ public class PacketBufferEC extends PacketBuffer{
 
 	@Nullable
 	public <T> T readTile(World world, Class<T> tileClass) {
-		if(!readBoolean()){
+		if (!readBoolean()) {
 			return null;
 		}
 		BlockPos pos = readBlockPos();

@@ -48,7 +48,7 @@ public enum ItemEnum {
 		this(internalName, item, null);
 	}
 
-	ItemEnum(String internalName, Item item, Integration.Mods mod){
+	ItemEnum(String internalName, Item item, Integration.Mods mod) {
 		this(internalName, item, mod, CreativeTabEC.INSTANCE);
 	}
 
@@ -58,8 +58,9 @@ public enum ItemEnum {
 		this.item.setUnlocalizedName("extracells." + this.internalName);
 		this.item.setRegistryName(this.internalName);
 		this.mod = mod;
-		if ((creativeTab != null) && (mod == null || mod.isEnabled()))
+		if ((creativeTab != null) && (mod == null || mod.isEnabled())) {
 			this.item.setCreativeTab(creativeTab);
+		}
 	}
 
 	public ItemStack getDamagedStack(int damage) {
@@ -82,7 +83,7 @@ public enum ItemEnum {
 		return I18n.translateToLocal(this.item.getUnlocalizedName());
 	}
 
-	public Integration.Mods getMod(){
+	public Integration.Mods getMod() {
 		return mod;
 	}
 }

@@ -11,7 +11,7 @@ public class ContainerFluidFiller extends Container {
 	public TileEntityFluidFiller tileentity;
 
 	public ContainerFluidFiller(InventoryPlayer player,
-			TileEntityFluidFiller tileentity) {
+		TileEntityFluidFiller tileentity) {
 		this.tileentity = tileentity;
 
 		bindPlayerInventory(player);
@@ -21,7 +21,7 @@ public class ContainerFluidFiller extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 84));
+					8 + j * 18, i * 18 + 84));
 			}
 		}
 
@@ -37,7 +37,7 @@ public class ContainerFluidFiller extends Container {
 
 	@Override
 	protected void retrySlotClick(int par1, int par2, boolean par3,
-			EntityPlayer par4EntityPlayer) {
+		EntityPlayer par4EntityPlayer) {
 		// DON'T DO ANYTHING, YOU SHITTY METHOD!
 	}
 

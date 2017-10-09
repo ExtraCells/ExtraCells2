@@ -12,11 +12,11 @@ import net.minecraft.util.text.TextComponentTranslation
 import net.minecraftforge.fml.common.Optional
 
 
-class PartGasStorageMonitor extends PartFluidStorageMonitor{
+class PartGasStorageMonitor extends PartFluidStorageMonitor {
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
   override def onActivate(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
-    if(isMekEnabled)
+    if (isMekEnabled)
       onActivateGas(player, hand, pos)
     else
       false

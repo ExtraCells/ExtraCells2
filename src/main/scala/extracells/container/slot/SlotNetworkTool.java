@@ -19,11 +19,13 @@ public class SlotNetworkTool extends Slot {
 
 	@Override
 	public boolean isItemValid(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return false;
+		}
 		Item item = itemStack.getItem();
-		if (!(item instanceof IUpgradeModule))
+		if (!(item instanceof IUpgradeModule)) {
 			return false;
+		}
 		IUpgradeModule upgradeModule = (IUpgradeModule) item;
 		return upgradeModule.getType(itemStack) != null;
 	}

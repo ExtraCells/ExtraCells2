@@ -14,21 +14,21 @@ object UniversalTerminal {
   val isWcLLoaded = Mods.WIRELESSCRAFTING.isEnabled
   val arrayLength = {
     var length = 2
-    if(isMekLoaded)
+    if (isMekLoaded)
       length += 1
-    if(isThaLoaded)
+    if (isThaLoaded)
       length += 1
-    if(isWcLLoaded)
+    if (isWcLLoaded)
       length += 1
     length
   }
 
-  val wirelessTerminals : Array[ItemStack] = {
+  val wirelessTerminals: Array[ItemStack] = {
     val terminals = new Array[ItemStack](arrayLength)
     terminals.update(0, AEApi.instance.definitions.items.wirelessTerminal.maybeStack(1).get())
     terminals.update(1, ItemEnum.FLUIDWIRELESSTERMINAL.getSizedStack(1))
     var next = 2
-    if(isMekLoaded) {
+    if (isMekLoaded) {
       terminals.update(next, ItemEnum.GASWIRELESSTERMINAL.getSizedStack(1))
       next += 1
     }
@@ -37,16 +37,16 @@ object UniversalTerminal {
       terminals.update(next, ThaumaticEnergistics.getWirelessTerminal)
       next += 1
     }*/
-    if(isWcLLoaded)
+    if (isWcLLoaded)
       terminals.update(next, WirelessCrafting.getCraftingTerminal)
     terminals
   }
 
-  val terminals : Array[ItemStack] = {
+  val terminals: Array[ItemStack] = {
     val terminals = new Array[ItemStack](if (isWcLLoaded) arrayLength - 1 else arrayLength)
     terminals.update(0, AEApi.instance.definitions.parts.terminal.maybeStack(1).get())
     terminals.update(1, ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal))
-    if(isMekLoaded) {
+    if (isMekLoaded) {
       terminals.update(2, ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal))
       //TODO:TE 1.10.2
       /*if(isThaLoaded)
@@ -58,20 +58,20 @@ object UniversalTerminal {
   }
 
   def isTerminal(stack: ItemStack): Boolean = {
-    if(stack == null)
+    if (stack == null)
       return false
     val item = stack.getItem
     val meta = stack.getItemDamage
-    if(item == null)
+    if (item == null)
       return false
     val aeterm = AEApi.instance.definitions.parts.terminal.maybeStack(1).get
-    if(item == aeterm.getItem && meta == aeterm.getItemDamage)
+    if (item == aeterm.getItem && meta == aeterm.getItemDamage)
       return true
     val ecterm = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
-    if(item == ecterm.getItem && meta == ecterm.getItemDamage)
+    if (item == ecterm.getItem && meta == ecterm.getItemDamage)
       return true
     val ectermgas = ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal)
-    if(item == ectermgas.getItem && meta == ectermgas.getItemDamage)
+    if (item == ectermgas.getItem && meta == ectermgas.getItemDamage)
       return true
     /*if(Mods.THAUMATICENERGISTICS.isEnabled){
       val thterm = ThaumaticEnergistics.getTerminal
@@ -82,20 +82,20 @@ object UniversalTerminal {
   }
 
   def isWirelessTerminal(stack: ItemStack): Boolean = {
-    if(stack == null)
+    if (stack == null)
       return false
     val item = stack.getItem
     val meta = stack.getItemDamage
-    if(item == null)
+    if (item == null)
       return false
     val aeterm = AEApi.instance.definitions.items.wirelessTerminal.maybeStack(1).get
-    if(item == aeterm.getItem && meta == aeterm.getItemDamage)
+    if (item == aeterm.getItem && meta == aeterm.getItemDamage)
       return true
     val ecterm = ItemEnum.FLUIDWIRELESSTERMINAL.getDamagedStack(0)
-    if(item == ecterm.getItem && meta == ecterm.getItemDamage)
+    if (item == ecterm.getItem && meta == ecterm.getItemDamage)
       return true
     val ectermgas = ItemEnum.GASWIRELESSTERMINAL.getDamagedStack(0)
-    if(item == ectermgas.getItem && meta == ectermgas.getItemDamage)
+    if (item == ectermgas.getItem && meta == ectermgas.getItemDamage)
       return true
     /*if(Mods.THAUMATICENERGISTICS.isEnabled){
       val thterm = ThaumaticEnergistics.getWirelessTerminal
@@ -111,20 +111,20 @@ object UniversalTerminal {
   }
 
   def getTerminalType(stack: ItemStack): WirelessTerminalType = {
-    if(stack == null)
+    if (stack == null)
       return null
     val item = stack.getItem
     val meta = stack.getItemDamage
-    if(item == null)
+    if (item == null)
       return null
     val aeterm = AEApi.instance.definitions.parts.terminal.maybeStack(1).get
-    if(item == aeterm.getItem && meta == aeterm.getItemDamage)
+    if (item == aeterm.getItem && meta == aeterm.getItemDamage)
       return WirelessTerminalType.ITEM
     val ecterm = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
-    if(item == ecterm.getItem && meta == ecterm.getItemDamage)
+    if (item == ecterm.getItem && meta == ecterm.getItemDamage)
       return WirelessTerminalType.FLUID
     val ectermgas = ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal)
-    if(item == ectermgas.getItem && meta == ectermgas.getItemDamage)
+    if (item == ectermgas.getItem && meta == ectermgas.getItemDamage)
       return WirelessTerminalType.GAS
     /*if(Mods.THAUMATICENERGISTICS.isEnabled){
       val thterm = ThaumaticEnergistics.getTerminal
@@ -132,13 +132,13 @@ object UniversalTerminal {
         return TerminalType.ESSENTIA
     }*/
     val aeterm2 = AEApi.instance.definitions.items.wirelessTerminal.maybeStack(1).get
-    if(item == aeterm2.getItem && meta == aeterm2.getItemDamage)
+    if (item == aeterm2.getItem && meta == aeterm2.getItemDamage)
       return WirelessTerminalType.ITEM
     val ecterm2 = ItemEnum.FLUIDWIRELESSTERMINAL.getDamagedStack(0)
-    if(item == ecterm2.getItem && meta == ecterm2.getItemDamage)
+    if (item == ecterm2.getItem && meta == ecterm2.getItemDamage)
       return WirelessTerminalType.FLUID
     val ectermgas2 = ItemEnum.GASWIRELESSTERMINAL.getDamagedStack(0)
-    if(item == ectermgas2.getItem && meta == ectermgas2.getItemDamage)
+    if (item == ectermgas2.getItem && meta == ectermgas2.getItemDamage)
       return WirelessTerminalType.GAS
     /*if(Mods.THAUMATICENERGISTICS.isEnabled){
       val thterm = ThaumaticEnergistics.getWirelessTerminal

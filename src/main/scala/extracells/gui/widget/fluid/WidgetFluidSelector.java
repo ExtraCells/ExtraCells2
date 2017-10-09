@@ -29,39 +29,40 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 	}
 
 	private void drawHollowRectWithCorners(int posX, int posY, int height,
-			int width, int color, int thickness) {
+		int width, int color, int thickness) {
 		drawRect(posX, posY, posX + height, posY + thickness, color);
 		drawRect(posX, posY + width - thickness, posX + height, posY + width,
-				color);
+			color);
 		drawRect(posX, posY, posX + thickness, posY + width, color);
 		drawRect(posX + height - thickness, posY, posX + height, posY + width,
-				color);
+			color);
 
 		drawRect(posX, posY, posX + thickness + 1, posY + thickness + 1, color);
 		drawRect(posX + height, posY + width, posX + height - thickness - 1,
-				posY + width - thickness - 1, color);
+			posY + width - thickness - 1, color);
 		drawRect(posX + height, posY, posX + height - thickness - 1, posY
-				+ thickness + 1, color);
+			+ thickness + 1, color);
 		drawRect(posX, posY + width, posX + thickness + 1, posY + width
-				- thickness - 1, color);
+			- thickness - 1, color);
 	}
 
 	@Override
 	public boolean drawTooltip(int posX, int posY, int mouseX, int mouseY) {
 		if (this.fluid == null
-				|| this.amount <= 0
-				|| !isPointInRegion(posX, posY, this.height, this.width,
-						mouseX, mouseY))
+			|| this.amount <= 0
+			|| !isPointInRegion(posX, posY, this.height, this.width,
+			mouseX, mouseY)) {
 			return false;
+		}
 
 		String amountToText = Long.toString(this.amount) + "mB";
 		if (ECConfigHandler.shortenedBuckets) {
-			if (this.amount > 1000000000L)
+			if (this.amount > 1000000000L) {
 				amountToText = Long.toString(this.amount / 1000000000L)
-						+ "MegaB";
-			else if (this.amount > 1000000L)
+					+ "MegaB";
+			} else if (this.amount > 1000000L) {
 				amountToText = Long.toString(this.amount / 1000000L) + "KiloB";
-			else if (this.amount > 9999L) {
+			} else if (this.amount > 9999L) {
 				amountToText = Long.toString(this.amount / 1000L) + "B";
 			}
 		}
@@ -70,8 +71,8 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		description.add(this.fluid.getLocalizedName(new FluidStack(this.fluid, 0)));
 		description.add(amountToText);
 		drawHoveringText(description, mouseX - this.guiFluidTerminal.guiLeft(),
-				mouseY - this.guiFluidTerminal.guiTop() + 18,
-				Minecraft.getMinecraft().fontRendererObj);
+			mouseY - this.guiFluidTerminal.guiTop() + 18,
+			Minecraft.getMinecraft().fontRendererObj);
 		return true;
 	}
 
@@ -108,8 +109,8 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 	@Override
 	public void mouseClicked(int posX, int posY, int mouseX, int mouseY) {
 		if (this.fluid != null
-				&& isPointInRegion(posX, posY, this.height, this.width, mouseX,
-						mouseY)) {
+			&& isPointInRegion(posX, posY, this.height, this.width, mouseX,
+			mouseY)) {
 			((IFluidSelectorGui) this.guiFluidTerminal).getContainer().setSelectedFluid(this.fluid);
 		}
 	}

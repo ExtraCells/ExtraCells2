@@ -24,7 +24,7 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te,
-			NBTTagCompound tag, World world, BlockPos pos) {
+		NBTTagCompound tag, World world, BlockPos pos) {
 		final RayTraceResult mop = retraceBlock(world, player, pos);
 
 		if (mop != null) {
@@ -32,7 +32,7 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 
 			if (part != null && part instanceof PartECBase) {
 				tag.setTag("partEC",
-						((PartECBase) part).getWailaTag(new NBTTagCompound()));
+					((PartECBase) part).getWailaTag(new NBTTagCompound()));
 			}
 		}
 		return tag;
@@ -52,18 +52,19 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack,
-			List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+		List<String> currenttip, IWailaDataAccessor accessor,
+		IWailaConfigHandler config) {
 		TileEntity tile = accessor.getTileEntity();
 
 		IPart part = getPart(tile, accessor.getMOP());
 		if (part != null && part instanceof PartECBase) {
 			NBTTagCompound tag;
 			if (accessor.getNBTData() != null
-					&& accessor.getNBTData().hasKey("partEC"))
+				&& accessor.getNBTData().hasKey("partEC")) {
 				tag = accessor.getNBTData().getCompoundTag("partEC");
-			else
+			} else {
 				tag = new NBTTagCompound();
+			}
 			return ((PartECBase) part).getWailaBodey(tag, currenttip);
 		}
 
@@ -72,21 +73,21 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 
 	@Override
 	public List<String> getWailaHead(ItemStack itemStack,
-			List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+		List<String> currenttip, IWailaDataAccessor accessor,
+		IWailaConfigHandler config) {
 		return currenttip;
 	}
 
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+		IWailaConfigHandler config) {
 		return accessor.getStack();
 	}
 
 	@Override
 	public List<String> getWailaTail(ItemStack itemStack,
-			List<String> currenttip, IWailaDataAccessor accessor,
-			IWailaConfigHandler config) {
+		List<String> currenttip, IWailaDataAccessor accessor,
+		IWailaConfigHandler config) {
 		return currenttip;
 	}
 
@@ -94,12 +95,13 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 		IBlockState blockState = world.getBlockState(pos);
 
 		Vec3d head = new Vec3d(player.posX, player.posY, player.posZ).addVector(0, player.getEyeHeight(), 0);
-		if (player.isSneaking())
+		if (player.isSneaking()) {
 			head = head.addVector(0, -0.08, 0);
+		}
 		Vec3d look = player.getLook(1.0F);
 		double reach = player.interactionManager.getBlockReachDistance();
 		Vec3d endVec = head.addVector(look.xCoord * reach, look.yCoord * reach,
-				look.zCoord * reach);
+			look.zCoord * reach);
 		return blockState.collisionRayTrace(world, pos, head, endVec);
 	}
 }

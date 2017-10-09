@@ -50,27 +50,32 @@ public class ContainerGasStorage extends ContainerStorage {
 	@Optional.Method(modid = "MekanismAPI|gas")
 	public void doWorkMekanism() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize())
+		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize()) {
 			return;
+		}
 		ItemStack container = this.inventory.getStackInSlot(0);
-		if (container == null)
+		if (container == null) {
 			doNextFill = false;
-		if (!GasUtil.isGasContainer(container))
+		}
+		if (!GasUtil.isGasContainer(container)) {
 			return;
-		if (this.monitor == null)
+		}
+		if (this.monitor == null) {
 			return;
+		}
 		GasStack gasStack = GasUtil.getGasFromContainer(container);
 		container = container.copy();
 		container.stackSize = 1;
-		if (GasUtil.isEmpty(container)  || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack).getFluid() == this.selectedFluid && doNextFill)) {
-			if (this.selectedFluid == null)
+		if (GasUtil.isEmpty(container) || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack).getFluid() == this.selectedFluid && doNextFill)) {
+			if (this.selectedFluid == null) {
 				return;
+			}
 			int capacity = GasUtil.getCapacity(container);
 			//Tries to simulate the extraction of fluid from storage.
 			IAEFluidStack result = this.monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
 
 			//Calculates the amount of fluid to fill container with.
-			int proposedAmount = result == null ? 0 :  gasStack == null ? (int) Math.min(capacity, result.getStackSize()) : (int) Math.min(capacity - gasStack.amount, result.getStackSize());
+			int proposedAmount = result == null ? 0 : gasStack == null ? (int) Math.min(capacity, result.getStackSize()) : (int) Math.min(capacity - gasStack.amount, result.getStackSize());
 
 			//Tries to fill the container with fluid.
 			MutablePair<Integer, ItemStack> filledContainer = GasUtil.fillStack(container, GasUtil.getGasStack(new FluidStack(this.selectedFluid, proposedAmount)));
@@ -83,7 +88,7 @@ public class ContainerGasStorage extends ContainerStorage {
 				monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
 				doNextFill = true;
 
-			}else if (fillSecondSlot(filledContainer.getRight())){
+			} else if (fillSecondSlot(filledContainer.getRight())) {
 				monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
 				decreaseFirstSlot();
 				doNextFill = false;
@@ -92,14 +97,15 @@ public class ContainerGasStorage extends ContainerStorage {
 		} else if (GasUtil.isFilled(container)) {
 			GasStack containerGas = GasUtil.getGasFromContainer(container);
 
-			MutablePair<Integer, ItemStack> drainedContainer =  GasUtil.drainStack(container.copy(), containerGas);
+			MutablePair<Integer, ItemStack> drainedContainer = GasUtil.drainStack(container.copy(), containerGas);
 			GasStack gasStack1 = containerGas.copy();
 			gasStack1.amount = drainedContainer.getLeft();
 
 			//Tries to inject fluid to network.
 			IAEFluidStack notInjected = this.monitor.injectItems(GasUtil.createAEFluidStack(gasStack1), Actionable.SIMULATE, new PlayerSource(this.player, null));
-			if (notInjected != null)
+			if (notInjected != null) {
 				return;
+			}
 			ItemStack handItem = player.getHeldItem(hand);
 			if (this.handler != null) {
 				if (!this.handler.hasPower(this.player, 20.0D,
@@ -116,12 +122,11 @@ public class ContainerGasStorage extends ContainerStorage {
 				this.storageCell.usePower(this.player, 20.0D,
 					handItem);
 			}
-			ItemStack emptyContainer  = drainedContainer.getRight();
-			if(emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1){
+			ItemStack emptyContainer = drainedContainer.getRight();
+			if (emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1) {
 				monitor.injectItems(GasUtil.createAEFluidStack(gasStack1), Actionable.MODULATE, new PlayerSource(this.player, null));
 				this.inventory.setInventorySlotContents(0, emptyContainer);
-			}
-			else if (emptyContainer == null || fillSecondSlot(drainedContainer.getRight())) {
+			} else if (emptyContainer == null || fillSecondSlot(drainedContainer.getRight())) {
 				monitor.injectItems(GasUtil.createAEFluidStack(containerGas), Actionable.MODULATE, new PlayerSource(this.player, null));
 				decreaseFirstSlot();
 			}

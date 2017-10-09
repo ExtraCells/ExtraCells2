@@ -44,14 +44,14 @@ public class PacketFluidSlotSelect extends Packet {
 		data.writeFluid(this.fluid);
 	}
 
-	public static class Handler implements IPacketHandlerServer{
+	public static class Handler implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			IFluidSlotListener listener;
 
 			if (data.readBoolean()) {
 				listener = data.readPart(player.worldObj);
-			}else {
+			} else {
 				listener = data.readTile(player.worldObj, IFluidSlotListener.class);
 			}
 			int index = data.readVarIntFromBuffer();

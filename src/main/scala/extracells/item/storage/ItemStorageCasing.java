@@ -24,7 +24,7 @@ public class ItemStorageCasing extends ItemECBase {
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
 		for (CellDefinition definition : CellDefinition.values()) {
-			if(definition == CellDefinition.GAS && !Integration.Mods.MEKANISMGAS.isEnabled()){
+			if (definition == CellDefinition.GAS && !Integration.Mods.MEKANISMGAS.isEnabled()) {
 				continue;
 			}
 			itemList.add(new ItemStack(item, 1, definition.ordinal()));

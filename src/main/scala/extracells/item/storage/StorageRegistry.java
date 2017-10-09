@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StorageRegistry implements Iterable<StorageType>{
+public class StorageRegistry implements Iterable<StorageType> {
 
 	public ImmutableList<StorageType> types;
 	public String name;
@@ -21,14 +21,14 @@ public class StorageRegistry implements Iterable<StorageType>{
 		return types.iterator();
 	}
 
-	public StorageType fromMeta(int meta){
-		if(meta >= types.size()) {
+	public StorageType fromMeta(int meta) {
+		if (meta >= types.size()) {
 			return types.get(0);
 		}
 		return types.get(meta);
 	}
 
-	public static class Builder{
+	public static class Builder {
 		private List<StorageType> types;
 		private String name;
 
@@ -37,21 +37,21 @@ public class StorageRegistry implements Iterable<StorageType>{
 			this.name = name;
 		}
 
-		public void add(CellDefinition definition, int... sizes){
-			for(int size : sizes){
+		public void add(CellDefinition definition, int... sizes) {
+			for (int size : sizes) {
 				add(definition, size);
 			}
 		}
 
-		public void add(CellDefinition definition, int size){
+		public void add(CellDefinition definition, int size) {
 			types.add(new StorageType(definition, types.size(), size, name));
 		}
 
-		public int size(){
+		public int size() {
 			return types.size();
 		}
 
-		public StorageRegistry build(){
+		public StorageRegistry build() {
 			return new StorageRegistry(ImmutableList.copyOf(types), name);
 		}
 	}

@@ -31,12 +31,12 @@ public class PacketStorageSelectFluid extends Packet {
 		return PacketId.STORAGE_SELECT_FLUID;
 	}
 
-	public static class Handler implements IPacketHandlerServer{
+	public static class Handler implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			Fluid fluid = data.readFluid();
 			ContainerStorage containerStorage = GuiUtil.getContainer(player, ContainerFluidStorage.class);
-			if(fluid == null || containerStorage == null){
+			if (fluid == null || containerStorage == null) {
 				return;
 			}
 

@@ -40,20 +40,24 @@ public class ContainerFluidStorage extends ContainerStorage {
 	@Override
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize())
+		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize()) {
 			return;
+		}
 		ItemStack container = this.inventory.getStackInSlot(0);
-		if (!FluidHelper.isFluidContainer(container))
+		if (!FluidHelper.isFluidContainer(container)) {
 			return;
-		if (this.monitor == null)
+		}
+		if (this.monitor == null) {
 			return;
+		}
 
 		container = container.copy();
 		container.stackSize = 1;
 
 		if (FluidHelper.isFillableContainerWithRoom(container)) {
-			if (this.selectedFluid == null)
+			if (this.selectedFluid == null) {
 				return;
+			}
 			int capacity = FluidHelper.getCapacity(container, selectedFluid);
 			//Tries to simulate the extraction of fluid from storage.
 			IAEFluidStack result = this.monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
@@ -61,8 +65,9 @@ public class ContainerFluidStorage extends ContainerStorage {
 			//Calculates the amount of fluid to fill container with.
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
 
-			if(proposedAmount == 0)
+			if (proposedAmount == 0) {
 				return;
+			}
 
 			//Tries to fill the container with fluid.
 			Pair<Integer, ItemStack> filledContainer = FluidHelper.fillStack(container, new FluidStack(this.selectedFluid, proposedAmount));
@@ -70,9 +75,9 @@ public class ContainerFluidStorage extends ContainerStorage {
 			//Moves it to second slot and commits extraction to grid.
 			if (fillSecondSlot(filledContainer.getRight())) {
 				this.monitor.extractItems(AEUtils.createFluidStack(
-						this.selectedFluid, filledContainer.getLeft()),
-						Actionable.MODULATE,
-						new PlayerSource(this.player, null));
+					this.selectedFluid, filledContainer.getLeft()),
+					Actionable.MODULATE,
+					new PlayerSource(this.player, null));
 				decreaseFirstSlot();
 			}
 
@@ -82,9 +87,10 @@ public class ContainerFluidStorage extends ContainerStorage {
 			//Tries to inject fluid to network.
 			IAEFluidStack notInjected = this.monitor.injectItems(
 				AEUtils.createFluidStack(containerFluid),
-					Actionable.SIMULATE, new PlayerSource(this.player, null));
-			if (notInjected != null)
+				Actionable.SIMULATE, new PlayerSource(this.player, null));
+			if (notInjected != null) {
 				return;
+			}
 			ItemStack handItem = player.getHeldItem(hand);
 			if (this.handler != null) {
 				if (!this.handler.hasPower(this.player, 20.0D,
@@ -92,22 +98,22 @@ public class ContainerFluidStorage extends ContainerStorage {
 					return;
 				}
 				this.handler.usePower(this.player, 20.0D,
-						handItem);
+					handItem);
 			} else if (this.storageCell != null) {
 				if (!this.storageCell.hasPower(this.player, 20.0D,
-						handItem)) {
+					handItem)) {
 					return;
 				}
 				this.storageCell.usePower(this.player, 20.0D,
 					handItem);
 			}
 			Pair<Integer, ItemStack> drainedContainer = FluidHelper
-					.drainStack(container, containerFluid);
+				.drainStack(container, containerFluid);
 			if (fillSecondSlot(drainedContainer.getRight())) {
 				this.monitor.injectItems(
 					AEUtils.createFluidStack(containerFluid),
-						Actionable.MODULATE,
-						new PlayerSource(this.player, null));
+					Actionable.MODULATE,
+					new PlayerSource(this.player, null));
 				decreaseFirstSlot();
 			}
 		}

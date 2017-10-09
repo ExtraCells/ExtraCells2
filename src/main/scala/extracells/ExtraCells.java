@@ -60,7 +60,7 @@ public class ExtraCells {
 
 		// Config
 		configFolder = event.getModConfigurationDirectory();
-		Configuration config = new Configuration(new File(configFolder,  "AppliedEnergistics2" + File.separator + "extracells.cfg"));
+		Configuration config = new Configuration(new File(configFolder, "AppliedEnergistics2" + File.separator + "extracells.cfg"));
 		ECConfigHandler configHandler = new ECConfigHandler(config);
 		configHandler.reload();
 		MinecraftForge.EVENT_BUS.register(configHandler);

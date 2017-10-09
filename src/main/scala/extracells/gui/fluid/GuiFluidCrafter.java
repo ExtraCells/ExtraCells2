@@ -15,7 +15,7 @@ public class GuiFluidCrafter extends GuiContainer {
 	public static final int xSize = 176;
 	public static final int ySize = 166;
 	private ResourceLocation guiTexture = new ResourceLocation("extracells",
-			"textures/gui/fluidcrafter.png");
+		"textures/gui/fluidcrafter.png");
 
 	public GuiFluidCrafter(InventoryPlayer player, IInventory tileentity) {
 		super(new ContainerFluidCrafter(player, tileentity));
@@ -37,7 +37,7 @@ public class GuiFluidCrafter extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		this.fontRendererObj.drawString(BlockEnum.FLUIDCRAFTER.getStatName(),
-				5, 5, 0x000000);
+			5, 5, 0x000000);
 	}
 
 	public int getRowLength() {
@@ -50,10 +50,10 @@ public class GuiFluidCrafter extends GuiContainer {
 			GlStateManager.enableBlend();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
 			this.mc.getTextureManager().bindTexture(
-					new ResourceLocation("appliedenergistics2",
-							"textures/guis/states.png"));
+				new ResourceLocation("appliedenergistics2",
+					"textures/guis/states.png"));
 			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition,
-					this.guiTop + slot.yDisplayPosition, 240, 128, 16, 16);
+				this.guiTop + slot.yDisplayPosition, 240, 128, 16, 16);
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
 		}

@@ -51,10 +51,10 @@ import extracells.util.ECConfigHandler;
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
 public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell, IAEItemPowerStorage, IEnergyContainerItem {
 
-	public static final String[] suffixes = { "256k", "1024k", "4096k", "16384k", "container" };
+	public static final String[] suffixes = {"256k", "1024k", "4096k", "16384k", "container"};
 
-	public static final int[] bytes_cell = { 262144, 1048576, 4194304, 16777216, 65536 };
-	public static final int[] types_cell = { 63, 63, 63, 63, 1 };
+	public static final int[] bytes_cell = {262144, 1048576, 4194304, 16777216, 65536};
+	public static final int[] types_cell = {63, 63, 63, 63, 1};
 	private final int MAX_POWER = 32000;
 
 	public ItemStorageCellPhysical() {
@@ -63,46 +63,49 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 		setHasSubtypes(true);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player,
-			List list, boolean par4) {
+		List list, boolean par4) {
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 		IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry
-				.getCellInventory(itemStack, null, StorageChannel.ITEMS);
+			.getCellInventory(itemStack, null, StorageChannel.ITEMS);
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
 		long usedBytes = cellInv.getUsedBytes();
 
 		list.add(String.format(I18n
 				.translateToLocal("extracells.tooltip.storage.physical.bytes"),
-				usedBytes, cellInv.getTotalBytes()));
+			usedBytes, cellInv.getTotalBytes()));
 		list.add(String.format(I18n
 				.translateToLocal("extracells.tooltip.storage.physical.types"),
-				cellInv.getStoredItemTypes(), cellInv.getTotalItemTypes()));
-		if (usedBytes > 0)
+			cellInv.getStoredItemTypes(), cellInv.getTotalItemTypes()));
+		if (usedBytes > 0) {
 			list.add(String.format(
-					I18n
-							.translateToLocal("extracells.tooltip.storage.physical.content"),
-					cellInv.getStoredItemCount()));
+				I18n
+					.translateToLocal("extracells.tooltip.storage.physical.content"),
+				cellInv.getStoredItemCount()));
+		}
 	}
 
 	@Override
 	public int getBytesPerType(ItemStack cellItem) {
 		return ECConfigHandler.dynamicTypes ? bytes_cell[MathHelper.clamp_int(
-				cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
+			cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
 	}
 
 	private NBTTagCompound ensureTagCompound(ItemStack itemStack) {
-		if (!itemStack.hasTagCompound())
+		if (!itemStack.hasTagCompound()) {
 			itemStack.setTagCompound(new NBTTagCompound());
+		}
 		return itemStack.getTagCompound();
 	}
 
 	@Override
 	public double extractAEPower(ItemStack itemStack, double amt) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
+		if (itemStack == null || itemStack.getItemDamage() != 4) {
 			return 0.0D;
+		}
 		NBTTagCompound tagCompound = ensureTagCompound(itemStack);
 		double currentPower = tagCompound.getDouble("power");
 		double toExtract = Math.min(amt, currentPower);
@@ -113,40 +116,43 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	@Override
 	@Optional.Method(modid = "CoFHAPI|energy")
 	public int extractEnergy(ItemStack container, int maxExtract,
-			boolean simulate) {
-		if (container == null || container.getItemDamage() != 4)
+		boolean simulate) {
+		if (container == null || container.getItemDamage() != 4) {
 			return 0;
+		}
 		if (simulate) {
 			return getEnergyStored(container) >= maxExtract ? maxExtract
-					: getEnergyStored(container);
+				: getEnergyStored(container);
 		} else {
 			return (int) PowerUnits.AE
-					.convertTo(
-							PowerUnits.RF,
-							extractAEPower(container, PowerUnits.RF.convertTo(
-									PowerUnits.AE, maxExtract)));
+				.convertTo(
+					PowerUnits.RF,
+					extractAEPower(container, PowerUnits.RF.convertTo(
+						PowerUnits.AE, maxExtract)));
 		}
 	}
 
 	@Override
 	public double getAECurrentPower(ItemStack itemStack) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
+		if (itemStack == null || itemStack.getItemDamage() != 4) {
 			return 0.0D;
+		}
 		NBTTagCompound tagCompound = ensureTagCompound(itemStack);
 		return tagCompound.getDouble("power");
 	}
 
 	@Override
 	public double getAEMaxPower(ItemStack itemStack) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
+		if (itemStack == null || itemStack.getItemDamage() != 4) {
 			return 0.0D;
+		}
 		return this.MAX_POWER;
 	}
 
 	@Override
 	public int getBytes(ItemStack cellItem) {
 		return bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0,
-				suffixes.length - 1)];
+			suffixes.length - 1)];
 	}
 
 	@Override
@@ -156,8 +162,9 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack itemStack) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
+		if (itemStack == null || itemStack.getItemDamage() != 4) {
 			return super.getDurabilityForDisplay(itemStack);
+		}
 		return 1 - getAECurrentPower(itemStack) / this.MAX_POWER;
 	}
 
@@ -165,13 +172,14 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	@Optional.Method(modid = "CoFHAPI|energy")
 	public int getEnergyStored(ItemStack arg0) {
 		return (int) PowerUnits.AE.convertTo(PowerUnits.RF,
-				getAECurrentPower(arg0));
+			getAECurrentPower(arg0));
 	}
 
 	@Override
 	public FuzzyMode getFuzzyMode(ItemStack is) {
-		if (!is.hasTagCompound())
+		if (!is.hasTagCompound()) {
 			is.setTagCompound(new NBTTagCompound());
+		}
 		return FuzzyMode.values()[is.getTagCompound().getInteger("fuzzyMode")];
 	}
 
@@ -184,30 +192,33 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	@SideOnly(Side.CLIENT)
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		if (stack == null)
+		if (stack == null) {
 			return super.getItemStackDisplayName(stack);
+		}
 		if (stack.getItemDamage() == 4) {
 			try {
 				IItemList list = AEApi
-						.instance()
-						.registries()
-						.cell()
-						.getCellInventory(stack, null, StorageChannel.ITEMS)
-						.getAvailableItems(
-								AEApi.instance().storage().createItemList());
-				if (list.isEmpty())
+					.instance()
+					.registries()
+					.cell()
+					.getCellInventory(stack, null, StorageChannel.ITEMS)
+					.getAvailableItems(
+						AEApi.instance().storage().createItemList());
+				if (list.isEmpty()) {
 					return super.getItemStackDisplayName(stack)
-							+ " - "
-							+ I18n
-									.translateToLocal("extracells.tooltip.empty1");
+						+ " - "
+						+ I18n
+						.translateToLocal("extracells.tooltip.empty1");
+				}
 				IAEItemStack s = (IAEItemStack) list.getFirstItem();
 				return super.getItemStackDisplayName(stack) + " - "
-						+ s.getItemStack().getDisplayName();
-			} catch (Throwable e) {}
+					+ s.getItemStack().getDisplayName();
+			} catch (Throwable e) {
+			}
 			return super.getItemStackDisplayName(stack)
-					+ " - "
-					+ I18n
-							.translateToLocal("extracells.tooltip.empty1");
+				+ " - "
+				+ I18n
+				.translateToLocal("extracells.tooltip.empty1");
 		}
 		return super.getItemStackDisplayName(stack);
 	}
@@ -216,15 +227,16 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	@Optional.Method(modid = "CoFHAPI|energy")
 	public int getMaxEnergyStored(ItemStack arg0) {
 		return (int) PowerUnits.AE
-				.convertTo(PowerUnits.RF, getAEMaxPower(arg0));
+			.convertTo(PowerUnits.RF, getAEMaxPower(arg0));
 	}
 
 	@Override
 	public AccessRestriction getPowerFlow(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return null;
+		}
 		return itemStack.getItemDamage() == 4 ? AccessRestriction.READ_WRITE
-				: AccessRestriction.NO_ACCESS;
+			: AccessRestriction.NO_ACCESS;
 	}
 
 	@Override
@@ -263,8 +275,9 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public double injectAEPower(ItemStack itemStack, double amt) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
+		if (itemStack == null || itemStack.getItemDamage() != 4) {
 			return 0.0D;
+		}
 		NBTTagCompound tagCompound = ensureTagCompound(itemStack);
 		double currentPower = tagCompound.getDouble("power");
 		double toInject = Math.min(amt, this.MAX_POWER - currentPower);
@@ -274,7 +287,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public boolean isBlackListed(ItemStack cellItem,
-			IAEItemStack requestedAddition) {
+		IAEItemStack requestedAddition) {
 		return false;
 	}
 
@@ -288,11 +301,12 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 		return true;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
+		}
 		if (itemStack.getItemDamage() == 4 && !world.isRemote && player.isSneaking()) {
 			switch (itemStack.getTagCompound().getInteger("mode")) {
 				case 0:
@@ -310,26 +324,30 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 			}
 			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 		}
-		if (!player.isSneaking())
+		if (!player.isSneaking()) {
 			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
+		}
 		IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
-		if (cellInv.getUsedBytes() == 0 && player.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
+		if (cellInv.getUsedBytes() == 0 && player.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0))) {
 			return new ActionResult(EnumActionResult.SUCCESS, ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage()));
+		}
 		return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 	}
 
 	@Override
 	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (stack == null || player == null)
+		if (stack == null || player == null) {
 			return EnumActionResult.PASS;
+		}
 		if (stack.getItemDamage() == 4 && !player.isSneaking()) {
 			double power = getAECurrentPower(stack);
 			IItemList list = AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.ITEMS).getAvailableItems(
-							AEApi.instance().storage().createItemList());
-			if (list.isEmpty())
+				AEApi.instance().storage().createItemList());
+			if (list.isEmpty()) {
 				return EnumActionResult.PASS;
+			}
 			IAEItemStack storageStack = (IAEItemStack) list.getFirstItem();
 			if (world.isAirBlock(pos.offset(facing)) && storageStack.getStackSize() != 0 && power >= 20.0D) {
 				if (!world.isRemote) {
@@ -364,24 +382,26 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	@Override
 	@Optional.Method(modid = "CoFHAPI|energy")
 	public int receiveEnergy(ItemStack container, int maxReceive,
-			boolean simulate) {
-		if (container == null || container.getItemDamage() != 4)
+		boolean simulate) {
+		if (container == null || container.getItemDamage() != 4) {
 			return 0;
+		}
 		if (simulate) {
 			double current = PowerUnits.AE.convertTo(PowerUnits.RF,
-					getAECurrentPower(container));
+				getAECurrentPower(container));
 			double max = PowerUnits.AE.convertTo(PowerUnits.RF,
-					getAEMaxPower(container));
-			if (max - current >= maxReceive)
+				getAEMaxPower(container));
+			if (max - current >= maxReceive) {
 				return maxReceive;
-			else
+			} else {
 				return (int) (max - current);
+			}
 		} else {
 			int notStored = (int) PowerUnits.AE
-					.convertTo(
-							PowerUnits.RF,
-							injectAEPower(container, PowerUnits.RF.convertTo(
-									PowerUnits.AE, maxReceive)));
+				.convertTo(
+					PowerUnits.RF,
+					injectAEPower(container, PowerUnits.RF.convertTo(
+						PowerUnits.AE, maxReceive)));
 			return maxReceive - notStored;
 		}
 	}
@@ -396,15 +416,17 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
-		if (!is.hasTagCompound())
+		if (!is.hasTagCompound()) {
 			is.setTagCompound(new NBTTagCompound());
+		}
 		is.getTagCompound().setInteger("fuzzyMode", fzMode.ordinal());
 	}
 
 	@Override
 	public boolean showDurabilityBar(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return false;
+		}
 		return itemStack.getItemDamage() == 4;
 	}
 
