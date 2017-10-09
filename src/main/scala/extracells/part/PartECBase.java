@@ -165,7 +165,8 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	}
 
 	@Override
-	public void getDrops(List<ItemStack> drops, boolean wrenched) {}
+	public void getDrops(List<ItemStack> drops, boolean wrenched) {
+	}
 
 	@Override
 	public final IGridNode getExternalFacingNode() {
@@ -177,7 +178,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")
-	public IGasHandler getFacingGasTank(){
+	public IGasHandler getFacingGasTank() {
 		return (IGasHandler) facingGasTank;
 	}
 
@@ -206,12 +207,13 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1,
-				PartEnum.getPartID(this));
+			PartEnum.getPartID(this));
 		if (type != PartItemStack.BREAK) {
 			NBTTagCompound itemNbt = new NBTTagCompound();
 			writeToNBT(itemNbt);
-			if (itemNbt.hasKey("node"))
+			if (itemNbt.hasKey("node")) {
 				itemNbt.removeTag("node");
+			}
 			is.setTagCompound(itemNbt);
 		}
 		return is;
@@ -296,7 +298,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d pos) {
-		if (player != null && player instanceof EntityPlayerMP){
+		if (player != null && player instanceof EntityPlayerMP) {
 			BlockPos hostPos = hostTile.getPos();
 			GuiHandler.launchGui(GuiHandler.getGuiId(this), player, this.hostTile.getWorld(), hostPos.getX(), hostPos.getY(), hostPos.getZ());
 		}
@@ -304,7 +306,8 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	}
 
 	@Override
-	public void onEntityCollision(Entity entity) {}
+	public void onEntityCollision(Entity entity) {
+	}
 
 	public boolean isValid() {
 		if (this.hostTile != null && this.hostTile.hasWorldObj()) {
@@ -312,10 +315,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 			TileEntity host = this.hostTile.getWorld().getTileEntity(loc.getPos());
 			if (host instanceof IPartHost) {
 				return ((IPartHost) host).getPart(this.side) == this;
+			} else {
+				return false;
 			}
-			else return false;
+		} else {
+			return false;
 		}
-		else return false;
 	}
 
 	@Override
@@ -424,8 +429,9 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 			IGrid grid = this.node.getGrid();
 			if (grid != null) {
 				IEnergyGrid energy = grid.getCache(IEnergyGrid.class);
-				if (energy != null)
+				if (energy != null) {
 					this.isPowerd = energy.isNetworkPowered();
+				}
 			}
 			this.host.markForUpdate();
 		}

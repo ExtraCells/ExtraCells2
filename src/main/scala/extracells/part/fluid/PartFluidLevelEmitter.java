@@ -87,12 +87,12 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	private boolean isPowering() {
 		switch (this.mode) {
-		case LOW_SIGNAL:
-			return this.wantedAmount >= this.currentAmount;
-		case HIGH_SIGNAL:
-			return this.wantedAmount <= this.currentAmount;
-		default:
-			return false;
+			case LOW_SIGNAL:
+				return this.wantedAmount >= this.currentAmount;
+			case HIGH_SIGNAL:
+				return this.wantedAmount <= this.currentAmount;
+			default:
+				return false;
 		}
 	}
 
@@ -151,27 +151,29 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		this.fluid = FluidRegistry.getFluid(data.getString("fluid"));
 		this.mode = RedstoneMode.values()[data.getInteger("mode")];
 		this.wantedAmount = data.getLong("wantedAmount");
-		if (this.wantedAmount < 0)
+		if (this.wantedAmount < 0) {
 			this.wantedAmount = 0;
+		}
 	}
 
 	@Override
 	public boolean readFromStream(ByteBuf data) throws IOException {
 		super.readFromStream(data);
 		this.clientRedstoneOutput = data.readBoolean();
-		if (getHost() != null)
+		if (getHost() != null) {
 			getHost().markForUpdate();
+		}
 		return true;
 	}
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return clientRedstoneOutput ? PartModels.EMITTER_ON_HAS_CHANNEL : PartModels.EMITTER_OFF_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return clientRedstoneOutput ? PartModels.EMITTER_ON_ON : PartModels.EMITTER_OFF_ON;
 		} else {
-			return clientRedstoneOutput ? PartModels.EMITTER_ON_OFF :PartModels.EMITTER_OFF_OFF;
+			return clientRedstoneOutput ? PartModels.EMITTER_ON_OFF : PartModels.EMITTER_OFF_OFF;
 		}
 	}
 
@@ -189,8 +191,9 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	public void setWantedAmount(long _wantedAmount, EntityPlayer player) {
 		this.wantedAmount = _wantedAmount;
-		if (this.wantedAmount < 0)
+		if (this.wantedAmount < 0) {
 			this.wantedAmount = 0;
+		}
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_AMOUNT, Long.toString(wantedAmount)), player);
 		notifyTargetBlock(getHostTile(), getFacing());
 		saveData();
@@ -204,12 +207,12 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	public void toggleMode(EntityPlayer player) {
 		switch (this.mode) {
-		case LOW_SIGNAL:
-			this.mode = RedstoneMode.HIGH_SIGNAL;
-			break;
-		default:
-			this.mode = RedstoneMode.LOW_SIGNAL;
-			break;
+			case LOW_SIGNAL:
+				this.mode = RedstoneMode.HIGH_SIGNAL;
+				break;
+			default:
+				this.mode = RedstoneMode.LOW_SIGNAL;
+				break;
 		}
 
 		notifyTargetBlock(getHostTile(), getFacing());
@@ -220,18 +223,20 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	@Override
 	public void updateWatcher(IStackWatcher newWatcher) {
 		this.watcher = newWatcher;
-		if (this.fluid != null)
+		if (this.fluid != null) {
 			this.watcher.add(AEApi.instance().storage()
-					.createFluidStack(new FluidStack(this.fluid, 1)));
+				.createFluidStack(new FluidStack(this.fluid, 1)));
+		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
-		if (this.fluid != null)
+		if (this.fluid != null) {
 			data.setString("fluid", this.fluid.getName());
-		else
+		} else {
 			data.removeTag("fluid");
+		}
 		data.setInteger("mode", this.mode.ordinal());
 		data.setLong("wantedAmount", this.wantedAmount);
 	}

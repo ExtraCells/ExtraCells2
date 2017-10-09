@@ -57,21 +57,6 @@ public class FluidCellHandler implements ICellHandler {
 		return 1;
 	}
 
-	/*@Override
-	public IIcon getTopTexture_Dark() {
-		return TextureManager.TERMINAL_FRONT.getTextures()[0];
-	}
-
-	@Override
-	public IIcon getTopTexture_Light() {
-		return TextureManager.TERMINAL_FRONT.getTextures()[2];
-	}
-
-	@Override
-	public IIcon getTopTexture_Medium() {
-		return TextureManager.TERMINAL_FRONT.getTextures()[1];
-	}*/
-
 	@Override
 	public boolean isCell(ItemStack is) {
 		return is != null && is.getItem() != null && is.getItem() instanceof IFluidStorageCell;

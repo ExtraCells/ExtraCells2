@@ -43,8 +43,9 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 	@SuppressWarnings("unused")
 	@MENetworkEventSubscribe
 	public void channelChanged(MENetworkChannelChanged e) {
-		if (e.node == getGridNode())
+		if (e.node == getGridNode()) {
 			onNeighborChanged();
+		}
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
-				(IPart) this)) {
+			(IPart) this)) {
 			return super.onActivate(player, hand, pos);
 		}
 		return false;
@@ -76,11 +77,13 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 	public void onNeighborChanged() {
 		TileEntity hostTile = getHostTile();
 		ECBaseGridBlock gridBlock = getGridBlock();
-		if (hostTile == null || gridBlock == null)
+		if (hostTile == null || gridBlock == null) {
 			return;
+		}
 		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
-		if (monitor == null)
+		if (monitor == null) {
 			return;
+		}
 		World world = hostTile.getWorld();
 		BlockPos pos = hostTile.getPos();
 		EnumFacing facing = getFacing();
@@ -92,13 +95,15 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 		if (fluidBlock instanceof IFluidBlock) {
 			IFluidBlock block = (IFluidBlock) fluidBlock;
 			FluidStack drained = block.drain(world, offsetPos, false);
-			if (drained == null)
+			if (drained == null) {
 				return;
+			}
 			IAEFluidStack toInject = AEUtils.createFluidStack(drained);
 			IAEFluidStack notInjected = monitor.injectItems(toInject,
-					Actionable.SIMULATE, new MachineSource(this));
-			if (notInjected != null)
+				Actionable.SIMULATE, new MachineSource(this));
+			if (notInjected != null) {
 				return;
+			}
 			monitor.injectItems(toInject, Actionable.MODULATE, new MachineSource(this));
 			block.drain(world, offsetPos, true);
 		} else if (meta == 0) {
@@ -106,19 +111,21 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 				IAEFluidStack toInject = AEUtils
 					.createFluidStack(FluidRegistry.WATER);
 				IAEFluidStack notInjected = monitor.injectItems(toInject,
-						Actionable.SIMULATE, new MachineSource(this));
-				if (notInjected != null)
+					Actionable.SIMULATE, new MachineSource(this));
+				if (notInjected != null) {
 					return;
+				}
 				monitor.injectItems(toInject, Actionable.MODULATE,
-						new MachineSource(this));
+					new MachineSource(this));
 				world.setBlockToAir(offsetPos);
 			} else if (fluidBlock == Blocks.FLOWING_LAVA) {
 				IAEFluidStack toInject = AEUtils
 					.createFluidStack(FluidRegistry.LAVA);
 				IAEFluidStack notInjected = monitor.injectItems(toInject,
-						Actionable.SIMULATE, new MachineSource(this));
-				if (notInjected != null)
+					Actionable.SIMULATE, new MachineSource(this));
+				if (notInjected != null) {
 					return;
+				}
 				monitor.injectItems(toInject, Actionable.MODULATE, new MachineSource(this));
 				world.setBlockToAir(offsetPos);
 			}
@@ -127,9 +134,9 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.ANNIHILATION_PLANE_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.ANNIHILATION_PLANE_ON;
 		} else {
 			return PartModels.ANNIHILATION_PLANE_OFF;

@@ -65,10 +65,11 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	};
 
 	@Override
-	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+	public void getDrops(List<ItemStack> drops, boolean wrenched) {
 		for (ItemStack stack : upgradeInventory.slots) {
-			if (stack == null)
+			if (stack == null) {
 				continue;
+			}
 			drops.add(stack);
 		}
 	}
@@ -76,13 +77,15 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack stack = super.getItemStack(type);
-		if (type.equals(PartItemStack.WRENCH))
+		if (type.equals(PartItemStack.WRENCH)) {
 			stack.getTagCompound().removeTag("upgradeInventory");
+		}
 		return stack;
 	}
 
 	@Override
-	public void blinkCell(int slot) {}
+	public void blinkCell(int slot) {
+	}
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
@@ -186,7 +189,8 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		if (data.hasKey("access")) {
 			try {
 				this.access = AccessRestriction.valueOf(data.getString("access"));
-			} catch (Throwable e) {}
+			} catch (Throwable e) {
+			}
 		}
 		this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
 		onInventoryChanged();
@@ -197,9 +201,9 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.STORAGE_BUS_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.STORAGE_BUS_ON;
 		} else {
 			return PartModels.STORAGE_BUS_OFF;
@@ -242,8 +246,8 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 			}
 		}
 		node.getGrid().postEvent(
-				new MENetworkStorageEvent(getGridBlock().getFluidMonitor(),
-						StorageChannel.FLUIDS));
+			new MENetworkStorageEvent(getGridBlock().getFluidMonitor(),
+				StorageChannel.FLUIDS));
 		node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 	}
 
@@ -253,28 +257,29 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		data.setInteger("priority", this.priority);
 		for (int i = 0; i < this.filterFluids.length; i++) {
 			Fluid fluid = this.filterFluids[i];
-			if (fluid != null)
+			if (fluid != null) {
 				data.setString("FilterFluid#" + i, fluid.getName());
-			else
+			} else {
 				data.setString("FilterFluid#" + i, "");
+			}
 		}
 		data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
 		data.setString("access", this.access.name());
 	}
-	
-	private void updateNeighborFluids(){
+
+	private void updateNeighborFluids() {
 		fluidList.clear();
-		if(access == AccessRestriction.READ || access == AccessRestriction.READ_WRITE){
-			for(IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())){
+		if (access == AccessRestriction.READ || access == AccessRestriction.READ_WRITE) {
+			for (IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())) {
 				FluidStack s = stack.getFluidStack().copy();
 				fluidList.put(s, s.amount);
 			}
 		}
 	}
-	
-	private boolean wasChanged(){
+
+	private boolean wasChanged() {
 		HashMap<FluidStack, Integer> fluids = new HashMap<FluidStack, Integer>();
-		for(IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())){
+		for (IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())) {
 			FluidStack s = stack.getFluidStack();
 			fluids.put(s, s.amount);
 		}

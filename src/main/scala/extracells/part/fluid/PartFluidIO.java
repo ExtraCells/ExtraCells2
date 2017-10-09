@@ -50,10 +50,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 	private UpgradeInventory upgradeInventory = new UpgradeInventory(this);
 
 	@Override
-	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+	public void getDrops(List<ItemStack> drops, boolean wrenched) {
 		for (ItemStack stack : upgradeInventory.slots) {
-			if (stack == null)
+			if (stack == null) {
 				continue;
+			}
 			drops.add(stack);
 		}
 	}
@@ -61,8 +62,9 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack stack = super.getItemStack(type);
-		if (type.equals(PartItemStack.WRENCH))
+		if (type.equals(PartItemStack.WRENCH)) {
 			stack.getTagCompound().removeTag("upgradeInventory");
+		}
 		return stack;
 	}
 
@@ -74,22 +76,23 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
 	private boolean canDoWork() {
 		boolean redstonePowered = isRedstonePowered();
-		if (!this.redstoneControlled)
+		if (!this.redstoneControlled) {
 			return true;
+		}
 		switch (getRedstoneMode()) {
-		case IGNORE:
-			return true;
-		case LOW_SIGNAL:
-			return !redstonePowered;
-		case HIGH_SIGNAL:
-			return redstonePowered;
-		case SIGNAL_PULSE:
-			return false;
+			case IGNORE:
+				return true;
+			case LOW_SIGNAL:
+				return !redstonePowered;
+			case HIGH_SIGNAL:
+				return redstonePowered;
+			case SIGNAL_PULSE:
+				return false;
 		}
 		return false;
 	}
-	
-	public byte getSpeedState(){
+
+	public byte getSpeedState() {
 		return this.speedState;
 	}
 
@@ -128,10 +131,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
 	@Override
 	public List<String> getWailaBodey(NBTTagCompound tag, List<String> oldList) {
-		if (tag.hasKey("speed"))
+		if (tag.hasKey("speed")) {
 			oldList.add(tag.getInteger("speed") + "mB/t");
-		else
+		} else {
 			oldList.add("125mB/t");
+		}
 		return oldList;
 	}
 
@@ -166,12 +170,15 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 		for (int i = 0; i < this.upgradeInventory.getSizeInventory(); i++) {
 			ItemStack currentStack = this.upgradeInventory.getStackInSlot(i);
 			if (currentStack != null) {
-				if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(currentStack))
+				if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(currentStack)) {
 					this.filterSize++;
-				if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(currentStack))
+				}
+				if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(currentStack)) {
 					this.redstoneControlled = true;
-				if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(currentStack))
+				}
+				if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(currentStack)) {
 					this.speedState++;
+				}
 			}
 		}
 
@@ -199,13 +206,13 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 	public final void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
 		this.redstoneMode = RedstoneMode.values()[data
-				.getInteger("redstoneMode")];
+			.getInteger("redstoneMode")];
 		for (int i = 0; i < 9; i++) {
 			this.filterFluids[i] = FluidRegistry.getFluid(data
-					.getString("FilterFluid#" + i));
+				.getString("FilterFluid#" + i));
 		}
 		this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory",
-				10));
+			10));
 		onInventoryChanged();
 	}
 
@@ -235,10 +242,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 
 	@Override
 	public final TickRateModulation tickingRequest(IGridNode node,
-			int TicksSinceLastCall) {
-		if (canDoWork())
+		int TicksSinceLastCall) {
+		if (canDoWork()) {
 			return doWork(125 + this.speedState * 125, TicksSinceLastCall) ? TickRateModulation.FASTER
-					: TickRateModulation.SLOWER;
+				: TickRateModulation.SLOWER;
+		}
 		return TickRateModulation.SLOWER;
 	}
 
@@ -248,10 +256,11 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 		data.setInteger("redstoneMode", this.redstoneMode.ordinal());
 		for (int i = 0; i < this.filterFluids.length; i++) {
 			Fluid fluid = this.filterFluids[i];
-			if (fluid != null)
+			if (fluid != null) {
 				data.setString("FilterFluid#" + i, fluid.getName());
-			else
+			} else {
 				data.setString("FilterFluid#" + i, "");
+			}
 		}
 		data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
 	}

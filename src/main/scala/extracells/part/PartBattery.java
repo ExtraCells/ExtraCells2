@@ -29,20 +29,21 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 	private ItemStack battery;
 	IAEItemPowerStorage handler;
 	private ECPrivateInventory inventory = new ECPrivateInventory(
-			"extracells.part.battery", 1, 1) {
+		"extracells.part.battery", 1, 1) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 			return itemStack != null
-					&& itemStack.getItem() instanceof IAEItemPowerStorage;
+				&& itemStack.getItem() instanceof IAEItemPowerStorage;
 		}
 	};
 
 	@Override
-	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+	public void getDrops(List<ItemStack> drops, boolean wrenched) {
 		for (ItemStack stack : inventory.slots) {
-			if (stack == null)
+			if (stack == null) {
 				continue;
+			}
 			drops.add(stack);
 		}
 	}
@@ -54,25 +55,28 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 
 	@Override
 	public double extractAEPower(double amt, Actionable mode,
-			PowerMultiplier usePowerMultiplier) {
-		if (this.handler == null || this.battery == null)
+		PowerMultiplier usePowerMultiplier) {
+		if (this.handler == null || this.battery == null) {
 			return 0;
+		}
 		return this.handler.extractAEPower(
-				mode == Actionable.MODULATE ? this.battery : this.battery
-						.copy(), usePowerMultiplier.multiply(amt));
+			mode == Actionable.MODULATE ? this.battery : this.battery
+				.copy(), usePowerMultiplier.multiply(amt));
 	}
 
 	@Override
 	public double getAECurrentPower() {
-		if (this.handler == null || this.battery == null)
+		if (this.handler == null || this.battery == null) {
 			return 0;
+		}
 		return this.handler.getAECurrentPower(this.battery);
 	}
 
 	@Override
 	public double getAEMaxPower() {
-		if (this.handler == null || this.battery == null)
+		if (this.handler == null || this.battery == null) {
 			return 0;
+		}
 		return this.handler.getAEMaxPower(this.battery);
 	}
 
@@ -83,18 +87,20 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 
 	@Override
 	public AccessRestriction getPowerFlow() {
-		if (this.handler == null || this.battery == null)
+		if (this.handler == null || this.battery == null) {
 			return AccessRestriction.NO_ACCESS;
+		}
 		return this.handler.getPowerFlow(this.battery);
 	}
 
 	@Override
 	public double injectAEPower(double amt, Actionable mode) {
-		if (this.handler == null || this.battery == null)
+		if (this.handler == null || this.battery == null) {
 			return 0;
+		}
 		return this.handler.injectAEPower(
-				mode == Actionable.MODULATE ? this.battery : this.battery
-						.copy(), amt);
+			mode == Actionable.MODULATE ? this.battery : this.battery
+				.copy(), amt);
 	}
 
 	@Override
@@ -106,7 +112,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 	public void onInventoryChanged() {
 		this.battery = this.inventory.getStackInSlot(0);
 		if (this.battery != null
-				&& this.battery.getItem() instanceof IAEItemPowerStorage) {
+			&& this.battery.getItem() instanceof IAEItemPowerStorage) {
 			//this.batteryIcon = this.battery.getgetIconIndex();
 			this.handler = (IAEItemPowerStorage) this.battery.getItem();
 		} else {
@@ -118,7 +124,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 			IGrid grid = node.getGrid();
 			if (grid != null) {
 				grid.postEvent(new MENetworkPowerStorage(this,
-						MENetworkPowerStorage.PowerEventType.REQUEST_POWER));
+					MENetworkPowerStorage.PowerEventType.REQUEST_POWER));
 			}
 			getHost().markForUpdate();
 		}
@@ -188,9 +194,9 @@ public class PartBattery extends PartECBase implements IAEPowerStorage,
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.BATTERY_PLANE_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.BATTERY_PLANE_ON;
 		} else {
 			return PartModels.BATTERY_PLANE_OFF;

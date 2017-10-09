@@ -13,8 +13,7 @@ import appeng.api.storage.data.IItemList;
 public class EmptyMeItemMonitor implements IMEMonitor<IAEItemStack> {
 
 	@Override
-	public void addListener(IMEMonitorHandlerReceiver<IAEItemStack> l,
-			Object verificationToken) {
+	public void addListener(IMEMonitorHandlerReceiver<IAEItemStack> l, Object verificationToken) {
 
 	}
 
@@ -24,9 +23,7 @@ public class EmptyMeItemMonitor implements IMEMonitor<IAEItemStack> {
 	}
 
 	@Override
-	public IAEItemStack extractItems(IAEItemStack request, Actionable mode,
-			BaseActionSource src) {
-		// TODO Auto-generated method stub
+	public IAEItemStack extractItems(IAEItemStack request, Actionable mode, BaseActionSource src) {
 		return null;
 	}
 
@@ -61,8 +58,7 @@ public class EmptyMeItemMonitor implements IMEMonitor<IAEItemStack> {
 	}
 
 	@Override
-	public IAEItemStack injectItems(IAEItemStack input, Actionable type,
-			BaseActionSource src) {
+	public IAEItemStack injectItems(IAEItemStack input, Actionable type, BaseActionSource src) {
 		return input;
 	}
 

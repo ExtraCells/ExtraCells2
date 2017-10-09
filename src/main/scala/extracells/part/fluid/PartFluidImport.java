@@ -34,8 +34,9 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
 	@Override
 	public boolean doWork(int rate, int TicksSinceLastCall) {
-		if (getFacingTank() == null || !isActive())
+		if (getFacingTank() == null || !isActive()) {
 			return false;
+		}
 		boolean empty = true;
 
 		List<Fluid> filter = new ArrayList<Fluid>();
@@ -82,14 +83,16 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
 		boolean redstonePowered = isRedstonePowered();
-		if (resource == null || redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL)
+		if (resource == null || redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL) {
 			return 0;
+		}
 		int drainAmount = Math.min(125 + this.speedState * 125, resource.amount);
 		FluidStack toFill = new FluidStack(resource.getFluid(), drainAmount);
 		Actionable action = doFill ? Actionable.MODULATE : Actionable.SIMULATE;
 		IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), action);
-		if (filled == null)
+		if (filled == null) {
 			return toFill.amount;
+		}
 		return toFill.amount - (int) filled.getStackSize();
 	}
 
@@ -103,30 +106,33 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 			drained = facingTank.drain(new FluidStack(fluid, toDrain), false);
 		}
 
-		if (drained == null || drained.amount <= 0 || drained.getFluid() == null)
+		if (drained == null || drained.amount <= 0 || drained.getFluid() == null) {
 			return false;
+		}
 
 		IAEFluidStack toFill = AEApi.instance().storage()
-				.createFluidStack(drained);
+			.createFluidStack(drained);
 		IAEFluidStack notInjected = injectFluid(toFill, Actionable.MODULATE);
 
 		if (notInjected != null) {
 			int amount = (int) (toFill.getStackSize() - notInjected
-					.getStackSize());
+				.getStackSize());
 			if (amount > 0) {
-				if (fluid == null)
+				if (fluid == null) {
 					facingTank.drain(amount, true);
-				else
+				} else {
 					facingTank.drain(new FluidStack(toFill.getFluid(), amount), true);
+				}
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			if (fluid == null)
+			if (fluid == null) {
 				facingTank.drain(toFill.getFluidStack().amount, true);
-			else
+			} else {
 				facingTank.drain(toFill.getFluidStack(), true);
+			}
 			return true;
 		}
 	}

@@ -51,8 +51,9 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	}
 
 	private boolean isItemValid(IAEItemStack s) {
-		if (s == null || this.filter.equals(""))
+		if (s == null || this.filter.equals("")) {
 			return false;
+		}
 
 		int[] ids = OreDictionary.getOreIDs(s.getItemStack());
 		ResourceLocation identifier = s.getItem().getRegistryName();
@@ -145,7 +146,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
 	public boolean doWork(int rate, int TicksSinceLastCall) {
 		int amount = rate * TicksSinceLastCall >= 64 ? 64 : rate
-				* TicksSinceLastCall;
+			* TicksSinceLastCall;
 		IStorageGrid storage = getStorageGrid();
 		IAEItemStack stack = null;
 		for (IAEItemStack s : storage.getItemInventory().getStorageList()) {
@@ -154,30 +155,35 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 				break;
 			}
 		}
-		if (stack == null)
+		if (stack == null) {
 			return false;
+		}
 		stack.setStackSize(amount);
 		stack = storage.getItemInventory().extractItems(stack.copy(),
-				Actionable.SIMULATE, new MachineSource(this));
-		if (stack == null)
+			Actionable.SIMULATE, new MachineSource(this));
+		if (stack == null) {
 			return false;
+		}
 		IAEItemStack exported = exportStack(stack.copy());
-		if (exported == null)
+		if (exported == null) {
 			return false;
+		}
 		storage.getItemInventory().extractItems(exported, Actionable.MODULATE,
-				new MachineSource(this));
+			new MachineSource(this));
 		return true;
 	}
 
 	public IAEItemStack exportStack(IAEItemStack stack0) {
 		DimensionalCoord location = getLocation();
-		if (location == null || stack0 == null)
+		if (location == null || stack0 == null) {
 			return null;
+		}
 		EnumFacing facing = getFacing();
 		BlockPos pos = location.getPos();
 		TileEntity tile = location.getWorld().getTileEntity(pos.offset(facing));
-		if (tile == null)
+		if (tile == null) {
 			return null;
+		}
 		IAEItemStack stack = stack0.copy();
 		if (tile instanceof IInventory) {
 			if (tile instanceof ISidedInventory) {
@@ -186,15 +192,16 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 					if (inv.canInsertItem(i, stack.getItemStack(), facing.getOpposite())) {
 						if (inv.getStackInSlot(i) == null) {
 							inv.setInventorySlotContents(i,
-									stack.getItemStack());
+								stack.getItemStack());
 							return stack0;
 						} else if (ItemUtils.areItemEqualsIgnoreStackSize(
-								inv.getStackInSlot(i), stack.getItemStack())) {
+							inv.getStackInSlot(i), stack.getItemStack())) {
 							int max = inv.getInventoryStackLimit();
 							int current = inv.getStackInSlot(i).stackSize;
 							int outStack = (int) stack.getStackSize();
-							if (max == current)
+							if (max == current) {
 								continue;
+							}
 							if (current + outStack <= max) {
 								ItemStack s = inv.getStackInSlot(i).copy();
 								s.stackSize = s.stackSize + outStack;
@@ -216,15 +223,16 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 					if (inv.isItemValidForSlot(i, stack.getItemStack())) {
 						if (inv.getStackInSlot(i) == null) {
 							inv.setInventorySlotContents(i,
-									stack.getItemStack());
+								stack.getItemStack());
 							return stack0;
 						} else if (ItemUtils.areItemEqualsIgnoreStackSize(
-								inv.getStackInSlot(i), stack.getItemStack())) {
+							inv.getStackInSlot(i), stack.getItemStack())) {
 							int max = inv.getInventoryStackLimit();
 							int current = inv.getStackInSlot(i).stackSize;
 							int outStack = (int) stack.getStackSize();
-							if (max == current)
+							if (max == current) {
 								continue;
+							}
 							if (current + outStack <= max) {
 								ItemStack s = inv.getStackInSlot(i).copy();
 								s.stackSize = s.stackSize + outStack;
@@ -262,7 +270,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1,
-				PartEnum.getPartID(this));
+			PartEnum.getPartID(this));
 		if (type != PartItemStack.BREAK) {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setString("filter", this.filter);
@@ -283,11 +291,13 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
 	private IStorageGrid getStorageGrid() {
 		IGridNode node = getGridNode();
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		IGrid grid = node.getGrid();
-		if (grid == null)
+		if (grid == null) {
 			return null;
+		}
 		return grid.getCache(IStorageGrid.class);
 	}
 
@@ -299,14 +309,15 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	@Override
 	public List<String> getWailaBodey(NBTTagCompound data, List<String> list) {
 		super.getWailaBodey(data, list);
-		if (data.hasKey("name"))
+		if (data.hasKey("name")) {
 			list.add(I18n
-					.translateToLocal("extracells.tooltip.oredict")
-					+ ": "
-					+ data.getString("name"));
-		else
+				.translateToLocal("extracells.tooltip.oredict")
+				+ ": "
+				+ data.getString("name"));
+		} else {
 			list.add(I18n
-					.translateToLocal("extracells.tooltip.oredict") + ":");
+				.translateToLocal("extracells.tooltip.oredict") + ":");
+		}
 		return list;
 	}
 
@@ -333,15 +344,16 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		if (data.hasKey("filter"))
+		if (data.hasKey("filter")) {
 			this.filter = data.getString("filter");
+		}
 	}
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.EXPORT_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.EXPORT_ON;
 		}
 		return PartModels.EXPORT_OFF;
@@ -349,10 +361,11 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
 	@Override
 	public final TickRateModulation tickingRequest(IGridNode node,
-			int TicksSinceLastCall) {
-		if (isActive())
+		int TicksSinceLastCall) {
+		if (isActive()) {
 			return doWork(10, TicksSinceLastCall) ? TickRateModulation.FASTER
-					: TickRateModulation.SLOWER;
+				: TickRateModulation.SLOWER;
+		}
 		return TickRateModulation.SLOWER;
 	}
 

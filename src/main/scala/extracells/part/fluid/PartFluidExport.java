@@ -32,8 +32,9 @@ public class PartFluidExport extends PartFluidIO {
 	@Override
 	public boolean doWork(int rate, int TicksSinceLastCall) {
 		IFluidHandler facingTank = getFacingTank();
-		if (facingTank == null || !isActive())
+		if (facingTank == null || !isActive()) {
 			return false;
+		}
 		List<Fluid> filter = new ArrayList<Fluid>();
 		filter.add(this.filterFluids[4]);
 
@@ -57,8 +58,9 @@ public class PartFluidExport extends PartFluidIO {
 			if (fluid != null) {
 				IAEFluidStack stack = extractFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, rate * TicksSinceLastCall)), Actionable.SIMULATE);
 
-				if (stack == null)
+				if (stack == null) {
 					continue;
+				}
 				int filled = facingTank.fill(stack.getFluidStack(), true);
 
 				if (filled > 0) {
@@ -94,9 +96,9 @@ public class PartFluidExport extends PartFluidIO {
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.EXPORT_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.EXPORT_ON;
 		}
 		return PartModels.EXPORT_OFF;

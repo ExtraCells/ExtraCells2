@@ -74,8 +74,9 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	}
 
 	protected void dropItems(World world, BlockPos pos, ItemStack stack) {
-		if (world == null)
+		if (world == null) {
 			return;
+		}
 		if (!world.isRemote) {
 			float f = 0.7F;
 			double d0 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
@@ -96,14 +97,17 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 
 	protected IMEMonitor<IAEFluidStack> getFluidStorage() {
 		IGridNode n = getGridNode();
-		if (n == null)
+		if (n == null) {
 			return null;
+		}
 		IGrid g = n.getGrid();
-		if (g == null)
+		if (g == null) {
 			return null;
+		}
 		IStorageGrid storage = g.getCache(IStorageGrid.class);
-		if (storage == null)
+		if (storage == null) {
 			return null;
+		}
 		return storage.getFluidInventory();
 	}
 
@@ -117,40 +121,44 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		super.getWailaBodey(data, list);
 		long amount = 0L;
 		Fluid fluid = null;
-		if (data.hasKey("locked") && data.getBoolean("locked"))
+		if (data.hasKey("locked") && data.getBoolean("locked")) {
 			list.add(I18n
-					.translateToLocal("waila.appliedenergistics2.Locked"));
-		else
+				.translateToLocal("waila.appliedenergistics2.Locked"));
+		} else {
 			list.add(I18n
-					.translateToLocal("waila.appliedenergistics2.Unlocked"));
-		if (data.hasKey("amount"))
+				.translateToLocal("waila.appliedenergistics2.Unlocked"));
+		}
+		if (data.hasKey("amount")) {
 			amount = data.getLong("amount");
+		}
 		if (data.hasKey("fluid")) {
 			String fluidName = data.getString("fluid");
-			if (!fluidName.isEmpty())
+			if (!fluidName.isEmpty()) {
 				fluid = FluidRegistry.getFluid(fluidName);
+			}
 		}
 		if (fluid != null) {
 			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
+				+ ": "
+				+ fluid.getLocalizedName(new FluidStack(fluid,
+				Fluid.BUCKET_VOLUME)));
+			if (isActive()) {
+				list.add(I18n
+					.translateToLocal("extracells.tooltip.amount")
 					+ ": "
-					+ fluid.getLocalizedName(new FluidStack(fluid,
-							Fluid.BUCKET_VOLUME)));
-			if (isActive())
+					+ amount + "mB");
+			} else {
 				list.add(I18n
-						.translateToLocal("extracells.tooltip.amount")
-						+ ": "
-						+ amount + "mB");
-			else
-				list.add(I18n
-						.translateToLocal("extracells.tooltip.amount")
-						+ ": 0mB");
+					.translateToLocal("extracells.tooltip.amount")
+					+ ": 0mB");
+			}
 		} else {
 			list.add(I18n.translateToLocal("extracells.tooltip.fluid")
-					+ ": "
-					+ I18n
-							.translateToLocal("extracells.tooltip.empty1"));
+				+ ": "
+				+ I18n
+				.translateToLocal("extracells.tooltip.empty1"));
 			list.add(I18n
-					.translateToLocal("extracells.tooltip.amount") + ": 0mB");
+				.translateToLocal("extracells.tooltip.amount") + ": 0mB");
 		}
 		return list;
 	}
@@ -160,51 +168,60 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		super.getWailaTag(tag);
 		tag.setBoolean("locked", this.locked);
 		tag.setLong("amount", this.amount);
-		if (this.fluid == null)
+		if (this.fluid == null) {
 			tag.setString("fluid", "");
-		else
+		} else {
 			tag.setString("fluid", this.fluid.getName());
+		}
 		return tag;
 	}
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
-		if (player == null || player.worldObj == null)
+		if (player == null || player.worldObj == null) {
 			return true;
-		if (player.worldObj.isRemote)
+		}
+		if (player.worldObj.isRemote) {
 			return true;
+		}
 		ItemStack s = player.getHeldItem(hand);
 		if (s == null) {
-			if (this.locked)
+			if (this.locked) {
 				return false;
-			if (this.fluid == null)
+			}
+			if (this.fluid == null) {
 				return true;
+			}
 			if (this.watcher != null) {
 				this.watcher.remove(AEUtils.createFluidStack(this.fluid));
 			}
 			this.fluid = null;
 			this.amount = 0L;
 			IPartHost host = getHost();
-			if (host != null)
+			if (host != null) {
 				host.markForUpdate();
+			}
 			return true;
 		}
 		if (WrenchUtil.canWrench(s, player, getHostTile().getPos())) {
 			this.locked = !this.locked;
 			WrenchUtil.wrenchUsed(s, player, getHostTile().getPos());
 			IPartHost host = getHost();
-			if (host != null)
+			if (host != null) {
 				host.markForUpdate();
-			if (this.locked)
+			}
+			if (this.locked) {
 				player.addChatMessage(new TextComponentTranslation(
-						"chat.appliedenergistics2.isNowLocked"));
-			else
+					"chat.appliedenergistics2.isNowLocked"));
+			} else {
 				player.addChatMessage(new TextComponentTranslation(
-						"chat.appliedenergistics2.isNowUnlocked"));
+					"chat.appliedenergistics2.isNowUnlocked"));
+			}
 			return true;
 		}
-		if (this.locked)
+		if (this.locked) {
 			return false;
+		}
 		if (!FluidHelper.isEmpty(s)) {
 			if (this.fluid != null && this.watcher != null) {
 				this.watcher.remove(AEUtils.createFluidStack(this.fluid));
@@ -214,8 +231,9 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 				this.watcher.add(AEUtils.createFluidStack(this.fluid));
 			}
 			IPartHost host = getHost();
-			if (host != null)
+			if (host != null) {
 				host.markForUpdate();
+			}
 			return true;
 		}
 		return false;
@@ -223,33 +241,39 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 
 	@Override
 	public void onStackChange(IItemList arg0, IAEStack arg1, IAEStack arg2,
-			BaseActionSource arg3, StorageChannel arg4) {
+		BaseActionSource arg3, StorageChannel arg4) {
 		if (this.fluid != null) {
 			IGridNode n = getGridNode();
-			if (n == null)
+			if (n == null) {
 				return;
+			}
 			IGrid g = n.getGrid();
-			if (g == null)
+			if (g == null) {
 				return;
+			}
 			IStorageGrid storage = g.getCache(IStorageGrid.class);
-			if (storage == null)
+			if (storage == null) {
 				return;
+			}
 			IMEMonitor<IAEFluidStack> fluids = getFluidStorage();
-			if (fluids == null)
+			if (fluids == null) {
 				return;
+			}
 			for (IAEFluidStack s : fluids.getStorageList()) {
 				if (s.getFluid() == this.fluid) {
 					this.amount = s.getStackSize();
 					IPartHost host = getHost();
-					if (host != null)
+					if (host != null) {
 						host.markForUpdate();
+					}
 					return;
 				}
 			}
 			this.amount = 0L;
 			IPartHost host = getHost();
-			if (host != null)
+			if (host != null) {
 				host.markForUpdate();
+			}
 		}
 
 	}
@@ -257,17 +281,20 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		if (data.hasKey("amount"))
+		if (data.hasKey("amount")) {
 			this.amount = data.getLong("amount");
+		}
 		if (data.hasKey("fluid")) {
 			String name = data.getString("fluid");
-			if (name.isEmpty())
+			if (name.isEmpty()) {
 				this.fluid = null;
-			else
+			} else {
 				this.fluid = FluidRegistry.getFluid(name);
+			}
 		}
-		if (data.hasKey("locked"))
+		if (data.hasKey("locked")) {
 			this.locked = data.getBoolean("locked");
+		}
 	}
 
 	@Override
@@ -275,10 +302,11 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		super.readFromStream(data);
 		this.amount = data.readLong();
 		String name = ByteBufUtils.readUTF8String(data);
-		if (name.isEmpty())
+		if (name.isEmpty()) {
 			this.fluid = null;
-		else
+		} else {
 			this.fluid = FluidRegistry.getFluid(name);
+		}
 		this.locked = data.readBoolean();
 		return true;
 	}
@@ -318,8 +346,8 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		EnumFacing facing = this.getSide().getFacing();
 
-		moveToFace( facing );
-		rotateToFace( facing, (byte)1);
+		moveToFace(facing);
+		rotateToFace(facing, (byte) 1);
 
 		GlStateManager.pushMatrix();
 		try {
@@ -328,7 +356,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			int var11 = br % 65536;
 			int var12 = br / 65536;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,
-					var11 * 0.8F, var12 * 0.8F);
+				var11 * 0.8F, var12 * 0.8F);
 
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -340,7 +368,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 
 			ResourceLocation fluidStill = fluid.getStill();
 
-			if(fluidStill != null){
+			if (fluidStill != null) {
 				TextureMap textureMap = mc.getTextureMapBlocks();
 				TextureAtlasSprite fluidIcon = textureMap.getAtlasSprite(fluidStill.toString());
 				if (fluidIcon != null) {
@@ -370,16 +398,18 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		GlStateManager.scale(1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f);
 
 		long qty = fluidStack.getStackSize();
-		if (qty > 999999999999L)
+		if (qty > 999999999999L) {
 			qty = 999999999999L;
+		}
 
 		String msg = Long.toString(qty) + "mB";
-		if (qty > 1000000000)
+		if (qty > 1000000000) {
 			msg = Long.toString(qty / 1000000000) + "MB";
-		else if (qty > 1000000)
+		} else if (qty > 1000000) {
 			msg = Long.toString(qty / 1000000) + "KB";
-		else if (qty > 9999)
+		} else if (qty > 9999) {
 			msg = Long.toString(qty / 1000) + 'B';
+		}
 
 		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 		int width = fr.getStringWidth(msg);
@@ -390,35 +420,35 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	}
 
 	private static void moveToFace(EnumFacing face) {
-		GlStateManager.translate( face.getFrontOffsetX() * 0.77, face.getFrontOffsetY() * 0.77, face.getFrontOffsetZ() * 0.77 );
+		GlStateManager.translate(face.getFrontOffsetX() * 0.77, face.getFrontOffsetY() * 0.77, face.getFrontOffsetZ() * 0.77);
 	}
 
 	private static void rotateToFace(EnumFacing face, byte spin) {
-		switch( face ) {
+		switch (face) {
 			case UP:
-				GlStateManager.scale( 1.0f, -1.0f, 1.0f );
-				GlStateManager.rotate( 90.0f, 1.0f, 0.0f, 0.0f );
-				GlStateManager.rotate( spin * 90.0F, 0, 0, 1 );
+				GlStateManager.scale(1.0f, -1.0f, 1.0f);
+				GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
+				GlStateManager.rotate(spin * 90.0F, 0, 0, 1);
 				break;
 			case DOWN:
-				GlStateManager.scale( 1.0f, -1.0f, 1.0f );
-				GlStateManager.rotate( -90.0f, 1.0f, 0.0f, 0.0f );
-				GlStateManager.rotate( spin * -90.0F, 0, 0, 1 );
+				GlStateManager.scale(1.0f, -1.0f, 1.0f);
+				GlStateManager.rotate(-90.0f, 1.0f, 0.0f, 0.0f);
+				GlStateManager.rotate(spin * -90.0F, 0, 0, 1);
 				break;
 			case EAST:
-				GlStateManager.scale( -1.0f, -1.0f, -1.0f );
-				GlStateManager.rotate( -90.0f, 0.0f, 1.0f, 0.0f );
+				GlStateManager.scale(-1.0f, -1.0f, -1.0f);
+				GlStateManager.rotate(-90.0f, 0.0f, 1.0f, 0.0f);
 				break;
 			case WEST:
-				GlStateManager.scale( -1.0f, -1.0f, -1.0f );
-				GlStateManager.rotate( 90.0f, 0.0f, 1.0f, 0.0f );
+				GlStateManager.scale(-1.0f, -1.0f, -1.0f);
+				GlStateManager.rotate(90.0f, 0.0f, 1.0f, 0.0f);
 				break;
 			case NORTH:
-				GlStateManager.scale( -1.0f, -1.0f, -1.0f );
+				GlStateManager.scale(-1.0f, -1.0f, -1.0f);
 				break;
 			case SOUTH:
-				GlStateManager.scale( -1.0f, -1.0f, -1.0f );
-				GlStateManager.rotate( 180.0f, 0.0f, 1.0f, 0.0f );
+				GlStateManager.scale(-1.0f, -1.0f, -1.0f);
+				GlStateManager.rotate(180.0f, 0.0f, 1.0f, 0.0f);
 				break;
 			default:
 				break;
@@ -427,9 +457,9 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.STORAGE_MONITOR_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.STORAGE_MONITOR_ON;
 		} else {
 			return PartModels.STORAGE_MONITOR_OFF;
@@ -454,10 +484,11 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
 		data.setLong("amount", this.amount);
-		if (this.fluid == null)
+		if (this.fluid == null) {
 			data.setInteger("fluid", -1);
-		else
+		} else {
 			data.setString("fluid", this.fluid.getName());
+		}
 		data.setBoolean("locked", this.locked);
 	}
 

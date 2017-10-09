@@ -54,7 +54,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 	// TODO redstone control
 	private RedstoneMode redstoneMode;
 	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1,
-			1) {
+		1) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
@@ -63,10 +63,11 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 	};
 
 	@Override
-	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+	public void getDrops(List<ItemStack> drops, boolean wrenched) {
 		for (ItemStack stack : upgradeInventory.slots) {
-			if (stack == null)
+			if (stack == null) {
 				continue;
+			}
 			drops.add(stack);
 		}
 	}
@@ -81,25 +82,29 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 		ECBaseGridBlock gridBlock = getGridBlock();
 		EnumFacing facing = getFacing();
 
-		if (this.fluid == null || hostTile == null || gridBlock == null || this.fluid.getBlock() == null)
+		if (this.fluid == null || hostTile == null || gridBlock == null || this.fluid.getBlock() == null) {
 			return;
+		}
 		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
-		if (monitor == null)
+		if (monitor == null) {
 			return;
+		}
 		World world = hostTile.getWorld();
 		BlockPos pos = hostTile.getPos().offset(facing);
 		Block worldBlock = world.getBlockState(pos).getBlock();
-		if (worldBlock != null && worldBlock != Blocks.AIR)
+		if (worldBlock != null && worldBlock != Blocks.AIR) {
 			return;
+		}
 		IAEFluidStack canDrain = monitor.extractItems(AEUtils.createFluidStack(this.fluid,
-						FluidContainerRegistry.BUCKET_VOLUME),
-				Actionable.SIMULATE, new MachineSource(this));
+			FluidContainerRegistry.BUCKET_VOLUME),
+			Actionable.SIMULATE, new MachineSource(this));
 		if (canDrain == null
-				|| canDrain.getStackSize() < FluidContainerRegistry.BUCKET_VOLUME)
+			|| canDrain.getStackSize() < FluidContainerRegistry.BUCKET_VOLUME) {
 			return;
+		}
 		monitor.extractItems(AEUtils.createFluidStack(this.fluid,
-				FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE,
-				new MachineSource(this));
+			FluidContainerRegistry.BUCKET_VOLUME), Actionable.MODULATE,
+			new MachineSource(this));
 		Block fluidWorldBlock = this.fluid.getBlock();
 		world.setBlockState(pos, fluidWorldBlock.getDefaultState());
 		world.notifyBlockUpdate(pos, fluidWorldBlock.getDefaultState(), fluidWorldBlock.getDefaultState(), 0);
@@ -143,7 +148,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		if (PermissionUtil.hasPermission(player, SecurityPermissions.BUILD,
-				(IPart) this)) {
+			(IPart) this)) {
 			return super.onActivate(player, hand, pos);
 		}
 		return false;
@@ -156,9 +161,9 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.FORMATION_PLANE_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.FORMATION_PLANE_ON;
 		} else {
 			return PartModels.FORMATION_PLANE_OFF;
@@ -178,7 +183,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 
 	@Override
 	public TickRateModulation tickingRequest(IGridNode node,
-			int TicksSinceLastCall) {
+		int TicksSinceLastCall) {
 		doWork();
 		return TickRateModulation.SAME;
 	}

@@ -992,8 +992,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 						.getFluidInventory()
 						.extractItems(
 							AEUtils.createFluidStack(
-										FluidRegistry
-											.getFluid(this.fluidFilter),
+								FluidRegistry
+									.getFluid(this.fluidFilter),
 								accepted),
 							Actionable.MODULATE,
 							new MachineSource(this)).getFluidStack(),

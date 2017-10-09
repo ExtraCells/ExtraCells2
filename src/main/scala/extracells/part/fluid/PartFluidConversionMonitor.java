@@ -24,12 +24,15 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		boolean wasActivated = super.onActivate(player, hand, pos);
-		if (wasActivated)
+		if (wasActivated) {
 			return wasActivated;
-		if (player == null || player.worldObj == null)
+		}
+		if (player == null || player.worldObj == null) {
 			return true;
-		if (player.worldObj.isRemote)
+		}
+		if (player.worldObj.isRemote) {
 			return true;
+		}
 		ItemStack heldItem = player.getHeldItem(hand);
 		IMEMonitor<IAEFluidStack> mon = getFluidStorage();
 		if (this.locked && heldItem != null && mon != null) {
@@ -37,15 +40,16 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 			itemStack.stackSize = 1;
 			if (FluidHelper.isDrainableFilledContainer(itemStack)) {
 				FluidStack f = FluidHelper.getFluidFromContainer(itemStack);
-				if (f == null)
+				if (f == null) {
 					return true;
+				}
 				IAEFluidStack fluidStack = AEUtils.createFluidStack(f);
 				IAEFluidStack injectItems = mon.injectItems(fluidStack.copy(),
-						Actionable.SIMULATE, new MachineSource(this));
+					Actionable.SIMULATE, new MachineSource(this));
 				if (mon.canAccept(fluidStack)
-						&& (injectItems == null || injectItems.getStackSize() == 0L)) {
+					&& (injectItems == null || injectItems.getStackSize() == 0L)) {
 					mon.injectItems(fluidStack, Actionable.MODULATE, new MachineSource(
-							this));
+						this));
 
 					Pair<Integer, ItemStack> emptyStack = FluidHelper.drainStack(itemStack, f);
 					ItemStack empty = emptyStack.getRight();
@@ -56,36 +60,38 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 					s3.stackSize = s3.stackSize - 1;
 					if (s3.stackSize == 0) {
 						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem, null);
+							player.inventory.currentItem, null);
 					} else {
 						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem, s3);
+							player.inventory.currentItem, s3);
 					}
 				}
 				return true;
 			} else if (FluidHelper.isFillableContainerWithRoom(itemStack)) {
-				if (this.fluid == null)
+				if (this.fluid == null) {
 					return true;
+				}
 				IAEFluidStack extract;
 				if (itemStack.getItem() instanceof IFluidContainerItem) {
 					extract = mon.extractItems(AEUtils.createFluidStack(
-							this.fluid, ((IFluidContainerItem) itemStack.getItem())
-									.getCapacity(itemStack)), Actionable.SIMULATE,
-							new MachineSource(this));
-				} else
+						this.fluid, ((IFluidContainerItem) itemStack.getItem())
+							.getCapacity(itemStack)), Actionable.SIMULATE,
+						new MachineSource(this));
+				} else {
 					extract = mon.extractItems(
 						AEUtils.createFluidStack(this.fluid),
-							Actionable.SIMULATE, new MachineSource(this));
+						Actionable.SIMULATE, new MachineSource(this));
+				}
 				if (extract != null) {
 					mon.extractItems(AEUtils.createFluidStack(new FluidStack(this.fluid,
-									(int) extract.getStackSize())),
-							Actionable.MODULATE, new MachineSource(this));
+							(int) extract.getStackSize())),
+						Actionable.MODULATE, new MachineSource(this));
 					Pair<Integer, ItemStack> empty1 = FluidHelper
-							.fillStack(itemStack, extract.getFluidStack());
+						.fillStack(itemStack, extract.getFluidStack());
 					if (empty1.getKey() == 0) {
 						mon.injectItems(AEUtils.createFluidStack(new FluidStack(this.fluid,
-										(int) extract.getStackSize())),
-								Actionable.MODULATE, new MachineSource(this));
+								(int) extract.getStackSize())),
+							Actionable.MODULATE, new MachineSource(this));
 						return true;
 					}
 					ItemStack empty = empty1.getRight();
@@ -96,10 +102,10 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 					s3.stackSize = s3.stackSize - 1;
 					if (s3.stackSize == 0) {
 						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem, null);
+							player.inventory.currentItem, null);
 					} else {
 						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem, s3);
+							player.inventory.currentItem, s3);
 					}
 				}
 				return true;
@@ -110,9 +116,9 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 
 	@Override
 	public IPartModel getStaticModels() {
-		if(isActive() && isPowered()) {
+		if (isActive() && isPowered()) {
 			return PartModels.CONVERSION_MONITOR_HAS_CHANNEL;
-		} else if(isPowered()) {
+		} else if (isPowered()) {
 			return PartModels.CONVERSION_MONITOR_ON;
 		} else {
 			return PartModels.CONVERSION_MONITOR_OFF;

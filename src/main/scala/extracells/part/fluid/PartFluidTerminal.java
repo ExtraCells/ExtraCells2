@@ -52,7 +52,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	protected Fluid currentFluid;
 	private List<Object> containers = new ArrayList<Object>();
 	protected ECPrivateInventory inventory = new ECPrivateInventory(
-			"extracells.part.fluid.terminal", 2, 64, this) {
+		"extracells.part.fluid.terminal", 2, 64, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
@@ -63,13 +63,15 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	protected boolean isItemValidForInputSlot(int i, ItemStack itemStack) {
 		return FluidHelper.isFluidContainer(itemStack);
 	}
+
 	protected MachineSource machineSource = new MachineSource(this);
 
 	@Override
-	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+	public void getDrops(List<ItemStack> drops, boolean wrenched) {
 		for (ItemStack stack : inventory.slots) {
-			if (stack == null)
+			if (stack == null) {
 				continue;
+			}
 			drops.add(stack);
 		}
 	}
@@ -77,8 +79,9 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
 		ItemStack stack = super.getItemStack(type);
-		if (type.equals(PartItemStack.WRENCH))
+		if (type.equals(PartItemStack.WRENCH)) {
 			stack.getTagCompound().removeTag("inventory");
+		}
 		return stack;
 	}
 
@@ -95,26 +98,31 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	public void decreaseFirstSlot() {
 		ItemStack slot = this.inventory.getStackInSlot(0);
 		slot.stackSize--;
-		if (slot.stackSize <= 0)
+		if (slot.stackSize <= 0) {
 			this.inventory.setInventorySlotContents(0, null);
+		}
 	}
 
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize())
+		if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize()) {
 			return;
+		}
 		ItemStack container = this.inventory.getStackInSlot(0);
-		if (!FluidHelper.isFluidContainer(container))
+		if (!FluidHelper.isFluidContainer(container)) {
 			return;
+		}
 		container = container.copy();
 		container.stackSize = 1;
 
 		ECBaseGridBlock gridBlock = getGridBlock();
-		if (gridBlock == null)
+		if (gridBlock == null) {
 			return;
+		}
 		IMEMonitor<IAEFluidStack> monitor = gridBlock.getFluidMonitor();
-		if (monitor == null)
+		if (monitor == null) {
 			return;
+		}
 
 		if (FluidHelper.isFillableContainerWithRoom(container)) {
 			if (this.currentFluid == null) {
@@ -124,7 +132,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 			IAEFluidStack result = monitor.extractItems(AEUtils.createFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource);
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
 			Pair<Integer, ItemStack> filledContainer = FluidHelper.fillStack(container, new FluidStack(this.currentFluid, proposedAmount));
-			if(filledContainer.getLeft() > proposedAmount) {
+			if (filledContainer.getLeft() > proposedAmount) {
 				return;
 			}
 			if (fillSecondSlot(filledContainer.getRight())) {
@@ -134,8 +142,9 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 		} else {
 			FluidStack containerFluid = FluidHelper.getFluidFromContainer(container);
 			IAEFluidStack notInjected = monitor.injectItems(AEUtils.createFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
-			if (notInjected != null)
+			if (notInjected != null) {
 				return;
+			}
 			Pair<Integer, ItemStack> drainedContainer = FluidHelper.drainStack(container, containerFluid);
 			ItemStack emptyContainer = drainedContainer.getRight();
 			if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
@@ -146,15 +155,17 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	}
 
 	public boolean fillSecondSlot(ItemStack itemStack) {
-		if (itemStack == null)
+		if (itemStack == null) {
 			return false;
+		}
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
 		if (secondSlot == null) {
 			this.inventory.setInventorySlotContents(1, itemStack);
 			return true;
 		} else {
-			if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot))
+			if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot)) {
 				return false;
+			}
 			this.inventory.incrStackSize(1, itemStack.stackSize);
 			return true;
 		}
@@ -193,8 +204,9 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
-		if (isActive() && (PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) this) || PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) this)))
+		if (isActive() && (PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) this) || PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) this))) {
 			return super.onActivate(player, hand, pos);
+		}
 		return false;
 	}
 
@@ -217,9 +229,9 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IPartModel getStaticModels() {
-		if( isActive() ) {
+		if (isActive()) {
 			return PartModels.TERMINAL_HAS_CHANNEL;
-		} else if( isPowered() ) {
+		} else if (isPowered()) {
 			return PartModels.TERMINAL_ON;
 		} else {
 			return PartModels.TERMINAL_OFF;
@@ -233,7 +245,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 	}
 
 	public void sendCurrentFluid(Object container) {
-		if(container instanceof ContainerTerminal){
+		if (container instanceof ContainerTerminal) {
 			ContainerTerminal containerFluidTerminal = (ContainerTerminal) container;
 			NetworkUtil.sendToPlayer(new PacketTerminalSelectFluidClient(currentFluid), containerFluidTerminal.getPlayer());
 		}
@@ -247,7 +259,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
 	@Override
 	public TickRateModulation tickingRequest(IGridNode node,
-			int TicksSinceLastCall) {
+		int TicksSinceLastCall) {
 		doWork();
 		return TickRateModulation.FASTER;
 	}
