@@ -32,7 +32,7 @@ public abstract class ContainerUpgradeable extends ContainerBase {
 				INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.getPos());
 				for (int j = 0; j < 3; j++) {
 					for (int k = 0; k < 3; k++) {
-						addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
+						addSlotToContainer(new SlotNetworkTool(networkTool, k + j * 3, 187 + k * 18, j * 18 + 102));
 					}
 				}
 				return;
