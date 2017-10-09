@@ -22,6 +22,7 @@ import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.ICellHandler;
 import appeng.api.storage.ICellRegistry;
@@ -34,11 +35,15 @@ import extracells.container.ContainerDrive;
 import extracells.gui.GuiDrive;
 import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.IInventoryListener;
+import extracells.models.PartModels;
+import extracells.models.drive.DriveSlotsState;
+import extracells.models.drive.IDrive;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
-public class PartDrive extends PartECBase implements ICellContainer,
-	IInventoryListener {
+public class PartDrive extends PartECBase implements ICellContainer, IInventoryListener, IDrive {
+
+	public static DriveSlotsState tempDriveState;
 
 	private int priority = 0; // TODO
 	private short[] blinkTimers; // TODO
@@ -317,5 +322,27 @@ public class PartDrive extends PartECBase implements ICellContainer,
 		for (byte aCellStati : this.cellStatuses) {
 			data.writeByte(aCellStati);
 		}
+	}
+
+	@Override
+	public IPartModel getStaticModels() {
+		tempDriveState = DriveSlotsState.fromChestOrDrive(this);
+		if (isActive() && isPowered()) {
+			return PartModels.DRIVE_HAS_CHANNEL;
+		} else if (isPowered()) {
+			return PartModels.DRIVE_ON;
+		} else {
+			return PartModels.DRIVE_OFF;
+		}
+	}
+
+	@Override
+	public int getCellCount() {
+		return 6;
+	}
+
+	@Override
+	public int getCellStatus(int index) {
+		return cellStatuses[index];
 	}
 }

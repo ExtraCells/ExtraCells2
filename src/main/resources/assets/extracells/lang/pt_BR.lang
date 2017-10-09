@@ -86,7 +86,7 @@ tile.extracells.block.fluidcrafter.name=Montador de Fluidos ME
 tile.extracells.block.fluidinterface.name=Interface de Fluidos ME
 tile.extracells.block.fluidfiller.name=Auto Preenchedor de Fluidos ME
 tile.extracells.block.vibrantchamberfluid.name=Câmara de Vibração de Fluidos
-tile.extracells.block.hardmedrive.name=Acionador ME Resistente à Explosões [WIP]
+tile.extracells.block.hardmedrive.name=Acionador ME Resistente à Explosões
 
 //Tooltips and Chat-Messages
 extracells.tooltip.amount=Quantia

@@ -1,0 +1,138 @@
+{
+  "uvlMarker": true,
+  "textures": {
+    "sides": "extracells:parts/plane_side",
+    "sides_status": "extracells:parts/plane_sides_status",
+    "front": "extracells:parts/drive_front_1",
+    "particle": "extracells:parts/plane_side"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        0
+      ],
+      "to": [
+        14,
+        14,
+        2
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            2,
+            14,
+            14,
+            16
+          ],
+          "texture": "#sides"
+        },
+        "up": {
+          "uv": [
+            2,
+            0,
+            14,
+            2
+          ],
+          "texture": "#sides"
+        },
+        "north": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "front"
+        },
+        "south": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#sides"
+        },
+        "west": {
+          "uv": [
+            0,
+            2,
+            2,
+            14
+          ],
+          "texture": "#sides"
+        },
+        "east": {
+          "uv": [
+            14,
+            2,
+            16,
+            14
+          ],
+          "texture": "#sides"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        5,
+        2
+      ],
+      "to": [
+        11,
+        11,
+        3
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            5,
+            13,
+            11,
+            14
+          ],
+          "texture": "#sides_status"
+        },
+        "up": {
+          "uv": [
+            5,
+            2,
+            11,
+            3
+          ],
+          "texture": "#sides_status"
+        },
+        "south": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#sides"
+        },
+        "west": {
+          "uv": [
+            2,
+            5,
+            3,
+            11
+          ],
+          "texture": "#sides_status"
+        },
+        "east": {
+          "uv": [
+            13,
+            5,
+            14,
+            11
+          ],
+          "texture": "#sides_status"
+        }
+      }
+    }
+  ]
+}

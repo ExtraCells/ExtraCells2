@@ -38,6 +38,7 @@ import extracells.block.IColoredBlock;
 import extracells.item.IColoredItem;
 import extracells.models.blocks.FluidItemModel;
 import extracells.models.drive.HardDriveModel;
+import extracells.models.drive.PartDriveModel;
 import extracells.util.ModelUtil;
 
 @SideOnly(Side.CLIENT)
@@ -167,6 +168,7 @@ public class ModelManager {
 
 	public static void init() {
 		addModel("models/block/builtin/hard_drive", new HardDriveModel());
+		addModel("models/part/drive", new PartDriveModel());
 		OBJLoader.INSTANCE.addDomain("extracells");
 		ModelLoaderRegistry.registerLoader(new FluidItemModel.ModelLoader());
 		ModelLoaderRegistry.registerLoader(new ECModelLoader(customModels));

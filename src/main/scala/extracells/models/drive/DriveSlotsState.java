@@ -15,10 +15,6 @@ public class DriveSlotsState {
 		return slots[index];
 	}
 
-	public int getSlotCount() {
-		return slots.length;
-	}
-
 	/**
 	 * Retrieve an array that describes the state of each slot in this drive or chest.
 	 */
