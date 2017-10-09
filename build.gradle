@@ -118,7 +118,7 @@ dependencies {
 	compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
 	
 	deobfCompile name: 'Mekanism', version: config.version.me, ext: 'jar'
-	deobfCompile "MCMultiPart:MCMultiPart-experimental:${config.mcmp_version}:universal"
+	deobfCompile "MCMultiPart:MCMultiPart-experimental:${config.version.mcmp}:universal"
 }
 
 processResources {

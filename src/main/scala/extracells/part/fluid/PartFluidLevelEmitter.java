@@ -37,6 +37,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEPartLocation;
 import extracells.container.fluid.ContainerFluidEmitter;
 import extracells.gui.fluid.GuiFluidEmitter;
 import extracells.gui.widget.fluid.IFluidSlotListener;
@@ -60,6 +61,11 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
 		return 16.0F;
+	}
+
+	@Override
+	public AECableType getCableConnectionType(final AEPartLocation dir) {
+		return AECableType.SMART;
 	}
 
 	public void changeWantedAmount(int modifier, EntityPlayer player) {
@@ -204,12 +210,15 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		saveData();
 	}
 
-	public void setWantedAmount(long _wantedAmount, EntityPlayer player) {
-		this.wantedAmount = _wantedAmount;
+	public void setWantedAmount(long wantedAmount, EntityPlayer player) {
+		this.wantedAmount = wantedAmount;
 		if (this.wantedAmount < 0) {
 			this.wantedAmount = 0;
 		}
 		notifyTargetBlock(getHostTile(), getFacing());
+		if (getHost() != null) {
+			getHost().markForUpdate();
+		}
 		saveData();
 	}
 
