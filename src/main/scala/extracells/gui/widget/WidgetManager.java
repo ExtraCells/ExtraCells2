@@ -62,7 +62,7 @@ public class WidgetManager {
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(-gui.getGuiLeft(), -gui.getGuiTop(), 0);
 				ScaledResolution scaledresolution = new ScaledResolution(mc);
-				GuiUtils.drawHoveringText(lines, mouseX, mouseY, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), 1, mc.fontRendererObj);
+				GuiUtils.drawHoveringText(lines, mouseX, mouseY, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), -1, mc.fontRendererObj);
 				GlStateManager.popMatrix();
 			}
 		}

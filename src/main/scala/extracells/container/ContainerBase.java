@@ -27,9 +27,9 @@ public abstract class ContainerBase extends Container {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (this.locked.contains(j + i * 9 + 9)) {
-					this.addSlotToContainer(new SlotDisabled(inv, j + i * 9 + 9, 8 + j * 18 + offsetX, offsetY + i * 18));
+					this.addSlotToContainer(new SlotDisabled(inv, j + i * 9 + 9, j * 18 + offsetX, offsetY + i * 18));
 				} else {
-					this.addSlotToContainer(new Slot(inv, j + i * 9 + 9, 8 + j * 18 + offsetX, offsetY + i * 18));
+					this.addSlotToContainer(new Slot(inv, j + i * 9 + 9, j * 18 + offsetX, offsetY + i * 18));
 				}
 			}
 		}
@@ -37,9 +37,9 @@ public abstract class ContainerBase extends Container {
 		// bind player hotbar
 		for (int i = 0; i < 9; i++) {
 			if (this.locked.contains(i)) {
-				this.addSlotToContainer(new SlotDisabled(inv, i, 8 + i * 18 + offsetX, 58 + offsetY));
+				this.addSlotToContainer(new SlotDisabled(inv, i, i * 18 + offsetX, 58 + offsetY));
 			} else {
-				this.addSlotToContainer(new Slot(inv, i, 8 + i * 18 + offsetX, 58 + offsetY));
+				this.addSlotToContainer(new Slot(inv, i, i * 18 + offsetX, 58 + offsetY));
 			}
 		}
 	}

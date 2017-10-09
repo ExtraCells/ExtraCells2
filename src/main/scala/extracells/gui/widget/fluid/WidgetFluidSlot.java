@@ -1,5 +1,8 @@
 package extracells.gui.widget.fluid;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -7,6 +10,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -140,6 +144,14 @@ public class WidgetFluidSlot extends AbstractWidget {
 		FluidStack fluidStack = GasUtil.getFluidStack(gasStack);
 		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
 		NetworkUtil.sendToServer(new PacketFluidSlotSelect(listener, id, fluid));
+	}
+
+	@Override
+	public List<String> getToolTip(int mouseX, int mouseY) {
+		if (fluid == null) {
+			return Collections.emptyList();
+		}
+		return Collections.singletonList(I18n.translateToLocal(fluid.getUnlocalizedName()));
 	}
 
 	public void setFluid(Fluid fluid) {

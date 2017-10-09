@@ -184,7 +184,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
             }
             updateBlock();
         }
-		if (worldObj.isRemote) {
+		if (worldObj != null && worldObj.isRemote) {
 			worldObj.markBlockRangeForRenderUpdate(pos, pos);
 		}
 	}
