@@ -23,6 +23,7 @@ import extracells.api.ECApi;
 import extracells.api.IExternalGasStorageHandler;
 import extracells.part.fluid.PartFluidStorage;
 
+//TODO: rewrite
 public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 
 	private IExternalGasStorageHandler externalHandler = null;

@@ -34,10 +34,10 @@ import extracells.gridblock.ECGridBlockHardMEDrive;
 import extracells.gui.GuiHardMEDrive;
 import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.IInventoryListener;
-import extracells.models.drive.IDrive;
+import extracells.models.drive.IECDrive;
 import extracells.network.IGuiProvider;
 
-public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryListener, IDrive, IGuiProvider {
+public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryListener, IECDrive, IGuiProvider {
 
 	private int priority = 0;
 	private boolean isPowerd;

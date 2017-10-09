@@ -24,6 +24,7 @@ import extracells.api.ECApi;
 import extracells.api.IFluidStorageCell;
 import extracells.api.IHandlerFluidStorage;
 
+//TODO: rewrite
 public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 
 	private NBTTagCompound stackTag;
@@ -154,9 +155,14 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	}
 
 	@Override
-	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode,
-		BaseActionSource src) {
-		if (input == null || !allowedByFormat(input.getFluid())) {
+	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
+		if (input == null) {
+			return input;
+		}
+		if (input.getStackSize() == 0) {
+			return input;
+		}
+		if (!allowedByFormat(input.getFluid())) {
 			return input;
 		}
 		IAEFluidStack notAdded = input.copy();

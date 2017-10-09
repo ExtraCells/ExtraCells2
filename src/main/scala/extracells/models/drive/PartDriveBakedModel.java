@@ -19,6 +19,7 @@ import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 
 import extracells.part.PartDrive;
 
+//This file is orientated on the applied energetics 2 drive model file.
 public class PartDriveBakedModel implements IBakedModel {
 	private final IBakedModel bakedBase;
 	private final Map<DriveSlotState, IBakedModel> bakedCells;

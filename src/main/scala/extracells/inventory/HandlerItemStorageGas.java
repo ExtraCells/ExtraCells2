@@ -24,6 +24,7 @@ import extracells.api.ECApi;
 import extracells.api.IGasStorageCell;
 import extracells.api.IHandlerFluidStorage;
 
+//TODO: rewrite
 public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 
 	private NBTTagCompound stackTag;

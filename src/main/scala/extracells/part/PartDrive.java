@@ -36,12 +36,12 @@ import extracells.inventory.IInventoryListener;
 import extracells.inventory.InventoryPartDrive;
 import extracells.models.PartModels;
 import extracells.models.drive.DriveSlotsState;
-import extracells.models.drive.IDrive;
+import extracells.models.drive.IECDrive;
 import extracells.util.AEUtils;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
-public class PartDrive extends PartECBase implements ICellContainer, IInventoryListener, IDrive {
+public class PartDrive extends PartECBase implements ICellContainer, IInventoryListener, IECDrive {
 
 	public static DriveSlotsState tempDriveState;
 
@@ -139,7 +139,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 
 	@Override
 	public IPartModel getStaticModels() {
-		tempDriveState = DriveSlotsState.fromChestOrDrive(this);
+		tempDriveState = DriveSlotsState.createState(this);
 		if (isActive() && isPowered()) {
 			return PartModels.DRIVE_HAS_CHANNEL;
 		} else if (isPowered()) {

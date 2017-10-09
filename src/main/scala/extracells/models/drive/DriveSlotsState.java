@@ -15,10 +15,7 @@ public class DriveSlotsState {
 		return slots[index];
 	}
 
-	/**
-	 * Retrieve an array that describes the state of each slot in this drive or chest.
-	 */
-	public static DriveSlotsState fromChestOrDrive(IDrive drive) {
+	public static DriveSlotsState createState(IECDrive drive) {
 		DriveSlotState[] slots = new DriveSlotState[drive.getCellCount()];
 		for (int i = 0; i < drive.getCellCount(); i++) {
 			if (!drive.isPowered()) {

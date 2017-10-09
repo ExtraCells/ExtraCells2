@@ -21,6 +21,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 
 import extracells.Constants;
 
+//This file is orientated on the applied energetics 2 drive model file.
 public class PartDriveModel implements IModel {
 	private static final ResourceLocation MODEL_BASE = new ResourceLocation(Constants.MOD_ID, "part/drive_base");
 
@@ -46,7 +47,6 @@ public class PartDriveModel implements IModel {
 	public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 		EnumMap<DriveSlotState, IBakedModel> cellModels = new EnumMap<>(DriveSlotState.class);
 
-		// Load the base model and the model for each cell state.
 		IModel baseModel;
 		try {
 			baseModel = ModelLoaderRegistry.getModel(MODEL_BASE);

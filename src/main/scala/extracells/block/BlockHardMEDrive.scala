@@ -199,7 +199,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
     val te = TileUtil.getTile(world, pos, classOf[TileEntityHardMeDrive])
     if (te == null) return super.getExtendedState(state, world, pos)
     val extState = super.getExtendedState(state, world, pos).asInstanceOf[IExtendedBlockState]
-    extState.withProperty(PropertyDrive.INSTANCE, DriveSlotsState.fromChestOrDrive(te))
+    extState.withProperty(PropertyDrive.INSTANCE, DriveSlotsState.createState(te))
   }
 
 }

@@ -20,6 +20,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 
 import extracells.block.properties.PropertyDrive;
 
+//This file is orientated on the applied energetics 2 drive model file.
 public class HardDriveBakedModel implements IBakedModel {
 	private final IBakedModel bakedBase;
 	private final Map<DriveSlotState, IBakedModel> bakedCells;
