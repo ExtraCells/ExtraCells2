@@ -238,10 +238,8 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		IStorageGrid storage = getStorageGrid();
 		if (storage == null)
 			return false;
-		IAEFluidStack fluidStack = AEApi
-				.instance()
-				.storage()
-				.createFluidStack(
+		IAEFluidStack fluidStack = FluidHelper
+			.createAEFluidStack(
 						new FluidStack(
 								fluid.getFluid(),
 								FluidHelper.getCapacity(patternDetails

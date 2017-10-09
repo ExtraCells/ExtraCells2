@@ -21,8 +21,7 @@ import appeng.api.storage.data.IAEFluidStack;
 public class FluidHelper {
 
 	public static IAEFluidStack createAEFluidStack(Fluid fluid) {
-		return createAEFluidStack(new FluidStack(fluid,
-				Fluid.BUCKET_VOLUME));
+		return createAEFluidStack(new FluidStack(fluid, Fluid.BUCKET_VOLUME));
 	}
 
 	public static IAEFluidStack createAEFluidStack(Fluid fluid, long amount) {
