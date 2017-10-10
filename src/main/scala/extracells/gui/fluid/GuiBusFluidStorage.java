@@ -29,8 +29,7 @@ import extracells.registries.PartEnum;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
-public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implements
-	WidgetFluidSlot.IConfigurable, IFluidSlotGui {
+public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implements WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
 	private EntityPlayer player;
 	private byte filterSize;

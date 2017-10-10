@@ -27,6 +27,7 @@ import extracells.integration.Integration;
 import extracells.network.packet.other.PacketFluidSlotSelect;
 import extracells.part.gas.PartGasExport;
 import extracells.part.gas.PartGasImport;
+import extracells.part.gas.PartGasStorage;
 import extracells.util.FluidHelper;
 import extracells.util.GasUtil;
 import extracells.util.NetworkUtil;
@@ -125,7 +126,7 @@ public class WidgetFluidSlot extends AbstractWidget {
 		if (!isVisable()) {
 			return;
 		}
-		if ((listener instanceof PartGasImport || listener instanceof PartGasExport) && Integration.Mods.MEKANISMGAS.isEnabled()) {
+		if ((listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage) && Integration.Mods.MEKANISMGAS.isEnabled()) {
 			handleGasContainer(stack);
 		} else {
 			handleFluidContainer(stack);
