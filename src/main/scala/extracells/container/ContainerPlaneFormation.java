@@ -9,6 +9,7 @@ import extracells.container.slot.SlotRespective;
 import extracells.gui.fluid.GuiFluidPlaneFormation;
 import extracells.part.fluid.PartFluidPlaneFormation;
 
+//TODO:remove the gui from this
 public class ContainerPlaneFormation extends ContainerUpgradeable {
 
 	private GuiFluidPlaneFormation gui;

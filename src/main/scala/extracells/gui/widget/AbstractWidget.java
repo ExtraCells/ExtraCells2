@@ -6,8 +6,10 @@ import java.util.List;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import extracells.gui.IToolTipProvider;
+
 @SideOnly(Side.CLIENT)
-public abstract class AbstractWidget {
+public abstract class AbstractWidget implements IToolTipProvider {
 	protected final WidgetManager manager;
 	protected final int xPos;
 	protected final int yPos;
@@ -34,7 +36,6 @@ public abstract class AbstractWidget {
 	 * Only called if the mouse is over the widget.
 	 */
 	public void drawOverlay(int mouseX, int mouseY) {
-
 	}
 
 	public List<String> getToolTip(int mouseX, int mouseY) {

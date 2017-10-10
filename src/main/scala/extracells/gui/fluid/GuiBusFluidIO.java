@@ -20,7 +20,7 @@ import extracells.container.fluid.ContainerBusFluidIO;
 import extracells.gui.GuiBase;
 import extracells.gui.ISlotRenderer;
 import extracells.gui.SlotUpgradeRenderer;
-import extracells.gui.widget.WidgetRedstoneModes;
+import extracells.gui.buttons.ButtonRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
@@ -77,16 +77,6 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
 		if (this.hasNetworkTool) {
 			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
-		}
-	}
-
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		for (Object button : this.buttonList) {
-			if (button instanceof WidgetRedstoneModes) {
-				((WidgetRedstoneModes) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
-			}
 		}
 	}
 
@@ -151,7 +141,7 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 		this.redstoneControlled = _redstoneControlled;
 		this.buttonList.clear();
 		if (this.redstoneControlled) {
-			this.buttonList.add(new WidgetRedstoneModes(0, this.guiLeft - 18, this.guiTop, 16, 16, this.part.getRedstoneMode()));
+			this.buttonList.add(new ButtonRedstoneModes(0, this.guiLeft - 18, this.guiTop, 16, 16, this.part.getRedstoneMode()));
 		}
 	}
 
@@ -176,7 +166,7 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 
 	public void updateRedstoneMode(RedstoneMode mode) {
 		if (this.redstoneControlled && this.buttonList.size() > 0) {
-			((WidgetRedstoneModes) this.buttonList.get(0)).setRedstoneMode(mode);
+			((ButtonRedstoneModes) this.buttonList.get(0)).setRedstoneMode(mode);
 		}
 	}
 }

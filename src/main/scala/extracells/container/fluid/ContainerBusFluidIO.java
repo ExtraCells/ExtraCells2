@@ -34,7 +34,7 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		//TODO: Remove this
+		//TODO:remove the gui from this
 		if (this.guiBusFluidIO != null && this.guiBusFluidIO.shiftClick(getSlot(slotnumber).getStack())) {
 			return this.inventorySlots.get(slotnumber).getStack();
 		}

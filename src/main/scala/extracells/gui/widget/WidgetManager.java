@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 
-import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,19 +47,6 @@ public class WidgetManager {
 			if (!overlay && widget.isMouseOver(mouseX, mouseY)) {
 				widget.drawOverlay(mouseX, mouseY);
 				overlay = true;
-			}
-		}
-	}
-
-	public void drawToolTips(int mouseX, int mouseY) {
-		AbstractWidget slot = getAtPosition(mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
-		if (slot != null) {
-			List<String> lines = slot.getToolTip(mouseX, mouseY);
-			if (!lines.isEmpty()) {
-				GlStateManager.pushMatrix();
-				ScaledResolution scaledresolution = new ScaledResolution(mc);
-				GuiUtils.drawHoveringText(lines, mouseX, mouseY, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), -1, mc.fontRendererObj);
-				GlStateManager.popMatrix();
 			}
 		}
 	}

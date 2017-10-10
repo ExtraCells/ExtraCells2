@@ -15,9 +15,9 @@ import org.lwjgl.input.Keyboard;
 import appeng.api.config.RedstoneMode;
 import extracells.container.fluid.ContainerFluidEmitter;
 import extracells.gui.GuiBase;
+import extracells.gui.buttons.ButtonRedstoneModes;
 import extracells.gui.widget.AbstractWidget;
 import extracells.gui.widget.DigitTextField;
-import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
@@ -74,7 +74,6 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		this.fontRendererObj.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
-		((WidgetRedstoneModes) this.buttonList.get(6)).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
 	}
 
 	@Override
@@ -119,7 +118,7 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 		this.buttonList.add(new GuiButton(3, posX + 65 - 46, posY + 58 - 2, 42, 20, "+1"));
 		this.buttonList.add(new GuiButton(4, posX + 115 - 46, posY + 58 - 2, 42, 20, "+10"));
 		this.buttonList.add(new GuiButton(5, posX + 165 - 46, posY + 58 - 2, 42, 20, "+100"));
-		this.buttonList.add(new WidgetRedstoneModes(6, posX + 120, posY + 36, 16, 16, RedstoneMode.LOW_SIGNAL, true));
+		this.buttonList.add(new ButtonRedstoneModes(6, posX + 120, posY + 36, 16, 16, RedstoneMode.LOW_SIGNAL, true));
 
 		super.initGui();
 	}
@@ -148,7 +147,7 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 	}
 
 	public void setRedstoneMode(RedstoneMode mode) {
-		((WidgetRedstoneModes) this.buttonList.get(6)).setRedstoneMode(mode);
+		((ButtonRedstoneModes) this.buttonList.get(6)).setRedstoneMode(mode);
 	}
 
 	@Override

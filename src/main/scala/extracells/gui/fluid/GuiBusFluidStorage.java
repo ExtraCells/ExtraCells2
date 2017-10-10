@@ -20,7 +20,7 @@ import extracells.container.fluid.ContainerBusFluidStorage;
 import extracells.gui.GuiBase;
 import extracells.gui.ISlotRenderer;
 import extracells.gui.SlotUpgradeRenderer;
-import extracells.gui.widget.WidgetStorageDirection;
+import extracells.gui.buttons.ButtonStorageDirection;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
@@ -61,9 +61,9 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	@Override
 	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
-		if (button instanceof WidgetStorageDirection) {
+		if (button instanceof ButtonStorageDirection) {
 			AccessRestriction restriction;
-			switch (((WidgetStorageDirection) button).getAccessRestriction()) {
+			switch (((ButtonStorageDirection) button).getAccessRestriction()) {
 				case NO_ACCESS:
 					restriction = AccessRestriction.READ;
 					break;
@@ -119,12 +119,6 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 
 		fontRendererObj.drawString(PartEnum.FLUIDSTORAGE.getStatName().replace("ME ", ""), 8, 6, 4210752);
 		fontRendererObj.drawString(player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 3, 4210752);
-
-		for (Object button : this.buttonList) {
-			if (button instanceof WidgetStorageDirection) {
-				((WidgetStorageDirection) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
-			}
-		}
 	}
 
 	@Override
@@ -145,7 +139,7 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.buttonList.add(new WidgetStorageDirection(0, this.guiLeft - 18, this.guiTop, 16, 16, AccessRestriction.READ_WRITE));
+		this.buttonList.add(new ButtonStorageDirection(0, this.guiLeft - 18, this.guiTop, 16, 16, AccessRestriction.READ_WRITE));
 	}
 
 	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
@@ -175,7 +169,7 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 
 	public void updateAccessRestriction(AccessRestriction mode) {
 		if (this.buttonList.size() > 0) {
-			((WidgetStorageDirection) this.buttonList.get(0)).setAccessRestriction(mode);
+			((ButtonStorageDirection) this.buttonList.get(0)).setAccessRestriction(mode);
 		}
 	}
 

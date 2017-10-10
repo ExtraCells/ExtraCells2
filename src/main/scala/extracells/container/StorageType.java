@@ -52,10 +52,10 @@ public enum StorageType {
 		}
 	};
 
-	String name;
-	String kilo;
-	String mega;
-	String buckets;
+	private String name;
+	private String kilo;
+	private String mega;
+	private String buckets;
 
 	StorageType(String name, String kilo, String mega, String buckets) {
 		this.name = name;

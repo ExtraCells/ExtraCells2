@@ -2,16 +2,20 @@ package extracells.gui;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 import extracells.gui.widget.WidgetManager;
 
@@ -109,13 +113,30 @@ public class GuiBase<C extends Container> extends GuiContainer {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
-		drawToolTips(mouseX, mouseY);
+		drawToolTips(this, buttonList, mouseX, mouseY);
+		drawToolTips(this, widgetManager.getWidgets(), mouseX, mouseY);
 	}
 
-	protected void drawToolTips(int mouseX, int mouseY) {
-		InventoryPlayer playerInv = mc.thePlayer.inventory;
-		if (playerInv.getItemStack() == null) {
-			widgetManager.drawToolTips(mouseX, mouseY);
+	public static void drawToolTips(GuiBase gui, Collection<?> objects, int mouseX, int mouseY) {
+		for (Object obj : objects) {
+			if (!(obj instanceof IToolTipProvider)) {
+				continue;
+			}
+			IToolTipProvider provider = (IToolTipProvider) obj;
+			List<String> tooltip = provider.getToolTip(mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+			if (tooltip == null) {
+				continue;
+			}
+			boolean mouseOver = provider.isMouseOver(mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+			if (mouseOver) {
+				if (!tooltip.isEmpty()) {
+					Minecraft mc = Minecraft.getMinecraft();
+					GlStateManager.pushMatrix();
+					ScaledResolution scaledresolution = new ScaledResolution(mc);
+					GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), -1, mc.fontRendererObj);
+					GlStateManager.popMatrix();
+				}
+			}
 		}
 	}
 

@@ -14,7 +14,6 @@ import net.minecraftforge.fluids.FluidStack;
 import appeng.api.AEApi;
 import extracells.container.ContainerPlaneFormation;
 import extracells.gui.GuiBase;
-import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
@@ -50,19 +49,6 @@ public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> imp
 		drawTexturedModalRect(this.guiLeft + 179, this.guiTop, 179, 0, 32, 86);
 		if (this.hasNetworkTool) {
 			drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
-		}
-	}
-
-	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
-		for (Object button : this.buttonList) {
-			if (button instanceof WidgetRedstoneModes) {
-				((WidgetRedstoneModes) button).drawTooltip(this.guiLeft,
-					this.guiTop, (this.width - this.xSize) / 2,
-					(this.height - this.ySize) / 2);
-			}
 		}
 	}
 
