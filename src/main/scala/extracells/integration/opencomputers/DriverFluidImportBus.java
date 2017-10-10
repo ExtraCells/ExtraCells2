@@ -109,7 +109,6 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 			if (!(node instanceof Component)) {
 				throw new IllegalArgumentException("no such component");
 			}
-			Component component = (Component) node;
 			Environment env = node.host();
 			if (!(env instanceof Database)) {
 				throw new IllegalArgumentException("not a database");

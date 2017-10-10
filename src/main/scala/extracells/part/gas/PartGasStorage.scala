@@ -1,6 +1,6 @@
 package extracells.part.gas
 
-import extracells.inventory.HandlerPartStorageGas
+import extracells.inventory.cell.HandlerPartStorageGas
 import extracells.part.fluid.PartFluidStorage
 
 

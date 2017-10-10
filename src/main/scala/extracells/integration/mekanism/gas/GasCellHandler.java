@@ -16,8 +16,8 @@ import appeng.api.storage.IStorageMonitorableAccessor;
 import appeng.api.storage.StorageChannel;
 import extracells.api.IGasStorageCell;
 import extracells.integration.Capabilities;
-import extracells.inventory.HandlerItemPlayerStorageGas;
-import extracells.inventory.HandlerItemStorageGas;
+import extracells.inventory.cell.HandlerItemPlayerStorageGas;
+import extracells.inventory.cell.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 
 public class GasCellHandler implements ICellHandler {

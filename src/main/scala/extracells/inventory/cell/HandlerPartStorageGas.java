@@ -1,4 +1,4 @@
-package extracells.inventory;
+package extracells.inventory.cell;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

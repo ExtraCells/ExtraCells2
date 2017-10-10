@@ -1,4 +1,4 @@
-package extracells.inventory;
+package extracells.inventory.cell;
 
 
 import java.util.ArrayList;

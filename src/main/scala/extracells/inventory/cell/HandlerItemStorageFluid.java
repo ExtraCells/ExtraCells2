@@ -1,4 +1,4 @@
-package extracells.inventory;
+package extracells.inventory.cell;
 
 import com.google.common.collect.Lists;
 

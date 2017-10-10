@@ -16,8 +16,8 @@ import appeng.api.storage.IStorageMonitorableAccessor;
 import appeng.api.storage.StorageChannel;
 import extracells.api.IFluidStorageCell;
 import extracells.integration.Capabilities;
-import extracells.inventory.HandlerItemPlayerStorageFluid;
-import extracells.inventory.HandlerItemStorageFluid;
+import extracells.inventory.cell.HandlerItemPlayerStorageFluid;
+import extracells.inventory.cell.HandlerItemStorageFluid;
 import extracells.network.GuiHandler;
 
 

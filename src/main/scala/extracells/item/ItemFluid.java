@@ -23,7 +23,6 @@ import extracells.models.ModelManager;
 public class ItemFluid extends Item implements IItemModelRegister {
 
 	public ItemFluid() {
-		//setCreativeTab(null);
 	}
 
 	@Override
