@@ -6,7 +6,7 @@ import appeng.api.AEApi;
 import appeng.api.storage.ICellRegistry;
 import extracells.part.PartDrive;
 
-public class InventoryPartDrive extends ECPrivateInventory {
+public class InventoryPartDrive extends InventoryPlain {
 	private final ICellRegistry cellRegistry;
 
 	public InventoryPartDrive(PartDrive listener) {

@@ -31,8 +31,8 @@ import extracells.container.IUpgradeable;
 import extracells.container.fluid.ContainerBusFluidIO;
 import extracells.gui.fluid.GuiBusFluidIO;
 import extracells.gui.widget.fluid.IFluidSlotListener;
-import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.IInventoryListener;
+import extracells.inventory.InventoryPlain;
 import extracells.inventory.UpgradeInventory;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketPartConfig;
@@ -126,7 +126,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 		return new TickingRequest(1, 20, false, false);
 	}
 
-	public ECPrivateInventory getUpgradeInventory() {
+	public InventoryPlain getUpgradeInventory() {
 		return this.upgradeInventory;
 	}
 

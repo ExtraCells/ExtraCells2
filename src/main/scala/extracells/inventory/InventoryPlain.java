@@ -11,7 +11,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-public class ECPrivateInventory implements IInventory {
+import extracells.util.ItemStackUtils;
+
+public class InventoryPlain implements IInventory {
 
 	public ItemStack[] slots;
 	public String customName;
@@ -19,11 +21,11 @@ public class ECPrivateInventory implements IInventory {
 	@Nullable
 	private IInventoryListener listener;
 
-	public ECPrivateInventory(String customName, int size, int stackLimit) {
+	public InventoryPlain(String customName, int size, int stackLimit) {
 		this(customName, size, stackLimit, null);
 	}
 
-	public ECPrivateInventory(String customName, int size, int stackLimit, IInventoryListener listener) {
+	public InventoryPlain(String customName, int size, int stackLimit, IInventoryListener listener) {
 		this.slots = new ItemStack[size];
 		this.customName = customName;
 		this.stackLimit = stackLimit;
@@ -86,7 +88,7 @@ public class ECPrivateInventory implements IInventory {
 	 */
 	public ItemStack incrStackSize(int slotId, int amount) {
 		ItemStack slot = this.slots[slotId];
-		if (slot == null) {
+		if (ItemStackUtils.isEmpty(slot)) {
 			return null;
 		}
 		int stackLimit = getInventoryStackLimit();

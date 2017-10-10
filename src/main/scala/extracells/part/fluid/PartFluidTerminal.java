@@ -37,8 +37,8 @@ import extracells.container.ContainerTerminal;
 import extracells.container.StorageType;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.GuiTerminal;
-import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.IInventoryListener;
+import extracells.inventory.InventoryPlain;
 import extracells.models.PartModels;
 import extracells.network.packet.part.PacketTerminalSelectFluidClient;
 import extracells.part.PartECBase;
@@ -50,7 +50,7 @@ import extracells.util.PermissionUtil;
 public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryListener {
 
 	private final List<Object> containers = new ArrayList<Object>();
-	protected final ECPrivateInventory inventory = new ECPrivateInventory(
+	protected final InventoryPlain inventory = new InventoryPlain(
 		"extracells.part.fluid.terminal", 2, 64, this) {
 
 		@Override

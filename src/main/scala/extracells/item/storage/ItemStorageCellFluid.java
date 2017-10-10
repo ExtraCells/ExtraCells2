@@ -13,7 +13,7 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.storage.StorageChannel;
 import extracells.api.IFluidStorageCell;
 import extracells.inventory.ECFluidFilterInventory;
-import extracells.inventory.ECPrivateInventory;
+import extracells.inventory.InventoryPlain;
 import extracells.item.ItemFluid;
 
 public class ItemStorageCellFluid extends ItemStorageCell implements IFluidStorageCell {
@@ -76,7 +76,7 @@ public class ItemStorageCellFluid extends ItemStorageCell implements IFluidStora
 
 	@Override
 	public IInventory getUpgradesInventory(ItemStack is) {
-		return new ECPrivateInventory("configInventory", 0, 64);
+		return new InventoryPlain("configInventory", 0, 64);
 	}
 
 	@Override

@@ -25,9 +25,9 @@ import extracells.container.slot.SlotOutput;
 import extracells.container.slot.SlotPlayerInventory;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiStorage;
-import extracells.inventory.ECPrivateInventory;
-import extracells.inventory.HandlerItemStorageFluid;
 import extracells.inventory.IInventoryListener;
+import extracells.inventory.InventoryPlain;
+import extracells.inventory.cell.HandlerItemStorageFluid;
 import extracells.network.packet.part.PacketStorageSelectFluid;
 import extracells.network.packet.part.PacketStorageUpdateFluid;
 import extracells.network.packet.part.PacketStorageUpdateState;
@@ -49,7 +49,7 @@ public abstract class ContainerStorage extends Container implements
 	protected IWirelessGasFluidTermHandler handler = null;
 	protected IPortableStorageCell storageCell = null;
 	public boolean hasWirelessTermHandler = false;
-	protected ECPrivateInventory inventory;
+	protected InventoryPlain inventory;
 
 	public ContainerStorage(StorageType storageType, EntityPlayer player, EnumHand hand) {
 		this(storageType, null, player, hand);
@@ -79,7 +79,7 @@ public abstract class ContainerStorage extends Container implements
 			this.fluidStackList = AEApi.instance().storage().createFluidList();
 		}
 
-		inventory = new ECPrivateInventory("extracells.item." + storageType.getName() + ".storage", 2, 64, this) {
+		inventory = new InventoryPlain("extracells.item." + storageType.getName() + ".storage", 2, 64, this) {
 			@Override
 			public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 				return storageType.isContainer(itemStack);

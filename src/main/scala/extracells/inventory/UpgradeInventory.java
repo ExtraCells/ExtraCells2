@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 import appeng.api.AEApi;
 import appeng.api.definitions.IMaterials;
 
-public class UpgradeInventory extends ECPrivateInventory {
+public class UpgradeInventory extends InventoryPlain {
 	public UpgradeInventory(IInventoryListener listener) {
 		super("", 4, 1, listener);
 	}

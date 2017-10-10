@@ -31,9 +31,9 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import extracells.container.ContainerDrive;
 import extracells.gui.GuiDrive;
-import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.IInventoryListener;
 import extracells.inventory.InventoryPartDrive;
+import extracells.inventory.InventoryPlain;
 import extracells.models.PartModels;
 import extracells.models.drive.DriveSlotsState;
 import extracells.models.drive.IECDrive;
@@ -154,7 +154,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 		return this.priority;
 	}
 
-	public ECPrivateInventory getInventory() {
+	public InventoryPlain getInventory() {
 		return this.inventory;
 	}
 

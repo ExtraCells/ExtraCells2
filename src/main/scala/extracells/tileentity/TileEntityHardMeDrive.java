@@ -32,8 +32,8 @@ import extracells.api.IECTileEntity;
 import extracells.container.ContainerHardMEDrive;
 import extracells.gridblock.ECGridBlockHardMEDrive;
 import extracells.gui.GuiHardMEDrive;
-import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.IInventoryListener;
+import extracells.inventory.InventoryPlain;
 import extracells.models.drive.IECDrive;
 import extracells.network.IGuiProvider;
 
@@ -48,7 +48,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 	List<IMEInventoryHandler> itemHandlers = new ArrayList<IMEInventoryHandler>();
 	private final ECGridBlockHardMEDrive gridBlock = new ECGridBlockHardMEDrive(this);
 
-	private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.drive", 3, 1, this) {
+	private InventoryPlain inventory = new InventoryPlain("extracells.part.drive", 3, 1, this) {
 
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 

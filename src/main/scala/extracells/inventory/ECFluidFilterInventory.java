@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import extracells.item.ItemFluid;
 import extracells.registries.ItemEnum;
 
-public class ECFluidFilterInventory extends ECPrivateInventory {
+public class ECFluidFilterInventory extends InventoryPlain {
 
 	private final ItemStack cellItem;
 

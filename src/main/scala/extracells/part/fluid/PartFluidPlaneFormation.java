@@ -38,7 +38,8 @@ import extracells.container.IUpgradeable;
 import extracells.gridblock.ECBaseGridBlock;
 import extracells.gui.fluid.GuiFluidPlaneFormation;
 import extracells.gui.widget.fluid.IFluidSlotListener;
-import extracells.inventory.ECPrivateInventory;
+import extracells.inventory.InventoryPlain;
+import extracells.inventory.UpgradeInventorySingle;
 import extracells.models.PartModels;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.part.PartECBase;
@@ -51,14 +52,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 	private Fluid fluid;
 	// TODO redstone control
 	//private RedstoneMode redstoneMode;
-	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1,
-		1) {
-
-		@Override
-		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-			return AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack);
-		}
-	};
+	private InventoryPlain upgradeInventory = new UpgradeInventorySingle(AEApi.instance().definitions().materials().cardRedstone());
 
 	@Override
 	public void getDrops(List<ItemStack> drops, boolean wrenched) {
@@ -136,7 +130,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 		return new TickingRequest(1, 20, false, false);
 	}
 
-	public ECPrivateInventory getUpgradeInventory() {
+	public InventoryPlain getUpgradeInventory() {
 		return this.upgradeInventory;
 	}
 

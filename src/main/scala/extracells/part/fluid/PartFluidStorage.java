@@ -39,9 +39,9 @@ import extracells.container.IUpgradeable;
 import extracells.container.fluid.ContainerBusFluidStorage;
 import extracells.gui.fluid.GuiBusFluidStorage;
 import extracells.gui.widget.fluid.IFluidSlotListener;
-import extracells.inventory.ECPrivateInventory;
-import extracells.inventory.HandlerPartStorageFluid;
 import extracells.inventory.IInventoryListener;
+import extracells.inventory.InventoryPlain;
+import extracells.inventory.cell.HandlerPartStorageFluid;
 import extracells.models.PartModels;
 import extracells.network.packet.other.PacketFluidSlotUpdate;
 import extracells.network.packet.part.PacketPartConfig;
@@ -53,7 +53,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
 	private final HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
 	private final Fluid[] filterFluids = new Fluid[54];
-	private final ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this) {
+	private final InventoryPlain upgradeInventory = new InventoryPlain("", 1, 1, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
@@ -134,7 +134,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		return new ContainerBusFluidStorage(this, player);
 	}
 
-	public ECPrivateInventory getUpgradeInventory() {
+	public InventoryPlain getUpgradeInventory() {
 		return this.upgradeInventory;
 	}
 

@@ -17,8 +17,8 @@ import appeng.api.networking.events.MENetworkPowerStorage;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
-import extracells.inventory.ECPrivateInventory;
 import extracells.inventory.IInventoryListener;
+import extracells.inventory.InventoryPlain;
 import extracells.models.PartModels;
 import io.netty.buffer.ByteBuf;
 
@@ -27,7 +27,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 	//private IIcon batteryIcon = TextureManager.BATTERY_FRONT.getTexture();
 	private ItemStack battery;
 	IAEItemPowerStorage handler;
-	private ECPrivateInventory inventory = new ECPrivateInventory(
+	private InventoryPlain inventory = new InventoryPlain(
 		"extracells.part.battery", 1, 1) {
 
 		@Override
