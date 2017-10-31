@@ -54,7 +54,42 @@ public class ContainerFluidStorage extends ContainerStorage {
 		container = container.copy();
 		container.stackSize = 1;
 
-		if (FluidHelper.isFillableContainerWithRoom(container)) {
+		if (FluidHelper.isDrainableFilledContainer(container)) {
+			FluidStack containerFluid = FluidHelper.getFluidFromContainer(container);
+
+			//Tries to inject fluid to network.
+			IAEFluidStack notInjected = this.monitor.injectItems(
+					AEUtils.createFluidStack(containerFluid),
+					Actionable.SIMULATE, new PlayerSource(this.player, null));
+			if (notInjected != null) {
+				return;
+			}
+			ItemStack handItem = player.getHeldItem(hand);
+			if (this.handler != null) {
+				if (!this.handler.hasPower(this.player, 20.0D,
+						handItem)) {
+					return;
+				}
+				this.handler.usePower(this.player, 20.0D,
+						handItem);
+			} else if (this.storageCell != null) {
+				if (!this.storageCell.hasPower(this.player, 20.0D,
+						handItem)) {
+					return;
+				}
+				this.storageCell.usePower(this.player, 20.0D,
+						handItem);
+			}
+			Pair<Integer, ItemStack> drainedContainer = FluidHelper
+					.drainStack(container, containerFluid);
+			if (fillSecondSlot(drainedContainer.getRight())) {
+				this.monitor.injectItems(
+						AEUtils.createFluidStack(containerFluid),
+						Actionable.MODULATE,
+						new PlayerSource(this.player, null));
+				decreaseFirstSlot();
+			}
+		} else if (FluidHelper.isFillableContainerWithRoom(container)) {
 			if (this.selectedFluid == null) {
 				return;
 			}
@@ -81,41 +116,6 @@ public class ContainerFluidStorage extends ContainerStorage {
 				decreaseFirstSlot();
 			}
 
-		} else if (FluidHelper.isDrainableFilledContainer(container)) {
-			FluidStack containerFluid = FluidHelper.getFluidFromContainer(container);
-
-			//Tries to inject fluid to network.
-			IAEFluidStack notInjected = this.monitor.injectItems(
-				AEUtils.createFluidStack(containerFluid),
-				Actionable.SIMULATE, new PlayerSource(this.player, null));
-			if (notInjected != null) {
-				return;
-			}
-			ItemStack handItem = player.getHeldItem(hand);
-			if (this.handler != null) {
-				if (!this.handler.hasPower(this.player, 20.0D,
-					handItem)) {
-					return;
-				}
-				this.handler.usePower(this.player, 20.0D,
-					handItem);
-			} else if (this.storageCell != null) {
-				if (!this.storageCell.hasPower(this.player, 20.0D,
-					handItem)) {
-					return;
-				}
-				this.storageCell.usePower(this.player, 20.0D,
-					handItem);
-			}
-			Pair<Integer, ItemStack> drainedContainer = FluidHelper
-				.drainStack(container, containerFluid);
-			if (fillSecondSlot(drainedContainer.getRight())) {
-				this.monitor.injectItems(
-					AEUtils.createFluidStack(containerFluid),
-					Actionable.MODULATE,
-					new PlayerSource(this.player, null));
-				decreaseFirstSlot();
-			}
 		}
 	}
 }

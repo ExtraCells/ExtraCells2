@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraftforge.fluids.FluidUtil;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -124,7 +125,19 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 			return;
 		}
 
-		if (FluidHelper.isFillableContainerWithRoom(container)) {
+		if(FluidHelper.isDrainableFilledContainer(container)) {
+			FluidStack containerFluid = FluidHelper.getFluidFromContainer(container);
+			IAEFluidStack notInjected = monitor.injectItems(AEUtils.createFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
+			if (notInjected != null) {
+				return;
+			}
+			Pair<Integer, ItemStack> drainedContainer = FluidHelper.drainStack(container, containerFluid);
+			ItemStack emptyContainer = drainedContainer.getRight();
+			if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
+				monitor.injectItems(AEUtils.createFluidStack(containerFluid), Actionable.MODULATE, this.machineSource);
+				decreaseFirstSlot();
+			}
+		}else if (FluidHelper.isFillableContainerWithRoom(container)) {
 			if (this.currentFluid == null) {
 				return;
 			}
@@ -137,18 +150,6 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 			}
 			if (fillSecondSlot(filledContainer.getRight())) {
 				monitor.extractItems(AEUtils.createFluidStack(this.currentFluid, filledContainer.getLeft()), Actionable.MODULATE, this.machineSource);
-				decreaseFirstSlot();
-			}
-		} else {
-			FluidStack containerFluid = FluidHelper.getFluidFromContainer(container);
-			IAEFluidStack notInjected = monitor.injectItems(AEUtils.createFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
-			if (notInjected != null) {
-				return;
-			}
-			Pair<Integer, ItemStack> drainedContainer = FluidHelper.drainStack(container, containerFluid);
-			ItemStack emptyContainer = drainedContainer.getRight();
-			if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
-				monitor.injectItems(AEUtils.createFluidStack(containerFluid), Actionable.MODULATE, this.machineSource);
 				decreaseFirstSlot();
 			}
 		}

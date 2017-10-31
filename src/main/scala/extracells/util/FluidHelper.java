@@ -44,26 +44,20 @@ public class FluidHelper {
 		if (itemStack == null) {
 			return 0;
 		}
-		Item item = itemStack.getItem();
-		if (item instanceof IFluidContainerItem) {
-			return ((IFluidContainerItem) item).getCapacity(itemStack);
-		} else if (FluidContainerRegistry.isEmptyContainer(itemStack)) {
-			for (FluidContainerRegistry.FluidContainerData data : FluidContainerRegistry
-				.getRegisteredFluidContainerData()) {
-				if (data != null && data.emptyContainer.isItemEqual(itemStack)) {
-					FluidStack interior = data.fluid;
-					return interior != null ? interior.amount : 0;
-				}
+		IFluidHandler handler = FluidUtil.getFluidHandler(itemStack);
+		int amount = 0;
+		if(handler != null){
+			for (IFluidTankProperties tank : handler.getTankProperties()) {
+				amount += tank.getCapacity();
 			}
 		}
-		return 0;
+		return amount;
 	}
 
 	public static int getCapacity(ItemStack itemStack, Fluid fluidToFill) {
 		if (itemStack == null) {
 			return 0;
 		}
-		Item item = itemStack.getItem();
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(itemStack);
 		return fluidHandler.fill(new FluidStack(fluidToFill, Integer.MAX_VALUE), false);
 	}
@@ -93,8 +87,8 @@ public class FluidHelper {
 			if (properties.getCapacity() > 0) {
 				FluidStack contents = properties.getContents();
 				if (contents == null) {
-					return true;
-				} else if (contents.amount < properties.getCapacity()) {
+					continue;
+				} else if (contents.amount > 0) {
 					return true;
 				}
 			}
@@ -135,14 +129,14 @@ public class FluidHelper {
 			if (properties.canFill() && properties.getCapacity() > 0) {
 				FluidStack contents = properties.getContents();
 				if (contents == null) {
-					return true;
+					continue;
 				} else if (contents.amount > 0) {
 					return false;
 				}
 			}
 		}
 
-		return false;
+		return tankProperties.length > 0;
 	}
 
 	public static boolean isFillableContainerWithRoom(ItemStack container) {
@@ -179,7 +173,7 @@ public class FluidHelper {
 			}
 
 			FluidStack contents = properties.getContents();
-			if (contents == null || contents.amount < properties.getCapacity()) {
+			if (contents == null || contents.amount <= 0) {
 				return false;
 			}
 		}
