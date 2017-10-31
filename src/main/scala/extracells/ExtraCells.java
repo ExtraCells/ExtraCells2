@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import javax.annotation.Nullable;
 import java.io.File;
 
+import extracells.integration.mekanism.gas.GasCellHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -78,6 +79,7 @@ public class ExtraCells {
 		registries.recipes().addNewSubItemResolver(new NameHandler());
 		registries.wireless().registerWirelessHandler(new AEWirelessTermHandler());
 		registries.cell().addCellHandler(new FluidCellHandler());
+		registries.cell().addCellHandler(new GasCellHandler());
 		ExtraCellsEventHandler handler = new ExtraCellsEventHandler();
 		MinecraftForge.EVENT_BUS.register(handler);
 		proxy.registerMovables();

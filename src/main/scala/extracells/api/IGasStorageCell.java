@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.Fluid;
 
 import appeng.api.storage.ICellWorkbenchItem;
 
-public interface IGasStorageCell extends ICellWorkbenchItem {
+public interface IGasStorageCell extends ICellWorkbenchItem, IFluidStorageCell {
 
 	/**
 	 * @param ItemStack

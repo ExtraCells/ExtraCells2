@@ -89,11 +89,11 @@ object GuiHandler extends IGuiHandler {
   def launchGui(ID: Int, player: EntityPlayer, hand: EnumHand, args: Array[Any]) {
     temp = args
     this.hand = hand
-    player.openGui(ExtraCells.instance, ID, player.getEntityWorld, 0, 0, 0);
+    player.openGui(ExtraCells.instance, ID, player.getEntityWorld, player.posX.asInstanceOf[Int], player.posY.asInstanceOf[Int], player.posZ.asInstanceOf[Int])
   }
 
   def launchGui(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any = {
-    player.openGui(ExtraCells.instance, ID, world, x, y, z);
+    player.openGui(ExtraCells.instance, ID, world, x, y, z)
   }
 
   def hasPermissions(pos: BlockPos, side: AEPartLocation, player: EntityPlayer): Boolean = {
@@ -144,14 +144,18 @@ object GuiHandler extends IGuiHandler {
     val pos = new BlockPos(x, y, z);
     val tileEntity = world.getTileEntity(pos)
     if (tileEntity == null)
-      return null
+      if(ID>=6)
+        return getGui(ID - 6, player).asInstanceOf[AnyRef]
+      else
+        return null
     else if (tileEntity.isInstanceOf[IGuiProvider])
       return tileEntity.asInstanceOf[IGuiProvider].getClientGuiElement(player)
     else if (tileEntity.isInstanceOf[IPartHost]) {
       if (world != null && side != null) {
         return getPartGui(side, player, world, x, y, z).asInstanceOf[AnyRef]
       }
-      getGui(ID - 6, player).asInstanceOf[AnyRef]
+      if(ID>=6)
+        return getGui(ID - 6, player).asInstanceOf[AnyRef]
     }
     return null;
   }
@@ -167,14 +171,18 @@ object GuiHandler extends IGuiHandler {
     val pos = new BlockPos(x, y, z);
     val tileEntity = world.getTileEntity(pos)
     if (tileEntity == null)
-      return null
+      if(ID >= 6)
+        return getContainer(ID - 6, player, temp).asInstanceOf[AnyRef]
+      else
+        return null
     else if (tileEntity.isInstanceOf[IGuiProvider])
       return tileEntity.asInstanceOf[IGuiProvider].getServerGuiElement(player)
     else if (tileEntity.isInstanceOf[IPartHost]) {
       if (world != null && side != null) {
         return getPartContainer(side, player, world, x, y, z).asInstanceOf[AnyRef]
       }
-      getContainer(ID - 6, player, temp).asInstanceOf[AnyRef]
+      if(ID >= 6)
+        return getContainer(ID - 6, player, temp).asInstanceOf[AnyRef]
     }
     return null;
   }

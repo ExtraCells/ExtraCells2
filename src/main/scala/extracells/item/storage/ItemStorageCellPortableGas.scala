@@ -50,7 +50,7 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
     if (partitioned) {
       list2.add(I18n.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + I18n.translateToLocal("gui.appliedenergistics2.Precise"))
     }
-    list2.add(I18n.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStorageCellPortableFluid.MAX_POWER * 1e4) / 1e2 + "%")
+    list2.add(I18n.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStorageCellPortableGas.MAX_POWER * 1e4) / 1e2 + "%")
   }
 
   def getConfigInventory(is: ItemStack): IInventory = new ECFluidFilterInventory("configFluidCell", 63, is)
@@ -98,7 +98,7 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     itemList2.add(new ItemStack(item))
     val itemStack: ItemStack = new ItemStack(item)
-    injectAEPower(itemStack, ItemStorageCellPortableFluid.MAX_POWER)
+    injectAEPower(itemStack, ItemStorageCellPortableGas.MAX_POWER)
     itemList2.add(itemStack)
   }
 

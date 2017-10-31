@@ -1,5 +1,6 @@
 package extracells.util;
 
+import extracells.api.IGasStorageCell;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -59,7 +60,7 @@ public class FluidCellHandler implements ICellHandler {
 
 	@Override
 	public boolean isCell(ItemStack is) {
-		return is != null && is.getItem() != null && is.getItem() instanceof IFluidStorageCell;
+		return is != null && is.getItem() != null && is.getItem() instanceof IFluidStorageCell && (!(is.getItem() instanceof IGasStorageCell));
 	}
 
 	@Override
