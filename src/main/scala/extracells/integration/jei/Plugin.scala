@@ -21,6 +21,14 @@ class Plugin extends BlankModPlugin{
     if (!Integration.Mods.JEI.isEnabled)
       return
 
+    Jei.registry = registry
+
+
+    for (item <- Jei.fluidBlacklist){
+      registry.getJeiHelpers.getIngredientBlacklist.addIngredientToBlacklist(item)
+    }
+
+
     hideItem(new ItemStack(ItemEnum.FLUIDITEM.getItem), registry)
     hideItem(new ItemStack(ItemEnum.CRAFTINGPATTERN.getItem), registry)
     for (item <- ItemEnum.values()) {
