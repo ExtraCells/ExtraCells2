@@ -5,7 +5,7 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.fml.common.Optional
 import p455w0rd.wct.api.IWirelessCraftingTerminalItem
 
-@Optional.Interface(iface = "net.p455w0rd.wirelesscraftingterminal.api.IWirelessCraftingTerminalItem", modid = "ae2wct", striprefs = true)
+@Optional.Interface(iface = "455w0rd.wct.api.IWirelessCraftingTerminalItem", modid = "ae2wct", striprefs = true)
 trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem {
 
   @Optional.Method(modid = "ae2wct")
