@@ -1,8 +1,54 @@
 {
-	"variants": {
-        "facing=north": { "model": "extracells:walrus.obj" },
-        "facing=south": { "model": "extracells:walrus.obj", "y": 180 },
-        "facing=west":  { "model": "extracells:walrus.obj", "y": 270 },
-        "facing=east":  { "model": "extracells:walrus.obj", "y": 90 }
+  "forge_marker": 1,
+  "defaults": {
+    "custom": {
+      "flip-v": true
+    },
+    "model": "extracells:walrus.obj",
+    "textures": {
+      "#builtin/white": "extracells:blocks/walrus2"
     }
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{
+      "transform": {
+        "thirdperson": {
+          "translation": [0, 0.09375, -0.171875],
+          "rotation": [ { "y": 45}, {"x": 45}, {"z": 10} ],
+          "scale": 0.375
+        },
+        "firstperson": {
+          "rotation": [ { "y": -45}, {"x": 45}, {"z": 10} ],
+          "scale": 0.375
+        },
+        "gui": {
+          "translation": [0.4, 0, 0],
+          "rotation": [ {"y": 90} ],
+          "scale": 0.4
+        },
+        "ground": {
+          "scale": 0.375
+        },
+        "fixed": {
+          "translation": [0.5, 0, 0],
+          "rotation": [ {"y": 90} ],
+          "scale": 0.4
+        }
+      }
+    }],
+    "facing": {
+      "north": {
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      }
+    }
+  }
 }

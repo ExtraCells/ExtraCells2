@@ -1,0 +1,59 @@
+package extracells.integration.jei
+
+import extracells.registries.{BlockEnum, ItemEnum}
+import mezz.jei.api._
+import mezz.jei.api.ingredients.IModIngredientRegistration
+import net.minecraft.item.{Item, ItemStack}
+import java.util
+
+import extracells.integration.Integration
+import extracells.util.CreativeTabEC
+
+@JEIPlugin
+class Plugin extends BlankModPlugin{
+  override def registerItemSubtypes(subtypeRegistry: ISubtypeRegistry) {
+  }
+
+  override def registerIngredients(ingredientRegistry: IModIngredientRegistration) {
+  }
+
+  override def register(registry: IModRegistry): Unit = {
+    if (!Integration.Mods.JEI.isEnabled)
+      return
+
+    hideItem(new ItemStack(ItemEnum.FLUIDITEM.getItem), registry)
+    hideItem(new ItemStack(ItemEnum.CRAFTINGPATTERN.getItem), registry)
+    for (item <- ItemEnum.values()) {
+      if (item.getMod != null && (!item.getMod.isEnabled)) {
+        val i = item.getItem
+        val list = new util.ArrayList[ItemStack]
+        i.getSubItems(i, CreativeTabEC.INSTANCE, list)
+        val it = list.iterator
+        while(it.hasNext){
+          hideItem(it.next, registry)
+        }
+      }
+    }
+
+    for (block <- BlockEnum.values()) {
+      if (block.getMod != null && (!block.getMod.isEnabled)) {
+        val b = block.getBlock
+        val list = new util.ArrayList[ItemStack]
+        b.getSubBlocks(Item.getItemFromBlock(b), CreativeTabEC.INSTANCE, list)
+        val it = list.iterator
+        while(it.hasNext){
+          hideItem(it.next, registry)
+        }
+      }
+    }
+  }
+
+  override def onRuntimeAvailable(jeiRuntime: IJeiRuntime) {
+  }
+
+  private def hideItem(item: ItemStack, registry: IModRegistry): Unit ={
+    registry.getJeiHelpers.getIngredientBlacklist.addIngredientToBlacklist(item)
+  }
+
+
+}
