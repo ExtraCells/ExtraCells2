@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import extracells.util.MachineSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -34,7 +36,6 @@ import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.BusSupport;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
@@ -82,7 +83,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 			return;
 		}
 		this.gridBlock = new ECBaseGridBlock(this);
-		this.node = AEApi.instance().createGridNode(this.gridBlock);
+		this.node = AEApi.instance().grid().createGridNode(this.gridBlock);
 		if (this.node != null) {
 			if (this.owner != null) {
 				this.node.setPlayerID(AEApi.instance().registries().players().getID(this.owner));
@@ -323,8 +324,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		}
 	}
 
+	protected void onNeighborChanged(){
+		onNeighborChanged(null, null, null);
+	}
+
 	@Override
-	public void onNeighborChanged() {
+	public void onNeighborChanged(IBlockAccess var1, BlockPos var2, BlockPos var3) {
 		if (hostTile == null) {
 			return;
 		}

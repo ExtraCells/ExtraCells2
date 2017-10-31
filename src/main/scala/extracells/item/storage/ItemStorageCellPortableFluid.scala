@@ -3,23 +3,26 @@ package extracells.item.storage
 import java.util
 
 import appeng.api.AEApi
-import appeng.api.config.{AccessRestriction, FuzzyMode}
+import appeng.api.config.{AccessRestriction, Actionable, FuzzyMode}
 import appeng.api.storage.data.IAEFluidStack
-import appeng.api.storage.{IMEInventoryHandler, StorageChannel}
+import appeng.api.storage.IMEInventoryHandler
 import extracells.api.{ECApi, IHandlerFluidStorage, IPortableFluidStorageCell}
 import extracells.inventory.{ECFluidFilterInventory, InventoryPlain}
 import extracells.item.{ItemECBase, ItemFluid, PowerItem}
 import extracells.models.ModelManager
+import extracells.util.StorageChannels
+import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.text.translation.I18n
-import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
+import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand, NonNullList}
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
+import net.minecraftforge.items.IItemHandler
 
 object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorageCell with PowerItem {
 
@@ -30,10 +33,9 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
   setMaxStackSize(1)
   setMaxDamage(0)
 
-
-  @SuppressWarnings(Array("rawtypes", "unchecked")) override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[String], par4: Boolean) {
+  @SuppressWarnings(Array("rawtypes", "unchecked")) override def addInformation(itemStack: ItemStack, world: World, list: util.List[String], par4: ITooltipFlag) {
     val list2 = list.asInstanceOf[util.List[String]]
-    val handler: IMEInventoryHandler[IAEFluidStack] = AEApi.instance.registries.cell.getCellInventory(itemStack, null, StorageChannel.FLUIDS).asInstanceOf[IMEInventoryHandler[IAEFluidStack]]
+    val handler: IMEInventoryHandler[IAEFluidStack] = AEApi.instance.registries.cell.getCellInventory(itemStack, null, StorageChannels.FLUID)
 
     if (!(handler.isInstanceOf[IHandlerFluidStorage])) {
       return
@@ -53,7 +55,7 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
     list2.add(I18n.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStorageCellPortableFluid.MAX_POWER * 1e4) / 1e2 + "%")
   }
 
-  def getConfigInventory(is: ItemStack): IInventory = {
+  def getConfigInventory(is: ItemStack): IItemHandler = {
     return new ECFluidFilterInventory("configFluidCell", 63, is)
   }
 
@@ -100,11 +102,11 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
   override def getRarity(itemStack: ItemStack): EnumRarity = EnumRarity.RARE
 
 
-  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[ItemStack]) {
+  override def getSubItems(creativeTab: CreativeTabs, itemList: NonNullList[ItemStack]) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
-    itemList2.add(new ItemStack(item))
-    val itemStack: ItemStack = new ItemStack(item)
-    injectAEPower(itemStack, ItemStorageCellPortableFluid.MAX_POWER)
+    itemList2.add(new ItemStack(this))
+    val itemStack: ItemStack = new ItemStack(this)
+    injectAEPower(itemStack, ItemStorageCellPortableFluid.MAX_POWER, Actionable.MODULATE)
     itemList2.add(itemStack)
   }
 
@@ -112,7 +114,7 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
     return "extracells.item.storage.fluid.portable"
   }
 
-  def getUpgradesInventory(is: ItemStack): IInventory = {
+  def getUpgradesInventory(is: ItemStack): IItemHandler = {
     return new InventoryPlain("configInventory", 0, 64)
   }
 
@@ -126,7 +128,7 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
   }
 
   @SuppressWarnings(Array("rawtypes", "unchecked"))
-  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
+  override def onItemRightClick(world: World, player: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
     new ActionResult(EnumActionResult.SUCCESS, ECApi.instance.openPortableFluidCellGui(player, hand, world))
   }
 
@@ -147,7 +149,7 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
   }
 
   def usePower(player: EntityPlayer, amount: Double, is: ItemStack): Boolean = {
-    extractAEPower(is, amount)
+    extractAEPower(is, amount, Actionable.MODULATE)
     return true
   }
 }

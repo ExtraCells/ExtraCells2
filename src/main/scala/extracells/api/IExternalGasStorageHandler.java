@@ -1,10 +1,10 @@
 package extracells.api;
 
 
+import appeng.api.networking.security.IActionSource;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEFluidStack;
 
@@ -22,7 +22,7 @@ public interface IExternalGasStorageHandler {
 	 * @param mySrc source
 	 * @return true, if it can get a handler via getInventory
 	 */
-	boolean canHandle(TileEntity te, EnumFacing d, BaseActionSource mySrc);
+	boolean canHandle(TileEntity te, EnumFacing d, IActionSource mySrc);
 
 	/**
 	 * if this can handle the given inventory, return the a IMEInventory implementing class for it, if not return null
@@ -32,5 +32,5 @@ public interface IExternalGasStorageHandler {
 	 * @param src source
 	 * @return The Handler for the inventory
 	 */
-	IMEInventory<IAEFluidStack> getInventory(TileEntity te, EnumFacing d, BaseActionSource src);
+	IMEInventory<IAEFluidStack> getInventory(TileEntity te, EnumFacing d, IActionSource src);
 }

@@ -1,5 +1,7 @@
 package extracells.container;
 
+import appeng.api.networking.security.IActionSource;
+import extracells.util.StorageChannels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -13,7 +15,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.AEApi;
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
@@ -72,11 +73,11 @@ public abstract class ContainerStorage extends Container implements
 		this.monitor = monitor;
 		this.player = player;
 		this.hand = hand;
-		if (!this.player.worldObj.isRemote && this.monitor != null) {
+		if (!this.player.world.isRemote && this.monitor != null) {
 			this.monitor.addListener(this, null);
 			this.fluidStackList = this.monitor.getStorageList();
 		} else {
-			this.fluidStackList = AEApi.instance().storage().createFluidList();
+			this.fluidStackList = StorageChannels.FLUID().createList();
 		}
 
 		inventory = new InventoryPlain("extracells.item." + storageType.getName() + ".storage", 2, 64, this) {
@@ -119,8 +120,8 @@ public abstract class ContainerStorage extends Container implements
 		if (slot == null) {
 			return;
 		}
-		slot.stackSize--;
-		if (slot.stackSize <= 0) {
+		slot.setCount(slot.getCount() - 1);
+		if (slot.getCount() <= 0) {
 			this.inventory.setInventorySlotContents(0, null);
 		}
 	}
@@ -178,7 +179,7 @@ public abstract class ContainerStorage extends Container implements
 				this.storageCell.usePower(this.player, 20.0D,
 					handItem);
 			}
-			this.inventory.incrStackSize(1, itemStack.stackSize);
+			this.inventory.incrStackSize(1, itemStack.getCount());
 			return true;
 		}
 	}
@@ -218,7 +219,7 @@ public abstract class ContainerStorage extends Container implements
 	@Override
 	public void onContainerClosed(EntityPlayer entityPlayer) {
 		super.onContainerClosed(entityPlayer);
-		if (!entityPlayer.worldObj.isRemote) {
+		if (!entityPlayer.world.isRemote) {
 			this.monitor.removeListener(this);
 			for (int i = 0; i < 2; i++) {
 				this.player.dropItem(this.inventorySlots.get(i).getStack(), false);
@@ -235,7 +236,7 @@ public abstract class ContainerStorage extends Container implements
 	}
 
 	@Override
-	public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+	public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, IActionSource actionSource) {
 		this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
 		NetworkUtil.sendToPlayer(new PacketStorageUpdateFluid(fluidStackList), player);
 		NetworkUtil.sendToPlayer(new PacketStorageUpdateState(hasWirelessTermHandler), player);
@@ -258,7 +259,7 @@ public abstract class ContainerStorage extends Container implements
 
 	@SideOnly(Side.CLIENT)
 	private void updateGui() {
-		if (player.worldObj.isRemote) {
+		if (player.world.isRemote) {
 			GuiStorage guiStorage = GuiUtil.getGui(GuiStorage.class);
 			if (guiStorage == null) {
 				return;

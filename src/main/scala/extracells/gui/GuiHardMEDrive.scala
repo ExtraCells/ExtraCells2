@@ -32,7 +32,7 @@ class GuiHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDrive)
   }
 
   override def drawGuiContainerForegroundLayer(i: Int, j: Int) =
-    fontRendererObj.drawString(BlockEnum.BLASTRESISTANTMEDRIVE.getStatName, 5, 5, 0x000000)
+    fontRenderer.drawString(BlockEnum.BLASTRESISTANTMEDRIVE.getStatName, 5, 5, 0x000000)
 
   private def renderBackground(slot: Slot) {
     if (slot.getStack == null && slot.slotNumber < 3) {
@@ -40,7 +40,7 @@ class GuiHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDrive)
       GlStateManager.enableBlend()
       GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F)
       this.mc.getTextureManager.bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"))
-      this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 0, 16, 16)
+      this.drawTexturedModalRect(this.guiLeft + slot.xPos, this.guiTop + slot.yPos, 240, 0, 16, 16)
       GlStateManager.disableBlend()
       GlStateManager.enableLighting()
     }

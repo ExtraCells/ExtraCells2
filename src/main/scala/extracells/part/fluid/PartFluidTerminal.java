@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.util.*;
 import net.minecraftforge.fluids.FluidUtil;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -23,7 +24,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
@@ -43,10 +43,6 @@ import extracells.inventory.InventoryPlain;
 import extracells.models.PartModels;
 import extracells.network.packet.part.PacketTerminalSelectFluidClient;
 import extracells.part.PartECBase;
-import extracells.util.AEUtils;
-import extracells.util.FluidHelper;
-import extracells.util.NetworkUtil;
-import extracells.util.PermissionUtil;
 
 public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryListener {
 
@@ -98,15 +94,15 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
 	public void decreaseFirstSlot() {
 		ItemStack slot = this.inventory.getStackInSlot(0);
-		slot.stackSize--;
-		if (slot.stackSize <= 0) {
+		slot.setCount(slot.getCount() - 1);
+		if (slot.getCount() <= 0) {
 			this.inventory.setInventorySlotContents(0, null);
 		}
 	}
 
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize()) {
+		if (secondSlot != null && secondSlot.getCount() >= secondSlot.getMaxStackSize()) {
 			return;
 		}
 		ItemStack container = this.inventory.getStackInSlot(0);
@@ -114,7 +110,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 			return;
 		}
 		container = container.copy();
-		container.stackSize = 1;
+		container.setCount(1);
 
 		ECBaseGridBlock gridBlock = getGridBlock();
 		if (gridBlock == null) {
@@ -167,7 +163,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 			if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot)) {
 				return false;
 			}
-			this.inventory.incrStackSize(1, itemStack.stackSize);
+			this.inventory.incrStackSize(1, itemStack.getCount());
 			return true;
 		}
 	}

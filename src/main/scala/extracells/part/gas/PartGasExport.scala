@@ -7,7 +7,7 @@ import appeng.api.config.Actionable
 import appeng.api.storage.data.IAEFluidStack
 import extracells.integration.Integration
 import extracells.part.fluid.PartFluidExport
-import extracells.util.GasUtil
+import extracells.util.{GasUtil, StorageChannels}
 import mekanism.api.gas.IGasHandler
 import net.minecraftforge.fluids.{Fluid, FluidStack}
 import net.minecraftforge.fml.common.Optional
@@ -62,14 +62,14 @@ class PartGasExport extends PartFluidExport {
     import scala.collection.JavaConversions._
     for (fluid <- filter) {
       if (fluid != null) {
-        val stack: IAEFluidStack = extractGas(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
+        val stack: IAEFluidStack = extractGas(StorageChannels.FLUID.createStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
 
         if (stack != null) {
           val gasStack = GasUtil.getGasStack(stack.getFluidStack)
           if (gasStack != null && facingTank.canReceiveGas(getFacing.getOpposite, gasStack.getGas)) {
             val filled: Int = facingTank.receiveGas(getFacing.getOpposite, gasStack, true)
             if (filled > 0) {
-              extractGas(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
+              extractGas(StorageChannels.FLUID.createStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
               return true
             }
           }

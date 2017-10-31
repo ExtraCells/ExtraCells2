@@ -7,6 +7,7 @@ import appeng.api.networking.{IGrid, IGridHost}
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.{IAEFluidStack, IAEItemStack}
 import appeng.api.util.AEPartLocation
+import extracells.util.StorageChannels
 
 
 trait TNetworkStorage {
@@ -27,7 +28,7 @@ trait TNetworkStorage {
     if (storageGrid == null)
       null
     else
-      storageGrid.getFluidInventory
+      storageGrid.getInventory(StorageChannels.FLUID)
   }
 
   @Nullable
@@ -36,7 +37,7 @@ trait TNetworkStorage {
     if (storageGrid == null)
       null
     else
-      storageGrid.getItemInventory
+      storageGrid.getInventory(StorageChannels.ITEM)
   }
 
 }

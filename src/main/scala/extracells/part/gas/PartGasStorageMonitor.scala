@@ -24,8 +24,8 @@ class PartGasStorageMonitor extends PartFluidStorageMonitor {
 
   @Optional.Method(modid = "MekanismAPI|gas")
   def onActivateGas(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
-    if (player == null || player.worldObj == null) return true
-    if (player.worldObj.isRemote) return true
+    if (player == null || player.world == null) return true
+    if (player.world.isRemote) return true
     val s: ItemStack = player.getHeldItem(hand)
     if (s == null) {
       if (this.locked) return false
@@ -42,8 +42,8 @@ class PartGasStorageMonitor extends PartFluidStorageMonitor {
       WrenchUtil.wrenchUsed(s, player, getHostTile.getPos)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
-      if (this.locked) player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))
-      else player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowUnlocked"))
+      if (this.locked) player.sendMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))
+      else player.sendMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowUnlocked"))
       return true
     }
     if (this.locked) return false

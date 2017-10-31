@@ -1,10 +1,13 @@
 package extracells.part.fluid;
 
+import appeng.api.networking.security.IActionSource;
+import appeng.api.storage.IStorageChannel;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
 import java.util.Random;
 
+import extracells.util.StorageChannels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,13 +29,11 @@ import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
@@ -122,8 +123,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	private void notifyTargetBlock(TileEntity tileEntity, EnumFacing facing) {
 		// note - params are always the same
-		tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos(), Blocks.AIR);
-		tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos().offset(facing), Blocks.AIR);
+		tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos(), Blocks.AIR, true);
+		tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos().offset(facing), Blocks.AIR, true);
 	}
 
 	@Override
@@ -135,8 +136,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	}
 
 	@Override
-	public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, BaseActionSource src, StorageChannel chan) {
-		if (chan == StorageChannel.FLUIDS && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == this.selectedFluid) {
+	public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, IActionSource src, IStorageChannel chan) {
+		if (chan == StorageChannels.FLUID() && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == this.selectedFluid) {
 			this.currentAmount = fullStack != null ? fullStack.getStackSize() : 0;
 
 			IGridNode node = getGridNode();
@@ -254,7 +255,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	public void updateWatcher(IStackWatcher newWatcher) {
 		this.watcher = newWatcher;
 		if (this.selectedFluid != null) {
-			this.watcher.add(AEApi.instance().storage().createFluidStack(new FluidStack(this.selectedFluid, 1)));
+			this.watcher.add(StorageChannels.FLUID().createStack(new FluidStack(this.selectedFluid, 1)));
 		}
 	}
 

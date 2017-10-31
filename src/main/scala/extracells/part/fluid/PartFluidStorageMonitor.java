@@ -3,12 +3,12 @@ package extracells.part.fluid;
 import java.io.IOException;
 import java.util.List;
 
+import appeng.api.networking.security.IActionSource;
+import appeng.api.storage.IStorageChannel;
+import extracells.util.StorageChannels;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -38,7 +38,6 @@ import org.lwjgl.opengl.GL11;
 
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.networking.storage.IStorageGrid;
@@ -46,7 +45,6 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartModel;
 import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
@@ -84,7 +82,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			double d2 = world.rand.nextFloat() * f + (1.0F - f) * 0.5D;
 			EntityItem entityitem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, stack);
 			entityitem.setPickupDelay(10);
-			world.spawnEntityInWorld(entityitem);
+			world.spawnEntity(entityitem);
 		}
 	}
 
@@ -108,7 +106,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		if (storage == null) {
 			return null;
 		}
-		return storage.getFluidInventory();
+		return storage.getInventory(StorageChannels.FLUID());
 	}
 
 	@Override
@@ -178,10 +176,10 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
-		if (player == null || player.worldObj == null) {
+		if (player == null || player.world == null) {
 			return true;
 		}
-		if (player.worldObj.isRemote) {
+		if (player.world.isRemote) {
 			return true;
 		}
 		ItemStack s = player.getHeldItem(hand);
@@ -211,10 +209,10 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 				host.markForUpdate();
 			}
 			if (this.locked) {
-				player.addChatMessage(new TextComponentTranslation(
+				player.sendMessage(new TextComponentTranslation(
 					"chat.appliedenergistics2.isNowLocked"));
 			} else {
-				player.addChatMessage(new TextComponentTranslation(
+				player.sendMessage(new TextComponentTranslation(
 					"chat.appliedenergistics2.isNowUnlocked"));
 			}
 			return true;
@@ -239,9 +237,10 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		return false;
 	}
 
+
 	@Override
-	public void onStackChange(IItemList arg0, IAEStack arg1, IAEStack arg2,
-		BaseActionSource arg3, StorageChannel arg4) {
+	public void onStackChange(IItemList<?> arg0, IAEStack<?> arg1, IAEStack<?> arg2,
+							  IActionSource arg3, IStorageChannel<?> arg4) {
 		if (this.fluid != null) {
 			IGridNode n = getGridNode();
 			if (n == null) {
@@ -376,7 +375,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 					GL11.glScalef(1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f);
 					GL11.glTranslated(-8.6F, -16.3, -1.2F);
 					mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-					VertexBuffer buffer = tess.getBuffer();
+					BufferBuilder buffer = tess.getBuffer();
 					buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 					try {
 						buffer.pos(0, 16, 0).tex(fluidIcon.getMinU(), fluidIcon.getMaxV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
@@ -411,7 +410,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			msg = Long.toString(qty / 1000) + 'B';
 		}
 
-		FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+		FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 		int width = fr.getStringWidth(msg);
 		GlStateManager.translate(-0.5f * width, 0.0f, -1.0f);
 		fr.drawString(msg, 0, 0, 0);

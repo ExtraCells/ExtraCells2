@@ -1,6 +1,6 @@
 package extracells.util
 
-import appeng.api.networking.security.BaseActionSource
+import appeng.api.networking.security.IActionSource
 import extracells.api.IExternalGasStorageHandler
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
@@ -16,7 +16,7 @@ object GasStorageRegistry {
     handler += esh
   }
 
-  def getHandler(te: TileEntity, opposite: EnumFacing, mySrc: BaseActionSource): IExternalGasStorageHandler = {
+  def getHandler(te: TileEntity, opposite: EnumFacing, mySrc: IActionSource): IExternalGasStorageHandler = {
     for (x <- handler) {
       if (x.canHandle(te, opposite, mySrc))
         return x

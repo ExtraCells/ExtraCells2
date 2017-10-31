@@ -64,27 +64,27 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
     while (i < inventory.getSizeInventory) {
 
       val item: ItemStack = inventory.getStackInSlot(i)
-      if (item != null && item.stackSize > 0) {
+      if (item != null && item.getCount > 0) {
         val rx: Float = rand.nextFloat * 0.8F + 0.1F
         val ry: Float = rand.nextFloat * 0.8F + 0.1F
         val rz: Float = rand.nextFloat * 0.8F + 0.1F
         val entityItem: EntityItem = new EntityItem(world, x + rx, y + ry, z + rz, item.copy)
         if (item.hasTagCompound) {
-          entityItem.getEntityItem.setTagCompound(item.getTagCompound.copy.asInstanceOf[NBTTagCompound])
+          entityItem.getItem.setTagCompound(item.getTagCompound.copy.asInstanceOf[NBTTagCompound])
         }
         val factor: Float = 0.05F
         entityItem.motionX = rand.nextGaussian * factor
         entityItem.motionY = rand.nextGaussian * factor + 0.2F
         entityItem.motionZ = rand.nextGaussian * factor
-        world.spawnEntityInWorld(entityItem)
-        item.stackSize = 0
+        world.spawnEntity(entityItem)
+        item.setCount(0)
       }
       i += 1
 
     }
   }
 
-  override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, heldItem: ItemStack, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
+  override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
     if (world.isRemote) return false
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile.isInstanceOf[TileEntityHardMeDrive]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(AEPartLocation.INTERNAL))) return false
@@ -115,7 +115,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
 
   override def onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, entity: EntityLivingBase, stack: ItemStack) {
     super.onBlockPlacedBy(world, pos, state, entity, stack)
-    val l = MathHelper.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+    val l = MathHelper.floor(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
     //TODO: Add rotation
     /*if (!entity.isSneaking())

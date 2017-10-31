@@ -46,7 +46,7 @@ class ContainerHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDri
         } else if (!mergeItemStack(itemstack1, 0, 3, false)) {
           return null
         }
-        if (itemstack1.stackSize == 0) {
+        if (itemstack1.getCount == 0) {
           slot.putStack(null)
         } else {
           slot.onSlotChanged()
@@ -56,12 +56,12 @@ class ContainerHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDri
     itemstack
   }
 
-  override def retrySlotClick(slotId: Int, clickedButton: Int, mode: Boolean, playerIn: EntityPlayer): Unit = {
+  /*override*/ def retrySlotClick(slotId: Int, clickedButton: Int, mode: Boolean, playerIn: EntityPlayer): Unit = {
 
   }
 
   override def canInteractWith(player: EntityPlayer): Boolean = {
-    if (tile.hasWorldObj) {
+    if (tile.hasWorld) {
       return tile.isUseableByPlayer(player)
     }
     false

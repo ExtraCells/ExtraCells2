@@ -3,6 +3,9 @@ package extracells.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import appeng.api.networking.security.IActionSource;
+import extracells.util.MachineSource;
+import extracells.util.StorageChannels;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -35,9 +38,7 @@ import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEMonitor;
@@ -77,7 +78,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	public void cellUpdate(MENetworkCellArrayUpdate event) {
 		IStorageGrid storage = getStorageGrid();
 		if (storage != null) {
-			postChange(storage.getFluidInventory(), null, null);
+			postChange(storage.getInventory(StorageChannels.FLUID()), null, null);
 		}
 	}
 
@@ -87,14 +88,14 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 			return null;
 		}
 		if (this.node == null) {
-			this.node = AEApi.instance().createGridNode(this.gridBlock);
+			this.node = AEApi.instance().grid().createGridNode(this.gridBlock);
 		}
 		return this.node;
 	}
 
 	@Override
 	public AECableType getCableConnectionType(AEPartLocation dir) {
-		return AECableType.DENSE;
+		return AECableType.DENSE_SMART;
 	}
 
 	@Override
@@ -105,14 +106,14 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	@Override
 	public IGridNode getGridNode(AEPartLocation location) {
 		if (FMLCommonHandler.instance().getSide().isClient()
-			&& (worldObj == null || worldObj.isRemote)) {
+			&& (world == null || world.isRemote)) {
 			return null;
 		}
 		if (this.isFirstGetGridNode) {
 			this.isFirstGetGridNode = false;
 			getActionableNode().updateState();
 			IStorageGrid storage = getStorageGrid();
-			storage.getFluidInventory().addListener(this, null);
+			storage.getInventory(StorageChannels.FLUID()).addListener(this, null);
 		}
 		return this.node;
 	}
@@ -169,7 +170,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	}
 
 	@Override
-	public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+	public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, IActionSource actionSource) {
 		List<Fluid> oldFluids = new ArrayList<Fluid>(this.fluids);
 		boolean mustUpdate = false;
 		this.fluids.clear();
@@ -205,7 +206,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	public void powerUpdate(MENetworkPowerStatusChange event) {
 		IStorageGrid storage = getStorageGrid();
 		if (storage != null) {
-			postChange(storage.getFluidInventory(), null, null);
+			postChange(storage.getInventory(StorageChannels.FLUID()), null, null);
 		}
 	}
 
@@ -215,7 +216,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		if (storage == null) {
 			return;
 		}
-		IMEMonitor<IAEFluidStack> fluidStorage = storage.getFluidInventory();
+		IMEMonitor<IAEFluidStack> fluidStorage = storage.getInventory(StorageChannels.FLUID());
 		for (IAEFluidStack fluidStack : fluidStorage.getStorageList()) {
 			Fluid fluid = fluidStack.getFluid();
 			if (fluid == null) {
@@ -235,7 +236,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 			ICraftingPatternItem patter = (ICraftingPatternItem) pattern
 				.getItem();
 			craftingTracker.addCraftingOption(this,
-				patter.getPatternForItem(pattern, worldObj));
+				patter.getPatternForItem(pattern, world));
 		}
 
 	}
@@ -247,7 +248,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 			return false;
 		}
 		ItemStack filled = patternDetails.getCondensedOutputs()[0]
-			.getItemStack();
+			.getDefinition();
 		FluidStack fluid = FluidHelper.getFluidFromContainer(filled);
 		IStorageGrid storage = getStorageGrid();
 		if (storage == null) {
@@ -257,15 +258,15 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 			new FluidStack(
 				fluid.getFluid(),
 				FluidHelper.getCapacity(patternDetails
-					.getCondensedInputs()[0].getItemStack())));
-		IAEFluidStack extracted = storage.getFluidInventory()
+					.getCondensedInputs()[0].getDefinition())));
+		IAEFluidStack extracted = storage.getInventory(StorageChannels.FLUID())
 			.extractItems(fluidStack.copy(), Actionable.SIMULATE,
 				new MachineSource(this));
 		if (extracted == null
 			|| extracted.getStackSize() != fluidStack.getStackSize()) {
 			return false;
 		}
-		storage.getFluidInventory().extractItems(fluidStack,
+		storage.getInventory(StorageChannels.FLUID()).extractItems(fluidStack,
 			Actionable.MODULATE, new MachineSource(this));
 		this.returnStack = filled;
 		this.ticksToFinish = 40;
@@ -276,14 +277,16 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 		if (tagCompound.hasKey("container")) {
-			this.containerItem = ItemStack.loadItemStackFromNBT(tagCompound
+			this.containerItem = ItemStack.EMPTY.copy();
+			this.containerItem.deserializeNBT(tagCompound
 				.getCompoundTag("container"));
 		} else if (tagCompound.hasKey("isContainerEmpty")
 			&& tagCompound.getBoolean("isContainerEmpty")) {
 			this.containerItem = null;
 		}
 		if (tagCompound.hasKey("return")) {
-			this.returnStack = ItemStack.loadItemStackFromNBT(tagCompound
+			this.returnStack = ItemStack.EMPTY.copy();
+			this.returnStack.deserializeNBT(tagCompound
 				.getCompoundTag("return"));
 		} else if (tagCompound.hasKey("isReturnEmpty")
 			&& tagCompound.getBoolean("isReturnEmpty")) {
@@ -292,7 +295,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		if (tagCompound.hasKey("time")) {
 			this.ticksToFinish = tagCompound.getInteger("time");
 		}
-		if (hasWorldObj()) {
+		if (hasWorld()) {
 			IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 			if (tagCompound.hasKey("nodes") && node != null) {
 				node.loadFromNBT("node0", tagCompound.getCompoundTag("nodes"));
@@ -307,7 +310,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		if (storage == null) {
 			return;
 		}
-		IMEMonitor<IAEFluidStack> fluidInventory = storage.getFluidInventory();
+		IMEMonitor<IAEFluidStack> fluidInventory = storage.getInventory(StorageChannels.FLUID());
 		postChange(fluidInventory, null, null);
 		fluidInventory.addListener(this, null);
 	}
@@ -318,7 +321,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		if (storage == null) {
 			return;
 		}
-		IMEMonitor<IAEFluidStack> fluidInventory = storage.getFluidInventory();
+		IMEMonitor<IAEFluidStack> fluidInventory = storage.getInventory(StorageChannels.FLUID());
 		fluidInventory.removeListener(this);
 	}
 
@@ -331,7 +334,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 
 	@Override
 	public void update() {
-		if (worldObj == null) {
+		if (!hasWorld()) {
 			return;
 		}
 		if (this.ticksToFinish > 0) {
@@ -342,14 +345,13 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 			if (storage == null) {
 				return;
 			}
-			IAEItemStack toInject = AEApi.instance().storage()
-				.createItemStack(this.returnStack);
-			if (storage.getItemInventory().canAccept(toInject.copy())) {
-				IAEItemStack nodAdded = storage.getItemInventory().injectItems(
+			IAEItemStack toInject = StorageChannels.ITEM().createStack(this.returnStack);
+			if (storage.getInventory(StorageChannels.ITEM()).canAccept(toInject.copy())) {
+				IAEItemStack nodAdded = storage.getInventory(StorageChannels.ITEM()).injectItems(
 					toInject.copy(), Actionable.SIMULATE,
 					new MachineSource(this));
 				if (nodAdded == null) {
-					storage.getItemInventory().injectItems(toInject,
+					storage.getInventory(StorageChannels.ITEM()).injectItems(toInject,
 						Actionable.MODULATE, new MachineSource(this));
 					this.returnStack = null;
 				}
@@ -362,13 +364,13 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		if (oldGrid != null) {
 			IStorageGrid storage = oldGrid.getCache(IStorageGrid.class);
 			if (storage != null) {
-				storage.getFluidInventory().removeListener(this);
+				storage.getInventory(StorageChannels.FLUID()).removeListener(this);
 			}
 		}
 		if (newGrid != null) {
 			IStorageGrid storage = newGrid.getCache(IStorageGrid.class);
 			if (storage != null) {
-				storage.getFluidInventory().addListener(this, null);
+				storage.getInventory(StorageChannels.FLUID()).addListener(this, null);
 			}
 		}
 	}
@@ -387,7 +389,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 			tagCompound.setBoolean("isReturnEmpty", true);
 		}
 		tagCompound.setInteger("time", this.ticksToFinish);
-		if (!hasWorldObj()) {
+		if (!hasWorld()) {
 			return tagCompound;
 		}
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);

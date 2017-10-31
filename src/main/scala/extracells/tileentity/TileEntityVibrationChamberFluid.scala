@@ -44,10 +44,10 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
   var fluidHandler = new FluidHandler
 
   override def update {
-    if (!hasWorldObj) return
+    if (!hasWorld) return
     var fluidStack1: FluidStack = tank.getFluid
     if (fluidStack1 != null) fluidStack1 = fluidStack1.copy
-    if (worldObj.isRemote) return
+    if (getWorld.isRemote) return
     if (burnTime == burnTimeTotal) {
       if (timer >= 40) {
         updateBlock()
@@ -108,10 +108,10 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
 
 
   override def getGridNode(forgeDirection: AEPartLocation): IGridNode = {
-    if (isFirstGridNode && hasWorldObj && !worldObj.isRemote) {
+    if (isFirstGridNode && hasWorld && !getWorld.isRemote) {
       isFirstGridNode = false
       try {
-        node = AEApi.instance.createGridNode(gridBlock)
+        node = AEApi.instance.grid.createGridNode(gridBlock)
         node.updateState
       }
       catch {
@@ -124,10 +124,10 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
   }
 
   def getGridNodeWithoutUpdate: IGridNode = {
-    if (isFirstGridNode && hasWorldObj && !worldObj.isRemote) {
+    if (isFirstGridNode && hasWorld && !getWorld.isRemote) {
       isFirstGridNode = false
       try {
-        node = AEApi.instance.createGridNode(gridBlock)
+        node = AEApi.instance.grid.createGridNode(gridBlock)
       }
       catch {
         case e: Exception => {
@@ -211,7 +211,7 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
     override def fill(resource: FluidStack, doFill: Boolean): Int = {
       if (resource == null || resource.getFluid == null || FuelBurnTime.getBurnTime(resource.getFluid) == 0) return 0
       val filled: Int = tank.fill(resource, doFill)
-      if (filled != 0 && hasWorldObj) updateBlock()
+      if (filled != 0 && hasWorld) updateBlock()
       filled
     }
 

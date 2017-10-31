@@ -26,10 +26,11 @@ class BlockFluidFiller() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
     return new TileEntityFluidFiller
   }
 
-  override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, @Nullable current: ItemStack, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
+  override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
     val x: Int = pos.getX
     val y: Int = pos.getY
     val z: Int = pos.getZ
+    val current = player.getHeldItem(hand)
     if (world.isRemote) return true
     val rand: Random = new Random
     val tile: TileEntity = world.getTileEntity(pos)

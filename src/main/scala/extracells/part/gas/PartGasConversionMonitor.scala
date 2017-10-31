@@ -1,13 +1,12 @@
 package extracells.part.gas
 
 import appeng.api.config.Actionable
-import appeng.api.networking.security.MachineSource
 import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import extracells.integration.Integration
 import extracells.part.fluid.PartFluidConversionMonitor
-import extracells.util.{AEUtils, GasUtil, WrenchUtil}
+import extracells.util.{AEUtils, GasUtil, MachineSource, WrenchUtil}
 import mekanism.api.gas.IGasItem
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
@@ -34,13 +33,13 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
   def onActivateGas(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
     val b: Boolean = super.onActivate(player, hand, pos)
     if (b) return b
-    if (player == null || player.worldObj == null) return true
-    if (player.worldObj.isRemote) return true
+    if (player == null || player.world == null) return true
+    if (player.world.isRemote) return true
     val s: ItemStack = player.getHeldItem(hand)
     val mon: IMEMonitor[IAEFluidStack] = getFluidStorage
     if (this.locked && s != null && mon != null) {
       val s2: ItemStack = s.copy
-      s2.stackSize = 1
+      s2.setCount(1)
       if (GasUtil.isFilled(s2)) {
         val g = GasUtil.getGasFromContainer(s2)
         val f = GasUtil.getFluidStack(g)
@@ -55,8 +54,8 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
             dropItems(getHost.getTile.getWorld, getHost.getTile.getPos.offset(getFacing), empty)
           }
           val s3: ItemStack = s.copy
-          s3.stackSize = s3.stackSize - 1
-          if (s3.stackSize == 0) {
+          s3.setCount(s3.getCount - 1)
+          if (s3.getCount == 0) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, null)
           }
           else {
@@ -85,8 +84,8 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
             dropItems(getHost.getTile.getWorld, getHost.getTile.getPos.offset(getFacing), empty)
           }
           val s3: ItemStack = s.copy
-          s3.stackSize = s3.stackSize - 1
-          if (s3.stackSize == 0) {
+          s3.setCount(s3.getCount - 1)
+          if (s3.getCount == 0) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, null)
           }
           else {
@@ -101,8 +100,8 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
 
   @Optional.Method(modid = "MekanismAPI|gas")
   def storageMonitor(player: EntityPlayer, hand: EnumHand, pos: Vec3d): Boolean = {
-    if (player == null || player.worldObj == null) return true
-    if (player.worldObj.isRemote) return true
+    if (player == null || player.world == null) return true
+    if (player.world.isRemote) return true
     val s: ItemStack = player.getHeldItem(hand)
     if (s == null) {
       if (this.locked) return false
@@ -119,8 +118,8 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
       WrenchUtil.wrenchUsed(s, player, getHostTile.getPos)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
-      if (this.locked) player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))
-      else player.addChatMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowUnlocked"))
+      if (this.locked) player.sendMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))
+      else player.sendMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowUnlocked"))
       return true
     }
     if (this.locked) return false

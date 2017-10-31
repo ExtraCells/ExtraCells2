@@ -20,7 +20,7 @@ object ItemWirelessTerminalFluid extends ItemECBase with IWirelessFluidTermHandl
   def isItemNormalWirelessTermToo(is: ItemStack): Boolean = false
 
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] =
+  override def onItemRightClick(world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] =
     new ActionResult(EnumActionResult.SUCCESS, ECApi.instance.openWirelessFluidTerminal(entityPlayer, hand, world))
 
 

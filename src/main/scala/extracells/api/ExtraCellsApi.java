@@ -1,5 +1,6 @@
 package extracells.api;
 
+import appeng.api.networking.security.IActionSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -10,7 +11,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
@@ -106,5 +106,5 @@ public interface ExtraCellsApi {
 	 * @param mySrc    source
 	 * @return the handler for a given tile / forge direction
 	 */
-	IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, BaseActionSource mySrc);
+	IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, IActionSource mySrc);
 }

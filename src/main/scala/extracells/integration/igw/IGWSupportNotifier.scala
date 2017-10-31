@@ -57,8 +57,8 @@ object IGWSupportNotifier {
 
   @SubscribeEvent
   def onPlayerJoin(event: TickEvent.PlayerTickEvent) {
-    if (event.player.worldObj.isRemote && event.player == FMLClientHandler.instance.getClientPlayerEntity) {
-      event.player.addChatComponentMessage(ITextComponent.Serializer.jsonToComponent("[\"" + TextFormatting.GOLD + "The mod " + supportingMod + " is supporting In-Game Wiki mod. " + TextFormatting.GOLD + "However, In-Game Wiki isn't installed! " + "[\"," + "{\"text\":\"Download Latest\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/igwmod_download\"}}," + "\"]\"]"))
+    if (event.player.world.isRemote && event.player == FMLClientHandler.instance.getClientPlayerEntity) {
+      event.player.sendMessage(ITextComponent.Serializer.jsonToComponent("[\"" + TextFormatting.GOLD + "The mod " + supportingMod + " is supporting In-Game Wiki mod. " + TextFormatting.GOLD + "However, In-Game Wiki isn't installed! " + "[\"," + "{\"text\":\"Download Latest\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/igwmod_download\"}}," + "\"]\"]"))
       FMLCommonHandler.instance.bus.unregister(this)
     }
   }
@@ -81,6 +81,10 @@ object IGWSupportNotifier {
     }
 
     override def execute(server: MinecraftServer, sender: ICommandSender, args: Array[String]): Unit = ???
+
+    override def getName: String = getCommandName
+
+    override def getUsage(sender: ICommandSender): String = getCommandUsage(sender)
   }
 
   private class ThreadDownloadIGW extends Thread {
@@ -91,7 +95,7 @@ object IGWSupportNotifier {
 
     override def run {
       try {
-        if (Minecraft.getMinecraft.thePlayer != null) Minecraft.getMinecraft.thePlayer.addChatMessage(new TextComponentString("Downloading IGW-Mod..."))
+        if (Minecraft.getMinecraft.player != null) Minecraft.getMinecraft.player.sendMessage(new TextComponentString("Downloading IGW-Mod..."))
         val url: URL = new URL(IGWSupportNotifier.LATEST_DL_URL)
         val connection: URLConnection = url.openConnection
         connection.connect
@@ -99,14 +103,14 @@ object IGWSupportNotifier {
         val dir: File = new File(".", "mods")
         val f: File = new File(dir, fileName)
         FileUtils.copyURLToFile(url, f)
-        if (Minecraft.getMinecraft.thePlayer != null) Minecraft.getMinecraft.thePlayer.addChatMessage(new TextComponentString(TextFormatting.GREEN + "Successfully downloaded. Restart Minecraft to apply."))
+        if (Minecraft.getMinecraft.player != null) Minecraft.getMinecraft.player.sendMessage(new TextComponentString(TextFormatting.GREEN + "Successfully downloaded. Restart Minecraft to apply."))
         Desktop.getDesktop.open(dir)
         finalize
       }
       catch {
         case e: Throwable => {
           e.printStackTrace
-          if (Minecraft.getMinecraft.thePlayer != null) Minecraft.getMinecraft.thePlayer.addChatComponentMessage(new TextComponentString(TextFormatting.RED + "Failed to download"))
+          if (Minecraft.getMinecraft.player != null) Minecraft.getMinecraft.player.sendMessage(new TextComponentString(TextFormatting.RED + "Failed to download"))
           try {
             finalize
           }

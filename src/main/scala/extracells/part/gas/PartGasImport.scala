@@ -3,13 +3,12 @@ package extracells.part.gas
 import java.util
 
 import appeng.api.config.Actionable
-import appeng.api.networking.security.MachineSource
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import extracells.integration.Integration
 import extracells.integration.mekanism.gas.MekanismGas
 import extracells.part.fluid.PartFluidImport
-import extracells.util.{AEUtils, GasUtil}
+import extracells.util.{AEUtils, GasUtil, MachineSource}
 import mekanism.api.gas.{Gas, GasStack, IGasHandler}
 import net.minecraft.util.EnumFacing
 import net.minecraftforge.fluids.{Fluid, FluidStack}

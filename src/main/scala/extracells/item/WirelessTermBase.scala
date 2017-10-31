@@ -2,12 +2,15 @@ package extracells.item
 
 import java.util
 
-import appeng.api.config.AccessRestriction
+import appeng.api.config.{AccessRestriction, Actionable}
+import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
+import net.minecraft.util.NonNullList
 import net.minecraft.util.text.translation.I18n
+import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
 
@@ -46,16 +49,16 @@ trait WirelessTermBase extends PowerItem {
   }
 
   def usePower(player: EntityPlayer, amount: Double, is: ItemStack): Boolean = {
-    extractAEPower(is, amount)
+    extractAEPower(is, amount, Actionable.MODULATE)
     return true
   }
 
   @SuppressWarnings(Array("unchecked", "rawtypes"))
-  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[ItemStack]) {
+  override def getSubItems(creativeTab: CreativeTabs, itemList: NonNullList[ItemStack]) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
-    itemList2.add(new ItemStack(item))
-    val itemStack: ItemStack = new ItemStack(item)
-    injectAEPower(itemStack, this.MAX_POWER)
+    itemList2.add(new ItemStack(this))
+    val itemStack: ItemStack = new ItemStack(this)
+    injectAEPower(itemStack, this.MAX_POWER, Actionable.MODULATE)
     itemList2.add(itemStack)
   }
 
@@ -65,7 +68,7 @@ trait WirelessTermBase extends PowerItem {
 
   @SuppressWarnings(Array("rawtypes", "unchecked"))
   @SideOnly(Side.CLIENT)
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[String], par4: Boolean) {
+  override def addInformation(itemStack: ItemStack, world: World, list: util.List[String], par4: ITooltipFlag) {
     val list2 = list.asInstanceOf[util.List[String]];
     if (!itemStack.hasTagCompound) itemStack.setTagCompound(new NBTTagCompound)
     val encryptionKey: String = itemStack.getTagCompound.getString("key")

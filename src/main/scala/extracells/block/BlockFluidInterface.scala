@@ -40,20 +40,20 @@ class BlockFluidInterface() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
     while (i < inventory.getSizeInventory) {
       {
         val item: ItemStack = inventory.getStackInSlot(i)
-        if (item != null && item.stackSize > 0) {
+        if (item != null && item.getCount() > 0) {
           val rx: Float = rand.nextFloat * 0.8F + 0.1F
           val ry: Float = rand.nextFloat * 0.8F + 0.1F
           val rz: Float = rand.nextFloat * 0.8F + 0.1F
           val entityItem: EntityItem = new EntityItem(world, x + rx, y + ry, z + rz, item.copy)
           if (item.hasTagCompound) {
-            entityItem.getEntityItem.setTagCompound(item.getTagCompound.copy.asInstanceOf[NBTTagCompound])
+            entityItem.getItem.setTagCompound(item.getTagCompound.copy.asInstanceOf[NBTTagCompound])
           }
           val factor: Float = 0.05F
           entityItem.motionX = rand.nextGaussian * factor
           entityItem.motionY = rand.nextGaussian * factor + 0.2F
           entityItem.motionZ = rand.nextGaussian * factor
-          world.spawnEntityInWorld(entityItem)
-          item.stackSize = 0
+          world.spawnEntity(entityItem)
+          item.setCount(0)
         }
       }
       {

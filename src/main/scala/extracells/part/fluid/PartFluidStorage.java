@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import appeng.api.storage.IStorageChannel;
+import extracells.util.StorageChannels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,7 +34,6 @@ import appeng.api.parts.PartItemStack;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.container.IUpgradeable;
@@ -100,9 +101,9 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	}
 
 	@Override
-	public List<IMEInventoryHandler> getCellArray(StorageChannel channel) {
+	public List<IMEInventoryHandler> getCellArray(IStorageChannel channel) {
 		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
-		if (channel == StorageChannel.FLUIDS) {
+		if (channel == StorageChannels.FLUID()) {
 			list.add(this.handler);
 		}
 		updateNeighborFluids();
@@ -157,7 +158,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 			IGrid grid = node.getGrid();
 			if (grid != null && this.wasChanged()) {
 				grid.postEvent(new MENetworkCellArrayUpdate());
-				grid.postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
+				grid.postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannels.FLUID()));
 				grid.postEvent(new MENetworkCellArrayUpdate());
 			}
 			getHost().markForUpdate();
@@ -174,7 +175,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 				onNeighborChanged();
 				getHost().markForUpdate();
 			}
-			node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
+			node.getGrid().postEvent(new MENetworkStorageEvent(getGridBlock().getFluidMonitor(), StorageChannels.FLUID()));
 			node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 		}
 	}
@@ -247,7 +248,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		}
 		node.getGrid().postEvent(
 			new MENetworkStorageEvent(getGridBlock().getFluidMonitor(),
-				StorageChannel.FLUIDS));
+				StorageChannels.FLUID()));
 		node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 	}
 
@@ -270,7 +271,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	private void updateNeighborFluids() {
 		fluidList.clear();
 		if (access == AccessRestriction.READ || access == AccessRestriction.READ_WRITE) {
-			for (IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())) {
+			for (IAEFluidStack stack : handler.getAvailableItems(StorageChannels.FLUID().createList())) {
 				FluidStack s = stack.getFluidStack().copy();
 				fluidList.put(s, s.amount);
 			}
@@ -279,7 +280,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 
 	private boolean wasChanged() {
 		HashMap<FluidStack, Integer> fluids = new HashMap<FluidStack, Integer>();
-		for (IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())) {
+		for (IAEFluidStack stack : handler.getAvailableItems(StorageChannels.FLUID().createList())) {
 			FluidStack s = stack.getFluidStack();
 			fluids.put(s, s.amount);
 		}

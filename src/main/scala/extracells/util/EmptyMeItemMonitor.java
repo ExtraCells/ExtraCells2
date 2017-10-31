@@ -3,10 +3,10 @@ package extracells.util;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
-import appeng.api.storage.StorageChannel;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 
@@ -23,7 +23,7 @@ public class EmptyMeItemMonitor implements IMEMonitor<IAEItemStack> {
 	}
 
 	@Override
-	public IAEItemStack extractItems(IAEItemStack request, Actionable mode, BaseActionSource src) {
+	public IAEItemStack extractItems(IAEItemStack request, Actionable mode, IActionSource src) {
 		return null;
 	}
 
@@ -38,8 +38,8 @@ public class EmptyMeItemMonitor implements IMEMonitor<IAEItemStack> {
 	}
 
 	@Override
-	public StorageChannel getChannel() {
-		return StorageChannel.ITEMS;
+	public IStorageChannel getChannel() {
+		return StorageChannels.ITEM();
 	}
 
 	@Override
@@ -54,11 +54,11 @@ public class EmptyMeItemMonitor implements IMEMonitor<IAEItemStack> {
 
 	@Override
 	public IItemList<IAEItemStack> getStorageList() {
-		return AEApi.instance().storage().createItemList();
+		return StorageChannels.ITEM().createList();
 	}
 
 	@Override
-	public IAEItemStack injectItems(IAEItemStack input, Actionable type, BaseActionSource src) {
+	public IAEItemStack injectItems(IAEItemStack input, Actionable type, IActionSource src) {
 		return input;
 	}
 

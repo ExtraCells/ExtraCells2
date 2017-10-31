@@ -4,6 +4,7 @@ package extracells.item
 import java.util
 
 import appeng.api.AEApi
+import appeng.api.config.Actionable
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
 import extracells.api.{ECApi, IWirelessFluidTermHandler, IWirelessGasTermHandler}
@@ -12,12 +13,13 @@ import extracells.integration.WirelessCrafting.WirelessCrafting
 import extracells.models.ModelManager
 import extracells.util.HandlerUniversalWirelessTerminal
 import extracells.wireless.ConfigManager
+import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.text.translation.I18n
-import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
+import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand, NonNullList}
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 
@@ -56,7 +58,8 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     super.getUnlocalizedName(itemStack).replace("item.extracells", "extracells.item")
 
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
+  override def onItemRightClick(world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
+    val itemStack = entityPlayer.getHeldItem(hand)
     if (world.isRemote) {
       if (entityPlayer.isSneaking)
         return new ActionResult(EnumActionResult.SUCCESS, itemStack)
@@ -145,7 +148,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
 
   @SideOnly(Side.CLIENT)
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[String], advanced: Boolean) {
+  override def addInformation(itemStack: ItemStack, world: World, list: util.List[String], advanced: ITooltipFlag) {
     val tag = ensureTagCompound(itemStack)
     if (!tag.hasKey("type"))
       tag.setByte("type", 0)
@@ -155,7 +158,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     val it = getInstalledModules(itemStack).iterator
     while (it.hasNext)
       list2.add("- " + I18n.translateToLocal("extracells.tooltip." + it.next.name.toLowerCase))
-    super.addInformation(itemStack, player, list, advanced);
+    super.addInformation(itemStack, world, list, advanced);
   }
 
   def installModule(itemStack: ItemStack, module: WirelessTerminalType): Unit = {
@@ -209,15 +212,15 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
 
   @SuppressWarnings(Array("unchecked", "rawtypes"))
-  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[ItemStack]) {
+  override def getSubItems(creativeTab: CreativeTabs, itemList: NonNullList[ItemStack]) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     val tag = new NBTTagCompound
     tag.setByte("modules", 31)
-    val itemStack: ItemStack = new ItemStack(item)
+    val itemStack: ItemStack = new ItemStack(this)
     itemStack.setTagCompound(tag)
     itemStack.setTagCompound(tag)
     itemList2.add(itemStack.copy)
-    injectAEPower(itemStack, this.MAX_POWER)
+    injectAEPower(itemStack, this.MAX_POWER, Actionable.MODULATE)
     itemList2.add(itemStack)
   }
 

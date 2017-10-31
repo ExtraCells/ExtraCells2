@@ -1,5 +1,6 @@
 package extracells.inventory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,8 +13,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 import extracells.util.ItemStackUtils;
+import net.minecraftforge.items.IItemHandler;
+import scala.actors.threadpool.Arrays;
 
-public class InventoryPlain implements IInventory {
+public class InventoryPlain implements IInventory, IItemHandler {
 
 	public ItemStack[] slots;
 	public String customName;
@@ -34,7 +37,7 @@ public class InventoryPlain implements IInventory {
 
 	@Override
 	public ItemStack decrStackSize(int slotId, int amount) {
-		ItemStack itemStack = ItemStackHelper.getAndSplit(slots, slotId, amount);
+		ItemStack itemStack = ItemStackHelper.getAndSplit(Arrays.asList(slots), slotId, amount);
 
 		if (itemStack != null) {
 			this.markDirty();
@@ -54,14 +57,78 @@ public class InventoryPlain implements IInventory {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		for (int i = 0; i < slots.length; i++){
+			if(slots[i] != null && !slots[i].isEmpty())
+				return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int getSlots() {
+		return slots.length;
+	}
+
+	@Override
 	public ItemStack getStackInSlot(int i) {
 		return this.slots[i];
+	}
+
+	@Nonnull
+	@Override
+	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+		if (stack == null)
+			return null;
+		if (isSlotEmpty(slot))
+		{
+			if (!simulate)
+				slots[slot] = stack;
+			return stack;
+		}else{
+			ItemStack oldStack = slots[slot];
+			if ((!ItemStack.areItemStackTagsEqual(stack, oldStack)) && oldStack.getMaxStackSize() > oldStack.getCount()){
+				ItemStack newStack = stack.copy();
+				newStack.setCount(Math.min(newStack.getCount(), oldStack.getMaxStackSize() - oldStack.getCount()));
+				if(!simulate)
+					oldStack.setCount(oldStack.getCount() + newStack.getCount());
+				return newStack;
+			}else
+				return null;
+		}
+	}
+
+	private boolean isSlotEmpty(int slot){
+		return slots[slot] == null || slots[slot].isEmpty();
+	}
+
+	@Nonnull
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		if (isSlotEmpty(slot))
+			return null;
+		ItemStack stack = slots[slot].copy();
+		if(amount >= stack.getCount()){
+			if(!simulate)
+				slots[slot] = null;
+			return stack;
+		}else{
+			stack.setCount(amount);
+			if(!simulate)
+				slots[slot].setCount(slots[slot].getCount() - amount);
+			return stack;
+		}
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return slots[slot] == null || slots[slot].isEmpty() ? 64 : slots[slot].getMaxStackSize();
 	}
 
 	@Nullable
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
-		return ItemStackHelper.getAndRemove(slots, index);
+		return ItemStackHelper.getAndRemove(Arrays.asList(slots), index);
 	}
 
 	@Override
@@ -96,8 +163,8 @@ public class InventoryPlain implements IInventory {
 			stackLimit = slot.getMaxStackSize();
 		}
 		ItemStack added = slot.copy();
-		added.stackSize = slot.stackSize + amount > stackLimit ? stackLimit : amount;
-		slot.stackSize += added.stackSize;
+		added.setCount(slot.getCount() + amount > stackLimit ? stackLimit : amount);
+		slot.setCount(slot.getCount() +  added.getCount());
 		return added;
 	}
 
@@ -107,15 +174,15 @@ public class InventoryPlain implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return true;
-	}
-
-	@Override
 	public void markDirty() {
 		if (this.listener != null) {
 			this.listener.onInventoryChanged();
 		}
+	}
+
+	@Override
+	public boolean isUsableByPlayer(EntityPlayer player) {
+		return false;
 	}
 
 	@Override
@@ -140,15 +207,16 @@ public class InventoryPlain implements IInventory {
 			int j = nbttagcompound.getByte("Slot") & 255;
 
 			if (j >= 0 && j < this.slots.length) {
-				this.slots[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
+				this.slots[j] = ItemStack.EMPTY.copy();
+				this.slots[j].deserializeNBT(nbttagcompound);
 			}
 		}
 	}
 
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack) {
-		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-			stack.stackSize = getInventoryStackLimit();
+		if (stack != null && stack.getCount() > getInventoryStackLimit()) {
+			stack.setCount(getInventoryStackLimit());
 		}
 		this.slots[index] = stack;
 

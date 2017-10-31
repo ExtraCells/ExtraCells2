@@ -11,9 +11,13 @@ import net.minecraft.item.crafting.IRecipe
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.world.World
 import net.minecraftforge.common.ForgeHooks
+import java.util
+
+import appeng.api.config.Actionable
+import net.minecraft.util.NonNullList;
 
 
-object RecipeUniversalTerminal extends IRecipe {
+object RecipeUniversalTerminal extends net.minecraftforge.registries.IForgeRegistryEntry.Impl[IRecipe] with IRecipe {
 
   val THIS = this
 
@@ -73,11 +77,11 @@ object RecipeUniversalTerminal extends IRecipe {
     }
   }
 
-  override def getRemainingItems(inv: InventoryCrafting): Array[ItemStack] = ForgeHooks.defaultRecipeGetRemainingItems(inv)
+  override def getRemainingItems(inv: InventoryCrafting): NonNullList[ItemStack] = ForgeHooks.defaultRecipeGetRemainingItems(inv)
 
   override def getRecipeOutput: ItemStack = ItemEnum.UNIVERSALTERMINAL.getDamagedStack(0)
 
-  override def getRecipeSize: Int = 2
+  //override def getRecipeSize: Int = 2
 
   override def getCraftingResult(inventory: InventoryCrafting): ItemStack = {
     var isUniversal = false
@@ -115,7 +119,7 @@ object RecipeUniversalTerminal extends IRecipe {
       }
       if (itemTerminal.isInstanceOf[IAEItemPowerStorage]) {
         val power = itemTerminal.asInstanceOf[IAEItemPowerStorage].getAECurrentPower(terminal)
-        itemUniversal.injectAEPower(t, power)
+        itemUniversal.injectAEPower(t, power, Actionable.MODULATE)
       }
       if (terminal.hasTagCompound) {
         val nbt = terminal.getTagCompound
@@ -135,4 +139,6 @@ object RecipeUniversalTerminal extends IRecipe {
     }
     terminal
   }
+
+  override def canFit(width: Int, height: Int): Boolean = (width >= 1 && height >= 2) || (width >= 2 && height >= 1)
 }

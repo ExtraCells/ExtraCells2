@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import appeng.api.storage.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,11 +23,6 @@ import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartModel;
-import appeng.api.storage.ICellContainer;
-import appeng.api.storage.ICellHandler;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import extracells.container.ContainerDrive;
@@ -192,7 +188,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 		getHost().markForSave();
 	}
 
-	private List<IMEInventoryHandler> updateHandlers(StorageChannel channel) {
+	private List<IMEInventoryHandler> updateHandlers(IStorageChannel channel) {
 		List<IMEInventoryHandler> handlers = new ArrayList<IMEInventoryHandler>();
 		for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
 			ItemStack cell = this.inventory.getStackInSlot(i);
@@ -225,7 +221,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 	}
 
 	@Override
-	public List<IMEInventoryHandler> getCellArray(StorageChannel channel) {
+	public List<IMEInventoryHandler> getCellArray(IStorageChannel channel) {
 		if (!isActive()) {
 			return new ArrayList();
 		}

@@ -1,11 +1,11 @@
 package extracells.integration.mekanism
 
 import appeng.api.config.Actionable
-import appeng.api.networking.security.BaseActionSource
+import appeng.api.networking.security.IActionSource
 import appeng.api.storage.data.{IAEFluidStack, IItemList}
-import appeng.api.storage.{IMEInventory, StorageChannel}
+import appeng.api.storage.IMEInventory
 import extracells.api.IExternalGasStorageHandler
-import extracells.util.GasUtil
+import extracells.util.{GasUtil, StorageChannels}
 import mekanism.api.gas.GasTank
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.EnumFacing
@@ -15,11 +15,11 @@ object HandlerMekanismGasTank extends IExternalGasStorageHandler {
 
   val clazz = Class.forName("mekanism.common.tile.TileEntityGasTank")
 
-  override def canHandle(tile: TileEntity, d: EnumFacing, mySrc: BaseActionSource): Boolean = {
+  override def canHandle(tile: TileEntity, d: EnumFacing, mySrc: IActionSource): Boolean = {
     tile != null && tile.getClass == clazz
   }
 
-  override def getInventory(tile: TileEntity, d: EnumFacing, src: BaseActionSource): IMEInventory[IAEFluidStack] = {
+  override def getInventory(tile: TileEntity, d: EnumFacing, src: IActionSource): IMEInventory[IAEFluidStack] = {
     val tank = getGasTank(tile)
     if (tank == null)
       null
@@ -40,7 +40,7 @@ object HandlerMekanismGasTank extends IExternalGasStorageHandler {
   }
 
   class Inventory(tank: GasTank) extends IMEInventory[IAEFluidStack] {
-    override def injectItems(stackType: IAEFluidStack, actionable: Actionable, baseActionSource: BaseActionSource): IAEFluidStack = {
+    override def injectItems(stackType: IAEFluidStack, actionable: Actionable, baseActionSource: IActionSource): IAEFluidStack = {
       val gasStack = GasUtil.getGasStack(stackType)
       if (gasStack == null)
         return stackType
@@ -54,9 +54,9 @@ object HandlerMekanismGasTank extends IExternalGasStorageHandler {
       stackType
     }
 
-    override def getChannel: StorageChannel = StorageChannel.FLUIDS
+    override def getChannel = StorageChannels.FLUID
 
-    override def extractItems(stackType: IAEFluidStack, actionable: Actionable, baseActionSource: BaseActionSource): IAEFluidStack = {
+    override def extractItems(stackType: IAEFluidStack, actionable: Actionable, baseActionSource: IActionSource): IAEFluidStack = {
       val gasStack = GasUtil.getGasStack(stackType)
       if (gasStack == null)
         return null

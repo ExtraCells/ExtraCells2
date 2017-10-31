@@ -3,11 +3,11 @@ package extracells.item
 import extracells.integration.WirelessCrafting.WirelessCrafting
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.fml.common.Optional
-import p455w0rd.wct.api.IWirelessCraftingTerminalItem
+//import p455w0rd.wct.api.IWirelessCraftingTerminalItem
 
 @Optional.Interface(iface = "455w0rd.wct.api.IWirelessCraftingTerminalItem", modid = "ae2wct", striprefs = true)
-trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem {
-
+trait CraftingTerminal extends Item /*with IWirelessCraftingTerminalItem*/ {
+/*TODO: Reimplement
   @Optional.Method(modid = "ae2wct")
   def checkForBooster(wirelessTerminal: ItemStack): Boolean = {
     if (wirelessTerminal.hasTagCompound()) {
@@ -32,5 +32,5 @@ trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem {
       ItemWirelessTerminalUniversal.isInstalled(itemStack, WirelessTerminalType.CRAFTING)
     else
       true
-  }
+  }*/
 }

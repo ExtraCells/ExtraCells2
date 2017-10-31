@@ -8,6 +8,7 @@ import java.util
 
 import extracells.integration.Integration
 import extracells.util.CreativeTabEC
+import net.minecraft.util.NonNullList
 
 @JEIPlugin
 class Plugin extends BlankModPlugin{
@@ -26,8 +27,8 @@ class Plugin extends BlankModPlugin{
     for (item <- ItemEnum.values()) {
       if (item.getMod != null && (!item.getMod.isEnabled)) {
         val i = item.getItem
-        val list = new util.ArrayList[ItemStack]
-        i.getSubItems(i, CreativeTabEC.INSTANCE, list)
+        val list = NonNullList.create[ItemStack]()
+        i.getSubItems(CreativeTabEC.INSTANCE, list)
         val it = list.iterator
         while(it.hasNext){
           hideItem(it.next, registry)
@@ -38,8 +39,8 @@ class Plugin extends BlankModPlugin{
     for (block <- BlockEnum.values()) {
       if (block.getMod != null && (!block.getMod.isEnabled)) {
         val b = block.getBlock
-        val list = new util.ArrayList[ItemStack]
-        b.getSubBlocks(Item.getItemFromBlock(b), CreativeTabEC.INSTANCE, list)
+        val list = NonNullList.create[ItemStack]()
+        b.getSubBlocks(CreativeTabEC.INSTANCE, list)
         val it = list.iterator
         while(it.hasNext){
           hideItem(it.next, registry)

@@ -1,5 +1,7 @@
 package extracells.util;
 
+import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.channels.IItemStorageChannel;
 import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fluids.Fluid;
@@ -15,7 +17,7 @@ import appeng.api.storage.data.IAEItemStack;
 public class AEUtils {
 
 	public static IAEItemStack createItemStack(ItemStack itemStack) {
-		return AEApi.instance().storage().createItemStack(itemStack);
+		return StorageChannels.ITEM().createStack(itemStack);
 	}
 
 	public static IAEFluidStack createFluidStack(Fluid fluid) {
@@ -31,23 +33,23 @@ public class AEUtils {
 	}
 
 	public static IAEFluidStack createFluidStack(FluidStack fluid) {
-		return AEApi.instance().storage().createFluidStack(fluid);
+		return StorageChannels.FLUID().createStack(fluid);
 	}
 
-	public static boolean isItemChannel(StorageChannel channel) {
+	public static boolean isItemChannel(IStorageChannel channel) {
 		return channel == getItemChannel();
 	}
 
-	public static boolean isFluidChannel(StorageChannel channel) {
+	public static boolean isFluidChannel(IStorageChannel channel) {
 		return channel == getFluidChannel();
 	}
 
-	public static StorageChannel getItemChannel() {
-		return StorageChannel.ITEMS;
+	public static IStorageChannel getItemChannel() {
+		return StorageChannels.ITEM();
 	}
 
-	public static StorageChannel getFluidChannel() {
-		return StorageChannel.FLUIDS;
+	public static IStorageChannel getFluidChannel() {
+		return StorageChannels.FLUID();
 	}
 
 	public static ICellRegistry cell() {

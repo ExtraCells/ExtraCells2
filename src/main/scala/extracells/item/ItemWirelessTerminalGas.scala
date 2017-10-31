@@ -21,7 +21,7 @@ object ItemWirelessTerminalGas extends ItemECBase with IWirelessGasTermHandler w
   def isItemNormalWirelessTermToo(is: ItemStack): Boolean = false
 
 
-  override def onItemRightClick(itemStack: ItemStack, world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] =
+  override def onItemRightClick(world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] =
     new ActionResult(EnumActionResult.SUCCESS, ECApi.instance.openWirelessGasTerminal(entityPlayer, hand, world))
 
 
