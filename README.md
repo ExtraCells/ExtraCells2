@@ -1,5 +1,8 @@
 [ExtraCells 2](https://minecraft.curseforge.com/projects/extracells2)
 ==========
+[![CurseForge](http://cf.way2muchnoise.eu/full_229218_downloads.svg)](https://minecraft.curseforge.com/projects/extracells2)
+[![Latest Version](http://cf.way2muchnoise.eu/versions/For%20MC_229218_all.svg)](https://minecraft.curseforge.com/projects/extracells2/files/latest)
+
 
 A mighty Add-On for Applied Energistics 2
 
