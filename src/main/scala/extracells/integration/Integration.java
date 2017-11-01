@@ -68,7 +68,7 @@ public class Integration {
 		}
 
 		public void loadConfig(Configuration config) {
-			shouldLoad = config.get("Integration", "enable" + getModName(), true, "Enable " + getModName() + " Integration.").getBoolean(true);
+			shouldLoad = config.get("Integration", "enable" + getModID(), true, "Enable " + getModName() + " Integration.").getBoolean(true);
 		}
 
 		public boolean isEnabled() {

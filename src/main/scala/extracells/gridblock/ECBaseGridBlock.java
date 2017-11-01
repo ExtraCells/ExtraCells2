@@ -2,6 +2,7 @@ package extracells.gridblock;
 
 import java.util.EnumSet;
 
+import extracells.util.StorageChannels;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
@@ -52,7 +53,7 @@ public class ECBaseGridBlock implements IGridBlock {
 		if (storageGrid == null) {
 			return null;
 		}
-		return storageGrid.getFluidInventory();
+		return storageGrid.getInventory(StorageChannels.FLUID());
 
 	}
 

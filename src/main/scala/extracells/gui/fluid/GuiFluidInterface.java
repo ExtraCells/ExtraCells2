@@ -72,7 +72,7 @@ public class GuiFluidInterface extends GuiBase<ContainerFluidInterface> {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		ItemStack itemStack = new ItemStack(BlockEnum.ECBASEBLOCK.getBlock());
-		this.fontRendererObj.drawString(itemStack.getDisplayName().replace("ME ", ""), 8, 5, 0x000000);
-		this.fontRendererObj.drawString(I18n.translateToLocal("container.inventory"), 8, 136, 0x000000);
+		this.fontRenderer.drawString(itemStack.getDisplayName().replace("ME ", ""), 8, 5, 0x000000);
+		this.fontRenderer.drawString(I18n.translateToLocal("container.inventory"), 8, 136, 0x000000);
 	}
 }

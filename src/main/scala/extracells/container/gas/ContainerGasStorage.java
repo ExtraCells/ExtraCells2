@@ -1,5 +1,6 @@
 package extracells.container.gas;
 
+import extracells.util.PlayerSource;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +12,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Optional;
 
 import appeng.api.config.Actionable;
-import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.api.IPortableGasStorageCell;
@@ -50,7 +50,7 @@ public class ContainerGasStorage extends ContainerStorage {
 	@Optional.Method(modid = "MekanismAPI|gas")
 	public void doWorkMekanism() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize()) {
+		if (secondSlot != null && secondSlot.getCount() > secondSlot.getMaxStackSize()) {
 			return;
 		}
 		ItemStack container = this.inventory.getStackInSlot(0);
@@ -65,7 +65,7 @@ public class ContainerGasStorage extends ContainerStorage {
 		}
 		GasStack gasStack = GasUtil.getGasFromContainer(container);
 		container = container.copy();
-		container.stackSize = 1;
+		container.setCount(1);
 		if (GasUtil.isEmpty(container) || (gasStack.amount < GasUtil.getCapacity(container) && GasUtil.getFluidStack(gasStack).getFluid() == this.selectedFluid && doNextFill)) {
 			if (this.selectedFluid == null) {
 				return;
@@ -83,7 +83,7 @@ public class ContainerGasStorage extends ContainerStorage {
 			GasStack gasStack2 = GasUtil.getGasFromContainer(filledContainer.getRight());
 
 			//Moves it to second slot and commits extraction to grid.
-			if (container.stackSize == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight())) {
+			if (container.getCount() == 1 && gasStack2.amount < GasUtil.getCapacity(filledContainer.getRight())) {
 				this.inventory.setInventorySlotContents(0, filledContainer.getRight());
 				monitor.extractItems(AEUtils.createFluidStack(this.selectedFluid, filledContainer.getLeft()), Actionable.MODULATE, new PlayerSource(this.player, null));
 				doNextFill = true;
@@ -123,7 +123,7 @@ public class ContainerGasStorage extends ContainerStorage {
 					handItem);
 			}
 			ItemStack emptyContainer = drainedContainer.getRight();
-			if (emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1) {
+			if (emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.getCount() == 1) {
 				monitor.injectItems(GasUtil.createAEFluidStack(gasStack1), Actionable.MODULATE, new PlayerSource(this.player, null));
 				this.inventory.setInventorySlotContents(0, emptyContainer);
 			} else if (emptyContainer == null || fillSecondSlot(drainedContainer.getRight())) {

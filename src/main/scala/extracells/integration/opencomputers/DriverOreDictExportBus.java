@@ -1,5 +1,5 @@
 package extracells.integration.opencomputers;
-
+/*
 import net.minecraft.tileentity.TileEntity;
 
 import appeng.api.parts.IPartHost;
@@ -80,3 +80,4 @@ public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter> {
 	}
 
 }
+*/

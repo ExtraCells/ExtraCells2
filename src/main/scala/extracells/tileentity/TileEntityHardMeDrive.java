@@ -2,8 +2,12 @@ package extracells.tileentity;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import appeng.api.storage.*;
+import appeng.api.storage.data.IAEStack;
+import extracells.util.StorageChannels;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -19,12 +23,6 @@ import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.storage.ICellContainer;
-import appeng.api.storage.ICellHandler;
-import appeng.api.storage.ICellRegistry;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
@@ -44,8 +42,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
 	boolean isFirstGridNode = true;
 	byte[] cellStatuses = new byte[3];
-	List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();
-	List<IMEInventoryHandler> itemHandlers = new ArrayList<IMEInventoryHandler>();
+	List<IMEInventoryHandler> handlers = new ArrayList<IMEInventoryHandler>();
 	private final ECGridBlockHardMEDrive gridBlock = new ECGridBlockHardMEDrive(this);
 
 	private InventoryPlain inventory = new InventoryPlain("extracells.part.drive", 3, 1, this) {
@@ -63,7 +60,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 	}
 
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return this.worldObj.getTileEntity(this.pos) == this && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
+		return this.world.getTileEntity(this.pos) == this && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 	IGridNode node = null;
@@ -80,12 +77,18 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 	}
 
 	@Override
-	public List<IMEInventoryHandler> getCellArray(StorageChannel channel) {
+	public List<IMEInventoryHandler> getCellArray(IStorageChannel channel) {
 		if (!isActive()) {
 			return new ArrayList<IMEInventoryHandler>();
 		}
-		return channel == StorageChannel.ITEMS ? this.itemHandlers
-			: this.fluidHandlers;
+
+		List<IMEInventoryHandler> channelHandlers = new ArrayList<IMEInventoryHandler>();
+
+		for (IMEInventoryHandler handler : handlers) {
+			if(handler.getChannel() == channel)
+				channelHandlers.add(handler);
+		}
+		return channelHandlers;
 	}
 
 	@Override
@@ -105,10 +108,10 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
 	@Override
 	public IGridNode getGridNode(AEPartLocation location) {
-		if (isFirstGridNode && hasWorldObj() && !worldObj.isRemote) {
+		if (isFirstGridNode && hasWorld() && !getWorld().isRemote) {
 			isFirstGridNode = false;
 			try {
-				node = AEApi.instance().createGridNode(gridBlock);
+				node = AEApi.instance().grid().createGridNode(gridBlock);
 				node.updateState();
 			} catch (Exception e) {
 				isFirstGridNode = true;
@@ -153,24 +156,17 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
 	@Override
 	public void onInventoryChanged() {
-		this.itemHandlers = updateHandlers(StorageChannel.ITEMS);
-		this.fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
+		this.handlers= updateHandlers();
+		Collection<IStorageChannel<? extends IAEStack<?>>> channels = AEApi.instance().storage().storageChannels();
 		for (int i = 0; i < this.cellStatuses.length; i++) {
 			ItemStack stackInSlot = this.inventory.getStackInSlot(i);
-			IMEInventoryHandler inventoryHandler = AEApi.instance()
-				.registries().cell()
-				.getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
-			if (inventoryHandler == null) {
-				inventoryHandler = AEApi
-					.instance()
-					.registries()
-					.cell()
-					.getCellInventory(stackInSlot, null,
-						StorageChannel.FLUIDS);
+			IMEInventoryHandler inventoryHandler = null;
+			for(IStorageChannel channel : channels){
+				inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, channel);
+				if(inventoryHandler != null)
+					break;
 			}
-
-			ICellHandler cellHandler = AEApi.instance().registries().cell()
-				.getHandler(stackInSlot);
+			ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stackInSlot);
 			if (cellHandler == null || inventoryHandler == null) {
 				this.cellStatuses[i] = 0;
 			} else {
@@ -186,21 +182,22 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 			}
 			updateBlock();
 		}
-		if (worldObj != null && worldObj.isRemote) {
-			worldObj.markBlockRangeForRenderUpdate(pos, pos);
+		if (world != null && world.isRemote) {
+			world.markBlockRangeForRenderUpdate(pos, pos);
 		}
 	}
 
-	private List<IMEInventoryHandler> updateHandlers(StorageChannel channel) {
+	private List<IMEInventoryHandler> updateHandlers() {
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 		List<IMEInventoryHandler> handlers = new ArrayList<IMEInventoryHandler>();
-		for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
-			ItemStack cell = this.inventory.getStackInSlot(i);
-			if (cellRegistry.isCellHandled(cell)) {
-				IMEInventoryHandler cellInventory = cellRegistry
-					.getCellInventory(cell, null, channel);
-				if (cellInventory != null) {
-					handlers.add(cellInventory);
+		for(IStorageChannel channel : AEApi.instance().storage().storageChannels()) {
+			for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
+				ItemStack cell = this.inventory.getStackInSlot(i);
+				if (cellRegistry.isCellHandled(cell)) {
+					IMEInventoryHandler cellInventory = cellRegistry.getCellInventory(cell, null, channel);
+					if (cellInventory != null) {
+						handlers.add(cellInventory);
+					}
 				}
 			}
 		}

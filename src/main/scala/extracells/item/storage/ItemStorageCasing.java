@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -22,12 +23,14 @@ public class ItemStorageCasing extends ItemECBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
+	public void getSubItems(CreativeTabs creativeTab, NonNullList itemList) {
+		if (!this.isInCreativeTab(creativeTab))
+			return;
 		for (CellDefinition definition : CellDefinition.values()) {
 			if (definition == CellDefinition.GAS && !Integration.Mods.MEKANISMGAS.isEnabled()) {
 				continue;
 			}
-			itemList.add(new ItemStack(item, 1, definition.ordinal()));
+			itemList.add(new ItemStack(this, 1, definition.ordinal()));
 		}
 	}
 

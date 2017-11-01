@@ -66,7 +66,7 @@ public class ContainerBusFluidStorage extends ContainerUpgradeable {
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0) {
+			if (itemstack1.getCount() == 0) {
 				slot.putStack(null);
 			} else {
 				slot.onSlotChanged();

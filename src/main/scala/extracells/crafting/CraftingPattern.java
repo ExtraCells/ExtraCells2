@@ -1,13 +1,13 @@
 package extracells.crafting;
 
+import extracells.util.FluidHelper;
+import extracells.util.StorageChannels;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 import appeng.api.AEApi;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
@@ -100,18 +100,10 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 		for (int i = 0; i < input.length; i++) {
 			IAEItemStack stack = input[i];
 			if (stack != null
-				&& FluidContainerRegistry.isFilledContainer(stack
-				.getItemStack())) {
+				&& FluidHelper.isFluidContainer(stack.createItemStack())) {
 				try {
 					craftingInv.setInventorySlotContents(i,
-						input[i].getItemStack());
-				} catch (Throwable e) {
-				}
-			} else if (stack != null
-				&& stack.getItem() instanceof IFluidContainerItem) {
-				try {
-					craftingInv.setInventorySlotContents(i,
-						input[i].getItemStack());
+						input[i].createItemStack());
 				} catch (Throwable e) {
 				}
 			}
@@ -120,11 +112,7 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 		for (int i = 0; i < input.length; i++) {
 			IAEItemStack stack = input[i];
 			if (stack != null
-				&& FluidContainerRegistry.isFilledContainer(stack
-				.getItemStack())) {
-				craftingInv.setInventorySlotContents(i, null);
-			} else if (stack != null
-				&& stack.getItem() instanceof IFluidContainerItem) {
+				&& FluidHelper.isFluidContainer(stack.createItemStack()) && FluidHelper.isFilled(stack.createItemStack())) {
 				craftingInv.setInventorySlotContents(i, null);
 			}
 		}
@@ -177,28 +165,17 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 		for (IAEItemStack currentRequirement : requirements) {
 
 			if (currentRequirement != null) {
-				ItemStack current = currentRequirement.getItemStack();
-				current.stackSize = 1;
+				ItemStack current = currentRequirement.createItemStack();
+				current.setCount(1);
 				FluidStack fluid = null;
-				if (FluidContainerRegistry.isFilledContainer(current)) {
-					fluid = FluidContainerRegistry
-						.getFluidForFilledItem(current);
-				} else if (currentRequirement.getItem() instanceof IFluidContainerItem) {
-					fluid = ((IFluidContainerItem) currentRequirement.getItem())
-						.getFluid(current);
+				if (FluidHelper.isFilled(current)) {
+					fluid = FluidHelper.getFluidFromContainer(current);
 				}
 				if (fluid == null) {
 					returnStack[i] = currentRequirement;
 				} else {
 					removed++;
-					fluidStacks[i] = AEApi
-						.instance()
-						.storage()
-						.createFluidStack(
-							new FluidStack(
-								fluid.getFluid(),
-								(int) (fluid.amount * currentRequirement
-									.getStackSize())));
+					fluidStacks[i] = StorageChannels.FLUID().createStack(new FluidStack(fluid.getFluid(),(int) (fluid.amount * currentRequirement.getStackSize())));
 				}
 			}
 			i++;

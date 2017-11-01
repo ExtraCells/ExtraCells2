@@ -2,6 +2,9 @@ package extracells.tileentity;
 
 import javax.annotation.Nullable;
 
+import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.data.IAEStack;
+import extracells.util.StorageChannels;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -28,11 +31,11 @@ public abstract class TileBase extends TileEntity {
 	}
 
 	public void updateBlock() {
-		if (worldObj == null || pos == null) {
+		if (world == null || pos == null) {
 			return;
 		}
-		IBlockState blockState = worldObj.getBlockState(pos);
-		worldObj.notifyBlockUpdate(pos, blockState, blockState, 0);
+		IBlockState blockState = world.getBlockState(pos);
+		world.notifyBlockUpdate(pos, blockState, blockState, 0);
 	}
 
 	public IStorageGrid getStorageGrid(AEPartLocation side) {
@@ -56,7 +59,7 @@ public abstract class TileBase extends TileEntity {
 		if (storageGrid == null) {
 			return null;
 		} else {
-			return storageGrid.getFluidInventory();
+			return storageGrid.getInventory(StorageChannels.FLUID());
 		}
 	}
 
@@ -66,7 +69,17 @@ public abstract class TileBase extends TileEntity {
 		if (storageGrid == null) {
 			return null;
 		} else {
-			return storageGrid.getItemInventory();
+			return storageGrid.getInventory(StorageChannels.ITEM());
+		}
+	}
+
+	@Nullable
+	public <T extends IAEStack<T>> IMEMonitor<T>  getInventory(AEPartLocation side, IStorageChannel<T> channel) {
+		IStorageGrid storageGrid = getStorageGrid(side);
+		if (storageGrid == null) {
+			return null;
+		} else {
+			return storageGrid.getInventory(channel);
 		}
 	}
 }

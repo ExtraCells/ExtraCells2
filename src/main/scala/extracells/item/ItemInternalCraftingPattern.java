@@ -24,7 +24,7 @@ public class ItemInternalCraftingPattern extends Item implements ICraftingPatter
 		switch (is.getItemDamage()) {
 			case 0:
 				if (is.hasTagCompound() && is.getTagCompound().hasKey("item")) {
-					ItemStack s = ItemStack.loadItemStackFromNBT(is.getTagCompound().getCompoundTag("item"));
+					ItemStack s = new ItemStack(is.getTagCompound().getCompoundTag("item"));
 					if (s != null && s.getItem() instanceof ICraftingPatternItem) {
 						return new CraftingPattern(((ICraftingPatternItem) s.getItem()).getPatternForItem(s, w));
 					}
@@ -32,7 +32,7 @@ public class ItemInternalCraftingPattern extends Item implements ICraftingPatter
 				return null;
 			case 1:
 				if (is.hasTagCompound() && is.getTagCompound().hasKey("item")) {
-					ItemStack s = ItemStack.loadItemStackFromNBT(is.getTagCompound().getCompoundTag("item"));
+					ItemStack s = new ItemStack(is.getTagCompound().getCompoundTag("item"));
 					if (s != null && s.getItem() instanceof ICraftingPatternItem) {
 						return new CraftingPattern2(((ICraftingPatternItem) s.getItem()).getPatternForItem(s, w));
 					}

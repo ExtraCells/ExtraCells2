@@ -35,7 +35,7 @@ public class PacketTerminalSelectFluidServer extends Packet {
 	public static class Handler implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
-			PartFluidTerminal terminalFluid = data.readPart(player.worldObj);
+			PartFluidTerminal terminalFluid = data.readPart(player.world);
 			Fluid fluid = data.readFluid();
 			if (fluid == null || terminalFluid == null) {
 				return;

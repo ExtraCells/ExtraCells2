@@ -1,7 +1,6 @@
 package extracells.util;
 
 import appeng.api.storage.IStorageChannel;
-import appeng.api.storage.channels.IItemStorageChannel;
 import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fluids.Fluid;
@@ -10,7 +9,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.AEApi;
 import appeng.api.storage.ICellRegistry;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 

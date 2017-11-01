@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 
 import javax.annotation.Nullable;
 
+import extracells.util.FluidHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -74,7 +75,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	}
 
 	@Override
-	public boolean canRenderInLayer(BlockRenderLayer layer) {
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
 		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
 	}
 
@@ -94,7 +95,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		ItemStack current = player.inventory.getCurrentItem();
 
 		if (player.isSneaking() && current != null) {
@@ -124,7 +125,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 		}
 
 		if (!player.isSneaking()) {
-			if (interactWithFluidHandler(current, world, pos, side, player)) {
+			if (interactWithFluidHandler(hand, world, pos, side, player)) {
 				return true;
 			}
 		}
@@ -199,19 +200,21 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	}
 
 	//TODO: 1.12 use FluidHandler#interactWithFluidHandler
-	private static boolean interactWithFluidHandler(ItemStack currentItem, World world, BlockPos pos, EnumFacing side, EntityPlayer player) {
+	private static boolean interactWithFluidHandler(EnumHand hand, World world, BlockPos pos, EnumFacing side, EntityPlayer player) {
 		Preconditions.checkNotNull(world);
 		Preconditions.checkNotNull(pos);
 
 		IFluidHandler blockFluidHandler = FluidUtil.getFluidHandler(world, pos, side);
-		return blockFluidHandler != null && FluidUtil.interactWithFluidHandler(currentItem, blockFluidHandler, player);
+
+		return blockFluidHandler != null && FluidUtil.interactWithFluidHandler(player, hand, blockFluidHandler);
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn) {
+	public void onNeighborChange(IBlockAccess blockAccess, BlockPos pos, BlockPos neighbor) {
+		World world = (World) blockAccess;
 		if (!world.isRemote) {
 
-			world.notifyBlockUpdate(pos, state, state, 0);
+			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 0);
 		}
 	}
 

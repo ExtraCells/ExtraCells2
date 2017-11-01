@@ -33,12 +33,12 @@ public class ContainerVibrationChamberFluid extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return tileentity.hasWorldObj() && tileentity.getWorld().getTileEntity(tileentity.getPos()) == this.tileentity;
+		return tileentity.hasWorld() && tileentity.getWorld().getTileEntity(tileentity.getPos()) == this.tileentity;
 	}
 
-	@Override
-	protected void retrySlotClick(int par1, int par2, boolean par3,
-		EntityPlayer par4EntityPlayer) {
-		// DON'T DO ANYTHING, YOU SHITTY METHOD!
-	}
+//	@Override
+//	protected void retrySlotClick(int par1, int par2, boolean par3,
+//		EntityPlayer par4EntityPlayer) {
+//		// DON'T DO ANYTHING, YOU SHITTY METHOD!
+//	}
 }

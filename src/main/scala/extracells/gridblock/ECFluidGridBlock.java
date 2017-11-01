@@ -2,6 +2,7 @@ package extracells.gridblock;
 
 import java.util.EnumSet;
 
+import extracells.util.StorageChannels;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -92,7 +93,7 @@ public class ECFluidGridBlock implements IGridBlock {
 			if (this.host instanceof TileEntityFluidFiller && this.grid.getCache(IStorageGrid.class) != null) {
 				TileEntityFluidFiller fluidFiller = (TileEntityFluidFiller) host;
 				IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-				fluidFiller.postChange(storageGrid.getFluidInventory(), null, null);
+				fluidFiller.postChange(storageGrid.getInventory(StorageChannels.FLUID()), null, null);
 			}
 		} else {
 			this.grid = grid;

@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -53,7 +54,7 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 	@Override
 	public IPart createPartFromItemStack(ItemStack itemStack) {
 		try {
-			return PartEnum.values()[MathHelper.clamp_int(
+			return PartEnum.values()[MathHelper.clamp(
 				itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
 				.newInstance(itemStack);
 		} catch (Throwable ex) {
@@ -91,11 +92,13 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 	@Override
 	@SuppressWarnings("unchecked")
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
+	public void getSubItems( CreativeTabs creativeTab, NonNullList itemList) {
+		if (!this.isInCreativeTab(creativeTab))
+			return;
 		for (int i = 0; i < PartEnum.values().length; i++) {
 			PartEnum part = PartEnum.values()[i];
 			if (part.getMod() == null || part.getMod().isEnabled()) {
-				itemList.add(new ItemStack(item, 1, i));
+				itemList.add(new ItemStack(this, 1, i));
 			}
 		}
 	}
@@ -103,21 +106,21 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 	@Override
 	public String getUnlocalizedGroupName(Set<ItemStack> otherItems,
 		ItemStack itemStack) {
-		return PartEnum.values()[MathHelper.clamp_int(
+		return PartEnum.values()[MathHelper.clamp(
 			itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
 			.getGroupName();
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemStack) {
-		return PartEnum.values()[MathHelper.clamp_int(
+		return PartEnum.values()[MathHelper.clamp(
 			itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
 			.getUnlocalizedName();
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		return AEApi.instance().partHelper().placeBus(stack, pos, facing, playerIn, hand, worldIn);
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		return AEApi.instance().partHelper().placeBus(playerIn.getHeldItem(hand), pos, facing, playerIn, hand, worldIn);
 	}
 
 	@Override

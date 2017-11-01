@@ -2,6 +2,8 @@ package extracells.item.storage;
 
 import java.util.List;
 
+import appeng.api.storage.IStorageChannel;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -10,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
@@ -20,7 +23,6 @@ import appeng.api.AEApi;
 import appeng.api.storage.ICellRegistry;
 import appeng.api.storage.ICellWorkbenchItem;
 import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.api.IHandlerFluidStorage;
 import extracells.item.ItemECBase;
@@ -29,9 +31,9 @@ import extracells.registries.ItemEnum;
 
 public abstract class ItemStorageCell extends ItemECBase implements ICellWorkbenchItem {
 	protected final CellDefinition definition;
-	protected final StorageChannel channel;
+	protected final IStorageChannel channel;
 
-	public ItemStorageCell(CellDefinition definition, StorageChannel channel) {
+	public ItemStorageCell(CellDefinition definition, IStorageChannel channel) {
 		this.definition = definition;
 		this.channel = channel;
 		setMaxStackSize(1);
@@ -41,7 +43,7 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advanced) {
+	public void addInformation(ItemStack itemStack, World world, List list, ITooltipFlag advanced) {
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 		IMEInventoryHandler<IAEFluidStack> handler = cellRegistry.getCellInventory(itemStack, null, channel);
 		if (!(handler instanceof IHandlerFluidStorage)) {
@@ -69,9 +71,11 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs creativeTab, List listSubItems) {
+	public void getSubItems(CreativeTabs creativeTab, NonNullList listSubItems) {
+		if (!this.isInCreativeTab(creativeTab))
+			return;
 		for (StorageType type : definition.cells) {
-			listSubItems.add(new ItemStack(item, 1, type.getMeta()));
+			listSubItems.add(new ItemStack(this, 1, type.getMeta()));
 		}
 	}
 
@@ -90,7 +94,8 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick( World world, EntityPlayer player, EnumHand hand) {
+		ItemStack itemStack = player.getHeldItem(hand);
 		if (!player.isSneaking()) {
 			return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
 		}

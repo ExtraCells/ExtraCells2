@@ -93,12 +93,11 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 				return slot;
 			}
 		}
-
 		return null;
 	}
 
 	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
-		return this.isPointInRegion(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
+		return this.isPointInRegion(p_146981_1_.xPos, p_146981_1_.yPos, 16, 16, p_146981_2_, p_146981_3_);
 	}
 
 	protected boolean isPointInRegion(int top, int left, int height, int width, int pointX, int pointY) {

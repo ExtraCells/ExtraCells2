@@ -34,25 +34,25 @@ public class ButtonRedstoneModes extends GuiButton implements IToolTipProvider {
 	}
 
 	@Override
-	public void drawButton(Minecraft minecraftInstance, int x, int y) {
+	public void drawButton(Minecraft minecraftInstance, int x, int y, float partialTicks) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mouseDragged(minecraftInstance, x, y);
 
 		minecraftInstance.getTextureManager().bindTexture(new ResourceLocation("extracells", "textures/gui/redstonemodes.png"));
-		drawTexturedModalRect(this.xPosition, this.yPosition, 0, 16, 16, 16);
+		drawTexturedModalRect(this.x, this.y, 0, 16, 16, 16);
 
 		switch (this.redstoneMode) {
 			case HIGH_SIGNAL:
-				drawTexturedModalRect(this.xPosition, this.yPosition, 16, 0, 16, 16);
+				drawTexturedModalRect(this.x, this.y, 16, 0, 16, 16);
 				break;
 			case LOW_SIGNAL:
-				drawTexturedModalRect(this.xPosition, this.yPosition, 0, 0, 16, 16);
+				drawTexturedModalRect(this.x, this.y, 0, 0, 16, 16);
 				break;
 			case SIGNAL_PULSE:
-				drawTexturedModalRect(this.xPosition, this.yPosition, 32, 0, 16, 16);
+				drawTexturedModalRect(this.x, this.y, 32, 0, 16, 16);
 				break;
 			case IGNORE:
-				drawTexturedModalRect(this.xPosition, this.yPosition, 48, 0, 16, 16);
+				drawTexturedModalRect(this.x, this.y, 48, 0, 16, 16);
 				break;
 			default:
 				break;

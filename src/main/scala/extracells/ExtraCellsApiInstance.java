@@ -3,6 +3,9 @@ package extracells;
 import java.util.ArrayList;
 import java.util.List;
 
+import appeng.api.networking.security.IActionSource;
+import appeng.api.storage.IMEMonitor;
+import extracells.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,13 +25,9 @@ import appeng.api.implementations.tiles.IWirelessAccessPoint;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.ICellHandler;
 import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.MEMonitorHandler;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEPartLocation;
 import extracells.api.ExtraCellsApi;
@@ -49,10 +48,6 @@ import extracells.integration.mekanism.gas.MekanismGas;
 import extracells.inventory.cell.HandlerItemStorageFluid;
 import extracells.inventory.cell.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
-import extracells.util.FluidCellHandler;
-import extracells.util.FuelBurnTime;
-import extracells.util.GasStorageRegistry;
-import extracells.util.GasUtil;
 import extracells.wireless.WirelessTermRegistry;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
@@ -173,7 +168,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		if (!(handler instanceof HandlerItemStorageFluid)) {
 			return stack;
 		}
-		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannel.FLUIDS);
+		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannels.FLUID());
 		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, hand, new Object[]{fluidInventory, item});
 		return stack;
 	}
@@ -196,7 +191,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		if (!(handler instanceof HandlerItemStorageGas)) {
 			return stack;
 		}
-		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannel.FLUIDS);
+		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannels.FLUID());
 		GuiHandler.launchGui(GuiHandler.getGuiId(6), player, hand, new Object[]{fluidInventory, item});
 		return stack;
 	}
@@ -270,7 +265,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
 				IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
 				if (gridCache != null) {
-					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getFluidInventory();
+					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getInventory(StorageChannels.FLUID());
 					if (fluidInventory != null) {
 						GuiHandler.launchGui(GuiHandler.getGuiId(guiId), player, hand, new Object[]{fluidInventory, getWirelessTermHandler(itemStack)});
 					}
@@ -347,7 +342,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	}
 
 	@Override
-	public IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, BaseActionSource mySrc) {
+	public IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, IActionSource mySrc) {
 		return isMekEnabled() ? GasStorageRegistry.getHandler(te, opposite, mySrc) : null;
 	}
 

@@ -2,7 +2,11 @@ package extracells.item.storage;
 
 import java.util.List;
 
+import appeng.api.config.Actionable;
+import cofh.redstoneflux.api.IEnergyContainerItem;
+import extracells.util.StorageChannels;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -12,10 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -36,19 +37,18 @@ import appeng.api.storage.ICellInventory;
 import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.ICellRegistry;
 import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
-import cofh.api.energy.IEnergyContainerItem;
 import extracells.inventory.ECCellInventory;
 import extracells.item.EnumBlockContainerMode;
 import extracells.item.ItemECBase;
 import extracells.models.ModelManager;
 import extracells.registries.ItemEnum;
 import extracells.util.ECConfigHandler;
+import net.minecraftforge.items.IItemHandler;
 
 //TODO: Clean Up
-@Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
+@Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux")
 public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell, IAEItemPowerStorage, IEnergyContainerItem {
 
 	public static final String[] suffixes = {"256k", "1024k", "4096k", "16384k", "container"};
@@ -65,11 +65,13 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player,
-		List list, boolean par4) {
+	public void addInformation(ItemStack itemStack, World world,
+		List list, ITooltipFlag flag) {
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 		IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry
-			.getCellInventory(itemStack, null, StorageChannel.ITEMS);
+			.getCellInventory(itemStack, null, StorageChannels.ITEM());
+		if (invHandler == null)
+			return;
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
 		long usedBytes = cellInv.getUsedBytes();
@@ -90,7 +92,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public int getBytesPerType(ItemStack cellItem) {
-		return ECConfigHandler.dynamicTypes ? bytes_cell[MathHelper.clamp_int(
+		return ECConfigHandler.dynamicTypes ? bytes_cell[MathHelper.clamp(
 			cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
 	}
 
@@ -102,19 +104,20 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
-	public double extractAEPower(ItemStack itemStack, double amt) {
+	public double extractAEPower(ItemStack itemStack, double amt, Actionable actionable) {
 		if (itemStack == null || itemStack.getItemDamage() != 4) {
 			return 0.0D;
 		}
 		NBTTagCompound tagCompound = ensureTagCompound(itemStack);
 		double currentPower = tagCompound.getDouble("power");
 		double toExtract = Math.min(amt, currentPower);
-		tagCompound.setDouble("power", currentPower - toExtract);
+		if (actionable == Actionable.MODULATE)
+			tagCompound.setDouble("power", currentPower - toExtract);
 		return toExtract;
 	}
 
 	@Override
-	@Optional.Method(modid = "CoFHAPI|energy")
+	@Optional.Method(modid = "redstoneflux")
 	public int extractEnergy(ItemStack container, int maxExtract,
 		boolean simulate) {
 		if (container == null || container.getItemDamage() != 4) {
@@ -128,7 +131,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 				.convertTo(
 					PowerUnits.RF,
 					extractAEPower(container, PowerUnits.RF.convertTo(
-						PowerUnits.AE, maxExtract)));
+						PowerUnits.AE, maxExtract), Actionable.MODULATE));
 		}
 	}
 
@@ -151,12 +154,12 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public int getBytes(ItemStack cellItem) {
-		return bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0,
+		return bytes_cell[MathHelper.clamp(cellItem.getItemDamage(), 0,
 			suffixes.length - 1)];
 	}
 
 	@Override
-	public IInventory getConfigInventory(ItemStack is) {
+	public IItemHandler getConfigInventory(ItemStack is) {
 		return new ECCellInventory(is, "config", 63, 1);
 	}
 
@@ -169,7 +172,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
-	@Optional.Method(modid = "CoFHAPI|energy")
+	@Optional.Method(modid = "redstoneflux")
 	public int getEnergyStored(ItemStack arg0) {
 		return (int) PowerUnits.AE.convertTo(PowerUnits.RF,
 			getAECurrentPower(arg0));
@@ -201,9 +204,8 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 					.instance()
 					.registries()
 					.cell()
-					.getCellInventory(stack, null, StorageChannel.ITEMS)
-					.getAvailableItems(
-						AEApi.instance().storage().createItemList());
+					.getCellInventory(stack, null, StorageChannels.ITEM())
+					.getAvailableItems(StorageChannels.ITEM().createList());
 				if (list.isEmpty()) {
 					return super.getItemStackDisplayName(stack)
 						+ " - "
@@ -212,7 +214,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 				}
 				IAEItemStack s = (IAEItemStack) list.getFirstItem();
 				return super.getItemStackDisplayName(stack) + " - "
-					+ s.getItemStack().getDisplayName();
+					+ s.createItemStack().getDisplayName();
 			} catch (Throwable e) {
 			}
 			return super.getItemStackDisplayName(stack)
@@ -224,7 +226,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
-	@Optional.Method(modid = "CoFHAPI|energy")
+	@Optional.Method(modid = "redstoneflux")
 	public int getMaxEnergyStored(ItemStack arg0) {
 		return (int) PowerUnits.AE
 			.convertTo(PowerUnits.RF, getAEMaxPower(arg0));
@@ -246,11 +248,13 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
+	public void getSubItems(CreativeTabs creativeTab, NonNullList itemList) {
+		if (!this.isInCreativeTab(creativeTab))
+			return;
 		for (int i = 0; i < suffixes.length; i++) {
-			itemList.add(new ItemStack(item, 1, i));
+			itemList.add(new ItemStack(this, 1, i));
 			if (i == 4) {
-				ItemStack s = new ItemStack(item, 1, i);
+				ItemStack s = new ItemStack(this, 1, i);
 				s.setTagCompound(new NBTTagCompound());
 				s.getTagCompound().setDouble("power", this.MAX_POWER);
 				itemList.add(s);
@@ -260,7 +264,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public int getTotalTypes(ItemStack cellItem) {
-		return types_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)];
+		return types_cell[MathHelper.clamp(cellItem.getItemDamage(), 0, suffixes.length - 1)];
 	}
 
 	@Override
@@ -269,19 +273,20 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
-	public IInventory getUpgradesInventory(ItemStack is) {
+	public IItemHandler getUpgradesInventory(ItemStack is) {
 		return new ECCellInventory(is, "upgrades", 2, 1);
 	}
 
 	@Override
-	public double injectAEPower(ItemStack itemStack, double amt) {
+	public double injectAEPower(ItemStack itemStack, double amt, Actionable actionable) {
 		if (itemStack == null || itemStack.getItemDamage() != 4) {
 			return 0.0D;
 		}
 		NBTTagCompound tagCompound = ensureTagCompound(itemStack);
 		double currentPower = tagCompound.getDouble("power");
 		double toInject = Math.min(amt, this.MAX_POWER - currentPower);
-		tagCompound.setDouble("power", currentPower + toInject);
+		if (actionable == Actionable.MODULATE)
+			tagCompound.setDouble("power", currentPower + toInject);
 		return toInject;
 	}
 
@@ -303,7 +308,8 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick( World world, EntityPlayer player, EnumHand hand) {
+		ItemStack itemStack = player.getHeldItem(hand);
 		if (itemStack == null) {
 			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 		}
@@ -314,15 +320,15 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 			switch (itemStack.getTagCompound().getInteger("mode")) {
 				case 0:
 					itemStack.getTagCompound().setInteger("mode", 1);
-					player.addChatMessage(new TextComponentTranslation("extracells.tooltip.storage.container.1"));
+					player.sendMessage(new TextComponentTranslation("extracells.tooltip.storage.container.1"));
 					break;
 				case 1:
 					itemStack.getTagCompound().setInteger("mode", 2);
-					player.addChatMessage(new TextComponentTranslation("extracells.tooltip.storage.container.2"));
+					player.sendMessage(new TextComponentTranslation("extracells.tooltip.storage.container.2"));
 					break;
 				case 2:
 					itemStack.getTagCompound().setInteger("mode", 0);
-					player.addChatMessage(new TextComponentTranslation("extracells.tooltip.storage.container.0"));
+					player.sendMessage(new TextComponentTranslation("extracells.tooltip.storage.container.0"));
 					break;
 			}
 			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
@@ -330,7 +336,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 		if (!player.isSneaking()) {
 			return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 		}
-		IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
+		IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannels.ITEM());
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
 		if (cellInv.getUsedBytes() == 0 && player.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0))) {
@@ -340,14 +346,15 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		ItemStack stack = player.getHeldItem(hand);
 		if (stack == null || player == null) {
 			return EnumActionResult.PASS;
 		}
 		if (stack.getItemDamage() == 4 && !player.isSneaking()) {
 			double power = getAECurrentPower(stack);
-			IItemList list = AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.ITEMS).getAvailableItems(
-				AEApi.instance().storage().createItemList());
+			IItemList list = AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannels.ITEM()).getAvailableItems(
+				StorageChannels.ITEM().createList());
 			if (list.isEmpty()) {
 				return EnumActionResult.PASS;
 			}
@@ -356,7 +363,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 				if (!world.isRemote) {
 					IAEItemStack request = storageStack.copy();
 					request.setStackSize(1);
-					ItemStack block = request.getItemStack();
+					ItemStack block = request.createItemStack();
 					if (block.getItem() instanceof ItemBlock) {
 						IBlockState blockState = world.getBlockState(pos);
 						if (blockState.getBlock() != Blocks.BEDROCK && blockState.getBlockHardness(world, pos) >= 0.0F) {
@@ -368,7 +375,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 							return EnumActionResult.PASS;
 						}
 					} else {
-						player.addChatMessage(new TextComponentTranslation("extracells.tooltip.onlyblocks"));
+						player.sendMessage(new TextComponentTranslation("extracells.tooltip.onlyblocks"));
 						return EnumActionResult.PASS;
 					}
 				} else {
@@ -383,7 +390,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
-	@Optional.Method(modid = "CoFHAPI|energy")
+	@Optional.Method(modid = "redstoneflux")
 	public int receiveEnergy(ItemStack container, int maxReceive,
 		boolean simulate) {
 		if (container == null || container.getItemDamage() != 4) {
@@ -404,7 +411,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 				.convertTo(
 					PowerUnits.RF,
 					injectAEPower(container, PowerUnits.RF.convertTo(
-						PowerUnits.AE, maxReceive)));
+						PowerUnits.AE, maxReceive), Actionable.MODULATE));
 			return maxReceive - notStored;
 		}
 	}

@@ -29,22 +29,22 @@ public class PacketFluidContainerSlot extends Packet {
 	@Override
 	protected void writeData(PacketBufferEC data) throws IOException {
 		data.writeTile(this.fluidFiller);
-		data.writeItemStackToBuffer(this.container);
+		data.writeItemStack(this.container);
 	}
 
 	public static class Handler implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
-			TileEntityFluidFiller fluidFiller = data.readTile(player.worldObj, TileEntityFluidFiller.class);
-			ItemStack container = data.readItemStackFromBuffer();
+			TileEntityFluidFiller fluidFiller = data.readTile(player.world, TileEntityFluidFiller.class);
+			ItemStack container = data.readItemStack();
 
 			if (fluidFiller == null) {
 				return;
 			}
 
-			container.stackSize = 1;
+			container.setCount(1);
 			fluidFiller.containerItem = container;
-			if (fluidFiller.hasWorldObj()) {
+			if (fluidFiller.hasWorld()) {
 				fluidFiller.updateBlock();
 			}
 			fluidFiller.postUpdateEvent();

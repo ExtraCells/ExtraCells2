@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -33,9 +34,11 @@ public class ItemFluid extends Item implements IItemModelRegister {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (!this.isInCreativeTab(tab))
+			return;
 		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-			ItemStack itemStack = new ItemStack(itemIn);
+			ItemStack itemStack = new ItemStack(this);
 			setFluidName(itemStack, fluid.getName());
 			subItems.add(itemStack);
 		}

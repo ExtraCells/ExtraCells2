@@ -1,5 +1,6 @@
 package extracells.container.fluid;
 
+import extracells.util.PlayerSource;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +10,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.config.Actionable;
-import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.api.IPortableFluidStorageCell;
@@ -40,7 +40,7 @@ public class ContainerFluidStorage extends ContainerStorage {
 	@Override
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize()) {
+		if (secondSlot != null && secondSlot.getCount() > secondSlot.getMaxStackSize()) {
 			return;
 		}
 		ItemStack container = this.inventory.getStackInSlot(0);
@@ -52,7 +52,7 @@ public class ContainerFluidStorage extends ContainerStorage {
 		}
 
 		container = container.copy();
-		container.stackSize = 1;
+		container.setCount(1);
 
 		if (FluidHelper.isDrainableFilledContainer(container)) {
 			FluidStack containerFluid = FluidHelper.getFluidFromContainer(container);

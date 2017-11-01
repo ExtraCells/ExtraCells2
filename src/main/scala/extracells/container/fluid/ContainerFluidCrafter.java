@@ -46,11 +46,11 @@ public class ContainerFluidCrafter extends Container {
 		super.onContainerClosed(entityplayer);
 	}
 
-	@Override
-	protected void retrySlotClick(int par1, int par2, boolean par3,
-		EntityPlayer par4EntityPlayer) {
-		// DON'T DO ANYTHING, YOU SHITTY METHOD!
-	}
+//	@Override
+//	protected void retrySlotClick(int par1, int par2, boolean par3,
+//		EntityPlayer par4EntityPlayer) {
+//		// DON'T DO ANYTHING, YOU SHITTY METHOD!
+//	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
@@ -69,7 +69,7 @@ public class ContainerFluidCrafter extends Container {
 						return null;
 					}
 				}
-				if (itemstack1.stackSize == 0) {
+				if (itemstack1.getCount() == 0) {
 					slot.putStack(null);
 				} else {
 					slot.onSlotChanged();

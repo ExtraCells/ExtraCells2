@@ -7,6 +7,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,12 +37,14 @@ public class ItemStorageComponent extends ItemECBase implements IStorageComponen
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
+	public void getSubItems(CreativeTabs creativeTab, NonNullList itemList) {
+		if (!this.isInCreativeTab(creativeTab))
+			return;
 		for (StorageType type : CellDefinition.components) {
 			if (type.getDefinition() == CellDefinition.GAS && !Integration.Mods.MEKANISMGAS.isEnabled()) {
 				continue;
 			}
-			itemList.add(new ItemStack(item, 1, type.getMeta()));
+			itemList.add(new ItemStack(this, 1, type.getMeta()));
 		}
 	}
 

@@ -75,7 +75,7 @@ public class PacketPartConfig extends Packet {
 	public static class HandlerClient implements IPacketHandlerClient {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
-			PartECBase part = data.readPart(player.worldObj);
+			PartECBase part = data.readPart(player.world);
 			String name = data.readString();
 			String value = data.readString();
 			if (name.equals(FLUID_EMITTER_AMOUNT) && part instanceof PartFluidLevelEmitter) {
@@ -127,7 +127,7 @@ public class PacketPartConfig extends Packet {
 	public static class HandlerServer implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
-			PartECBase part = data.readPart(player.worldObj);
+			PartECBase part = data.readPart(player.world);
 			String name = data.readString();
 			String value = data.readString();
 			if (name.equals(FLUID_EMITTER_TOGGLE) && part instanceof PartFluidLevelEmitter) {

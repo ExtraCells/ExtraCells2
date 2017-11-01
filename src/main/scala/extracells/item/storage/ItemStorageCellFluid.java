@@ -2,7 +2,7 @@ package extracells.item.storage;
 
 import java.util.ArrayList;
 
-import net.minecraft.inventory.IInventory;
+import extracells.util.StorageChannels;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -10,20 +10,20 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.config.FuzzyMode;
-import appeng.api.storage.StorageChannel;
 import extracells.api.IFluidStorageCell;
 import extracells.inventory.ECFluidFilterInventory;
 import extracells.inventory.InventoryPlain;
 import extracells.item.ItemFluid;
+import net.minecraftforge.items.IItemHandler;
 
 public class ItemStorageCellFluid extends ItemStorageCell implements IFluidStorageCell {
 
 	public ItemStorageCellFluid() {
-		super(CellDefinition.FLUID, StorageChannel.FLUIDS);
+		super(CellDefinition.FLUID, StorageChannels.FLUID());
 	}
 
 	@Override
-	public IInventory getConfigInventory(ItemStack is) {
+	public IItemHandler getConfigInventory(ItemStack is) {
 		return new ECFluidFilterInventory("configFluidCell", 63, is);
 	}
 
@@ -75,7 +75,7 @@ public class ItemStorageCellFluid extends ItemStorageCell implements IFluidStora
 	}
 
 	@Override
-	public IInventory getUpgradesInventory(ItemStack is) {
+	public IItemHandler getUpgradesInventory(ItemStack is) {
 		return new InventoryPlain("configInventory", 0, 64);
 	}
 

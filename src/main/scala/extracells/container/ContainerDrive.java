@@ -58,7 +58,7 @@ public class ContainerDrive extends Container {
 				return null;
 			}
 
-			if (itemStack.stackSize == 0) {
+			if (itemStack.getCount() == 0) {
 				slot.putStack(null);
 			} else {
 				slot.onSlotChanged();

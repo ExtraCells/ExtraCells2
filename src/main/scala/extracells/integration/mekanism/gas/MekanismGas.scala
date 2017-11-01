@@ -2,6 +2,8 @@ package extracells.integration.mekanism.gas
 
 import appeng.api.AEApi
 import extracells.api.ECApi
+import extracells.integration.Integration
+import extracells.integration.jei.Jei
 import mekanism.api.gas.{Gas, GasRegistry, IGasHandler, ITubeConnection}
 import net.minecraftforge.fluids.{Fluid, FluidRegistry, FluidStack}
 
@@ -28,6 +30,9 @@ object MekanismGas {
       val fluid = new GasFluid(g)
       if ((!FluidRegistry.isFluidRegistered(fluid)) && FluidRegistry.registerFluid(fluid))
         fluidGas += (g -> fluid)
+        if(Integration.Mods.JEI.isEnabled){
+          Jei.addFluidToBlacklist(new FluidStack(fluid, 1000))
+        }
     }
     ECApi.instance.addFluidToShowBlacklist(classOf[GasFluid])
     ECApi.instance.addFluidToStorageBlacklist(classOf[GasFluid])

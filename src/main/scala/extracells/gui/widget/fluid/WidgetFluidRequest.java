@@ -40,7 +40,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 			1)));
 		drawHoveringText(description, mouseX - this.guiFluidTerminal.guiLeft(),
 			mouseY - this.guiFluidTerminal.guiTop() + 18,
-			Minecraft.getMinecraft().fontRendererObj);
+			Minecraft.getMinecraft().fontRenderer);
 		return true;
 	}
 
@@ -58,7 +58,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
 			GL11.glScalef(0.5F, 0.5F, 0.5F);
 			String str = I18n.translateToLocal("extracells.gui.craft");
 			str = WordUtils.capitalize(str.toLowerCase());
-			Minecraft.getMinecraft().fontRendererObj.drawString(
+			Minecraft.getMinecraft().fontRenderer.drawString(
 				TextFormatting.WHITE + str, 52 + posX - str.length(),
 				posY + 24, 0);
 		}

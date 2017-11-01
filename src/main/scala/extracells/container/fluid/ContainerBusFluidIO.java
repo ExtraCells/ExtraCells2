@@ -23,10 +23,10 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 		return part.isValid();
 	}
 
-	@Override
-	protected void retrySlotClick(int par1, int par2, boolean par3, EntityPlayer par4EntityPlayer) {
-		// NOPE
-	}
+//	@Override
+//	protected void retrySlotClick(int par1, int par2, boolean par3, EntityPlayer par4EntityPlayer) {
+//		// NOPE
+//	}
 
 	public void setGui(GuiBusFluidIO _guiBusFluidIO) {
 		this.guiBusFluidIO = _guiBusFluidIO;
@@ -54,7 +54,7 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 				return itemstack1;
 			}
 
-			if (itemstack1.stackSize == 0) {
+			if (itemstack1.getCount() == 0) {
 				slot.putStack(null);
 			} else {
 				slot.onSlotChanged();

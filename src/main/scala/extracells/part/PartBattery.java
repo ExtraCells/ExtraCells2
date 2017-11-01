@@ -58,9 +58,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 		if (this.handler == null || this.battery == null) {
 			return 0;
 		}
-		return this.handler.extractAEPower(
-			mode == Actionable.MODULATE ? this.battery : this.battery
-				.copy(), usePowerMultiplier.multiply(amt));
+		return this.handler.extractAEPower(this.battery, usePowerMultiplier.multiply(amt), mode);
 	}
 
 	@Override
@@ -97,9 +95,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
 		if (this.handler == null || this.battery == null) {
 			return 0;
 		}
-		return this.handler.injectAEPower(
-			mode == Actionable.MODULATE ? this.battery : this.battery
-				.copy(), amt);
+		return this.handler.injectAEPower(this.battery, amt, mode);
 	}
 
 	@Override

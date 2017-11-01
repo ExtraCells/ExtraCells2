@@ -46,7 +46,7 @@ public class PacketFluidInterface extends Packet {
 				tag.setString("filter#" + i, this.filter[i]);
 			}
 		}
-		data.writeNBTTagCompoundToBuffer(tag);
+		data.writeCompoundTag(tag);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class PacketFluidInterface extends Packet {
 	public static class Handler implements IPacketHandlerClient {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
-			NBTTagCompound tag = data.readNBTTagCompoundFromBuffer();
+			NBTTagCompound tag = data.readCompoundTag();
 			FluidStack[] tank = new FluidStack[tag.getInteger("lengthTank")];
 			for (int i = 0; i < tank.length; i++) {
 				if (tag.hasKey("tank#" + i)) {

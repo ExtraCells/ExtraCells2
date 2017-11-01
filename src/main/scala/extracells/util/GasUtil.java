@@ -6,10 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.integration.mekanism.gas.MekanismGas;
 import mekanism.api.gas.Gas;
@@ -19,8 +17,7 @@ import mekanism.api.gas.IGasItem;
 public class GasUtil {
 
 	public static IAEFluidStack createAEFluidStack(Gas gas) {
-		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas),
-			FluidContainerRegistry.BUCKET_VOLUME));
+		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas),1000));
 	}
 
 	public static IAEFluidStack createAEFluidStack(GasStack gasStack) {
@@ -29,7 +26,7 @@ public class GasUtil {
 
 
 	public static IAEFluidStack createAEFluidStack(FluidStack fluid) {
-		return AEApi.instance().storage().createFluidStack(fluid);
+		return StorageChannels.FLUID().createStack(fluid);
 	}
 
 	public static IAEFluidStack createAEFluidStack(Gas gas, long amount) {
@@ -112,7 +109,7 @@ public class GasUtil {
 			GasStack content = ((IGasItem) item).getGas(itemStack);
 			return content != null && content.amount > 0;
 		}
-		return FluidContainerRegistry.isFilledContainer(itemStack);
+		return FluidHelper.isFilled(itemStack);
 	}
 
 	public static boolean isGasContainer(ItemStack itemStack) {

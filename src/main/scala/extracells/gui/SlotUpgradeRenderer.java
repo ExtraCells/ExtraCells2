@@ -17,7 +17,7 @@ public class SlotUpgradeRenderer implements ISlotRenderer {
 		GlStateManager.enableBlend();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
 		gui.mc.getTextureManager().bindTexture(TEXTURE_LOCATION);
-		gui.drawTexturedModalRect(slot.xDisplayPosition, slot.yDisplayPosition, 240, 208, 16, 16);
+		gui.drawTexturedModalRect(slot.xPos, slot.yPos, 240, 208, 16, 16);
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
 	}

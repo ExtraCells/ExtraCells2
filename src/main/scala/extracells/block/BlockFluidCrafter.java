@@ -52,7 +52,7 @@ public class BlockFluidCrafter extends BlockEC {
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
 			ItemStack item = inventory.getStackInSlot(i);
 
-			if (item != null && item.stackSize > 0) {
+			if (item != null && item.getCount() > 0) {
 				float rx = rand.nextFloat() * 0.8F + 0.1F;
 				float ry = rand.nextFloat() * 0.8F + 0.1F;
 				float rz = rand.nextFloat() * 0.8F + 0.1F;
@@ -61,7 +61,7 @@ public class BlockFluidCrafter extends BlockEC {
 					+ rz, item.copy());
 
 				if (item.hasTagCompound()) {
-					entityItem.getEntityItem().setTagCompound(
+					entityItem.getItem().setTagCompound(
 						item.getTagCompound().copy());
 				}
 
@@ -69,14 +69,14 @@ public class BlockFluidCrafter extends BlockEC {
 				entityItem.motionX = rand.nextGaussian() * factor;
 				entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
 				entityItem.motionZ = rand.nextGaussian() * factor;
-				world.spawnEntityInWorld(entityItem);
-				item.stackSize = 0;
+				world.spawnEntity(entityItem);
+				item.setCount(0);
 			}
 		}
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
 			return true;
 		}

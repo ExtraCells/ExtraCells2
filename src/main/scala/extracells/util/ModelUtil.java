@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.block.model.ModelBlock;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.client.model.SimpleModelState;
 
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelUtil {
 
 	public static SimpleModelState loadModelState(ResourceLocation location) {
-		return new SimpleModelState(IPerspectiveAwareModel.MapWrapper.getTransforms(loadTransformFromJson(location)));
+		return new SimpleModelState(PerspectiveMapWrapper.getTransforms(loadTransformFromJson(location)));
 	}
 
 	private static ItemCameraTransforms loadTransformFromJson(ResourceLocation location) {

@@ -72,7 +72,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		description.add(amountToText);
 		drawHoveringText(description, mouseX - this.guiFluidTerminal.guiLeft(),
 			mouseY - this.guiFluidTerminal.guiTop() + 18,
-			Minecraft.getMinecraft().fontRendererObj);
+			Minecraft.getMinecraft().fontRenderer);
 		return true;
 	}
 

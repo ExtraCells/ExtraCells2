@@ -8,6 +8,7 @@ import java.io.File;
 import extracells.integration.mekanism.gas.GasCellHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import net.minecraftforge.fml.common.Mod;
@@ -71,12 +72,15 @@ public class ExtraCells {
 		CellDefinition.create();
 		integration.preInit();
 		proxy.registerModels();
+
+		//Moved to preeinit for JSON recipes
+		IRegistryContainer registries = AEApi.instance().registries();
+		registries.recipes().addNewSubItemResolver(new NameHandler());
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
 		IRegistryContainer registries = AEApi.instance().registries();
-		registries.recipes().addNewSubItemResolver(new NameHandler());
 		registries.wireless().registerWirelessHandler(new AEWirelessTermHandler());
 		registries.cell().addCellHandler(new FluidCellHandler());
 		registries.cell().addCellHandler(new GasCellHandler());
@@ -95,5 +99,6 @@ public class ExtraCells {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		integration.postInit();
+
 	}
 }

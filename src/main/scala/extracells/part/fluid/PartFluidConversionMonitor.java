@@ -1,5 +1,6 @@
 package extracells.part.fluid;
 
+import extracells.util.MachineSource;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,10 +9,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 import appeng.api.config.Actionable;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPartModel;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
@@ -27,17 +26,17 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 		if (wasActivated) {
 			return wasActivated;
 		}
-		if (player == null || player.worldObj == null) {
+		if (player == null || player.world == null) {
 			return true;
 		}
-		if (player.worldObj.isRemote) {
+		if (player.world.isRemote) {
 			return true;
 		}
 		ItemStack heldItem = player.getHeldItem(hand);
 		IMEMonitor<IAEFluidStack> mon = getFluidStorage();
 		if (this.locked && heldItem != null && mon != null) {
 			ItemStack itemStack = heldItem.copy();
-			itemStack.stackSize = 1;
+			itemStack.setCount(1);
 			if (FluidHelper.isDrainableFilledContainer(itemStack)) {
 				FluidStack f = FluidHelper.getFluidFromContainer(itemStack);
 				if (f == null) {
@@ -57,8 +56,8 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 						dropItems(getHost().getTile().getWorld(), getHost().getTile().getPos().offset(getFacing()), empty);
 					}
 					ItemStack s3 = heldItem.copy();
-					s3.stackSize = s3.stackSize - 1;
-					if (s3.stackSize == 0) {
+					s3.setCount(s3.getCount() - 1);
+					if (s3.getCount() == 0) {
 						player.inventory.setInventorySlotContents(
 							player.inventory.currentItem, null);
 					} else {
@@ -71,17 +70,9 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 				if (this.fluid == null) {
 					return true;
 				}
-				IAEFluidStack extract;
-				if (itemStack.getItem() instanceof IFluidContainerItem) {
-					extract = mon.extractItems(AEUtils.createFluidStack(
-						this.fluid, ((IFluidContainerItem) itemStack.getItem())
-							.getCapacity(itemStack)), Actionable.SIMULATE,
-						new MachineSource(this));
-				} else {
-					extract = mon.extractItems(
+				IAEFluidStack extract = mon.extractItems(
 						AEUtils.createFluidStack(this.fluid),
 						Actionable.SIMULATE, new MachineSource(this));
-				}
 				if (extract != null) {
 					mon.extractItems(AEUtils.createFluidStack(new FluidStack(this.fluid,
 							(int) extract.getStackSize())),
@@ -99,8 +90,8 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 						dropItems(getHost().getTile().getWorld(), getHost().getTile().getPos().offset(getFacing()), empty);
 					}
 					ItemStack s3 = heldItem.copy();
-					s3.stackSize = s3.stackSize - 1;
-					if (s3.stackSize == 0) {
+					s3.setCount(s3.getCount() - 1);
+					if (s3.getCount() == 0) {
 						player.inventory.setInventorySlotContents(
 							player.inventory.currentItem, null);
 					} else {

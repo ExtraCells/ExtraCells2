@@ -213,6 +213,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
   @SuppressWarnings(Array("unchecked", "rawtypes"))
   override def getSubItems(creativeTab: CreativeTabs, itemList: NonNullList[ItemStack]) {
+    if (!this.isInCreativeTab(creativeTab)) return
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     val tag = new NBTTagCompound
     tag.setByte("modules", 31)

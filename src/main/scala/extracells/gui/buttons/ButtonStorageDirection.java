@@ -27,27 +27,27 @@ public class ButtonStorageDirection extends GuiButton implements IToolTipProvide
 	}
 
 	@Override
-	public void drawButton(Minecraft minecraftInstance, int x, int y) {
+	public void drawButton(Minecraft minecraftInstance, int x, int y, float particalTicks) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mouseDragged(minecraftInstance, x, y);
 
 		minecraftInstance.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
-		drawTexturedModalRect(this.xPosition, this.yPosition, 240, 240, 16, 16);
+		drawTexturedModalRect(this.x, this.y, 240, 240, 16, 16);
 
 		switch (this.access) {
 			case NO_ACCESS:
-				drawTexturedModalRect(this.xPosition, this.yPosition, 96, 0, 16, 16);
+				drawTexturedModalRect(this.x, this.y, 96, 0, 16, 16);
 				break;
 			case READ:
-				drawTexturedModalRect(this.xPosition, this.yPosition, 16, 144, 16,
+				drawTexturedModalRect(this.x, this.y, 16, 144, 16,
 					16);
 				break;
 			case READ_WRITE:
-				drawTexturedModalRect(this.xPosition, this.yPosition, 32, 144, 16,
+				drawTexturedModalRect(this.x, this.y, 32, 144, 16,
 					16);
 				break;
 			case WRITE:
-				drawTexturedModalRect(this.xPosition, this.yPosition, 0, 144, 16,
+				drawTexturedModalRect(this.x, this.y, 0, 144, 16,
 					16);
 				break;
 			default:

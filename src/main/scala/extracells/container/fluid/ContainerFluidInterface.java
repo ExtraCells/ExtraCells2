@@ -84,11 +84,11 @@ public class ContainerFluidInterface extends Container implements
 		}
 	}
 
-	@Override
-	protected void retrySlotClick(int p_75133_1_, int p_75133_2_,
-		boolean p_75133_3_, EntityPlayer p_75133_4_) {
-
-	}
+//	@Override
+//	protected void retrySlotClick(int p_75133_1_, int p_75133_2_,
+//		boolean p_75133_3_, EntityPlayer p_75133_4_) {
+//
+//	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
@@ -112,7 +112,7 @@ public class ContainerFluidInterface extends Container implements
 				} else if (!mergeItemStack(itemstack1, 0, 9, false)) {
 					return null;
 				}
-				if (itemstack1.stackSize == 0) {
+				if (itemstack1.getCount() == 0) {
 					slot.putStack(null);
 				} else {
 					slot.onSlotChanged();
@@ -130,7 +130,7 @@ public class ContainerFluidInterface extends Container implements
 				return null;
 			}
 
-			if (itemstack1.stackSize == 0) {
+			if (itemstack1.getCount() == 0) {
 				slot.putStack(null);
 			} else {
 				slot.onSlotChanged();

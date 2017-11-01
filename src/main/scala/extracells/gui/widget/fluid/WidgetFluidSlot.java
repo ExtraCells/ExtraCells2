@@ -117,7 +117,7 @@ public class WidgetFluidSlot extends AbstractWidget {
 
 	@Override
 	public void handleMouseClick(int mouseX, int mouseY, int mouseButton) {
-		EntityPlayer player = manager.mc.thePlayer;
+		EntityPlayer player = manager.mc.player;
 		ItemStack stack = player.inventory.getItemStack();
 		handleContainer(stack);
 	}

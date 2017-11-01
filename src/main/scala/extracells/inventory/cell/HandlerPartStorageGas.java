@@ -1,5 +1,9 @@
 package extracells.inventory.cell;
 
+import appeng.api.networking.security.IActionSource;
+import appeng.api.storage.IStorageChannel;
+import extracells.util.MachineSource;
+import extracells.util.StorageChannels;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
@@ -12,11 +16,8 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkStorageEvent;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEInventory;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
@@ -56,7 +57,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 	}
 
 	@Override
-	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src) {
+	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, IActionSource src) {
 		if (!this.node.isActive() || !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE)) {
 			return null;
 		}
@@ -85,7 +86,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 			if (inventory == null) {
 				return out;
 			}
-			IItemList<IAEFluidStack> list = inventory.getAvailableItems(AEApi.instance().storage().createFluidList());
+			IItemList<IAEFluidStack> list = inventory.getAvailableItems(StorageChannels.FLUID().createList());
 			for (IAEFluidStack stack : list) {
 				out.add(stack);
 			}
@@ -94,8 +95,8 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 	}
 
 	@Override
-	public StorageChannel getChannel() {
-		return StorageChannel.FLUIDS;
+	public IStorageChannel getChannel() {
+		return StorageChannels.FLUID();
 	}
 
 	@Override
@@ -109,7 +110,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 	}
 
 	@Override
-	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
+	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, IActionSource src) {
 		if (!(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE)) {
 			return input;
 		}
@@ -169,7 +170,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 
 	@Override
 	public void postChange(IBaseMonitor<IAEFluidStack> monitor,
-		Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+		Iterable<IAEFluidStack> change, IActionSource actionSource) {
 		IGridNode gridNode = this.node.getGridNode();
 		if (gridNode != null) {
 			IGrid grid = gridNode.getGrid();
@@ -177,7 +178,7 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 				grid.postEvent(new MENetworkCellArrayUpdate());
 				gridNode.getGrid().postEvent(
 					new MENetworkStorageEvent(this.node.getGridBlock()
-						.getFluidMonitor(), StorageChannel.FLUIDS));
+						.getFluidMonitor(), StorageChannels.FLUID()));
 			}
 			this.node.getHost().markForUpdate();
 		}

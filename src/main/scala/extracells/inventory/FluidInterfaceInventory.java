@@ -23,6 +23,9 @@ public class FluidInterfaceInventory implements IInventory {
 
 	public FluidInterfaceInventory(PartFluidInterface part) {
 		this.part = part;
+		for(int i = 0; i < inv.length; i++){
+			inv[i] = ItemStack.EMPTY;
+		}
 	}
 
 	@Override
@@ -33,11 +36,11 @@ public class FluidInterfaceInventory implements IInventory {
 	public ItemStack decrStackSize(int slot, int amt) {
 		ItemStack stack = getStackInSlot(slot);
 		if (stack != null) {
-			if (stack.stackSize <= amt) {
+			if (stack.getCount() <= amt) {
 				setInventorySlotContents(slot, null);
 			} else {
 				stack = stack.splitStack(amt);
-				if (stack.stackSize == 0) {
+				if (stack.getCount() == 0) {
 					setInventorySlotContents(slot, null);
 				}
 			}
@@ -71,6 +74,15 @@ public class FluidInterfaceInventory implements IInventory {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		for (int i = 0; i < inv.length; i++){
+			if(inv[i] != null && !inv[i].isEmpty())
+				return true;
+		}
+		return false;
+	}
+
+	@Override
 	public ItemStack getStackInSlot(int slot) {
 		return this.inv[slot];
 	}
@@ -101,7 +113,7 @@ public class FluidInterfaceInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return true;
 	}
 
@@ -120,7 +132,7 @@ public class FluidInterfaceInventory implements IInventory {
 			NBTTagCompound tag = tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
 			if (slot >= 0 && slot < this.inv.length) {
-				this.inv[slot] = ItemStack.loadItemStackFromNBT(tag);
+				this.inv[slot] = new ItemStack(tag);
 			}
 		}
 	}
@@ -128,8 +140,8 @@ public class FluidInterfaceInventory implements IInventory {
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
 		this.inv[slot] = stack;
-		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-			stack.stackSize = getInventoryStackLimit();
+		if (stack != null && stack.getCount() > getInventoryStackLimit()) {
+			stack.setCount(getInventoryStackLimit());
 		}
 		part.markForUpdate();
 	}

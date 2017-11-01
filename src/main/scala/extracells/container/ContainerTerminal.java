@@ -2,6 +2,8 @@ package extracells.container;
 
 import javax.annotation.Nullable;
 
+import appeng.api.networking.security.IActionSource;
+import extracells.util.StorageChannels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -40,8 +42,8 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 		this.terminal = terminal;
 		this.player = player;
 		this.type = type;
-		this.fluidStackList = AEApi.instance().storage().createFluidList();
-		if (!this.player.worldObj.isRemote) {
+		this.fluidStackList = StorageChannels.FLUID().createList();
+		if (!this.player.world.isRemote) {
 			this.monitor = this.terminal.getGridBlock().getFluidMonitor();
 			if (this.monitor != null) {
 				this.monitor.addListener(this, null);
@@ -107,7 +109,7 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 	@Override
 	public void onContainerClosed(EntityPlayer entityPlayer) {
 		super.onContainerClosed(entityPlayer);
-		if (!entityPlayer.worldObj.isRemote) {
+		if (!entityPlayer.world.isRemote) {
 			if (this.monitor != null) {
 				this.monitor.removeListener(this);
 			}
@@ -122,7 +124,7 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 
 	@Override
 	public void postChange(IBaseMonitor<IAEFluidStack> monitor,
-		Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+		Iterable<IAEFluidStack> change, IActionSource actionSource) {
 		this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor)
 			.getStorageList();
 		NetworkUtil.sendToPlayer(new PacketTerminalUpdateFluid(fluidStackList), player);
@@ -184,7 +186,7 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 				} else if (!mergeItemStack(itemstack1, 0, 1, false)) {
 					return null;
 				}
-				if (itemstack1.stackSize == 0) {
+				if (itemstack1.getCount() == 0) {
 					slot.putStack(null);
 				} else {
 					slot.onSlotChanged();

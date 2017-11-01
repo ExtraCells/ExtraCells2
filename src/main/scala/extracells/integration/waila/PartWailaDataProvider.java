@@ -100,8 +100,8 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 		}
 		Vec3d look = player.getLook(1.0F);
 		double reach = player.interactionManager.getBlockReachDistance();
-		Vec3d endVec = head.addVector(look.xCoord * reach, look.yCoord * reach,
-			look.zCoord * reach);
+		Vec3d endVec = head.addVector(look.x * reach, look.y * reach,
+			look.z * reach);
 		return blockState.collisionRayTrace(world, pos, head, endVec);
 	}
 }

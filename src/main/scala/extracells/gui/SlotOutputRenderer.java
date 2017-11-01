@@ -29,7 +29,7 @@ public class SlotOutputRenderer implements ISlotRenderer {
 		GlStateManager.enableBlend();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
 		gui.mc.getTextureManager().bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
-		gui.drawTexturedModalRect(slot.xDisplayPosition, slot.yDisplayPosition, 240, 128, 16, 16);
+		gui.drawTexturedModalRect(slot.xPos, slot.yPos, 240, 128, 16, 16);
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
 	}
@@ -41,8 +41,8 @@ public class SlotOutputRenderer implements ISlotRenderer {
 			return;
 		}
 		ICraftingPatternItem pattern = (ICraftingPatternItem) stack.getItem();
-		ItemStack output = pattern.getPatternForItem(stack, Minecraft.getMinecraft().theWorld)
-			.getCondensedOutputs()[0].getItemStack().copy();
+		ItemStack output = pattern.getPatternForItem(stack, Minecraft.getMinecraft().world)
+			.getCondensedOutputs()[0].createItemStack().copy();
 
 		gui.setZLevel(160.0F);
 		GlStateManager.disableLighting();
@@ -52,9 +52,9 @@ public class SlotOutputRenderer implements ISlotRenderer {
 		GlStateManager.disableLighting();
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(gui.textureFile);
-		gui.drawTexturedModalRect(slot.xDisplayPosition,
-			slot.yDisplayPosition, slot.xDisplayPosition,
-			slot.yDisplayPosition, 18, 18);
+		gui.drawTexturedModalRect(slot.xPos,
+			slot.yPos, slot.xPos,
+			slot.yPos, 18, 18);
 		GlStateManager.enableLighting();
 
 		GlStateManager.translate(0.0F, 0.0F, 32.0F);
@@ -66,16 +66,16 @@ public class SlotOutputRenderer implements ISlotRenderer {
 			font = output.getItem().getFontRenderer(output);
 		}
 		if (font == null) {
-			font = Minecraft.getMinecraft().fontRendererObj;
+			font = Minecraft.getMinecraft().fontRenderer;
 		}
 		GlStateManager.enableDepth();
-		itemRender.renderItemAndEffectIntoGUI(output, slot.xDisplayPosition, slot.yDisplayPosition);
-		itemRender.renderItemOverlayIntoGUI(font, output, slot.xDisplayPosition, slot.yDisplayPosition, null);
+		itemRender.renderItemAndEffectIntoGUI(output, slot.xPos, slot.yPos);
+		itemRender.renderItemOverlayIntoGUI(font, output, slot.xPos, slot.yPos, null);
 		gui.setZLevel(0.0F);
 		itemRender.zLevel = 0.0F;
 
-		int i = slot.xDisplayPosition;
-		int j = slot.yDisplayPosition;
+		int i = slot.xPos;
+		int j = slot.yPos;
 		if (GuiUtil.isPointInRegion(gui.getGuiLeft(), gui.getGuiTop(), i, j, 16, 16, mouseX, mouseY)) {
 			GlStateManager.disableLighting();
 			GlStateManager.disableDepth();

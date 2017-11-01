@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -34,9 +35,11 @@ public class ItemOCUpgrade extends ItemECBase /*implements UpgradeItemAEBase*/ {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
+		if (!this.isInCreativeTab(tab))
+			return;
 		for (int i = 0; i < 3; i++) {
-			subItems.add(new ItemStack(item, 1, i));
+			subItems.add(new ItemStack(this, 1, i));
 		}
 	}
 

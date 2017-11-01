@@ -1,5 +1,6 @@
 package extracells.crafting;
 
+import extracells.util.StorageChannels;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -36,11 +37,7 @@ public class CraftingPattern2 extends CraftingPattern {
 		IAEItemStack[] s = super.getCondensedInputs();
 		if (s.length == 0) {
 			s = new IAEItemStack[1];
-			s[0] = AEApi
-				.instance()
-				.storage()
-				.createItemStack(
-					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+			s[0] = StorageChannels.ITEM().createStack(new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 			this.needExtra = true;
 		}
 		return s;
@@ -55,11 +52,7 @@ public class CraftingPattern2 extends CraftingPattern {
 			for (int i = 0; i < s.length; i++) {
 				s2[i] = s[i];
 			}
-			s2[s.length] = AEApi
-				.instance()
-				.storage()
-				.createItemStack(
-					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+			s2[s.length] = StorageChannels.ITEM().createStack(new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 			return s2;
 		}
 		return s;
@@ -70,22 +63,14 @@ public class CraftingPattern2 extends CraftingPattern {
 		IAEItemStack[] in = super.getInputs();
 		if (in.length == 0) {
 			in = new IAEItemStack[1];
-			in[0] = AEApi
-				.instance()
-				.storage()
-				.createItemStack(
-					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+			in[0] = StorageChannels.ITEM().createStack(new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 		} else {
 			for (IAEItemStack s : in) {
 				if (s != null) {
 					return in;
 				}
 			}
-			in[0] = AEApi
-				.instance()
-				.storage()
-				.createItemStack(
-					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
+			in[0] = StorageChannels.ITEM().createStack(new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 		}
 		return in;
 	}
@@ -99,18 +84,12 @@ public class CraftingPattern2 extends CraftingPattern {
 		}
 		if (out.length == 0) {
 			out = new IAEItemStack[1];
-			out[0] = AEApi
-				.instance()
-				.storage()
-				.createItemStack(
+			out[0] = StorageChannels.ITEM().createStack(
 					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 		} else {
 			for (int i = 0; i < out.length; i++) {
 				if (out[i] == null) {
-					out[i] = AEApi
-						.instance()
-						.storage()
-						.createItemStack(
+					out[i] = StorageChannels.ITEM().createStack(
 							new ItemStack(ItemEnum.FLUIDPATTERN
 								.getItem()));
 					return out;
@@ -120,10 +99,7 @@ public class CraftingPattern2 extends CraftingPattern {
 			for (int i = 0; i < out.length; i++) {
 				s2[i] = out[i];
 			}
-			s2[out.length] = AEApi
-				.instance()
-				.storage()
-				.createItemStack(
+			s2[out.length] = StorageChannels.ITEM().createStack(
 					new ItemStack(ItemEnum.FLUIDPATTERN.getItem()));
 			return s2;
 		}

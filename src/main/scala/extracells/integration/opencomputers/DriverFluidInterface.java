@@ -1,5 +1,5 @@
 package extracells.integration.opencomputers;
-
+/*
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -170,3 +170,4 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 		return null;
 	}
 }
+*/

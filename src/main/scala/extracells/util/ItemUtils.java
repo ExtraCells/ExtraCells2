@@ -12,8 +12,8 @@ public class ItemUtils {
 		}
 		ItemStack s1 = stack1.copy();
 		ItemStack s2 = stack2.copy();
-		s1.stackSize = 1;
-		s2.stackSize = 1;
+		s1.setCount(1);
+		s2.setCount(1);
 		return ItemStack.areItemStacksEqual(s1, s2);
 	}
 

@@ -6,16 +6,12 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.MinecraftForge;
 
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import extracells.models.ModelManager;
 import extracells.models.PartModels;
 import extracells.models.blocks.ModelCertusTank;
-import extracells.models.blocks.ModelWalrus;
 import extracells.network.PacketHandler;
-import extracells.render.tileentity.TileEntityRendererWalrus;
-import extracells.tileentity.TileEntityWalrus;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {

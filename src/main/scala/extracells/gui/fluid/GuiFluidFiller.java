@@ -20,6 +20,6 @@ public class GuiFluidFiller extends GuiBase<ContainerFluidFiller> {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRendererObj.drawString(I18n.translateToLocal("extracells.block.fluidfiller.name").replace("ME ", ""), 5, 5, 0x000000);
+		this.fontRenderer.drawString(I18n.translateToLocal("extracells.block.fluidfiller.name").replace("ME ", ""), 5, 5, 0x000000);
 	}
 }

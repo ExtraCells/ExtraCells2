@@ -1,5 +1,5 @@
 package extracells.integration.opencomputers;
-
+/*
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -151,7 +151,7 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 				context.pause(0.25);
 			return new Object[]{didSomething};
 		}*/
-
+/*
 		@Override
 		public String preferredName() {
 			return "me_importbus";
@@ -165,3 +165,4 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 	}
 
 }
+*/

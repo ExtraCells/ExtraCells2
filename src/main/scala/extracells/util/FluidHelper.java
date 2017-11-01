@@ -3,14 +3,11 @@ package extracells.util;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
@@ -107,7 +104,7 @@ public class FluidHelper {
 
 	public static ItemStack getEmptyContainer(ItemStack container) {
 		ItemStack empty = container.copy();
-		empty.stackSize = 1;
+		empty.setCount(1);
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(empty);
 		if (fluidHandler == null) {
 			return null;

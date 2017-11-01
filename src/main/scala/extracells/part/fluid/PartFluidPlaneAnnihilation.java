@@ -1,5 +1,6 @@
 package extracells.part.fluid;
 
+import extracells.util.MachineSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,6 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.events.MENetworkChannelChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;

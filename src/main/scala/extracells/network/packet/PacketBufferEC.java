@@ -3,6 +3,7 @@ package extracells.network.packet;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
+import extracells.util.StorageChannels;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -30,21 +31,21 @@ public class PacketBufferEC extends PacketBuffer {
 	}
 
 	public String readString() {
-		return super.readStringFromBuffer(1024);
+		return super.readString(1024);
 	}
 
 	public void writeFluidStack(@Nullable FluidStack fluidStack) {
 		if (fluidStack == null) {
-			writeVarIntToBuffer(-1);
+			writeInt(-1);
 		} else {
-			writeVarIntToBuffer(fluidStack.amount);
+			writeInt(fluidStack.amount);
 			writeFluid(fluidStack.getFluid());
 		}
 	}
 
 	@Nullable
 	public FluidStack readFluidStack() {
-		int amount = readVarIntFromBuffer();
+		int amount = readInt();
 		if (amount > 0) {
 			Fluid fluid = readFluid();
 			if (fluid == null) {
@@ -127,14 +128,13 @@ public class PacketBufferEC extends PacketBuffer {
 	}
 
 	public IItemList<IAEFluidStack> readAEFluidStacks() throws IOException {
-		IStorageHelper storage = AEApi.instance().storage();
-		IItemList<IAEFluidStack> fluidStackList = storage.createFluidList();
+		IItemList<IAEFluidStack> fluidStackList = StorageChannels.FLUID().createList();
 		while (readableBytes() > 0) {
 			FluidStack fluidStack = readFluidStack();
 			if (fluidStack == null) {
 				continue;
 			}
-			fluidStackList.add(storage.createFluidStack(fluidStack));
+			fluidStackList.add(StorageChannels.FLUID().createStack(fluidStack));
 		}
 		return fluidStackList;
 	}

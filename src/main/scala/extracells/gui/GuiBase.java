@@ -133,7 +133,7 @@ public class GuiBase<C extends Container> extends GuiContainer {
 					Minecraft mc = Minecraft.getMinecraft();
 					GlStateManager.pushMatrix();
 					ScaledResolution scaledresolution = new ScaledResolution(mc);
-					GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), -1, mc.fontRendererObj);
+					GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), -1, mc.fontRenderer);
 					GlStateManager.popMatrix();
 				}
 			}

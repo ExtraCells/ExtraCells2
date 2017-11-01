@@ -3,6 +3,7 @@ package extracells.item
 import appeng.api.config.{Actionable, PowerUnits}
 import appeng.api.implementations.items.IAEItemPowerStorage
 import cofh.redstoneflux.api.IEnergyContainerItem
+import net.minecraft.creativetab.CreativeTabs
 //import cofh.api.energy.IEnergyContainerItem
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
@@ -86,5 +87,7 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem 
     return itemStack.getTagCompound
   }
 
+  //Workaround for WirelessTermBase
+  override def isInCreativeTab(targetTab: CreativeTabs): Boolean = super.isInCreativeTab(targetTab)
 
 }

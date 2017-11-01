@@ -311,7 +311,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	}
 
 	public boolean isValid() {
-		if (this.hostTile != null && this.hostTile.hasWorldObj()) {
+		if (this.hostTile != null && this.hostTile.hasWorld()) {
 			DimensionalCoord loc = this.getLocation();
 			TileEntity host = this.hostTile.getWorld().getTileEntity(loc.getPos());
 			if (host instanceof IPartHost) {

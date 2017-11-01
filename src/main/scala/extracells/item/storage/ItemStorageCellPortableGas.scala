@@ -98,6 +98,7 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
 
 
   override def getSubItems(creativeTab: CreativeTabs, itemList: NonNullList[ItemStack]) {
+    if (!this.isInCreativeTab(creativeTab)) return
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     itemList2.add(new ItemStack(this))
     val itemStack: ItemStack = new ItemStack(this)

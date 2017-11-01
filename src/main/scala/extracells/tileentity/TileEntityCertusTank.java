@@ -50,7 +50,7 @@ public class TileEntityCertusTank extends TileBase {
 	}
 
 	public void compareAndUpdate() {
-		if (!this.worldObj.isRemote) {
+		if (!this.world.isRemote) {
 			FluidStack current = this.tank.getFluid();
 
 			if (current != null) {
@@ -83,16 +83,16 @@ public class TileEntityCertusTank extends TileBase {
 		boolean findMainTank) {
 		if (findMainTank) {
 			int yOff = 0;
-			TileEntity offTE = this.worldObj.getTileEntity(pos);
+			TileEntity offTE = this.world.getTileEntity(pos);
 			TileEntityCertusTank mainTank = this;
 			while (true) {
 				if (offTE != null && offTE instanceof TileEntityCertusTank) {
 					Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
 					if (offFluid != null && offFluid == fluid.getFluid()) {
-						mainTank = (TileEntityCertusTank) this.worldObj
+						mainTank = (TileEntityCertusTank) this.world
 							.getTileEntity(pos.up(yOff));
 						yOff++;
-						offTE = this.worldObj.getTileEntity(pos.up(yOff));
+						offTE = this.world.getTileEntity(pos.up(yOff));
 						continue;
 					}
 				}
@@ -107,7 +107,7 @@ public class TileEntityCertusTank extends TileBase {
 		compareAndUpdate();
 
 		if (drained == null || drained.amount < fluid.amount) {
-			TileEntity offTE = this.worldObj.getTileEntity(pos.down());
+			TileEntity offTE = this.world.getTileEntity(pos.down());
 			if (offTE instanceof TileEntityCertusTank) {
 				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
 				FluidStack externallyDrained = tank.drain(new FluidStack(
@@ -131,16 +131,16 @@ public class TileEntityCertusTank extends TileBase {
 	public int fill(FluidStack fluid, boolean doFill, boolean findMainTank) {
 		if (findMainTank) {
 			int yOff = 0;
-			TileEntity offTE = this.worldObj.getTileEntity(pos);
+			TileEntity offTE = this.world.getTileEntity(pos);
 			TileEntityCertusTank mainTank = this;
 			while (true) {
 				if (offTE != null && offTE instanceof TileEntityCertusTank) {
 					Fluid offFluid = ((TileEntityCertusTank) offTE).getFluid();
 					if (offFluid == null || offFluid == fluid.getFluid()) {
-						mainTank = (TileEntityCertusTank) this.worldObj
+						mainTank = (TileEntityCertusTank) this.world
 							.getTileEntity(pos.down(yOff));
 						yOff++;
-						offTE = this.worldObj.getTileEntity(pos.down(yOff));
+						offTE = this.world.getTileEntity(pos.down(yOff));
 						continue;
 					}
 				}
@@ -154,7 +154,7 @@ public class TileEntityCertusTank extends TileBase {
 		compareAndUpdate();
 
 		if (filled < fluid.amount) {
-			TileEntity offTE = this.worldObj.getTileEntity(pos.up());
+			TileEntity offTE = this.world.getTileEntity(pos.up());
 			if (offTE instanceof TileEntityCertusTank) {
 				TileEntityCertusTank tank = (TileEntityCertusTank) offTE;
 				return filled
@@ -195,16 +195,16 @@ public class TileEntityCertusTank extends TileBase {
 		Fluid fluid = null;
 
 		int yOff = 0;
-		TileEntity offTE = this.worldObj.getTileEntity(pos.offset(EnumFacing.DOWN, yOff));
+		TileEntity offTE = this.world.getTileEntity(pos.offset(EnumFacing.DOWN, yOff));
 		TileEntityCertusTank mainTank = this;
 		while (true) {
 			if (offTE != null && offTE instanceof TileEntityCertusTank) {
 				if (((TileEntityCertusTank) offTE).getFluid() == null
 					|| ((TileEntityCertusTank) offTE).getFluid() == getFluid()) {
-					mainTank = (TileEntityCertusTank) this.worldObj
+					mainTank = (TileEntityCertusTank) this.world
 						.getTileEntity(pos.offset(EnumFacing.DOWN, yOff));
 					yOff++;
-					offTE = this.worldObj.getTileEntity(pos.offset(EnumFacing.DOWN, yOff));
+					offTE = this.world.getTileEntity(pos.offset(EnumFacing.DOWN, yOff));
 					continue;
 				}
 			}
@@ -212,7 +212,7 @@ public class TileEntityCertusTank extends TileBase {
 		}
 
 		yOff = 0;
-		offTE = this.worldObj.getTileEntity(pos.offset(EnumFacing.UP, yOff));
+		offTE = this.world.getTileEntity(pos.offset(EnumFacing.UP, yOff));
 		while (true) {
 			if (offTE != null && offTE instanceof TileEntityCertusTank) {
 				mainTank = (TileEntityCertusTank) offTE;
@@ -229,7 +229,7 @@ public class TileEntityCertusTank extends TileBase {
 						}
 					}
 					yOff++;
-					offTE = this.worldObj.getTileEntity(pos.offset(EnumFacing.UP, yOff));
+					offTE = this.world.getTileEntity(pos.offset(EnumFacing.UP, yOff));
 					continue;
 				}
 			}
@@ -242,7 +242,7 @@ public class TileEntityCertusTank extends TileBase {
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
-		worldObj.markBlockRangeForRenderUpdate(pos, pos);
+		world.markBlockRangeForRenderUpdate(pos, pos);
 	}
 
 	@Override

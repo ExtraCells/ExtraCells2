@@ -62,7 +62,7 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRendererObj.drawString(I18n.translateToLocal(this.guiName).replace("ME ", ""), 5, 6, 0x000000);
+		this.fontRenderer.drawString(I18n.translateToLocal(this.guiName).replace("ME ", ""), 5, 6, 0x000000);
 		drawWidgets(mouseX, mouseY);
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
@@ -77,10 +77,10 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 				}
 			}
 
-			this.fontRendererObj.drawString(
+			this.fontRenderer.drawString(
 				I18n.translateToLocal("extracells.tooltip.amount")
 					+ ": " + amountToText, 45, 91, 0x000000);
-			this.fontRendererObj.drawString(
+			this.fontRenderer.drawString(
 				I18n.translateToLocal("extracells.tooltip.fluid")
 					+ ": "
 					+ this.currentFluid.getFluid().getLocalizedName(
@@ -161,7 +161,7 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
-		this.searchbar = new GuiTextField(0, this.fontRendererObj,
+		this.searchbar = new GuiTextField(0, this.fontRenderer,
 			this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 
 			private int xPos = 0;
@@ -170,12 +170,13 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 			private int height = 0;
 
 			@Override
-			public void mouseClicked(int x, int y, int mouseBtn) {
+			public boolean mouseClicked(int x, int y, int mouseBtn) {
 				boolean flag = x >= this.xPos && x < this.xPos + this.width
 					&& y >= this.yPos && y < this.yPos + this.height;
 				if (flag && mouseBtn == 3) {
 					setText("");
 				}
+				return flag;
 			}
 		};
 		this.searchbar.setEnableBackgroundDrawing(false);
@@ -186,7 +187,7 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 	@Override
 	protected void keyTyped(char key, int keyID) {
 		if (keyID == Keyboard.KEY_ESCAPE) {
-			this.mc.thePlayer.closeScreen();
+			this.mc.player.closeScreen();
 		}
 		this.searchbar.textboxKeyTyped(key, keyID);
 		updateFluids();

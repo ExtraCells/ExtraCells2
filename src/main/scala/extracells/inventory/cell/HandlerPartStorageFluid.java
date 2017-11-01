@@ -62,7 +62,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			IMEMonitor<IAEFluidStack> fluidInventory = monitor.getInventory(StorageChannels.FLUID());
 			return fluidInventory != null && fluidInventory.canAccept(input);
 		} else if (externalHandler != null) {
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(new MachineSource(this.node)).getFluidInventory();
+			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(new MachineSource(this.node)).getInventory(StorageChannels.FLUID());
 			return inventory != null;
 		}
 		IFluidTankProperties[] infoArray = this.tank.getTankProperties();

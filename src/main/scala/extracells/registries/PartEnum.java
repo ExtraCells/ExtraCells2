@@ -38,6 +38,8 @@ import extracells.part.gas.PartGasStorage;
 import extracells.part.gas.PartGasStorageMonitor;
 import extracells.part.gas.PartGasTerminal;
 
+import javax.annotation.Nullable;
+
 public enum PartEnum {
 	FLUIDEXPORT("fluid.export", PartFluidExport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
 	FLUIDIMPORT("fluid.import", PartFluidImport.class, "fluid.IO", generatePair(Upgrades.CAPACITY, 2), generatePair(Upgrades.REDSTONE, 1), generatePair(Upgrades.SPEED, 2)),
@@ -76,11 +78,20 @@ public enum PartEnum {
 		return -1;
 	}
 
+	public static ItemStack getPartByName(String name){
+		for(int i = 0; i < values().length; i++){
+			if (values()[i].name == name)
+				return new ItemStack(ItemEnum.PARTITEM.getItem(), 1, i);
+		}
+		return null;
+	}
+
 	public static int getPartID(PartECBase partECBase) {
 		return getPartID(partECBase.getClass());
 	}
 
 	private String unlocalizedName;
+	private String name;
 	private Class<? extends PartECBase> partClass;
 	private String groupName;
 	@SideOnly(Side.CLIENT)
@@ -101,6 +112,7 @@ public enum PartEnum {
 
 	PartEnum(String name, Class<? extends PartECBase> partClass, String groupName, Integration.Mods mod) {
 		this.unlocalizedName = "extracells.part." + name;
+		this.name = name;
 		this.partClass = partClass;
 		this.groupName = groupName == null || groupName.isEmpty() ? null : "extracells." + groupName;
 		this.mod = mod;

@@ -64,7 +64,7 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRendererObj.drawString(I18n.translateToLocal("extracells.part." + type.getName() + ".terminal.name").replace("ME ", ""), 9, 6, 0x000000);
+		this.fontRenderer.drawString(I18n.translateToLocal("extracells.part." + type.getName() + ".terminal.name").replace("ME ", ""), 9, 6, 0x000000);
 		drawWidgets(mouseX, mouseY);
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
@@ -79,8 +79,8 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 				}
 			}
 
-			this.fontRendererObj.drawString(I18n.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
-			this.fontRendererObj.drawString(I18n.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
+			this.fontRenderer.drawString(I18n.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
+			this.fontRenderer.drawString(I18n.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
 		}
 	}
 
@@ -160,7 +160,7 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
-		this.searchbar = new GuiTextField(0, this.fontRendererObj, this.guiLeft + 81, this.guiTop + 6, 88, 10) {
+		this.searchbar = new GuiTextField(0, this.fontRenderer, this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 
 			private int xPos = 0;
 			private int yPos = 0;
@@ -168,11 +168,12 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 			private int height = 0;
 
 			@Override
-			public void mouseClicked(int x, int y, int mouseBtn) {
+			public boolean mouseClicked(int x, int y, int mouseBtn) {
 				boolean flag = x >= this.xPos && x < this.xPos + this.width && y >= this.yPos && y < this.yPos + this.height;
 				if (flag && mouseBtn == 3) {
 					setText("");
 				}
+				return flag;
 			}
 		};
 		this.searchbar.setEnableBackgroundDrawing(false);
@@ -183,7 +184,7 @@ public class GuiTerminal extends GuiContainer implements IFluidSelectorGui {
 	@Override
 	protected void keyTyped(char key, int keyID) {
 		if (keyID == Keyboard.KEY_ESCAPE) {
-			this.mc.thePlayer.closeScreen();
+			this.mc.player.closeScreen();
 		}
 		this.searchbar.textboxKeyTyped(key, keyID);
 		updateFluids();

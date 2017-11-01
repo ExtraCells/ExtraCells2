@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 
@@ -119,7 +119,7 @@ public class ModelCertusTank extends BlankModel {
 		@Override
 		public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
 			FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-			return new IPerspectiveAwareModel.MapWrapper(new ItemModel(fluidStack), ModelManager.getDefaultBlockState());
+			return new PerspectiveMapWrapper(new ItemModel(fluidStack), ModelManager.getDefaultBlockState());
 		}
 	}
 }

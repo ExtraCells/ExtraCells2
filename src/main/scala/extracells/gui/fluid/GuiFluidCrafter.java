@@ -36,7 +36,7 @@ public class GuiFluidCrafter extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		this.fontRendererObj.drawString(BlockEnum.FLUIDCRAFTER.getStatName(),
+		this.fontRenderer.drawString(BlockEnum.FLUIDCRAFTER.getStatName(),
 			5, 5, 0x000000);
 	}
 
@@ -52,8 +52,8 @@ public class GuiFluidCrafter extends GuiContainer {
 			this.mc.getTextureManager().bindTexture(
 				new ResourceLocation("appliedenergistics2",
 					"textures/guis/states.png"));
-			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition,
-				this.guiTop + slot.yDisplayPosition, 240, 128, 16, 16);
+			this.drawTexturedModalRect(this.guiLeft + slot.xPos,
+				this.guiTop + slot.yPos, 240, 128, 16, 16);
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
 		}

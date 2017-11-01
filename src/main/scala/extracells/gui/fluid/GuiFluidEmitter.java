@@ -73,7 +73,7 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRendererObj.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
+		this.fontRenderer.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 		int posX = (this.width - xSize) / 2;
 		int posY = (this.height - ySize) / 2;
 
-		this.amountField = new DigitTextField(0, this.fontRendererObj, posX + 10, posY + 40, 59, 10);
+		this.amountField = new DigitTextField(0, this.fontRenderer, posX + 10, posY + 40, 59, 10);
 		this.amountField.setFocused(true);
 		this.amountField.setEnableBackgroundDrawing(false);
 		this.amountField.setTextColor(0xFFFFFF);

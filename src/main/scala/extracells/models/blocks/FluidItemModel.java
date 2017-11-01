@@ -1,13 +1,13 @@
 package extracells.models.blocks;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -81,7 +81,7 @@ public class FluidItemModel implements IModel {
 			return new FluidItemBakedModel(ImmutableList.of());
 		}
 
-		return new FluidItemBakedModel(ItemLayerModel.getQuadsForSprite(0, sprite, format, Optional.absent()));
+		return new FluidItemBakedModel(ItemLayerModel.getQuadsForSprite(0, sprite, format, Optional.empty()));
 	}
 
 	@Override

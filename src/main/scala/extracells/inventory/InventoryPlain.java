@@ -33,13 +33,16 @@ public class InventoryPlain implements IInventory, IItemHandler {
 		this.customName = customName;
 		this.stackLimit = stackLimit;
 		this.listener = listener;
+		for(int i = 0; i < slots.length; i++){
+			slots[i] = ItemStack.EMPTY;
+		}
 	}
 
 	@Override
 	public ItemStack decrStackSize(int slotId, int amount) {
 		ItemStack itemStack = ItemStackHelper.getAndSplit(Arrays.asList(slots), slotId, amount);
 
-		if (itemStack != null) {
+		if (itemStack != null && !itemStack.isEmpty()) {
 			this.markDirty();
 		}
 
@@ -79,7 +82,9 @@ public class InventoryPlain implements IInventory, IItemHandler {
 	@Override
 	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 		if (stack == null)
-			return null;
+			return ItemStack.EMPTY;
+		if (!isItemValidForSlot(slot, stack))
+			return ItemStack.EMPTY;
 		if (isSlotEmpty(slot))
 		{
 			if (!simulate)
@@ -94,7 +99,7 @@ public class InventoryPlain implements IInventory, IItemHandler {
 					oldStack.setCount(oldStack.getCount() + newStack.getCount());
 				return newStack;
 			}else
-				return null;
+				return ItemStack.EMPTY;
 		}
 	}
 
@@ -106,11 +111,11 @@ public class InventoryPlain implements IInventory, IItemHandler {
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		if (isSlotEmpty(slot))
-			return null;
+			return ItemStack.EMPTY;
 		ItemStack stack = slots[slot].copy();
 		if(amount >= stack.getCount()){
 			if(!simulate)
-				slots[slot] = null;
+				slots[slot] = ItemStack.EMPTY;
 			return stack;
 		}else{
 			stack.setCount(amount);
@@ -156,7 +161,7 @@ public class InventoryPlain implements IInventory, IItemHandler {
 	public ItemStack incrStackSize(int slotId, int amount) {
 		ItemStack slot = this.slots[slotId];
 		if (ItemStackUtils.isEmpty(slot)) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		int stackLimit = getInventoryStackLimit();
 		if (stackLimit > slot.getMaxStackSize()) {
@@ -198,7 +203,7 @@ public class InventoryPlain implements IInventory, IItemHandler {
 	public void readFromNBT(NBTTagList nbtList) {
 		if (nbtList == null) {
 			for (int i = 0; i < slots.length; i++) {
-				slots[i] = null;
+				slots[i] = ItemStack.EMPTY;
 			}
 			return;
 		}
@@ -254,7 +259,7 @@ public class InventoryPlain implements IInventory, IItemHandler {
 	@Override
 	public void clear() {
 		for (int i = 0; i < slots.length; i++) {
-			slots[i] = null;
+			slots[i] = ItemStack.EMPTY;
 		}
 	}
 }

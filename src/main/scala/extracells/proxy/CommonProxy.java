@@ -9,8 +9,12 @@ import java.io.InputStreamReader;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -31,8 +35,13 @@ import extracells.tileentity.TileEntityVibrationChamberFluid;
 import extracells.tileentity.TileEntityWalrus;
 import extracells.util.FuelBurnTime;
 import extracells.util.recipe.RecipeUniversalTerminal;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class CommonProxy {
+
+	public CommonProxy(){
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 
 	private class ExternalRecipeLoader implements IRecipeLoader {
 
@@ -58,10 +67,12 @@ public class CommonProxy {
 		if (externalRecipe.exists()) {
 			recipeHandler.parseRecipes(new ExternalRecipeLoader(), externalRecipe.getPath());
 		} else {
-			recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
+			//recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
 		}
 		recipeHandler.injectRecipes();
-		GameRegistry.addRecipe(RecipeUniversalTerminal.THIS());
+
+
+		//GameRegistry.register(RecipeUniversalTerminal.THIS());
 	}
 
 	public void registerBlocks() {
@@ -69,6 +80,12 @@ public class CommonProxy {
 			registerBlock(current.getBlock());
 			registerItem(current.getItem());
 		}
+	}
+
+	@SubscribeEvent
+	public void onRegister(RegistryEvent.Register<IRecipe> event){
+		RecipeUniversalTerminal.setRegistryName("UniversalCraftingTerminalRecipe");
+		event.getRegistry().register(RecipeUniversalTerminal.THIS());
 	}
 
 	public void registerItems() {

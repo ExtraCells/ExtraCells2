@@ -1,5 +1,5 @@
 package extracells.integration.opencomputers;
-
+/*
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -54,3 +54,4 @@ public abstract class DriverBase<P extends IPart> implements SidedBlock, Environ
 		return null;
 	}
 }
+*/

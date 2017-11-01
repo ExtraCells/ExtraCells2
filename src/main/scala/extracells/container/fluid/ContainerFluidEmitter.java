@@ -58,7 +58,7 @@ public class ContainerFluidEmitter extends Container {
 		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack fluidItem = slot.getStack().copy();
-			fluidItem.stackSize = 1;
+			fluidItem.setCount(1);
 			FluidStack fluidStack = FluidHelper.getFluidFromContainer(fluidItem);
 			if (fluidStack == null) {
 				return null;

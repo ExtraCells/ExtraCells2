@@ -19,7 +19,7 @@ public class ContainerOreDictExport extends Container {
 		this.part = _part;
 		bindPlayerInventory(player.inventory);
 		TileEntity tile = this.part.getHostTile();
-		if (tile != null && tile.hasWorldObj() && !tile.getWorld().isRemote) {
+		if (tile != null && tile.hasWorld() && !tile.getWorld().isRemote) {
 			NetworkUtil.sendToPlayer(new PacketOreDictExport(this.part.filter), player);
 		}
 	}
@@ -47,10 +47,10 @@ public class ContainerOreDictExport extends Container {
 		return true;
 	}
 
-	@Override
-	protected void retrySlotClick(int p_75133_1_, int p_75133_2_,
-		boolean p_75133_3_, EntityPlayer p_75133_4_) {
-
-	}
+//	@Override
+//	protected void retrySlotClick(int p_75133_1_, int p_75133_2_,
+//		boolean p_75133_3_, EntityPlayer p_75133_4_) {
+//
+//	}
 
 }

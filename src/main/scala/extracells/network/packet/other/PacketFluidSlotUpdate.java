@@ -31,7 +31,7 @@ public class PacketFluidSlotUpdate extends Packet {
 
 	@Override
 	protected void writeData(PacketBufferEC data) throws IOException {
-		data.writeVarIntToBuffer(this.filterFluids.size());
+		data.writeInt(this.filterFluids.size());
 		for (int i = 0; i < this.filterFluids.size(); i++) {
 			data.writeFluid(this.filterFluids.get(i));
 		}
@@ -41,7 +41,7 @@ public class PacketFluidSlotUpdate extends Packet {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayer player) throws IOException {
 			List<Fluid> filterFluids = new LinkedList<>();
-			int size = data.readVarIntFromBuffer();
+			int size = data.readInt();
 			for (int i = 0; i < size; i++) {
 				filterFluids.add(data.readFluid());
 			}

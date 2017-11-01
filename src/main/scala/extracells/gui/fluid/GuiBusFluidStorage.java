@@ -116,8 +116,8 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRendererObj.drawString(PartEnum.FLUIDSTORAGE.getStatName().replace("ME ", ""), 8, 6, 4210752);
-		fontRendererObj.drawString(player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 3, 4210752);
+		fontRenderer.drawString(PartEnum.FLUIDSTORAGE.getStatName().replace("ME ", ""), 8, 6, 4210752);
+		fontRenderer.drawString(player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 3, 4210752);
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	}
 
 	private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
-		return this.isPointInRegion(p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
+		return this.isPointInRegion(p_146981_1_.xPos, p_146981_1_.yPos, 16, 16, p_146981_2_, p_146981_3_);
 	}
 
 	@Override

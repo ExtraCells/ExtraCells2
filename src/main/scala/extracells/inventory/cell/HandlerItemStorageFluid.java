@@ -1,23 +1,23 @@
 package extracells.inventory.cell;
 
+import appeng.api.networking.security.IActionSource;
+import appeng.api.storage.IStorageChannel;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.util.StorageChannels;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.ISaveProvider;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
@@ -79,7 +79,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 
 	@Override
 	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode,
-		BaseActionSource src) {
+		IActionSource src) {
 		if (request == null || !allowedByFormat(request.getFluid())) {
 			return null;
 		}
@@ -98,7 +98,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 						writeFluidToSlot(i, toWrite);
 					}
 				} else {
-					removedStack = AEApi.instance().storage().createFluidStack(currentStack.copy());
+					removedStack = StorageChannels.FLUID().createStack(currentStack.copy());
 					if (mode == Actionable.MODULATE) {
 						writeFluidToSlot(i, null);
 					}
@@ -133,15 +133,15 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		IItemList<IAEFluidStack> out) {
 		for (FluidStack fluidStack : this.fluidStacks) {
 			if (fluidStack != null) {
-				out.add(AEApi.instance().storage().createFluidStack(fluidStack));
+				out.add(StorageChannels.FLUID().createStack(fluidStack));
 			}
 		}
 		return out;
 	}
 
 	@Override
-	public StorageChannel getChannel() {
-		return StorageChannel.FLUIDS;
+	public IStorageChannel getChannel() {
+		return StorageChannels.FLUID();
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	}
 
 	@Override
-	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
+	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, IActionSource src) {
 		if (input == null) {
 			return input;
 		}

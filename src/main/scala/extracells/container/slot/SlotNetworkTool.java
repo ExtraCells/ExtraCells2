@@ -1,20 +1,17 @@
 package extracells.container.slot;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import appeng.api.implementations.guiobjects.INetworkTool;
 import appeng.api.implementations.items.IUpgradeModule;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotNetworkTool extends Slot {
+public class SlotNetworkTool extends SlotItemHandler {
 
-	IInventory inventory;
 
 	public SlotNetworkTool(INetworkTool inventory, int index, int x, int y) {
-		super(inventory, index, x, y);
-		this.inventory = inventory;
+		super(inventory.getInventory(), index, x, y);
 	}
 
 	@Override

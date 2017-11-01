@@ -40,7 +40,7 @@ public class PacketFluidSlotSelect extends Packet {
 			data.writeBoolean(false);
 			data.writeTile((TileEntity) this.partOrBlock);
 		}
-		data.writeVarIntToBuffer(this.index);
+		data.writeInt(this.index);
 		data.writeFluid(this.fluid);
 	}
 
@@ -50,11 +50,11 @@ public class PacketFluidSlotSelect extends Packet {
 			IFluidSlotListener listener;
 
 			if (data.readBoolean()) {
-				listener = data.readPart(player.worldObj);
+				listener = data.readPart(player.world);
 			} else {
-				listener = data.readTile(player.worldObj, IFluidSlotListener.class);
+				listener = data.readTile(player.world, IFluidSlotListener.class);
 			}
-			int index = data.readVarIntFromBuffer();
+			int index = data.readInt();
 			Fluid fluid = data.readFluid();
 			if (listener == null) {
 				return;

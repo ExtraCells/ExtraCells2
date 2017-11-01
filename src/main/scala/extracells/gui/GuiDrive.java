@@ -41,8 +41,8 @@ public class GuiDrive extends GuiContainer {
 			this.mc.getTextureManager().bindTexture(
 				new ResourceLocation("appliedenergistics2",
 					"textures/guis/states.png"));
-			this.drawTexturedModalRect(this.guiLeft + slot.xDisplayPosition,
-				this.guiTop + slot.yDisplayPosition, 240, 0, 16, 16);
+			this.drawTexturedModalRect(this.guiLeft + slot.xPos,
+				this.guiTop + slot.yPos, 240, 0, 16, 16);
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
 		}

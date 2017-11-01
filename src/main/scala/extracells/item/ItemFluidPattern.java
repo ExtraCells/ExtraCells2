@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
@@ -76,8 +77,10 @@ public class ItemFluidPattern extends ItemECBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
-		super.getSubItems(item, creativeTab, itemList);
+	public void getSubItems(CreativeTabs creativeTab, NonNullList itemList) {
+		if (!this.isInCreativeTab(creativeTab))
+			return;
+		super.getSubItems(creativeTab, itemList);
 		for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
 			itemList.add(getPatternForFluid(fluid));
 		}
@@ -89,9 +92,10 @@ public class ItemFluidPattern extends ItemECBase {
 	}
 
 	@Override
-	public ActionResult onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer, EnumHand hand) {
+	public ActionResult onItemRightClick( World world, EntityPlayer entityPlayer, EnumHand hand) {
+		ItemStack itemStack = entityPlayer.getHeldItem(hand);
 		if (entityPlayer.isSneaking()) {
-			return new ActionResult(EnumActionResult.SUCCESS, ItemEnum.FLUIDPATTERN.getSizedStack(itemStack.stackSize));
+			return new ActionResult(EnumActionResult.SUCCESS, ItemEnum.FLUIDPATTERN.getSizedStack(itemStack.getCount()));
 		}
 		return new ActionResult(EnumActionResult.SUCCESS, itemStack);
 	}

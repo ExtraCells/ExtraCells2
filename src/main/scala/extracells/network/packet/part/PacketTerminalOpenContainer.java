@@ -32,7 +32,7 @@ public class PacketTerminalOpenContainer extends Packet {
 	public static class Handler implements IPacketHandlerServer {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
-			PartFluidTerminal terminalFluid = data.readPart(player.worldObj);
+			PartFluidTerminal terminalFluid = data.readPart(player.world);
 			ContainerTerminal containerTerminal = GuiUtil.getContainer(player, ContainerTerminal.class);
 			if (terminalFluid == null) {
 				return;

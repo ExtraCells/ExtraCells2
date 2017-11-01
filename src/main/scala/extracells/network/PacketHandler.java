@@ -75,7 +75,7 @@ public class PacketHandler {
 	@SubscribeEvent
 	public void onPacket(ServerCustomPacketEvent event) {
 		PacketBufferEC data = new PacketBufferEC(event.getPacket().payload());
-		EntityPlayerMP player = ((NetHandlerPlayServer) event.getHandler()).playerEntity;
+		EntityPlayerMP player = ((NetHandlerPlayServer) event.getHandler()).player;
 
 		byte packetIdOrdinal = data.readByte();
 		PacketId packetId = PacketId.values()[packetIdOrdinal];
@@ -103,7 +103,7 @@ public class PacketHandler {
 		if (!threadListener.isCallingFromMinecraftThread()) {
 			threadListener.addScheduledTask(() -> {
 				try {
-					EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+					EntityPlayer player = Minecraft.getMinecraft().player;
 					Preconditions.checkNotNull(player, "Tried to send data to client before the player exists.");
 					packet.onPacketData(data, player);
 				} catch (IOException e) {

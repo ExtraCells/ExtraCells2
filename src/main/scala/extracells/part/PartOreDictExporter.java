@@ -2,6 +2,8 @@ package extracells.part;
 
 import java.util.List;
 
+import extracells.util.MachineSource;
+import extracells.util.StorageChannels;
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +25,6 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -55,7 +56,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 			return false;
 		}
 
-		int[] ids = OreDictionary.getOreIDs(s.getItemStack());
+		int[] ids = OreDictionary.getOreIDs(s.createItemStack());
 		ResourceLocation identifier = s.getItem().getRegistryName();
 
 		String[] filters = StringUtils.split(this.filter, '&');
@@ -149,7 +150,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 			* TicksSinceLastCall;
 		IStorageGrid storage = getStorageGrid();
 		IAEItemStack stack = null;
-		for (IAEItemStack s : storage.getItemInventory().getStorageList()) {
+		for (IAEItemStack s : storage.getInventory(StorageChannels.ITEM()).getStorageList()) {
 			if (isItemValid(s.copy())) {
 				stack = s.copy();
 				break;
@@ -159,7 +160,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 			return false;
 		}
 		stack.setStackSize(amount);
-		stack = storage.getItemInventory().extractItems(stack.copy(),
+		stack = storage.getInventory(StorageChannels.ITEM()).extractItems(stack.copy(),
 			Actionable.SIMULATE, new MachineSource(this));
 		if (stack == null) {
 			return false;
@@ -168,7 +169,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 		if (exported == null) {
 			return false;
 		}
-		storage.getItemInventory().extractItems(exported, Actionable.MODULATE,
+		storage.getInventory(StorageChannels.ITEM()).extractItems(exported, Actionable.MODULATE,
 			new MachineSource(this));
 		return true;
 	}
@@ -189,27 +190,27 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 			if (tile instanceof ISidedInventory) {
 				ISidedInventory inv = (ISidedInventory) tile;
 				for (int i : inv.getSlotsForFace(facing.getOpposite())) {
-					if (inv.canInsertItem(i, stack.getItemStack(), facing.getOpposite())) {
+					if (inv.canInsertItem(i, stack.createItemStack(), facing.getOpposite())) {
 						if (inv.getStackInSlot(i) == null) {
 							inv.setInventorySlotContents(i,
-								stack.getItemStack());
+								stack.createItemStack());
 							return stack0;
 						} else if (ItemUtils.areItemEqualsIgnoreStackSize(
-							inv.getStackInSlot(i), stack.getItemStack())) {
+							inv.getStackInSlot(i), stack.createItemStack())) {
 							int max = inv.getInventoryStackLimit();
-							int current = inv.getStackInSlot(i).stackSize;
+							int current = inv.getStackInSlot(i).getCount();
 							int outStack = (int) stack.getStackSize();
 							if (max == current) {
 								continue;
 							}
 							if (current + outStack <= max) {
 								ItemStack s = inv.getStackInSlot(i).copy();
-								s.stackSize = s.stackSize + outStack;
+								s.setCount(s.getCount() + outStack);
 								inv.setInventorySlotContents(i, s);
 								return stack0;
 							} else {
 								ItemStack s = inv.getStackInSlot(i).copy();
-								s.stackSize = max;
+								s.setCount(max);
 								inv.setInventorySlotContents(i, s);
 								stack.setStackSize(max - current);
 								return stack;
@@ -220,26 +221,26 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 			} else {
 				IInventory inv = (IInventory) tile;
 				for (int i = 0; i < inv.getSizeInventory(); i++) {
-					if (inv.isItemValidForSlot(i, stack.getItemStack())) {
+					if (inv.isItemValidForSlot(i, stack.createItemStack())) {
 						if (inv.getStackInSlot(i) == null) {
-							inv.setInventorySlotContents(i, stack.getItemStack());
+							inv.setInventorySlotContents(i, stack.createItemStack());
 							return stack0;
 						} else if (ItemUtils.areItemEqualsIgnoreStackSize(
-							inv.getStackInSlot(i), stack.getItemStack())) {
+							inv.getStackInSlot(i), stack.createItemStack())) {
 							int max = inv.getInventoryStackLimit();
-							int current = inv.getStackInSlot(i).stackSize;
+							int current = inv.getStackInSlot(i).getCount();
 							int outStack = (int) stack.getStackSize();
 							if (max == current) {
 								continue;
 							}
 							if (current + outStack <= max) {
 								ItemStack s = inv.getStackInSlot(i).copy();
-								s.stackSize = s.stackSize + outStack;
+								s.setCount(s.getCount() + outStack);
 								inv.setInventorySlotContents(i, s);
 								return stack0;
 							} else {
 								ItemStack s = inv.getStackInSlot(i).copy();
-								s.stackSize = max;
+								s.setCount(max);
 								inv.setInventorySlotContents(i, s);
 								stack.setStackSize(max - current);
 								return stack;
