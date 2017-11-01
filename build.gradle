@@ -125,8 +125,8 @@ dependencies {
 	
     //compile name: "buildcraft", version: "${config.version.bc}", classifier: "dev", ext: 'jar'
 	
-	compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
-	compile name: 'p455w0rdslib', version: config.version.pl, ext: 'jar'
+	//compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
+	deobfCompile name: 'p455w0rdslib', version: config.version.pl, ext: 'jar'
 	
 	deobfCompile ("appeng:appliedenergistics2:${config.version.ae}")
 	
