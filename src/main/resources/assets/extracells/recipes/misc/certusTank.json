@@ -1,0 +1,16 @@
+{
+    "result": {
+        "item": "extracells:certustank"
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aaa",
+        "a a",
+        "aaa"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:glassQuartz"
+        }
+    }
+}

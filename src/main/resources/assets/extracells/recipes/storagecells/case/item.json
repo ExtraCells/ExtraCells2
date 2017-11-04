@@ -1,0 +1,24 @@
+{
+    "result": {
+        "item": "extracells:storage.casing",
+		"data": 0
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "a a",
+        "bbb"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:dustFluix"
+        },
+		"b": {
+			"type": "forge:ore_dict",
+            "ore": "gemDiamond"
+		},
+		"d": {
+			"item": "#extracells:glassQuartz"
+		}
+    }
+}

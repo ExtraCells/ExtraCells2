@@ -1,0 +1,21 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 10
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#extracells:levelEmitter"
+        },
+		{
+			"item": "#extracells:panel"
+        },
+		{
+			"item": "#extracells:lapis"
+		},
+		{
+			"item": "#extracells:lapis"
+		}
+    ]
+}

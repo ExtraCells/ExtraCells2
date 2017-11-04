@@ -31,6 +31,11 @@ class GuiHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDrive)
     }
   }
 
+  override def drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
+    super.drawScreen(mouseX, mouseY, partialTicks)
+    renderHoveredToolTip(mouseX, mouseY)
+  }
+
   override def drawGuiContainerForegroundLayer(i: Int, j: Int) =
     fontRenderer.drawString(BlockEnum.BLASTRESISTANTMEDRIVE.getStatName, 5, 5, 0x000000)
 

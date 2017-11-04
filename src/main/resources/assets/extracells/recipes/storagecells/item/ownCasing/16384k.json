@@ -1,0 +1,28 @@
+{
+    "result": {
+        "item": "extracells:storage.physical",
+		"data": 3
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "asa",
+        "bbb"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:dustFluix"
+        },
+		"b": {
+			"type": "forge:ore_dict",
+            "ore": "gemDiamond"
+		},
+		"d": {
+			"item": "#extracells:glassQuartz"
+		},
+		"s": {
+			"item": "extracells:storage.component",
+			"data": 3
+		}
+    }
+}

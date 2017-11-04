@@ -1,0 +1,20 @@
+{
+    "result": {
+        "item": "extracells:storage.physical",
+		"data": 4
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "appliedenergistics2:material",
+			"data": 35
+        },
+		{
+			"item": "appliedenergistics2:material",
+			"data": 39
+        },
+		{
+			"item": "minecraft:chest"
+		}
+    ]
+}

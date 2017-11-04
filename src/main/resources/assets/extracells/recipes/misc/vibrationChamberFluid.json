@@ -1,0 +1,23 @@
+{
+    "result": {
+        "item": "extracells:vibrantchamberfluid"
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aaa",
+        "aba",
+        "aca"
+    ],
+    "key": {
+        "a": {
+			"type": "forge:ore_dict",
+            "ore": "ingotIron"
+        },
+		"b": {
+			"item": "extracells:certustank"
+		},
+		"c": {
+			"item": "appliedenergistics2:vibration_chamber"
+		}
+    }
+}

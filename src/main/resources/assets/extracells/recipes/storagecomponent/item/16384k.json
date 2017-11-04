@@ -1,0 +1,27 @@
+{
+    "result": {
+        "item": "extracells:storage.component",
+		"data": 3
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "cdc",
+        "aca"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:dustGlowstone"
+        },
+		"b": {
+			"item": "#extracells:engProcessor"
+		},
+		"c": {
+			"item": "extracells:storage.component",
+			"data": 2
+		},
+		"d": {
+			"item": "#extracells:logProcessor"
+		}
+    }
+}

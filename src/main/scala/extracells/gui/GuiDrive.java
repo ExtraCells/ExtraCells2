@@ -33,6 +33,12 @@ public class GuiDrive extends GuiContainer {
 		}
 	}
 
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
+
 	private void renderBackground(Slot slot) {
 		if (slot.getStack() == null && slot.slotNumber < 6) {
 			GlStateManager.disableLighting();

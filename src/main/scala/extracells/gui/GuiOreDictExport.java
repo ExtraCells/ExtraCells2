@@ -112,4 +112,10 @@ public class GuiOreDictExport extends GuiBase {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		this.searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
 	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
 }

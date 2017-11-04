@@ -1,0 +1,18 @@
+{
+    "result": {
+        "item": "extracells:fluidfiller"
+    },
+    "type": "forge:ore_shapeless",
+    "pattern": [
+        "ab"
+    ],
+    "ingredients": [
+        {
+			"item": "extracells:fluidcrafter"
+        },
+		{
+			"item": "extracells:part.base",
+			"data": 3
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+{
+    "result": {
+        "item": "extracells:ecbaseblock",
+		"data": 0
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "extracells:part.base",
+			"data": 9
+        }
+    ]
+}

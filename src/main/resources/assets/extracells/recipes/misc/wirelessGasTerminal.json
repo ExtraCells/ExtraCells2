@@ -1,0 +1,24 @@
+{
+    "result": {
+        "item": "extracells:terminal.gas.wireless"
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "a",
+        "b",
+        "c"
+    ],
+    "key": {
+        "a": {
+			"item": "appliedenergistics2:material",
+			"data": 41
+        },
+		"b": {
+			"item": "extracells:part.base",
+			"data": 15
+		},
+		"c": {
+			"item": "appliedenergistics2:dense_energy_cell"
+		}
+    }
+}

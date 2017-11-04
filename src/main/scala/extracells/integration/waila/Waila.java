@@ -11,10 +11,10 @@ import mcp.mobius.waila.api.IWailaRegistrar;
 public class Waila {
 
 	public static void init() {
-		FMLInterModComms.sendMessage("Waila", "register", Waila.class.getName() + ".register");
+		FMLInterModComms.sendMessage("waila", "register", Waila.class.getName() + ".register");
 	}
 
-	@Optional.Method(modid = "Waila")
+	@Optional.Method(modid = "waila")
 	public static void register(IWailaRegistrar registrar) {
 		final IWailaDataProvider partHost = new PartWailaDataProvider();
 

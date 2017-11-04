@@ -4,14 +4,16 @@ import extracells.registries.{BlockEnum, ItemEnum}
 import mezz.jei.api._
 import mezz.jei.api.ingredients.IModIngredientRegistration
 import net.minecraft.item.{Item, ItemStack}
-import java.util
-
 import extracells.integration.Integration
 import extracells.util.CreativeTabEC
+import mezz.jei.api.recipe.VanillaRecipeCategoryUid
 import net.minecraft.util.NonNullList
 
+import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConversions._
+
 @JEIPlugin
-class Plugin extends BlankModPlugin{
+class Plugin extends IModPlugin{
   override def registerItemSubtypes(subtypeRegistry: ISubtypeRegistry) {
   }
 
@@ -24,6 +26,12 @@ class Plugin extends BlankModPlugin{
 
     Jei.registry = registry
 
+    val terminalRecipes = new ListBuffer[UniversalTerminalRecipeWrapper]
+
+    terminalRecipes += new UniversalTerminalRecipeWrapper(true)
+    terminalRecipes += new UniversalTerminalRecipeWrapper(false)
+
+    registry.addRecipes(terminalRecipes, VanillaRecipeCategoryUid.CRAFTING)
 
     for (item <- Jei.fluidBlacklist){
       registry.getJeiHelpers.getIngredientBlacklist.addIngredientToBlacklist(item)

@@ -14,7 +14,7 @@ import extracells.integration.waila.Waila;
 public class Integration {
 
 	public enum Mods {
-		WAILA("Waila"),
+		WAILA("waila"),
 		OPENCOMPUTERS("OpenComputers"),
 		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
 		NEI("NotEnoughItems", Side.CLIENT),
@@ -23,7 +23,7 @@ public class Integration {
 		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics"),
 		MEKANISM("Mekanism"),
 		WIRELESSCRAFTING("ae2wct", "AE2 Wireless Crafting Terminal"),
-		JEI("JEI", "Just Enough Items", Side.CLIENT);
+		JEI("jei", "Just Enough Items", Side.CLIENT);
 
 		private final String modID;
 

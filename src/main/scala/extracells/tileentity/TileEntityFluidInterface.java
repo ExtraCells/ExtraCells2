@@ -820,6 +820,8 @@ public class TileEntityFluidInterface extends TileBase implements
 
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (facing == null)
+			return null;
 		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(fluidHandlers[facing.ordinal()]);
 		}
@@ -831,6 +833,8 @@ public class TileEntityFluidInterface extends TileBase implements
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		if (facing == null)
+			return false;
 		return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
 			|| capability == Capabilities.STORAGE_MONITORABLE_ACCESSOR
 			|| super.hasCapability(capability, facing);

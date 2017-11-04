@@ -1,0 +1,28 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 15
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#extracells:panel"
+		},
+		{
+			"item": "#extracells:formationCore"
+        },
+		{
+			"item": "#extracells:annihilationCore"
+        },
+		{
+			"item": "appliedenergistics2:material",
+			"data": 22
+        },
+		{
+			"item": "#extracells:flower"
+		},
+		{
+			"item": "#extracells:flower"
+		}
+    ]
+}

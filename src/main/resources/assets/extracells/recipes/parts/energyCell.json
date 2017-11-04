@@ -1,0 +1,18 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 8
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "baa"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:iron"
+        },
+		"b": {
+			"item": "appliedenergistics2:energy_cell"
+		}
+    }
+}

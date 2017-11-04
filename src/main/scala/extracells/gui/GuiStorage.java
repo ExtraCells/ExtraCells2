@@ -50,6 +50,12 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 	}
 
 	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float alpha, int sizeX, int sizeY) {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);

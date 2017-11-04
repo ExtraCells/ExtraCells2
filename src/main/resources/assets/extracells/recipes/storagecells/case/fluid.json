@@ -1,0 +1,23 @@
+{
+    "result": {
+        "item": "extracells:storage.casing",
+		"data": 1
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "a a",
+        "bbb"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:dustFluix"
+        },
+		"b": {
+			"item": "extracells:certustank"
+		},
+		"d": {
+			"item": "#extracells:glassQuartz"
+		}
+    }
+}

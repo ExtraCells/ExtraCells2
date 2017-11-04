@@ -118,8 +118,6 @@ public enum PartEnum {
 		this.mod = mod;
 		if (FMLCommonHandler.instance().getSide().isClient()) {
 			itemModel = Optional.of(new ModelResourceLocation("extracells:part/" + name.replace(".", "_")));
-		} else {
-			itemModel = Optional.empty();
 		}
 	}
 

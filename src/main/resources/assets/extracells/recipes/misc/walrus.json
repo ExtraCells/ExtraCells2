@@ -1,0 +1,17 @@
+{
+    "result": {
+        "item": "extracells:walrus"
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aaa",
+        "a a",
+        "aaa"
+    ],
+    "key": {
+        "a": {
+			"item": "minecraft:fish",
+			"data": 0
+        }
+    }
+}

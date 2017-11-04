@@ -115,6 +115,7 @@ public class GuiBase<C extends Container> extends GuiContainer {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		drawToolTips(this, buttonList, mouseX, mouseY);
 		drawToolTips(this, widgetManager.getWidgets(), mouseX, mouseY);
+		renderHoveredToolTip(mouseX, mouseY);
 	}
 
 	public static void drawToolTips(GuiBase gui, Collection<?> objects, int mouseX, int mouseY) {

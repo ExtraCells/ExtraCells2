@@ -1,0 +1,18 @@
+{
+    "result": {
+        "item": "extracells:storage.fluid.portable"
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "appliedenergistics2:chest"
+        },
+		{
+			"item": "extracells:storage.component",
+			"data": 4
+        },
+		{
+			"item": "appliedenergistics2:energy_Cell"
+		}
+    ]
+}

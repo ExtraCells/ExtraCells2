@@ -1,0 +1,30 @@
+{
+    "result": {
+        "item": "extracells:ecbaseblock",
+		"data": 0
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "c d",
+        "aba"
+    ],
+    "key": {
+        "a": {
+			"type": "forge:ore_dict",
+            "ore": "ingotIron"
+        },
+		"b": {
+			"type": "forge:ore_dict",
+            "ore": "dyeBlue"
+		},
+		"c": {
+			"item": "appliedenergistics2:material",
+			"data": 44
+		},
+		"d": {
+			"item": "appliedenergistics2:material",
+			"data": 43
+		}
+    }
+}

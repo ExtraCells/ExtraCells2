@@ -1,0 +1,18 @@
+{
+    "result": {
+        "item": "extracells:pattern.fluid",
+		"data": 0
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba"
+    ],
+    "key": {
+        "a": {
+			"item": "appliedenergistics2:quartz_glass"
+        },
+		"b": {
+			"item": "minecraft:bucket"
+		}
+    }
+}

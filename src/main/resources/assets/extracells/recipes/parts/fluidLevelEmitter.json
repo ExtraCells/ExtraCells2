@@ -1,0 +1,19 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 4
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+        {
+			"item": "minecraft:redstone_torch"
+        },
+		{
+			"item": "appliedenergistics2:material",
+			"data": 23
+        },
+		{
+			"item": "#extracells:lapis"
+		}
+    ]
+}

@@ -19,6 +19,12 @@ public class GuiVibrationChamberFluid extends GuiBase<ContainerVibrationChamberF
 	}
 
 	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
 	protected void drawBackground() {
 		super.drawBackground();
 		//int burnTime = tileEntity.getBurntTimeScaled(52);

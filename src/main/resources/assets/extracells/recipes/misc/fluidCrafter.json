@@ -1,0 +1,18 @@
+{
+    "result": {
+        "item": "extracells:fluidcrafter"
+    },
+    "type": "forge:ore_shapeless",
+    "pattern": [
+        "ab"
+    ],
+    "ingredients": [
+        {
+			"item": "appliedenergistics2:molecular_assembler"
+        },
+		{
+			"item": "extracells:storage.component",
+			"data": 4
+        }
+    ]
+}

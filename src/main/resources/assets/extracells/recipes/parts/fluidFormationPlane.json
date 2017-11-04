@@ -1,0 +1,26 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 6
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "acd",
+        "bcd",
+		"acd"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:iron"
+        },
+		"b": {
+			"item": "#extracells:formationCore"
+		},
+		"c": {
+			"item": "#extracells:lapis"
+		},
+		"d": {
+			"item": "#extracells:dustFluix"
+		}
+    }
+}

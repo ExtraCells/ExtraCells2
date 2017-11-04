@@ -1,0 +1,17 @@
+{
+    "result": {
+        "item": "extracells:storage.gas",
+		"data": 4
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "extracells:storage.casing",
+			"data": 2
+        },
+		{
+			"item": "extracells:storage.component",
+			"data": 15
+        }
+    ]
+}

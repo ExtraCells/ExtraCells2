@@ -1,0 +1,30 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 12
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#extracells:exportBus"
+        },
+		{
+			"item": "#extracells:cardFuzzy"
+        },
+		{
+			"item": "#extracells:cardFuzzy"
+        },
+		{
+			"item": "#extracells:cardSpeed"
+        },
+		{
+			"item": "#extracells:cardSpeed"
+        },
+		{
+			"item": "#extracells:cardSpeed"
+        },
+		{
+			"item": "#extracells:cardSpeed"
+        }
+    ]
+}

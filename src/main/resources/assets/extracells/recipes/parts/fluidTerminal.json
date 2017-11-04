@@ -1,0 +1,30 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 3
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#extracells:panel"
+		},
+		{
+			"item": "appliedenergistics2:material",
+			"data": 43
+        },
+		{
+			"item": "appliedenergistics2:material",
+			"data": 44
+        },
+		{
+			"item": "appliedenergistics2:material",
+			"data": 22
+        },
+		{
+			"item": "#extracells:lapis"
+		},
+		{
+			"item": "#extracells:lapis"
+		}
+    ]
+}

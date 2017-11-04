@@ -1,0 +1,18 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 7
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "appliedenergistics2:drive"
+        },
+		{
+			"item": "#extracells:iron"
+		},
+		{
+			"item": "#extracells:iron"
+		}
+    ]
+}

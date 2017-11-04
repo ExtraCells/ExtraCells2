@@ -1,0 +1,27 @@
+{
+    "result": {
+        "item": "extracells:storage.component",
+		"data": 10
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "cdc",
+        "aca"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:lapis"
+        },
+		"b": {
+			"item": "#extracells:engProcessor"
+		},
+		"c": {
+			"item": "extracells:storage.component",
+			"data": 9
+		},
+		"d": {
+			"item": "#extracells:logProcessor"
+		}
+    }
+}

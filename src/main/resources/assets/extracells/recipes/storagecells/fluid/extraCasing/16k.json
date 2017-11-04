@@ -1,0 +1,17 @@
+{
+    "result": {
+        "item": "extracells:storage.fluid",
+		"data": 2
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "extracells:storage.casing",
+			"data": 1
+        },
+		{
+			"item": "extracells:storage.component",
+			"data": 6
+        }
+    ]
+}

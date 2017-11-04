@@ -1,0 +1,19 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 11
+    },
+    "type": "forge:ore_shapeless",
+    "ingredients": [
+		{
+			"item": "#extracells:annihilationCore"
+        },
+		{
+			"item": "extracells:part.base",
+			"data": 10
+        },
+		{
+			"item": "#extracells:formationCore"
+		}
+    ]
+}

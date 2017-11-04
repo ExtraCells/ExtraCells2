@@ -1,0 +1,23 @@
+{
+    "result": {
+        "item": "extracells:hardmedrive"
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "aca",
+        "aaa"
+    ],
+    "key": {
+        "a": {
+			"item": "minecraft:obsidian"
+        },
+		"b": {
+			"type": "appliedenergistics2:part",
+            "part": "cable_glass"
+		},
+		"c": {
+			"item": "appliedenergistics2:drive"
+		}
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "result": {
+        "item": "extracells:storage.gas",
+		"data": 3
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "asa",
+        "bbb"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:dustFluix"
+        },
+		"b": {
+			"item": "#extracells:gold"
+		},
+		"d": {
+			"item": "#extracells:glassQuartz"
+		},
+		"s": {
+			"item": "extracells:storage.component",
+			"data": 14
+		}
+    }
+}

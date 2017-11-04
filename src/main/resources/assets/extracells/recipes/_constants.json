@@ -1,0 +1,183 @@
+[
+    {
+        "name": "extracells:panel",
+        "ingredient": [
+            {
+                "type": "forge:ore_dict",
+                "ore": "itemIlluminatedPanel"
+            }
+        ]
+    },
+	{
+		"name": "extracells:lapis",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "dyeBlue"
+			}
+		]
+	},
+	{
+		"name": "extracells:flower",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "dyeYellow"
+			}
+		]
+	},
+	{
+		"name": "extracells:iron",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "ingotIron"
+			}
+		]
+	},
+	{
+		"name": "extracells:gold",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "ingotGold"
+			}
+		]
+	},
+	{
+		"name": "extracells:formationCore",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 43
+			}
+		]
+	},
+	{
+		"name": "extracells:annihilationCore",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 44
+			}
+		]
+	},
+	{
+		"name": "extracells:cardFuzzy",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 29
+			}
+		]
+	},
+	{
+		"name": "extracells:cardSpeed",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 30
+			}
+		]
+	},
+	{
+		"name": "extracells:interface",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:part",
+				"data": 440
+			},
+			{
+				"item": "appliedenergistics2:interface"
+			}
+		]
+	},
+	{
+		"name": "extracells:exportBus",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:part",
+				"data": 260
+			}
+		]
+	},
+	{
+		"name": "extracells:levelEmitter",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:part",
+				"data": 280
+			}
+		]
+	},
+	{
+		"name": "extracells:dustFluix",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "dustFluix"
+			}
+		]
+	},
+	{
+		"name": "extracells:dustGlowstone",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "dustGlowstone"
+			}
+		]
+	},
+	{
+		"name": "extracells:engProcessor",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 24
+			}
+		]
+	},
+	{
+		"name": "extracells:logProcessor",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 22
+			}
+		]
+	},
+	{
+		"name": "extracells:calcProcessor",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 23
+			}
+		]
+	},
+	{
+		"name": "extracells:glassQuartz",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:quartz_glass"
+			}
+		]
+	},
+	{
+		"name": "extracells:certusCrystal",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 0
+			},
+			{
+				"item": "appliedenergistics2:material",
+				"data": 1
+			},
+			{
+				"item": "appliedenergistics2:material",
+				"data": 10
+			}
+		]
+	}
+]

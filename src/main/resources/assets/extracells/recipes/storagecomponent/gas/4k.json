@@ -1,0 +1,27 @@
+{
+    "result": {
+        "item": "extracells:storage.component",
+		"data": 12
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "cdc",
+        "aca"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:flower"
+        },
+		"b": {
+			"item": "#extracells:calcProcessor"
+		},
+		"c": {
+			"item": "extracells:storage.component",
+			"data": 11
+		},
+		"d": {
+			"item": "#extracells:glassQuartz"
+		}
+    }
+}

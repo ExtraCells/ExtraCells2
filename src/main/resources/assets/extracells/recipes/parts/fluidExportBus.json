@@ -1,0 +1,25 @@
+{
+    "result": {
+        "item": "extracells:part.base",
+		"data": 0
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "aba",
+        "cdc"
+    ],
+    "key": {
+        "a": {
+			"item": "#extracells:iron"
+        },
+		"b": {
+			"item": "#extracells:formationCore"
+		},
+		"c": {
+			"item": "#extracells:lapis"
+		},
+		"d": {
+			"item": "minecraft:piston"
+		}
+    }
+}

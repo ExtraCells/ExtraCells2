@@ -55,7 +55,7 @@ public class CommonProxy {
 
 		@Override
 		public BufferedReader getFile(String path) throws Exception {
-			InputStream resourceAsStream = getClass().getResourceAsStream("/assets/extracells/recipes/" + path);
+			InputStream resourceAsStream = getClass().getResourceAsStream("/assets/extracells/aerecipes/" + path);
 			InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
 			return new BufferedReader(reader);
 		}
@@ -67,12 +67,9 @@ public class CommonProxy {
 		if (externalRecipe.exists()) {
 			recipeHandler.parseRecipes(new ExternalRecipeLoader(), externalRecipe.getPath());
 		} else {
-			//recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
+			recipeHandler.parseRecipes(new InternalRecipeLoader(), "main.recipe");
 		}
 		recipeHandler.injectRecipes();
-
-
-		//GameRegistry.register(RecipeUniversalTerminal.THIS());
 	}
 
 	public void registerBlocks() {
