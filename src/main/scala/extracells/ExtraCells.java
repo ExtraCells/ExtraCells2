@@ -53,9 +53,7 @@ public class ExtraCells {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Log.error("Init PacketHandler");
 		packetHandler = new PacketHandler();
-		Log.error("Finish PacketHandler");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler$.MODULE$);
 
 		// Config
