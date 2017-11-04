@@ -117,7 +117,7 @@ public class PacketHandler {
 	}
 
 	public void sendPacket(FMLProxyPacket packet, EntityPlayerMP player) {
-		//channel.sendTo(packet, player);
+		channel.sendTo(packet, player);
 	}
 
 
