@@ -12,16 +12,16 @@ object WirelessCrafting {
 
   WCTApi.instance.interact.openWirelessCraftingTerminalGui(player)
 
-  def getBoosterItem = null
+  def getBoosterItem =
 
-  //WCTApi.instance.items.InfinityBoosterCard.getItem
+  WCTApi.instance.items.infinityBoosterCard.getItem
 
-  def isBoosterEnabled =false
+  def isBoosterEnabled =
 
-  //Reference.WCT_BOOSTER_ENABLED
+  WCTApi.isInfinityBoosterCardEnabled
 
-  def getCraftingTerminal = null
+  def getCraftingTerminal =
 
-  //WCTApi.instance..WirelessCraftingTerminal.getStack
+  WCTApi.instance.items.wirelessCraftingTerminal.getStack
 
 }

@@ -5,10 +5,10 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.fml.common.Optional
 import p455w0rd.wct.api.IWirelessCraftingTerminalItem
 
-@Optional.Interface(iface = "455w0rd.wct.api.IWirelessCraftingTerminalItem", modid = "ae2wct", striprefs = true)
+@Optional.Interface(iface = "p455w0rd.wct.api.IWirelessCraftingTerminalItem", modid = "wct", striprefs = true)
 trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem {
 
-  @Optional.Method(modid = "ae2wct")
+  @Optional.Method(modid = "wct")
   def checkForBooster(wirelessTerminal: ItemStack): Boolean = {
     if (wirelessTerminal.hasTagCompound()) {
       val boosterNBTList = wirelessTerminal.getTagCompound().getTagList("BoosterSlot", 10)
@@ -26,11 +26,15 @@ trait CraftingTerminal extends Item with IWirelessCraftingTerminalItem {
     false
   }
 
-  @Optional.Method(modid = "ae2wct")
+  @Optional.Method(modid = "wct")
   override def isWirelessCraftingEnabled(itemStack: ItemStack): Boolean = {
     if (this == ItemWirelessTerminalUniversal)
       ItemWirelessTerminalUniversal.isInstalled(itemStack, WirelessTerminalType.CRAFTING)
     else
       true
   }
+
+  override def getItem: Item = this
+
+  override def getStack: ItemStack = new ItemStack(this)
 }

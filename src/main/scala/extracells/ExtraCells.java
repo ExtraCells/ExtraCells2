@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 
 import extracells.integration.mekanism.gas.GasCellHandler;
+import extracells.util.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -24,10 +25,6 @@ import extracells.item.storage.CellDefinition;
 import extracells.network.GuiHandler$;
 import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
-import extracells.util.ECConfigHandler;
-import extracells.util.ExtraCellsEventHandler;
-import extracells.util.FluidCellHandler;
-import extracells.util.NameHandler;
 import extracells.wireless.AEWirelessTermHandler;
 
 @Mod(modid = Constants.MOD_ID, version = Constants.VERSION, name = "Extra Cells", dependencies = "after:LogisticsPipes|Main;after:Waila;required-after:appliedenergistics2")
@@ -56,7 +53,9 @@ public class ExtraCells {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		Log.error("Init PacketHandler");
 		packetHandler = new PacketHandler();
+		Log.error("Finish PacketHandler");
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler$.MODULE$);
 
 		// Config

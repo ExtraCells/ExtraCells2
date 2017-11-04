@@ -176,7 +176,10 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
   }
 
   override def breakBlock(world: World, pos: BlockPos, state: IBlockState) {
-    if (world.isRemote) return
+    if (world.isRemote){
+      super.breakBlock(world, pos, state)
+      return
+    }
     dropItems(world, pos)
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile != null) {

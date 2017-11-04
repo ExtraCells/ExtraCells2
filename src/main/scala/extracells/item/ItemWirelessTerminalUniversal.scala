@@ -220,5 +220,4 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     injectAEPower(itemStack, this.MAX_POWER)
     itemList2.add(itemStack)
   }
-
 }

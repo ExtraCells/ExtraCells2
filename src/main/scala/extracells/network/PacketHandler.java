@@ -91,27 +91,37 @@ public class PacketHandler {
 		byte packetIdOrdinal = data.readByte();
 		PacketId packetId = PacketId.values()[packetIdOrdinal];
 		IPacketHandlerClient packetHandler = packetId.getHandlerClient();
-		checkThreadAndEnqueue(packetHandler, data, Minecraft.getMinecraft());
+
+
+		PacketHandlerHelper.checkThreadAndEnqueue(packetHandler, data, Minecraft.getMinecraft());
+	}
+
+
+	//Workaround for Side.CLIENT
+	@SideOnly(Side.CLIENT)
+	private static class PacketHandlerHelper{
+		@SideOnly(Side.CLIENT)
+		private static void checkThreadAndEnqueue(final IPacketHandlerClient packet, final PacketBufferEC data, IThreadListener threadListener) {
+			if (!threadListener.isCallingFromMinecraftThread()) {
+				threadListener.addScheduledTask(() -> {
+					try {
+						EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+						Preconditions.checkNotNull(player, "Tried to send data to client before the player exists.");
+						packet.onPacketData(data, player);
+					} catch (IOException e) {
+						Log.error("Network Error", e);
+					}
+				});
+			}
+		}
 	}
 
 	public void sendPacket(FMLProxyPacket packet, EntityPlayerMP player) {
-		channel.sendTo(packet, player);
+		//channel.sendTo(packet, player);
 	}
 
-	@SideOnly(Side.CLIENT)
-	private static void checkThreadAndEnqueue(final IPacketHandlerClient packet, final PacketBufferEC data, IThreadListener threadListener) {
-		if (!threadListener.isCallingFromMinecraftThread()) {
-			threadListener.addScheduledTask(() -> {
-				try {
-					EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-					Preconditions.checkNotNull(player, "Tried to send data to client before the player exists.");
-					packet.onPacketData(data, player);
-				} catch (IOException e) {
-					Log.error("Network Error", e);
-				}
-			});
-		}
-	}
+
+
 
 	private static void checkThreadAndEnqueue(final IPacketHandlerServer packet, final PacketBufferEC data, final EntityPlayerMP player, IThreadListener threadListener) {
 		if (!threadListener.isCallingFromMinecraftThread()) {
