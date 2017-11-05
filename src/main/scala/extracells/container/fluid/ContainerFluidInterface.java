@@ -19,10 +19,13 @@ import extracells.network.packet.part.PacketFluidInterface;
 import extracells.part.fluid.PartFluidInterface;
 import extracells.tileentity.TileEntityFluidInterface;
 import extracells.util.NetworkUtil;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerFluidInterface extends Container implements
 	IContainerListener {
 	public IFluidInterface fluidInterface;
+	@SideOnly(Side.CLIENT)
 	public GuiFluidInterface gui;
 	EntityPlayer player;
 

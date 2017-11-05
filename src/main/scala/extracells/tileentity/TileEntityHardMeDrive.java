@@ -222,7 +222,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
 	@Override
 	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = writeToNBT(new NBTTagCompound());
+		NBTTagCompound tag = new NBTTagCompound();//new NBTTagCompound());
 		int i = 0;
 		for (byte aCellStati : this.cellStatuses) {
 			tag.setByte("status#" + i, aCellStati);
@@ -275,7 +275,13 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
 	@Override
 	public void handleUpdateTag(NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
+		//super.handleUpdateTag(tag);
 		isPowerd = tag.getBoolean("isPowerd");
+		for (int i = 0; i < this.cellStatuses.length; i++){
+			this.cellStatuses[i] = tag.getByte("status#" + i);
+		}
+		if(world != null && world.isRemote){
+			world.markBlockRangeForRenderUpdate(getPos(), getPos());
+		}
 	}
 }

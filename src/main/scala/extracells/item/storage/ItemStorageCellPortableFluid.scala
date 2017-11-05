@@ -23,6 +23,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 import net.minecraftforge.items.IItemHandler
+import net.minecraftforge.items.wrapper.InvWrapper
 
 object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorageCell with PowerItem {
 
@@ -56,7 +57,7 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
   }
 
   def getConfigInventory(is: ItemStack): IItemHandler = {
-    return new ECFluidFilterInventory("configFluidCell", 63, is)
+    return new InvWrapper(new ECFluidFilterInventory("configFluidCell", 63, is))
   }
 
   override def getDurabilityForDisplay(itemStack: ItemStack): Double = {
@@ -116,7 +117,7 @@ object ItemStorageCellPortableFluid extends ItemECBase with IPortableFluidStorag
   }
 
   def getUpgradesInventory(is: ItemStack): IItemHandler = {
-    return new InventoryPlain("configInventory", 0, 64)
+    return new InvWrapper(new InventoryPlain("configInventory", 0, 64))
   }
 
   def hasPower(player: EntityPlayer, amount: Double, is: ItemStack): Boolean = {

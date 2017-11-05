@@ -40,7 +40,7 @@ public class GuiDrive extends GuiContainer {
 	}
 
 	private void renderBackground(Slot slot) {
-		if (slot.getStack() == null && slot.slotNumber < 6) {
+		if ((slot.getStack() == null || slot.getStack().isEmpty()) && slot.slotNumber < 6) {
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);

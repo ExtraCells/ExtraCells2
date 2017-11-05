@@ -15,6 +15,7 @@ import extracells.inventory.ECFluidFilterInventory;
 import extracells.inventory.InventoryPlain;
 import extracells.item.ItemFluid;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class ItemStorageCellGas extends ItemStorageCell implements IGasStorageCell {
 
@@ -24,7 +25,7 @@ public class ItemStorageCellGas extends ItemStorageCell implements IGasStorageCe
 
 	@Override
 	public IItemHandler getConfigInventory(ItemStack is) {
-		return new ECFluidFilterInventory("configFluidCell", 63, is);
+		return new InvWrapper(new ECFluidFilterInventory("configFluidCell", 63, is));
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class ItemStorageCellGas extends ItemStorageCell implements IGasStorageCe
 
 	@Override
 	public IItemHandler getUpgradesInventory(ItemStack is) {
-		return new InventoryPlain("configInventory", 0, 64);
+		return new InvWrapper(new InventoryPlain("configInventory", 0, 64));
 	}
 
 	@Override

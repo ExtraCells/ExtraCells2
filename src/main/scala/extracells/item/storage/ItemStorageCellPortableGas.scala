@@ -23,6 +23,7 @@ import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 import net.minecraftforge.items.IItemHandler
+import net.minecraftforge.items.wrapper.InvWrapper
 
 object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCell with PowerItem {
 
@@ -56,7 +57,7 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
     list2.add(I18n.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStorageCellPortableGas.MAX_POWER * 1e4) / 1e2 + "%")
   }
 
-  def getConfigInventory(is: ItemStack): IItemHandler = new ECFluidFilterInventory("configFluidCell", 63, is)
+  def getConfigInventory(is: ItemStack): IItemHandler = new InvWrapper(new ECFluidFilterInventory("configFluidCell", 63, is))
 
 
   override def getDurabilityForDisplay(itemStack: ItemStack): Double = 1 - getAECurrentPower(itemStack) / ItemStorageCellPortableFluid.MAX_POWER
@@ -110,7 +111,7 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
   override def getUnlocalizedName(itemStack: ItemStack): String = "extracells.item.storage.gas.portable"
 
 
-  def getUpgradesInventory(is: ItemStack): IItemHandler = new InventoryPlain("configInventory", 0, 64)
+  def getUpgradesInventory(is: ItemStack): IItemHandler = new InvWrapper(new InventoryPlain("configInventory", 0, 64))
 
 
   def hasPower(player: EntityPlayer, amount: Double, is: ItemStack): Boolean = getAECurrentPower(is) >= amount

@@ -56,9 +56,6 @@ class ContainerHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDri
     itemstack
   }
 
-  /*override*/ def retrySlotClick(slotId: Int, clickedButton: Int, mode: Boolean, playerIn: EntityPlayer): Unit = {
-
-  }
 
   override def canInteractWith(player: EntityPlayer): Boolean = {
     if (tile.hasWorld) {

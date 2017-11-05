@@ -3,7 +3,6 @@ package extracells.item
 import appeng.api.config.{Actionable, PowerUnits}
 import appeng.api.implementations.items.IAEItemPowerStorage
 import cofh.redstoneflux.api.IEnergyContainerItem
-import net.minecraft.creativetab.CreativeTabs
 //import cofh.api.energy.IEnergyContainerItem
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound

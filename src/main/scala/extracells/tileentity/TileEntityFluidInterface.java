@@ -726,6 +726,7 @@ public class TileEntityFluidInterface extends TileBase implements
 			forceUpdate();
 		}
 		tick();
+		markDirty();
 	}
 
 	public NBTTagCompound writeFilter(NBTTagCompound tag) {

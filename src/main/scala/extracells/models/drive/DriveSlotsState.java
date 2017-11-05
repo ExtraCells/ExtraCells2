@@ -6,6 +6,12 @@ public class DriveSlotsState {
 
 	private DriveSlotsState(DriveSlotState[] slots) {
 		this.slots = slots;
+		for (int i = 0; i < this.slots.length; i++)
+		{
+			if (this.slots[i] == null){
+				this.slots[i] = DriveSlotState.EMPTY;
+			}
+		}
 	}
 
 	public DriveSlotState getState(int index) {

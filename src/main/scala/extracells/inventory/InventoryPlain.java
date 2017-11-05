@@ -17,7 +17,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.Arrays;
 
-public class InventoryPlain implements IInventory, IItemHandler {
+public class InventoryPlain implements IInventory {
 
 	public ItemStack[] slots;
 	public String customName;
@@ -69,7 +69,6 @@ public class InventoryPlain implements IInventory, IItemHandler {
 		return false;
 	}
 
-	@Override
 	public int getSlots() {
 		return slots.length;
 	}
@@ -80,7 +79,6 @@ public class InventoryPlain implements IInventory, IItemHandler {
 	}
 
 	@Nonnull
-	@Override
 	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 		if (stack == null)
 			return ItemStack.EMPTY;
@@ -109,7 +107,6 @@ public class InventoryPlain implements IInventory, IItemHandler {
 	}
 
 	@Nonnull
-	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		if (isSlotEmpty(slot))
 			return ItemStack.EMPTY;
@@ -126,7 +123,6 @@ public class InventoryPlain implements IInventory, IItemHandler {
 		}
 	}
 
-	@Override
 	public int getSlotLimit(int slot) {
 		return slots[slot] == null || slots[slot].isEmpty() ? 64 : slots[slot].getMaxStackSize();
 	}
