@@ -46,6 +46,8 @@ extracells.item.storage.casing.physical.name=高级存储外壳
 extracells.item.storage.casing.fluid.name=流体存储外壳
 extracells.item.storage.casing.gas.name=气体存储外壳
 extracells.item.terminal.fluid.wireless.name=无线ME流体终端
+extracells.item.terminal.gas.wireless.name=无线ME气体终端
+extracells.item.terminal.universal.wireless.name=无线ME通用终端
 extracells.item.fluid.pattern=ME流体模板
 extracells.item.oc.upgrade.name=ME升级模块
 
@@ -72,6 +74,10 @@ extracells.part.oredict.export.name=ME矿典输出总线
 extracells.part.gas.export.name=ME气体输出总线
 extracells.part.gas.import.name=ME气体输入总线
 extracells.part.gas.terminal.name=ME气体终端
+extracells.part.gas.storage.name=ME气体存储总线
+extracells.part.gas.levelemitter.name=ME气体发信器
+extracells.part.gas.conversion.monitor.name=ME气体交换监控器
+extracells.part.gas.monitor.name=ME气体存储监控器
 
 //Blocks
 extracells.block.certustank=赛特斯石英水槽
@@ -91,6 +97,9 @@ extracells.tooltip.storage.physical.bytes=%s/%s物品字节已使用。
 extracells.tooltip.storage.fluid.bytes=%s/%s流体字节已使用。
 extracells.tooltip.storage.fluid.content=存有%smB的流体。
 extracells.tooltip.storage.physical.content=存有%s个物品。
+extracells.tooltip.storage.gas.bytes=%s/%s气体字节已使用。
+extracells.tooltip.storage.gas.content=存有%s的气体。
+extracells.tooltip.storage.gas.types=%s/%s个气体类型已使用。
 extracells.tooltip.direction.0=下
 extracells.tooltip.direction.1=上
 extracells.tooltip.direction.2=北
@@ -108,6 +117,8 @@ extracells.tooltip.mode=模式
 extracells.tooltip.item=物品
 extracells.tooltip.gas=气体
 extracells.tooltip.essentia=源质
+extracells.tooltip.installed=已安装：
+extracells.tooltip.crafting=合成中
 
 //Buttons
-extracells.gui.craft=Craft
+extracells.gui.craft=合成
