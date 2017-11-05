@@ -55,7 +55,7 @@ trait WirelessTermBase extends PowerItem {
 
   @SuppressWarnings(Array("unchecked", "rawtypes"))
   override def getSubItems(creativeTab: CreativeTabs, itemList: NonNullList[ItemStack]) {
-    if (!this.isInCreativeTab(creativeTab)) return
+    if (!this.isInCreativeTab2(creativeTab)) return
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     itemList2.add(new ItemStack(this))
     val itemStack: ItemStack = new ItemStack(this)
@@ -77,4 +77,7 @@ trait WirelessTermBase extends PowerItem {
     list2.add(I18n.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / this.MAX_POWER * 1e4) / 1e2 + "%")
     list2.add(I18n.translateToLocal(if (encryptionKey != null && !encryptionKey.isEmpty) "gui.appliedenergistics2.Linked" else "gui.appliedenergistics2.Unlinked"))
   }
+
+  //Workaround for getSubItems
+  def isInCreativeTab2(targetTab: CreativeTabs): Boolean
 }

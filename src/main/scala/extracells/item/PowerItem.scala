@@ -87,7 +87,4 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem 
     return itemStack.getTagCompound
   }
 
-  //Workaround for WirelessTermBase
-  override def isInCreativeTab(targetTab: CreativeTabs): Boolean = super.isInCreativeTab(targetTab)
-
 }

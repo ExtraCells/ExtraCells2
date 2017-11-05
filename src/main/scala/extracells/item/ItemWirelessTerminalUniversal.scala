@@ -10,6 +10,7 @@ import appeng.api.util.IConfigManager
 import extracells.api.{ECApi, IWirelessFluidTermHandler, IWirelessGasTermHandler}
 import extracells.integration.Integration
 import extracells.integration.WirelessCrafting.WirelessCrafting
+import extracells.item.ItemWirelessTerminalFluid.isInCreativeTab
 import extracells.models.ModelManager
 import extracells.util.HandlerUniversalWirelessTerminal
 import extracells.wireless.ConfigManager
@@ -224,5 +225,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     injectAEPower(itemStack, this.MAX_POWER, Actionable.MODULATE)
     itemList2.add(itemStack)
   }
+
+  override def isInCreativeTab2(targetTab: CreativeTabs): Boolean = isInCreativeTab(targetTab)
 
 }

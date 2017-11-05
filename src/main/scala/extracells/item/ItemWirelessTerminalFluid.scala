@@ -2,6 +2,7 @@ package extracells.item
 
 import extracells.api.{ECApi, IWirelessFluidTermHandler}
 import extracells.models.ModelManager
+import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand}
@@ -28,5 +29,5 @@ object ItemWirelessTerminalFluid extends ItemECBase with IWirelessFluidTermHandl
   override def registerModel(item: Item, manager: ModelManager) =
     manager.registerItemModel(item, 0, "terminals/fluid_wireless")
 
-
+  override def isInCreativeTab2(targetTab: CreativeTabs): Boolean = isInCreativeTab(targetTab)
 }
