@@ -92,7 +92,7 @@ public class ContainerFluidInterface extends Container implements
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 
 		if (slot != null && slot.getHasStack()) {
@@ -106,14 +106,14 @@ public class ContainerFluidInterface extends Container implements
 						this.inventorySlots.size(), false)) {
 						if (!mergeItemStack(itemstack1, 9,
 							this.inventorySlots.size() - 9, false)) {
-							return null;
+							return ItemStack.EMPTY;
 						}
 					}
 				} else if (!mergeItemStack(itemstack1, 0, 9, false)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 				if (itemstack1.getCount() == 0) {
-					slot.putStack(null);
+					slot.putStack(ItemStack.EMPTY);
 				} else {
 					slot.onSlotChanged();
 				}
@@ -123,15 +123,15 @@ public class ContainerFluidInterface extends Container implements
 			if (slotnumber < this.inventorySlots.size() - 9) {
 				if (!mergeItemStack(itemstack1, this.inventorySlots.size() - 9,
 					this.inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			} else if (!mergeItemStack(itemstack1, 9,
 				this.inventorySlots.size() - 9, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			if (itemstack1.getCount() == 0) {
-				slot.putStack(null);
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}

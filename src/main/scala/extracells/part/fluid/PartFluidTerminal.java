@@ -96,13 +96,13 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 		ItemStack slot = this.inventory.getStackInSlot(0);
 		slot.setCount(slot.getCount() - 1);
 		if (slot.getCount() <= 0) {
-			this.inventory.setInventorySlotContents(0, null);
+			this.inventory.setInventorySlotContents(0, ItemStack.EMPTY);
 		}
 	}
 
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.getCount() >= secondSlot.getMaxStackSize()) {
+		if ((secondSlot != null && !secondSlot.isEmpty()) && secondSlot.getCount() >= secondSlot.getMaxStackSize()) {
 			return;
 		}
 		ItemStack container = this.inventory.getStackInSlot(0);
@@ -156,7 +156,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 			return false;
 		}
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot == null) {
+		if (secondSlot == null || secondSlot.isEmpty()) {
 			this.inventory.setInventorySlotContents(1, itemStack);
 			return true;
 		} else {

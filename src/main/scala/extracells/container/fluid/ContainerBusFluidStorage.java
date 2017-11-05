@@ -51,7 +51,7 @@ public class ContainerBusFluidStorage extends ContainerUpgradeable {
 			this.guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
 		}
 
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 
 		if (slot != null && slot.getHasStack()) {
@@ -60,14 +60,14 @@ public class ContainerBusFluidStorage extends ContainerUpgradeable {
 
 			if (slotnumber < 36) {
 				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			} else if (!mergeItemStack(itemstack1, 0, 36, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			if (itemstack1.getCount() == 0) {
-				slot.putStack(null);
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}

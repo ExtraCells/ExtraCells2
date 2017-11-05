@@ -23,8 +23,8 @@ public enum BlockEnum {
 	CERTUSTANK("certustank", new BlockCertusTank(), (block) -> new ItemBlockCertusTank(block)),
 	WALRUS("walrus", new BlockWalrus()),
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
-	ECBASEBLOCK("ecbaseblock", new BlockFluidInterface(), (block) -> new ItemBlockFluidInterface(block)),
-	FILLER("fluidfiller", new BlockFluidFiller(), (block) -> new ItemBlockFluidFiller(block)),
+	ECBASEBLOCK("ecbaseblock", BlockFluidInterface.instance(), (block) -> new ItemBlockFluidInterface(block)),
+	FILLER("fluidfiller", BlockFluidFiller.instance(), (block) -> new ItemBlockFluidFiller(block)),
 	BLASTRESISTANTMEDRIVE("hardmedrive", BlockHardMEDrive.instance()),
 	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid());
 

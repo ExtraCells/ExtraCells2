@@ -34,6 +34,8 @@ import extracells.inventory.IInventoryListener;
 import extracells.inventory.InventoryPlain;
 import extracells.models.drive.IECDrive;
 import extracells.network.IGuiProvider;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryListener, IECDrive, IGuiProvider {
 
@@ -245,6 +247,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 		return isPowerd;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public GuiContainer getClientGuiElement(EntityPlayer player, Object... args) {
 		return new GuiHardMEDrive(player.inventory, this);

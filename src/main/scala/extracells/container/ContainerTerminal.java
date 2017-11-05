@@ -146,14 +146,14 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 		boolean hasPermission = true;
 		if (slotId == 0 || slotId == 1) {
 			ItemStack stack = player.inventory.getItemStack();
-			if (stack == null) {
+			if (stack == null || stack.isEmpty()) {
 			} else {
 				if (type.isEmpty(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())) {
 				} else if (type.isFilled(stack) && PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())) {
 				} else {
 					ItemStack slotStack = this.inventorySlots.get(slotId).getStack();
-					if (slotStack == null) {
-						returnStack = null;
+					if (slotStack == null || slotStack.isEmpty()) {
+						returnStack = ItemStack.EMPTY;
 					} else {
 						returnStack = slotStack.copy();
 					}
@@ -173,7 +173,7 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
@@ -181,18 +181,18 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 			if (this.terminal.getInventory().isItemValidForSlot(0, itemstack1)) {
 				if (slotnumber == 1 || slotnumber == 0) {
 					if (!mergeItemStack(itemstack1, 2, 36, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				} else if (!mergeItemStack(itemstack1, 0, 1, false)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 				if (itemstack1.getCount() == 0) {
-					slot.putStack(null);
+					slot.putStack(ItemStack.EMPTY);
 				} else {
 					slot.onSlotChanged();
 				}
 			} else {
-				return null;
+				return ItemStack.EMPTY;
 			}
 		}
 		return itemstack;

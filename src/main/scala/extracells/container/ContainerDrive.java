@@ -43,7 +43,7 @@ public class ContainerDrive extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack transferStack = null;
+		ItemStack transferStack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 
 		if (slot != null && slot.getHasStack()) {
@@ -52,14 +52,14 @@ public class ContainerDrive extends Container {
 
 			if (slotnumber < 36) {
 				if (!mergeItemStack(itemStack, 36, this.inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			} else if (!mergeItemStack(itemStack, 0, 36, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			if (itemStack.getCount() == 0) {
-				slot.putStack(null);
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}

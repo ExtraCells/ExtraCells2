@@ -39,7 +39,7 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 			return this.inventorySlots.get(slotnumber).getStack();
 		}
 
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 
 		if (slot != null && slot.getHasStack()) {
@@ -48,14 +48,14 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 
 			if (slotnumber < 36) {
 				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			} else if (!mergeItemStack(itemstack1, 0, 36, false)) {
 				return itemstack1;
 			}
 
 			if (itemstack1.getCount() == 0) {
-				slot.putStack(null);
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}

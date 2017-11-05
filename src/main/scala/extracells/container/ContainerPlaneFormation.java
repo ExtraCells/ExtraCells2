@@ -49,7 +49,7 @@ public class ContainerPlaneFormation extends ContainerUpgradeable {
 			this.gui.shiftClick(getSlot(slotnumber).getStack());
 		}
 
-		ItemStack transferredStack = null;
+		ItemStack transferredStack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 
 		if (slot != null && slot.getHasStack()) {
@@ -58,14 +58,14 @@ public class ContainerPlaneFormation extends ContainerUpgradeable {
 
 			if (slotnumber < 36) {
 				if (!mergeItemStack(stack, 36, this.inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 			} else if (!mergeItemStack(stack, 0, 36, false)) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			if (stack.getCount() == 0) {
-				slot.putStack(null);
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}

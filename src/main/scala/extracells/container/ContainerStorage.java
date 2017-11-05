@@ -4,8 +4,7 @@ import appeng.api.networking.security.IActionSource;
 import extracells.util.StorageChannels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
@@ -34,10 +33,11 @@ import extracells.network.packet.part.PacketStorageUpdateFluid;
 import extracells.network.packet.part.PacketStorageUpdateState;
 import extracells.util.GuiUtil;
 import extracells.util.NetworkUtil;
+import scala.xml.PrettyPrinter;
 
 public abstract class ContainerStorage extends Container implements
 	IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer,
-	IInventoryListener, IStorageContainer {
+	IInventoryListener, IStorageContainer, ITickContainer {
 
 	protected EnumHand hand = EnumHand.MAIN_HAND;
 	protected StorageType storageType;
@@ -117,31 +117,30 @@ public abstract class ContainerStorage extends Container implements
 
 	public void decreaseFirstSlot() {
 		ItemStack slot = this.inventory.getStackInSlot(0);
-		if (slot == null) {
+		if (slot == null || slot.isEmpty()) {
 			return;
 		}
 		slot.setCount(slot.getCount() - 1);
 		if (slot.getCount() <= 0) {
-			this.inventory.setInventorySlotContents(0, null);
+			this.inventory.setInventorySlotContents(0, ItemStack.EMPTY);
 		}
 	}
 
 	@Override
-	public void detectAndSendChanges() {
+	public void onTick() {
 		forceFluidUpdate();
 		doWork();
-		super.detectAndSendChanges();
 	}
 
 	public abstract void doWork();
 
 	public boolean fillSecondSlot(ItemStack itemStack) {
-		if (itemStack == null) {
+		if (itemStack == null || itemStack.isEmpty()) {
 			return false;
 		}
 		ItemStack handItem = player.getHeldItem(hand);
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot == null) {
+		if (secondSlot == null || secondSlot.isEmpty()) {
 			if (this.handler != null) {
 				if (!this.handler.hasPower(this.player, 20.0D,
 					handItem)) {
@@ -293,7 +292,7 @@ public abstract class ContainerStorage extends Container implements
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
@@ -301,18 +300,18 @@ public abstract class ContainerStorage extends Container implements
 			if (this.inventory.isItemValidForSlot(0, itemstack1)) {
 				if (slotnumber == 0 || slotnumber == 1) {
 					if (!mergeItemStack(itemstack1, 2, 36, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				} else if (!mergeItemStack(itemstack1, 0, 1, false)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 				if (itemstack1.getCount() == 0) {
-					slot.putStack(null);
+					slot.putStack(ItemStack.EMPTY);
 				} else {
 					slot.onSlotChanged();
 				}
 			} else {
-				return null;
+				return ItemStack.EMPTY;
 			}
 		}
 		return itemstack;

@@ -844,6 +844,12 @@ public class TileEntityFluidInterface extends TileBase implements
 
 		private ItemStack[] inv = new ItemStack[9];
 
+		private FluidInterfaceInventory(){
+			for(int i = 0; i < inv.length; i++){
+				inv[i] = ItemStack.EMPTY;
+			}
+		}
+
 		@Override
 		public void closeInventory(EntityPlayer player) {
 		}
@@ -851,13 +857,13 @@ public class TileEntityFluidInterface extends TileBase implements
 		@Override
 		public ItemStack decrStackSize(int slot, int amt) {
 			ItemStack stack = getStackInSlot(slot);
-			if (stack != null) {
+			if (stack != null && !stack.isEmpty()) {
 				if (stack.getCount() <= amt) {
-					setInventorySlotContents(slot, null);
+					setInventorySlotContents(slot, ItemStack.EMPTY);
 				} else {
 					stack = stack.splitStack(amt);
 					if (stack.getCount() == 0) {
-						setInventorySlotContents(slot, null);
+						setInventorySlotContents(slot, ItemStack.EMPTY);
 					}
 				}
 			}
@@ -888,7 +894,7 @@ public class TileEntityFluidInterface extends TileBase implements
 		@Nullable
 		@Override
 		public ItemStack removeStackFromSlot(int index) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		@Override
@@ -943,7 +949,7 @@ public class TileEntityFluidInterface extends TileBase implements
 		@Override
 		public void setInventorySlotContents(int slot, ItemStack stack) {
 			this.inv[slot] = stack;
-			if (stack != null && stack.getCount() > getInventoryStackLimit()) {
+			if (stack != null && (!stack.isEmpty()) && stack.getCount() > getInventoryStackLimit()) {
 				stack.setCount(getInventoryStackLimit());
 			}
 			TileEntityFluidInterface.this.update = true;

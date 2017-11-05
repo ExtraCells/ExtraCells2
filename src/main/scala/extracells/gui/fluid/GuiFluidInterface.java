@@ -57,8 +57,8 @@ public class GuiFluidInterface extends GuiBase<ContainerFluidInterface> {
 	protected ISlotRenderer getSlotRenderer(Slot slot) {
 		if (slot.slotNumber < 9) {
 			ItemStack stack = slot.getStack();
-			if (stack == null) {
-				return SlotUpgradeRenderer.INSTANCE;
+			if (stack == null || stack.isEmpty()) {
+				return SlotOutputRenderer.INSTANCE;
 			} else {
 				if (stack.getItem() instanceof ICraftingPatternItem) {
 					return SlotOutputRenderer.INSTANCE;

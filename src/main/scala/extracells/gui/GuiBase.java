@@ -77,7 +77,7 @@ public class GuiBase<C extends Container> extends GuiContainer {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		if (hasSlotRenders()) {
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(guiLeft, guiTop, 0.0F);
+			//GlStateManager.translate(guiLeft, guiTop, 0.0F);
 			for (Slot slot : container.inventorySlots) {
 				ISlotRenderer slotRenderer = getSlotRenderer(slot);
 				if (slotRenderer != null) {

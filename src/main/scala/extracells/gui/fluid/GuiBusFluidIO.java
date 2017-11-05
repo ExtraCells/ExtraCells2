@@ -130,7 +130,7 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 	@Nullable
 	@Override
 	protected ISlotRenderer getSlotRenderer(Slot slot) {
-		if (slot.getStack() == null && (slot.slotNumber < 4 || slot.slotNumber > 39)) {
+		if ((slot.getStack() == null || slot.getStack().isEmpty()) && slot.slotNumber > 35) {
 			return SlotUpgradeRenderer.INSTANCE;
 		}
 		return null;

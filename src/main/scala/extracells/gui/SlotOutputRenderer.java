@@ -22,7 +22,7 @@ public class SlotOutputRenderer implements ISlotRenderer {
 	@Override
 	public void renderBackground(Slot slot, GuiBase gui, int mouseX, int mouseY) {
 		ItemStack stack = slot.getStack();
-		if (stack != null) {
+		if (stack != null && !stack.isEmpty()) {
 			return;
 		}
 		GlStateManager.disableLighting();

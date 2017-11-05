@@ -40,7 +40,7 @@ public class ContainerFluidStorage extends ContainerStorage {
 	@Override
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.getCount() > secondSlot.getMaxStackSize()) {
+		if ((secondSlot != null && !secondSlot.isEmpty()) && secondSlot.getCount() > secondSlot.getMaxStackSize()) {
 			return;
 		}
 		ItemStack container = this.inventory.getStackInSlot(0);

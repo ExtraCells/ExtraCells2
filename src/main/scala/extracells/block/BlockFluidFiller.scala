@@ -21,7 +21,12 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
-class BlockFluidFiller() extends BlockEC(Material.IRON, 2.0F, 10.0F) {
+object BlockFluidFiller extends BlockEC(Material.IRON, 2.0F, 10.0F) {
+
+  //Only needed because BlockEnum is in java. not in scala
+  val instance = this
+
+
   def createNewTileEntity(world: World, meta: Int): TileEntity = {
     return new TileEntityFluidFiller
   }

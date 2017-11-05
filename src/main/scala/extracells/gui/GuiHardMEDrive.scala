@@ -40,7 +40,7 @@ class GuiHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDrive)
     fontRenderer.drawString(BlockEnum.BLASTRESISTANTMEDRIVE.getStatName, 5, 5, 0x000000)
 
   private def renderBackground(slot: Slot) {
-    if (slot.getStack == null && slot.slotNumber < 3) {
+    if ((slot.getStack == null || slot.getStack.isEmpty) && slot.slotNumber < 3) {
       GlStateManager.disableLighting()
       GlStateManager.enableBlend()
       GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F)

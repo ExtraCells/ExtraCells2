@@ -64,8 +64,8 @@ public class ContainerFluidEmitter extends Container {
 				return null;
 			}
 			this.part.setFluid(0, fluidStack.getFluid(), player);
-			return null;
+			return ItemStack.EMPTY;
 		}
-		return null;
+		return ItemStack.EMPTY;
 	}
 }

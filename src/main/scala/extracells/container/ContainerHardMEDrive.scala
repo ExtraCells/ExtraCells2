@@ -33,7 +33,7 @@ class ContainerHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDri
 
 
   override def transferStackInSlot(p: EntityPlayer, i: Int): ItemStack = {
-    var itemstack: ItemStack = null
+    var itemstack: ItemStack = ItemStack.EMPTY
     val slot = inventorySlots.get(i).asInstanceOf[Slot]
     if (slot != null && slot.getHasStack()) {
       val itemstack1 = slot.getStack();
@@ -41,13 +41,13 @@ class ContainerHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDri
       if (AEApi.instance.registries.cell().isCellHandled(itemstack)) {
         if (i < 3) {
           if (!mergeItemStack(itemstack1, 3, 38, false)) {
-            return null
+            return ItemStack.EMPTY
           }
         } else if (!mergeItemStack(itemstack1, 0, 3, false)) {
-          return null
+          return ItemStack.EMPTY
         }
         if (itemstack1.getCount == 0) {
-          slot.putStack(null)
+          slot.putStack(ItemStack.EMPTY)
         } else {
           slot.onSlotChanged()
         }

@@ -22,7 +22,7 @@ public class Integration {
 		IGW("IGWMod", "IngameWikiMod", Side.CLIENT),
 		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics"),
 		MEKANISM("Mekanism"),
-		WIRELESSCRAFTING("ae2wct", "AE2 Wireless Crafting Terminal"),
+		WIRELESSCRAFTING("wct", "AE2 Wireless Crafting Terminal"),
 		JEI("jei", "Just Enough Items", Side.CLIENT);
 
 		private final String modID;

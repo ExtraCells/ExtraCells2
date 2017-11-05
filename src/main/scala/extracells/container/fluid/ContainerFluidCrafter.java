@@ -54,7 +54,7 @@ public class ContainerFluidCrafter extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
@@ -62,20 +62,20 @@ public class ContainerFluidCrafter extends Container {
 			if (this.tileentity.isItemValidForSlot(0, itemstack1)) {
 				if (slotnumber < 10) {
 					if (!mergeItemStack(itemstack1, 10, 36, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				} else if (slotnumber >= 10 && slotnumber <= 36) {
 					if (!mergeItemStack(itemstack1, 0, 1, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				}
 				if (itemstack1.getCount() == 0) {
-					slot.putStack(null);
+					slot.putStack(ItemStack.EMPTY);
 				} else {
 					slot.onSlotChanged();
 				}
 			} else {
-				return null;
+				return ItemStack.EMPTY;
 			}
 		}
 		return itemstack;
