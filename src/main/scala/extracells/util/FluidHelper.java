@@ -1,5 +1,6 @@
 package extracells.util;
 
+import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -22,6 +23,8 @@ public class FluidHelper {
 			return null;
 		}
 		FluidStack drained = fluidHandler.drain(fluid, true);
+		if(fluidHandler instanceof FluidBucketWrapper)
+			itemStack = ((FluidBucketWrapper)fluidHandler).getContainer();
 		return new MutablePair(drained != null && drained.getFluid() == fluid.getFluid() ? drained.amount : 0, itemStack);
 	}
 
@@ -34,6 +37,8 @@ public class FluidHelper {
 			return null;
 		}
 		int filled = fluidHandler.fill(fluid, true);
+		if(fluidHandler instanceof FluidBucketWrapper)
+			itemStack = ((FluidBucketWrapper)fluidHandler).getContainer();
 		return new MutablePair(filled, itemStack);
 	}
 

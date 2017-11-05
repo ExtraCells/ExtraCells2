@@ -46,6 +46,7 @@ import extracells.models.ModelManager;
 import extracells.registries.ItemEnum;
 import extracells.util.ECConfigHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 //TODO: Clean Up
 @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux")
@@ -160,7 +161,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public IItemHandler getConfigInventory(ItemStack is) {
-		return new ECCellInventory(is, "config", 63, 1);
+		return new InvWrapper(new ECCellInventory(is, "config", 63, 1));
 	}
 
 	@Override
@@ -274,7 +275,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 
 	@Override
 	public IItemHandler getUpgradesInventory(ItemStack is) {
-		return new ECCellInventory(is, "upgrades", 2, 1);
+		return new InvWrapper(new ECCellInventory(is, "upgrades", 2, 1));
 	}
 
 	@Override

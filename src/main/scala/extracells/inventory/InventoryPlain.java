@@ -14,7 +14,8 @@ import net.minecraft.util.text.TextComponentString;
 
 import extracells.util.ItemStackUtils;
 import net.minecraftforge.items.IItemHandler;
-import scala.actors.threadpool.Arrays;
+
+import java.util.Arrays;
 
 public class InventoryPlain implements IInventory, IItemHandler {
 

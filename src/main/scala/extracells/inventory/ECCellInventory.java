@@ -14,7 +14,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.items.IItemHandler;
 import scala.actors.threadpool.Arrays;
 
-public class ECCellInventory implements IInventory, IItemHandler {
+public class ECCellInventory implements IInventory {
 
 	private ItemStack storage;
 	private String tagId;
@@ -186,7 +186,6 @@ public class ECCellInventory implements IInventory, IItemHandler {
 	}
 
 	@Nonnull
-	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		if (isSlotEmpty(slot))
 			return ItemStack.EMPTY;
@@ -203,13 +202,11 @@ public class ECCellInventory implements IInventory, IItemHandler {
 		}
 	}
 
-	@Override
 	public int getSlotLimit(int slot) {
 		return slots[slot] == null || slots[slot].isEmpty() ? 64 : slots[slot].getMaxStackSize();
 	}
 
 	@Nonnull
-	@Override
 	public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
 		if (stack == null)
 			return ItemStack.EMPTY;
@@ -237,7 +234,6 @@ public class ECCellInventory implements IInventory, IItemHandler {
 		return slots[slot] == null || slots[slot].isEmpty();
 	}
 
-	@Override
 	public int getSlots() {
 		return slots.length;
 	}
