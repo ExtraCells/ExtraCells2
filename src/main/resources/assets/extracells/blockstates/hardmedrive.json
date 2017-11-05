@@ -1,7 +1,12 @@
 {
+  "forge_marker": 1,
+  "defaults": {
+    "model": "extracells:builtin/hard_drive"
+  },
   "variants": {
-    "normal": {
-      "model": "extracells:builtin/hard_drive"
-    }
+    "facing=north": {"model": "extracells:builtin/hard_drive" },
+    "facing=south": { "model": "extracells:builtin/hard_drive","y": 180 },
+    "facing=west":  { "model": "extracells:builtin/hard_drive","y": 270 },
+    "facing=east":  { "model": "extracells:builtin/hard_drive","y": 90 }
   }
 }

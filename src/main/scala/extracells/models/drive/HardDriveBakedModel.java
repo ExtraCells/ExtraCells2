@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import extracells.block.BlockHardMEDrive;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -40,6 +42,10 @@ public class HardDriveBakedModel implements IBakedModel {
 		if (side == null && state instanceof IExtendedBlockState) {
 			IExtendedBlockState extState = (IExtendedBlockState) state;
 			DriveSlotsState slotsState = extState.getValue(PropertyDrive.INSTANCE);
+			EnumFacing direction = extState.getValue(BlockHardMEDrive.FACING());
+
+			if (slotsState == null)
+				return result;
 
 			for (int row = 0; row < 3; row++) {
 				DriveSlotState slotState = slotsState.getState(row);
@@ -54,7 +60,21 @@ public class HardDriveBakedModel implements IBakedModel {
 				// cell-model being in slot 0,0 at the top left of the drive.
 				float yOffset = -3 * scale + -row * 3 * scale;
 
-				transform.setTranslation(new Vector3f(-4 * scale, yOffset, 0));
+
+				switch (direction){
+					case SOUTH:
+						transform.setTranslation(new Vector3f(4 * scale, yOffset, 0));
+						break;
+					case EAST:
+						transform.setTranslation(new Vector3f(0, yOffset, -4 * scale));
+						break;
+					case WEST:
+						transform.setTranslation(new Vector3f(0, yOffset, 4 * scale));
+						break;
+					default:
+						transform.setTranslation(new Vector3f(-4 * scale, yOffset, 0));
+				}
+
 
 				MatrixVertexTransformer transformer = new MatrixVertexTransformer(transform);
 				for (BakedQuad bakedQuad : bakedCell.getQuads(state, null, rand)) {

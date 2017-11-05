@@ -9,11 +9,13 @@ import appeng.api.networking.IGridNode
 import appeng.api.util.AEPartLocation
 import extracells.block.properties.PropertyDrive
 import extracells.container.ContainerHardMEDrive
+import extracells.gui.GuiHardMEDrive
 import extracells.models.drive.DriveSlotsState
 import extracells.network.GuiHandler
 import extracells.tileentity.TileEntityHardMeDrive
 import extracells.util.{PermissionUtil, TileUtil}
-import net.minecraft.block.properties.IProperty
+import net.minecraft.block.BlockHorizontal
+import net.minecraft.block.properties.{IProperty, PropertyDirection}
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.item.EntityItem
@@ -23,13 +25,14 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.math.{BlockPos, MathHelper}
-import net.minecraft.util.{BlockRenderLayer, EnumFacing, EnumHand}
+import net.minecraft.util._
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.property.{ExtendedBlockState, IExtendedBlockState, IUnlistedProperty}
 
 
-object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ROCK, 2.0F, 1000000.0F) with TGuiBlock {
+object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ROCK, 2.0F, 1000000.0F)  {
 
+  /*
   override def getServerGuiElement(player: EntityPlayer, world: World, pos: BlockPos): Any = {
     val tile = world.getTileEntity(pos)
     if (tile == null || player == null) return null
@@ -41,38 +44,58 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
     }
   }
 
+  @SideOnly(Side.CLIENT)
+  override def getClientGuiElement(player: EntityPlayer, world: World, pos: BlockPos): Any = {
+    val tile = world.getTileEntity(pos)
+    if (tile == null || player == null) return null
+    tile match {
+      case tileMe: TileEntityHardMeDrive => {
+        return new GuiHardMEDrive(player.inventory, tileMe)
+      }
+      case _ => return null
+    }
+  }*/
+  var _FACING: PropertyDirection = null
+
+  def FACING: PropertyDirection = {
+    if (_FACING == null)
+      _FACING = BlockHorizontal.FACING
+    _FACING
+  }
+
   //Only needed because BlockEnum is in java. not in scala
   val instance = this
-
 
   setUnlocalizedName("block.hardmedrive");
 
   override def createNewTileEntity(world: World, meta: Int): TileEntity = new TileEntityHardMeDrive()
 
+  override def getStateForPlacement(world: World, pos: BlockPos, facing: EnumFacing, hitX: Float, hitY: Float, hitZ: Float, meta: Int, placer: EntityLivingBase, stack: ItemStack): IBlockState = getDefaultState.withProperty(FACING, placer.getHorizontalFacing.getOpposite)
+
   private def dropItems(world: World, pos: BlockPos) {
     val x = pos.getX
     val y = pos.getY
     val z = pos.getZ
-    val rand: Random = new Random
-    val tileEntity: TileEntity = world.getTileEntity(pos)
+    val rand = new Random
+    val tileEntity = world.getTileEntity(pos)
     if (!(tileEntity.isInstanceOf[TileEntityHardMeDrive])) {
       return
     }
-    val inventory: IInventory = (tileEntity.asInstanceOf[TileEntityHardMeDrive]).getInventory
+    val inventory = (tileEntity.asInstanceOf[TileEntityHardMeDrive]).getInventory
 
-    var i: Int = 0
+    var i = 0
     while (i < inventory.getSizeInventory) {
 
-      val item: ItemStack = inventory.getStackInSlot(i)
+      val item = inventory.getStackInSlot(i)
       if (item != null && item.stackSize > 0) {
-        val rx: Float = rand.nextFloat * 0.8F + 0.1F
-        val ry: Float = rand.nextFloat * 0.8F + 0.1F
-        val rz: Float = rand.nextFloat * 0.8F + 0.1F
-        val entityItem: EntityItem = new EntityItem(world, x + rx, y + ry, z + rz, item.copy)
+        val rx = rand.nextFloat * 0.8F + 0.1F
+        val ry = rand.nextFloat * 0.8F + 0.1F
+        val rz = rand.nextFloat * 0.8F + 0.1F
+        val entityItem = new EntityItem(world, x + rx, y + ry, z + rz, item.copy)
         if (item.hasTagCompound) {
           entityItem.getEntityItem.setTagCompound(item.getTagCompound.copy.asInstanceOf[NBTTagCompound])
         }
-        val factor: Float = 0.05F
+        val factor = 0.05F
         entityItem.motionX = rand.nextGaussian * factor
         entityItem.motionY = rand.nextGaussian * factor + 0.2F
         entityItem.motionZ = rand.nextGaussian * factor
@@ -116,6 +139,8 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
   override def onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, entity: EntityLivingBase, stack: ItemStack) {
     super.onBlockPlacedBy(world, pos, state, entity, stack)
     val l = MathHelper.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+
+    world.setBlockState(pos, state.withProperty(FACING, entity.getHorizontalFacing.getOpposite), 2)
 
     //TODO: Add rotation
     /*if (!entity.isSneaking())
@@ -196,7 +221,8 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
 
   override def getBlockLayer: BlockRenderLayer = BlockRenderLayer.CUTOUT
 
-  override protected def createBlockState = new ExtendedBlockState(this, new Array[IProperty[_ <: Comparable[_]]](0), Array[IUnlistedProperty[_]](PropertyDrive.INSTANCE))
+  override protected def createBlockState =
+    new ExtendedBlockState(this, Array[IProperty[_ <: Comparable[_]]](FACING), Array[IUnlistedProperty[_]](PropertyDrive.INSTANCE))
 
   override def getExtendedState(state: IBlockState, world: IBlockAccess, pos: BlockPos): IBlockState = {
     val te = TileUtil.getTile(world, pos, classOf[TileEntityHardMeDrive])
@@ -204,5 +230,19 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
     val extState = super.getExtendedState(state, world, pos).asInstanceOf[IExtendedBlockState]
     extState.withProperty(PropertyDrive.INSTANCE, DriveSlotsState.createState(te))
   }
+
+  override def getStateFromMeta(meta: Int): IBlockState = {
+    var enumfacing = EnumFacing.getFront(meta)
+    if (enumfacing.getAxis eq EnumFacing.Axis.Y) enumfacing = EnumFacing.NORTH
+    this.getDefaultState.withProperty(FACING, enumfacing)
+  }
+
+  override def getMetaFromState(state: IBlockState): Int = state.getValue(FACING).getIndex
+
+  override def withRotation(state: IBlockState, rot: Rotation): IBlockState = state.withProperty(FACING, rot.rotate(state.getValue(FACING)))
+
+
+  override def withMirror(state : IBlockState, mirrorIn : Mirror) : IBlockState =
+    state.withRotation(mirrorIn.toRotation(state.getValue(FACING)))
 
 }

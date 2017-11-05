@@ -282,6 +282,7 @@ public class TileEntityCertusTank extends TileBase {
 				&& resource.getFluid() != tank.getFluid().getFluid()) {
 				return 0;
 			}
+			markDirty();
 			return TileEntityCertusTank.this.fill(resource, doFill, true);
 		}
 
@@ -292,7 +293,7 @@ public class TileEntityCertusTank extends TileBase {
 				|| resource.getFluid() != tank.getFluid().getFluid()) {
 				return null;
 			}
-
+			markDirty();
 			return TileEntityCertusTank.this.drain(resource, doDrain, true);
 		}
 
@@ -302,7 +303,7 @@ public class TileEntityCertusTank extends TileBase {
 			if (tank.getFluid() == null) {
 				return null;
 			}
-
+			markDirty();
 			return drain(new FluidStack(tank.getFluid(), maxDrain), doDrain);
 		}
 	}
