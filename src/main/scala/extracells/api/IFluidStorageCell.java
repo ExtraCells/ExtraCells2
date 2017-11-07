@@ -6,9 +6,8 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.fluids.Fluid;
 
-import appeng.api.storage.ICellWorkbenchItem;
 
-public interface IFluidStorageCell extends ICellWorkbenchItem {
+public interface IFluidStorageCell extends IStorageCellBase {
 
 	/**
 	 * @param ItemStack
@@ -16,9 +15,5 @@ public interface IFluidStorageCell extends ICellWorkbenchItem {
 	 * all Fluids
 	 */
 	ArrayList<Fluid> getFilter(ItemStack is);
-
-	int getMaxBytes(ItemStack is);
-
-	int getMaxTypes(ItemStack is);
 
 }

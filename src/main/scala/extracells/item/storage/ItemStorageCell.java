@@ -3,6 +3,7 @@ package extracells.item.storage;
 import java.util.List;
 
 import appeng.api.storage.IStorageChannel;
+import extracells.api.IHandlerStorageBase;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +25,6 @@ import appeng.api.storage.ICellRegistry;
 import appeng.api.storage.ICellWorkbenchItem;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.api.IHandlerFluidStorage;
 import extracells.item.ItemECBase;
 import extracells.models.ModelManager;
 import extracells.registries.ItemEnum;
@@ -46,10 +46,10 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 	public void addInformation(ItemStack itemStack, World world, List list, ITooltipFlag advanced) {
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 		IMEInventoryHandler<IAEFluidStack> handler = cellRegistry.getCellInventory(itemStack, null, channel);
-		if (!(handler instanceof IHandlerFluidStorage)) {
+		if (!(handler instanceof IHandlerStorageBase)) {
 			return;
 		}
-		IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
+		IHandlerStorageBase cellHandler = (IHandlerStorageBase) handler;
 		boolean partitioned = cellHandler.isFormatted();
 		long usedBytes = cellHandler.usedBytes();
 
@@ -101,10 +101,10 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 		}
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 		IMEInventoryHandler<IAEFluidStack> handler = cellRegistry.getCellInventory(itemStack, null, channel);
-		if (!(handler instanceof IHandlerFluidStorage)) {
+		if (!(handler instanceof IHandlerStorageBase)) {
 			return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
 		}
-		IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
+		IHandlerStorageBase cellHandler = (IHandlerStorageBase) handler;
 		if (cellHandler.usedBytes() == 0 && player.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(definition.ordinal()))) {
 			return new ActionResult<>(EnumActionResult.SUCCESS, ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + definition.componentMetaStart));
 		}

@@ -6,7 +6,7 @@ import appeng.api.AEApi
 import appeng.api.config.{AccessRestriction, Actionable, FuzzyMode}
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.IMEInventoryHandler
-import extracells.api.{ECApi, IHandlerFluidStorage, IPortableGasStorageCell}
+import extracells.api.{ECApi, IHandlerGasStorage, IPortableGasStorageCell}
 import extracells.inventory.{ECFluidFilterInventory, InventoryPlain}
 import extracells.item.{ItemECBase, ItemFluid, PowerItem}
 import extracells.models.ModelManager
@@ -14,7 +14,6 @@ import extracells.util.StorageChannels
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.inventory.IInventory
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.text.translation.I18n
@@ -39,10 +38,10 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
     val list2 = list.asInstanceOf[util.List[String]]
     val handler: IMEInventoryHandler[IAEFluidStack] = AEApi.instance.registries.cell.getCellInventory(itemStack, null, StorageChannels.FLUID)
 
-    if (!(handler.isInstanceOf[IHandlerFluidStorage])) {
+    if (!(handler.isInstanceOf[IHandlerGasStorage])) {
       return
     }
-    val cellHandler: IHandlerFluidStorage = handler.asInstanceOf[IHandlerFluidStorage]
+    val cellHandler: IHandlerGasStorage = handler.asInstanceOf[IHandlerGasStorage]
     val partitioned: Boolean = cellHandler.isFormatted
     val usedBytes: Long = cellHandler.usedBytes
     val aeCurrentPower: Double = getAECurrentPower(itemStack)
