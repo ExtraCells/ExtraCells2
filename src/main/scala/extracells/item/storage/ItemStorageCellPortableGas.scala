@@ -12,6 +12,7 @@ import extracells.item.{ItemECBase, ItemFluid, PowerItem}
 import extracells.models.ModelManager
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.inventory.IInventory
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.text.translation.I18n
