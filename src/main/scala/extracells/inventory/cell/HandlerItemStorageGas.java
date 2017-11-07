@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.api.IHandlerGasStorage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -22,10 +23,9 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
 import extracells.api.IGasStorageCell;
-import extracells.api.IHandlerFluidStorage;
 
 //TODO: rewrite
-public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
+public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>, IHandlerGasStorage {
 
 	private NBTTagCompound stackTag;
 	protected ArrayList<FluidStack> fluidStacks = new ArrayList<FluidStack>();

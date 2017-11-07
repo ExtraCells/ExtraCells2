@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.Fluid;
 
 import appeng.api.storage.ICellWorkbenchItem;
 
-public interface IGasStorageCell extends ICellWorkbenchItem, IFluidStorageCell {
+public interface IGasStorageCell extends IStorageCellBase {
 
 	/**
 	 * @param ItemStack
@@ -16,9 +16,5 @@ public interface IGasStorageCell extends ICellWorkbenchItem, IFluidStorageCell {
 	 * all Gas
 	 */
 	ArrayList<Fluid> getFilter(ItemStack is);
-
-	int getMaxBytes(ItemStack is);
-
-	int getMaxTypes(ItemStack is);
 
 }
