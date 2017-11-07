@@ -28,10 +28,10 @@ public enum CellDefinition {
 	public static void create() {
 		StorageRegistry.Builder componentBuilder = new StorageRegistry.Builder("components");
 		for (CellDefinition definition : values()) {
+			definition.componentMetaStart = componentBuilder.size();
 			StorageRegistry.Builder cellBuilder = new StorageRegistry.Builder("cells");
 			definition.create(componentBuilder, cellBuilder);
 			definition.cells = cellBuilder.build();
-			definition.componentMetaStart = componentBuilder.size();
 		}
 		components = componentBuilder.build();
 	}
