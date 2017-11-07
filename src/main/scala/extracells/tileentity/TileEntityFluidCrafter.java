@@ -58,6 +58,12 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 
 		private ItemStack[] inv = new ItemStack[9];
 
+		private FluidCrafterInventory(){
+			for(int i = 0; i < inv.length; i++){
+				inv[i] = ItemStack.EMPTY;
+			}
+		}
+
 		@Override
 		public void closeInventory(EntityPlayer player) {
 		}
@@ -65,13 +71,13 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 		@Override
 		public ItemStack decrStackSize(int slot, int amt) {
 			ItemStack stack = getStackInSlot(slot);
-			if (stack != null) {
+			if (stack != null && !stack.isEmpty()) {
 				if (stack.getCount() <= amt) {
-					setInventorySlotContents(slot, null);
+					setInventorySlotContents(slot, ItemStack.EMPTY);
 				} else {
 					stack = stack.splitStack(amt);
 					if (stack.getCount() == 0) {
-						setInventorySlotContents(slot, null);
+						setInventorySlotContents(slot, ItemStack.EMPTY);
 					}
 				}
 			}
@@ -111,7 +117,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 		@Nullable
 		@Override
 		public ItemStack removeStackFromSlot(int index) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 
 		@Override

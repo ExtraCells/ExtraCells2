@@ -51,7 +51,7 @@ public class GuiFluidCrafter extends GuiContainer {
 	}
 
 	private void renderBackground(Slot slot) {
-		if (slot.getStack() == null && slot.slotNumber < 9) {
+		if ((slot.getStack() == null || slot.getStack().isEmpty()) && slot.slotNumber < 9) {
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
