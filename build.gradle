@@ -23,6 +23,9 @@ if (System.getenv("BUILD_NUMBER") != null) {
 if (System.getenv("DRONE_BUILD_NUMBER") != null) {
 	version = "${System.getenv("DRONE_BUILD_NUMBER")}"
 }
+if (System.getenv("APPVEYOR_BUILD_NUMBER") != null) {
+	version = "${System.getenv("APPVEYOR_BUILD_NUMBER")}"
+}
 
 buildProps.withReader {
     def prop = new Properties()
