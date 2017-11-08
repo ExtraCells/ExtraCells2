@@ -200,7 +200,8 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 				ISidedInventory inv = (ISidedInventory) tile;
 				for (int i : inv.getSlotsForFace(facing.getOpposite())) {
 					if (inv.canInsertItem(i, stack.createItemStack(), facing.getOpposite())) {
-						if (inv.getStackInSlot(i) == null) {
+						ItemStack invStack = inv.getStackInSlot(i);
+						if (invStack == null || invStack.isEmpty()) {
 							inv.setInventorySlotContents(i,
 								stack.createItemStack());
 							return stack0;
@@ -231,7 +232,8 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 				IInventory inv = (IInventory) tile;
 				for (int i = 0; i < inv.getSizeInventory(); i++) {
 					if (inv.isItemValidForSlot(i, stack.createItemStack())) {
-						if (inv.getStackInSlot(i) == null) {
+						ItemStack invStack = inv.getStackInSlot(i);
+						if (invStack == null || invStack.isEmpty()) {
 							inv.setInventorySlotContents(i, stack.createItemStack());
 							return stack0;
 						} else if (ItemUtils.areItemEqualsIgnoreStackSize(
