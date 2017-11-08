@@ -51,7 +51,8 @@ class ContainerHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDri
         } else {
           slot.onSlotChanged()
         }
-      }
+      } else
+        return ItemStack.EMPTY
     }
     itemstack
   }

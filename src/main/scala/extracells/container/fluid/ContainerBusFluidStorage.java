@@ -1,5 +1,6 @@
 package extracells.container.fluid;
 
+import extracells.gui.IFluidSlotGuiTransfer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -7,12 +8,11 @@ import net.minecraft.item.ItemStack;
 
 import extracells.container.ContainerUpgradeable;
 import extracells.container.slot.SlotRespective;
-import extracells.gui.fluid.GuiBusFluidStorage;
 import extracells.part.fluid.PartFluidStorage;
 
 public class ContainerBusFluidStorage extends ContainerUpgradeable {
 
-	private GuiBusFluidStorage guiBusFluidStorage;
+	private IFluidSlotGuiTransfer guiBusFluidStorage;
 
 	public PartFluidStorage part;
 
@@ -41,7 +41,7 @@ public class ContainerBusFluidStorage extends ContainerUpgradeable {
 		return part.isValid();
 	}
 
-	public void setGui(GuiBusFluidStorage _guiBusFluidStorage) {
+	public void setGui(IFluidSlotGuiTransfer _guiBusFluidStorage) {
 		this.guiBusFluidStorage = _guiBusFluidStorage;
 	}
 

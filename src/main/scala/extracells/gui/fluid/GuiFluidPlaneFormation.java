@@ -3,6 +3,7 @@ package extracells.gui.fluid;
 import java.io.IOException;
 import java.util.List;
 
+import extracells.gui.IFluidSlotGuiTransfer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,7 @@ import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
 public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> implements
-	IFluidSlotGui {
+	IFluidSlotGui, IFluidSlotGuiTransfer {
 
 	private PartFluidPlaneFormation part;
 	private EntityPlayer player;
@@ -92,13 +93,15 @@ public class GuiFluidPlaneFormation extends GuiBase<ContainerPlaneFormation> imp
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 	}
 
-	public void shiftClick(ItemStack itemStack) {
+	@Override
+	public boolean shiftClick(ItemStack itemStack) {
 		FluidStack containerFluid = FluidHelper.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 
 		if (this.fluidSlot.getFluid() == null || fluid != null && this.fluidSlot.getFluid() == fluid) {
 			this.fluidSlot.handleFluidContainer(itemStack);
 		}
+		return true;
 	}
 
 	@Override

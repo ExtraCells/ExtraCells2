@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.gui.IFluidSlotGuiTransfer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -29,7 +30,7 @@ import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
 
 public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
-	WidgetFluidSlot.IConfigurable, IFluidSlotGui {
+	WidgetFluidSlot.IConfigurable, IFluidSlotGui, IFluidSlotGuiTransfer {
 
 	private PartFluidIO part;
 	private byte filterSize;
@@ -144,11 +145,12 @@ public class GuiBusFluidIO extends GuiBase<ContainerBusFluidIO> implements
 		}
 	}
 
+	@Override
 	public boolean shiftClick(ItemStack itemStack) {
 		FluidStack containerFluid = FluidHelper.getFluidFromContainer(itemStack);
 		Fluid fluid = containerFluid == null ? null : containerFluid.getFluid();
 		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
-			if (fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid)) {
+			if (fluid != null && (fluidSlot.getFluid() == null || fluidSlot.getFluid() == fluid) && fluidSlot.isVisable()) {
 				fluidSlot.handleContainer(itemStack);
 				return true;
 			}

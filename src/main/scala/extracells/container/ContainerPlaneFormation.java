@@ -1,18 +1,18 @@
 package extracells.container;
 
+import extracells.gui.IFluidSlotGuiTransfer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import extracells.container.slot.SlotRespective;
-import extracells.gui.fluid.GuiFluidPlaneFormation;
 import extracells.part.fluid.PartFluidPlaneFormation;
 
 //TODO:remove the gui from this
 public class ContainerPlaneFormation extends ContainerUpgradeable {
 
-	private GuiFluidPlaneFormation gui;
+	private IFluidSlotGuiTransfer gui;
 
 	public ContainerPlaneFormation(PartFluidPlaneFormation part,
 		EntityPlayer player) {
@@ -39,7 +39,7 @@ public class ContainerPlaneFormation extends ContainerUpgradeable {
 		return true;
 	}
 
-	public void setGui(GuiFluidPlaneFormation gui) {
+	public void setGui(IFluidSlotGuiTransfer gui) {
 		this.gui = gui;
 	}
 
