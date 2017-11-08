@@ -33,7 +33,7 @@ class PartGasTerminal extends PartFluidTerminal {
   @Optional.Method(modid = "MekanismAPI|gas")
   def doWorkGas {
     val secondSlot: ItemStack = this.inventory.getStackInSlot(1)
-    if (secondSlot != null && secondSlot.getCount >= secondSlot.getMaxStackSize) return
+    if (secondSlot != null && (!secondSlot.isEmpty) && secondSlot.getCount >= secondSlot.getMaxStackSize) return
     var container: ItemStack = this.inventory.getStackInSlot(0)
     if (container == null || container.isEmpty)
       doNextFill = false

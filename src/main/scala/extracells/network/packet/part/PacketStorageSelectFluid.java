@@ -35,7 +35,7 @@ public class PacketStorageSelectFluid extends Packet {
 		@Override
 		public void onPacketData(PacketBufferEC data, EntityPlayerMP player) throws IOException {
 			Fluid fluid = data.readFluid();
-			ContainerStorage containerStorage = GuiUtil.getContainer(player, ContainerFluidStorage.class);
+			ContainerStorage containerStorage = GuiUtil.getContainer(player, ContainerStorage.class);
 			if (fluid == null || containerStorage == null) {
 				return;
 			}
