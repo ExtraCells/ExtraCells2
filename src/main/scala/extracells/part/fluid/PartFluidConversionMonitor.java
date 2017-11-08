@@ -34,7 +34,7 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 		}
 		ItemStack heldItem = player.getHeldItem(hand);
 		IMEMonitor<IAEFluidStack> mon = getFluidStorage();
-		if (this.locked && heldItem != null && mon != null) {
+		if (this.locked && heldItem != null && (!heldItem.isEmpty()) && mon != null) {
 			ItemStack itemStack = heldItem.copy();
 			itemStack.setCount(1);
 			if (FluidHelper.isDrainableFilledContainer(itemStack)) {
@@ -52,17 +52,15 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 
 					Pair<Integer, ItemStack> emptyStack = FluidHelper.drainStack(itemStack, f);
 					ItemStack empty = emptyStack.getRight();
-					if (empty != null) {
+					if (empty != null && !empty.isEmpty()) {
 						dropItems(getHost().getTile().getWorld(), getHost().getTile().getPos().offset(getFacing()), empty);
 					}
 					ItemStack s3 = heldItem.copy();
 					s3.setCount(s3.getCount() - 1);
 					if (s3.getCount() == 0) {
-						player.inventory.setInventorySlotContents(
-							player.inventory.currentItem, null);
+						player.setHeldItem(hand, ItemStack.EMPTY);
 					} else {
-						player.inventory.setInventorySlotContents(
-							player.inventory.currentItem, s3);
+						player.setHeldItem(hand, s3);
 					}
 				}
 				return true;
@@ -86,17 +84,15 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 						return true;
 					}
 					ItemStack empty = empty1.getRight();
-					if (empty != null) {
+					if (empty != null && !empty.isEmpty()) {
 						dropItems(getHost().getTile().getWorld(), getHost().getTile().getPos().offset(getFacing()), empty);
 					}
 					ItemStack s3 = heldItem.copy();
 					s3.setCount(s3.getCount() - 1);
 					if (s3.getCount() == 0) {
-						player.inventory.setInventorySlotContents(
-							player.inventory.currentItem, null);
+						player.setHeldItem(hand, ItemStack.EMPTY);
 					} else {
-						player.inventory.setInventorySlotContents(
-							player.inventory.currentItem, s3);
+						player.setHeldItem(hand, s3);
 					}
 				}
 				return true;

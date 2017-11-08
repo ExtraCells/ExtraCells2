@@ -37,7 +37,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
     if (player.world.isRemote) return true
     val s: ItemStack = player.getHeldItem(hand)
     val mon: IMEMonitor[IAEFluidStack] = getFluidStorage
-    if (this.locked && s != null && mon != null) {
+    if (this.locked && s != null && (!s.isEmpty) && mon != null) {
       val s2: ItemStack = s.copy
       s2.setCount(1)
       if (GasUtil.isFilled(s2)) {
@@ -50,17 +50,13 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
           mon.injectItems(fl, Actionable.MODULATE, new MachineSource(this))
           val empty1: MutablePair[Integer, ItemStack] = GasUtil.drainStack(s2, g)
           val empty: ItemStack = empty1.right
-          if (empty != null) {
+          if (empty != null && !empty.isEmpty) {
             dropItems(getHost.getTile.getWorld, getHost.getTile.getPos.offset(getFacing), empty)
           }
           val s3: ItemStack = s.copy
           s3.setCount(s3.getCount - 1)
-          if (s3.getCount == 0) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, null)
-          }
-          else {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, s3)
-          }
+          if (s3.getCount == 0) player.setHeldItem(hand, ItemStack.EMPTY)
+          else player.setHeldItem(hand, s3)
         }
         return true
       }
@@ -80,17 +76,13 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
             return true
           }
           val empty: ItemStack = empty1.right
-          if (empty != null) {
+          if (empty != null && !empty.isEmpty) {
             dropItems(getHost.getTile.getWorld, getHost.getTile.getPos.offset(getFacing), empty)
           }
           val s3: ItemStack = s.copy
           s3.setCount(s3.getCount - 1)
-          if (s3.getCount == 0) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, null)
-          }
-          else {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, s3)
-          }
+          if (s3.getCount == 0) player.setHeldItem(hand, ItemStack.EMPTY)
+          else player.setHeldItem(hand, s3)
         }
         return true
       }
