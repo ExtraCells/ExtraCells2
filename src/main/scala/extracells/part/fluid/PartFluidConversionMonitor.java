@@ -59,11 +59,9 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 					ItemStack s3 = heldItem.copy();
 					s3.stackSize = s3.stackSize - 1;
 					if (s3.stackSize == 0) {
-						player.inventory.setInventorySlotContents(
-							player.inventory.currentItem, null);
+						player.setHeldItem(hand, null);
 					} else {
-						player.inventory.setInventorySlotContents(
-							player.inventory.currentItem, s3);
+						player.setHeldItem(hand, s3);
 					}
 				}
 				return true;
@@ -101,11 +99,9 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 					ItemStack s3 = heldItem.copy();
 					s3.stackSize = s3.stackSize - 1;
 					if (s3.stackSize == 0) {
-						player.inventory.setInventorySlotContents(
-							player.inventory.currentItem, null);
+						player.setHeldItem(hand, null);
 					} else {
-						player.inventory.setInventorySlotContents(
-							player.inventory.currentItem, s3);
+						player.setHeldItem(hand, s3);
 					}
 				}
 				return true;

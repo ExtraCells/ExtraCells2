@@ -56,12 +56,8 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
           }
           val s3: ItemStack = s.copy
           s3.stackSize = s3.stackSize - 1
-          if (s3.stackSize == 0) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, null)
-          }
-          else {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, s3)
-          }
+          if (s3.stackSize == 0) player.setHeldItem(hand, null)
+          else player.setHeldItem(hand, s3)
         }
         return true
       }
@@ -86,12 +82,8 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
           }
           val s3: ItemStack = s.copy
           s3.stackSize = s3.stackSize - 1
-          if (s3.stackSize == 0) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, null)
-          }
-          else {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, s3)
-          }
+          if (s3.stackSize == 0) player.setHeldItem(hand, null)
+          else player.setHeldItem(hand, s3)
         }
         return true
       }
