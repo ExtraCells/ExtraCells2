@@ -1,16 +1,16 @@
 package extracells.container.fluid;
 
+import extracells.gui.IFluidSlotGuiTransfer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import extracells.container.ContainerUpgradeable;
-import extracells.gui.fluid.GuiBusFluidIO;
 import extracells.part.fluid.PartFluidIO;
 
 public class ContainerBusFluidIO extends ContainerUpgradeable {
 	private PartFluidIO part;
-	private GuiBusFluidIO guiBusFluidIO;
+	private IFluidSlotGuiTransfer guiBusFluidIO;
 
 	public ContainerBusFluidIO(PartFluidIO part, EntityPlayer player) {
 		this.part = part;
@@ -28,7 +28,7 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 		// NOPE
 	}
 
-	public void setGui(GuiBusFluidIO _guiBusFluidIO) {
+	public void setGui(IFluidSlotGuiTransfer _guiBusFluidIO) {
 		this.guiBusFluidIO = _guiBusFluidIO;
 	}
 
@@ -36,7 +36,7 @@ public class ContainerBusFluidIO extends ContainerUpgradeable {
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
 		//TODO:remove the gui from this
 		if (this.guiBusFluidIO != null && this.guiBusFluidIO.shiftClick(getSlot(slotnumber).getStack())) {
-			return this.inventorySlots.get(slotnumber).getStack();
+			return null;
 		}
 
 		ItemStack itemstack = null;
