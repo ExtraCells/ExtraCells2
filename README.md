@@ -10,6 +10,6 @@ To build this, download the project (ZIP or fork or whatever) and execute the bu
 
 Thanks to arbrarsyed for ForgeGradle, to AlgorithmX2 for his massive support and his *amazing* API, cyntain and tgame14 for some very cool textures and Vexatos, crafteverywhere, SSCXM and VeryBigBro for the cool localizations! 
 
-Dmod: [![Build Status](http://shadowcity.net:8080/job/ecrv2/badge/icon)](http://shadowcity.net:8080/job/ecrv2/)
+AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/32n8cjqh2bhu599e/branch/rv5-1.12?svg=true)](https://ci.appveyor.com/project/DrummerMC/extracells2/branch/rv5-1.12)
 
 ExtraCells 2 is licensed under the MIT license.
