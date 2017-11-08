@@ -160,6 +160,9 @@ def getBuildNumber() {
     else if (System.getenv("DRONE_BUILD_NUMBER") != null) {
         return "${System.getenv("DRONE_BUILD_NUMBER")}"
     }
+	else if (System.getenv("APPVEYOR_BUILD_NUMBER") != null) {
+        return "${System.getenv("APPVEYOR_BUILD_NUMBER")}"
+    }
     return "NIGHTLY"
 }
 
