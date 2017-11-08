@@ -54,6 +54,11 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 			return isItemValidForInputSlot(i, itemStack);
 		}
+
+		@Override
+		protected void onContentsChanged() {
+			saveData();
+		}
 	};
 	protected Fluid currentFluid;
 

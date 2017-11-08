@@ -90,9 +90,19 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 	private final List<IAEStack> removeFromExport = new ArrayList<IAEStack>();
 	private final List<IAEStack> addToExport = new ArrayList<IAEStack>();
 	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orElse(null);
-	private final FluidTank tank = new FluidTank(10000);
+	private final FluidTank tank = new FluidTank(10000){
+		@Override
+		protected void onContentsChanged() {
+			saveData();
+		}
+	};
 
-	public final FluidInterfaceInventory inventory = new FluidInterfaceInventory(this);
+	public final FluidInterfaceInventory inventory = new FluidInterfaceInventory(this){
+		@Override
+		protected void onContentsChanged() {
+			saveData();
+		}
+	};
 
 	private boolean update = false;
 	private IAEItemStack toExport = null;

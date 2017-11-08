@@ -44,11 +44,20 @@ import extracells.util.ItemUtils;
 
 public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
-	public String filter = "";
+	private String filter = "";
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
 		return 5.0F;
+	}
+
+	public String getFilter(){
+		return filter;
+	}
+
+	public void setFilter(String filter){
+		this.filter = filter;
+		saveData();
 	}
 
 	private boolean isItemValid(IAEItemStack s) {

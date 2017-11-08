@@ -20,7 +20,7 @@ public class ContainerOreDictExport extends Container {
 		bindPlayerInventory(player.inventory);
 		TileEntity tile = this.part.getHostTile();
 		if (tile != null && tile.hasWorld() && !tile.getWorld().isRemote) {
-			NetworkUtil.sendToPlayer(new PacketOreDictExport(this.part.filter), player);
+			NetworkUtil.sendToPlayer(new PacketOreDictExport(this.part.getFilter()), player);
 		}
 	}
 
@@ -39,7 +39,7 @@ public class ContainerOreDictExport extends Container {
 	}
 
 	public void setFilter(String filter) {
-		part.filter = filter;
+		part.setFilter(filter);
 	}
 
 	@Override

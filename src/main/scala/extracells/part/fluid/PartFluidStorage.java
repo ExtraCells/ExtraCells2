@@ -60,6 +60,11 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 			return itemStack != null && AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack);
 		}
+
+		@Override
+		protected void onContentsChanged() {
+			saveData();
+		}
 	};
 	private int priority = 0;
 	protected HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);

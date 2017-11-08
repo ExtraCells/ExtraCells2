@@ -82,4 +82,8 @@ public abstract class TileBase extends TileEntity {
 			return storageGrid.getInventory(channel);
 		}
 	}
+
+	protected void saveData(){
+		markDirty();
+	}
 }

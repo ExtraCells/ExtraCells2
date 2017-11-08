@@ -42,7 +42,12 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 	public static DriveSlotsState tempDriveState;
 
 	private final byte[] cellStatuses = new byte[6];
-	private final InventoryPartDrive inventory = new InventoryPartDrive(this);
+	private final InventoryPartDrive inventory = new InventoryPartDrive(this){
+		@Override
+		protected void onContentsChanged() {
+			saveData();
+		}
+	};
 	private int priority = 0; // TODO
 	private short[] blinkTimers; // TODO
 	private List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();

@@ -198,6 +198,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			if (host != null) {
 				host.markForUpdate();
 			}
+			saveData();
 			return true;
 		}
 		if (WrenchUtil.canWrench(s, player, getHostTile().getPos())) {
@@ -214,6 +215,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 				player.sendMessage(new TextComponentTranslation(
 					"chat.appliedenergistics2.isNowUnlocked"));
 			}
+			saveData();
 			return true;
 		}
 		if (this.locked) {

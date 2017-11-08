@@ -45,6 +45,7 @@ public class InventoryPlain implements IInventory {
 
 		if (itemStack != null && !itemStack.isEmpty()) {
 			this.markDirty();
+			onContentsChanged();
 		}
 
 		return itemStack;
@@ -86,16 +87,20 @@ public class InventoryPlain implements IInventory {
 			return ItemStack.EMPTY;
 		if (isSlotEmpty(slot))
 		{
-			if (!simulate)
+			if (!simulate) {
 				slots[slot] = stack;
+				onContentsChanged();
+			}
 			return stack;
 		}else{
 			ItemStack oldStack = slots[slot];
 			if ((!ItemStack.areItemStackTagsEqual(stack, oldStack)) && oldStack.getMaxStackSize() > oldStack.getCount()){
 				ItemStack newStack = stack.copy();
 				newStack.setCount(Math.min(newStack.getCount(), oldStack.getMaxStackSize() - oldStack.getCount()));
-				if(!simulate)
+				if(!simulate) {
 					oldStack.setCount(oldStack.getCount() + newStack.getCount());
+					onContentsChanged();
+				}
 				return newStack;
 			}else
 				return ItemStack.EMPTY;
@@ -112,13 +117,17 @@ public class InventoryPlain implements IInventory {
 			return ItemStack.EMPTY;
 		ItemStack stack = slots[slot].copy();
 		if(amount >= stack.getCount()){
-			if(!simulate)
+			if(!simulate){
 				slots[slot] = ItemStack.EMPTY;
+				onContentsChanged();
+			}
 			return stack;
 		}else{
 			stack.setCount(amount);
-			if(!simulate)
+			if(!simulate) {
 				slots[slot].setCount(slots[slot].getCount() - amount);
+				onContentsChanged();
+			}
 			return stack;
 		}
 	}
@@ -167,6 +176,7 @@ public class InventoryPlain implements IInventory {
 		ItemStack added = slot.copy();
 		added.setCount(slot.getCount() + amount > stackLimit ? stackLimit : amount);
 		slot.setCount(slot.getCount() +  added.getCount());
+		onContentsChanged();
 		return added;
 	}
 
@@ -209,8 +219,7 @@ public class InventoryPlain implements IInventory {
 			int j = nbttagcompound.getByte("Slot") & 255;
 
 			if (j >= 0 && j < this.slots.length) {
-				this.slots[j] = ItemStack.EMPTY.copy();
-				this.slots[j].deserializeNBT(nbttagcompound);
+				this.slots[j] = new ItemStack(nbttagcompound);
 			}
 		}
 	}
@@ -221,7 +230,7 @@ public class InventoryPlain implements IInventory {
 			stack.setCount(getInventoryStackLimit());
 		}
 		this.slots[index] = stack;
-
+		onContentsChanged();
 		markDirty();
 	}
 
@@ -258,5 +267,9 @@ public class InventoryPlain implements IInventory {
 		for (int i = 0; i < slots.length; i++) {
 			slots[i] = ItemStack.EMPTY;
 		}
+		onContentsChanged();
+	}
+
+	protected void onContentsChanged() {
 	}
 }
