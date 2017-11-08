@@ -124,6 +124,11 @@ public class TileEntityFluidInterface extends TileBase implements
 					}
 					return this;
 				}
+
+				@Override
+				protected void onContentsChanged() {
+					saveData();
+				}
 			};
 			this.fluidFilter[i] = "";
 			fluidHandlers[i] = new FluidHandler(tank, i);

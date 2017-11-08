@@ -43,7 +43,12 @@ import io.netty.buffer.ByteBuf;
 public abstract class PartFluidIO extends PartECBase implements IGridTickable, IInventoryListener, IFluidSlotListener, IUpgradeable {
 
 	public final Fluid[] filterFluids = new Fluid[9];
-	private final UpgradeInventory upgradeInventory = new UpgradeInventory(this);
+	private final UpgradeInventory upgradeInventory = new UpgradeInventory(this){
+		@Override
+		protected void onContentsChanged() {
+			saveData();
+		}
+	};
 	private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 	protected byte filterSize;
 	protected byte speedState;

@@ -69,4 +69,8 @@ public abstract class TileBase extends TileEntity {
 			return storageGrid.getItemInventory();
 		}
 	}
+
+	protected void saveData(){
+		markDirty();
+	}
 }

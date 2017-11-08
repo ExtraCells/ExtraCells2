@@ -58,6 +58,11 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 			return this.cellRegistry.isCellHandled(itemStack);
 		}
+
+		@Override
+		protected void onContentsChanged() {
+			saveData();
+		}
 	};
 
 	public IInventory getInventory() {

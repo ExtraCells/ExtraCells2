@@ -42,6 +42,7 @@ public class FluidInterfaceInventory implements IInventory {
 				}
 			}
 		}
+		onContentsChanged();
 		part.markForUpdate();
 		return stack;
 	}
@@ -130,6 +131,7 @@ public class FluidInterfaceInventory implements IInventory {
 		this.inv[slot] = stack;
 		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
 			stack.stackSize = getInventoryStackLimit();
+			onContentsChanged();
 		}
 		part.markForUpdate();
 	}
@@ -165,6 +167,10 @@ public class FluidInterfaceInventory implements IInventory {
 
 	@Override
 	public void clear() {
+
+	}
+
+	protected void onContentsChanged(){
 
 	}
 }

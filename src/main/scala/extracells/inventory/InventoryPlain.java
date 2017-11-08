@@ -38,6 +38,7 @@ public class InventoryPlain implements IInventory {
 
 		if (itemStack != null) {
 			this.markDirty();
+			onContentsChanged();
 		}
 
 		return itemStack;
@@ -98,6 +99,7 @@ public class InventoryPlain implements IInventory {
 		ItemStack added = slot.copy();
 		added.stackSize = slot.stackSize + amount > stackLimit ? stackLimit : amount;
 		slot.stackSize += added.stackSize;
+		onContentsChanged();
 		return added;
 	}
 
@@ -151,7 +153,7 @@ public class InventoryPlain implements IInventory {
 			stack.stackSize = getInventoryStackLimit();
 		}
 		this.slots[index] = stack;
-
+		onContentsChanged();
 		markDirty();
 	}
 
@@ -188,5 +190,9 @@ public class InventoryPlain implements IInventory {
 		for (int i = 0; i < slots.length; i++) {
 			slots[i] = null;
 		}
+		onContentsChanged();
+	}
+
+	protected void onContentsChanged() {
 	}
 }

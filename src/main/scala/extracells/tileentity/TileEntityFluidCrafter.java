@@ -75,6 +75,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 				}
 			}
 			TileEntityFluidCrafter.this.update = true;
+			onContentsChanged();
 			return stack;
 		}
 
@@ -150,6 +151,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 			if (stack != null && stack.stackSize > getInventoryStackLimit()) {
 				stack.stackSize = getInventoryStackLimit();
 			}
+			onContentsChanged();
 			TileEntityFluidCrafter.this.update = true;
 		}
 
@@ -191,6 +193,10 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 		@Override
 		public ITextComponent getDisplayName() {
 			return new TextComponentString(getName());
+		}
+
+		protected void onContentsChanged() {
+			saveData();
 		}
 	}
 

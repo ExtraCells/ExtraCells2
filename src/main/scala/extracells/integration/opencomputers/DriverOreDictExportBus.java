@@ -48,7 +48,7 @@ public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter> {
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
-			return new Object[]{part.filter};
+			return new Object[]{part.getFilter()};
 		}
 
 		@Callback(doc = "function(side:number[, filter:string]):boolean -- Set the configuration of the ore dict export bus pointing in the specified direction.")
@@ -61,7 +61,7 @@ public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter> {
 			if (part == null) {
 				return new Object[]{false, "no export bus"};
 			}
-			part.filter = args.optString(1, "");
+			part.setFilter(args.optString(1, ""));
 			context.pause(0.5);
 			return new Object[]{true};
 		}
