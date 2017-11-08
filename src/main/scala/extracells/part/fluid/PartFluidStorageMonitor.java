@@ -182,7 +182,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			return true;
 		}
 		ItemStack s = player.getHeldItem(hand);
-		if (s == null) {
+		if (s == null || s.isEmpty()) {
 			if (this.locked) {
 				return false;
 			}
@@ -227,6 +227,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			if (this.watcher != null) {
 				this.watcher.add(AEUtils.createFluidStack(this.fluid));
 			}
+			onStackChange(null, null, null, null, null);
 			IPartHost host = getHost();
 			if (host != null) {
 				host.markForUpdate();
