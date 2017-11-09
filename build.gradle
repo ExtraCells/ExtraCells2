@@ -38,6 +38,14 @@ group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
 
+
+task outputVersionToFile {
+	def versionFile = new File("version.txt")
+	versionFile.write("$version")
+}
+build.dependsOn outputVersionToFile
+
+
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
