@@ -82,4 +82,7 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem 
   }
 
 
+  override def shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean): Boolean =
+    slotChanged
+
 }
