@@ -32,6 +32,8 @@ public class BlockFluidCrafter extends BlockEC {
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		dropItems(world, pos);
+		if (!world.isRemote)
+			TileUtil.destroy(world, pos);
 		super.breakBlock(world, pos, state);
 	}
 
@@ -116,14 +118,6 @@ public class BlockFluidCrafter extends BlockEC {
 			return;
 		}
 		TileUtil.setOwner(world, pos, placer);
-	}
-
-	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
-		if (world.isRemote) {
-			return;
-		}
-		TileUtil.destroy(world, pos);
 	}
 
 }
