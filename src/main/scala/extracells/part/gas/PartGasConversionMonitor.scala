@@ -1,7 +1,7 @@
 package extracells.part.gas
 
 import appeng.api.config.Actionable
-import appeng.api.networking.storage.IStorageGrid
+import appeng.api.networking.storage.{IStackWatcher, IStorageGrid}
 import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
@@ -69,6 +69,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
       if (this.watcher != null) this.watcher.add(StorageChannels.GAS.createStack(this.fluid))
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
+      onStackChange()
       return true
     }
     false
@@ -184,7 +185,7 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
       if (n == null) return
       val g = n.getGrid
       if (g == null) return
-      val storage = g.getCache(classOf[IStorageGrid])
+      val storage: IStorageGrid = g.getCache(classOf[IStorageGrid])
       if (storage == null) return
       val fluids = getGasStorage
       if (fluids == null) return
@@ -202,5 +203,11 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
       val host = getHost
       if (host != null) host.markForUpdate()
     }
+  }
+
+  override def updateWatcher(w: IStackWatcher) {
+    this.watcher = w
+    if (this.fluid != null) w.add(StorageChannels.GAS.createStack(this.fluid))
+    onStackChange(null, null, null, null, null)
   }
 }

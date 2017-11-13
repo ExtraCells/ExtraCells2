@@ -57,6 +57,7 @@ public class GuiStorage extends GuiContainer implements IFluidSelectorGui {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float alpha, int sizeX, int sizeY) {
+		drawDefaultBackground();
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,

@@ -157,7 +157,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 
 	@Override
 	public boolean isBusy() {
-		return this.returnStack != null;
+		return this.returnStack != null && !this.returnStack.isEmpty();
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	@Override
 	public boolean pushPattern(ICraftingPatternDetails patternDetails,
 		InventoryCrafting table) {
-		if (this.returnStack != null) {
+		if (this.returnStack != null && !this.returnStack.isEmpty()) {
 			return false;
 		}
 		ItemStack filled = patternDetails.getCondensedOutputs()[0]
@@ -285,8 +285,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 			this.containerItem = null;
 		}
 		if (tagCompound.hasKey("return")) {
-			this.returnStack = ItemStack.EMPTY.copy();
-			this.returnStack.deserializeNBT(tagCompound
+			this.returnStack = new ItemStack(tagCompound
 				.getCompoundTag("return"));
 		} else if (tagCompound.hasKey("isReturnEmpty")
 			&& tagCompound.getBoolean("isReturnEmpty")) {
@@ -340,7 +339,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		if (this.ticksToFinish > 0) {
 			this.ticksToFinish = this.ticksToFinish - 1;
 		}
-		if (this.ticksToFinish <= 0 && this.returnStack != null) {
+		if (this.ticksToFinish <= 0 && this.returnStack != null && !this.returnStack.isEmpty()) {
 			IStorageGrid storage = getStorageGrid();
 			if (storage == null) {
 				return;
@@ -383,7 +382,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		} else {
 			tagCompound.setBoolean("isContainerEmpty", true);
 		}
-		if (this.returnStack != null) {
+		if (this.returnStack != null && !this.returnStack.isEmpty()) {
 			tagCompound.setTag("return", this.returnStack.writeToNBT(new NBTTagCompound()));
 		} else {
 			tagCompound.setBoolean("isReturnEmpty", true);
