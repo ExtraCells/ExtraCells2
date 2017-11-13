@@ -1,6 +1,8 @@
 package extracells.integration.WirelessCrafting
 
 import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.{Item, ItemStack}
+import p455w0rd.wct.api.WCTApi
 //import p455w0rd.wct.api.WCTApi
 
 
@@ -8,20 +10,12 @@ import net.minecraft.entity.player.EntityPlayer
 
 
 object WirelessCrafting {
-  def openCraftingTerminal(player: EntityPlayer) = null
+  def openCraftingTerminal(player: EntityPlayer) = WCTApi.instance.openWirelessCraftingTerminalGui(player)
 
-  //WCTApi.instance.interact.openWirelessCraftingTerminalGui(player)
+  def getBoosterItem = new ItemStack(Item.getByNameOrId("wct:infinity_booster_card"))
 
-  def getBoosterItem = null
+  def isBoosterEnabled = WCTApi.instance().isInfinityBoosterCardEnabled
 
-  //WCTApi.instance.items.InfinityBoosterCard.getItem
-
-  def isBoosterEnabled =false
-
-  //Reference.WCT_BOOSTER_ENABLED
-
-  def getCraftingTerminal = null
-
-  //WCTApi.instance..WirelessCraftingTerminal.getStack
+  def getCraftingTerminal = new ItemStack(Item.getByNameOrId("wct:wct"))
 
 }

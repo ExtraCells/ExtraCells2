@@ -58,6 +58,12 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
   override def getUnlocalizedName(itemStack: ItemStack): String =
     super.getUnlocalizedName(itemStack).replace("item.extracells", "extracells.item")
 
+  override def getItemStackDisplayName(stack: ItemStack): String = {
+    val tag = ensureTagCompound(stack)
+    if (!tag.hasKey("type"))
+      tag.setByte("type", 0)
+    super.getItemStackDisplayName(stack) + " - " +I18n.translateToLocal("extracells.tooltip." + WirelessTerminalType.values().apply(tag.getByte("type")).toString.toLowerCase)
+  }
 
   override def onItemRightClick(world: World, entityPlayer: EntityPlayer, hand: EnumHand): ActionResult[ItemStack] = {
     val itemStack = entityPlayer.getHeldItem(hand)

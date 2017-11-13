@@ -102,11 +102,11 @@ object UniversalTerminal {
       if(item == thterm.getItem && meta == thterm.getItemDamage)
         return true
     }*/
-    /*if(isWcLLoaded){ //TODO reimplement wirelessCrafting
+    if(isWcLLoaded){
       val wcTerm = WirelessCrafting.getCraftingTerminal
       if(item == wcTerm.getItem && meta == wcTerm.getItemDamage)
         return true
-    }*/
+    }
     false
   }
 
@@ -145,11 +145,11 @@ object UniversalTerminal {
       if(item == thterm.getItem && meta == thterm.getItemDamage)
         return TerminalType.ESSENTIA
     }*/
-    /*if(isWcLLoaded){ //TODO reimplement wirelessCrafting
+    if(isWcLLoaded){
       val wcTerm = WirelessCrafting.getCraftingTerminal
       if(item == wcTerm.getItem && meta == wcTerm.getItemDamage)
-        return TerminalType.CRAFTING
-    }*/
+        return WirelessTerminalType.CRAFTING
+    }
     null
   }
 
