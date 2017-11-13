@@ -10,6 +10,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.FluidRegistry;
@@ -66,7 +67,7 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 	}
 
 	@Override
-	public void onNeighborChanged() {
+	public void onNeighborChanged(IBlockAccess var1, BlockPos var2, BlockPos var3) {
 		TileEntity hostTile = getHostTile();
 		ECBaseGridBlock gridBlock = getGridBlock();
 		if (hostTile == null || gridBlock == null) {

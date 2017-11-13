@@ -85,7 +85,7 @@ public class PartFluidPlaneFormation extends PartECBase implements IFluidSlotLis
 		BlockPos pos = hostTile.getPos().offset(facing);
 		IBlockState blockState = world.getBlockState(pos);
 		Block worldBlock = blockState.getBlock();
-		if (worldBlock != null && worldBlock.isAir(blockState, world, pos)) {
+		if (!(worldBlock != null && worldBlock.isAir(blockState, world, pos))) {
 			return;
 		}
 		IAEFluidStack fluidStack = AEUtils.createFluidStack(this.fluid, Fluid.BUCKET_VOLUME);
