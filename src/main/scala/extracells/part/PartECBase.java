@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import appeng.api.networking.events.MENetworkChannelsChanged;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -341,6 +342,9 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 			if (Integration.Mods.MEKANISMGAS.isEnabled()) {
 				updateCheckGasTank(tileEntity);
 			}
+		} else {
+			facingTank = null;
+			facingGasTank = null;
 		}
 		this.redstonePowered = world.isBlockIndirectlyGettingPowered(pos) > 0 || world.isBlockIndirectlyGettingPowered(pos.up()) > 0;
 	}
@@ -419,6 +423,8 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		this.host = iPartHost;
 		this.hostTile = tileEntity;
 		setPower(null);
+		if(host != null)
+			host.markForUpdate();
 	}
 
 	@MENetworkEventSubscribe
@@ -433,8 +439,16 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 					this.isPowerd = energy.isNetworkPowered();
 				}
 			}
-			this.host.markForUpdate();
+
 		}
+		if(this.host != null)
+			this.host.markForUpdate();
+	}
+
+	@MENetworkEventSubscribe
+	public void setChannelChanged(MENetworkChannelsChanged channelChanged){
+		if (this.host != null)
+			host.markForUpdate();
 	}
 
 	@Override
