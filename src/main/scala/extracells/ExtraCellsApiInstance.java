@@ -5,6 +5,8 @@ import java.util.List;
 
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.IStorageChannel;
+import extracells.api.gas.IAEGasStack;
 import extracells.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -60,6 +62,8 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	private final List<Fluid> blacklistShowFluid = new ArrayList<Fluid>();
 	private final List<Class<? extends Fluid>> blacklistStorageClass = new ArrayList<Class<? extends Fluid>>();
 	private final List<Fluid> blacklistStorageFluid = new ArrayList<Fluid>();
+
+	private final boolean isMekanismGasEnabled = Integration.Mods.MEKANISMGAS.isEnabled();
 
 	@Override
 	public void addFluidToShowBlacklist(Class<? extends Fluid> clazz) {
@@ -175,6 +179,9 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Override
 	public ItemStack openPortableGasCellGui(EntityPlayer player, EnumHand hand, World world) {
+		if (!isMekanismGasEnabled)
+			return player.getHeldItem(hand);
+
 		ItemStack stack = player.getHeldItem(hand);
 		if (world.isRemote || stack == null || stack.getItem() == null) {
 			return stack;
@@ -187,11 +194,11 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		if (!(cellHandler instanceof GasCellHandler)) {
 			return stack;
 		}
-		IMEInventoryHandler<IAEFluidStack> handler = ((GasCellHandler) cellHandler).getCellInventoryPlayer(stack, player, hand);
+		IMEInventoryHandler<IAEGasStack> handler = ((GasCellHandler) cellHandler).getCellInventoryPlayer(stack, player, hand);
 		if (!(handler instanceof HandlerItemStorageGas)) {
 			return stack;
 		}
-		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannels.FLUID());
+		IMEMonitor<IAEGasStack> fluidInventory = new MEMonitorHandler<IAEGasStack>(handler, StorageChannels.GAS());
 		GuiHandler.launchGui(GuiHandler.getGuiId(6), player, hand, new Object[]{fluidInventory, item});
 		return stack;
 	}
@@ -215,7 +222,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		} catch (Throwable ignored) {
 			return stack;
 		}
-		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 1, hand);
+		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 1, hand, StorageChannels.FLUID());
 	}
 
 	@Override
@@ -237,10 +244,10 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		} catch (Throwable ignored) {
 			return stack;
 		}
-		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 5, hand);
+		return openWirelessTerminal(player, stack, world, player.getPosition(), key, 5, hand, StorageChannels.GAS());
 	}
 
-	private ItemStack openWirelessTerminal(EntityPlayer player, ItemStack itemStack, World world, BlockPos pos, Long key, int guiId, EnumHand hand) {
+	private ItemStack openWirelessTerminal(EntityPlayer player, ItemStack itemStack, World world, BlockPos pos, Long key, int guiId, EnumHand hand, IStorageChannel channel) {
 		if (world.isRemote) {
 			return itemStack;
 		}
@@ -265,7 +272,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 			if (squaredDistance <= accessPoint.getRange() * accessPoint.getRange()) {
 				IStorageGrid gridCache = grid.getCache(IStorageGrid.class);
 				if (gridCache != null) {
-					IMEMonitor<IAEFluidStack> fluidInventory = gridCache.getInventory(StorageChannels.FLUID());
+					IMEMonitor fluidInventory = gridCache.getInventory(channel);
 					if (fluidInventory != null) {
 						GuiHandler.launchGui(GuiHandler.getGuiId(guiId), player, hand, new Object[]{fluidInventory, getWirelessTermHandler(itemStack)});
 					}
@@ -316,7 +323,7 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Override
 	public boolean isGas(Fluid fluid) {
-		return fluid != null && Integration.Mods.MEKANISMGAS.isEnabled() && checkGas(fluid);
+		return fluid != null && isMekanismGasEnabled && checkGas(fluid);
 	}
 
 	@Override
@@ -326,24 +333,29 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 
 	@Override
 	public IAEFluidStack createFluidStackFromGas(Object gasStack) {
-		return isMekEnabled() ? createFluidStackFromGasStack(gasStack) : null;
+		return isMekanismGasEnabled ? createFluidStackFromGasStack(gasStack) : null;
 	}
 
 	@Override
 	public Fluid getGasFluid(Object gas) {
-		return isMekEnabled() ? createFluidFromGas(gas) : null;
+		return isMekanismGasEnabled ? createFluidFromGas(gas) : null;
 	}
 
 	@Override
 	public void addExternalStorageInterface(IExternalGasStorageHandler esh) {
-		if (isMekEnabled()) {
+		if (isMekanismGasEnabled) {
 			GasStorageRegistry.addExternalStorageInterface(esh);
 		}
 	}
 
 	@Override
 	public IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, IActionSource mySrc) {
-		return isMekEnabled() ? GasStorageRegistry.getHandler(te, opposite, mySrc) : null;
+		return isMekanismGasEnabled ? GasStorageRegistry.getHandler(te, opposite, mySrc) : null;
+	}
+
+	@Override
+	public boolean isGasSystemEnabled() {
+		return isMekanismGasEnabled;
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")
@@ -366,7 +378,4 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		return fluid instanceof MekanismGas.GasFluid;
 	}
 
-	private boolean isMekEnabled() {
-		return Integration.Mods.MEKANISMGAS.isEnabled();
-	}
 }

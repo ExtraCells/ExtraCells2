@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.util.Random;
 
+import extracells.api.gas.IAEGasStack;
 import extracells.util.StorageChannels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -52,12 +53,13 @@ import io.netty.buffer.ByteBuf;
 
 public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotListener {
 
-	private Fluid selectedFluid;
+	protected Fluid selectedFluid;
 	private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;
 	private IStackWatcher watcher;
 	private long wantedAmount;
-	private long currentAmount;
+	protected long currentAmount;
 	private boolean clientRedstoneOutput = false;
+	protected boolean isGas = false;
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
@@ -121,7 +123,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		return isProvidingStrongPower();
 	}
 
-	private void notifyTargetBlock(TileEntity tileEntity, EnumFacing facing) {
+	protected void notifyTargetBlock(TileEntity tileEntity, EnumFacing facing) {
 		// note - params are always the same
 		tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos(), Blocks.AIR, true);
 		tileEntity.getWorld().notifyNeighborsOfStateChange(tileEntity.getPos().offset(facing), Blocks.AIR, true);
@@ -137,7 +139,9 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	@Override
 	public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, IActionSource src, IStorageChannel chan) {
-		if (chan == StorageChannels.FLUID() && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == this.selectedFluid) {
+		if (isGas && chan == StorageChannels.GAS())
+			onStackChangeGas((IAEGasStack) fullStack, (IAEGasStack) diffStack);
+		else if (chan == StorageChannels.FLUID() && diffStack != null && ((IAEFluidStack) diffStack).getFluid() == this.selectedFluid) {
 			this.currentAmount = fullStack != null ? fullStack.getStackSize() : 0;
 
 			IGridNode node = getGridNode();
@@ -147,6 +151,10 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 				notifyTargetBlock(getHostTile(), getFacing());
 			}
 		}
+	}
+
+	protected void onStackChangeGas(IAEGasStack fullStack, IAEGasStack diffStack){
+
 	}
 
 	@Override
@@ -255,7 +263,10 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	public void updateWatcher(IStackWatcher newWatcher) {
 		this.watcher = newWatcher;
 		if (this.selectedFluid != null) {
-			this.watcher.add(StorageChannels.FLUID().createStack(new FluidStack(this.selectedFluid, 1)));
+			if(isGas)
+				this.watcher.add(StorageChannels.GAS().createStack(new FluidStack(this.selectedFluid, 1)));
+			else
+				this.watcher.add(StorageChannels.FLUID().createStack(new FluidStack(this.selectedFluid, 1)));
 		}
 	}
 

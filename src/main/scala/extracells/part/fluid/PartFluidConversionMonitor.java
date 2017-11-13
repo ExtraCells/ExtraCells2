@@ -20,6 +20,10 @@ import extracells.util.FluidHelper;
 
 public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 
+	protected boolean wasActivated(EntityPlayer player, EnumHand hand, Vec3d pos){
+		return super.onActivate(player, hand, pos);
+	}
+
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d pos) {
 		boolean wasActivated = super.onActivate(player, hand, pos);

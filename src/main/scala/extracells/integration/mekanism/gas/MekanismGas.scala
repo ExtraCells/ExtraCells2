@@ -2,6 +2,7 @@ package extracells.integration.mekanism.gas
 
 import appeng.api.AEApi
 import extracells.api.ECApi
+import extracells.api.gas.{IAEGasStack, IGasStorageChannel}
 import extracells.integration.Integration
 import extracells.integration.jei.Jei
 import mekanism.api.gas.{Gas, GasRegistry, IGasHandler, ITubeConnection}
@@ -14,11 +15,15 @@ object MekanismGas {
 
   private var fluidGas: Map[Gas, Fluid] = Map()
 
+  def preInit: Unit = {
+    AEApi.instance.storage.registerStorageChannel[IAEGasStack, IGasStorageChannel](classOf[IGasStorageChannel], GasStorageChannel)
+  }
+
   def init {
     val api = AEApi.instance.partHelper
-    api.registerNewLayer(classOf[LayerGasHandler].getName, classOf[IGasHandler].getName)
-    api.registerNewLayer(classOf[LayerTubeConnection].getName, classOf[ITubeConnection].getName)
-    AEApi.instance().registries().cell().addCellHandler(new GasCellHandler())
+    val r1 = api.registerNewLayer(classOf[LayerGasHandler].getName, classOf[IGasHandler].getName)
+    val r2 = api.registerNewLayer(classOf[LayerTubeConnection].getName, classOf[ITubeConnection].getName)
+    AEApi.instance.registries.cell.addCellHandler(new GasCellHandler())
   }
 
   def getFluidGasMap = mapAsJavaMap(fluidGas)
@@ -37,6 +42,9 @@ object MekanismGas {
     ECApi.instance.addFluidToShowBlacklist(classOf[GasFluid])
     ECApi.instance.addFluidToStorageBlacklist(classOf[GasFluid])
   }
+
+  def getGasResourceLocation(gasName: String) =
+    GasRegistry.getGas(gasName).getIcon
 
   class GasFluid(gas: Gas) extends Fluid("ec.internal." + gas.getName, gas.getIcon, gas.getIcon) {
 

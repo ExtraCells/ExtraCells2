@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import extracells.api.IHandlerGasStorage;
+import extracells.api.gas.IAEGasStack;
+import extracells.util.GasUtil;
 import extracells.util.StorageChannels;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -21,15 +25,14 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import extracells.api.ECApi;
 import extracells.api.IGasStorageCell;
 
 //TODO: rewrite
-public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>, IHandlerGasStorage {
+public class HandlerItemStorageGas implements IMEInventoryHandler<IAEGasStack>, IHandlerGasStorage {
 
 	private NBTTagCompound stackTag;
-	protected ArrayList<FluidStack> fluidStacks = new ArrayList<FluidStack>();
-	private ArrayList<Fluid> prioritizedFluids = new ArrayList<Fluid>();
+	protected ArrayList<GasStack> gasStacks = new ArrayList<GasStack>();
+	private ArrayList<Gas> prioritizedGases = new ArrayList<Gas>();
 	private int totalTypes;
 	private int totalBytes;
 	private ISaveProvider saveProvider;
@@ -44,63 +47,64 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 		this.totalBytes = ((IGasStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack) * 250;
 
 		for (int i = 0; i < this.totalTypes; i++) {
-			this.fluidStacks.add(FluidStack.loadFluidStackFromNBT(this.stackTag.getCompoundTag("Fluid#" + i)));
+			if (this.stackTag.hasKey("Gas#" + i))
+				this.gasStacks.add(GasStack.readFromNBT(this.stackTag.getCompoundTag("Gas#" + i)));
+			else
+				//Load From old fluid Tags
+				this.gasStacks.add(GasUtil.getGasStack(FluidStack.loadFluidStackFromNBT(this.stackTag.getCompoundTag("Fluid#" + i))));
 		}
 
 		this.saveProvider = _saveProvider;
 	}
 
-	public HandlerItemStorageGas(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Fluid> _filter) {
+	public HandlerItemStorageGas(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Gas> _filter) {
 		this(_storageStack, _saveProvider);
 		if (_filter != null) {
-			this.prioritizedFluids = _filter;
+			this.prioritizedGases = _filter;
 		}
 	}
 
-	private boolean allowedByFormat(Fluid fluid) {
-		return !isFormatted() || this.prioritizedFluids.contains(fluid);
+	private boolean allowedByFormat(Gas gas) {
+		return !isFormatted() || this.prioritizedGases.contains(gas);
 	}
 
 	@Override
-	public boolean canAccept(IAEFluidStack input) {
+	public boolean canAccept(IAEGasStack input) {
 		if (input == null) {
 			return false;
 		}
-		if (!ECApi.instance().isGasStack(input)) {
-			return false;
-		}
-		for (FluidStack fluidStack : this.fluidStacks) {
-			if (fluidStack == null || fluidStack.getFluid() == input.getFluid()) {
-				return allowedByFormat(input.getFluid());
+		for (GasStack gasStack : this.gasStacks) {
+			if (gasStack == null || gasStack.getGas() == input.getGas()) {
+				return allowedByFormat((Gas) input.getGas());
 			}
 		}
 		return false;
 	}
 
 	@Override
-	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode,
+	public IAEGasStack extractItems(IAEGasStack request, Actionable mode,
 		IActionSource src) {
-		if (request == null || !allowedByFormat(request.getFluid())) {
+		if (request == null || !allowedByFormat((Gas) request.getGas())) {
 			return null;
 		}
 
-		IAEFluidStack removedStack;
-		List<FluidStack> currentFluids = Lists.newArrayList(this.fluidStacks);
-		for (int i = 0; i < this.fluidStacks.size(); i++) {
-			FluidStack currentStack = this.fluidStacks.get(i);
-			if (currentStack != null && currentStack.getFluid().getName().equals(request.getFluid().getName())) {
+		IAEGasStack removedStack;
+		List<GasStack> currentGases = Lists.newArrayList(this.gasStacks);
+		for (int i = 0; i < this.gasStacks.size(); i++) {
+			GasStack currentStack = this.gasStacks.get(i);
+			if (currentStack != null && currentStack.getGas().getName().equals(((Gas) request.getGas()).getName())) {
 				long endAmount = currentStack.amount - request.getStackSize();
 				if (endAmount >= 0) {
 					removedStack = request.copy();
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(), (int) endAmount);
-					currentFluids.set(i, toWrite);
+					GasStack toWrite = new GasStack(currentStack.getGas(), (int) endAmount);
+					currentGases.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
+						writeGasToSlot(i, toWrite);
 					}
 				} else {
-					removedStack = StorageChannels.FLUID().createStack(currentStack.copy());
+					removedStack = StorageChannels.GAS().createStack(currentStack.copy());
 					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, null);
+						writeGasToSlot(i, null);
 					}
 				}
 				if (removedStack != null && removedStack.getStackSize() > 0) {
@@ -115,7 +119,7 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 
 	public int freeBytes() {
 		int i = 0;
-		for (FluidStack stack : this.fluidStacks) {
+		for (GasStack stack : this.gasStacks) {
 			if (stack != null) {
 				i += stack.amount;
 			}
@@ -129,11 +133,11 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 	}
 
 	@Override
-	public IItemList<IAEFluidStack> getAvailableItems(
-		IItemList<IAEFluidStack> out) {
-		for (FluidStack fluidStack : this.fluidStacks) {
-			if (fluidStack != null) {
-				out.add(StorageChannels.FLUID().createStack(fluidStack));
+	public IItemList<IAEGasStack> getAvailableItems(
+		IItemList<IAEGasStack> out) {
+		for (GasStack gasStack : this.gasStacks) {
+			if (gasStack != null) {
+				out.add(StorageChannels.GAS().createStack(gasStack));
 			}
 		}
 		return out;
@@ -155,50 +159,50 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 	}
 
 	@Override
-	public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode,
+	public IAEGasStack injectItems(IAEGasStack input, Actionable mode,
 		IActionSource src) {
-		if (input == null || !allowedByFormat(input.getFluid())) {
+		if (input == null || !allowedByFormat((Gas) input.getGas())) {
 			return input;
 		}
-		IAEFluidStack notAdded = input.copy();
-		List<FluidStack> currentFluids = Lists.newArrayList(this.fluidStacks);
-		for (int i = 0; i < currentFluids.size(); i++) {
-			FluidStack currentStack = currentFluids.get(i);
+		IAEGasStack notAdded = input.copy();
+		List<GasStack> currentGases = Lists.newArrayList(this.gasStacks);
+		for (int i = 0; i < currentGases.size(); i++) {
+			GasStack currentStack = currentGases.get(i);
 			if (notAdded != null && currentStack != null
-				&& input.getFluid() == currentStack.getFluid()) {
+				&& input.getGas() == currentStack.getGas()) {
 				if (notAdded.getStackSize() <= freeBytes()) {
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(),
+					GasStack toWrite = new GasStack(currentStack.getGas(),
 						currentStack.amount + (int) notAdded.getStackSize());
-					currentFluids.set(i, toWrite);
+					currentGases.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
+						writeGasToSlot(i, toWrite);
 					}
 					notAdded = null;
 				} else {
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(), currentStack.amount + freeBytes());
-					currentFluids.set(i, toWrite);
+					GasStack toWrite = new GasStack(currentStack.getGas(), currentStack.amount + freeBytes());
+					currentGases.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
+						writeGasToSlot(i, toWrite);
 					}
 					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
 				}
 			}
 		}
-		for (int i = 0; i < currentFluids.size(); i++) {
-			FluidStack currentStack = currentFluids.get(i);
+		for (int i = 0; i < currentGases.size(); i++) {
+			GasStack currentStack = currentGases.get(i);
 			if (notAdded != null && currentStack == null) {
 				if (input.getStackSize() <= freeBytes()) {
-					FluidStack toWrite = notAdded.getFluidStack();
-					currentFluids.set(i, toWrite);
+					GasStack toWrite = (GasStack) notAdded.getGasStack();
+					currentGases.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
+						writeGasToSlot(i, toWrite);
 					}
 					notAdded = null;
 				} else {
-					FluidStack toWrite = new FluidStack(notAdded.getFluid(), freeBytes());
-					currentFluids.set(i, toWrite);
+					GasStack toWrite = new GasStack((Gas) notAdded.getGas(), freeBytes());
+					currentGases.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
+						writeGasToSlot(i, toWrite);
 					}
 					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
 				}
@@ -213,12 +217,12 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 	@Override
 	public boolean isFormatted() {
 		// Common case
-		if (this.prioritizedFluids.isEmpty()) {
+		if (this.prioritizedGases.isEmpty()) {
 			return false;
 		}
 
-		for (Fluid currentFluid : this.prioritizedFluids) {
-			if (currentFluid != null) {
+		for (Gas currentGas : this.prioritizedGases) {
+			if (currentGas != null) {
 				return true;
 			}
 		}
@@ -227,9 +231,9 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 	}
 
 	@Override
-	public boolean isPrioritized(IAEFluidStack input) {
+	public boolean isPrioritized(IAEGasStack input) {
 		return input != null
-			&& this.prioritizedFluids.contains(input.getFluid());
+			&& this.prioritizedGases.contains(input.getGas());
 	}
 
 	private void requestSave() {
@@ -256,7 +260,7 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 	@Override
 	public int usedTypes() {
 		int i = 0;
-		for (FluidStack stack : this.fluidStacks) {
+		for (GasStack stack : this.gasStacks) {
 			if (stack != null) {
 				i++;
 			}
@@ -269,14 +273,17 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
 		return true; // TODO
 	}
 
-	protected void writeFluidToSlot(int i, FluidStack fluidStack) {
-		NBTTagCompound fluidTag = new NBTTagCompound();
-		if (fluidStack != null && fluidStack.amount > 0) {
-			fluidStack.writeToNBT(fluidTag);
-			this.stackTag.setTag("Fluid#" + i, fluidTag);
+	protected void writeGasToSlot(int i, GasStack gasStack) {
+		NBTTagCompound gasTag = new NBTTagCompound();
+		if (gasStack != null && gasStack.amount > 0) {
+			gasTag = gasStack.write(gasTag);
+			this.stackTag.setTag("Gas#" + i, gasTag);
 		} else {
-			this.stackTag.removeTag("Fluid#" + i);
+			this.stackTag.removeTag("Gas#" + i);
 		}
-		this.fluidStacks.set(i, fluidStack);
+		this.gasStacks.set(i, gasStack);
+		//Removes old Fluid Tag
+		this.stackTag.removeTag("Fluid#" + i);
+
 	}
 }

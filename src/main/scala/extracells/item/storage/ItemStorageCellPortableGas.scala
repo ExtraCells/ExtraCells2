@@ -7,10 +7,12 @@ import appeng.api.config.{AccessRestriction, Actionable, FuzzyMode}
 import appeng.api.storage.data.IAEFluidStack
 import appeng.api.storage.IMEInventoryHandler
 import extracells.api.{ECApi, IHandlerGasStorage, IPortableGasStorageCell}
+import extracells.integration.Integration
 import extracells.inventory.{ECFluidFilterInventory, InventoryPlain}
-import extracells.item.{ItemECBase, ItemFluid, PowerItem}
+import extracells.item.{ItemECBase, ItemFluid, ItemGas, PowerItem}
 import extracells.models.ModelManager
 import extracells.util.StorageChannels
+import mekanism.api.gas.{Gas, GasRegistry}
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
@@ -20,6 +22,7 @@ import net.minecraft.util.text.translation.I18n
 import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand, NonNullList}
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
+import net.minecraftforge.fml.common.Optional
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 import net.minecraftforge.items.IItemHandler
 import net.minecraftforge.items.wrapper.InvWrapper
@@ -27,6 +30,8 @@ import net.minecraftforge.items.wrapper.InvWrapper
 object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCell with PowerItem {
 
   override val MAX_POWER: Double = 20000
+
+  val isMekanismGasEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
   def THIS = this
 
@@ -62,18 +67,26 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
   override def getDurabilityForDisplay(itemStack: ItemStack): Double = 1 - getAECurrentPower(itemStack) / ItemStorageCellPortableFluid.MAX_POWER
 
 
-  def getFilter(stack: ItemStack): util.ArrayList[Fluid] = {
-    val inventory: ECFluidFilterInventory = new ECFluidFilterInventory("", 63, stack)
-    val stacks: Array[ItemStack] = inventory.slots
-    val filter: util.ArrayList[Fluid] = new util.ArrayList[Fluid]
+  override def getFilter(stack: ItemStack): util.ArrayList[Object] = {
+    if(isMekanismGasEnabled)
+      getFilterGas(stack)
+    else
+      new util.ArrayList[Object]
+  }
+
+  @Optional.Method(modid = "MekanismAPI|gas")
+  def getFilterGas(stack: ItemStack): util.ArrayList[Object] = {
+    val inventory = new ECFluidFilterInventory("", 63, stack)
+    val stacks = inventory.slots
+    val filter = new util.ArrayList[Gas]
     if (stacks.length == 0) return null
     for (stack <- stacks) {
       if (stack != null) {
-        val fluid: Fluid = FluidRegistry.getFluid(ItemFluid.getFluidName(stack))
-        if (fluid != null) filter.add(fluid)
+        val gas = GasRegistry.getGas(ItemGas.getGasName(stack))
+        if (gas != null) filter.add(gas)
       }
     }
-    filter
+    filter.asInstanceOf[Object].asInstanceOf[util.ArrayList[Object]]
   }
 
   def getFuzzyMode(is: ItemStack): FuzzyMode = {

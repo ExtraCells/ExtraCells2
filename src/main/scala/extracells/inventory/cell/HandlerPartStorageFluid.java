@@ -31,7 +31,7 @@ import extracells.part.fluid.PartFluidStorage;
 import extracells.util.AEUtils;
 
 //TODO: rewrite
-public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IMEMonitorHandlerReceiver<IAEFluidStack> {
+public class HandlerPartStorageFluid implements IHandlerPartBase<IAEFluidStack> {
 
 	protected PartFluidStorage node;
 	protected IFluidHandler tank;
@@ -327,14 +327,17 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		}
 	}
 
+	@Override
 	public void setAccessRestriction(AccessRestriction access) {
 		this.access = access;
 	}
 
+	@Override
 	public void setInverted(boolean _inverted) {
 		this.inverted = _inverted;
 	}
 
+	@Override
 	public void setPrioritizedFluids(Fluid[] _fluids) {
 		this.prioritizedFluids.clear();
 		for (Fluid fluid : _fluids) {

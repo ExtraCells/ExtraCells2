@@ -107,4 +107,6 @@ public interface ExtraCellsApi {
 	 * @return the handler for a given tile / forge direction
 	 */
 	IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, IActionSource mySrc);
+
+	boolean isGasSystemEnabled();
 }

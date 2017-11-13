@@ -3,6 +3,7 @@ package extracells.integration.mekanism.gas;
 import appeng.api.storage.*;
 import extracells.util.PlayerSource;
 import extracells.util.StorageChannels;
+import mekanism.api.gas.Gas;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +16,9 @@ import extracells.inventory.cell.HandlerItemPlayerStorageGas;
 import extracells.inventory.cell.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GasCellHandler implements ICellHandler {
 
 	@Override
@@ -24,14 +28,14 @@ public class GasCellHandler implements ICellHandler {
 
 	@Override
 	public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, IStorageChannel channel) {
-		if (channel == StorageChannels.ITEM() || !(itemStack.getItem() instanceof IGasStorageCell)) {
+		if (channel != StorageChannels.GAS() || !(itemStack.getItem() instanceof IGasStorageCell)) {
 			return null;
 		}
-		return new HandlerItemStorageGas(itemStack, saveProvider, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack));
+		return new HandlerItemStorageGas(itemStack, saveProvider, (ArrayList<Gas>) (Object)(((IGasStorageCell) itemStack.getItem()).getFilter(itemStack)));
 	}
 
 	public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player, EnumHand hand) {
-		return new HandlerItemPlayerStorageGas(itemStack, null, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack), player, hand);
+		return new HandlerItemPlayerStorageGas(itemStack, null, (ArrayList<Gas>) (Object)((IGasStorageCell) itemStack.getItem()).getFilter(itemStack), player, hand);
 	}
 
 	@Override
@@ -74,7 +78,7 @@ public class GasCellHandler implements ICellHandler {
 
 	@Override
 	public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler, IMEInventoryHandler inv, ItemStack is, IStorageChannel chan) {
-		if (chan != StorageChannels.FLUID()) {
+		if (chan != StorageChannels.GAS()) {
 			return;
 		}
 		IStorageMonitorable monitorable = null;
@@ -86,7 +90,7 @@ public class GasCellHandler implements ICellHandler {
 			}
 		}
 		if (monitorable != null) {
-			GuiHandler.launchGui(GuiHandler.getGuiId(4), player, EnumHand.MAIN_HAND, new Object[]{monitorable.getInventory(StorageChannels.FLUID())});
+			GuiHandler.launchGui(GuiHandler.getGuiId(4), player, EnumHand.MAIN_HAND, new Object[]{monitorable.getInventory(StorageChannels.GAS())});
 		}
 	}
 

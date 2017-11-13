@@ -8,6 +8,7 @@ import appeng.api.parts.LayerBase;
 import mekanism.api.gas.IGasHandler;
 import mekanism.api.gas.ITubeConnection;
 
+//TODO: Remove
 public class LayerTubeConnection extends LayerBase implements ITubeConnection {
 	@Override
 	public boolean canTubeConnect(EnumFacing side) {

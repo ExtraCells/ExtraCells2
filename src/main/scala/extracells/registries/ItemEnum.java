@@ -1,19 +1,12 @@
 package extracells.registries;
 
+import extracells.item.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
 
 import extracells.integration.Integration;
-import extracells.item.ItemFluid;
-import extracells.item.ItemFluidPattern;
-import extracells.item.ItemInternalCraftingPattern;
-import extracells.item.ItemOCUpgrade;
-import extracells.item.ItemPartECBase;
-import extracells.item.ItemWirelessTerminalFluid;
-import extracells.item.ItemWirelessTerminalGas;
-import extracells.item.ItemWirelessTerminalUniversal;
 import extracells.item.storage.ItemStorageCasing;
 import extracells.item.storage.ItemStorageCellFluid;
 import extracells.item.storage.ItemStorageCellGas;
@@ -38,7 +31,8 @@ public enum ItemEnum {
 	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern(), null, null),// Internal EC Item
 	UNIVERSALTERMINAL("terminal.universal.wireless", ItemWirelessTerminalUniversal.THIS()),
 	GASWIRELESSTERMINAL("terminal.gas.wireless", ItemWirelessTerminalGas.THIS(), Integration.Mods.MEKANISMGAS),
-	OCUPGRADE("oc.upgrade", new ItemOCUpgrade(), Integration.Mods.OPENCOMPUTERS);
+	OCUPGRADE("oc.upgrade", new ItemOCUpgrade(), Integration.Mods.OPENCOMPUTERS),
+	GASITEM("gas.item", ItemGas.INSTANCE(), Integration.Mods.MEKANISMGAS, null); //Internal EC Item
 
 	private final String internalName;
 	private Item item;

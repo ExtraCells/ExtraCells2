@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
+import extracells.api.gas.IAEGasStack;
+import extracells.integration.mekanism.gas.Capabilities;
 import extracells.util.MachineSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -126,22 +128,22 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 		return monitor.injectItems(toInject, action, new MachineSource(this));
 	}
 
-	protected final IAEFluidStack extractGas(IAEFluidStack toExtract, Actionable action) {
+	protected final IAEGasStack extractGas(IAEGasStack toExtract, Actionable action) {
 		if (this.gridBlock == null || this.facingGasTank == null) {
 			return null;
 		}
-		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
+		IMEMonitor<IAEGasStack> monitor = this.gridBlock.getGasMonitor();
 		if (monitor == null) {
 			return null;
 		}
 		return monitor.extractItems(toExtract, action, new MachineSource(this));
 	}
 
-	protected final IAEFluidStack injectGas(IAEFluidStack toInject, Actionable action) {
+	protected final IAEGasStack injectGas(IAEGasStack toInject, Actionable action) {
 		if (this.gridBlock == null || this.facingGasTank == null) {
 			return toInject;
 		}
-		IMEMonitor<IAEFluidStack> monitor = this.gridBlock.getFluidMonitor();
+		IMEMonitor<IAEGasStack> monitor = this.gridBlock.getGasMonitor();
 		if (monitor == null) {
 			return toInject;
 		}
@@ -180,7 +182,11 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Optional.Method(modid = "MekanismAPI|gas")
 	public IGasHandler getFacingGasTank() {
-		return (IGasHandler) facingGasTank;
+		if(facingGasTank == null)
+			return null;
+		else if(((TileEntity)facingGasTank).hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, this.getSide().getFacing().getOpposite()))
+			return ((TileEntity)facingGasTank).getCapability(Capabilities.GAS_HANDLER_CAPABILITY, this.getSide().getFacing().getOpposite());
+		return null;
 	}
 
 	public ECBaseGridBlock getGridBlock() {
@@ -242,7 +248,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 	}
 
 	public EnumFacing getFacing() {
-		return this.side.getFacing();
+		return this.side != null ? this.side.getFacing() : null;
 	}
 
 	public AEPartLocation getSide() {
@@ -334,6 +340,8 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 			return;
 		}
 		World world = hostTile.getWorld();
+		if (world == null)
+			return;
 		BlockPos pos = hostTile.getPos();
 		EnumFacing facing = side.getFacing();
 		TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
@@ -352,7 +360,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
 	@Optional.Method(modid = "MekanismAPI|gas")
 	private void updateCheckGasTank(TileEntity tile) {
-		if (tile instanceof IGasHandler) {
+		if (tile.hasCapability(Capabilities.GAS_HANDLER_CAPABILITY, this.getSide().getFacing().getOpposite())) {
 			this.facingGasTank = tile;
 		} else {
 			this.facingGasTank = null;

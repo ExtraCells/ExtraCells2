@@ -5,6 +5,7 @@ import java.util.List;
 
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.IStorageChannel;
+import extracells.api.gas.IAEGasStack;
 import extracells.util.StorageChannels;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -106,6 +107,22 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			return null;
 		}
 		return storage.getInventory(StorageChannels.FLUID());
+	}
+
+	protected IMEMonitor<IAEGasStack> getGasStorage() {
+		IGridNode n = getGridNode();
+		if (n == null) {
+			return null;
+		}
+		IGrid g = n.getGrid();
+		if (g == null) {
+			return null;
+		}
+		IStorageGrid storage = g.getCache(IStorageGrid.class);
+		if (storage == null) {
+			return null;
+		}
+		return storage.getInventory(StorageChannels.GAS());
 	}
 
 	@Override
@@ -239,10 +256,13 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 		return false;
 	}
 
-
 	@Override
 	public void onStackChange(IItemList<?> arg0, IAEStack<?> arg1, IAEStack<?> arg2,
 							  IActionSource arg3, IStorageChannel<?> arg4) {
+		onStackChange();
+	}
+
+	protected void onStackChange() {
 		if (this.fluid != null) {
 			IGridNode n = getGridNode();
 			if (n == null) {

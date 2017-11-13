@@ -2,37 +2,45 @@ package extracells.item.storage;
 
 import java.util.ArrayList;
 
+import extracells.inventory.ECGasFilterInventory;
+import extracells.item.ItemGas;
 import extracells.util.StorageChannels;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.config.FuzzyMode;
 import extracells.api.IGasStorageCell;
 import extracells.inventory.ECFluidFilterInventory;
 import extracells.inventory.InventoryPlain;
-import extracells.item.ItemFluid;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class ItemStorageCellGas extends ItemStorageCell implements IGasStorageCell {
 
 	public ItemStorageCellGas() {
-		super(CellDefinition.GAS, StorageChannels.FLUID());
+		super(CellDefinition.GAS, StorageChannels.GAS());
 	}
 
 	@Override
 	public IItemHandler getConfigInventory(ItemStack is) {
-		return new InvWrapper(new ECFluidFilterInventory("configFluidCell", 63, is));
+		return new InvWrapper(new ECGasFilterInventory("configFluidCell", 63, is));
 	}
 
 	@Override
-	public ArrayList<Fluid> getFilter(ItemStack stack) {
-		ECFluidFilterInventory inventory = new ECFluidFilterInventory("", 63, stack);
+	public ArrayList<Object> getFilter(ItemStack stack) {
+		if (channel != null)
+			return getFilterGas(stack);
+		return new ArrayList<Object>();
+	}
+
+	@Optional.Method(modid = "MekanismAPI|gas")
+	public ArrayList<Object> getFilterGas(ItemStack stack){
+		ECGasFilterInventory inventory = new ECGasFilterInventory("", 63, stack);
 		ItemStack[] itemStacks = inventory.slots;
-		ArrayList<Fluid> filter = new ArrayList<Fluid>();
+		ArrayList<Gas> filter = new ArrayList<Gas>();
 		if (itemStacks.length == 0) {
 			return null;
 		}
@@ -40,13 +48,13 @@ public class ItemStorageCellGas extends ItemStorageCell implements IGasStorageCe
 			if (itemStack == null) {
 				continue;
 			}
-			String fluidName = ItemFluid.getFluidName(itemStack);
-			Fluid fluid = FluidRegistry.getFluid(fluidName);
-			if (fluid != null) {
-				filter.add(fluid);
+			String gasName = ItemGas.getGasName(itemStack);
+			Gas gas = GasRegistry.getGas(gasName);
+			if (gas != null) {
+				filter.add(gas);
 			}
 		}
-		return filter;
+		return (ArrayList<Object>)(Object) filter;
 	}
 
 	@Override

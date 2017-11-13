@@ -3,6 +3,8 @@ package extracells.inventory.cell;
 
 import java.util.ArrayList;
 
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +20,7 @@ public class HandlerItemPlayerStorageGas extends HandlerItemStorageGas {
 	private final EntityPlayer player;
 	private final EnumHand hand;
 
-	public HandlerItemPlayerStorageGas(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Fluid> _filter, EntityPlayer _player, EnumHand hand) {
+	public HandlerItemPlayerStorageGas(ItemStack _storageStack, ISaveProvider _saveProvider, ArrayList<Gas> _filter, EntityPlayer _player, EnumHand hand) {
 		super(_storageStack, _saveProvider, _filter);
 		this.player = _player;
 		this.hand = hand;
@@ -32,7 +34,7 @@ public class HandlerItemPlayerStorageGas extends HandlerItemStorageGas {
 	}
 
 	@Override
-	protected void writeFluidToSlot(int i, FluidStack fluidStack) {
+	protected void writeGasToSlot(int i, GasStack fluidStack) {
 		ItemStack item = player.getHeldItem(hand);
 		if (item == null) {
 			return;
@@ -40,13 +42,15 @@ public class HandlerItemPlayerStorageGas extends HandlerItemStorageGas {
 		if (!item.hasTagCompound()) {
 			item.setTagCompound(new NBTTagCompound());
 		}
-		NBTTagCompound fluidTag = new NBTTagCompound();
+		NBTTagCompound gasTag = new NBTTagCompound();
 		if (fluidStack != null && fluidStack.amount > 0) {
-			fluidStack.writeToNBT(fluidTag);
-			item.getTagCompound().setTag("Fluid#" + i, fluidTag);
+			gasTag = fluidStack.write(gasTag);
+			item.getTagCompound().setTag("Gas#" + i, gasTag);
 		} else {
-			item.getTagCompound().removeTag("Fluid#" + i);
+			item.getTagCompound().removeTag("GAs#" + i);
 		}
-		this.fluidStacks.set(i, fluidStack);
+		this.gasStacks.set(i, fluidStack);
+		//Remove old Fluid Tag
+		item.getTagCompound().removeTag("Fluid#" + i);
 	}
 }

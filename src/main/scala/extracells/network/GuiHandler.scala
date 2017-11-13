@@ -9,10 +9,12 @@ import appeng.api.storage.data.IAEFluidStack
 import appeng.api.util.AEPartLocation
 import extracells.ExtraCells
 import extracells.api._
+import extracells.api.gas.IAEGasStack
 import extracells.block.TGuiBlock
 import extracells.container.fluid.ContainerFluidStorage
 import extracells.container.gas.ContainerGasStorage
 import extracells.gui._
+import extracells.integration.mekanism.gas.MEMonitorFluidGasWrapper
 import extracells.part.PartECBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
@@ -38,14 +40,14 @@ object GuiHandler extends IGuiHandler {
         val storageCell = args.apply(1).asInstanceOf[IPortableFluidStorageCell]
         new ContainerFluidStorage(fluidInventory3, player, storageCell, hand)
       case 4 =>
-        val fluidInventory = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+        val fluidInventory = new MEMonitorFluidGasWrapper(args.apply(0).asInstanceOf[IMEMonitor[IAEGasStack]])
         new ContainerGasStorage(fluidInventory, player, hand)
       case 5 =>
-        val fluidInventory2 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+        val fluidInventory2 = new MEMonitorFluidGasWrapper(args.apply(0).asInstanceOf[IMEMonitor[IAEGasStack]])
         val handler = args.apply(1).asInstanceOf[IWirelessGasTermHandler]
         new ContainerGasStorage(fluidInventory2, player, handler, hand)
       case 6 =>
-        val fluidInventory3 = args.apply(0).asInstanceOf[IMEMonitor[IAEFluidStack]]
+        val fluidInventory3 = new MEMonitorFluidGasWrapper(args.apply(0).asInstanceOf[IMEMonitor[IAEGasStack]])
         val storageCell = args.apply(1).asInstanceOf[IPortableGasStorageCell]
         new ContainerGasStorage(fluidInventory3, player, storageCell, hand)
       case _ =>

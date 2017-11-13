@@ -2,6 +2,7 @@ package extracells.api;
 
 
 import appeng.api.networking.security.IActionSource;
+import extracells.api.gas.IAEGasStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
@@ -32,5 +33,5 @@ public interface IExternalGasStorageHandler {
 	 * @param src source
 	 * @return The Handler for the inventory
 	 */
-	IMEInventory<IAEFluidStack> getInventory(TileEntity te, EnumFacing d, IActionSource src);
+	IMEInventory<IAEGasStack> getInventory(TileEntity te, EnumFacing d, IActionSource src);
 }

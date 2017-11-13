@@ -12,9 +12,9 @@ public interface IGasStorageCell extends IStorageCellBase {
 
 	/**
 	 * @param ItemStack
-	 * @return the Fluid Filter. An empty ArrayList or null if the cell accepts
+	 * @return the Gas Filter. An empty ArrayList or null if the cell accepts
 	 * all Gas
 	 */
-	ArrayList<Fluid> getFilter(ItemStack is);
+	ArrayList<Object> getFilter(ItemStack is);
 
 }

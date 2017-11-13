@@ -9,6 +9,7 @@ import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasHandler;
 
+//TODO: Remove
 public class LayerGasHandler extends LayerBase implements IGasHandler {
 	@Override
 	public int receiveGas(EnumFacing side, GasStack stack, boolean doTransfer) {

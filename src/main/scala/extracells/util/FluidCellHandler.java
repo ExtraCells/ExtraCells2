@@ -25,7 +25,7 @@ public class FluidCellHandler implements ICellHandler {
 
 	@Override
 	public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, IStorageChannel channel) {
-		if (channel == StorageChannels.ITEM() || !(itemStack.getItem() instanceof IFluidStorageCell)) {
+		if (channel != StorageChannels.FLUID() || !(itemStack.getItem() instanceof IFluidStorageCell)) {
 			return null;
 		}
 		return new HandlerItemStorageFluid(itemStack, saveProvider, ((IFluidStorageCell) itemStack.getItem()).getFilter(itemStack));

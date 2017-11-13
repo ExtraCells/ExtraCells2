@@ -67,10 +67,10 @@ public class ExtraCells {
 		configHandler.reload();
 		MinecraftForge.EVENT_BUS.register(configHandler);
 
+		integration.preInit();
 		proxy.registerItems();
 		proxy.registerBlocks();
 		CellDefinition.create();
-		integration.preInit();
 		proxy.registerModels();
 
 		//Moved to preeinit for JSON recipes

@@ -45,7 +45,7 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack itemStack, World world, List list, ITooltipFlag advanced) {
 		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
-		IMEInventoryHandler<IAEFluidStack> handler = cellRegistry.getCellInventory(itemStack, null, channel);
+		IMEInventoryHandler handler = cellRegistry.getCellInventory(itemStack, null, channel);
 		if (!(handler instanceof IHandlerStorageBase)) {
 			return;
 		}

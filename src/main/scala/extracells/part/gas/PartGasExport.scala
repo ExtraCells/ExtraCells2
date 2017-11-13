@@ -2,17 +2,21 @@ package extracells.part.gas
 
 import java.util
 
-import appeng.api.AEApi
 import appeng.api.config.Actionable
-import appeng.api.storage.data.IAEFluidStack
+import extracells.api.gas.IAEGasStack
 import extracells.integration.Integration
+import extracells.integration.mekanism.gas.Capabilities
 import extracells.part.fluid.PartFluidExport
-import extracells.util.{GasUtil, StorageChannels}
-import mekanism.api.gas.IGasHandler
+import extracells.util.StorageChannels
+import mekanism.api.gas.{GasStack, IGasHandler, ITubeConnection}
+import net.minecraft.util.EnumFacing
+import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.fluids.{Fluid, FluidStack}
 import net.minecraftforge.fml.common.Optional
+import net.minecraftforge.fml.common.Optional.Method
 
-class PartGasExport extends PartFluidExport {
+@Optional.Interface(iface = "mekanism.api.gas.ITubeConnection", modid = "MekanismAPI|gas", striprefs = true)
+class PartGasExport extends PartFluidExport with ITubeConnection {
 
   private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
@@ -62,14 +66,14 @@ class PartGasExport extends PartFluidExport {
     import scala.collection.JavaConversions._
     for (fluid <- filter) {
       if (fluid != null) {
-        val stack: IAEFluidStack = extractGas(StorageChannels.FLUID.createStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
+        val stack: IAEGasStack = extractGas(StorageChannels.GAS.createStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
 
         if (stack != null) {
-          val gasStack = GasUtil.getGasStack(stack.getFluidStack)
+          val gasStack = stack.getGasStack.asInstanceOf[GasStack]
           if (gasStack != null && facingTank.canReceiveGas(getFacing.getOpposite, gasStack.getGas)) {
             val filled: Int = facingTank.receiveGas(getFacing.getOpposite, gasStack, true)
             if (filled > 0) {
-              extractGas(StorageChannels.FLUID.createStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
+              extractGas(StorageChannels.GAS.createStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
               return true
             }
           }
@@ -78,6 +82,21 @@ class PartGasExport extends PartFluidExport {
     }
     return false
   }
+
+  @Method(modid = "MekanismAPI|gas")
+  override def hasCapability(capability: Capability[_]): Boolean = {
+      capability == Capabilities.TUBE_CONNECTION_CAPABILITY
+  }
+
+  @Method(modid = "MekanismAPI|gas")
+  override def getCapability[T](capability: Capability[T]): T = {
+    if (capability == Capabilities.TUBE_CONNECTION_CAPABILITY)
+      Capabilities.TUBE_CONNECTION_CAPABILITY.cast(this)
+    else
+      super.getCapability(capability)
+  }
+
+  override def canTubeConnect(enumFacing: EnumFacing): Boolean = enumFacing == this.getSide.getFacing
 
 
 }

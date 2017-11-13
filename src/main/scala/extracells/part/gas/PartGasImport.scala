@@ -4,20 +4,24 @@ import java.util
 
 import appeng.api.config.Actionable
 import appeng.api.storage.IMEMonitor
-import appeng.api.storage.data.IAEFluidStack
+import extracells.api.gas.IAEGasStack
 import extracells.integration.Integration
-import extracells.integration.mekanism.gas.MekanismGas
+import extracells.integration.mekanism.gas.{Capabilities, MekanismGas}
 import extracells.part.fluid.PartFluidImport
-import extracells.util.{AEUtils, GasUtil, MachineSource}
-import mekanism.api.gas.{Gas, GasStack, IGasHandler}
+import extracells.util.{GasUtil, MachineSource, StorageChannels}
+import mekanism.api.gas.{Gas, GasStack, IGasHandler, ITubeConnection}
 import net.minecraft.util.EnumFacing
+import net.minecraftforge.common.capabilities.Capability
 import net.minecraftforge.fluids.{Fluid, FluidStack}
 import net.minecraftforge.fml.common.Optional
-import net.minecraftforge.fml.common.Optional.{Interface, Method}
 
 
-@Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true)
-class PartGasImport extends PartFluidImport with IGasHandler {
+
+@Optional.InterfaceList(Array(
+  new Optional.Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true),
+  new Optional.Interface(iface = "mekanism.api.gas.ITubeConnection", modid = "MekanismAPI|gas", striprefs = true)
+))
+class PartGasImport extends PartFluidImport with IGasHandler with ITubeConnection {
 
   private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
@@ -87,8 +91,8 @@ class PartGasImport extends PartFluidImport with IGasHandler {
       drained = facingTank.drawGas(side.getOpposite, toDrain, false)
     }
     if (drained == null || drained.amount <= 0 || drained.getGas == null) return false
-    val toFill: IAEFluidStack = AEUtils.createFluidStack(GasUtil.getFluidStack(drained))
-    val notInjected: IAEFluidStack = injectGas(toFill, Actionable.MODULATE)
+    val toFill: IAEGasStack = StorageChannels.GAS.createStack(drained)
+    val notInjected: IAEGasStack = injectGas(toFill, Actionable.MODULATE)
     if (notInjected != null) {
       val amount: Int = (toFill.getStackSize - notInjected.getStackSize).toInt
       if (amount > 0) {
@@ -101,22 +105,22 @@ class PartGasImport extends PartFluidImport with IGasHandler {
       }
     }
     else {
-      facingTank.drawGas(side.getOpposite, toFill.getFluidStack.amount, true)
+      facingTank.drawGas(side.getOpposite, toFill.getGasStack.asInstanceOf[GasStack].amount, true)
       true
     }
   }
 
-  @Method(modid = "MekanismAPI|gas")
+  @Optional.Method(modid = "MekanismAPI|gas")
   override def receiveGas(side: EnumFacing, stack: GasStack, doTransfer: Boolean): Int = {
     if (stack == null || stack.amount <= 0 || !canReceiveGas(side, stack.getGas))
       return 0
     val amount = Math.min(stack.amount, 125 + this.speedState * 125)
-    val gasStack = GasUtil.createAEFluidStack(stack.getGas, amount)
+    val gasStack = StorageChannels.GAS.createStack(new GasStack(stack.getGas, amount))
     val notInjected = {
       if (getGridBlock == null) {
         gasStack
       } else {
-        val monitor: IMEMonitor[IAEFluidStack] = getGridBlock.getFluidMonitor
+        val monitor: IMEMonitor[IAEGasStack] = getGridBlock.getGasMonitor
         if (monitor == null)
           gasStack
         else
@@ -129,13 +133,13 @@ class PartGasImport extends PartFluidImport with IGasHandler {
       amount - notInjected.getStackSize.toInt
   }
 
-  @Method(modid = "MekanismAPI|gas")
+  @Optional.Method(modid = "MekanismAPI|gas")
   override def drawGas(side: EnumFacing, amount: Int, doTransfer: Boolean): GasStack = null
 
-  @Method(modid = "MekanismAPI|gas")
+  @Optional.Method(modid = "MekanismAPI|gas")
   override def canDrawGas(side: EnumFacing, gasType: Gas): Boolean = false
 
-  @Method(modid = "MekanismAPI|gas")
+  @Optional.Method(modid = "MekanismAPI|gas")
   override def canReceiveGas(side: EnumFacing, gasType: Gas): Boolean = {
     val fluid = MekanismGas.getFluidGasMap.get(gasType)
     var isEmpty = true
@@ -148,4 +152,22 @@ class PartGasImport extends PartFluidImport with IGasHandler {
     }
     isEmpty
   }
+
+  @Optional.Method(modid = "MekanismAPI|gas")
+  override def hasCapability(capability: Capability[_]): Boolean = {
+    (capability == Capabilities.GAS_HANDLER_CAPABILITY ||
+      capability == Capabilities.TUBE_CONNECTION_CAPABILITY)
+  }
+
+  @Optional.Method(modid = "MekanismAPI|gas")
+  override def getCapability[T](capability: Capability[T]): T = {
+    if (capability == Capabilities.GAS_HANDLER_CAPABILITY)
+      Capabilities.GAS_HANDLER_CAPABILITY.cast(this)
+    else if (capability == Capabilities.TUBE_CONNECTION_CAPABILITY)
+      Capabilities.TUBE_CONNECTION_CAPABILITY.cast(this)
+    else
+      super.getCapability(capability)
+  }
+
+  override def canTubeConnect(enumFacing: EnumFacing): Boolean = enumFacing == this.getSide.getFacing
 }

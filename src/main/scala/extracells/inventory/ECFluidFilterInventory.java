@@ -27,13 +27,13 @@ public class ECFluidFilterInventory extends InventoryPlain {
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack itemStack) {
-		if (itemStack == null) {
+		if (itemStack == null || itemStack.isEmpty()) {
 			return false;
 		}
 		if (itemStack.getItem() == ItemEnum.FLUIDITEM.getItem()) {
 			String fluidName = ItemFluid.getFluidName(itemStack);
 			for (ItemStack slotStack : this.slots) {
-				if (slotStack == null) {
+				if (slotStack == null || slotStack.isEmpty()) {
 					continue;
 				}
 				String itemFluidName = ItemFluid.getFluidName(slotStack);
@@ -49,7 +49,7 @@ public class ECFluidFilterInventory extends InventoryPlain {
 		}
 		String fluidName = stack.getFluid().getName();
 		for (ItemStack slotStack : this.slots) {
-			if (slotStack == null) {
+			if (slotStack == null || slotStack.isEmpty()) {
 				continue;
 			}
 			String itemFluidName = ItemFluid.getFluidName(slotStack);
@@ -73,8 +73,8 @@ public class ECFluidFilterInventory extends InventoryPlain {
 
 	@Override
 	public void setInventorySlotContents(int index, ItemStack itemStack) {
-		if (itemStack == null) {
-			super.setInventorySlotContents(index, null);
+		if (itemStack == null || itemStack.isEmpty()) {
+			super.setInventorySlotContents(index, ItemStack.EMPTY);
 			return;
 		}
 		Fluid fluid;
@@ -89,12 +89,12 @@ public class ECFluidFilterInventory extends InventoryPlain {
 			}
 			FluidStack fluidStack = FluidUtil.getFluidContained(itemStack);
 			if (fluidStack == null) {
-				super.setInventorySlotContents(index, null);
+				super.setInventorySlotContents(index, ItemStack.EMPTY);
 				return;
 			}
 			fluid = fluidStack.getFluid();
 			if (fluid == null) {
-				super.setInventorySlotContents(index, null);
+				super.setInventorySlotContents(index, ItemStack.EMPTY);
 				return;
 			}
 		}

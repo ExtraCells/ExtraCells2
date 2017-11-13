@@ -2,6 +2,9 @@ package extracells.gridblock;
 
 import java.util.EnumSet;
 
+import extracells.api.gas.IAEGasStack;
+import extracells.integration.Integration;
+import extracells.integration.mekanism.gas.MEMonitorFluidGasWrapper;
 import extracells.util.StorageChannels;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -40,6 +43,13 @@ public class ECBaseGridBlock implements IGridBlock {
 		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
 	}
 
+	public IMEMonitor<IAEFluidStack> getFluidGasMonitor() {
+		IMEMonitor<IAEGasStack> gasMonitor = getGasMonitor();
+		if (gasMonitor == null)
+			return null;
+		return new MEMonitorFluidGasWrapper(gasMonitor);
+	}
+
 	public IMEMonitor<IAEFluidStack> getFluidMonitor() {
 		IGridNode node = this.host.getGridNode();
 		if (node == null) {
@@ -54,6 +64,26 @@ public class ECBaseGridBlock implements IGridBlock {
 			return null;
 		}
 		return storageGrid.getInventory(StorageChannels.FLUID());
+
+	}
+
+	public IMEMonitor<IAEGasStack> getGasMonitor() {
+		if (!Integration.Mods.MEKANISMGAS.isEnabled())
+			return null;
+
+		IGridNode node = this.host.getGridNode();
+		if (node == null) {
+			return null;
+		}
+		IGrid grid = node.getGrid();
+		if (grid == null) {
+			return null;
+		}
+		IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
+		if (storageGrid == null) {
+			return null;
+		}
+		return storageGrid.getInventory(StorageChannels.GAS());
 
 	}
 

@@ -1,9 +1,11 @@
 package extracells.part.gas
 
+import appeng.api.networking.storage.IStorageGrid
 import appeng.api.parts.IPartHost
 import extracells.integration.Integration
 import extracells.part.fluid.PartFluidStorageMonitor
-import extracells.util.{AEUtils, GasUtil, WrenchUtil}
+import extracells.util.{AEUtils, GasUtil, StorageChannels, WrenchUtil}
+import mekanism.api.gas.Gas
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumHand
@@ -30,7 +32,7 @@ class PartGasStorageMonitor extends PartFluidStorageMonitor {
     if (s == null) {
       if (this.locked) return false
       if (this.fluid == null) return true
-      if (this.watcher != null) this.watcher.remove(AEUtils.createFluidStack(this.fluid))
+      if (this.watcher != null) this.watcher.remove(StorageChannels.GAS.createStack(this.fluid))
       this.fluid = null
       this.amount = 0L
       val host: IPartHost = getHost
@@ -48,7 +50,7 @@ class PartGasStorageMonitor extends PartFluidStorageMonitor {
     }
     if (this.locked) return false
     if (GasUtil.isFilled(s)) {
-      if (this.fluid != null && this.watcher != null) this.watcher.remove(AEUtils.createFluidStack(this.fluid))
+      if (this.fluid != null && this.watcher != null) this.watcher.remove(StorageChannels.GAS.createStack(this.fluid))
       val gas = GasUtil.getGasFromContainer(s)
       val fluidStack = GasUtil.getFluidStack(gas)
       this.fluid = {
@@ -57,12 +59,39 @@ class PartGasStorageMonitor extends PartFluidStorageMonitor {
         else
           fluidStack.getFluid
       }
-      if (this.watcher != null) this.watcher.add(AEUtils.createFluidStack(this.fluid))
+      if (this.watcher != null) this.watcher.add(StorageChannels.GAS.createStack(this.fluid))
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
       return true
     }
     false
+  }
+
+  @Optional.Method(modid = "MekanismAPI|gas")
+  override protected def onStackChange() {
+    if (this.fluid != null) {
+      val n = getGridNode
+      if (n == null) return
+      val g = n.getGrid
+      if (g == null) return
+      val storage = g.getCache(classOf[IStorageGrid])
+      if (storage == null) return
+      val fluids = getGasStorage
+      if (fluids == null) return
+      val gas = GasUtil.getGas(this.fluid)
+      import scala.collection.JavaConversions._
+      for (s <- fluids.getStorageList) {
+        if (s.getGas == gas) {
+          this.amount = s.getStackSize
+          val host = getHost
+          if (host != null) host.markForUpdate()
+          return
+        }
+      }
+      this.amount = 0L
+      val host = getHost
+      if (host != null) host.markForUpdate()
+    }
   }
 
 }

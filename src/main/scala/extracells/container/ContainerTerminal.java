@@ -44,7 +44,10 @@ public class ContainerTerminal extends Container implements IMEMonitorHandlerRec
 		this.type = type;
 		this.fluidStackList = StorageChannels.FLUID().createList();
 		if (!this.player.world.isRemote) {
-			this.monitor = this.terminal.getGridBlock().getFluidMonitor();
+			if (type == StorageType.GAS)
+				this.monitor = this.terminal.getGridBlock().getFluidGasMonitor();
+			else
+				this.monitor = this.terminal.getGridBlock().getFluidMonitor();
 			if (this.monitor != null) {
 				this.monitor.addListener(this, null);
 				this.fluidStackList = this.monitor.getStorageList();

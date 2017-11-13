@@ -6,13 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import appeng.api.storage.IStorageChannel;
+import extracells.api.IHandlerStorageBase;
+import extracells.inventory.cell.IHandlerPartBase;
 import extracells.util.StorageChannels;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -67,8 +71,9 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		}
 	};
 	private int priority = 0;
-	protected HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
-	private AccessRestriction access = AccessRestriction.READ_WRITE;
+	protected IHandlerPartBase handler = new HandlerPartStorageFluid(this);
+	protected AccessRestriction access = AccessRestriction.READ_WRITE;
+	protected IStorageChannel channel = StorageChannels.FLUID();
 
 	@Override
 	public void getDrops(List<ItemStack> drops, boolean wrenched) {
@@ -108,10 +113,10 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	@Override
 	public List<IMEInventoryHandler> getCellArray(IStorageChannel channel) {
 		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
-		if (channel == StorageChannels.FLUID()) {
+		if (channel == this.channel) {
 			list.add(this.handler);
 		}
-		updateNeighborFluids();
+		updateNeighbor();
 		return list;
 	}
 
@@ -156,7 +161,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	}
 
 	@Override
-	public void onNeighborChanged() {
+	public void onNeighborChanged(IBlockAccess var1, BlockPos var2, BlockPos var3) {
 		this.handler.onNeighborChange();
 		IGridNode node = getGridNode();
 		if (node != null) {
@@ -168,6 +173,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 			}
 			getHost().markForUpdate();
 		}
+		super.onNeighborChanged(null, null, null);
 	}
 
 	@MENetworkEventSubscribe
@@ -273,19 +279,23 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		data.setString("access", this.access.name());
 	}
 
+	protected void updateNeighbor(){
+		updateNeighborFluids();
+	}
+
 	private void updateNeighborFluids() {
 		fluidList.clear();
 		if (access == AccessRestriction.READ || access == AccessRestriction.READ_WRITE) {
-			for (IAEFluidStack stack : handler.getAvailableItems(StorageChannels.FLUID().createList())) {
+			for (IAEFluidStack stack : ((IHandlerPartBase<IAEFluidStack>)handler).getAvailableItems(StorageChannels.FLUID().createList())) {
 				FluidStack s = stack.getFluidStack().copy();
 				fluidList.put(s, s.amount);
 			}
 		}
 	}
 
-	private boolean wasChanged() {
+	protected boolean wasChanged() {
 		HashMap<FluidStack, Integer> fluids = new HashMap<FluidStack, Integer>();
-		for (IAEFluidStack stack : handler.getAvailableItems(StorageChannels.FLUID().createList())) {
+		for (IAEFluidStack stack : ((IHandlerPartBase<IAEFluidStack>)handler).getAvailableItems(StorageChannels.FLUID().createList())) {
 			FluidStack s = stack.getFluidStack();
 			fluids.put(s, s.amount);
 		}

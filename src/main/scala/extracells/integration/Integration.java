@@ -15,13 +15,13 @@ public class Integration {
 
 	public enum Mods {
 		WAILA("waila"),
-		OPENCOMPUTERS("OpenComputers"),
+		OPENCOMPUTERS("opencomputers"),
 		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
 		NEI("NotEnoughItems", Side.CLIENT),
 		MEKANISMGAS("MekanismAPI|gas", "MekanismGas"),
 		IGW("IGWMod", "IngameWikiMod", Side.CLIENT),
 		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics"),
-		MEKANISM("Mekanism"),
+		MEKANISM("mekanism"),
 		WIRELESSCRAFTING("wct", "AE2 Wireless Crafting Terminal"),
 		JEI("jei", "Just Enough Items", Side.CLIENT);
 
@@ -93,28 +93,23 @@ public class Integration {
 	public void preInit() {
 		/*if (Mods.IGW.correctSide() && Mods.IGW.shouldLoad)
 			IGW.initNotifier();*/
+		if (Mods.MEKANISMGAS.isEnabled())
+			MekanismGas.preInit();
 	}
 
 	public void init() {
-		if (Mods.WAILA.isEnabled()) {
+		if (Mods.WAILA.isEnabled())
 			Waila.init();
-		}
-		if (Mods.OPENCOMPUTERS.isEnabled())
+		//if (Mods.OPENCOMPUTERS.isEnabled())
 		//OpenComputers.init();
 		//if (Mods.NEI.isEnabled())
 		//Nei.init();
-		{
-			if (Mods.MEKANISMGAS.isEnabled()) {
-				MekanismGas.init();
-			}
-		}
-		if (Mods.IGW.isEnabled())
+		if (Mods.MEKANISMGAS.isEnabled())
+			MekanismGas.init();
+		//if (Mods.IGW.isEnabled())
 		//IGW.init();
-		{
-			if (Mods.MEKANISM.isEnabled()) {
-				Mekanism.init();
-			}
-		}
+		if (Mods.MEKANISM.isEnabled())
+			Mekanism.init();
 	}
 
 	public void postInit() {

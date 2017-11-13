@@ -1,5 +1,7 @@
 package extracells.util;
 
+import appeng.api.storage.data.IItemList;
+import extracells.api.gas.IAEGasStack;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import net.minecraft.item.Item;
@@ -32,6 +34,46 @@ public class GasUtil {
 	public static IAEFluidStack createAEFluidStack(Gas gas, long amount) {
 		return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas), 1)).setStackSize(
 			amount);
+	}
+
+	public static IAEFluidStack createAEFluidStack(IAEGasStack gasStack){
+		if (gasStack == null || gasStack.getGas() == null)
+			return null;
+		return createAEFluidStack((Gas)gasStack.getGas()).setStackSize(gasStack.getStackSize());
+	}
+
+	public static IAEGasStack createAEGasStack(Gas gas) {
+		return StorageChannels.GAS().createStack(gas);
+	}
+
+	public static IAEGasStack createAEGasStack(GasStack gasStack) {
+		return StorageChannels.GAS().createStack(gasStack);
+	}
+
+	public static IAEGasStack createAEGasStack(Gas gas, long amount) {
+		return createAEGasStack(gas).setStackSize(amount);
+	}
+
+	public static IAEGasStack createAEGasStack(IAEFluidStack fluidStack) {
+		if (fluidStack == null || fluidStack.getFluid() == null || !isGas(fluidStack.getFluid()))
+			return null;
+		return createAEGasStack(getGas(fluidStack.getFluid())).setStackSize(fluidStack.getStackSize());
+	}
+
+	public static IItemList<IAEGasStack> createAEGasItemList(IItemList<IAEFluidStack> fluidStacks){
+		IItemList<IAEGasStack> out = StorageChannels.GAS().createList();
+		for (IAEFluidStack fluid : fluidStacks) {
+			out.add(createAEGasStack(fluid));
+		}
+		return out;
+	}
+
+	public static IItemList<IAEFluidStack> createAEFluidItemList(IItemList<IAEGasStack> fluidStacks){
+		IItemList<IAEFluidStack> out = StorageChannels.FLUID().createList();
+		for (IAEGasStack gas : fluidStacks) {
+			out.add(createAEFluidStack(gas));
+		}
+		return out;
 	}
 
 	public static MutablePair<Integer, ItemStack> drainStack(ItemStack itemStack, GasStack gas) {
