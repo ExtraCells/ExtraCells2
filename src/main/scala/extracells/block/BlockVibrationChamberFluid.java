@@ -2,6 +2,7 @@ package extracells.block;
 
 import javax.annotation.Nullable;
 
+import extracells.util.TileUtil;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -107,6 +108,9 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+		if (worldIn.isRemote)
+			return;
+		TileUtil.setOwner(worldIn, pos, placer);
 	}
 
 	@Override
@@ -166,5 +170,16 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+		if (worldIn.isRemote){
+			super.breakBlock(worldIn, pos, state);
+			return;
+		}
+		TileUtil.destroy(worldIn, pos);
+
+		super.breakBlock(worldIn, pos, state);
 	}
 }
