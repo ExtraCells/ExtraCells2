@@ -253,7 +253,7 @@ public abstract class ContainerStorage extends Container implements
 		} else {
 			this.selectedFluidStack = null;
 		}
-		if (player.worldObj.isRemote)
+		if (player.world.isRemote)
 			updateGui();
 	}
 
