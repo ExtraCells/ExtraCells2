@@ -253,18 +253,17 @@ public abstract class ContainerStorage extends Container implements
 		} else {
 			this.selectedFluidStack = null;
 		}
-		updateGui();
+		if (player.worldObj.isRemote)
+			updateGui();
 	}
 
 	@SideOnly(Side.CLIENT)
 	private void updateGui() {
-		if (player.worldObj.isRemote) {
-			GuiStorage guiStorage = GuiUtil.getGui(GuiStorage.class);
-			if (guiStorage == null) {
-				return;
-			}
-			guiStorage.updateSelectedFluid();
+		GuiStorage guiStorage = GuiUtil.getGui(GuiStorage.class);
+		if (guiStorage == null) {
+			return;
 		}
+		guiStorage.updateSelectedFluid();
 	}
 
 	public void removeEnergyTick() {
