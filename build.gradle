@@ -59,7 +59,7 @@ minecraft {
     runDir = "../../MinecraftDebug/run_client"
 	mappings = "${config.version.mappings}"
 	
-	replace '@VERSION@', project.version
+	replace '@VERSION@', "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}." + getBuildNumber()
 }
 
 repositories {
