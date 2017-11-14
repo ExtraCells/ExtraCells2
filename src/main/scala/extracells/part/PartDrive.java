@@ -2,8 +2,10 @@ package extracells.part;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import appeng.api.AEApi;
 import appeng.api.storage.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -50,8 +52,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 	};
 	private int priority = 0; // TODO
 	private short[] blinkTimers; // TODO
-	private List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();
-	private List<IMEInventoryHandler> itemHandlers = new ArrayList<IMEInventoryHandler>();
+	private HashMap<IStorageChannel,List<IMEInventoryHandler>> handlers = new HashMap<IStorageChannel,List<IMEInventoryHandler>>();
 
 	@Override
 	public void addToWorld() {
@@ -161,14 +162,11 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 
 	@Override
 	public void onInventoryChanged() {
-		this.itemHandlers = updateHandlers(AEUtils.getItemChannel());
-		this.fluidHandlers = updateHandlers(AEUtils.getFluidChannel());
+		IMEInventoryHandler[] handlerSlots = new IMEInventoryHandler[this.cellStatuses.length];
+		this.handlers = updateHandlers(handlerSlots);
 		for (int i = 0; i < this.cellStatuses.length; i++) {
 			ItemStack stackInSlot = this.inventory.getStackInSlot(i);
-			IMEInventoryHandler inventoryHandler = AEUtils.cell().getCellInventory(stackInSlot, null, AEUtils.getItemChannel());
-			if (inventoryHandler == null) {
-				inventoryHandler = AEUtils.cell().getCellInventory(stackInSlot, null, AEUtils.getFluidChannel());
-			}
+			IMEInventoryHandler inventoryHandler = handlerSlots[i];
 
 			ICellHandler cellHandler = AEUtils.cell().getHandler(stackInSlot);
 			if (cellHandler == null || inventoryHandler == null) {
@@ -193,16 +191,21 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 		getHost().markForSave();
 	}
 
-	private List<IMEInventoryHandler> updateHandlers(IStorageChannel channel) {
-		List<IMEInventoryHandler> handlers = new ArrayList<IMEInventoryHandler>();
-		for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
-			ItemStack cell = this.inventory.getStackInSlot(i);
-			if (AEUtils.cell().isCellHandled(cell)) {
-				IMEInventoryHandler cellInventory = AEUtils.cell().getCellInventory(cell, null, channel);
-				if (cellInventory != null) {
-					handlers.add(cellInventory);
+	private HashMap<IStorageChannel,List<IMEInventoryHandler>> updateHandlers(IMEInventoryHandler[] handlerSlot) {
+		HashMap<IStorageChannel,List<IMEInventoryHandler>> handlers = new HashMap<IStorageChannel,List<IMEInventoryHandler>>();
+		for(IStorageChannel channel : AEApi.instance().storage().storageChannels()) {
+			List<IMEInventoryHandler> handlerChannel = new ArrayList<IMEInventoryHandler>();
+			for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
+				ItemStack cell = this.inventory.getStackInSlot(i);
+				if (AEUtils.cell().isCellHandled(cell)) {
+					IMEInventoryHandler cellInventory = AEUtils.cell().getCellInventory(cell, null, channel);
+					if (cellInventory != null) {
+						handlerChannel.add(cellInventory);
+						handlerSlot[i] = cellInventory;
+					}
 				}
 			}
+			handlers.put(channel, handlerChannel);
 		}
 		return handlers;
 	}
@@ -230,7 +233,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 		if (!isActive()) {
 			return new ArrayList();
 		}
-		return AEUtils.isItemChannel(channel) ? this.itemHandlers : this.fluidHandlers;
+		return handlers.containsKey(channel) ? handlers.get(channel) : new ArrayList();
 	}
 
 	/* EVENT HANDLERS*/
