@@ -34,7 +34,7 @@ public class HandlerItemPlayerStorageGas extends HandlerItemStorageGas {
 	}
 
 	@Override
-	protected void writeGasToSlot(int i, GasStack fluidStack) {
+	protected void writeGasToSlot(int i, GasStack gasStack) {
 		ItemStack item = player.getHeldItem(hand);
 		if (item == null) {
 			return;
@@ -43,13 +43,13 @@ public class HandlerItemPlayerStorageGas extends HandlerItemStorageGas {
 			item.setTagCompound(new NBTTagCompound());
 		}
 		NBTTagCompound gasTag = new NBTTagCompound();
-		if (fluidStack != null && fluidStack.amount > 0) {
-			gasTag = fluidStack.write(gasTag);
+		if (gasStack != null && gasStack.amount > 0) {
+			gasTag = gasStack.write(gasTag);
 			item.getTagCompound().setTag("Gas#" + i, gasTag);
 		} else {
-			item.getTagCompound().removeTag("GAs#" + i);
+			item.getTagCompound().removeTag("Gas#" + i);
 		}
-		this.gasStacks.set(i, fluidStack);
+		this.gasStacks.set(i, gasStack);
 		//Remove old Fluid Tag
 		item.getTagCompound().removeTag("Fluid#" + i);
 	}

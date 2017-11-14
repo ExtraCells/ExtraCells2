@@ -16,14 +16,12 @@ import mekanism.api.gas.GasStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.ISaveProvider;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.api.IGasStorageCell;
 
@@ -145,7 +143,7 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEGasStack>, 
 
 	@Override
 	public IStorageChannel getChannel() {
-		return StorageChannels.FLUID();
+		return StorageChannels.GAS();
 	}
 
 	@Override
