@@ -683,13 +683,14 @@ public class TileEntityFluidInterface extends TileBase implements
 			FluidTank tank = tanks[i];
 			FluidStack containedFluid = tank.getFluid();
 			String fluidFilter = this.fluidFilter[i];
-			if (containedFluid != null
-				&& FluidRegistry.getFluid(fluidFilter) != containedFluid.getFluid()) {
+			if (containedFluid != null && FluidRegistry.getFluid(fluidFilter) != containedFluid.getFluid()) {
 				FluidStack fluidStack = tank.drain(125, false);
 				if (fluidStack != null) {
 					IAEFluidStack notAdded = fluidInv.injectItems(AEUtils.createFluidStack(fluidStack.copy()), Actionable.SIMULATE, new MachineSource(this));
 					if (notAdded != null) {
 						int toAdd = (int) (fluidStack.amount - notAdded.getStackSize());
+						if (toAdd == 0)
+							continue;
 						fluidInv.injectItems(AEUtils.createFluidStack(tank.drain(toAdd, true)), Actionable.MODULATE, new MachineSource(this));
 						this.doNextUpdate = true;
 						this.wasIdle = false;

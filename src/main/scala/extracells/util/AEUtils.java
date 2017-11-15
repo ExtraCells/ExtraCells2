@@ -23,7 +23,7 @@ public class AEUtils {
 	}
 
 	public static IAEFluidStack createFluidStack(Fluid fluid, long amount) {
-		return createFluidStack(new FluidStack(fluid, 1)).setStackSize(amount);
+		return fluid == null ? null : createFluidStack(new FluidStack(fluid, 1)).setStackSize(amount);
 	}
 
 	public static IAEFluidStack createFluidStack(String fluidName, long amount) {
@@ -31,7 +31,7 @@ public class AEUtils {
 	}
 
 	public static IAEFluidStack createFluidStack(FluidStack fluid) {
-		return AEApi.instance().storage().createFluidStack(fluid);
+		return fluid == null ? null : AEApi.instance().storage().createFluidStack(fluid);
 	}
 
 	public static boolean isItemChannel(StorageChannel channel) {
