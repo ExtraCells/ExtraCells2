@@ -223,7 +223,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     if (!this.isInCreativeTab(creativeTab)) return
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     val tag = new NBTTagCompound
-    tag.setByte("modules", 31)
+    tag.setByte("modules", 23 /*No Essentia Terminal; 31 for All Terminals*/)
     val itemStack: ItemStack = new ItemStack(this)
     itemStack.setTagCompound(tag)
     itemStack.setTagCompound(tag)
