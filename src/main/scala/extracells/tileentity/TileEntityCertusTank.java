@@ -8,6 +8,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -194,12 +195,12 @@ public class TileEntityCertusTank extends TileBase {
 		int amount = 0, capacity = 0;
 		Fluid fluid = null;
 
-		int yOff = 0;
+		int yOff = 1;
 		TileEntity offTE = this.world.getTileEntity(pos.offset(EnumFacing.DOWN, yOff));
 		TileEntityCertusTank mainTank = this;
 		while (true) {
 			if (offTE != null && offTE instanceof TileEntityCertusTank) {
-				if (((TileEntityCertusTank) offTE).getFluid() == null
+				if (((TileEntityCertusTank) offTE).getFluid() == null || getFluid() == null
 					|| ((TileEntityCertusTank) offTE).getFluid() == getFluid()) {
 					mainTank = (TileEntityCertusTank) this.world
 						.getTileEntity(pos.offset(EnumFacing.DOWN, yOff));
@@ -211,12 +212,14 @@ public class TileEntityCertusTank extends TileBase {
 			break;
 		}
 
+		BlockPos posBaseTank = pos.offset(EnumFacing.DOWN, yOff - 1);
+
 		yOff = 0;
-		offTE = this.world.getTileEntity(pos.offset(EnumFacing.UP, yOff));
+		offTE = this.world.getTileEntity(posBaseTank.offset(EnumFacing.UP, yOff));
 		while (true) {
 			if (offTE != null && offTE instanceof TileEntityCertusTank) {
 				mainTank = (TileEntityCertusTank) offTE;
-				if (mainTank.getFluid() == null
+				if (mainTank.getFluid() == null || getFluid() == null
 					|| mainTank.getFluid() == getFluid()) {
 					IFluidTankProperties info = mainTank.getTankInfo(false)[0];
 					if (info != null) {
@@ -229,7 +232,7 @@ public class TileEntityCertusTank extends TileBase {
 						}
 					}
 					yOff++;
-					offTE = this.world.getTileEntity(pos.offset(EnumFacing.UP, yOff));
+					offTE = this.world.getTileEntity(posBaseTank.offset(EnumFacing.UP, yOff));
 					continue;
 				}
 			}

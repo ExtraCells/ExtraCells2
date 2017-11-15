@@ -128,7 +128,7 @@ dependencies {
 		transitive = false
 	}
 	
-	deobfProvided "cofh:CoFHCore:${config.version.cofh}:deobf"
+	deobfCompile "cofh:RedstoneFlux:${config.version.rf}:universal"
 	
 	deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}:api")
 	runtime ("li.cil.oc:OpenComputers:${config.version.oc}")
@@ -141,7 +141,9 @@ dependencies {
 	deobfCompile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
 	deobfCompile name: 'p455w0rdslib', version: config.version.pl, ext: 'jar'
 	
-	deobfCompile ("appeng:appliedenergistics2:${config.version.ae}")
+	deobfCompile ("appeng:appliedenergistics2:${config.version.ae}"){
+		transitive = false
+	}
 	
 	//compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
 	

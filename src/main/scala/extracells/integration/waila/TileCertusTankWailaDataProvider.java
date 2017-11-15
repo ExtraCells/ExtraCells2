@@ -18,6 +18,7 @@ import extracells.tileentity.TileEntityCertusTank;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 
@@ -25,16 +26,19 @@ public class TileCertusTankWailaDataProvider implements IWailaDataProvider {
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile,
 		NBTTagCompound tag, World world, BlockPos blockPos) {
 		if (tile instanceof TileEntityCertusTank) {
-			if (((TileEntityCertusTank) tile).tank.getFluid() == null) {
+			TileEntityCertusTank tileTank = (TileEntityCertusTank) tile;
+			IFluidTankProperties properties = tileTank.getTankInfo(true)[0];
+			FluidStack content = properties.getContents();
+			if (content == null || content.getFluid() == null) {
 				tag.setString("fluidName", "");
 			} else {
 				tag.setString("fluidName",
-					((TileEntityCertusTank) tile).tank.getFluid().getFluid().getName());
+					content.getFluid().getName());
 				tag.setInteger("currentFluid",
-					((TileEntityCertusTank) tile).tank.getFluidAmount());
+					content.amount);
 			}
 			tag.setInteger("maxFluid",
-				((TileEntityCertusTank) tile).tank.getCapacity());
+				properties.getCapacity());
 		}
 		return tag;
 	}

@@ -165,9 +165,8 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	@SideOnly(Side.CLIENT)
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		TileEntity tileEntity = world.getTileEntity(pos);
-		if (tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-			IFluidHandler fluidHandler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-			FluidStack fluidStack = fluidHandler.getTankProperties()[0].getContents();
+		if (tileEntity != null && tileEntity instanceof TileEntityCertusTank) {
+			FluidStack fluidStack = ((TileEntityCertusTank)tileEntity).tank.getFluid();
 			state = state.withProperty(EMPTY, fluidStack == null);
 		}
 		TileEntity tileAbove = world.getTileEntity(pos.up());

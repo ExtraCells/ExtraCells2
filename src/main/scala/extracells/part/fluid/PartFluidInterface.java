@@ -777,9 +777,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 			&& FluidRegistry.getFluid(this.fluidFilter) != null) {
 			IAEFluidStack extracted = storage.getInventory(StorageChannels.FLUID()).extractItems(
 				AEUtils.createFluidStack(
-						new FluidStack(FluidRegistry
-							.getFluid(this.fluidFilter), 125)),
-				Actionable.SIMULATE, new MachineSource(this));
+						new FluidStack(FluidRegistry.getFluid(this.fluidFilter), 125)), Actionable.SIMULATE, new MachineSource(this));
 			if (extracted == null) {
 				return TickRateModulation.URGENT;
 			}
