@@ -20,9 +20,6 @@ object MekanismGas {
   }
 
   def init {
-    val api = AEApi.instance.partHelper
-    val r1 = api.registerNewLayer(classOf[LayerGasHandler].getName, classOf[IGasHandler].getName)
-    val r2 = api.registerNewLayer(classOf[LayerTubeConnection].getName, classOf[ITubeConnection].getName)
     AEApi.instance.registries.cell.addCellHandler(new GasCellHandler())
   }
 
