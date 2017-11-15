@@ -14,10 +14,10 @@ public class ContainerDrive extends Container {
 
 	public ContainerDrive(PartDrive part, EntityPlayer player) {
 		this.part = part;
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 3; j++) {
-				addSlotToContainer(new SlotRespective(part.getInventory(), j
-					+ i * 3, 18 + 71 - i * 18, j * 18 - 4));
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 2; j++) {
+				addSlotToContainer(new SlotRespective(part.getInventory(), i
+					+ (j * (-1) + 1) * 3, 18 + 71 - (j * (-1) + 1) * 18, i * 18 - 4));
 			}
 		}
 		bindPlayerInventory(player.inventory);
@@ -50,12 +50,17 @@ public class ContainerDrive extends Container {
 			ItemStack itemStack = slot.getStack();
 			transferStack = itemStack.copy();
 
-			if (slotnumber < 36) {
-				if (!mergeItemStack(itemStack, 36, this.inventorySlots.size(), true)) {
+			if (slotnumber < 6) {
+				if (!mergeItemStack(itemStack, 6, this.inventorySlots.size(), false)) {
 					return null;
 				}
-			} else if (!mergeItemStack(itemStack, 0, 36, false)) {
-				return null;
+			} else if (slotnumber < 33){
+				if (!mergeItemStack(itemStack, 0, 6, false) &&
+						!mergeItemStack(itemStack, 33, this.inventorySlots.size(), false)) {
+					return null;
+				}
+			} else if (!mergeItemStack(itemStack, 0, 6, false) &&
+					!mergeItemStack(itemStack, 6, 33, false)) {
 			}
 
 			if (itemStack.stackSize == 0) {
