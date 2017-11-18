@@ -45,8 +45,13 @@ def actualVersion = version
 task outputVersionToFile {
 	def versionFile = new File("version.txt")
 	versionFile.write("${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}")
+	
+	def oldVersion = new File("versionOld.txt")
+	if(!oldVersion.exists()) {
+		oldVersion.write("0.0.0")
+	}
 }
-build.dependsOn outputVersionToFile
+//build.dependsOn outputVersionToFile
 
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
