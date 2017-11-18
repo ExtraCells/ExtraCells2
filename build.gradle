@@ -2,9 +2,11 @@ buildscript {
     repositories {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+		classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.0.9'
     }
 }
 
@@ -12,6 +14,7 @@ buildscript {
 apply plugin: 'scala'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'idea'
+apply plugin: 'com.matthewprenger.cursegradle'
 
 
 ext.buildProps = file "build.properties"
@@ -41,7 +44,7 @@ def actualVersion = version
 
 task outputVersionToFile {
 	def versionFile = new File("version.txt")
-	versionFile.write("$version")
+	versionFile.write("${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}")
 }
 build.dependsOn outputVersionToFile
 
@@ -59,9 +62,9 @@ minecraft {
     runDir = "../../MinecraftDebug/run_client"
 	mappings = "${config.version.mappings}"
 	
-	replace '@VERSION@', "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}." + getBuildNumber()
+	replace '@VERSION@', "${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
 }
-
+	
 repositories {
     maven {
         name 'Mobius Repo'
@@ -173,8 +176,29 @@ task apiJar(type: Jar) {
     from sourceSets.main.output
     from sourceSets.main.scala
     from sourceSets.main.java
-    appendix = 'api'
+    classifier = 'api'
 	include 'extracells/api/**'
+}
+
+if (System.getenv("CURSEFORGE_API_KEY") != null) {
+	curseforge {
+	  apiKey = System.getenv("CURSEFORGE_API_KEY")
+	  project {
+		id = config.cf.project.id
+		addGameVersion config.version.minecraft
+		changelog = ''
+		releaseType = config.cf.project.type
+		relations {
+			requiredLibrary 'applied-energistics-2'
+		}
+		addArtifact(apiJar) {
+			releaseType = 'alpha'
+		}
+		mainArtifact(jar) {
+			displayName = "$archivesBaseName-${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}"
+		}
+	  }
+	}
 }
 
 artifacts {
