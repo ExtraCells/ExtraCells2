@@ -52,8 +52,10 @@ public class WidgetSlotFluidContainer extends AbstractWidget {
 		GlStateManager.enableLighting();
 	}
 
-	public void mouseClicked(ItemStack stack) {
-		if (stack != null && stack.getItem() != null && FluidHelper.isEmpty(stack)) {
+	@Override
+	public void handleMouseClick(int mouseX, int mouseY, int mouseButton) {
+		ItemStack stack = Minecraft.getMinecraft().player.inventory.getItemStack();
+		if (stack != null && !stack.isEmpty() && stack.getItem() != null && FluidHelper.isEmpty(stack)) {
 			NetworkUtil.sendToServer(new PacketFluidContainerSlot(this.fluidFiller, stack));
 		}
 	}

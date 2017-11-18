@@ -191,7 +191,7 @@ if (System.getenv("CURSEFORGE_API_KEY") != null) {
 	  project {
 		id = config.cf.project.id
 		addGameVersion config.version.minecraft
-		changelog = ''
+		changelog = file('changelog.txt')
 		releaseType = config.cf.project.type
 		relations {
 			requiredLibrary 'applied-energistics-2'

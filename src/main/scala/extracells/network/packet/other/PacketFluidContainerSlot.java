@@ -44,6 +44,7 @@ public class PacketFluidContainerSlot extends Packet {
 
 			container.setCount(1);
 			fluidFiller.containerItem = container;
+			fluidFiller.markDirty();
 			if (fluidFiller.hasWorld()) {
 				fluidFiller.updateBlock();
 			}

@@ -277,8 +277,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
 		if (tagCompound.hasKey("container")) {
-			this.containerItem = ItemStack.EMPTY.copy();
-			this.containerItem.deserializeNBT(tagCompound
+			this.containerItem = new ItemStack(tagCompound
 				.getCompoundTag("container"));
 		} else if (tagCompound.hasKey("isContainerEmpty")
 			&& tagCompound.getBoolean("isContainerEmpty")) {

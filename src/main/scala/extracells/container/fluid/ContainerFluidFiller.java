@@ -1,11 +1,13 @@
 package extracells.container.fluid;
 
+import extracells.util.FluidHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 
 import extracells.tileentity.TileEntityFluidFiller;
+import net.minecraft.item.ItemStack;
 
 public class ContainerFluidFiller extends Container {
 	public TileEntityFluidFiller tileentity;
@@ -41,5 +43,35 @@ public class ContainerFluidFiller extends Container {
 //		// DON'T DO ANYTHING, YOU SHITTY METHOD!
 //	}
 
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
+		ItemStack transferStack = ItemStack.EMPTY;
+		Slot slot = this.inventorySlots.get(slotnumber);
+
+		if (slot != null && slot.getHasStack()) {
+			ItemStack itemStack = slot.getStack();
+			transferStack = itemStack.copy();
+
+			if (FluidHelper.isEmpty(itemStack)){
+				tileentity.containerItem = itemStack.copy();
+				tileentity.markDirty();
+				return ItemStack.EMPTY;
+			} else if (slotnumber < 27) {
+				if (!mergeItemStack(itemStack, 27, this.inventorySlots.size(), false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (!mergeItemStack(itemStack, 0, 27, false)) {
+				return ItemStack.EMPTY;
+			}
+
+			if (itemStack.getCount() == 0) {
+				slot.putStack(ItemStack.EMPTY);
+			} else {
+				slot.onSlotChanged();
+			}
+		}
+
+		return transferStack;
+	}
 
 }
