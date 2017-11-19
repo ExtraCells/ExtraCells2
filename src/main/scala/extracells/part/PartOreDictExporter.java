@@ -2,6 +2,9 @@ package extracells.part;
 
 import java.util.List;
 
+import extracells.util.ItemHandlerUtil;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -194,7 +197,15 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 			return null;
 		}
 		IAEItemStack stack = stack0.copy();
-		if (tile instanceof IInventory) {
+		if(tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())){
+			IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+			ItemStack itemStack = stack.getItemStack();
+			ItemStack notExported = ItemHandlerUtil.insertItemStack(itemHandler, itemStack, true);
+			if (notExported == null)
+				return stack;
+			else
+				return stack.setStackSize(stack.getStackSize() - notExported.stackSize);
+		} else if (tile instanceof IInventory) {
 			if (tile instanceof ISidedInventory) {
 				ISidedInventory inv = (ISidedInventory) tile;
 				for (int i : inv.getSlotsForFace(facing.getOpposite())) {
