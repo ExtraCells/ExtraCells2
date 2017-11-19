@@ -35,38 +35,40 @@ public class PartDriveBakedModel implements IBakedModel {
 
 		result.addAll(bakedBase.getQuads(state, side, rand));
 
-		if (side == null && PartDrive.tempDriveState != null) {
-			DriveSlotsState slotsState = PartDrive.tempDriveState;
+		if(!PartDrive.tempDriveStates.isEmpty()){
+			DriveSlotsState slotsState = PartDrive.tempDriveStates.remove();
+			if (side == null && slotsState != null) {
 
-			for (int row = 0; row < 3; row++) {
-				for (int col = 0; col < 2; col++) {
-					DriveSlotState slotState = slotsState.getState(row + 3 + col * -3);
 
-					IBakedModel bakedCell = bakedCells.get(slotState);
+				for (int row = 0; row < 3; row++) {
+					for (int col = 0; col < 2; col++) {
+						DriveSlotState slotState = slotsState.getState(row + 3 + col * -3);
 
-					Matrix4f transform = new Matrix4f();
-					transform.setIdentity();
-					float scale = 1 / 16.0F;
+						IBakedModel bakedCell = bakedCells.get(slotState);
 
-					// Position this drive model copy at the correct slot. The transform is based on the
-					// cell-model being in slot 0,0 at the top left of the drive.
-					float xOffset = -col * 5 * scale;
-					float yOffset = -row * 3 * scale;
+						Matrix4f transform = new Matrix4f();
+						transform.setIdentity();
+						float scale = 1 / 16.0F;
 
-					transform.setTranslation(new Vector3f(xOffset, -3 * scale + yOffset, 0));
+						// Position this drive model copy at the correct slot. The transform is based on the
+						// cell-model being in slot 0,0 at the top left of the drive.
+						float xOffset = -col * 5 * scale;
+						float yOffset = -row * 3 * scale;
 
-					MatrixVertexTransformer transformer = new MatrixVertexTransformer(transform);
-					for (BakedQuad bakedQuad : bakedCell.getQuads(state, null, rand)) {
-						UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(bakedQuad.getFormat());
-						transformer.setParent(builder);
-						transformer.setVertexFormat(builder.getVertexFormat());
-						bakedQuad.pipe(transformer);
-						result.add(builder.build());
+						transform.setTranslation(new Vector3f(xOffset, -3 * scale + yOffset, 0));
+
+						MatrixVertexTransformer transformer = new MatrixVertexTransformer(transform);
+						for (BakedQuad bakedQuad : bakedCell.getQuads(state, null, rand)) {
+							UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(bakedQuad.getFormat());
+							transformer.setParent(builder);
+							transformer.setVertexFormat(builder.getVertexFormat());
+							bakedQuad.pipe(transformer);
+							result.add(builder.build());
+						}
 					}
 				}
 			}
 		}
-
 		return result;
 	}
 
