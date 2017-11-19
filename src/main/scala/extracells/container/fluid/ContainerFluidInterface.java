@@ -95,52 +95,35 @@ public class ContainerFluidInterface extends Container implements
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack itemstack = ItemStack.EMPTY;
+		ItemStack transferStack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
 
 		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
+			ItemStack itemStack = slot.getStack();
+			transferStack = itemStack.copy();
 
-			if (itemstack.getItem() instanceof ICraftingPatternItem) {
-				if (slotnumber < 9) {
-					if (!mergeItemStack(itemstack1,
-						this.inventorySlots.size() - 9,
-						this.inventorySlots.size(), false)) {
-						if (!mergeItemStack(itemstack1, 9,
-							this.inventorySlots.size() - 9, false)) {
-							return ItemStack.EMPTY;
-						}
-					}
-				} else if (!mergeItemStack(itemstack1, 0, 9, false)) {
+			if (slotnumber < 9) {
+				if (!mergeItemStack(itemStack, 9, this.inventorySlots.size(), false)) {
 					return ItemStack.EMPTY;
 				}
-				if (itemstack1.getCount() == 0) {
-					slot.putStack(ItemStack.EMPTY);
-				} else {
-					slot.onSlotChanged();
-				}
-				return itemstack;
-			}
-
-			if (slotnumber < this.inventorySlots.size() - 9) {
-				if (!mergeItemStack(itemstack1, this.inventorySlots.size() - 9,
-					this.inventorySlots.size(), true)) {
+			} else if (slotnumber < 36){
+				if (!mergeItemStack(itemStack, 0, 9, false) &&
+						!mergeItemStack(itemStack, 36, this.inventorySlots.size(), false)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!mergeItemStack(itemstack1, 9,
-				this.inventorySlots.size() - 9, false)) {
+			} else if (!mergeItemStack(itemStack, 0, 9, false) &&
+					!mergeItemStack(itemStack, 9, 36, false)) {
 				return ItemStack.EMPTY;
 			}
 
-			if (itemstack1.getCount() == 0) {
+			if (itemStack.getCount() == 0) {
 				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}
 		}
 
-		return itemstack;
+		return transferStack;
 	}
 
 	@Override

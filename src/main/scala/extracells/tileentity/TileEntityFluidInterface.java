@@ -71,6 +71,8 @@ import extracells.integration.Capabilities;
 import extracells.integration.waila.IWailaTile;
 import extracells.network.IGuiProvider;
 import extracells.registries.ItemEnum;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class TileEntityFluidInterface extends TileBase implements
 	IActionHost, IECTileEntity, IFluidInterface,
@@ -104,6 +106,7 @@ public class TileEntityFluidInterface extends TileBase implements
 	//private List<IAEItemStack> watcherList = new ArrayList<IAEItemStack>();
 
 	private boolean isFirstGetGridNode = true;
+	private boolean markForSave = false;
 
 	public TileEntityFluidInterface() {
 		super();
@@ -315,18 +318,12 @@ public class TileEntityFluidInterface extends TileBase implements
 		this.patternConvert.clear();
 
 		for (ItemStack currentPatternStack : this.inventory.inv) {
-			if (currentPatternStack != null
-				&& currentPatternStack.getItem() != null
-				&& currentPatternStack.getItem() instanceof ICraftingPatternItem) {
-				ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack
-					.getItem();
+			if (currentPatternStack != null && !currentPatternStack.isEmpty()
+				&& currentPatternStack.getItem() != null && currentPatternStack.getItem() instanceof ICraftingPatternItem) {
+				ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack.getItem();
 
-				if (currentPattern != null
-					&& currentPattern.getPatternForItem(
-					currentPatternStack, world) != null) {
-					IFluidCraftingPatternDetails pattern = new CraftingPattern2(
-						currentPattern.getPatternForItem(
-							currentPatternStack, world));
+				if (currentPattern.getPatternForItem(currentPatternStack, world) != null) {
+					IFluidCraftingPatternDetails pattern = new CraftingPattern2(currentPattern.getPatternForItem(currentPatternStack, world));
 					this.patternHandlers.add(pattern);
 					ItemStack is = makeCraftingPatternItem(pattern);
 					if (is == null) {
@@ -344,10 +341,12 @@ public class TileEntityFluidInterface extends TileBase implements
 	private void pushItems() {
 		for (IAEStack s : this.removeFromExport) {
 			this.export.remove(s);
+			markForSave = true;
 		}
 		this.removeFromExport.clear();
 		for (IAEStack s : this.addToExport) {
 			this.export.add(s);
+			markForSave = true;
 		}
 		this.addToExport.clear();
 		if (!hasWorld() || this.export.isEmpty()) {
@@ -359,84 +358,86 @@ public class TileEntityFluidInterface extends TileBase implements
 			if (tile != null) {
 				IAEStack stack0 = this.export.iterator().next();
 				IAEStack stack = stack0.copy();
-				if (stack instanceof IAEItemStack && tile instanceof IInventory) {
-					if (tile instanceof ISidedInventory) {
-						ISidedInventory inv = (ISidedInventory) tile;
-						for (int i : inv.getSlotsForFace(facing.getOpposite())) {
-							if (inv.canInsertItem(i, ((IAEItemStack) stack).createItemStack(), facing.getOpposite())) {
-								if (inv.getStackInSlot(i) == null) {
-									inv.setInventorySlotContents(i,
-										((IAEItemStack) stack)
-											.createItemStack());
-									this.removeFromExport.add(stack0);
-									return;
-								} else if (ItemUtils.areItemEqualsIgnoreStackSize(
-									inv.getStackInSlot(i),
-									((IAEItemStack) stack).createItemStack())) {
-									int max = inv.getInventoryStackLimit();
-									int current = inv.getStackInSlot(i).getCount();
-									int outStack = (int) stack.getStackSize();
-									if (max == current) {
-										continue;
-									}
-									if (current + outStack <= max) {
-										ItemStack s = inv.getStackInSlot(i)
-											.copy();
-										s.setCount(s.getCount() + outStack);
-										inv.setInventorySlotContents(i, s);
+				if (stack instanceof IAEItemStack) {
+					if(tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())){
+						IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+						ItemStack itemStack = ((IAEItemStack) stack).createItemStack();
+						if (ItemHandlerUtil.insertItemStack(itemHandler, itemStack, false).isEmpty()){
+							ItemHandlerUtil.insertItemStack(itemHandler, itemStack, true);
+							this.removeFromExport.add(stack0);
+							markForSave = true;
+						}
+					} else if (tile instanceof IInventory) {
+						if (tile instanceof ISidedInventory) {
+							ISidedInventory inv = (ISidedInventory) tile;
+							for (int i : inv.getSlotsForFace(facing.getOpposite())) {
+								if (inv.canInsertItem(i, ((IAEItemStack) stack).createItemStack(), facing.getOpposite())) {
+									if (inv.getStackInSlot(i).isEmpty()) {
+										inv.setInventorySlotContents(i, ((IAEItemStack) stack).createItemStack());
 										this.removeFromExport.add(stack0);
+										markForSave = true;
 										return;
-									} else {
-										ItemStack s = inv.getStackInSlot(i)
-											.copy();
-										s.setCount(max);
-										inv.setInventorySlotContents(i, s);
-										this.removeFromExport.add(stack0);
-										stack.setStackSize(outStack - max
-											+ current);
-										this.addToExport.add(stack);
-										return;
+									} else if (ItemUtils.areItemEqualsIgnoreStackSize(inv.getStackInSlot(i), ((IAEItemStack) stack).createItemStack())) {
+										int max = inv.getInventoryStackLimit();
+										int current = inv.getStackInSlot(i).getCount();
+										int outStack = (int) stack.getStackSize();
+										if (max == current) {
+											continue;
+										}
+										if (current + outStack <= max) {
+											ItemStack s = inv.getStackInSlot(i).copy();
+											s.setCount(s.getCount() + outStack);
+											inv.setInventorySlotContents(i, s);
+											this.removeFromExport.add(stack0);
+											markForSave = true;
+											return;
+										} else {
+											ItemStack s = inv.getStackInSlot(i).copy();
+											s.setCount(max);
+											inv.setInventorySlotContents(i, s);
+											this.removeFromExport.add(stack0);
+											stack.setStackSize(outStack - max + current);
+											this.addToExport.add(stack);
+											markForSave = true;
+											return;
+										}
 									}
 								}
 							}
-						}
-					} else {
-						IInventory inv = (IInventory) tile;
-						for (int i = 0; i < inv.getSizeInventory(); i++) {
-							if (inv.isItemValidForSlot(i,
-								((IAEItemStack) stack).createItemStack())) {
-								if (inv.getStackInSlot(i) == null) {
-									inv.setInventorySlotContents(i,
-										((IAEItemStack) stack)
-											.createItemStack());
-									this.removeFromExport.add(stack0);
-									return;
-								} else if (ItemUtils.areItemEqualsIgnoreStackSize(
-									inv.getStackInSlot(i),
-									((IAEItemStack) stack).createItemStack())) {
-									int max = inv.getInventoryStackLimit();
-									int current = inv.getStackInSlot(i).getCount();
-									int outStack = (int) stack.getStackSize();
-									if (max == current) {
-										continue;
-									}
-									if (current + outStack <= max) {
-										ItemStack s = inv.getStackInSlot(i)
-											.copy();
-										s.setCount(s.getCount() + outStack);
-										inv.setInventorySlotContents(i, s);
+						} else {
+							IInventory inv = (IInventory) tile;
+							for (int i = 0; i < inv.getSizeInventory(); i++) {
+								if (inv.isItemValidForSlot(i, ((IAEItemStack) stack).createItemStack())) {
+									if (inv.getStackInSlot(i).isEmpty()) {
+										inv.setInventorySlotContents(i, ((IAEItemStack) stack).createItemStack());
 										this.removeFromExport.add(stack0);
+										markForSave = true;
 										return;
-									} else {
-										ItemStack s = inv.getStackInSlot(i)
-											.copy();
-										s.setCount(max);
-										inv.setInventorySlotContents(i, s);
-										this.removeFromExport.add(stack0);
-										stack.setStackSize(outStack - max
-											+ current);
-										this.addToExport.add(stack);
-										return;
+									} else if (ItemUtils.areItemEqualsIgnoreStackSize(inv.getStackInSlot(i), ((IAEItemStack) stack).createItemStack())) {
+										int max = inv.getInventoryStackLimit();
+										int current = inv.getStackInSlot(i).getCount();
+										int outStack = (int) stack.getStackSize();
+										if (max == current) {
+											continue;
+										}
+										if (current + outStack <= max) {
+											ItemStack s = inv.getStackInSlot(i).copy();
+											s.setCount(s.getCount() + outStack);
+											inv.setInventorySlotContents(i, s);
+											this.removeFromExport.add(stack0);
+											markForSave = true;
+											return;
+										} else {
+											ItemStack s = inv.getStackInSlot(i).copy();
+											s.setCount(max);
+											inv.setInventorySlotContents(i, s);
+											this.removeFromExport.add(stack0);
+											markForSave = true;
+											stack.setStackSize(outStack - max + current);
+											this.addToExport.add(stack);
+											markForSave = true;
+											return;
+										}
 									}
 								}
 							}
@@ -452,6 +453,7 @@ public class TileEntityFluidInterface extends TileBase implements
 					if (amount == fluid.getStackSize()) {
 						handler.fill(fluid.getFluidStack().copy(), true);
 						this.removeFromExport.add(stack0);
+						markForSave = true;
 					} else {
 						IAEFluidStack aeFluidStack = fluid.copy();
 						aeFluidStack.setStackSize(aeFluidStack.getStackSize() - amount);
@@ -460,6 +462,7 @@ public class TileEntityFluidInterface extends TileBase implements
 						handler.fill(fluidStack, true);
 						this.removeFromExport.add(stack0);
 						this.addToExport.add(aeFluidStack);
+						markForSave = true;
 						return;
 					}
 				}
@@ -470,11 +473,11 @@ public class TileEntityFluidInterface extends TileBase implements
 	@Override
 	public boolean pushPattern(ICraftingPatternDetails patDetails,
 		InventoryCrafting table) {
+		boolean markForSave = false;
 		if (isBusy() || !this.patternConvert.containsKey(patDetails)) {
 			return false;
 		}
-		ICraftingPatternDetails patternDetails = this.patternConvert
-			.get(patDetails);
+		ICraftingPatternDetails patternDetails = this.patternConvert.get(patDetails);
 		if (patternDetails instanceof CraftingPattern) {
 			CraftingPattern patter = (CraftingPattern) patternDetails;
 			HashMap<Fluid, Long> fluids = new HashMap<Fluid, Long>();
@@ -497,26 +500,17 @@ public class TileEntityFluidInterface extends TileBase implements
 			}
 			for (Fluid fluid : fluids.keySet()) {
 				Long amount = fluids.get(fluid);
-				IAEFluidStack extractFluid = storage.getInventory(StorageChannels.FLUID())
-					.extractItems(
-						AEUtils.createFluidStack(
-							new FluidStack(fluid,
-								(int) (amount + 0))),
-						Actionable.SIMULATE, new MachineSource(this));
-				if (extractFluid == null
-					|| extractFluid.getStackSize() != amount) {
+				IAEFluidStack extractFluid = storage.getInventory(StorageChannels.FLUID()).extractItems(AEUtils.createFluidStack(
+						new FluidStack(fluid, (int) (amount + 0))), Actionable.SIMULATE, new MachineSource(this));
+				if (extractFluid == null || extractFluid.getStackSize() != amount) {
 					return false;
 				}
 			}
 			for (Fluid fluid : fluids.keySet()) {
 				Long amount = fluids.get(fluid);
-				IAEFluidStack extractFluid = storage.getInventory(StorageChannels.FLUID())
-					.extractItems(
-						AEUtils.createFluidStack(
-							new FluidStack(fluid,
-								(int) (amount + 0))),
-						Actionable.MODULATE, new MachineSource(this));
+				IAEFluidStack extractFluid = storage.getInventory(StorageChannels.FLUID()).extractItems(AEUtils.createFluidStack(new FluidStack(fluid, (int) (amount + 0))), Actionable.MODULATE, new MachineSource(this));
 				this.export.add(extractFluid);
+				markForSave = true;
 			}
 			for (IAEItemStack s : patter.getCondensedInputs()) {
 				if (s == null) {
@@ -527,9 +521,12 @@ public class TileEntityFluidInterface extends TileBase implements
 					continue;
 				}
 				this.export.add(s);
+				markForSave = true;
 			}
 
 		}
+		if(markForSave)
+			markDirty();
 		return true;
 	}
 
@@ -732,7 +729,10 @@ public class TileEntityFluidInterface extends TileBase implements
 			forceUpdate();
 		}
 		tick();
-		markDirty();
+		if (markForSave){
+			markForSave = false;
+			markDirty();
+		}
 	}
 
 	public NBTTagCompound writeFilter(NBTTagCompound tag) {

@@ -54,30 +54,34 @@ public class ContainerFluidCrafter extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack itemstack = ItemStack.EMPTY;
+		ItemStack transferStack = ItemStack.EMPTY;
 		Slot slot = this.inventorySlots.get(slotnumber);
+
 		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
-			if (this.tileentity.isItemValidForSlot(0, itemstack1)) {
-				if (slotnumber < 10) {
-					if (!mergeItemStack(itemstack1, 10, 36, false)) {
-						return ItemStack.EMPTY;
-					}
-				} else if (slotnumber >= 10 && slotnumber <= 36) {
-					if (!mergeItemStack(itemstack1, 0, 1, false)) {
-						return ItemStack.EMPTY;
-					}
+			ItemStack itemStack = slot.getStack();
+			transferStack = itemStack.copy();
+
+			if (slotnumber < 9) {
+				if (!mergeItemStack(itemStack, 9, this.inventorySlots.size(), false)) {
+					return ItemStack.EMPTY;
 				}
-				if (itemstack1.getCount() == 0) {
-					slot.putStack(ItemStack.EMPTY);
-				} else {
-					slot.onSlotChanged();
+			} else if (slotnumber < 36){
+				if (!mergeItemStack(itemStack, 0, 9, false) &&
+						!mergeItemStack(itemStack, 36, this.inventorySlots.size(), false)) {
+					return ItemStack.EMPTY;
 				}
-			} else {
+			} else if (!mergeItemStack(itemStack, 0, 9, false) &&
+					!mergeItemStack(itemStack, 9, 36, false)) {
 				return ItemStack.EMPTY;
 			}
+
+			if (itemStack.getCount() == 0) {
+				slot.putStack(ItemStack.EMPTY);
+			} else {
+				slot.onSlotChanged();
+			}
 		}
-		return itemstack;
+
+		return transferStack;
 	}
 }

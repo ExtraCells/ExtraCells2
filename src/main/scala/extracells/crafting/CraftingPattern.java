@@ -113,7 +113,7 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 			IAEItemStack stack = input[i];
 			if (stack != null
 				&& FluidHelper.isFluidContainer(stack.createItemStack()) && FluidHelper.isFilled(stack.createItemStack())) {
-				craftingInv.setInventorySlotContents(i, null);
+				craftingInv.setInventorySlotContents(i, ItemStack.EMPTY);
 			}
 		}
 		return returnStack;
@@ -127,8 +127,8 @@ public class CraftingPattern implements IFluidCraftingPatternDetails,
 	@Override
 	public ItemStack getPattern() {
 		ItemStack p = this.pattern.getPattern();
-		if (p == null) {
-			return null;
+		if (p == null || p.isEmpty()) {
+			return ItemStack.EMPTY;
 		}
 		ItemStack s = new ItemStack(ItemEnum.CRAFTINGPATTERN.getItem());
 		NBTTagCompound tag = new NBTTagCompound();

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import extracells.util.ItemStackUtils;
+import extracells.util.ItemUtils;
 import extracells.util.MachineSource;
 import extracells.util.StorageChannels;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -330,26 +332,19 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 					continue;
 				}
 			}
-			if (currentPatternStack != null
+			if (!ItemStackUtils.isEmpty(currentPatternStack)
 				&& currentPatternStack.getItem() != null
 				&& currentPatternStack.getItem() instanceof ICraftingPatternItem) {
 				ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack
 					.getItem();
 
-				if (currentPattern != null
-					&& currentPattern.getPatternForItem(
-					currentPatternStack, getWorld()) != null
-					&& currentPattern.getPatternForItem(
-					currentPatternStack, getWorld())
-					.isCraftable()) {
-					ICraftingPatternDetails pattern = new CraftingPattern(
-						currentPattern.getPatternForItem(
-							currentPatternStack, getWorld()));
+				if (currentPattern != null && currentPattern.getPatternForItem(currentPatternStack, getWorld()) != null
+					&& currentPattern.getPatternForItem(currentPatternStack, getWorld()).isCraftable()) {
+					ICraftingPatternDetails pattern = new CraftingPattern(currentPattern.getPatternForItem(currentPatternStack, getWorld()));
 					this.patternHandlers.add(pattern);
 					this.patternHandlerSlot[i] = pattern;
 					if (pattern.getCondensedInputs().length == 0) {
-						craftingTracker.setEmitable(pattern
-							.getCondensedOutputs()[0]);
+						craftingTracker.setEmitable(pattern.getCondensedOutputs()[0]);
 					} else {
 						craftingTracker.addCraftingOption(this, pattern);
 					}
@@ -457,7 +452,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 			}
 			storage.getInventory(StorageChannels.ITEM()).injectItems(StorageChannels.ITEM().createStack(this.returnStack), Actionable.MODULATE, new MachineSource(this));
 			for (ItemStack s : this.optionalReturnStack) {
-				if (s == null) {
+				if (s == null || s.isEmpty()) {
 					continue;
 				}
 				storage.getInventory(StorageChannels.ITEM()).injectItems(StorageChannels.ITEM().createStack(s), Actionable.MODULATE, new MachineSource(this));
@@ -465,6 +460,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 			this.optionalReturnStack = new ItemStack[0];
 			this.isBusy = false;
 			this.returnStack = null;
+			markDirty();
 		}
 		if (!this.isBusy && getWorld() != null && !getWorld().isRemote) {
 			for (IAEItemStack stack : this.removeList) {
@@ -522,6 +518,7 @@ public class TileEntityFluidCrafter extends TileBase implements IActionHost, ICr
 
 							this.returnStack = patter.getCondensedOutputs()[0].createItemStack();
 							this.isBusy = true;
+							markDirty();
 							return;
 						}
 					}
