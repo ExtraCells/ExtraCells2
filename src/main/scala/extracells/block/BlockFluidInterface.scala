@@ -72,7 +72,7 @@ object BlockFluidInterface extends BlockEC(Material.IRON, 2.0F, 10.0F) {
   }
 
   override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
-    if (world.isRemote) return false
+    if (world.isRemote) return true
     val rand: Random = new Random()
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile.isInstanceOf[TileEntityFluidInterface]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, tile.asInstanceOf[TileEntityFluidInterface].getGridNode(null))) return false

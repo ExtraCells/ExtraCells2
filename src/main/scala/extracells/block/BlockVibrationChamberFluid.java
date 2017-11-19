@@ -43,7 +43,7 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
-			return false;
+			return true;
 		}
 		GuiHandler.launchGui(0, player, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;

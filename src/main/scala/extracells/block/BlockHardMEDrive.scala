@@ -108,7 +108,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
   }
 
   override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, hand: EnumHand, side: EnumFacing, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
-    if (world.isRemote) return false
+    if (world.isRemote) return true
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile.isInstanceOf[TileEntityHardMeDrive]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(AEPartLocation.INTERNAL))) return false
     val current: ItemStack = player.inventory.getCurrentItem
