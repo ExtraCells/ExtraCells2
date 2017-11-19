@@ -1,14 +1,15 @@
 package extracells.part;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import appeng.api.util.DimensionalCoord;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import appeng.api.config.SecurityPermissions;
@@ -40,10 +41,12 @@ import extracells.models.drive.IECDrive;
 import extracells.util.AEUtils;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.world.World;
 
 public class PartDrive extends PartECBase implements ICellContainer, IInventoryListener, IECDrive {
 
-	public static DriveSlotsState tempDriveState;
+	public static Queue<DriveSlotsState> tempDriveStates = new LinkedList<DriveSlotsState>();
+	public static DimensionalCoord oldPos = null;
 
 	private final byte[] cellStatuses = new byte[6];
 	private final InventoryPartDrive inventory = new InventoryPartDrive(this){
@@ -144,7 +147,12 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 
 	@Override
 	public IPartModel getStaticModels() {
-		tempDriveState = DriveSlotsState.createState(this);
+		DimensionalCoord currentPos = getLocation();
+		if(currentPos == null || oldPos == null || !currentPos.isEqual(oldPos)){
+			tempDriveStates = new LinkedList<DriveSlotsState>();
+			oldPos = currentPos;
+		}
+		tempDriveStates.add(DriveSlotsState.createState(this));
 		if (isActive() && isPowered()) {
 			return PartModels.DRIVE_HAS_CHANNEL;
 		} else if (isPowered()) {
