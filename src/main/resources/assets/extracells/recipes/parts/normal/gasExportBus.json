@@ -1,4 +1,10 @@
-{
+﻿{
+    "conditions": [
+        {
+            "type": "extracells:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
     "result": {
         "item": "extracells:part.base",
 		"data": 14

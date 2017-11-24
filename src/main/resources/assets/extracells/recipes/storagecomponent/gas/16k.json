@@ -1,4 +1,10 @@
-{
+﻿{
+    "conditions": [
+        {
+            "type": "extracells:mod_integration",
+            "mod": "mekanismgas"
+        }
+    ],
     "result": {
         "item": "extracells:storage.component",
 		"data": 13

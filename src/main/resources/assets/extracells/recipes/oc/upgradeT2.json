@@ -1,0 +1,35 @@
+﻿{
+    "conditions": [
+        {
+            "type": "extracells:mod_integration",
+            "mod": "opencomputers"
+        }
+    ],
+    "result": {
+        "item": "extracells:oc.upgrade",
+		"data": 1
+    },
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "dad",
+        "mbm",
+        "dcd"
+    ],
+    "key": {
+        "a": {
+          "item": "#extracells:wirelessReceiver"
+        },
+		"c": {
+			"item": "#extracells:printedCircuitBoard"
+		},
+		"b": {
+			"item": "#extracells:wlanCard"
+		},
+		"d": {
+			"item": "#extracells:gold"
+		},
+		"m": {
+			"item": "#extracells:chip2"
+		}
+    }
+}

@@ -1,0 +1,5 @@
+{
+  "conditions": {
+    "mod_integration": "extracells.util.recipe.ConditionModIntegration"
+  }
+}

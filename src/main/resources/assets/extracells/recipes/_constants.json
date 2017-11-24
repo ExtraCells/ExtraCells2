@@ -45,6 +45,15 @@
 		]
 	},
 	{
+		"name": "extracells:diamond",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "gemDiamond"
+			}
+		]
+	},
+	{
 		"name": "extracells:formationCore",
 		"ingredient": [
 			{
@@ -177,6 +186,90 @@
 			{
 				"item": "appliedenergistics2:material",
 				"data": 10
+			}
+		]
+	},
+	{
+		"name": "extracells:wirelessReceiver",
+		"ingredient": [
+			{
+				"item": "appliedenergistics2:material",
+				"data": 41
+			}
+		]
+	},
+	{
+		"name": "extracells:printedCircuitBoard",
+		"conditions": [
+			{
+				"type": "extracells:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:material",
+				"data": 4
+			}
+		]
+	},
+	{
+		"name": "extracells:wlanCard",
+		"conditions": [
+			{
+				"type": "extracells:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:card",
+				"data": 7
+			}
+		]
+	},
+	{
+		"name": "extracells:chip1",
+		"conditions": [
+			{
+				"type": "extracells:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:material",
+				"data": 7
+			}
+		]
+	},
+	{
+		"name": "extracells:chip2",
+		"conditions": [
+			{
+				"type": "extracells:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:material",
+				"data": 8
+			}
+		]
+	},
+	{
+		"name": "extracells:chip3",
+		"conditions": [
+			{
+				"type": "extracells:mod_integration",
+				"mod": "opencomputers"
+			}
+		],
+		"ingredient": [
+			{
+				"item": "opencomputers:material",
+				"data": 9
 			}
 		]
 	}
