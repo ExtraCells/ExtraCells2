@@ -1,5 +1,6 @@
 package extracells.integration.opencomputers
 
+import extracells.integration.Integration
 import li.cil.oc.api.driver.item.{HostAware, Slot}
 import li.cil.oc.api.internal.{Drone, Robot}
 import li.cil.oc.api.{CreativeTab, network}
@@ -28,7 +29,11 @@ trait UpgradeItemAEBase extends Item with HostAware /*with EnvironmentProvider*/
   }
 
   @Method(modid = "opencomputers")
-  override def getCreativeTabs: Array[CreativeTabs] = Array[CreativeTabs](getCreativeTab, CreativeTab.instance)
+  def getOCCreativeTab: CreativeTabs = CreativeTab.instance
+
+  override def getCreativeTabs: Array[CreativeTabs] =
+    if (Integration.Mods.OPENCOMPUTERS.isEnabled) Array[CreativeTabs](getCreativeTab, CreativeTab.instance)
+    else super.getCreativeTabs
 
   @Method(modid = "opencomputers")
   override def slot(stack: ItemStack) = Slot.Upgrade

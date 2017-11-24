@@ -1,1 +1,1 @@
-- fixed crash on startup with old OpenComputers version
+- fixed crash on startup if OpenComputers is not installed

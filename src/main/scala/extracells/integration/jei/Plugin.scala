@@ -39,6 +39,7 @@ class Plugin extends IModPlugin{
 
 
     hideItem(new ItemStack(ItemEnum.FLUIDITEM.getItem), registry)
+    hideItem(new ItemStack(ItemEnum.GASITEM.getItem), registry)
     hideItem(new ItemStack(ItemEnum.CRAFTINGPATTERN.getItem), registry)
     for (item <- ItemEnum.values()) {
       if (item.getMod != null && (!item.getMod.isEnabled)) {
