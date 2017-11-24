@@ -19,7 +19,6 @@ object OpenComputers {
 		}
 		Driver.add(ItemOCUpgrade)
 		AEApi.instance.registries.wireless.registerWirelessHandler(WirelessHandlerUpgradeAE)
-		//OCRecipes.loadRecipes
 		ExtraCellsPathProvider
 	}
 

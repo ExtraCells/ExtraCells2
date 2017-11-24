@@ -1,2 +1,1 @@
-- bug fixes
-- add OpenComputers integration
+- fixed crash on startup with old OpenComputers version
