@@ -1,7 +1,14 @@
 package extracells.integration.opencomputers
 
-/*object OpenComputers {
-	
+import appeng.api.AEApi
+import extracells.integration.Integration
+import extracells.item.ItemOCUpgrade
+import li.cil.oc.api.Driver
+import li.cil.oc.api.driver.EnvironmentProvider
+import net.minecraftforge.common.config.Configuration
+
+object OpenComputers {
+
 	def init{
 		add(new DriverFluidExportBus)
 		add(new DriverOreDictExportBus)
@@ -10,9 +17,9 @@ package extracells.integration.opencomputers
 			add(new DriverGasExportBus)
 			add(new DriverGasImportBus)
 		}
-		add(ItemEnum.OCUPGRADE.getItem.asInstanceOf[ItemOCUpgrade])
+		Driver.add(ItemOCUpgrade)
 		AEApi.instance.registries.wireless.registerWirelessHandler(WirelessHandlerUpgradeAE)
-		OCRecipes.loadRecipes
+		//OCRecipes.loadRecipes
 		ExtraCellsPathProvider
 	}
 
@@ -20,4 +27,4 @@ package extracells.integration.opencomputers
 		Driver.add(provider)
 	}
 
-}*/
+}

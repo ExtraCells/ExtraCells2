@@ -1,5 +1,6 @@
 package extracells.integration;
 
+import extracells.integration.opencomputers.OpenComputers;
 import net.minecraftforge.common.config.Configuration;
 
 import net.minecraftforge.fml.common.Loader;
@@ -100,8 +101,8 @@ public class Integration {
 	public void init() {
 		if (Mods.WAILA.isEnabled())
 			Waila.init();
-		//if (Mods.OPENCOMPUTERS.isEnabled())
-		//OpenComputers.init();
+		if (Mods.OPENCOMPUTERS.isEnabled())
+			OpenComputers.init();
 		//if (Mods.NEI.isEnabled())
 		//Nei.init();
 		if (Mods.MEKANISMGAS.isEnabled())

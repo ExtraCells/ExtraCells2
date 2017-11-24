@@ -1,9 +1,15 @@
 package extracells.integration.opencomputers
 
-//import li.cil.oc.common.item.data.{DroneData, RobotData}
+import appeng.api.features.IWirelessTermHandler
+import appeng.api.util.IConfigManager
+import extracells.registries.ItemEnum
+import li.cil.oc.common.item.data.{DroneData, RobotData}
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
 
 
-/*object WirelessHandlerUpgradeAE extends IWirelessTermHandler{
+object WirelessHandlerUpgradeAE extends IWirelessTermHandler{
 
   override def canHandle(itemStack: ItemStack): Boolean = {
     if (itemStack == null) return false
@@ -70,4 +76,4 @@ package extracells.integration.opencomputers
     getEncryptionKey(component)
   }
 
-}*/
+}

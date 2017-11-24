@@ -1,5 +1,7 @@
 package extracells.integration.opencomputers;
-/*
+
+import li.cil.oc.api.network.*;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -17,11 +19,6 @@ import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Component;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
 import mekanism.api.gas.GasStack;
 
 public class DriverGasExportBus extends DriverBase<PartGasExport> {
@@ -35,7 +32,7 @@ public class DriverGasExportBus extends DriverBase<PartGasExport> {
 		return new Enviroment(host);
 	}
 
-	public class Enviroment extends ManagedEnvironment implements NamedBlock {
+	public class Enviroment extends AbstractManagedEnvironment implements NamedBlock {
 
 		protected final TileEntity tile;
 		protected final IPartHost host;
@@ -169,4 +166,3 @@ public class DriverGasExportBus extends DriverBase<PartGasExport> {
 	}
 
 }
-*/

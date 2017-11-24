@@ -1,5 +1,8 @@
 package extracells.integration.opencomputers;
-/*
+
+import li.cil.oc.api.driver.DriverBlock;
+import li.cil.oc.api.network.*;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,18 +25,12 @@ import extracells.util.FluidHelper;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
-import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Component;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
 
-public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
+public class DriverFluidInterface implements DriverBlock, EnvironmentProvider {
 
 	@Override
 	public boolean worksWith(World world, BlockPos pos, EnumFacing facing) {
@@ -54,7 +51,7 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 		return new Enviroment(tile);
 	}
 
-	public class Enviroment extends ManagedEnvironment implements NamedBlock {
+	public class Enviroment extends AbstractManagedEnvironment implements NamedBlock {
 
 		protected final TileEntity tile;
 		protected final IPartHost host;
@@ -170,4 +167,3 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 		return null;
 	}
 }
-*/

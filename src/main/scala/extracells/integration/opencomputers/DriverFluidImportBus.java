@@ -1,8 +1,14 @@
 package extracells.integration.opencomputers;
-/*
+
+import appeng.api.parts.IPart;
+import extracells.part.gas.PartGasImport;
+import li.cil.oc.api.network.*;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -17,11 +23,6 @@ import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Component;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
 
 public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 
@@ -34,7 +35,25 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 		return new Enviroment(host);
 	}
 
-	public class Enviroment extends ManagedEnvironment implements NamedBlock {
+	private static PartFluidImport getImportBus(World world, BlockPos pos, AEPartLocation dir){
+		TileEntity tile = world.getTileEntity(pos);
+		if (tile == null || (!(tile instanceof IPartHost)))
+			return null;
+		IPartHost host = (IPartHost) tile;
+		if(dir == null || dir == AEPartLocation.INTERNAL){
+			for (AEPartLocation side: AEPartLocation.SIDE_LOCATIONS){
+				IPart part = host.getPart(side);
+				if (part != null && part instanceof PartFluidImport &&!(part instanceof PartGasImport))
+					return (PartFluidImport) part;
+			}
+			return null;
+		}else{
+			IPart part = host.getPart(dir);
+			return part == null ? null : part instanceof PartGasImport ? null : (PartFluidImport) part;
+		}
+	}
+
+	public class Enviroment extends AbstractManagedEnvironment implements NamedBlock {
 
 		protected final TileEntity tile;
 		protected final IPartHost host;
@@ -133,12 +152,12 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 			}
 		}
 		
-		/*@Callback(doc = "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single export operation.")
+		@Callback(doc = "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single export operation.")
 		public Object[] exportFluid(Context context, Arguments args){
-			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-			if (dir == null || dir == ForgeDirection.UNKNOWN)
+			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
+			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{false, "unknown side"};
-			PartFluidImport part = getImportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
+			PartFluidImport part = getImportBus(tile.getWorld(), tile.getPos(), dir);
 			if (part == null)
 				return new Object[]{false, "no export bus"};
 			if (part.getFacingTank() == null)
@@ -148,8 +167,8 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 			if (didSomething)
 				context.pause(0.25);
 			return new Object[]{didSomething};
-		}*/
-/*
+		}
+
 		@Override
 		public String preferredName() {
 			return "me_importbus";
@@ -163,4 +182,3 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 	}
 
 }
-*/

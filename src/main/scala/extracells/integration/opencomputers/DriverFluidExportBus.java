@@ -1,6 +1,7 @@
 package extracells.integration.opencomputers;
-/*
+
 import li.cil.oc.api.network.*;
+import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
@@ -29,7 +30,7 @@ public class DriverFluidExportBus extends DriverBase<PartFluidExport> {
 		return new Enviroment(host);
 	}
 
-	public class Enviroment extends ManagedEnvironment implements NamedBlock {
+	public class Enviroment extends AbstractManagedEnvironment implements NamedBlock {
 
 		protected final TileEntity tile;
 		protected final IPartHost host;
@@ -163,4 +164,3 @@ public class DriverFluidExportBus extends DriverBase<PartFluidExport> {
 	}
 
 }
-*/

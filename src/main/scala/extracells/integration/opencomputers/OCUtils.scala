@@ -2,7 +2,9 @@ package extracells.integration.opencomputers
 
 import appeng.api.parts.{IPart, IPartHost}
 import appeng.api.util.AEPartLocation
-//import li.cil.oc.common.item.data.{DroneData, RobotData}
+import li.cil.oc.api.API
+import li.cil.oc.common.item.data.{DroneData, RobotData}
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -26,7 +28,7 @@ object OCUtils {
     }
   }
 
-  /* def isRobot(stack: ItemStack): Boolean = {
+   def isRobot(stack: ItemStack): Boolean = {
      val item = API.items.get(stack)
      if (item == null) return false
      item.name == "robot"
@@ -54,7 +56,7 @@ object OCUtils {
      null
    }
 
-   def getComponent(drone: DroneData, item: Item): ItemStack = getComponent(drone, item, 0)*/
+   def getComponent(drone: DroneData, item: Item): ItemStack = getComponent(drone, item, 0)
 
 
 }

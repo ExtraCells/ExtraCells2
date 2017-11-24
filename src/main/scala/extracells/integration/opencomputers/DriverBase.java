@@ -1,21 +1,22 @@
 package extracells.integration.opencomputers;
-/*
+
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.api.util.AEPartLocation;
+import li.cil.oc.api.driver.DriverBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
-import appeng.api.util.AEPartLocation;
+
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import li.cil.oc.api.driver.EnvironmentProvider;
-import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.network.ManagedEnvironment;
 
-public abstract class DriverBase<P extends IPart> implements SidedBlock, EnvironmentProvider {
+public abstract class DriverBase<P extends IPart> implements DriverBlock, EnvironmentProvider {
 	protected PartEnum part;
 	protected Class environmentClass;
 
@@ -54,4 +55,3 @@ public abstract class DriverBase<P extends IPart> implements SidedBlock, Environ
 		return null;
 	}
 }
-*/
