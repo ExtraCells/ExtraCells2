@@ -5,9 +5,9 @@ import extracells.util.UniversalTerminal;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.wrapper.ICraftingRecipeWrapper;
 import net.minecraft.item.ItemStack;
-import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UniversalTerminalRecipeWrapper implements ICraftingRecipeWrapper {
