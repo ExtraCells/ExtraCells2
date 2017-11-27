@@ -2,31 +2,33 @@ package extracells.integration.opencomputers
 
 import appeng.api.parts.{IPart, IPartHost}
 import appeng.api.util.AEPartLocation
-//import li.cil.oc.common.item.data.{DroneData, RobotData}
+import li.cil.oc.api.API
+import li.cil.oc.common.item.data.{DroneData, RobotData}
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 
 object OCUtils {
 
-  def getPart[P >: IPart](world: World, pos: BlockPos, location: AEPartLocation): P = {
+  def getPart[ P >: IPart, C <: Class[_ <: P]](world: World, pos: BlockPos, location: AEPartLocation, clazz: C): P = {
     val tile = world.getTileEntity(pos)
     if (tile == null || (!tile.isInstanceOf[IPartHost])) return null
     val host = tile.asInstanceOf[IPartHost]
-    if (location == null || (location eq AEPartLocation.INTERNAL)) {
+    if (location == null || (location == AEPartLocation.INTERNAL)) {
       for (side <- AEPartLocation.SIDE_LOCATIONS) {
         val part = host.getPart(side)
-        if (part != null && part.isInstanceOf[P]) return part.asInstanceOf[P]
+        if (part != null && clazz.isInstance(part)) return part.asInstanceOf[P]
       }
-      return null
+      null
     } else {
       val part = host.getPart(location)
-      return if (part == null || !part.isInstanceOf[P]) null
+      if (part == null || !clazz.isInstance(part)) null
       else part.asInstanceOf[P]
     }
   }
 
-  /* def isRobot(stack: ItemStack): Boolean = {
+   def isRobot(stack: ItemStack): Boolean = {
      val item = API.items.get(stack)
      if (item == null) return false
      item.name == "robot"
@@ -54,7 +56,7 @@ object OCUtils {
      null
    }
 
-   def getComponent(drone: DroneData, item: Item): ItemStack = getComponent(drone, item, 0)*/
+   def getComponent(drone: DroneData, item: Item): ItemStack = getComponent(drone, item, 0)
 
 
 }

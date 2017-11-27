@@ -1,7 +1,13 @@
 package extracells.integration.opencomputers;
 
 
-/*public class OCRecipes {
+import appeng.api.AEApi;
+import li.cil.oc.api.API;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+
+public class OCRecipes {
 
     public static void loadRecipes(){
         GameRegistry.addShapedRecipe(new ItemStack(GameRegistry.findItem("extracells", "oc.upgrade")), "DAD", "MBM", "DCD",
@@ -24,4 +30,4 @@ package extracells.integration.opencomputers;
                 'M', API.items.get("chip1").createItemStack(1));
     }
 
-}*/
+}

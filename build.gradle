@@ -107,8 +107,8 @@ dependencies {
 	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
 	}
-	deobfProvided "li.cil.oc:OpenComputers:${config.version.oc}:api"
-	runtime "li.cil.oc:OpenComputers:${config.version.oc}:api"
+	deobfCompile "li.cil.oc:OpenComputers:${config.version.oc}"
+	//runtime "li.cil.oc:OpenComputers:${config.version.oc}:api"
 
 	deobfProvided "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
 	runtime "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}"

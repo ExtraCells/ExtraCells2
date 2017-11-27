@@ -38,7 +38,7 @@ public enum ItemEnum {
 	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern(), null, null),// Internal EC Item
 	UNIVERSALTERMINAL("terminal.universal.wireless", ItemWirelessTerminalUniversal.THIS()),
 	GASWIRELESSTERMINAL("terminal.gas.wireless", ItemWirelessTerminalGas.THIS(), Integration.Mods.MEKANISMGAS),
-	OCUPGRADE("oc.upgrade", new ItemOCUpgrade(), Integration.Mods.OPENCOMPUTERS);
+	OCUPGRADE("oc.upgrade", ItemOCUpgrade.THIS(), Integration.Mods.OPENCOMPUTERS);
 
 	private final String internalName;
 	private Item item;

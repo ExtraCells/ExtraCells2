@@ -1,5 +1,7 @@
 package extracells.integration.opencomputers;
 
+import li.cil.oc.api.driver.SidedBlock;
+import li.cil.oc.api.network.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,16 +24,10 @@ import extracells.util.FluidHelper;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
-import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Component;
-import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
 
 public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 
@@ -41,7 +37,7 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 		if (tile == null) {
 			return false;
 		}
-		PartFluidInterface partFluidInterface = OCUtils.getPart(world, pos, AEPartLocation.INTERNAL);
+		PartFluidInterface partFluidInterface = OCUtils.getPart(world, pos, AEPartLocation.INTERNAL, PartFluidInterface.class);
 		return partFluidInterface != null || tile instanceof IFluidInterface;
 	}
 
@@ -54,7 +50,7 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 		return new Enviroment(tile);
 	}
 
-	public class Enviroment extends ManagedEnvironment implements NamedBlock {
+	public class Enviroment extends li.cil.oc.api.prefab.ManagedEnvironment implements NamedBlock {
 
 		protected final TileEntity tile;
 		protected final IPartHost host;
@@ -81,7 +77,7 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 				}
 				return new Object[]{new FluidStack(fluid, 1000)};
 			}
-			PartFluidInterface part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartFluidInterface part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidInterface.class);
 			if (part == null) {
 				return new Object[]{null, "no interface"};
 			}
@@ -99,7 +95,7 @@ public class DriverFluidInterface implements SidedBlock, EnvironmentProvider {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			IFluidInterface part = tile instanceof IFluidInterface ? (IFluidInterface) tile : OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			IFluidInterface part = tile instanceof IFluidInterface ? (IFluidInterface) tile : OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidInterface.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
