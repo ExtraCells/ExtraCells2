@@ -1,5 +1,6 @@
 package extracells.integration;
 
+import extracells.integration.opencomputers.OpenComputers;
 import net.minecraftforge.common.config.Configuration;
 
 import net.minecraftforge.fml.common.Loader;
@@ -96,31 +97,23 @@ public class Integration {
 	}
 
 	public void init() {
-		if (Mods.WAILA.isEnabled()) {
+		if (Mods.WAILA.isEnabled())
 			Waila.init();
-		}
 		if (Mods.OPENCOMPUTERS.isEnabled())
-		//OpenComputers.init();
+			OpenComputers.init();
 		//if (Mods.NEI.isEnabled())
 		//Nei.init();
-		{
-			if (Mods.MEKANISMGAS.isEnabled()) {
-				MekanismGas.init();
-			}
-		}
-		if (Mods.IGW.isEnabled())
+		if (Mods.MEKANISMGAS.isEnabled())
+			MekanismGas.init();
+		//if (Mods.IGW.isEnabled())
 		//IGW.init();
-		{
-			if (Mods.MEKANISM.isEnabled()) {
-				Mekanism.init();
-			}
-		}
+		if (Mods.MEKANISM.isEnabled())
+			Mekanism.init();
 	}
 
 	public void postInit() {
-		if (Mods.MEKANISMGAS.isEnabled()) {
+		if (Mods.MEKANISMGAS.isEnabled())
 			MekanismGas.postInit();
-		}
 	}
 
 }
