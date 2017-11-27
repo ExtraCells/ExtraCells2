@@ -1,6 +1,7 @@
 package extracells.util
 
 
+import buildcraft.api.fuels.BuildcraftFuelRegistry
 import extracells.integration.Integration
 import net.minecraftforge.fluids.Fluid
 import net.minecraftforge.fml.common.Optional
@@ -28,13 +29,12 @@ object FuelBurnTime {
 
   @Optional.Method(modid = "BuildCraftAPI|fuels")
   private def getBCBurnTime(fluid: Fluid): Int = {
-    //TODO: Add Buildcraft
-    /*val it = BuildcraftFuelRegistry.fuel.getFuels.iterator()
+    val it = BuildcraftFuelRegistry.fuel.getFuels.iterator()
     while (it.hasNext){
       val fuel = it.next
-      if(fuel.getFluid == fluid)
+      if(fuel.getFluid.getFluid == fluid)
         return fuel.getTotalBurningTime
-    }*/
+    }
     0
   }
 

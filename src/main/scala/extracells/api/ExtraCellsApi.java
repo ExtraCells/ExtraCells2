@@ -109,4 +109,6 @@ public interface ExtraCellsApi {
 	IExternalGasStorageHandler getHandler(TileEntity te, EnumFacing opposite, IActionSource mySrc);
 
 	boolean isGasSystemEnabled();
+
+	void registerWrenchHandler(IWrenchHandler wrenchHandler);
 }

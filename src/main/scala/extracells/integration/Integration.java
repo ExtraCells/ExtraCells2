@@ -1,6 +1,11 @@
 package extracells.integration;
 
+import extracells.integration.appeng.AppEng;
+import extracells.integration.buildcraft.tools.BuildcraftTools;
+import extracells.integration.cofh.item.CofhItem;
+import extracells.integration.igw.IGW;
 import extracells.integration.opencomputers.OpenComputers;
+import extracells.util.Log;
 import net.minecraftforge.common.config.Configuration;
 
 import net.minecraftforge.fml.common.Loader;
@@ -18,13 +23,14 @@ public class Integration {
 		WAILA("waila"),
 		OPENCOMPUTERS("opencomputers"),
 		BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
-		NEI("NotEnoughItems", Side.CLIENT),
 		MEKANISMGAS("MekanismAPI|gas", "MekanismGas"),
-		IGW("IGWMod", "IngameWikiMod", Side.CLIENT),
+		IGW("igwmod", "IngameWikiMod", Side.CLIENT),
 		THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics"),
 		MEKANISM("mekanism"),
 		WIRELESSCRAFTING("wct", "AE2 Wireless Crafting Terminal"),
-		JEI("jei", "Just Enough Items", Side.CLIENT);
+		JEI("jei", "Just Enough Items", Side.CLIENT),
+		BUILDCRAFTTOOLS("BuildCraftAPI|tools", "BuildCraft Wrench"),
+		COFHITEM("cofhapi|item", "COFH Hammer");
 
 		private final String modID;
 
@@ -79,10 +85,7 @@ public class Integration {
 		private boolean correctSide() {
 			return ExtraCells.proxy.isClient() ? isOnClient() : isOnServer();
 		}
-
-
 	}
-
 
 	public void loadConfig(Configuration config) {
 		for (Mods mod : Mods.values()) {
@@ -92,8 +95,13 @@ public class Integration {
 
 
 	public void preInit() {
-		/*if (Mods.IGW.correctSide() && Mods.IGW.shouldLoad)
-			IGW.initNotifier();*/
+		for(Mods mod : Mods.values()){
+			if(mod.isEnabled())
+				Log.info("Enable integration for '" + mod.name + " (" + mod.modID + ")'");
+		}
+
+		if (Mods.IGW.correctSide() && Mods.IGW.shouldLoad)
+			IGW.initNotifier();
 		if (Mods.MEKANISMGAS.isEnabled())
 			MekanismGas.preInit();
 	}
@@ -103,14 +111,18 @@ public class Integration {
 			Waila.init();
 		if (Mods.OPENCOMPUTERS.isEnabled())
 			OpenComputers.init();
-		//if (Mods.NEI.isEnabled())
-		//Nei.init();
 		if (Mods.MEKANISMGAS.isEnabled())
 			MekanismGas.init();
-		//if (Mods.IGW.isEnabled())
-		//IGW.init();
+		if (Mods.IGW.isEnabled())
+			IGW.init();
 		if (Mods.MEKANISM.isEnabled())
 			Mekanism.init();
+		if (Mods.BUILDCRAFTTOOLS.isEnabled())
+			BuildcraftTools.init();
+		if (Mods.COFHITEM.isEnabled())
+			CofhItem.init();
+
+		AppEng.init();
 	}
 
 	public void postInit() {

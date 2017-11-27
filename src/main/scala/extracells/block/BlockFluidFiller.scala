@@ -9,7 +9,7 @@ import appeng.api.util.AEPartLocation
 import extracells.api.IECTileEntity
 import extracells.network.GuiHandler
 import extracells.tileentity.{IListenerTile, TileEntityFluidFiller, TileEntityFluidInterface}
-import extracells.util.{PermissionUtil, TileUtil}
+import extracells.util.{PermissionUtil, TileUtil, WrenchUtil}
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.IBlockState
 import net.minecraft.entity.EntityLivingBase
@@ -17,7 +17,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.{BlockPos, RayTraceResult, Vec3d}
 import net.minecraft.util.{EnumFacing, EnumHand}
 import net.minecraft.world.World
 
@@ -40,37 +40,20 @@ object BlockFluidFiller extends BlockEC(Material.IRON, 2.0F, 10.0F) {
     val rand: Random = new Random
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile.isInstanceOf[IECTileEntity]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[IECTileEntity]).getGridNode(AEPartLocation.INTERNAL))) return false
-    if (player.isSneaking && current != null) {
-      /*try {
-               if (current.getItem() instanceof IToolWrench
-                   && ((IToolWrench) current.getItem()).canWrench(
-                       player, x, y, z)) {
-                 ItemStack block = new ItemStack(this, 1,0);
-                 if (tile != null
-                     && tile instanceof TileEntityFluidInterface) {
-                   block.setTagCompound(((TileEntityFluidInterface) tile)
-                       .writeFilter(new NBTTagCompound()));
-                 }
-                 dropBlockAsItem(world, pos, state, 1);
-                 world.setBlockToAir(pos);
-                 ((IToolWrench) current.getItem()).wrenchUsed(player, x,
-                     y, z);
-                 return true;
-               }
-             } catch (Throwable e) {
-               // No IToolWrench
-             }*/ if (current.getItem.isInstanceOf[IAEWrench] && (current.getItem.asInstanceOf[IAEWrench]).canWrench(current, player, pos)) {
+    if (player.isSneaking) {
+      val rayTraceResult = new RayTraceResult(new Vec3d(hitX, hitY, hitZ), side, pos)
+      val wrenchHandler = WrenchUtil.getHandler(current, player, rayTraceResult, hand)
+      if (wrenchHandler != null) {
         val block: ItemStack = new ItemStack(this, 1, 0)
-        if (tile != null && tile.isInstanceOf[TileEntityFluidInterface]) {
-          block.setTagCompound((tile.asInstanceOf[TileEntityFluidInterface]).writeFilter(new NBTTagCompound))
-        }
+        if (tile != null && tile.isInstanceOf[TileEntityFluidInterface]) block.setTagCompound(tile.asInstanceOf[TileEntityFluidInterface].writeFilter(new NBTTagCompound))
         dropBlockAsItem(world, pos, state, 1)
         world.setBlockToAir(pos)
+        wrenchHandler.wrenchUsed(current, player, rayTraceResult, hand)
         return true
       }
     }
     GuiHandler.launchGui(0, player, world, x, y, z)
-    return true
+    true
   }
 
   override def onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, entity: EntityLivingBase, stack: ItemStack) {

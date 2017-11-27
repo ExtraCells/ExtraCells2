@@ -34,9 +34,9 @@ object IGWSupportNotifier {
     * Needs to be instantiated somewhere in your mod's loading stage.
     */
 
-  if (FMLCommonHandler.instance.getSide == Side.CLIENT && !Loader.isModLoaded("IGWMod")) {
+  if (FMLCommonHandler.instance.getSide == Side.CLIENT && !Loader.isModLoaded("igwmod")) {
     val dir: File = new File(".", "config")
-    val config: Configuration = new Configuration(new File(dir, "IGWMod.cfg"))
+    val config: Configuration = new Configuration(new File(dir, "igwmod.cfg"))
     config.load
     if (config.get(Configuration.CATEGORY_GENERAL, "enable_missing_notification", true, "When enabled, this will notify players when IGW-Mod is not installed even though mods add support.").getBoolean) {
       val mc: ModContainer = Loader.instance.activeModContainer

@@ -13,7 +13,7 @@ import extracells.gui.GuiHardMEDrive
 import extracells.models.drive.DriveSlotsState
 import extracells.network.GuiHandler
 import extracells.tileentity.TileEntityHardMeDrive
-import extracells.util.{PermissionUtil, TileUtil}
+import extracells.util.{PermissionUtil, TileUtil, WrenchUtil}
 import net.minecraft.block.BlockHorizontal
 import net.minecraft.block.properties.{IProperty, PropertyDirection}
 import net.minecraft.block.state.IBlockState
@@ -24,7 +24,7 @@ import net.minecraft.inventory.IInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.math.{BlockPos, MathHelper}
+import net.minecraft.util.math.{BlockPos, MathHelper, RayTraceResult, Vec3d}
 import net.minecraft.util._
 import net.minecraft.world.{IBlockAccess, World}
 import net.minecraftforge.common.property.{ExtendedBlockState, IExtendedBlockState, IUnlistedProperty}
@@ -112,28 +112,18 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
     val tile: TileEntity = world.getTileEntity(pos)
     if (tile.isInstanceOf[TileEntityHardMeDrive]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(AEPartLocation.INTERNAL))) return false
     val current: ItemStack = player.inventory.getCurrentItem
-    if (player.isSneaking && current != null) {
-      //TODO: Add buildcraft Support
-      /*try {
-        if (current.getItem.isInstanceOf[IToolWrench] && (current.getItem.asInstanceOf[IToolWrench]).canWrench(player, x, y, z)) {
-          dropBlockAsItem(world, x, y, z, new ItemStack(this))
-          world.setBlockToAir(x, y, z)
-          (current.getItem.asInstanceOf[IToolWrench]).wrenchUsed(player, x, y, z)
-          return true
-        }
-      }
-      catch {
-        case e: Throwable => {
-        }
-      }*/
-      if (current.getItem.isInstanceOf[IAEWrench] && (current.getItem.asInstanceOf[IAEWrench]).canWrench(current, player, pos)) {
+    if (player.isSneaking) {
+      val rayTraceResult = new RayTraceResult(new Vec3d(hitX, hitY, hitZ), side, pos)
+      val wrenchHandler = WrenchUtil.getHandler(current, player, rayTraceResult, hand)
+      if (wrenchHandler != null) {
         dropBlockAsItem(world, pos, world.getBlockState(pos), 1)
         world.setBlockToAir(pos)
+        wrenchHandler.wrenchUsed(current, player, rayTraceResult, hand)
         return true
       }
     }
     GuiHandler.launchGui(0, player, world, pos.getX, pos.getY, pos.getZ)
-    return true
+    true
   }
 
   override def onBlockPlacedBy(world: World, pos: BlockPos, state: IBlockState, entity: EntityLivingBase, stack: ItemStack) {

@@ -1,12 +1,8 @@
-package extracells.integration.WirelessCrafting
+package extracells.integration.wct
 
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import p455w0rd.wct.api.WCTApi
-//import p455w0rd.wct.api.WCTApi
-
-
-
 
 
 object WirelessCrafting {

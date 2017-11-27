@@ -9,7 +9,7 @@ import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
 import extracells.api.{ECApi, IWirelessFluidTermHandler, IWirelessGasTermHandler}
 import extracells.integration.Integration
-import extracells.integration.WirelessCrafting.WirelessCrafting
+import extracells.integration.wct.WirelessCrafting
 import extracells.item.ItemWirelessTerminalFluid.isInCreativeTab
 import extracells.models.ModelManager
 import extracells.util.HandlerUniversalWirelessTerminal

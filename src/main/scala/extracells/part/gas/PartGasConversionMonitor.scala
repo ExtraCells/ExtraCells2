@@ -8,12 +8,12 @@ import appeng.api.storage.data.IAEFluidStack
 import extracells.api.gas.IAEGasStack
 import extracells.integration.Integration
 import extracells.part.fluid.PartFluidConversionMonitor
-import extracells.util._
+import extracells.util.{WrenchUtil, _}
 import mekanism.api.gas.{GasStack, IGasItem}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumHand
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.{RayTraceResult, Vec3d}
 import net.minecraft.util.text.TextComponentTranslation
 import net.minecraftforge.fluids.FluidStack
 import net.minecraftforge.fml.common.Optional
@@ -46,9 +46,11 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
       if (host != null) host.markForUpdate
       return true
     }
-    if (WrenchUtil.canWrench(s, player, getHostTile.getPos)) {
+    val rayTraceResult = new RayTraceResult(pos, getFacing, this.getLocation.getPos)
+    val wrenchHandler = WrenchUtil.getHandler(s, player, rayTraceResult, hand)
+    if (wrenchHandler != null) {
       this.locked = !this.locked
-      WrenchUtil.wrenchUsed(s, player, getHostTile.getPos)
+      wrenchHandler.wrenchUsed(s, player, rayTraceResult, hand)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
       if (this.locked) player.sendMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))
@@ -150,9 +152,11 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor {
       if (host != null) host.markForUpdate
       return true
     }
-    if (WrenchUtil.canWrench(s, player, getHostTile.getPos)) {
+    val rayTraceResult = new RayTraceResult(pos, getFacing, this.getLocation.getPos)
+    val wrenchHandler = WrenchUtil.getHandler(s, player, rayTraceResult, hand)
+    if (wrenchHandler != null) {
       this.locked = !this.locked
-      WrenchUtil.wrenchUsed(s, player, getHostTile.getPos)
+      wrenchHandler.wrenchUsed(s, player, rayTraceResult, hand)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
       if (this.locked) player.sendMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))

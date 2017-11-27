@@ -5,6 +5,7 @@ import java.util.List;
 
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.IStorageChannel;
+import extracells.api.IWrenchHandler;
 import extracells.api.gas.IAEGasStack;
 import extracells.util.StorageChannels;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
@@ -218,9 +220,11 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 			saveData();
 			return true;
 		}
-		if (WrenchUtil.canWrench(s, player, getHostTile().getPos())) {
+		RayTraceResult rayTraceResult = new RayTraceResult(pos, getFacing(), this.getLocation().getPos());
+		IWrenchHandler wrenchHandler = WrenchUtil.getHandler(s, player, rayTraceResult, hand);
+		if (wrenchHandler != null) {
 			this.locked = !this.locked;
-			WrenchUtil.wrenchUsed(s, player, getHostTile().getPos());
+			wrenchHandler.wrenchUsed(s, player, rayTraceResult, hand);
 			IPartHost host = getHost();
 			if (host != null) {
 				host.markForUpdate();

@@ -1,5 +1,6 @@
 package extracells.util;
 
+import extracells.container.ITickContainer;
 import net.minecraft.inventory.Container;
 
 import net.minecraftforge.event.world.BlockEvent;
@@ -31,11 +32,13 @@ public class ExtraCellsEventHandler {
 		if (event.phase == TickEvent.Phase.START && event.side == Side.SERVER && event.player != null) {
 			if (event.player.openContainer != null) {
 				Container con = event.player.openContainer;
-				if (con instanceof ContainerFluidStorage) {
+				if (con instanceof ContainerFluidStorage)
 					((ContainerFluidStorage) con).removeEnergyTick();
-				} else if (con instanceof ContainerGasStorage) {
+				else if (con instanceof ContainerGasStorage)
 					((ContainerGasStorage) con).removeEnergyTick();
-				}
+
+				if(con instanceof ITickContainer)
+					((ITickContainer)con).onTick();
 			}
 		}
 	}

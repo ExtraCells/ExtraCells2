@@ -91,10 +91,10 @@ repositories {
         url "http://maven.amadornes.com/"
     }
 
-    //ivy {
-    //    name "BuildCraft"
-    //    artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
-    //}
+    ivy {
+        name "BuildCraft"
+        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]"
+    }
 	
 	ivy { 
 		name 'WirelessCraftingTerminal' 
@@ -105,11 +105,6 @@ repositories {
 		name 'p455w0rdslib' 
 		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.pl}/[module]-[revision].[ext]" 
 	}
-	
-	//ivy { 
-	//	name 'appliedenergistics2' 
-	//	artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.ae}/[module]-[revision].[ext]" 
-	//} 
 	
 	ivy { 
 		name 'Mekanism' 
@@ -124,6 +119,11 @@ repositories {
 		name = "CoFH Maven"
 		url = "http://maven.covers1624.net"
 	}
+	
+	maven {
+        name = 'IGW'
+        url = "http://maven.k-4u.nl/"
+    }
 
 }
 
@@ -138,13 +138,20 @@ dependencies {
 	
 	deobfCompile "cofh:RedstoneFlux:${config.version.rf}:universal"
 	
+	compileOnly ("cofh:CoFHCore:${config.version.cofh}:deobf") {
+		transitive = false
+	}
+	
 	//deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}:api")
 	deobfCompile ("li.cil.oc:OpenComputers:${config.version.oc}")
 
 	deobfProvided "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
 	runtime "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}"
 	
-    //compile name: "buildcraft", version: "${config.version.bc}", classifier: "dev", ext: 'jar'
+	deobfProvided name: "buildcraft-api", version: "${config.version.bc}", ext: 'jar'
+	runtime name: "buildcraft", version: "${config.version.bc}", ext: 'jar'
+	
+	deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
 	
 	deobfCompile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
 	deobfCompile name: 'p455w0rdslib', version: config.version.pl, ext: 'jar'
@@ -152,8 +159,6 @@ dependencies {
 	deobfCompile ("appeng:appliedenergistics2:${config.version.ae}"){
 		transitive = false
 	}
-	
-	//compile name: 'appliedenergistics2', version: config.version.ae, classifier: "dev", ext: 'jar'
 	
 	deobfCompile name: 'Mekanism', version: config.version.me, ext: 'jar'
 	deobfCompile "MCMultiPart2:MCMultiPart:${config.version.mcmp}"

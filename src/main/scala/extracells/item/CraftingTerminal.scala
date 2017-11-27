@@ -1,6 +1,6 @@
 package extracells.item
 
-import extracells.integration.WirelessCrafting.WirelessCrafting
+import extracells.integration.wct.WirelessCrafting
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraftforge.fml.common.Optional
 import p455w0rd.wct.api.IWirelessCraftingTerminalItem

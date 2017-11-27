@@ -3,6 +3,8 @@ package extracells.block;
 import javax.annotation.Nullable;
 import java.util.Random;
 
+import extracells.api.IWrenchHandler;
+import extracells.util.WrenchUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,6 +16,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import appeng.api.config.SecurityPermissions;
@@ -82,32 +86,23 @@ public class BlockFluidCrafter extends BlockEC {
 		if (world.isRemote) {
 			return true;
 		}
-		TileEntity tile = world.getTileEntity(pos);
-		if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, tile)) {
-			return false;
-		}
+
 		ItemStack current = player.getHeldItem(hand);
-		if (!player.isSneaking() && current != null) {
-			//TODO: Buildcraft
-		/*try {
-			if (current.getItem() instanceof IToolWrench
-				&& ((IToolWrench) current.getItem()).canWrench(player,
-				x, y, z)) {
-				dropBlockAsItem(world, x, y, z, new ItemStack(this));
-				world.setBlockToAir(x, y, z);
-				((IToolWrench) current.getItem()).wrenchUsed(player, x, y,
-					z);
-				return true;
+		if (!player.isSneaking()) {
+			TileEntity tile = world.getTileEntity(pos);
+			if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, tile)) {
+				return false;
 			}
-		} catch (Throwable e) {
-			// No IToolWrench
-		}*/
-			if (current.getItem() instanceof IAEWrench && ((IAEWrench) current.getItem()).canWrench(current, player, pos)) {
+			RayTraceResult rayTraceResult = new RayTraceResult(new Vec3d(hitX, hitY, hitZ), side, pos);
+			IWrenchHandler wrenchHandler = WrenchUtil.getHandler(current, player, rayTraceResult, hand);
+			if (wrenchHandler != null) {
 				spawnAsEntity(world, pos, new ItemStack(this));
 				world.setBlockToAir(pos);
+				wrenchHandler.wrenchUsed(current, player, rayTraceResult, hand);
 				return true;
 			}
 		}
+
 		GuiHandler.launchGui(0, player, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}

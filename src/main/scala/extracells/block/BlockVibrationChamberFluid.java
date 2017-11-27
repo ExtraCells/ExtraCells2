@@ -2,7 +2,11 @@ package extracells.block;
 
 import javax.annotation.Nullable;
 
+import appeng.api.config.SecurityPermissions;
+import extracells.api.IWrenchHandler;
+import extracells.util.PermissionUtil;
 import extracells.util.TileUtil;
+import extracells.util.WrenchUtil;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -18,6 +22,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -45,6 +51,23 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
 		if (world.isRemote) {
 			return true;
 		}
+
+		ItemStack current = player.getHeldItem(hand);
+		if (!player.isSneaking()) {
+			TileEntity tile = world.getTileEntity(pos);
+			if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, tile)) {
+				return false;
+			}
+			RayTraceResult rayTraceResult = new RayTraceResult(new Vec3d(hitX, hitY, hitZ), side, pos);
+			IWrenchHandler wrenchHandler = WrenchUtil.getHandler(current, player, rayTraceResult, hand);
+			if (wrenchHandler != null) {
+				spawnAsEntity(world, pos, new ItemStack(this));
+				world.setBlockToAir(pos);
+				wrenchHandler.wrenchUsed(current, player, rayTraceResult, hand);
+				return true;
+			}
+		}
+
 		GuiHandler.launchGui(0, player, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}

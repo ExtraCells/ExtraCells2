@@ -6,6 +6,7 @@ import java.util.List;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageChannel;
+import extracells.api.*;
 import extracells.api.gas.IAEGasStack;
 import extracells.util.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,12 +33,6 @@ import appeng.api.storage.ICellHandler;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEPartLocation;
-import extracells.api.ExtraCellsApi;
-import extracells.api.IExternalGasStorageHandler;
-import extracells.api.IPortableFluidStorageCell;
-import extracells.api.IPortableGasStorageCell;
-import extracells.api.IWirelessFluidTermHandler;
-import extracells.api.IWirelessGasFluidTermHandler;
 import extracells.api.definitions.IBlockDefinition;
 import extracells.api.definitions.IItemDefinition;
 import extracells.api.definitions.IPartDefinition;
@@ -356,6 +351,11 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 	@Override
 	public boolean isGasSystemEnabled() {
 		return isMekanismGasEnabled;
+	}
+
+	@Override
+	public void registerWrenchHandler(IWrenchHandler wrenchHandler) {
+		WrenchUtil.addWrenchHandler(wrenchHandler);
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")

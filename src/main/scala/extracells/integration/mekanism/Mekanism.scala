@@ -8,7 +8,8 @@ object Mekanism {
 
   def init: Unit = {
     if (Mods.MEKANISMGAS.isEnabled) {
-      ECApi.instance().addExternalStorageInterface(HandlerMekanismGasTank)
+      ECApi.instance.addExternalStorageInterface(HandlerMekanismGasTank)
     }
+    ECApi.instance.registerWrenchHandler(WrenchHandler)
   }
 }

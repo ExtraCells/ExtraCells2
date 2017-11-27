@@ -2,7 +2,7 @@ package extracells.util
 
 import appeng.api.AEApi
 import extracells.integration.Integration.Mods
-import extracells.integration.WirelessCrafting.WirelessCrafting
+import extracells.integration.wct.WirelessCrafting
 import extracells.item.WirelessTerminalType
 import extracells.registries.{ItemEnum, PartEnum}
 import net.minecraft.item.ItemStack

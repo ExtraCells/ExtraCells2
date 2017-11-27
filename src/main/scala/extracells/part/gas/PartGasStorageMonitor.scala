@@ -9,7 +9,7 @@ import mekanism.api.gas.Gas
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.ItemStack
 import net.minecraft.util.EnumHand
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.{RayTraceResult, Vec3d}
 import net.minecraft.util.text.TextComponentTranslation
 import net.minecraftforge.fml.common.Optional
 
@@ -39,9 +39,11 @@ class PartGasStorageMonitor extends PartFluidStorageMonitor {
       if (host != null) host.markForUpdate
       return true
     }
-    if (WrenchUtil.canWrench(s, player, getHostTile.getPos)) {
+    val rayTraceResult = new RayTraceResult(pos, getFacing, this.getLocation.getPos)
+    val wrenchHandler = WrenchUtil.getHandler(s, player, rayTraceResult, hand)
+    if (wrenchHandler != null) {
       this.locked = !this.locked
-      WrenchUtil.wrenchUsed(s, player, getHostTile.getPos)
+      wrenchHandler.wrenchUsed(s, player, rayTraceResult, hand)
       val host: IPartHost = getHost
       if (host != null) host.markForUpdate
       if (this.locked) player.sendMessage(new TextComponentTranslation("chat.appliedenergistics2.isNowLocked"))

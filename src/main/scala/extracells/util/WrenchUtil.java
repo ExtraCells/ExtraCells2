@@ -1,35 +1,30 @@
 package extracells.util;
 
+import extracells.api.IWrenchHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.RayTraceResult;
 
-import appeng.api.implementations.items.IAEWrench;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WrenchUtil {
 
-	public static boolean canWrench(ItemStack wrench, EntityPlayer player, BlockPos pos) {
-		if (wrench == null || wrench.getItem() == null) {
-			return false;
-		}
-		/*try { //TODO reimplement Buildcraft
-			IToolWrench w = (IToolWrench) wrench.getItem();
-			return w.canWrench(player, x, y, z);
-		} catch (Throwable e) {}*/
-		if (wrench.getItem() instanceof IAEWrench) {
-			IAEWrench w = (IAEWrench) wrench.getItem();
-			return w.canWrench(wrench, player, pos);
-		}
-		return false;
+	private static List<IWrenchHandler> handlers = new ArrayList<IWrenchHandler>();
+
+	public static void addWrenchHandler(IWrenchHandler handler){
+		handlers.add(handler);
 	}
 
-	public static void wrenchUsed(ItemStack wrench, EntityPlayer player, BlockPos pos) {
-		if (wrench == null || wrench.getItem() == null) {
-			return;
+	public static IWrenchHandler getHandler(ItemStack wrench, EntityPlayer player, RayTraceResult rayTraceResult, EnumHand hand) {
+		if (wrench == null || wrench.isEmpty() || player == null || rayTraceResult == null || hand == null) {
+			return null;
 		}
-		/*try {//TODO reimplement Buildcraft
-			IToolWrench w = (IToolWrench) wrench.getItem();
-			w.wrenchUsed(player, x, y, z);
-		} catch (Throwable e) {}*/
+		for (IWrenchHandler handler : handlers) {
+			if(handler.canWrench(wrench, player, rayTraceResult, hand))
+				return handler;
+		}
+		return null;
 	}
 }

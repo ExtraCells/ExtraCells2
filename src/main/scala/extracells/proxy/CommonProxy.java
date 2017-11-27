@@ -89,15 +89,6 @@ public class CommonProxy {
 		event.getRegistry().register(RecipeUniversalTerminal.THIS());
 	}
 
-	@SubscribeEvent
-	public void onTick(TickEvent.PlayerTickEvent event){
-		if (event.side == Side.SERVER){
-			Container container = event.player.openContainer;
-			if (container != null && container instanceof ITickContainer)
-				((ITickContainer)container).onTick();
-		}
-	}
-
 	public void registerItems() {
 		for (ItemEnum current : ItemEnum.values()) {
 			registerItem(current.getItem());
