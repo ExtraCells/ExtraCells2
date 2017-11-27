@@ -2,10 +2,9 @@ package extracells.block;
 
 import com.google.common.base.Preconditions;
 
-import javax.annotation.Nullable;
 
-import extracells.util.FluidHelper;
-import net.minecraft.block.Block;
+import extracells.api.IWrenchHandler;
+import extracells.util.WrenchUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -20,6 +19,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -29,13 +29,11 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import appeng.api.implementations.items.IAEWrench;
 import extracells.block.properties.PropertyFluid;
 import extracells.models.IStateMapperRegister;
 import extracells.registries.BlockEnum;
@@ -48,6 +46,8 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	public static final PropertyBool EMPTY = PropertyBool.create("empty");
 	public static final PropertyBool TANK_ABOVE = PropertyBool.create("above");
 	public static final PropertyBool TANK_BELOW = PropertyBool.create("below");
+	public static final PropertyFluid FLUID_ABOVE = new PropertyFluid("fluid_above");
+	public static final PropertyFluid FLUID_BELOW = new PropertyFluid("fluid_below");
 	public static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.0625F, 0.0F, 0.0625F, 0.9375F, 1.0F, 0.9375F);
 
 	public BlockCertusTank() {
@@ -98,27 +98,13 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		ItemStack current = player.inventory.getCurrentItem();
 
-		if (player.isSneaking() && current != null) {
-			//TODO: BuildCraft
-			/*try {
-				if (current.getItem() instanceof IToolWrench
-					&& ((IToolWrench) current.getItem()).canWrench(
-					entityplayer, x, y, z)) {
-					dropBlockAsItem(worldObj, x, y, z,
-						getDropWithNBT(worldObj, x, y, z));
-					worldObj.setBlockToAir(x, y, z);
-					((IToolWrench) current.getItem()).wrenchUsed(entityplayer,
-						x, y, z);
-					return true;
-				}
-			} catch (Throwable e) {
-				// No IToolWrench
-			}*/
-			if (current.getItem() instanceof IAEWrench
-				&& ((IAEWrench) current.getItem()).canWrench(current,
-				player, pos)) {
+		if (player.isSneaking()) {
+			RayTraceResult rayTraceResult = new RayTraceResult(new Vec3d(hitX, hitY, hitZ), side, pos);
+			IWrenchHandler wrenchHandler = WrenchUtil.getHandler(current, player, rayTraceResult, hand);
+			if (wrenchHandler != null) {
 				spawnAsEntity(world, pos, getDropWithNBT(world, pos));
 				world.setBlockToAir(pos);
+				wrenchHandler.wrenchUsed(current, player, rayTraceResult, hand);
 				return true;
 			}
 
@@ -157,6 +143,31 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 			if (fluidStack != null) {
 				extendedBlockState = extendedBlockState.withProperty(FLUID, fluidStack);
 			}
+
+		}
+		//ABOVE
+		if(extendedBlockState.getValue(TANK_ABOVE)) {
+			tileEntity = world.getTileEntity(pos.up());
+			if (tileEntity != null && tileEntity instanceof TileEntityCertusTank) {
+				TileEntityCertusTank certusTank = (TileEntityCertusTank) tileEntity;
+				FluidStack fluidStack = certusTank.tank.getFluid();
+				if (fluidStack != null) {
+					extendedBlockState = extendedBlockState.withProperty(FLUID_ABOVE, fluidStack);
+				}
+
+			}
+		}
+		//BELOW
+		if(extendedBlockState.getValue(TANK_BELOW)) {
+			tileEntity = world.getTileEntity(pos.down());
+			if (tileEntity != null && tileEntity instanceof TileEntityCertusTank) {
+				TileEntityCertusTank certusTank = (TileEntityCertusTank) tileEntity;
+				FluidStack fluidStack = certusTank.tank.getFluid();
+				if (fluidStack != null) {
+					extendedBlockState = extendedBlockState.withProperty(FLUID_BELOW, fluidStack);
+				}
+
+			}
 		}
 		return extendedBlockState;
 	}
@@ -181,7 +192,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new ExtendedBlockState(this, new IProperty[]{EMPTY, TANK_ABOVE, TANK_BELOW}, new IUnlistedProperty[]{FLUID});
+		return new ExtendedBlockState(this, new IProperty[]{EMPTY, TANK_ABOVE, TANK_BELOW}, new IUnlistedProperty[]{FLUID, FLUID_ABOVE, FLUID_BELOW});
 	}
 
 	public ItemStack getDropWithNBT(World world, BlockPos pos) {
