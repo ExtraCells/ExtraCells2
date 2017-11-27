@@ -5,9 +5,11 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -46,7 +48,17 @@ public class ModelTankFluid extends BlankModel {
 		if (stack.amount > 0 && amount == 0) {
 			amount = 1;
 		}
-		Key key = new Key(stack.getFluid(), amount, state.getValue(BlockCertusTank.TANK_ABOVE), state.getValue(BlockCertusTank.TANK_BELOW));
+		boolean renderTop = true;
+		if(extendedBlockState.getValue(BlockCertusTank.TANK_ABOVE)){
+			FluidStack topFluid = extendedBlockState.getValue(BlockCertusTank.FLUID_ABOVE);
+			renderTop = topFluid == null || topFluid.getFluid() != stack.getFluid() || topFluid.amount == 0;
+		}
+		boolean renderBelow = true;
+		if(extendedBlockState.getValue(BlockCertusTank.TANK_BELOW)){
+			FluidStack bottomFluid = extendedBlockState.getValue(BlockCertusTank.FLUID_BELOW);
+			renderBelow = bottomFluid == null || bottomFluid.getFluid() != stack.getFluid() || bottomFluid.amount != 32000;
+		}
+		Key key = new Key(stack.getFluid(), amount, state.getValue(BlockCertusTank.TANK_ABOVE), state.getValue(BlockCertusTank.TANK_BELOW), renderTop, renderBelow);
 		List<BakedQuad> fluidQuads = blockModels.getIfPresent(key);
 		if (fluidQuads == null) {
 			blockModels.put(key, fluidQuads = createQuads(key));
@@ -82,7 +94,12 @@ public class ModelTankFluid extends BlankModel {
 		if (!key.below) {
 			minY = 0.1F;
 		}
-		return ModelFactory.createCube(new Vector3f(1.1F, minY, 1.1F), new Vector3f(14.9F, maxY, 14.9F), sprite);
+		List<EnumFacing> openSides = new ArrayList<EnumFacing>();
+		if(!key.renderTop)
+			openSides.add(EnumFacing.UP);
+		if(!key.renderBelow)
+			openSides.add(EnumFacing.DOWN);
+		return ModelFactory.createCubeOpen(new Vector3f(1.1F, minY, 1.1F), new Vector3f(14.9F, maxY, 14.9F), sprite, openSides);
 	}
 
 	public class Key {
@@ -90,12 +107,20 @@ public class ModelTankFluid extends BlankModel {
 		public int amount;
 		public boolean above;
 		public boolean below;
+		public boolean renderTop;
+		public boolean renderBelow;
 
 		public Key(Fluid fluid, int amount, boolean above, boolean below) {
+			this(fluid, amount, above, below, true, true);
+		}
+
+		public Key(Fluid fluid, int amount, boolean above, boolean below, boolean renderTop, boolean renderBelow) {
 			this.fluid = fluid;
 			this.amount = amount;
 			this.above = above;
 			this.below = below;
+			this.renderTop = renderTop;
+			this.renderBelow = renderBelow;
 		}
 
 		@Override
@@ -104,7 +129,7 @@ public class ModelTankFluid extends BlankModel {
 				return false;
 			}
 			Key key = (Key) obj;
-			return key.fluid == fluid && key.amount == amount && key.above == above && key.below == below;
+			return key.fluid == fluid && key.amount == amount && key.above == above && key.below == below && key.renderBelow == renderBelow && key.renderTop == renderTop;
 		}
 
 		@Override

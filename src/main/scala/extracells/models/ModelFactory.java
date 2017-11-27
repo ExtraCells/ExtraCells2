@@ -12,12 +12,24 @@ import net.minecraft.util.EnumFacing;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import java.util.List;
+
 public class ModelFactory {
 	private static final FaceBakery bakery = new FaceBakery();
 
 	public static ImmutableList<BakedQuad> createCube(Vector3f from, Vector3f to, TextureAtlasSprite sprite) {
 		ImmutableList.Builder builder = new ImmutableList.Builder();
 		for (EnumFacing facing : EnumFacing.VALUES) {
+			builder.add(createQuad(facing, from, to, sprite));
+		}
+		return builder.build();
+	}
+
+	public static ImmutableList<BakedQuad> createCubeOpen(Vector3f from, Vector3f to, TextureAtlasSprite sprite, List<EnumFacing> openSides) {
+		ImmutableList.Builder builder = new ImmutableList.Builder();
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			if(openSides.contains(facing))
+				continue;
 			builder.add(createQuad(facing, from, to, sprite));
 		}
 		return builder.build();
