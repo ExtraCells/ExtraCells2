@@ -73,7 +73,7 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartGasImport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -91,12 +91,12 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 		}
 
 		@Callback(doc = "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the gas import bus pointing in the specified direction to export gas stacks matching the specified descriptor.")
-		public Object[] setFluidImportConfiguration(Context context, Arguments args) {
+		public Object[] setGasImportConfiguration(Context context, Arguments args) {
 			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartGasImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartGasImport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -154,8 +154,8 @@ public class DriverGasImportBus extends DriverBase<PartGasImport> {
 			}
 		}
 
-		@Callback(doc = "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single export operation.")
-		public Object[] exportFluid(Context context, Arguments args){
+		@Callback(doc = "function(side:number, amount:number):boolean -- Make the gas import bus facing the specified direction perform a single import operation.")
+		public Object[] importGas(Context context, Arguments args){
 			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
 			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{false, "unknown side"};

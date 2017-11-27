@@ -45,7 +45,7 @@ public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartOreDictExporter part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartOreDictExporter part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartOreDictExporter.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -58,7 +58,7 @@ public class DriverOreDictExportBus extends DriverBase<PartOreDictExporter> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartOreDictExporter part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartOreDictExporter part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartOreDictExporter.class);
 			if (part == null) {
 				return new Object[]{false, "no export bus"};
 			}

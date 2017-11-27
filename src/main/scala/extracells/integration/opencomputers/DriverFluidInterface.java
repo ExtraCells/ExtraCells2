@@ -38,7 +38,7 @@ public class DriverFluidInterface implements DriverBlock, EnvironmentProvider {
 		if (tile == null) {
 			return false;
 		}
-		PartFluidInterface partFluidInterface = OCUtils.getPart(world, pos, AEPartLocation.INTERNAL);
+		PartFluidInterface partFluidInterface = OCUtils.getPart(world, pos, AEPartLocation.INTERNAL, PartFluidInterface.class);
 		return partFluidInterface != null || tile instanceof IFluidInterface;
 	}
 
@@ -78,7 +78,7 @@ public class DriverFluidInterface implements DriverBlock, EnvironmentProvider {
 				}
 				return new Object[]{new FluidStack(fluid, 1000)};
 			}
-			PartFluidInterface part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartFluidInterface part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidInterface.class);
 			if (part == null) {
 				return new Object[]{null, "no interface"};
 			}
@@ -96,7 +96,7 @@ public class DriverFluidInterface implements DriverBlock, EnvironmentProvider {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			IFluidInterface part = tile instanceof IFluidInterface ? (IFluidInterface) tile : OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			IFluidInterface part = tile instanceof IFluidInterface ? (IFluidInterface) tile : OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidInterface.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}

@@ -1,6 +1,7 @@
 package extracells.integration.opencomputers
 
 import extracells.integration.Integration
+import li.cil.oc.api.driver.EnvironmentProvider
 import li.cil.oc.api.driver.item.{HostAware, Slot}
 import li.cil.oc.api.internal.{Drone, Robot}
 import li.cil.oc.api.{CreativeTab, network}
@@ -8,10 +9,12 @@ import li.cil.oc.api.network.ManagedEnvironment
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraftforge.fml.common.Optional.{Interface, Method}
-
-@Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = "opencomputers", striprefs = true)
-trait UpgradeItemAEBase extends Item with HostAware /*with EnvironmentProvider*/{
+import net.minecraftforge.fml.common.Optional.{Interface, InterfaceList, Method}
+@InterfaceList(Array(
+  new Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = "opencomputers", striprefs = true),
+  new Interface(iface = "li.cil.oc.api.driver.EnvironmentProvider", modid = "opencomputers", striprefs = true)
+))
+trait UpgradeItemAEBase extends Item with HostAware with EnvironmentProvider{
 
   override def getRarity (stack: ItemStack) =
     stack.getItemDamage match {
@@ -65,6 +68,19 @@ trait UpgradeItemAEBase extends Item with HostAware /*with EnvironmentProvider*/
       }catch{
         case _: Throwable => new UpgradeAE(host)
       }
+    else
+      null
+  }
+
+  @Method(modid = "opencomputers")
+  override def getEnvironment(stack: ItemStack): Class[_] = {
+    if (stack != null && stack.getItem == this)
+      try {
+        CompleteHelper.getCompleteUpgradeAEClass
+      }
+    catch{
+      case _: Throwable => classOf[UpgradeAE]
+    }
     else
       null
   }

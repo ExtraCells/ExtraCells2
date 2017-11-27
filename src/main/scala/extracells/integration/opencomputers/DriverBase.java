@@ -18,21 +18,21 @@ import li.cil.oc.api.network.ManagedEnvironment;
 
 public abstract class DriverBase<P extends IPart> implements DriverBlock, EnvironmentProvider {
 	protected PartEnum part;
-	protected Class environmentClass;
+	private Class environmentClass;
+	private Class<? extends P> partClass;
 
-	public DriverBase(PartEnum part, Class environmentClass) {
+	DriverBase(PartEnum part, Class environmentClass) {
 		this.part = part;
 		this.environmentClass = environmentClass;
+		this.partClass = (Class<? extends P>) part.getPartClass();
 	}
 
-	//TODO: Use side ?
 	@Override
 	public boolean worksWith(World world, BlockPos pos, EnumFacing side) {
-		P part = OCUtils.getPart(world, pos, AEPartLocation.INTERNAL);
+		P part = OCUtils.getPart(world, pos, AEPartLocation.INTERNAL, partClass);
 		return part != null;
 	}
 
-	//TODO: Use side ?
 	@Override
 	public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side) {
 		TileEntity tile = world.getTileEntity(pos);

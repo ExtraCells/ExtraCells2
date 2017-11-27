@@ -51,7 +51,7 @@ public class DriverGasExportBus extends DriverBase<PartGasExport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartGasExport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -74,7 +74,7 @@ public class DriverGasExportBus extends DriverBase<PartGasExport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartGasExport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -138,7 +138,7 @@ public class DriverGasExportBus extends DriverBase<PartGasExport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartGasExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartGasExport.class);
 			if (part == null) {
 				return new Object[]{false, "no export bus"};
 			}

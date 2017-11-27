@@ -49,7 +49,7 @@ public class DriverFluidExportBus extends DriverBase<PartFluidExport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidExport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -72,7 +72,7 @@ public class DriverFluidExportBus extends DriverBase<PartFluidExport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidExport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -136,7 +136,7 @@ public class DriverFluidExportBus extends DriverBase<PartFluidExport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartFluidExport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidExport.class);
 			if (part == null) {
 				return new Object[]{false, "no export bus"};
 			}

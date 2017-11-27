@@ -72,7 +72,7 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartFluidImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartFluidImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidImport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -95,7 +95,7 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 			if (dir == null || dir == AEPartLocation.INTERNAL) {
 				return new Object[]{null, "unknown side"};
 			}
-			PartFluidImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir);
+			PartFluidImport part = OCUtils.getPart(tile.getWorld(), tile.getPos(), dir, PartFluidImport.class);
 			if (part == null) {
 				return new Object[]{null, "no export bus"};
 			}
@@ -152,8 +152,8 @@ public class DriverFluidImportBus extends DriverBase<PartFluidImport> {
 			}
 		}
 		
-		@Callback(doc = "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single export operation.")
-		public Object[] exportFluid(Context context, Arguments args){
+		@Callback(doc = "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single import operation.")
+		public Object[] importFluid(Context context, Arguments args){
 			AEPartLocation dir = AEPartLocation.fromOrdinal(args.checkInteger(0));
 			if (dir == null || dir == AEPartLocation.INTERNAL)
 				return new Object[]{false, "unknown side"};
