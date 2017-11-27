@@ -229,12 +229,14 @@ public class HandlerPartStorageFluid implements IHandlerPartBase<IAEFluidStack> 
 			filled = filled + filled2;
 		} while (filled2 != 0 && filled != toFill.amount);
 		IFluidTankProperties[] infos = this.tank.getTankProperties();
-		int maxFill = 0;
-		for (IFluidTankProperties info : infos) {
-			if (info.getContents() == null) {
-				maxFill += info.getCapacity();
-			} else if (info.getContents().getFluid() == toFill.getFluid()) {
-				maxFill += info.getCapacity() - info.getContents().amount;
+		int maxFill = mode == Actionable.MODULATE ? filled : 0;
+		if(mode == Actionable.SIMULATE) {
+			for (IFluidTankProperties info : infos) {
+				if (info.getContents() == null) {
+					maxFill += info.getCapacity();
+				} else if (info.getContents().getFluid() == toFill.getFluid()) {
+					maxFill += info.getCapacity() - info.getContents().amount;
+				}
 			}
 		}
 		filled = Math.min(filled, maxFill);
