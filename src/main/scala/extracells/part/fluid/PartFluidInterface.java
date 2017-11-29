@@ -435,6 +435,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
 						continue;
 					}
 					ICraftingPatternDetails p = ((ICraftingPatternItem) is.getItem()).getPatternForItem(is, getGridNode().getWorld());
+					if (p == null)
+						continue;
 					this.patternConvert.put(p, pattern);
 					craftingTracker.addCraftingOption(this, p);
 				}
