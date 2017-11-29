@@ -331,6 +331,8 @@ public class TileEntityFluidInterface extends TileBase implements
 					}
 					ICraftingPatternDetails p = ((ICraftingPatternItem) is
 						.getItem()).getPatternForItem(is, world);
+					if (p == null)
+						continue;
 					this.patternConvert.put(p, pattern);
 					craftingTracker.addCraftingOption(this, p);
 				}
