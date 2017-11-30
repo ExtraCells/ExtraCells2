@@ -178,6 +178,6 @@ public class FluidHelper {
 			}
 		}
 
-		return true;
+		return fluidHandler.drain(Integer.MAX_VALUE, false) != null;
 	}
 }
