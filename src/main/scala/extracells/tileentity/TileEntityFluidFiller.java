@@ -1,6 +1,7 @@
 package extracells.tileentity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import appeng.api.networking.security.IActionSource;
@@ -210,8 +211,11 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 		}
 	}
 
+	HashMap<ICraftingPatternDetails, FluidStack> patternFluids = new HashMap<ICraftingPatternDetails, FluidStack>();
+
 	@Override
 	public void provideCrafting(ICraftingProviderHelper craftingTracker) {
+		patternFluids.clear();
 		IStorageGrid storage = getStorageGrid();
 		if (storage == null) {
 			return;
@@ -235,39 +239,38 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost, ICra
 			ItemStack pattern = getPattern(this.containerItem, filled.getRight());
 			ICraftingPatternItem patter = (ICraftingPatternItem) pattern
 				.getItem();
-			craftingTracker.addCraftingOption(this,
-				patter.getPatternForItem(pattern, world));
+			ICraftingPatternDetails details = patter.getPatternForItem(pattern, world);
+			if(details == null)
+				continue;
+			patternFluids.put(details, new FluidStack(fluid, filled.getLeft()));
+			craftingTracker.addCraftingOption(this, details);
 		}
 
 	}
 
 	@Override
-	public boolean pushPattern(ICraftingPatternDetails patternDetails,
-		InventoryCrafting table) {
+	public boolean pushPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table) {
 		if (this.returnStack != null && !this.returnStack.isEmpty()) {
 			return false;
 		}
-		ItemStack filled = patternDetails.getCondensedOutputs()[0]
-			.getDefinition();
-		FluidStack fluid = FluidHelper.getFluidFromContainer(filled);
+		ItemStack filled = patternDetails.getCondensedOutputs()[0].getDefinition();
+
+		if (!patternFluids.containsKey(patternDetails))
+			return false;
+
+		FluidStack fluid = patternFluids.get(patternDetails);
 		IStorageGrid storage = getStorageGrid();
-		if (storage == null) {
+		if (storage == null || fluid == null) {
 			return false;
 		}
-		IAEFluidStack fluidStack = AEUtils.createFluidStack(
-			new FluidStack(
-				fluid.getFluid(),
-				FluidHelper.getCapacity(patternDetails
-					.getCondensedInputs()[0].getDefinition())));
+		IAEFluidStack fluidStack = AEUtils.createFluidStack(new FluidStack(fluid.getFluid(),
+				FluidHelper.getCapacity(patternDetails.getCondensedInputs()[0].getDefinition())));
 		IAEFluidStack extracted = storage.getInventory(StorageChannels.FLUID())
-			.extractItems(fluidStack.copy(), Actionable.SIMULATE,
-				new MachineSource(this));
-		if (extracted == null
-			|| extracted.getStackSize() != fluidStack.getStackSize()) {
+			.extractItems(fluidStack.copy(), Actionable.SIMULATE, new MachineSource(this));
+		if (extracted == null || extracted.getStackSize() != fluidStack.getStackSize()) {
 			return false;
 		}
-		storage.getInventory(StorageChannels.FLUID()).extractItems(fluidStack,
-			Actionable.MODULATE, new MachineSource(this));
+		storage.getInventory(StorageChannels.FLUID()).extractItems(fluidStack, Actionable.MODULATE, new MachineSource(this));
 		this.returnStack = filled;
 		this.ticksToFinish = 40;
 		return true;
