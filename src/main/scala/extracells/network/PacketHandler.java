@@ -101,6 +101,7 @@ public class PacketHandler {
 	@SideOnly(Side.CLIENT)
 	private static void checkThreadAndEnqueue(final IPacketHandlerClient packet, final PacketBufferEC data, IThreadListener threadListener) {
 		if (!threadListener.isCallingFromMinecraftThread()) {
+			data.retain();
 			threadListener.addScheduledTask(() -> {
 				try {
 					EntityPlayer player = Minecraft.getMinecraft().player;
@@ -108,6 +109,8 @@ public class PacketHandler {
 					packet.onPacketData(data, player);
 				} catch (IOException e) {
 					Log.error("Network Error", e);
+				} finally {
+					data.release();
 				}
 			});
 		}
@@ -115,11 +118,14 @@ public class PacketHandler {
 
 	private static void checkThreadAndEnqueue(final IPacketHandlerServer packet, final PacketBufferEC data, final EntityPlayerMP player, IThreadListener threadListener) {
 		if (!threadListener.isCallingFromMinecraftThread()) {
+			data.retain();
 			threadListener.addScheduledTask(() -> {
 				try {
 					packet.onPacketData(data, player);
 				} catch (IOException e) {
 					Log.error("Network Error", e);
+				} finally {
+					data.release();
 				}
 			});
 		}

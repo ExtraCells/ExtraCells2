@@ -1,1 +1,1 @@
-- fixed crash with fluid interface and crafting pattern
+- fixed network issue with newer forge version
