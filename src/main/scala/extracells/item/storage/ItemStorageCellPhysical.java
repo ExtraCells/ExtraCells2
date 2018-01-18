@@ -2,33 +2,44 @@ package extracells.item.storage;
 
 import java.util.List;
 
-import appeng.api.config.Actionable;
-import cofh.redstoneflux.api.IEnergyContainerItem;
-import extracells.util.StorageChannels;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+
+import cofh.redstoneflux.api.IEnergyContainerItem;
+import extracells.inventory.ECCellInventory;
+import extracells.item.EnumBlockContainerMode;
+import extracells.item.ItemECBase;
+import extracells.models.ModelManager;
+import extracells.registries.ItemEnum;
+import extracells.util.ECConfigHandler;
+import extracells.util.StorageChannels;
 
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
+import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.PowerUnits;
 import appeng.api.implementations.items.IAEItemPowerStorage;
@@ -37,16 +48,9 @@ import appeng.api.storage.ICellInventory;
 import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.ICellRegistry;
 import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
-import extracells.inventory.ECCellInventory;
-import extracells.item.EnumBlockContainerMode;
-import extracells.item.ItemECBase;
-import extracells.models.ModelManager;
-import extracells.registries.ItemEnum;
-import extracells.util.ECConfigHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 //TODO: Clean Up
 @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux")
@@ -444,5 +448,9 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	@Override
 	public boolean storableInStorageCell() {
 		return false;
+	}
+
+	public IStorageChannel getChannel(){
+		return StorageChannels.ITEM();
 	}
 }
