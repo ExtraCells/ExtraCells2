@@ -18,7 +18,7 @@ object WirelessCrafting {
 
   def isBoosterEnabled =
 
-  WCTApi.isInfinityBoosterCardEnabled
+  WCTApi.instance().isInfinityBoosterCardEnabled
 
   def getCraftingTerminal =
 

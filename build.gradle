@@ -82,22 +82,22 @@ repositories {
 	
 	ivy { 
 		name 'WirelessCraftingTerminal' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.wc}/[module]-[revision].[ext]" 
+		artifactPattern "https://media.forgecdn.net/files/${config.cf.wc}/[module]-[revision].[ext]" 
 	}
 	
 	ivy { 
 		name 'p455w0rdslib' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.pl}/[module]-[revision].[ext]" 
+		artifactPattern "https://media.forgecdn.net/files/${config.cf.pl}/[module]-[revision].[ext]" 
 	}
 	
 	ivy { 
 		name 'appliedenergistics2' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.ae}/[module]-[revision].[ext]" 
+		artifactPattern "https://media.forgecdn.net/files/${config.cf.ae}/[module]-[revision].[ext]" 
 	} 
 	
 	ivy { 
 		name 'Mekanism' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.me}/[module]-[revision].[ext]" 
+		artifactPattern "https://media.forgecdn.net/files/${config.cf.me}/[module]-[revision].[ext]" 
 	}
 
 
