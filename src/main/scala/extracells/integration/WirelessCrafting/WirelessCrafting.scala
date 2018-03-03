@@ -10,11 +10,11 @@ import p455w0rd.wct.api.WCTApi
 object WirelessCrafting {
   def openCraftingTerminal(player: EntityPlayer) =
 
-  WCTApi.instance.interact.openWirelessCraftingTerminalGui(player)
+  WCTApi.instance().interact().openWirelessCraftingTerminalGui(player)
 
   def getBoosterItem =
 
-  WCTApi.instance.items.infinityBoosterCard.getItem
+  WCTApi.instance().items().infinityBoosterCard().getItem
 
   def isBoosterEnabled =
 
@@ -22,6 +22,6 @@ object WirelessCrafting {
 
   def getCraftingTerminal =
 
-  WCTApi.instance.items.wirelessCraftingTerminal.getStack
+  WCTApi.instance().items().wirelessCraftingTerminal().getStack
 
 }
