@@ -50,7 +50,7 @@ public class ContainerGasStorage extends ContainerStorage {
 	@Optional.Method(modid = "MekanismAPI|gas")
 	public void doWorkMekanism() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if ((secondSlot != null && (!secondSlot.isEmpty())) && secondSlot.getCount() > secondSlot.getMaxStackSize()) {
+		if ((secondSlot != null && !secondSlot.isEmpty()) && secondSlot.getCount() >= secondSlot.getMaxStackSize()) {
 			return;
 		}
 		ItemStack container = this.inventory.getStackInSlot(0);
