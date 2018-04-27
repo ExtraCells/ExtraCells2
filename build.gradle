@@ -96,20 +96,6 @@ repositories {
         artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]"
     }
 	
-	ivy { 
-		name 'WirelessCraftingTerminal' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.wc}/[module]-[revision].[ext]" 
-	}
-	
-	ivy { 
-		name 'p455w0rdslib' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.pl}/[module]-[revision].[ext]" 
-	}
-	
-	ivy { 
-		name 'Mekanism' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.me}/[module]-[revision].[ext]" 
-	}
 	maven {
 		name = "tehnut"
 		url = "http://tehnut.info/maven"
@@ -125,6 +111,10 @@ repositories {
         url = "http://maven.k-4u.nl/"
     }
 
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
 }
 
 dependencies {
@@ -153,14 +143,14 @@ dependencies {
 	
 	deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
 	
-	deobfCompile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
-	deobfCompile name: 'p455w0rdslib', version: config.version.pl, ext: 'jar'
+    deobfCompile "p455w0rds-library:p455w0rdslib:${config.version.pl}"
+    deobfCompile "mekanism:Mekanism:${config.version.me}"
+	deobfCompile "wireless-crafting-terminal:WirelessCraftingTerminal:${config.version.wc}"
 	
 	deobfCompile ("appeng:appliedenergistics2:${config.version.ae}"){
 		transitive = false
 	}
 	
-	deobfCompile name: 'Mekanism', version: config.version.me, ext: 'jar'
 	deobfCompile "MCMultiPart2:MCMultiPart:${config.version.mcmp}"
 }
 

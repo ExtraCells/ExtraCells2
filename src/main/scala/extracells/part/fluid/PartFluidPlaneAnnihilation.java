@@ -1,5 +1,9 @@
 package extracells.part.fluid;
 
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.ticking.IGridTickable;
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.networking.ticking.TickingRequest;
 import extracells.util.MachineSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -34,7 +38,7 @@ import extracells.part.PartECBase;
 import extracells.util.AEUtils;
 import extracells.util.PermissionUtil;
 
-public class PartFluidPlaneAnnihilation extends PartECBase {
+public class PartFluidPlaneAnnihilation extends PartECBase implements IGridTickable {
 
 	@Override
 	public float getCableConnectionLength(AECableType cable) {
@@ -113,7 +117,9 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 	}
 
 	private static IAEFluidStack getFluidStack(Block fluidBlock) {
-		return fluidBlock == Blocks.FLOWING_WATER ? AEUtils.createFluidStack(FluidRegistry.WATER) : fluidBlock == Blocks.FLOWING_LAVA ? AEUtils.createFluidStack(FluidRegistry.LAVA) : null;
+		return fluidBlock == Blocks.WATER || fluidBlock == Blocks.FLOWING_WATER ? AEUtils.createFluidStack(FluidRegistry.WATER) :
+                fluidBlock == Blocks.LAVA || fluidBlock == Blocks.FLOWING_LAVA ? AEUtils.createFluidStack(FluidRegistry.LAVA) :
+                        null;
 	}
 
 	@Override
@@ -142,4 +148,15 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 		super.setPower(notUsed);
 		onNeighborChanged();
 	}
+
+    @Override
+    public TickingRequest getTickingRequest(IGridNode iGridNode) {
+        return new TickingRequest(1, 20, false, false);
+    }
+
+    @Override
+    public TickRateModulation tickingRequest(IGridNode iGridNode, int i) {
+        onNeighborChanged();
+        return TickRateModulation.SAME;
+    }
 }
