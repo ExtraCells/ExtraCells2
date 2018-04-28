@@ -215,7 +215,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 		}
 		this.watcher.reset();
 		updateWatcher(this.watcher);
-		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.selectedFluid)), player);
+		if (this.selectedFluid != null)
+			NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.selectedFluid)), player);
 		saveData();
 	}
 
@@ -234,7 +235,8 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	public void syncClientGui(EntityPlayer player) {
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_MODE, mode.toString()), player);
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_EMITTER_AMOUNT, Long.toString(wantedAmount)), player);
-		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.selectedFluid)), player);
+		if (this.selectedFluid != null)
+		    NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(ImmutableList.of(this.selectedFluid)), player);
 	}
 
 	public long getWantedAmount() {
