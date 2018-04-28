@@ -201,7 +201,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 		if(tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())){
 			IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 			ItemStack itemStack = stack.createItemStack();
-			ItemStack notExported = ItemHandlerUtil.insertItemStack(itemHandler, itemStack, true);
+			ItemStack notExported = ItemHandlerUtil.insertItemStack(itemHandler, itemStack, false);
 			if (notExported.isEmpty())
 				return stack;
 			else
