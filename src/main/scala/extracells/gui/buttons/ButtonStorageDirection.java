@@ -1,9 +1,11 @@
 package extracells.gui.buttons;
 
-import com.google.common.base.Splitter;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.base.Splitter;
+
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -11,10 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 
-import org.lwjgl.opengl.GL11;
+import extracells.gui.IToolTipProvider;
 
 import appeng.api.config.AccessRestriction;
-import extracells.gui.IToolTipProvider;
 
 public class ButtonStorageDirection extends GuiButton implements IToolTipProvider {
 
@@ -28,6 +29,8 @@ public class ButtonStorageDirection extends GuiButton implements IToolTipProvide
 
 	@Override
 	public void drawButton(Minecraft minecraftInstance, int x, int y, float particalTicks) {
+		this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
+
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mouseDragged(minecraftInstance, x, y);
 
