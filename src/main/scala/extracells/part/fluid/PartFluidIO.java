@@ -253,6 +253,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable, I
 		NetworkUtil.sendToPlayer(new PacketFluidSlotUpdate(Arrays.asList(this.filterFluids)), player);
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_FILTER, Byte.toString(filterSize)), player);
 		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_REDSTONE, Boolean.toString(redstoneControlled)), player);
+		NetworkUtil.sendToPlayer(new PacketPartConfig(this, PacketPartConfig.FLUID_IO_REDSTONE_MODE, this.redstoneMode.toString()), player);
 	}
 
 	@Override
