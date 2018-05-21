@@ -2,3 +2,4 @@ Fixed OreDictExportBus again. Fixes #563
 Fixed issue with Gas Storage. Fixes #550
 Fixed FluidIO not sending the current redstone mode. Fixes #558
 Fixed Tooltips. Fixes #561
+Fixed Duplication Glitch with Fluid Interface. Fixes #562
