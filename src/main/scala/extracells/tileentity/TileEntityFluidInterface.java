@@ -368,6 +368,7 @@ public class TileEntityFluidInterface extends TileBase implements
 							ItemHandlerUtil.insertItemStack(itemHandler, itemStack, true);
 							this.removeFromExport.add(stack0);
 							markForSave = true;
+							return;
 						}
 					} else if (tile instanceof IInventory) {
 						if (tile instanceof ISidedInventory) {
@@ -456,6 +457,7 @@ public class TileEntityFluidInterface extends TileBase implements
 						handler.fill(fluid.getFluidStack().copy(), true);
 						this.removeFromExport.add(stack0);
 						markForSave = true;
+						return;
 					} else {
 						IAEFluidStack aeFluidStack = fluid.copy();
 						aeFluidStack.setStackSize(aeFluidStack.getStackSize() - amount);

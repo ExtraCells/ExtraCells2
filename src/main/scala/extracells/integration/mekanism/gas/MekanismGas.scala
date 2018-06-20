@@ -16,7 +16,7 @@ object MekanismGas {
   private var fluidGas: Map[Gas, Fluid] = Map()
 
   def preInit: Unit = {
-    AEApi.instance.storage.registerStorageChannel[IAEGasStack, IGasStorageChannel](classOf[IGasStorageChannel], GasStorageChannel)
+    AEApi.instance.storage.registerStorageChannel[IAEGasStack, IGasStorageChannel](classOf[IGasStorageChannel], new GasStorageChannel())
   }
 
   def init {

@@ -64,7 +64,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	}
 
 	private boolean isItemValid(IAEItemStack s) {
-		if (s == null || this.filter.equals("")) {
+		if (s == null || s.getStackSize() < 1 || this.filter.equals("")) {
 			return false;
 		}
 
