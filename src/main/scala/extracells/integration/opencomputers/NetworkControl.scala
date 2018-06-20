@@ -212,7 +212,7 @@ trait NetworkControl[AETile >: Null <: TileEntity with IActionHost with IGridHos
         sel3
       }else
         null
-    if(sel != null && !ItemStack.areItemStacksEqual(sel2, stack2)) return Array(0.underlying.asInstanceOf[AnyRef])
+    if(sel != null && !ItemStack.areItemStacksEqual(sel2, stack2) && !sel2.isEmpty) return Array(0.underlying.asInstanceOf[AnyRef])
     val extracted = inv.extractItems(StorageChannels.ITEM.createStack(stack), Actionable.MODULATE, new MachineSource(tile))
     if(extracted == null) return Array(0.underlying.asInstanceOf[AnyRef])
     val ext = extracted.getStackSize.toInt
