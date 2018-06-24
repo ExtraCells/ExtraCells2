@@ -86,7 +86,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 		IStorageGrid storage = getStorageGrid();
 		IAEItemStack stack = null;
 		for (IAEItemStack s : storage.getItemInventory().getStorageList()) {
-			if (checkItem(s.copy())) {
+			if (s.getStackSize() > 0 && checkItem(s.copy())) {  // skip craftable items not in storage
 				stack = s.copy();
 				break;
 			}
