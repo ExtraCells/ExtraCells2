@@ -8,8 +8,8 @@
 			"item": "appliedenergistics2:chest"
         },
 		{
-			"item": "extracells:storage.component",
-			"data": 4
+            "type": "appliedenergistics2:part",
+            "part": "material.fluid_cell1k_part"
         },
 		{
 			"item": "appliedenergistics2:energy_Cell"

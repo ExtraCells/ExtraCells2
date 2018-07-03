@@ -1,23 +1,13 @@
 {
     "result": {
-        "item": "extracells:storage.component",
-		"data": 4
+        "type": "appliedenergistics2:part",
+        "part": "material.fluid_cell1k_part"
     },
-    "type": "forge:ore_shaped",
-    "pattern": [
-        "aba",
-        "bcb",
-        "aba"
-    ],
-    "key": {
-        "a": {
-			"item": "#extracells:lapis"
-        },
-		"b": {
-			"item": "#extracells:certusCrystal"
-		},
-		"c": {
-			"item": "#extracells:logProcessor"
-		}
-    }
+    "type": "appliedenergistics2:part_shapeless",
+    "ingredients": [
+        {
+            "item": "extracells:storage.component",
+            "data": 4
+        }
+    ]
 }

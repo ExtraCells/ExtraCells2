@@ -1,7 +1,6 @@
 {
     "result": {
-        "item": "extracells:ecbaseblock",
-		"data": 0
+        "item": "appliedenergistics2:fluid_interface"
     },
     "type": "forge:ore_shapeless",
     "ingredients": [

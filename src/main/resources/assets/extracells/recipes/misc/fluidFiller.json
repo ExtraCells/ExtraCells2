@@ -11,8 +11,8 @@
 			"item": "extracells:fluidcrafter"
         },
 		{
-			"item": "extracells:part.base",
-			"data": 3
+            "type": "appliedenergistics2:part",
+            "part": "part.fluid_terminal"
         }
     ]
 }
