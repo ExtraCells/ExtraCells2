@@ -4,6 +4,7 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, Da
 
 import appeng.api.config.FuzzyMode
 import appeng.api.storage.IStorageChannel
+import appeng.api.storage.data.IAEStack
 import extracells.api.gas.IAEGasStack
 import extracells.item.ItemGas
 import extracells.registries.ItemEnum
@@ -106,7 +107,7 @@ class AEGasStack extends IAEGasStack{
 
   override def getCountRequestable: Long = requestable
 
-  override def fuzzyComparison(o: scala.Any, fuzzyMode: FuzzyMode): Boolean = {
+  override def fuzzyComparison(o: IAEGasStack, fuzzyMode: FuzzyMode): Boolean = {
     o match{
       case gas: Gas => gas == this.gas
       case gasStack: GasStack => gasStack.getGas == this.gas
