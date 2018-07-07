@@ -26,6 +26,7 @@ import appeng.api.util.AEPartLocation;
 import extracells.api.IECTileEntity;
 import extracells.container.fluid.ContainerFluidStorage;
 import extracells.container.gas.ContainerGasStorage;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class ExtraCellsEventHandler {
     }
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
         Item item = stack.getItem();
