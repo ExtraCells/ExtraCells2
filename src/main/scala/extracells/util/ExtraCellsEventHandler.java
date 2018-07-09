@@ -1,34 +1,32 @@
 package extracells.util;
 
-import appeng.core.Api;
+import extracells.api.IECTileEntity;
 import extracells.container.ITickContainer;
-import extracells.item.ItemPartECBase;
+import extracells.container.fluid.ContainerFluidStorage;
+import extracells.container.gas.ContainerGasStorage;
 import extracells.registries.BlockEnum;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
-import net.minecraft.inventory.Container;
 
+import java.util.List;
+
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.event.RenderTooltipEvent;
+
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.BlockEvent;
-
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.config.SecurityPermissions;
 import appeng.api.util.AEPartLocation;
-import extracells.api.IECTileEntity;
-import extracells.container.fluid.ContainerFluidStorage;
-import extracells.container.gas.ContainerGasStorage;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
+import appeng.core.Api;
 
 public class ExtraCellsEventHandler {
 
@@ -97,7 +95,7 @@ public class ExtraCellsEventHandler {
             if (stack.getItemDamage() >= 0 && stack.getItemDamage() < 4) {
                 isDeprecated = true;
                 text3 = new TextComponentTranslation("extracells.tooltip.deprecated.cell");
-                switch (stack.getItemDamage()){
+                switch (stack.getItemDamage()) {
                     case 0:
                         ae2Name = Api.INSTANCE.definitions().items().fluidCell1k().maybeStack(1).get().getDisplayName();
                         break;
@@ -115,7 +113,7 @@ public class ExtraCellsEventHandler {
         } else if (ItemEnum.STORAGECOMPONET.getItem().getUnlocalizedName().equalsIgnoreCase(item.getUnlocalizedName())) {
             if (stack.getItemDamage() >= 4 && stack.getItemDamage() < 8) {
                 isDeprecated = true;
-                switch (stack.getItemDamage()){
+                switch (stack.getItemDamage()) {
                     case 4:
                         ae2Name = Api.INSTANCE.definitions().materials().fluidCell1kPart().maybeStack(1).get().getDisplayName();
                         break;
@@ -130,6 +128,15 @@ public class ExtraCellsEventHandler {
                         break;
                 }
             }
+        } else if (PartEnum.FLUIDLEVELEMITTER.getUnlocalizedName().equalsIgnoreCase(name)) {
+            ae2Name = Api.INSTANCE.definitions().parts().fluidLevelEmitter().maybeStack(1).get().getDisplayName();
+            isDeprecated = true;
+        } else if (PartEnum.FLUIDPANEANNIHILATION.getUnlocalizedName().equalsIgnoreCase(name)) {
+            ae2Name = Api.INSTANCE.definitions().parts().fluidAnnihilationPlane().maybeStack(1).get().getDisplayName();
+            isDeprecated = true;
+        } else if (PartEnum.FLUIDPANEFORMATION.getUnlocalizedName().equalsIgnoreCase(name)) {
+            ae2Name = Api.INSTANCE.definitions().parts().fluidFormationnPlane().maybeStack(1).get().getDisplayName();
+            isDeprecated = true;
         }
 
         if (isDeprecated) {
