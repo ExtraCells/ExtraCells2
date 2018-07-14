@@ -1,25 +1,13 @@
 {
     "result": {
-        "item": "extracells:part.base",
-		"data": 1
+        "type": "appliedenergistics2:part",
+        "part": "part.fluid_import_bus"
     },
-    "type": "forge:ore_shaped",
-    "pattern": [
-        "aba",
-        "cdc"
-    ],
-    "key": {
-        "a": {
-			"item": "#extracells:iron"
-        },
-		"b": {
-			"item": "#extracells:annihilationCore"
-		},
-		"c": {
-			"item": "#extracells:lapis"
-		},
-		"d": {
-			"item": "minecraft:sticky_piston"
-		}
-    }
+    "type": "appliedenergistics2:part_shapeless",
+    "ingredients": [
+        {
+            "item": "extracells:part.base",
+            "data": 1
+        }
+    ]
 }

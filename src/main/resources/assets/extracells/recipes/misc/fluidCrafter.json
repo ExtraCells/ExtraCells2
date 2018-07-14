@@ -11,8 +11,8 @@
 			"item": "appliedenergistics2:molecular_assembler"
         },
 		{
-			"item": "extracells:storage.component",
-			"data": 4
+            "type": "appliedenergistics2:part",
+            "part": "material.fluid_cell1k_part"
         }
     ]
 }

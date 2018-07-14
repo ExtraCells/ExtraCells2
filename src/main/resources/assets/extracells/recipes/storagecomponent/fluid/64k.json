@@ -1,27 +1,13 @@
 {
     "result": {
-        "item": "extracells:storage.component",
-		"data": 7
+        "type": "appliedenergistics2:part",
+        "part": "material.fluid_cell64k_part"
     },
-    "type": "forge:ore_shaped",
-    "pattern": [
-        "aba",
-        "cdc",
-        "aca"
-    ],
-    "key": {
-        "a": {
-			"item": "#extracells:lapis"
-        },
-		"b": {
-			"item": "#extracells:engProcessor"
-		},
-		"c": {
-			"item": "extracells:storage.component",
-			"data": 6
-		},
-		"d": {
-			"item": "#extracells:glassQuartz"
-		}
-    }
+    "type": "appliedenergistics2:part_shapeless",
+    "ingredients": [
+        {
+            "item": "extracells:storage.component",
+            "data": 7
+        }
+    ]
 }

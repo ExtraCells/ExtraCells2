@@ -2,6 +2,7 @@ package extracells.item.storage;
 
 import java.util.List;
 
+import appeng.api.storage.data.IAEStack;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -54,7 +55,7 @@ import appeng.api.storage.data.IItemList;
 
 //TODO: Clean Up
 @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux")
-public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell, IAEItemPowerStorage, IEnergyContainerItem {
+public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell<IAEItemStack>, IAEItemPowerStorage, IEnergyContainerItem {
 
 	public static final String[] suffixes = {"256k", "1024k", "4096k", "16384k", "container"};
 
@@ -296,8 +297,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
-	public boolean isBlackListed(ItemStack cellItem,
-		IAEItemStack requestedAddition) {
+	public boolean isBlackListed(ItemStack cellItem, IAEItemStack requestedAddition) {
 		return false;
 	}
 

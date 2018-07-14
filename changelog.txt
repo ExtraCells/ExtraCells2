@@ -1,5 +1,2 @@
-Fixed OreDictExportBus again. Fixes #563
-Fixed issue with Gas Storage. Fixes #550
-Fixed FluidIO not sending the current redstone mode. Fixes #558
-Fixed Tooltips. Fixes #561
-Fixed Duplication Glitch with Fluid Interface. Fixes #562
+Updated to ae2 rv6-alpha-1 and added deprecation tooltips for duplicate items
+Removed Deprecated item recipes and added conversion recipes

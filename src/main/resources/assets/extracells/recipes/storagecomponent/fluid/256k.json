@@ -17,8 +17,8 @@
 			"item": "#extracells:engProcessor"
 		},
 		"c": {
-			"item": "extracells:storage.component",
-			"data": 7
+            "type": "appliedenergistics2:part",
+            "part": "material.fluid_cell64k_part"
 		},
 		"d": {
 			"item": "#extracells:logProcessor"
