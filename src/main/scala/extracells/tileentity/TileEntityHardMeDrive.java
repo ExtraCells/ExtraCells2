@@ -139,8 +139,8 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 	}
 
 	@Override
-	public void saveChanges(IMEInventory imeInventory) {
-
+	public void saveChanges(ICellInventory<?> imeInventory) {
+		this.world.markChunkDirty( this.pos, this );
 	}
 
 	//TODO

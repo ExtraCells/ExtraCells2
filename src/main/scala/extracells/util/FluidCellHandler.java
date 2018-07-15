@@ -1,6 +1,5 @@
 package extracells.util;
 
-import appeng.api.AEApi;
 import appeng.api.storage.*;
 import extracells.api.IGasStorageCell;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +23,7 @@ public class FluidCellHandler implements ICellHandler {
 	}
 
 	@Override
-	public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, IStorageChannel channel) {
+	public ICellInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, IStorageChannel channel) {
 		if (channel != StorageChannels.FLUID() || !(itemStack.getItem() instanceof IFluidStorageCell)) {
 			return null;
 		}

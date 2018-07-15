@@ -194,7 +194,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 	}
 
 	@Override
-	public void saveChanges(IMEInventory cellInventory) {
+	public void saveChanges(ICellInventory<?> cellInventory) {
 		getHost().markForSave();
 	}
 

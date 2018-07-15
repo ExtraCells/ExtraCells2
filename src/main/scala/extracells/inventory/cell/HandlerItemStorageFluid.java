@@ -1,23 +1,26 @@
 package extracells.inventory.cell;
 
+import appeng.api.config.FuzzyMode;
+import appeng.api.config.IncludeExclude;
 import appeng.api.networking.security.IActionSource;
-import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.*;
+
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.util.Log;
 import extracells.util.StorageChannels;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.IItemHandler;
 
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
@@ -25,8 +28,9 @@ import extracells.api.IFluidStorageCell;
 import extracells.api.IHandlerFluidStorage;
 
 //TODO: rewrite
-public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
+public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidStack>, IHandlerFluidStorage, ICellInventory<IAEFluidStack> {
 
+	private ItemStack storageStack;
 	private NBTTagCompound stackTag;
 	protected ArrayList<FluidStack> fluidStacks = new ArrayList<FluidStack>();
 	private ArrayList<Fluid> prioritizedFluids = new ArrayList<Fluid>();
@@ -39,6 +43,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (!_storageStack.hasTagCompound()) {
 			_storageStack.setTagCompound(new NBTTagCompound());
 		}
+		this.storageStack = _storageStack;
 		this.stackTag = _storageStack.getTagCompound();
 		this.totalTypes = ((IFluidStorageCell) _storageStack.getItem()).getMaxTypes(_storageStack);
 		this.totalBytes = ((IFluidStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack) * 250;
@@ -283,5 +288,128 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			this.stackTag.removeTag("Fluid#" + i);
 		}
 		this.fluidStacks.set(i, fluidStack);
+	}
+
+	@Override
+	public ICellInventory<IAEFluidStack> getCellInv() {
+		return this;
+	}
+
+	@Override
+	public boolean isPreformatted() {
+		return this.isFormatted();
+	}
+
+	@Override
+	public boolean isFuzzy() {
+		return this.getFuzzyMode() != FuzzyMode.IGNORE_ALL;
+	}
+
+	@Override
+	public IncludeExclude getIncludeExcludeMode() {
+		return IncludeExclude.WHITELIST;
+	}
+
+	@Override
+	public ItemStack getItemStack() {
+		return this.storageStack;
+	}
+
+	protected ICellWorkbenchItem getCellItem() {
+		return (ICellWorkbenchItem) this.getItemStack().getItem();
+	}
+
+	@Override
+	public double getIdleDrain() {
+		return 1;
+	}
+
+	@Override
+	public FuzzyMode getFuzzyMode() {
+		return this.getCellItem().getFuzzyMode(this.getItemStack());
+	}
+
+	@Override
+	public IItemHandler getConfigInventory() {
+		return this.getCellItem().getConfigInventory(this.getItemStack());
+	}
+
+	@Override
+	public IItemHandler getUpgradesInventory() {
+		return this.getCellItem().getUpgradesInventory(this.getItemStack());
+	}
+
+	@Override
+	public int getBytesPerType() {
+		return 8;
+	}
+
+	@Override
+	public boolean canHoldNewItem() {
+		long bytesFree = this.getFreeBytes();
+		return ( bytesFree > this.getBytesPerType() || ( bytesFree == this.getBytesPerType() && this.getUnusedItemCount() > 0 ) ) && this
+				.getRemainingItemTypes() > 0;
+	}
+
+	@Override
+	public long getTotalBytes() {
+		return this.totalBytes();
+	}
+
+	@Override
+	public long getFreeBytes() {
+		return this.freeBytes();
+	}
+
+	@Override
+	public long getUsedBytes() {
+		return this.usedBytes();
+	}
+
+	@Override
+	public long getTotalItemTypes() {
+		return this.totalTypes();
+	}
+
+	@Override
+	public long getStoredItemCount() {
+		return 0;
+		//return this.
+	}
+
+	@Override
+	public long getStoredItemTypes() {
+		//return 0;
+		return this.usedTypes();
+	}
+
+	@Override
+	public long getRemainingItemTypes() {
+		//return 0;
+		return this.totalTypes() - this.usedTypes();
+	}
+
+	@Override
+	public long getRemainingItemCount() {
+		return 0;
+		//return this.total
+	}
+
+	@Override
+	public int getUnusedItemCount() {
+		return 0;
+		//return this.fre
+	}
+
+	@Override
+	public int getStatusForCell() {
+		return 0;
+	}
+
+	@Override
+	public void persist() {
+        if (this.saveProvider != null) {
+            this.saveProvider.saveChanges(this);
+        }
 	}
 }

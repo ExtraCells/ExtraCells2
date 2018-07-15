@@ -17,7 +17,6 @@ import extracells.inventory.cell.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GasCellHandler implements ICellHandler {
 
@@ -27,7 +26,7 @@ public class GasCellHandler implements ICellHandler {
 	}
 
 	@Override
-	public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, IStorageChannel channel) {
+	public ICellInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, IStorageChannel channel) {
 		if (channel != StorageChannels.GAS() || !(itemStack.getItem() instanceof IGasStorageCell)) {
 			return null;
 		}
