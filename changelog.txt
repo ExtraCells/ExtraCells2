@@ -5,3 +5,4 @@ ALONG WITH AE2 EXTRA CELLS 2 IS IN ALPHA STATE
 
 Updated to ae2 rv6-alpha-3 and added deprecation tooltips for duplicate items
 Removed Deprecated item recipes and added conversion recipes
+Fixed issue with Cell Workbench
