@@ -125,4 +125,4 @@ extracells.tooltip.deprecated.part=변환하고 싶으면 조합대에 놓으세
 extracells.tooltip.deprecated.cell=ME 입출력 포트를 사용하여 이 셀을 비운 다음 변환하기 위해 해당 구성 요소로 분할합니다.
 
 //Buttons
-extracells.gui.craft=Craft
+extracells.gui.craft=
