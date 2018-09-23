@@ -179,7 +179,7 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryL
 			if (cellHandler == null || inventoryHandler == null) {
 				this.cellStatuses[i] = 0;
 			} else {
-				this.cellStatuses[i] = (byte) cellHandler.getStatusForCell(stackInSlot, inventoryHandler);
+				this.cellStatuses[i] = (byte) cellHandler.getStatusForCell(stackInSlot, (ICellInventoryHandler) inventoryHandler);
 			}
 		}
 		IGridNode node = getGridNode();

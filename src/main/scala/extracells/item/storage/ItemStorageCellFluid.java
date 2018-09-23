@@ -3,13 +3,18 @@ package extracells.item.storage;
 import java.util.ArrayList;
 
 import extracells.util.StorageChannels;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 import appeng.api.config.FuzzyMode;
+import appeng.core.AELog;
+
 import extracells.api.IFluidStorageCell;
 import extracells.inventory.ECFluidFilterInventory;
 import extracells.inventory.InventoryPlain;

@@ -21,11 +21,6 @@ import java.util.ArrayList;
 public class GasCellHandler implements ICellHandler {
 
 	@Override
-	public double cellIdleDrain(ItemStack is, IMEInventory handler) {
-		return 0;
-	}
-
-	@Override
 	public ICellInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider, IStorageChannel channel) {
 		if (channel != StorageChannels.GAS() || !(itemStack.getItem() instanceof IGasStorageCell)) {
 			return null;
@@ -35,23 +30,6 @@ public class GasCellHandler implements ICellHandler {
 
 	public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player, EnumHand hand) {
 		return new HandlerItemPlayerStorageGas(itemStack, null, (ArrayList<Gas>) (Object)((IGasStorageCell) itemStack.getItem()).getFilter(itemStack), player, hand);
-	}
-
-	@Override
-	public int getStatusForCell(ItemStack is, IMEInventory handler) {
-		if (handler == null) {
-			return 0;
-		}
-
-		HandlerItemStorageGas inventory = (HandlerItemStorageGas) handler;
-		if (inventory.freeBytes() == 0) {
-			return 3;
-		}
-		if (inventory.isFormatted() || inventory.usedTypes() == inventory.totalTypes()) {
-			return 2;
-		}
-
-		return 1;
 	}
 
 	/*@Override
@@ -74,23 +52,4 @@ public class GasCellHandler implements ICellHandler {
 	public boolean isCell(ItemStack is) {
 		return is != null && is.getItem() != null && is.getItem() instanceof IGasStorageCell;
 	}
-
-	@Override
-	public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler, IMEInventoryHandler inv, ItemStack is, IStorageChannel chan) {
-		if (chan != StorageChannels.GAS()) {
-			return;
-		}
-		IStorageMonitorable monitorable = null;
-		if (chest != null && chest instanceof TileEntity) {
-			TileEntity tileEntity = (TileEntity) chest;
-			if (tileEntity.hasCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, null)) {
-				IStorageMonitorableAccessor accessor = tileEntity.getCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, null);
-				monitorable = accessor.getInventory(new PlayerSource(player, chest));
-			}
-		}
-		if (monitorable != null) {
-			GuiHandler.launchGui(GuiHandler.getGuiId(4), player, EnumHand.MAIN_HAND, new Object[]{monitorable.getInventory(StorageChannels.GAS())});
-		}
-	}
-
 }

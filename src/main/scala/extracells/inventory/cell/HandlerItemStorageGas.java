@@ -403,7 +403,11 @@ public class HandlerItemStorageGas implements ICellInventoryHandler<IAEGasStack>
 
 	@Override
 	public int getStatusForCell() {
-		return 0;
+		if( this.canHoldNewItem() )
+			return 1;
+		if( this.getRemainingItemCount() > 0 )
+			return 2;
+		return 3;
 	}
 
 	@Override
