@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.*;
+
 import extracells.api.IHandlerStorageBase;
 import extracells.inventory.cell.IHandlerPartBase;
 import extracells.util.StorageChannels;
@@ -35,9 +36,6 @@ import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
 import appeng.api.parts.PartItemStack;
-import appeng.api.storage.ICellContainer;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import extracells.container.IUpgradeable;
@@ -223,7 +221,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	}
 
 	@Override
-	public void saveChanges(IMEInventory cellInventory) {
+	public void saveChanges(ICellInventory<?> cellInventory) {
 		saveData();
 	}
 

@@ -21,6 +21,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 
 public class GasStorageChannel implements IGasStorageChannel {
 
@@ -34,6 +36,12 @@ public class GasStorageChannel implements IGasStorageChannel {
     @Override
     public IAEGasStack readFromPacket(@Nonnull ByteBuf byteBuf) throws IOException {
         return new AEGasStack(byteBuf);
+    }
+
+    @Nullable
+    @Override
+    public IAEGasStack createFromNBT(@Nonnull NBTTagCompound nbtTagCompound) {
+        return new AEGasStack(nbtTagCompound);
     }
 
     @Nullable
@@ -64,27 +72,5 @@ public class GasStorageChannel implements IGasStorageChannel {
             return this.createStack(fluidStack.getFluid());
         }
         return null;
-    }
-
-    @Nullable
-    @Override
-    public IAEGasStack poweredExtraction(@Nonnull IEnergySource energy, @Nonnull IMEInventory<IAEGasStack> cell, @Nonnull IAEGasStack request, @Nonnull IActionSource src) {
-        Preconditions.checkNotNull(energy);
-        Preconditions.checkNotNull(cell);
-        Preconditions.checkNotNull(request);
-        Preconditions.checkNotNull(src);
-
-        return Platform.poweredExtraction(energy, cell, request, src);
-    }
-
-    @Nullable
-    @Override
-    public IAEGasStack poweredInsert(@Nonnull IEnergySource energy, @Nonnull IMEInventory<IAEGasStack> cell, @Nonnull IAEGasStack input, @Nonnull IActionSource src) {
-        Preconditions.checkNotNull(energy);
-        Preconditions.checkNotNull(cell);
-        Preconditions.checkNotNull(input);
-        Preconditions.checkNotNull(src);
-
-        return Platform.poweredInsert(energy, cell, input, src);
     }
 }

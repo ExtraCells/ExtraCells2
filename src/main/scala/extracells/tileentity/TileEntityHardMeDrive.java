@@ -90,6 +90,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 		}
 
 		List<IMEInventoryHandler> channelHandlers = new ArrayList<IMEInventoryHandler>();
+		this.handlers = this.updateHandlers();
 
 		for (IMEInventoryHandler handler : handlers) {
 			if(handler.getChannel() == channel)
@@ -139,8 +140,8 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 	}
 
 	@Override
-	public void saveChanges(IMEInventory imeInventory) {
-
+	public void saveChanges(ICellInventory<?> imeInventory) {
+		this.world.markChunkDirty( this.pos, this );
 	}
 
 	//TODO
@@ -163,7 +164,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
 	@Override
 	public void onInventoryChanged() {
-		this.handlers= updateHandlers();
+		this.handlers = updateHandlers();
 		Collection<IStorageChannel<? extends IAEStack<?>>> channels = AEApi.instance().storage().storageChannels();
 		for (int i = 0; i < this.cellStatuses.length; i++) {
 			ItemStack stackInSlot = this.inventory.getStackInSlot(i);
@@ -178,7 +179,7 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 				this.cellStatuses[i] = 0;
 			} else {
 				this.cellStatuses[i] = (byte) cellHandler.getStatusForCell(
-					stackInSlot, inventoryHandler);
+					stackInSlot, (ICellInventoryHandler) inventoryHandler);
 			}
 		}
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
