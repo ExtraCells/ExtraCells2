@@ -67,6 +67,9 @@ object UniversalTerminal {
     val aeterm = AEApi.instance.definitions.parts.terminal.maybeStack(1).get
     if (item == aeterm.getItem && meta == aeterm.getItemDamage)
       return true
+    val aetermfluid = AEApi.instance.definitions.parts.fluidTerminal.maybeStack(1).get
+    if (item == aetermfluid.getItem && meta == aetermfluid.getItemDamage)
+      return true
     val ecterm = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
     if (item == ecterm.getItem && meta == ecterm.getItemDamage)
       return true
@@ -120,6 +123,9 @@ object UniversalTerminal {
     val aeterm = AEApi.instance.definitions.parts.terminal.maybeStack(1).get
     if (item == aeterm.getItem && meta == aeterm.getItemDamage)
       return WirelessTerminalType.ITEM
+    val aetermfluid = AEApi.instance.definitions.parts.fluidTerminal.maybeStack(1).get
+    if (item == aetermfluid.getItem && meta == aetermfluid.getItemDamage)
+      return WirelessTerminalType.FLUID
     val ecterm = ItemEnum.PARTITEM.getDamagedStack(PartEnum.FLUIDTERMINAL.ordinal)
     if (item == ecterm.getItem && meta == ecterm.getItemDamage)
       return WirelessTerminalType.FLUID
