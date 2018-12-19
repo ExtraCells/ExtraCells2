@@ -26,6 +26,7 @@ import extracells.gui.widget.fluid.WidgetFluidSlot;
 import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketPartConfig;
 import extracells.part.fluid.PartFluidStorage;
+import extracells.part.gas.PartGasStorage;
 import extracells.registries.PartEnum;
 import extracells.util.FluidHelper;
 import extracells.util.NetworkUtil;
@@ -117,7 +118,8 @@ public class GuiBusFluidStorage extends GuiBase<ContainerBusFluidStorage> implem
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRenderer.drawString(PartEnum.FLUIDSTORAGE.getStatName().replace("ME ", ""), 8, 6, 4210752);
+		PartEnum partEnum = part instanceof PartGasStorage ? PartEnum.GASSTORAGE : PartEnum.FLUIDSTORAGE;
+		fontRenderer.drawString(partEnum.getStatName().replace("ME ", ""), 8, 6, 4210752);
 		fontRenderer.drawString(player.inventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 3, 4210752);
 	}
 
