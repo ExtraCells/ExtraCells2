@@ -9,6 +9,15 @@
         ]
     },
 	{
+		"name": "extracells:chest",
+		"ingredient": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "chestWood"
+			}
+		]
+	},
+	{
 		"name": "extracells:lapis",
 		"ingredient": [
 			{
