@@ -7,6 +7,7 @@ import appeng.api.AEApi
 import appeng.api.config.Actionable
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
+import baubles.api.BaubleType
 import extracells.api.{ECApi, IWirelessFluidTermHandler, IWirelessGasTermHandler}
 import extracells.integration.Integration
 import extracells.integration.wct.WirelessCrafting
@@ -14,6 +15,7 @@ import extracells.item.ItemWirelessTerminalFluid.isInCreativeTab
 import extracells.models.ModelManager
 import extracells.util.HandlerUniversalWirelessTerminal
 import extracells.wireless.ConfigManager
+import net.minecraft.client.renderer.block.model.ModelResourceLocation
 import net.minecraft.client.util.ITooltipFlag
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
@@ -23,6 +25,7 @@ import net.minecraft.util.text.translation.I18n
 import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand, NonNullList}
 import net.minecraft.world.World
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
+import p455w0rd.ae2wtlib.api.IBaubleRender
 
 object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with CraftingTerminal {
   val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
@@ -74,7 +77,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
       if (!tag.hasKey("type"))
         tag.setByte("type", 0)
       if (tag.getByte("type") == 4 && isWcEnabled)
-        WirelessCrafting.openCraftingTerminal(entityPlayer)
+        WirelessCrafting.openCraftingTerminal(entityPlayer, entityPlayer.inventory.currentItem)
       return new ActionResult(EnumActionResult.SUCCESS, itemStack)
     }
 
@@ -234,4 +237,13 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
   override def isInCreativeTab2(targetTab: CreativeTabs): Boolean = isInCreativeTab(targetTab)
 
+  override def getRender: IBaubleRender = null
+
+  override def getBaubleType(itemStack: ItemStack): BaubleType = BaubleType.TRINKET
+
+  override def initModel(): Unit = {
+
+  }
+
+  override def getModelResource: ModelResourceLocation = null
 }

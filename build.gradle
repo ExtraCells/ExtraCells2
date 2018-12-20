@@ -142,10 +142,11 @@ dependencies {
 	runtime name: "buildcraft", version: "${config.version.bc}", ext: 'jar'
 	
 	deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
-	
-    deobfCompile "p455w0rds-library:p455w0rdslib:${config.version.pl}"
-    deobfCompile "mekanism:Mekanism:${config.version.me}"
-	deobfCompile "wireless-crafting-terminal:WirelessCraftingTerminal:${config.version.wc}"
+
+	deobfCompile "mekanism:Mekanism:${config.version.me}"
+    deobfCompile "p455w0rd:p455w0rdslib:${config.version.pl}"
+    deobfCompile "p455w0rd:AE2WTLib:${config.version.wt}"
+	deobfCompile "p455w0rd:WirelessCraftingTerminal:${config.version.wc}"
 	
 	deobfCompile ("appeng:appliedenergistics2:${config.version.ae}"){
 		transitive = false
