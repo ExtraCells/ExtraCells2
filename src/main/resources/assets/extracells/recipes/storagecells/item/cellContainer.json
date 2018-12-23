@@ -14,7 +14,7 @@
 			"data": 39
         },
 		{
-			"item": "minecraft:chest"
+			"item": "#extracells:chest"
 		}
     ]
 }

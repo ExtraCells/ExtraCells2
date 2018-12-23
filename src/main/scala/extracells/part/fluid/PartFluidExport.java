@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -71,6 +72,11 @@ public class PartFluidExport extends PartFluidIO {
 			return super.onActivate(player, hand, pos);
 		}
 		return false;
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capabilityClass) {
+		return super.getCapability(capabilityClass);
 	}
 
 	@Override

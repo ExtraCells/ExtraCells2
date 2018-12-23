@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -134,6 +135,11 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d pos) {
 		return PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (IPart) this) && super.onActivate(player, enumHand, pos);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capabilityClass) {
+		return super.getCapability(capabilityClass);
 	}
 
 	@Override
