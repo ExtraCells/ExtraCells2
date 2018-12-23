@@ -76,6 +76,9 @@ object UniversalTerminal {
     val ectermgas = ItemEnum.PARTITEM.getDamagedStack(PartEnum.GASTERMINAL.ordinal)
     if (item == ectermgas.getItem && meta == ectermgas.getItemDamage)
       return true
+    val aetermcrafting = AEApi.instance.definitions.parts.craftingTerminal.maybeStack(1).get
+    if (item == aetermcrafting.getItem && meta == aetermcrafting.getItemDamage)
+      return true
     /*if(Mods.THAUMATICENERGISTICS.isEnabled){
       val thterm = ThaumaticEnergistics.getTerminal
       if(item == thterm.getItem && meta == thterm.getItemDamage)
@@ -152,6 +155,9 @@ object UniversalTerminal {
         return TerminalType.ESSENTIA
     }*/
     if(isWcLLoaded){
+      val aetermcrafting = AEApi.instance.definitions.parts.craftingTerminal.maybeStack(1).get
+      if (item == aetermcrafting.getItem && meta == aetermcrafting.getItemDamage)
+        return WirelessTerminalType.CRAFTING
       val wcTerm = WirelessCrafting.getCraftingTerminal
       if(item == wcTerm.getItem && meta == wcTerm.getItemDamage)
         return WirelessTerminalType.CRAFTING
