@@ -10,6 +10,6 @@ To build this, download the project (ZIP or fork or whatever) and execute the bu
 
 Thanks to arbrarsyed for ForgeGradle, to AlgorithmX2 for his massive support and his *amazing* API, cyntain and tgame14 for some very cool textures and Vexatos, crafteverywhere, SSCXM and VeryBigBro for the cool localizations! 
 
-AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/32n8cjqh2bhu599e/branch/rv5-1.12?svg=true)](https://ci.appveyor.com/project/DrummerMC/extracells2/branch/rv5-1.12)
+Travis CI: [![Build Status](https://travis-ci.org/ExtraCells/ExtraCells2.svg?branch=rv6-1.12)](https://travis-ci.org/ExtraCells/ExtraCells2)
 
 ExtraCells 2 is licensed under the MIT license.
