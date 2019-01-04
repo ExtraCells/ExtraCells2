@@ -79,14 +79,17 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor3f(1, 1, 1);
-		IAEFluidStack terminalFluid = ((IFluidSelectorGui) this.guiFluidTerminal)
-				.getCurrentFluid();
-		Fluid currentFluid = terminalFluid != null ? terminalFluid.getFluid()
-				: null;
-		if (this.fluid != null && this.fluid.getIcon() != null)
+		GL11.glColor3f(1F, 1F, 1F);
+
+		IAEFluidStack terminalFluid = ((IFluidSelectorGui) this.guiFluidTerminal).getCurrentFluid();
+		Fluid currentFluid = terminalFluid != null ? terminalFluid.getFluid() : null;
+
+		if (this.fluid != null && this.fluid.getIcon() != null) {
+			GL11.glColor3f((this.fluid.getColor() >> 16 & 0xFF) / 255.0F, (this.fluid.getColor() >> 8 & 0xFF) / 255.0F, (this.fluid.getColor() & 0xFF) / 255.0F);
 			drawTexturedModelRectFromIcon(posX + 1, posY + 1,
 					this.fluid.getIcon(), this.height - 2, this.width - 2);
+		}
+		GL11.glColor3f(1F, 1F, 1F);
 		if (this.fluid == currentFluid)
 			drawHollowRectWithCorners(posX, posY, this.height, this.width,
 					this.color, this.borderThickness);

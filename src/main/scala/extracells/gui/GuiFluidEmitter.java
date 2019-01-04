@@ -14,7 +14,6 @@ import extracells.registries.PartEnum;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -23,7 +22,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
+public class GuiFluidEmitter extends ECGuiContainer implements IFluidSlotGui {
 
 	public static final int xSize = 176;
 	public static final int ySize = 166;
@@ -31,7 +30,6 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 	private PartFluidLevelEmitter part;
 	private EntityPlayer player;
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png");
-	private WidgetFluidSlot fluidSlot;
 
 	public GuiFluidEmitter(PartFluidLevelEmitter _part, EntityPlayer _player) {
 		super(new ContainerFluidEmitter(_part, _player));
@@ -84,6 +82,7 @@ public class GuiFluidEmitter extends GuiContainer implements IFluidSlotGui {
 		this.fluidSlot.drawWidget();
 		((WidgetRedstoneModes) this.buttonList.get(6)).drawTooltip(mouseX, mouseY, (this.width - xSize) / 2, (this.height - ySize) / 2);
 		GuiUtil.renderOverlay(this.zLevel, this.guiLeft, this.guiTop, this.fluidSlot, mouseX, mouseY);
+		showTooltip(mouseX, mouseY);
 	}
 
 	@Override

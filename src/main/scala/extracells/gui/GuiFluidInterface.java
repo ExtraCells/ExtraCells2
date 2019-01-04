@@ -10,7 +10,6 @@ import extracells.registries.BlockEnum;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -21,7 +20,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
-public class GuiFluidInterface extends GuiContainer {
+public class GuiFluidInterface extends ECGuiContainer {
 	IFluidInterface fluidInterface;
 	public WidgetFluidTank[] tanks = new WidgetFluidTank[6];
 	public WidgetFluidSlot[] filter = new WidgetFluidSlot[6];
@@ -80,10 +79,10 @@ public class GuiFluidInterface extends GuiContainer {
 		for (WidgetFluidTank tank : this.tanks) {
 			if (tank != null)
 				if (func_146978_c(tank.posX, tank.posY, 18, 73, mouseX, mouseY)) {
-					tank.drawDirectionTooltip(mouseX - this.guiLeft, mouseY
+					tank.drawTooltip(mouseX - this.guiLeft, mouseY
 							- this.guiTop);
 				}
-		}
+		}	
 		for (WidgetFluidSlot fluidSlot : this.filter) {
 			if (fluidSlot != null) {
 				int i = fluidSlot.getPosX() + 1;
@@ -95,6 +94,7 @@ public class GuiFluidInterface extends GuiContainer {
 				}
 			}
 		}
+		showTooltipList(mouseX, mouseY);
 		for (Object s : this.inventorySlots.inventorySlots) {
 			try {
 				renderOutput((Slot) s, mouseX, mouseY);
