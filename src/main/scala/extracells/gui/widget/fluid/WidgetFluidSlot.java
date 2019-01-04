@@ -21,7 +21,7 @@ import org.lwjgl.opengl.GL12;
 
 import java.awt.*;
 import java.util.List;
-
+import java.util.ArrayList;
 public class WidgetFluidSlot extends Gui {
 
 	public interface IConfigurable {
@@ -136,9 +136,13 @@ public class WidgetFluidSlot extends Gui {
 		}
 	}
 
-	public void drawTooltip() {
+	public void drawTooltip(int x, int y) {
 		if (canRender()) {
-
+		if (this.fluid != null) {
+			List<String> description = new ArrayList<String>();
+			description.add(this.fluid.getLocalizedName(new FluidStack(this.fluid,0)));
+			drawHoveringText(description, x, y, Minecraft.getMinecraft().fontRenderer);
+		}
 		}
 	}
 
@@ -158,8 +162,7 @@ public class WidgetFluidSlot extends Gui {
 		if (this.fluid == null || this.fluid.getIcon() == null)
 			return;
 
-		Minecraft.getMinecraft().renderEngine
-				.bindTexture(TextureMap.locationBlocksTexture);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		Color color = new Color(this.fluid.getColor());
 		GL11.glColor3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);

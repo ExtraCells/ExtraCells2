@@ -365,7 +365,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 				cake.startDrawingQuads();
 				try {
 					cake.setBrightness(255);
-					cake.setColorRGBA_F(1.0f, 1.0f, 1.0f, 1.0f);
+					cake.setColorRGBA_F((this.fluid.getColor() >> 16 & 0xFF) / 255.0F, (this.fluid.getColor() >> 8 & 0xFF) / 255.0F, (this.fluid.getColor() & 0xFF) / 255.0F, 1.0F);
 					cake.addVertexWithUV(0, 16, 0, fluidIcon.getMinU(),
 							fluidIcon.getMaxV());
 					cake.addVertexWithUV(16, 16, 0, fluidIcon.getMaxU(),

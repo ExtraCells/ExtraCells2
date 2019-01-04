@@ -59,8 +59,8 @@ public class ItemRendererCertusTank implements IItemRenderer {
 						.bindTexture(TextureMap.locationBlocksTexture);
 				GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 				Block waterBlock = FluidRegistry.WATER.getBlock();
-
 				tessellator.startDrawingQuads();
+				tessellator.setColorRGBA_F((storedFluid.getFluid().getColor() >> 16 & 0xFF) / 255.0F, (storedFluid.getFluid().getColor() >> 8 & 0xFF) / 255.0F, (storedFluid.getFluid().getColor() & 0xFF) / 255.0F, 1.0F);
 				tessellator.setNormal(0.0F, -1F, 0.0F);
 				renderer.renderFaceYNeg(waterBlock, 0.0D, 0.0D, 0.0D, fluidIcon);
 				tessellator.setNormal(0.0F, 1.0F, 0.0F);

@@ -73,41 +73,23 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		GL11.glEnable(GL11.GL_BLEND);
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor3f(1F, 1F, 1F);
 
-		// Apply fluid color on top of fluid texture
-		// Same behaviour as in GT5-Unofficial item rendering
-		Color color = new Color(this.fluid.getColor());
-		GL11.glColor3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);
+		IAEFluidStack terminalFluid = ((IFluidSelectorGui) this.guiFluidTerminal).getCurrentFluid();
+		Fluid currentFluid = terminalFluid != null ? terminalFluid.getFluid() : null;
 
 		if (this.fluid != null && this.fluid.getIcon() != null) {
-			drawTexturedModelRectFromIcon(
-					posX + 1,
-					posY + 1,
-					this.fluid.getIcon(),
-					this.height - 2,
-					this.width - 2
-			);
+			Color color = new Color(this.fluid.getColor());
+			GL11.glColor3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);
+			drawTexturedModelRectFromIcon(posX + 1, posY + 1,
+					this.fluid.getIcon(), this.height - 2, this.width - 2);
 		}
-
-		// Reset color
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-
-		IAEFluidStack currentFluidStack = ((IFluidSelectorGui)this.guiFluidTerminal).getCurrentFluid();
-		Fluid currentFluid = currentFluidStack != null ? currentFluidStack.getFluid() : null;
-
-		if (this.fluid == currentFluid) {
-			drawHollowRectWithCorners(
-					posX,
-					posY,
-					this.height,
-					this.width,
-					this.SELECTED_RECT_COLOR,
-					this.SELECTED_BORDER_THICKNESS
-			);
-		}
+		GL11.glColor3f(1F, 1F, 1F);
+		if (this.fluid == currentFluid)
+			drawHollowRectWithCorners(posX, posY, this.height, this.width,
+					SELECTED_RECT_COLOR, SELECTED_BORDER_THICKNESS);
 
 		drawAmount(posX, posY);
-
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 	}

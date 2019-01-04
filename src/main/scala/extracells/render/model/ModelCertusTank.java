@@ -54,11 +54,8 @@ public class ModelCertusTank extends ModelBase {
 					fluidIcon = FluidRegistry.LAVA.getIcon();
 				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92,
 						scale * 0.999F, 0.92F);
-
 				Color color = new Color(storedFluid.getColor());
 				tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
-				GL11.glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
-
 				tessellator.setNormal(0.0F, -1F, 0.0F);
 				renderer.renderFaceYNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(0.0F, 1.0F, 0.0F);
@@ -71,6 +68,7 @@ public class ModelCertusTank extends ModelBase {
 				renderer.renderFaceXNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(1.0F, 0.0F, 0.0F);
 				renderer.renderFaceXPos(id, x, y, z, fluidIcon);
+				tessellator.setColorOpaque(255, 255, 255);
 			}
 		}
 	}
@@ -145,6 +143,7 @@ public class ModelCertusTank extends ModelBase {
 		tessellator.setNormal(1.0F, 0.0F, 0.0F);
 		renderer.renderFaceXPos(block, x, y, z, sideIcon);
 		GL11.glPopMatrix();
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {
