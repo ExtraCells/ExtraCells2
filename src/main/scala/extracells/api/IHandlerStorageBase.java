@@ -13,4 +13,6 @@ public interface IHandlerStorageBase {
 
     int usedTypes();
 
+    long storedCount();
+
 }

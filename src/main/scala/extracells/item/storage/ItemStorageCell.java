@@ -52,11 +52,12 @@ public abstract class ItemStorageCell extends ItemECBase implements ICellWorkben
 		IHandlerStorageBase cellHandler = (IHandlerStorageBase) handler;
 		boolean partitioned = cellHandler.isFormatted();
 		long usedBytes = cellHandler.usedBytes();
+		long storedCount = cellHandler.storedCount();
 
-		list.add(String.format(I18n.translateToLocal("extracells.tooltip.storage." + definition + ".bytes"), usedBytes / 250, cellHandler.totalBytes() / 250));
+		list.add(String.format(I18n.translateToLocal("extracells.tooltip.storage." + definition + ".bytes"), usedBytes, cellHandler.totalBytes()));
 		list.add(String.format(I18n.translateToLocal("extracells.tooltip.storage." + definition + ".types"), cellHandler.usedTypes(), cellHandler.totalTypes()));
-		if (usedBytes != 0) {
-			list.add(String.format(I18n.translateToLocal("extracells.tooltip.storage." + definition + ".content"), usedBytes));
+		if (storedCount != 0) {
+			list.add(String.format(I18n.translateToLocal("extracells.tooltip.storage." + definition + ".content"), storedCount));
 		}
 
 		if (partitioned) {

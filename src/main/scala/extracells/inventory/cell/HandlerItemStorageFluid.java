@@ -36,6 +36,12 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 	private ArrayList<Fluid> prioritizedFluids = new ArrayList<Fluid>();
 	private int totalTypes;
 	private int totalBytes;
+
+	private int itemsPerByte;
+
+	private boolean _dirty = true;
+	private long storedCount;
+
 	private ISaveProvider saveProvider;
 
 	public HandlerItemStorageFluid(ItemStack _storageStack,
@@ -46,7 +52,8 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 		this.storageStack = _storageStack;
 		this.stackTag = _storageStack.getTagCompound();
 		this.totalTypes = ((IFluidStorageCell) _storageStack.getItem()).getMaxTypes(_storageStack);
-		this.totalBytes = ((IFluidStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack) * 250;
+		this.totalBytes = ((IFluidStorageCell) _storageStack.getItem()).getMaxBytes(_storageStack);
+		this.itemsPerByte = this.getChannel().getUnitsPerByte();
 
 		for (int i = 0; i < this.totalTypes; i++) {
 			this.fluidStacks.add(FluidStack.loadFluidStackFromNBT(this.stackTag.getCompoundTag("Fluid#" + i)));
@@ -109,6 +116,7 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 					}
 				}
 				if (removedStack != null && removedStack.getStackSize() > 0) {
+					this._dirty = true;
 					requestSave();
 				}
 				return removedStack;
@@ -116,16 +124,6 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 		}
 
 		return null;
-	}
-
-	public int freeBytes() {
-		int i = 0;
-		for (FluidStack stack : this.fluidStacks) {
-			if (stack != null) {
-				i += stack.amount;
-			}
-		}
-		return this.totalBytes - i;
 	}
 
 	@Override
@@ -176,7 +174,7 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 			FluidStack currentStack = currentFluids.get(i);
 			if (notAdded != null && currentStack != null
 				&& input.getFluid() == currentStack.getFluid()) {
-				if (notAdded.getStackSize() <= freeBytes()) {
+				if (notAdded.getStackSize() <= remainingItems()) {
 					FluidStack toWrite = new FluidStack(currentStack.getFluid(),
 						currentStack.amount + (int) notAdded.getStackSize());
 					currentFluids.set(i, toWrite);
@@ -185,19 +183,19 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 					}
 					notAdded = null;
 				} else {
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(), currentStack.amount + freeBytes());
+					FluidStack toWrite = new FluidStack(currentStack.getFluid(), currentStack.amount + remainingItems());
 					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
 						writeFluidToSlot(i, toWrite);
 					}
-					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
+					notAdded.setStackSize(notAdded.getStackSize() - remainingItems());
 				}
 			}
 		}
 		for (int i = 0; i < currentFluids.size(); i++) {
 			FluidStack currentStack = currentFluids.get(i);
 			if (notAdded != null && currentStack == null) {
-				if (input.getStackSize() <= freeBytes()) {
+				if (input.getStackSize() <= getRemainingItemCount()) {
 					FluidStack toWrite = notAdded.getFluidStack();
 					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
@@ -205,16 +203,17 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 					}
 					notAdded = null;
 				} else {
-					FluidStack toWrite = new FluidStack(notAdded.getFluid(), freeBytes());
+					FluidStack toWrite = new FluidStack(notAdded.getFluid(), remainingItems());
 					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
 						writeFluidToSlot(i, toWrite);
 					}
-					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
+					notAdded.setStackSize(notAdded.getStackSize() - remainingItems());
 				}
 			}
 		}
 		if (notAdded == null || !notAdded.equals(input)) {
+			this._dirty = true;
 			requestSave();
 		}
 		return notAdded;
@@ -260,7 +259,8 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 
 	@Override
 	public int usedBytes() {
-		return this.totalBytes - freeBytes();
+		return this.getBytesPerType() * this.usedTypes()
+		    + (int) ((this.getStoredItemCount() + this.getUnusedItemCount()) / this.itemsPerByte);
 	}
 
 	@Override
@@ -272,6 +272,17 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 			}
 		}
 		return i;
+	}
+
+	@Override
+	public long storedCount() {
+		return this.getStoredItemCount();
+	}
+
+	public int remainingItems() {
+		return this.getRemainingItemCount() > Integer.MAX_VALUE
+		     ? (int) Integer.MAX_VALUE
+				 : (int) this.getRemainingItemCount();
 	}
 
 	@Override
@@ -341,7 +352,7 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 
 	@Override
 	public int getBytesPerType() {
-		return 8;
+		return totalBytes / 128;
 	}
 
 	@Override
@@ -358,7 +369,7 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 
 	@Override
 	public long getFreeBytes() {
-		return this.freeBytes();
+		return this.totalBytes() - this.usedBytes();
 	}
 
 	@Override
@@ -371,34 +382,43 @@ public class HandlerItemStorageFluid implements ICellInventoryHandler<IAEFluidSt
 		return this.totalTypes();
 	}
 
+	private void refreshStoredItemCache() {
+		this.storedCount = 0;
+		for (FluidStack stack : this.fluidStacks) {
+			if (stack != null) {
+				this.storedCount += stack.amount;
+			}
+		}
+		this._dirty = false;
+	}
+
 	@Override
 	public long getStoredItemCount() {
-		return 0;
-		//return this.
+		if (this._dirty) {
+			this.refreshStoredItemCache();
+		}
+		return this.storedCount;
 	}
 
 	@Override
 	public long getStoredItemTypes() {
-		//return 0;
 		return this.usedTypes();
 	}
 
 	@Override
 	public long getRemainingItemTypes() {
-		//return 0;
 		return this.totalTypes() - this.usedTypes();
 	}
 
 	@Override
 	public long getRemainingItemCount() {
-		return 0;
-		//return this.total
+		return this.getFreeBytes() * this.itemsPerByte + this.getUnusedItemCount();
 	}
 
 	@Override
 	public int getUnusedItemCount() {
-		return 0;
-		//return this.fre
+		final int modResult = (int) (this.getStoredItemCount() % this.itemsPerByte);
+		return modResult == 0 ? 0 : this.getChannel().getUnitsPerByte() - modResult;
 	}
 
 	@Override
