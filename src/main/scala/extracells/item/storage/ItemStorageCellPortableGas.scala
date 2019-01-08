@@ -49,11 +49,12 @@ object ItemStorageCellPortableGas extends ItemECBase with IPortableGasStorageCel
     val cellHandler: IHandlerGasStorage = handler.asInstanceOf[IHandlerGasStorage]
     val partitioned: Boolean = cellHandler.isFormatted
     val usedBytes: Long = cellHandler.usedBytes
+    val storedCount: Long = cellHandler.storedCount
     val aeCurrentPower: Double = getAECurrentPower(itemStack)
-    list2.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.bytes"), (usedBytes / 250).asInstanceOf[AnyRef], (cellHandler.totalBytes / 250).asInstanceOf[AnyRef]))
+    list2.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.bytes"), (usedBytes).asInstanceOf[AnyRef], (cellHandler.totalBytes).asInstanceOf[AnyRef]))
     list2.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.types"), cellHandler.usedTypes.asInstanceOf[AnyRef], cellHandler.totalTypes.asInstanceOf[AnyRef]))
-    if (usedBytes != 0) {
-      list2.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.content"), usedBytes.asInstanceOf[AnyRef]))
+    if (storedCount != 0) {
+      list2.add(String.format(I18n.translateToLocal("extracells.tooltip.storage.gas.content"), storedCount.asInstanceOf[AnyRef]))
     }
     if (partitioned) {
       list2.add(I18n.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + I18n.translateToLocal("gui.appliedenergistics2.Precise"))

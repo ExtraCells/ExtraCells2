@@ -247,7 +247,7 @@ public class HandlerItemStorageGas implements ICellInventoryHandler<IAEGasStack>
 
 	@Override
 	public int totalBytes() {
-		return this.totalBytes;
+		return this.totalBytes / 250; // HACK HACK HACK pending rework
 	}
 
 	@Override
@@ -257,7 +257,7 @@ public class HandlerItemStorageGas implements ICellInventoryHandler<IAEGasStack>
 
 	@Override
 	public int usedBytes() {
-		return this.totalBytes - freeBytes();
+		return (this.totalBytes - freeBytes()) / 250; // HACK HACK HACK pending rework
 	}
 
 	@Override
@@ -269,6 +269,11 @@ public class HandlerItemStorageGas implements ICellInventoryHandler<IAEGasStack>
 			}
 		}
 		return i;
+	}
+
+	@Override
+	public long storedCount() {
+		return this.totalBytes - freeBytes();
 	}
 
 	@Override
@@ -373,8 +378,7 @@ public class HandlerItemStorageGas implements ICellInventoryHandler<IAEGasStack>
 
 	@Override
 	public long getStoredItemCount() {
-		return 0;
-		//return this.
+		return this.storedCount();
 	}
 
 	@Override
