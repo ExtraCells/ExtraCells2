@@ -159,12 +159,13 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 					}
 					notAdded = null;
 				} else {
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(), currentStack.amount + freeBytes());
+					int freeBytes = freeBytes();
+					FluidStack toWrite = new FluidStack(currentStack.getFluid(), currentStack.amount + freeBytes);
 					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
 						writeFluidToSlot(i, toWrite);
 					}
-					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
+					notAdded.setStackSize(notAdded.getStackSize() - freeBytes);
 				}
 			}
 		}
