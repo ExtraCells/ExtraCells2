@@ -20,6 +20,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -55,7 +56,7 @@ import appeng.api.storage.data.IItemList;
 
 //TODO: Clean Up
 @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux")
-public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell<IAEItemStack>, IAEItemPowerStorage, IEnergyContainerItem {
+public class ItemStorageCellPhysical extends ItemStorageCell<IAEItemStack> implements IAEItemPowerStorage, IEnergyContainerItem {
 
 	public static final String[] suffixes = {"256k", "1024k", "4096k", "16384k", "container"};
 
@@ -64,36 +65,7 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell<
 	private final int MAX_POWER = 32000;
 
 	public ItemStorageCellPhysical() {
-		setMaxStackSize(1);
-		setMaxDamage(0);
-		setHasSubtypes(true);
-	}
-
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	@Override
-	public void addInformation(ItemStack itemStack, World world,
-		List list, ITooltipFlag flag) {
-		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
-		IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry
-			.getCellInventory(itemStack, null, StorageChannels.ITEM());
-		if (invHandler == null)
-			return;
-		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
-		ICellInventory cellInv = inventoryHandler.getCellInv();
-		long usedBytes = cellInv.getUsedBytes();
-
-		list.add(String.format(I18n
-				.translateToLocal("extracells.tooltip.storage.physical.bytes"),
-			usedBytes, cellInv.getTotalBytes()));
-		list.add(String.format(I18n
-				.translateToLocal("extracells.tooltip.storage.physical.types"),
-			cellInv.getStoredItemTypes(), cellInv.getTotalItemTypes()));
-		if (usedBytes > 0) {
-			list.add(String.format(
-				I18n
-					.translateToLocal("extracells.tooltip.storage.physical.content"),
-				cellInv.getStoredItemCount()));
-		}
+		super(CellDefinition.PHYSICAL, StorageChannels.ITEM());
 	}
 
 	@Override
@@ -182,20 +154,6 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell<
 	public int getEnergyStored(ItemStack arg0) {
 		return (int) PowerUnits.AE.convertTo(PowerUnits.RF,
 			getAECurrentPower(arg0));
-	}
-
-	@Override
-	public FuzzyMode getFuzzyMode(ItemStack is) {
-		if (!is.hasTagCompound()) {
-			is.setTagCompound(new NBTTagCompound());
-		}
-		return FuzzyMode.values()[is.getTagCompound().getInteger("fuzzyMode")];
-	}
-
-
-	@Override
-	public double getIdleDrain() {
-		return 0;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -296,21 +254,6 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell<
 		return toInject;
 	}
 
-	@Override
-	public boolean isBlackListed(ItemStack cellItem, IAEItemStack requestedAddition) {
-		return false;
-	}
-
-	@Override
-	public boolean isEditable(ItemStack is) {
-		return true;
-	}
-
-	@Override
-	public boolean isStorageCell(ItemStack i) {
-		return true;
-	}
-
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public ActionResult<ItemStack> onItemRightClick( World world, EntityPlayer player, EnumHand hand) {
@@ -357,6 +300,10 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell<
 			return EnumActionResult.PASS;
 		}
 		if (stack.getItemDamage() == 4 && !player.isSneaking()) {
+			if (true) {
+				player.sendMessage(new TextComponentString("Disabled pending rewrite"));
+				return EnumActionResult.PASS;
+			}
 			double power = getAECurrentPower(stack);
 			IItemList list = AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannels.ITEM()).getAvailableItems(
 				StorageChannels.ITEM().createList());
@@ -430,27 +377,10 @@ public class ItemStorageCellPhysical extends ItemECBase implements IStorageCell<
 	}
 
 	@Override
-	public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
-		if (!is.hasTagCompound()) {
-			is.setTagCompound(new NBTTagCompound());
-		}
-		is.getTagCompound().setInteger("fuzzyMode", fzMode.ordinal());
-	}
-
-	@Override
 	public boolean showDurabilityBar(ItemStack itemStack) {
 		if (itemStack == null) {
 			return false;
 		}
 		return itemStack.getItemDamage() == 4;
-	}
-
-	@Override
-	public boolean storableInStorageCell() {
-		return false;
-	}
-
-	public IStorageChannel getChannel(){
-		return StorageChannels.ITEM();
 	}
 }

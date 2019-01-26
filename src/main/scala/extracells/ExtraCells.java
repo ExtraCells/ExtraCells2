@@ -5,12 +5,14 @@ import com.google.common.base.Preconditions;
 import javax.annotation.Nullable;
 import java.io.File;
 
-import extracells.integration.mekanism.gas.GasCellHandler;
+import net.minecraft.util.datafix.FixTypes;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.common.util.ModFixs;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -27,8 +29,9 @@ import extracells.network.PacketHandler;
 import extracells.proxy.CommonProxy;
 import extracells.util.ECConfigHandler;
 import extracells.util.ExtraCellsEventHandler;
-import extracells.util.FluidCellHandler;
 import extracells.util.NameHandler;
+import extracells.util.datafix.BasicCellDataFixer;
+import extracells.util.datafix.PortableCellDataFixer;
 import extracells.wireless.AEWirelessTermHandler;
 
 @Mod(modid = Constants.MOD_ID, version = Constants.VERSION, name = "Extra Cells", dependencies = "after:waila;required-after:appliedenergistics2")
@@ -82,8 +85,6 @@ public class ExtraCells {
 	public void init(FMLInitializationEvent event) {
 		IRegistryContainer registries = AEApi.instance().registries();
 		registries.wireless().registerWirelessHandler(new AEWirelessTermHandler());
-		registries.cell().addCellHandler(new FluidCellHandler());
-		registries.cell().addCellHandler(new GasCellHandler());
 		ExtraCellsEventHandler handler = new ExtraCellsEventHandler();
 		MinecraftForge.EVENT_BUS.register(handler);
 		proxy.registerMovables();
@@ -94,6 +95,10 @@ public class ExtraCells {
 		proxy.registerPackets();
 		//RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId))
 		integration.init();
+
+		ModFixs fixes = FMLCommonHandler.instance().getDataFixer().init(Constants.MOD_ID, 4);
+		fixes.registerFix(FixTypes.ITEM_INSTANCE, new BasicCellDataFixer());
+		fixes.registerFix(FixTypes.ITEM_INSTANCE, new PortableCellDataFixer());
 	}
 
 	@Mod.EventHandler

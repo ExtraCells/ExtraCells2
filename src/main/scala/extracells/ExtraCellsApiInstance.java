@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import appeng.api.networking.security.IActionSource;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.*;
+
 import extracells.api.*;
 import extracells.api.gas.IAEGasStack;
 import extracells.util.*;
@@ -29,8 +29,6 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.ICellHandler;
-import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEPartLocation;
 import extracells.api.definitions.IBlockDefinition;
@@ -40,10 +38,7 @@ import extracells.definitions.BlockDefinition;
 import extracells.definitions.ItemDefinition;
 import extracells.definitions.PartDefinition;
 import extracells.integration.Integration;
-import extracells.integration.mekanism.gas.GasCellHandler;
 import extracells.integration.mekanism.gas.MekanismGas;
-import extracells.inventory.cell.HandlerItemStorageFluid;
-import extracells.inventory.cell.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 import extracells.wireless.WirelessTermRegistry;
 import mekanism.api.gas.Gas;
@@ -159,15 +154,10 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		if (!(item instanceof IPortableFluidStorageCell)) {
 			return stack;
 		}
-		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
-		if (!(cellHandler instanceof FluidCellHandler)) {
+		ICellInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannels.FLUID());
+		if (handler == null)
 			return stack;
-		}
-		IMEInventoryHandler<IAEFluidStack> handler = ((FluidCellHandler) cellHandler).getCellInventoryPlayer(stack, player, hand);
-		if (!(handler instanceof HandlerItemStorageFluid)) {
-			return stack;
-		}
-		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<IAEFluidStack>(handler, StorageChannels.FLUID());
+		IMEMonitor<IAEFluidStack> fluidInventory = new MEMonitorHandler<>(handler, StorageChannels.FLUID());
 		GuiHandler.launchGui(GuiHandler.getGuiId(3), player, hand, new Object[]{fluidInventory, item});
 		return stack;
 	}
@@ -185,15 +175,10 @@ public class ExtraCellsApiInstance implements ExtraCellsApi {
 		if (!(item instanceof IPortableGasStorageCell)) {
 			return stack;
 		}
-		ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stack);
-		if (!(cellHandler instanceof GasCellHandler)) {
+		ICellInventoryHandler<IAEGasStack> handler = AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannels.GAS());
+		if (handler == null)
 			return stack;
-		}
-		IMEInventoryHandler<IAEGasStack> handler = ((GasCellHandler) cellHandler).getCellInventoryPlayer(stack, player, hand);
-		if (!(handler instanceof HandlerItemStorageGas)) {
-			return stack;
-		}
-		IMEMonitor<IAEGasStack> fluidInventory = new MEMonitorHandler<IAEGasStack>(handler, StorageChannels.GAS());
+		IMEMonitor<IAEGasStack> fluidInventory = new MEMonitorHandler<>(handler, StorageChannels.GAS());
 		GuiHandler.launchGui(GuiHandler.getGuiId(6), player, hand, new Object[]{fluidInventory, item});
 		return stack;
 	}

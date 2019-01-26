@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import appeng.api.AEApi;
 import appeng.api.networking.storage.IBaseMonitor;
+import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
@@ -27,13 +28,11 @@ import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiStorage;
 import extracells.inventory.IInventoryListener;
 import extracells.inventory.InventoryPlain;
-import extracells.inventory.cell.HandlerItemStorageFluid;
 import extracells.network.packet.part.PacketStorageSelectFluid;
 import extracells.network.packet.part.PacketStorageUpdateFluid;
 import extracells.network.packet.part.PacketStorageUpdateState;
 import extracells.util.GuiUtil;
 import extracells.util.NetworkUtil;
-import scala.xml.PrettyPrinter;
 
 public abstract class ContainerStorage extends Container implements
 	IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer,
@@ -46,7 +45,7 @@ public abstract class ContainerStorage extends Container implements
 	protected IAEFluidStack selectedFluidStack;
 	protected EntityPlayer player;
 	protected IMEMonitor<IAEFluidStack> monitor;
-	protected HandlerItemStorageFluid storageFluid;
+	protected ICellInventoryHandler<IAEFluidStack> storageFluid;
 	protected IWirelessGasFluidTermHandler handler = null;
 	protected IPortableStorageCell storageCell = null;
 	public boolean hasWirelessTermHandler = false;
