@@ -7,7 +7,7 @@ import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEStack;
 import net.minecraftforge.fluids.Fluid;
 
-public interface  IHandlerPartBase<T extends IAEStack<T>> extends IMEInventoryHandler<T>, IMEMonitorHandlerReceiver<T> {
+public interface IHandlerPartBase<T extends IAEStack<T>> extends IMEInventoryHandler<T>, IMEMonitorHandlerReceiver<T> {
 
     void setAccessRestriction(AccessRestriction access);
 

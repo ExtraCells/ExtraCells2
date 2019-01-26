@@ -2,6 +2,9 @@ package extracells.item;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -9,11 +12,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.FluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,6 +35,23 @@ import extracells.models.ModelManager;
 public class ItemFluid extends Item implements IItemModelRegister {
 
 	public ItemFluid() {
+	}
+
+	@Nullable
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+		return new ICapabilityProvider() {
+			@Override
+			public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+				return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
+			}
+
+			@Nullable
+			@Override
+			public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+				return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.cast(new FluidHandler(stack));
+			}
+		};
 	}
 
 	@Override
@@ -70,5 +98,40 @@ public class ItemFluid extends Item implements IItemModelRegister {
 		return tagCompound.getString("fluid");
 	}
 
+	private static class FluidHandler implements IFluidHandlerItem {
 
+		private ItemStack container;
+
+		public FluidHandler(ItemStack container) {
+			this.container = container;
+		}
+
+		@Nonnull
+		@Override
+		public ItemStack getContainer() {
+			return this.container;
+		}
+
+		@Override
+		public IFluidTankProperties[] getTankProperties() {
+			return new IFluidTankProperties[]{new FluidTankProperties(this.drain(1000, true), 1000, false, true)};
+		}
+
+		@Override
+		public int fill(FluidStack resource, boolean doFill) {
+			return 0;
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(FluidStack resource, boolean doDrain) {
+			return this.drain(resource.amount, doDrain);
+		}
+
+		@Nullable
+		@Override
+		public FluidStack drain(int maxDrain, boolean doDrain) {
+			return new FluidStack(FluidRegistry.getFluid(ItemFluid.getFluidName(this.getContainer())), 1000);
+		}
+	}
 }

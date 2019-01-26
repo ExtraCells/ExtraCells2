@@ -20,7 +20,7 @@ object MekanismGas {
   }
 
   def init {
-    AEApi.instance.registries.cell.addCellHandler(new GasCellHandler())
+
   }
 
   def getFluidGasMap = mapAsJavaMap(fluidGas)
