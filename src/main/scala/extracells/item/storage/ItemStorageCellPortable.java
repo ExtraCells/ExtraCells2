@@ -1,6 +1,7 @@
 package extracells.item.storage;
 
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import net.minecraft.client.resources.I18n;
@@ -22,7 +23,6 @@ import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 
-import com.sun.istack.internal.NotNull;
 import extracells.api.IPortableStorageCell;
 import extracells.models.ModelManager;
 
@@ -141,10 +141,10 @@ public abstract class ItemStorageCellPortable<T extends IAEStack<T>> extends Ite
         return 1 - this.getAECurrentPower(stack) / this.getAEMaxPower(stack);
     }
 
-    @NotNull
+    @Nonnull
     protected NBTTagCompound getTag(ItemStack stack) {
         if (!stack.hasTagCompound())
             stack.setTagCompound(new NBTTagCompound());
-        return stack.getTagCompound();
+        return Objects.requireNonNull(stack.getTagCompound());
     }
 }
