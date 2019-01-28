@@ -23,10 +23,13 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.text.translation.I18n
 import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand, NonNullList}
 import net.minecraft.world.World
+import net.minecraftforge.fml.common.Optional
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
 import p455w0rd.ae2wtlib.api.client.IBaubleRender
+import p455w0rd.wct.api.IWirelessCraftingTerminalItem
 
-object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with CraftingTerminal {
+@Optional.Interface(iface = "p455w0rd.wct.api.IWirelessCraftingTerminalItem", modid = "wct", striprefs = true)
+object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with IWirelessCraftingTerminalItem {
   val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
   val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
   val isWcEnabled = Integration.Mods.WIRELESSCRAFTING.isEnabled
