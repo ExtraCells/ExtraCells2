@@ -80,4 +80,8 @@ public enum ItemEnum {
 	public Integration.Mods getMod() {
 		return mod;
 	}
+
+	public boolean shouldRegister() {
+		return mod == null || mod.isEnabled();
+	}
 }

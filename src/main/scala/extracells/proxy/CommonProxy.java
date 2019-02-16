@@ -91,7 +91,9 @@ public class CommonProxy {
 
 	public void registerItems() {
 		for (ItemEnum current : ItemEnum.values()) {
-			registerItem(current.getItem());
+			if (current.shouldRegister()) {
+				registerItem(current.getItem());
+			}
 		}
 	}
 
