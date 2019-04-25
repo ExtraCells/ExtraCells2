@@ -3,7 +3,8 @@ package extracells.integration.opencomputers
 import cpw.mods.fml.common.Optional.{Interface, InterfaceList, Method}
 import li.cil.oc.api.CreativeTab
 import li.cil.oc.api.driver.item.{HostAware, Slot}
-import li.cil.oc.api.driver.{EnvironmentAware, EnvironmentHost}
+import li.cil.oc.api.driver.EnvironmentProvider
+import li.cil.oc.api.network.EnvironmentHost
 import li.cil.oc.api.internal.{Drone, Robot}
 import li.cil.oc.api.network.{Environment, ManagedEnvironment}
 import net.minecraft.creativetab.CreativeTabs
@@ -11,10 +12,9 @@ import net.minecraft.item.{EnumRarity, Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 
 @InterfaceList(Array(
-  new Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = "OpenComputers", striprefs = true),
-  new Interface(iface = "li.cil.oc.api.driver.EnvironmentAware", modid = "OpenComputers", striprefs = true)
+  new Interface(iface = "li.cil.oc.api.driver.item.HostAware", modid = "OpenComputers", striprefs = true)
 ))
-trait UpgradeItemAEBase extends Item with HostAware with EnvironmentAware{
+trait UpgradeItemAEBase extends Item with HostAware{
 
   @Method(modid = "OpenComputers")
   override def setCreativeTab(creativeTabs: CreativeTabs): Item ={
@@ -43,7 +43,7 @@ trait UpgradeItemAEBase extends Item with HostAware with EnvironmentAware{
       null
   }
 
-  override def getRarity (stack: ItemStack) =
+  override def getRarity (stack: ItemStack) : EnumRarity =
     stack.getItemDamage match {
       case 0 => EnumRarity.rare
       case 1 => EnumRarity.uncommon
@@ -51,7 +51,7 @@ trait UpgradeItemAEBase extends Item with HostAware with EnvironmentAware{
   }
 
   @Method(modid = "OpenComputers")
-  override def dataTag(stack: ItemStack) = {
+  override def dataTag(stack: ItemStack) : NBTTagCompound = {
     if (!stack.hasTagCompound) {
       stack.setTagCompound(new NBTTagCompound)
     }
@@ -66,12 +66,14 @@ trait UpgradeItemAEBase extends Item with HostAware with EnvironmentAware{
   override def worksWith(stack: ItemStack, host: Class[_ <: EnvironmentHost]): Boolean =
     worksWith(stack) && host != null && (classOf[Robot].isAssignableFrom(host) || classOf[Drone].isAssignableFrom(host))
 
-  @Method(modid = "OpenComputers")
-  override def providedEnvironment(stack: ItemStack): Class[_ <: Environment] = {
-    if (stack != null && stack.getItem == this)
-      classOf[UpgradeAE]
-    else
-      null
+  @InterfaceList(Array(
+    new Interface(iface = "li.cil.oc.api.driver.EnvironmentProvider", modid = "OpenComputers", striprefs = true)
+  ))
+  object Provider extends EnvironmentProvider {
+    @Method(modid = "OpenComputers")
+    override def getEnvironment(stack: ItemStack): Class[_] =
+      if (worksWith(stack))
+        classOf[UpgradeAE]
+      else null
   }
-
 }
