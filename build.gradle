@@ -42,7 +42,6 @@ buildProps.withReader {
 version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}b" + getBuildNumber()
 group = "extracells"
 archivesBaseName = "ExtraCells"
-def actualVersion = version
 
 logger.lifecycle "$archivesBaseName-$version"
 logger.lifecycle "" + version
@@ -66,7 +65,12 @@ repositories {
 		name 'Open Computers'
 		url "http://maven.cil.li/"
 	}
-	
+
+    maven {
+        name = "Forestry and IC2 repo"
+        url = "http://maven.ic2.player.to/"
+    }
+
 	maven {
         name = 'IGW'
         url = "http://maven.k-4u.nl/"
@@ -85,6 +89,8 @@ repositories {
 }
 
 dependencies {
+//    provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
+//    provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
 	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
         transitive = false
 	}
@@ -134,7 +140,7 @@ artifacts {
     archives deobfJar
 }
 
-def getBuildNumber() {
+def static getBuildNumber() {
     if (System.getenv("BUILD_NUMBER") != null) {
         return "${System.getenv("BUILD_NUMBER")}"
     }

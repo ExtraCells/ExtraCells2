@@ -8,8 +8,9 @@ import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.util.FluidUtil;
 import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentAware;
+import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
+import li.cil.oc.api.driver.SidedBlock;
 import li.cil.oc.api.internal.Database;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -26,15 +27,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-public class DriverFluidImportBus implements li.cil.oc.api.driver.Block, EnvironmentAware{
+public class DriverFluidImportBus implements SidedBlock {
 
 	@Override
-	public boolean worksWith(World world, int x, int y, int z) {
-		return getImportBus(world, x, y, z, ForgeDirection.UNKNOWN) != null;
+	public boolean worksWith(World world, int x, int y, int z, ForgeDirection side) {
+		return getImportBus(world, x, y, z, side) != null;
 	}
 
 	@Override
-	public ManagedEnvironment createEnvironment(World world, int x, int y, int z) {
+	public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile == null || (!(tile instanceof IPartHost)))
 			return null;
@@ -64,7 +65,7 @@ public class DriverFluidImportBus implements li.cil.oc.api.driver.Block, Environ
 		protected final TileEntity tile;
 		protected final IPartHost host;
 		
-		public Enviroment(IPartHost host){
+		Enviroment(IPartHost host){
 			tile = (TileEntity) host;
 			this.host = host;
 			setNode(Network.newNode(this, Visibility.Network).
@@ -127,7 +128,6 @@ public class DriverFluidImportBus implements li.cil.oc.api.driver.Block, Environ
 				throw new IllegalArgumentException("no such component");
 			if (!(node instanceof Component))
 				throw new IllegalArgumentException("no such component");
-			Component component = (Component) node;
 			Environment env = node.host();
 			if (!(env instanceof Database))
 				throw new IllegalArgumentException("not a database");
@@ -178,14 +178,15 @@ public class DriverFluidImportBus implements li.cil.oc.api.driver.Block, Environ
 		}
 		
 	}
-	
-	@Override
-	public Class<? extends Environment> providedEnvironment(ItemStack stack) {
-		if(stack == null)
-			return null;
-		if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.FLUIDEXPORT.ordinal())
-			return Enviroment.class;
-		return null;
-	}
 
+	static class Provider implements EnvironmentProvider {
+		@Override
+		public Class<? extends Environment> getEnvironment(ItemStack stack) {
+			if(stack == null)
+				return null;
+			if(stack.getItem() == ItemEnum.PARTITEM.getItem() && stack.getItemDamage() == PartEnum.FLUIDEXPORT.ordinal())
+				return Enviroment.class;
+			return null;
+		}
+	}
 }

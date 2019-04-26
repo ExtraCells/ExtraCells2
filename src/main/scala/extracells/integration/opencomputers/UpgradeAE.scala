@@ -12,7 +12,7 @@ import appeng.api.util.WorldCoord
 import appeng.tile.misc.TileSecurity
 import extracells.item.ItemOCUpgrade
 import li.cil.oc.api.Network
-import li.cil.oc.api.driver.EnvironmentHost
+import li.cil.oc.api.network.EnvironmentHost
 import li.cil.oc.api.internal.{Agent, Database, Drone, Robot}
 import li.cil.oc.api.machine.{Arguments, Callback, Context}
 import li.cil.oc.api.network._
@@ -27,21 +27,20 @@ import scala.collection.JavaConversions._
 
 
 class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.NetworkControl[TileSecurity] with ec.NetworkControl[TileSecurity]{
-  val robot: Robot =
-    if (host.isInstanceOf[Robot])
-      host.asInstanceOf[Robot]
-    else
-      null
+  val robot: Robot = host match {
+    case r : Robot => r
+    case _ => null
+  }
 
-  val drone: Drone =
-    if (host.isInstanceOf[Drone])
-      host.asInstanceOf[Drone]
-    else
-      null
+  val drone: Drone = host match {
+    case d : Drone => d
+    case _ => null
+  }
   var isActive = false
 
   val agent: Agent = host.asInstanceOf[Agent]
-  setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("upgrade_me", Visibility.Neighbors).create());
+
+  setNode(Network.newNode(this, Visibility.Network).withConnector().withComponent("upgrade_me", Visibility.Neighbors).create())
 
   def getComponent: ItemStack = {
     if (robot != null)
@@ -118,8 +117,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
       return WirelessHandlerUpgradeAE.getEncryptionKey(stack).toLong
     }
     catch {
-      case ignored: Throwable => {
-      }
+      case _: Throwable =>
     }
     0L
   }
@@ -160,28 +158,28 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
   def sendItems(context: Context, args: Arguments): Array[AnyRef] = {
     val selected = agent.selectedSlot
     val invRobot = agent.mainInventory
-    if (invRobot.getSizeInventory <= 0) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (invRobot.getSizeInventory <= 0) return Array(0.underlying)
     val stack = invRobot.getStackInSlot(selected)
     val inv = getItemInventory
-    if (stack == null || inv == null) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (stack == null || inv == null) return Array(0.underlying)
     val amount = Math.min(args.optInteger(0, 64), stack.stackSize)
     val stack2 = stack.copy
     stack2.stackSize = amount
-    val notInjectet = inv.injectItems(AEApi.instance.storage.createItemStack(stack2), Actionable.MODULATE, new MachineSource(tile))
-    if (notInjectet == null){
+    val notInjected = inv.injectItems(AEApi.instance.storage.createItemStack(stack2), Actionable.MODULATE, new MachineSource(tile))
+    if (notInjected == null){
       stack.stackSize -= amount
       if (stack.stackSize <= 0)
         invRobot.setInventorySlotContents(selected, null)
       else
         invRobot.setInventorySlotContents(selected, stack)
-      return Array(amount.underlying.asInstanceOf[AnyRef])
+      Array(amount.underlying)
     }else{
-      stack.stackSize = stack.stackSize - amount + notInjectet.getStackSize.toInt
+      stack.stackSize = stack.stackSize - amount + notInjected.getStackSize.toInt
       if (stack.stackSize <= 0)
         invRobot.setInventorySlotContents(selected, null)
       else
         invRobot.setInventorySlotContents(selected, stack)
-      return Array((stack2.stackSize - notInjectet.getStackSize).underlying.asInstanceOf[AnyRef])
+      Array((stack2.stackSize - notInjected.getStackSize).underlying)
     }
   }
 
@@ -193,15 +191,14 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     val amount = args.optInteger(2, 64)
     val selected = agent.selectedSlot
     val invRobot = agent.mainInventory
-    if (invRobot.getSizeInventory <= 0) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (invRobot.getSizeInventory <= 0) return Array(0.underlying)
     val inv = getItemInventory
-    if (inv == null) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (inv == null) return Array(0.underlying)
     val n: Node = node.network.node(address)
     if (n == null) throw new IllegalArgumentException("no such component")
-    if (!(n.isInstanceOf[Component])) throw new IllegalArgumentException("no such component")
-    val component: Component = n.asInstanceOf[Component]
+    if (!n.isInstanceOf[Component]) throw new IllegalArgumentException("no such component")
     val env: Environment = n.host
-    if (!(env.isInstanceOf[Database])) throw new IllegalArgumentException("not a database")
+    if (!env.isInstanceOf[Database]) throw new IllegalArgumentException("not a database")
     val database: Database = env.asInstanceOf[Database]
     val sel = invRobot.getStackInSlot(selected)
     val inSlot =
@@ -215,7 +212,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     else
       sel.getMaxStackSize
     val stack = database.getStackInSlot(entry - 1)
-    if(stack == null) return Array(0.underlying.asInstanceOf[AnyRef])
+    if(stack == null) return Array(0.underlying)
     stack.stackSize = Math.min(amount, maxSize - inSlot)
     val stack2 = stack.copy
     stack2.stackSize = 1
@@ -226,23 +223,23 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
         sel3
       }else
         null
-    if(sel != null && !ItemStack.areItemStacksEqual(sel2, stack2)) return Array(0.underlying.asInstanceOf[AnyRef])
+    if(sel != null && !ItemStack.areItemStacksEqual(sel2, stack2)) return Array(0.underlying)
     val extracted = inv.extractItems(AEApi.instance.storage.createItemStack(stack), Actionable.MODULATE, new MachineSource(tile))
-    if(extracted == null) return Array(0.underlying.asInstanceOf[AnyRef])
+    if(extracted == null) return Array(0.underlying)
     val ext = extracted.getStackSize.toInt
     stack.stackSize = inSlot + ext
     invRobot.setInventorySlotContents(selected, stack)
-    Array(ext.underlying.asInstanceOf[AnyRef])
+    Array(ext.underlying)
   }
 
   @Callback(doc = "function([number:amount]):number -- Transfer selecte fluid to your ae system.")
   def sendFluids(context: Context, args: Arguments): Array[AnyRef] = {
     val selected = agent.selectedTank
     val tanks = agent.tank
-    if (tanks.tankCount <= 0) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (tanks.tankCount <= 0) return Array(0.underlying)
     val tank = tanks.getFluidTank(selected)
     val inv = getFluidInventory
-    if (tank == null || inv == null || tank.getFluid == null) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (tank == null || inv == null || tank.getFluid == null) return Array(0.underlying)
     val amount = Math.min(args.optInteger(0, tank.getCapacity), tank.getFluidAmount)
     val fluid = tank.getFluid
     val fluid2 = fluid.copy
@@ -250,10 +247,10 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     val notInjectet = inv.injectItems(AEApi.instance.storage.createFluidStack(fluid2), Actionable.MODULATE, new MachineSource(tile))
     if (notInjectet == null){
       tank.drain(amount, true)
-      Array(amount.underlying.asInstanceOf[AnyRef])
+      Array(amount.underlying)
     }else{
       tank.drain(amount - notInjectet.getStackSize.toInt, true)
-      Array((amount - notInjectet.getStackSize).underlying.asInstanceOf[AnyRef])
+      Array((amount - notInjectet.getStackSize).underlying)
     }
   }
 
@@ -264,25 +261,24 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     val amount = args.optInteger(2, FluidContainerRegistry.BUCKET_VOLUME)
     val tanks = agent.tank
     val selected = agent.selectedTank
-    if (tanks.tankCount <= 0) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (tanks.tankCount <= 0) return Array(0.underlying)
     val tank = tanks.getFluidTank(selected)
     val inv = getFluidInventory
-    if (tank == null || inv == null) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (tank == null || inv == null) return Array(0.underlying)
     val n: Node = node.network.node(address)
     if (n == null) throw new IllegalArgumentException("no such component")
-    if (!(n.isInstanceOf[Component])) throw new IllegalArgumentException("no such component")
-    val component: Component = n.asInstanceOf[Component]
+    if (!n.isInstanceOf[Component]) throw new IllegalArgumentException("no such component")
     val env: Environment = n.host
-    if (!(env.isInstanceOf[Database])) throw new IllegalArgumentException("not a database")
+    if (!env.isInstanceOf[Database]) throw new IllegalArgumentException("not a database")
     val database: Database = env.asInstanceOf[Database]
     val fluid = FluidContainerRegistry.getFluidForFilledItem(database.getStackInSlot(entry - 1))
     fluid.amount = amount
     val fluid2 = fluid.copy()
     fluid2.amount = tank.fill(fluid, false)
-    if (fluid2.amount == 0) return Array(0.underlying.asInstanceOf[AnyRef])
+    if (fluid2.amount == 0) return Array(0.underlying)
     val extracted = inv.extractItems(AEApi.instance.storage.createFluidStack(fluid2), Actionable.MODULATE, new MachineSource(tile))
-    if (extracted == 0) return Array(0.underlying.asInstanceOf[AnyRef])
-    Array(tank.fill(extracted.getFluidStack, true).underlying.asInstanceOf[AnyRef])
+    if (extracted == null) return Array(0.underlying)
+    Array(tank.fill(extracted.getFluidStack, true).underlying)
   }
 
 
@@ -301,7 +297,7 @@ class UpgradeAE(host: EnvironmentHost) extends ManagedEnvironment with appeng.Ne
     }
   }
 
-  def getEnergy  = {
+  private def getEnergy = {
     val c = getComponent
     if (c == null)
       .0
