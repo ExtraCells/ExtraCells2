@@ -86,17 +86,24 @@ repositories {
 		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.wc}/[module]-[revision].[ext]" 
 	} 
 
+	maven {
+		name 'GT6 Maven'
+		url "https://gregtech.overminddl1.com/"
+	}
+	maven {
+		name 'GTNH Maven'
+		url "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases/"
+	}
+
+	ivy {
+		name 'GTNH Ivy'
+		artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]"
+	}
 }
 
 dependencies {
-//    provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-//    provided "com.gregoriust.gregtech:gregtech_1.7.10:${config.gregtech.version}:dev"
-	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
-        transitive = false
-	}
-	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
-        transitive = false
-	}
+	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){        transitive = false	}
+	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){        transitive = false	}
 	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
 	}
