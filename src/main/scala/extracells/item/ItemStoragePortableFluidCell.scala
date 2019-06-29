@@ -28,7 +28,8 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
   setMaxDamage(0)
 
 
-  @SuppressWarnings(Array("rawtypes", "unchecked")) override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
+  @SuppressWarnings(Array("rawtypes", "unchecked"))
+  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
     val list2 = list.asInstanceOf[util.List[String]]
     val handler: IMEInventoryHandler[IAEFluidStack] = AEApi.instance.registries.cell.getCellInventory(itemStack, null, StorageChannel.FLUIDS).asInstanceOf[IMEInventoryHandler[IAEFluidStack]]
 
