@@ -108,11 +108,6 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	}
 
 	@Override
-	public int getLightLevel() {
-		return 0;
-	}
-
-	@Override
 	public double getPowerUsage() {
 		return 1.0D;
 	}
@@ -120,6 +115,11 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	@Override
 	public int getPriority() {
 		return this.priority;
+	}
+
+	@Override
+	public int getLightLevel() {
+		return this.isPowered() ? 9 : 0;
 	}
 
 	@Override

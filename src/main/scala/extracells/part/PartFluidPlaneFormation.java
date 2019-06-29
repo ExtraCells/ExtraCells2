@@ -120,11 +120,6 @@ public class PartFluidPlaneFormation extends PartECBase implements
 	}
 
 	@Override
-	public int getLightLevel() {
-		return 0;
-	}
-
-	@Override
 	public double getPowerUsage() {
 		return 1.0D;
 	}

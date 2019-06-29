@@ -201,7 +201,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 
 	@Override
 	public int getLightLevel() {
-		return isActive() ? 15 : 0;
+		return 0;
 	}
 
 	public final DimensionalCoord getLocation() {

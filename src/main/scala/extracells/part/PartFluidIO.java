@@ -114,11 +114,6 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		return new GuiBusFluidIO(this, player);
 	}
 
-	@Override
-	public int getLightLevel() {
-		return 0;
-	}
-
 	public RedstoneMode getRedstoneMode() {
 		return this.redstoneMode;
 	}

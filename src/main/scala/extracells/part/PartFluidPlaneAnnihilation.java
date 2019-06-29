@@ -54,11 +54,6 @@ public class PartFluidPlaneAnnihilation extends PartECBase {
 	}
 
 	@Override
-	public int getLightLevel() {
-		return 0;
-	}
-
-	@Override
 	public double getPowerUsage() {
 		return 1.0D;
 	}
