@@ -159,7 +159,7 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 		}
 		IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
 		if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(1))) {
-			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 4);
+			return ItemEnum.STORAGECOMPONENT.getDamagedStack(itemStack.getItemDamage() + 4);
 		}
 		return itemStack;
 	}

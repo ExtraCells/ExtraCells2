@@ -63,4 +63,6 @@ public interface IItemDefinition {
 
 	// MISC
 	appeng.api.definitions.IItemDefinition wirelessFluidTerminal();
+
+	appeng.api.definitions.IItemDefinition itemFluidPattern();
 }

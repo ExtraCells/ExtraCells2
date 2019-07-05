@@ -9,59 +9,59 @@ public class ItemDefinition implements IItemDefinition {
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell1024kPart() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 1);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 1);
 	}
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell1024kPartFluid() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 9);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 9);
 	}
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell16384kPart() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 3);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 3);
 	}
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell16kPartFluid() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 6);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 6);
 	}
 
 	// Fluid Storage Components
 	@Override
 	public appeng.api.definitions.IItemDefinition cell1kPartFluid() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 4);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 4);
 	}
 
 	// Physical Storage Components
 	@Override
 	public appeng.api.definitions.IItemDefinition cell256kPart() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem());
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem());
 	}
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell256kPartFluid() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 8);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 8);
 	}
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell4096kPart() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 2);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 2);
 	}
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell4096kPartFluid() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 10);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 10);
 	}
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell4kPartFluid() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 5);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 5);
 	}
 
 	@Override
 	public appeng.api.definitions.IItemDefinition cell64kPartFluid() {
-		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONET.getItem(), 7);
+		return new ItemItemDefinitions(ItemEnum.STORAGECOMPONENT.getItem(), 7);
 	}
 
 	// Fluid Storage
@@ -146,5 +146,10 @@ public class ItemDefinition implements IItemDefinition {
 	@Override
 	public appeng.api.definitions.IItemDefinition wirelessFluidTerminal() {
 		return new ItemItemDefinitions(ItemEnum.FLUIDWIRELESSTERMINAL.getItem());
+	}
+
+	@Override
+	public appeng.api.definitions.IItemDefinition itemFluidPattern() {
+		return new ItemItemDefinitions(ItemEnum.FLUIDPATTERN.getItem());
 	}
 }

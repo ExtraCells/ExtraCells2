@@ -38,7 +38,7 @@ object Extracells {
 	
 	val ModTab = new CreativeTabs("Extra_Cells") {
 
-		override def  getIconItemStack = new ItemStack(ItemEnum.FLUIDSTORAGE.getItem)
+		override def getIconItemStack = new ItemStack(ItemEnum.FLUIDSTORAGE.getItem)
 
 		override def getTabIconItem = ItemEnum.FLUIDSTORAGE.getItem
 	}
