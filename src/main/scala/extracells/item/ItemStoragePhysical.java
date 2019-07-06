@@ -320,7 +320,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
 		ICellInventory cellInv = inventoryHandler.getCellInv();
 		if (cellInv.getUsedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
-			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage());
+			return ItemEnum.STORAGECOMPONENT.getDamagedStack(itemStack.getItemDamage());
 		return itemStack;
 	}
 

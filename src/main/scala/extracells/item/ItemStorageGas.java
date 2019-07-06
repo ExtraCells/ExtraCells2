@@ -159,7 +159,7 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
 		}
 		IHandlerFluidStorage cellHandler = (IHandlerFluidStorage) handler;
 		if (cellHandler.usedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(2))) {
-			return ItemEnum.STORAGECOMPONET.getDamagedStack(itemStack.getItemDamage() + 11);
+			return ItemEnum.STORAGECOMPONENT.getDamagedStack(itemStack.getItemDamage() + 11);
 		}
 		return itemStack;
 	}

@@ -24,14 +24,14 @@ object IGW {
       if(item != ItemEnum.CRAFTINGPATTERN && item != ItemEnum.FLUIDITEM) {
         if(item == ItemEnum.FLUIDPATTERN){
           WikiRegistry.registerBlockAndItemPageEntry(item.getSizedStack(1), item.getSizedStack(1).getUnlocalizedName.replace(".", "/"))
-        }else if (item == ItemEnum.STORAGECOMPONET || item == ItemEnum.STORAGECASING){
+        } else if (item == ItemEnum.STORAGECOMPONENT || item == ItemEnum.STORAGECASING){
           val list = new util.ArrayList[java.lang.Object]
           item.getItem.getSubItems(item.getItem, Extracells.ModTab, list)
           for (sub <- list) {
             val stack = sub.asInstanceOf[ItemStack]
             WikiRegistry.registerBlockAndItemPageEntry(stack, "extracells/item/crafting")
           }
-        }else{
+        } else{
           val list = new util.ArrayList[java.lang.Object]
           item.getItem.getSubItems(item.getItem, Extracells.ModTab, list)
           for (sub <- list) {

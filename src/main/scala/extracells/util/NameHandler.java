@@ -63,45 +63,45 @@ public class NameHandler implements ISubItemResolver {
 
 		// Fluid Storage Components
 		if (fullName.equals("cell1kPartFluid"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 4);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 4);
 		if (fullName.equals("cell4kPartFluid"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 5);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 5);
 		if (fullName.equals("cell16kPartFluid"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 6);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 6);
 		if (fullName.equals("cell64kPartFluid"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 7);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 7);
 		if (fullName.equals("cell256kPartFluid"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 8);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 8);
 		if (fullName.equals("cell1024kPartFluid"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 9);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 9);
 		if (fullName.equals("cell4096kPartFluid"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 10);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 10);
 
 		// Gas Storage Components
 		if (fullName.equals("cell1kPartGas"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 11);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 11);
 		if (fullName.equals("cell4kPartGas"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 12);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 12);
 		if (fullName.equals("cell16kPartGas"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 13);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 13);
 		if (fullName.equals("cell64kPartGas"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 14);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 14);
 		if (fullName.equals("cell256kPartGas"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 15);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 15);
 		if (fullName.equals("cell1024kPartGas"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 16);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 16);
 		if (fullName.equals("cell4096kPartGas"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 17);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 17);
 
 		// Physical Storage Components
 		if (fullName.equals("cell256kPart"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 0);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 0);
 		if (fullName.equals("cell1024kPart"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 1);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 1);
 		if (fullName.equals("cell4096kPart"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 2);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 2);
 		if (fullName.equals("cell16384kPart"))
-			return new ResolverResult(ItemEnum.STORAGECOMPONET.getInternalName(), 3);
+			return new ResolverResult(ItemEnum.STORAGECOMPONENT.getInternalName(), 3);
 
 		// Physical Storage Casing
 		if (fullName.equals("physCasing"))
