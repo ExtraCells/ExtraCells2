@@ -98,28 +98,18 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 		if (this.tank == null || request == null || this.access == AccessRestriction.WRITE || this.access == AccessRestriction.NO_ACCESS)
 			return null;
 		FluidStack toDrain = request.getFluidStack();
-		int drained = 0;
-		int drained2 = 0;
-		do {
-			FluidStack drain = this.tank.drain(this.node.getSide().getOpposite(), new FluidStack(toDrain.getFluid(), toDrain.amount - drained), mode == Actionable.MODULATE);
-			if (drain == null)
-				drained2 = 0;
-			else
-				drained2 = drain.amount;
-			drained = drained + drained2;
-		} while (toDrain.amount != drained && drained2 != 0);
-		if (drained == 0)
-			return null;
-		IItemList<IAEFluidStack> fluids = getAvailableItems(AEApi.instance().storage().createFluidList());
-		for(IAEFluidStack fluid : fluids){
-			if(fluid.getFluid() == request.getFluid()){
-				drained = (int) Math.min(drained, fluid.getStackSize());
-			}
-		}
+        FluidStack drain = this.tank.drain(
+        		this.node.getSide().getOpposite(), new FluidStack(toDrain.getFluid(), toDrain.amount), mode == Actionable.MODULATE);
 
-		if (drained == toDrain.amount)
+        if (drain == null) {
+        	return null;
+		} else if (drain.amount == 0) {
+			return null;
+		} else if (drain.amount == toDrain.amount) {
 			return request;
-		return FluidUtil.createAEFluidStack(toDrain.getFluidID(), drained);
+		} else {
+			return FluidUtil.createAEFluidStack(toDrain.getFluidID(), drain.amount);
+		}
 	}
 
 	@Override
