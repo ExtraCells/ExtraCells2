@@ -75,6 +75,11 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 		return stack;
 	}
 
+	@Override
+	public int getLightLevel() {
+		return this.isPowered() ? 9 : 0;
+	}
+
 	public void addContainer(ContainerFluidTerminal containerTerminalFluid) {
 		this.containers.add(containerTerminalFluid);
 		sendCurrentFluid();

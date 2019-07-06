@@ -103,6 +103,11 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	}
 
 	@Override
+	public int getLightLevel() {
+		return this.isPowered() ? 9 : 0;
+	}
+
+	@Override
 	public List<String> getWailaBodey(NBTTagCompound data, List<String> list) {
 		super.getWailaBodey(data, list);
 		long amount = 0L;
