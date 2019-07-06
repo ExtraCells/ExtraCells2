@@ -517,6 +517,9 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		this.patternHandlers = new ArrayList<ICraftingPatternDetails>();
 		this.patternConvert.clear();
 
+		if (!this.isActive()) {
+			return;
+		}
 		for (ItemStack currentPatternStack : this.inventory.inv) {
 			if (currentPatternStack != null
 					&& currentPatternStack.getItem() != null

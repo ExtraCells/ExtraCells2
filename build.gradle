@@ -90,6 +90,9 @@ repositories {
 	ivy {
 		artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]"
 	}
+    ivy {
+        artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]"
+    }
 }
 
 configurations {
@@ -100,8 +103,12 @@ configurations {
 
 dependencies {
     provided name: 'CoFHCore', version: config.cofhcore.version, ext: 'jar'
-	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){        transitive = false	}
-	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){        transitive = false	}
+	compile ("appeng:appliedenergistics2:${config.version.ae}:api") {
+        transitive = false
+    }
+	compile ("appeng:appliedenergistics2:${config.version.ae}:dev") {
+        transitive = false
+    }
 	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
         transitive = false
 	}
