@@ -125,6 +125,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 			int capacity = FluidUtil.getCapacity(container);
 			IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource);
 			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
+			if(proposedAmount == 0)
+				return;
 			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(this.currentFluid, proposedAmount));
 			if(filledContainer.getLeft() > proposedAmount)
 				return;
