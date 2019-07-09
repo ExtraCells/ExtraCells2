@@ -45,9 +45,9 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	public boolean canAccept(IAEFluidStack input) {
 		if (!this.node.isActive())
 			return false;
-		if (this.tank == null && this.externalSystem == null && this.externalHandler == null || !(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE) || input == null)
+		else if (this.tank == null && this.externalSystem == null && this.externalHandler == null || !(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE) || input == null)
 			return false;
-		if (this.externalSystem != null) {
+		else if (this.externalSystem != null) {
 			IStorageMonitorable monitor = this.externalSystem.getMonitorable(
 					this.node.getSide().getOpposite(), new MachineSource(
 							this.node));
@@ -56,19 +56,19 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			IMEMonitor<IAEFluidStack> fluidInventory = monitor
 					.getFluidInventory();
 			return fluidInventory != null && fluidInventory.canAccept(input);
-		}else if(externalHandler != null){
-			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
+		} else if (externalHandler != null) {
+			IMEInventory<IAEFluidStack> inventory = this.externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
 			return inventory != null;
 		}
 		FluidTankInfo[] infoArray = this.tank.getTankInfo(this.node.getSide().getOpposite());
 		if (infoArray != null && infoArray.length > 0) {
-			FluidTankInfo info = infoArray[0];
-			if (info.fluid == null || info.fluid.amount == 0
-					|| info.fluid.getFluidID() == input.getFluidStack().getFluidID())
-				if (this.inverted)
-					return !this.prioritizedFluids.isEmpty() || !isPrioritized(input);
-				else
-					return this.prioritizedFluids.isEmpty() || isPrioritized(input);
+			for (FluidTankInfo tank : infoArray) {
+			    if (tank.fluid == null) return isPrioritized(input);
+			    else if (tank.fluid.getFluidID() == input.getFluidStack().getFluidID()) {
+			        if (!isPrioritized(input)) return false;
+                    if (tank.fluid.amount < tank.capacity) return true;
+                }
+            }
 		}
 		return false;
 	}
@@ -208,10 +208,12 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	public boolean isPrioritized(IAEFluidStack input) {
 		if (input == null)
 			return false;
+		else if (this.prioritizedFluids.isEmpty()) return true;
+
 		for (Fluid fluid : this.prioritizedFluids)
 			if (fluid == input.getFluid())
-				return true;
-		return false;
+				return !this.inverted;
+		return this.inverted;
 	}
 
 	@Override
