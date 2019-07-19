@@ -182,6 +182,14 @@ public class NameHandler implements ISubItemResolver {
 			return  new ResolverResult(BlockEnum.VIBRANTCHAMBERFLUID.getInternalName(), 0);
 		if (fullName.equals("hardMEDrive"))
 			return new ResolverResult(BlockEnum.BLASTRESISTANTMEDRIVE.getInternalName(), 0);
+		if (fullName.equals("craftingStorage256k"))
+			return new ResolverResult(BlockEnum.CRAFTINGSTORAGE.getInternalName(), 0);
+		if (fullName.equals("craftingStorage1024k"))
+			return new ResolverResult(BlockEnum.CRAFTINGSTORAGE.getInternalName(), 1);
+		if (fullName.equals("craftingStorage4096k"))
+			return new ResolverResult(BlockEnum.CRAFTINGSTORAGE.getInternalName(), 2);
+		if (fullName.equals("craftingStorage16384k"))
+			return new ResolverResult(BlockEnum.CRAFTINGSTORAGE.getInternalName(), 3);
 
 		return null;
 	}

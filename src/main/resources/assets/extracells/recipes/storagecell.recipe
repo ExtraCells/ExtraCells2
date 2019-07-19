@@ -77,6 +77,24 @@ shapeless=
 	ec:fluidCasing ec:cell4096kPartFluid
 	-> ec:fluidCell4096k
 
+
+shapeless=
+	ae2:BlockCraftingUnit:0 ec:physCell256k
+	-> ec:craftingStorage256k
+
+shapeless=
+	ae2:BlockCraftingUnit:0 ec:physCell1024k
+	-> ec:craftingStorage1024k
+
+shapeless=
+	ae2:BlockCraftingUnit:0 ec:physCell4096k
+	-> ec:craftingStorage4096k
+
+shapeless=
+	ae2:BlockCraftingUnit:0 ec:physCell16384k
+	-> ec:craftingStorage16384k
+
+
 shaped=
 	ae2:BlockQuartzGlass oredictionary:dustFluix ae2:BlockQuartzGlass,
 	oredictionary:dustFluix  ec:cell1kPartFluid oredictionary:dustFluix,

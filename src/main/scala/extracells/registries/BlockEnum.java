@@ -5,6 +5,7 @@ import extracells.block.*;
 import extracells.integration.Integration;
 import extracells.item.ItemBlockCertusTank;
 import extracells.item.ItemBlockECBase;
+import extracells.item.ItemCraftingStorage;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.StatCollector;
@@ -15,7 +16,8 @@ public enum BlockEnum {
 	FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),
 	ECBASEBLOCK("ecbaseblock", new ECBaseBlock(), ItemBlockECBase.class),
 	BLASTRESISTANTMEDRIVE("hardmedrive", BlockHardMEDrive.instance()),
-	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid());
+	VIBRANTCHAMBERFLUID("vibrantchamberfluid", new BlockVibrationChamberFluid()),
+	CRAFTINGSTORAGE("craftingstorage", new BlockCraftingStorage(), ItemCraftingStorage.class);
 
 	private final String internalName;
 	private Block block;
@@ -37,7 +39,7 @@ public enum BlockEnum {
 	BlockEnum(String _internalName, Block _block, Class<? extends ItemBlock> _itemBlockClass, Integration.Mods _mod) {
 		this.internalName = _internalName;
 		this.block = _block;
-		this.block.setBlockName("extracells.block." + this.internalName);
+		this.block.setBlockName(String.format("extracells.block.%s", this.internalName));
 		this.itemBlockClass = _itemBlockClass;
 		this.mod = _mod;
 		if(_mod == null || _mod.isEnabled())

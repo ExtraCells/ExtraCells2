@@ -29,7 +29,7 @@ object Extracells {
 
 	var VERSION = ""
 
-	var bcBurnTimeMultiplicator = 4;
+	var bcBurnTimeMultiplicator = 4
 
 	var configFolder: File = null
 	var shortenedBuckets = true
@@ -37,9 +37,7 @@ object Extracells {
 	val integration = new Integration
 	
 	val ModTab = new CreativeTabs("Extra_Cells") {
-
 		override def getIconItemStack = new ItemStack(ItemEnum.FLUIDSTORAGE.getItem)
-
 		override def getTabIconItem = ItemEnum.FLUIDSTORAGE.getItem
 	}
 
@@ -51,19 +49,19 @@ object Extracells {
 		val handler = new ExtraCellsEventHandler
 		FMLCommonHandler.instance.bus.register(handler)
 		MinecraftForge.EVENT_BUS.register(handler)
-		proxy.registerMovables
-		proxy.registerRenderers
-		proxy.registerTileEntities
-		proxy.registerFluidBurnTimes
+		proxy.registerMovables()
+		proxy.registerRenderers()
+		proxy.registerTileEntities()
+		proxy.registerFluidBurnTimes()
 		proxy.addRecipes(configFolder)
-		ChannelHandler.registerMessages
+		ChannelHandler.registerMessages()
 		RenderingRegistry.registerBlockHandler(new RenderHandler(RenderingRegistry.getNextAvailableRenderId))
-		integration.init
+		integration.init()
 	}
 
 	@EventHandler
 	def postInit(event: FMLPostInitializationEvent) {
-		integration.postInit
+		integration.postInit()
 	}
 
 	@EventHandler
@@ -73,20 +71,17 @@ object Extracells {
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, GuiHandler)
 
-
-
 		// Config
 		val config = new Configuration(new File(configFolder.getPath + File.separator + "AppliedEnergistics2" + File.separator + "extracells.cfg"))
-		config.load
+		config.load()
 		shortenedBuckets = config.get("Tooltips", "shortenedBuckets", true, "Shall the guis shorten large mB values?").getBoolean(true)
 		dynamicTypes = config.get("Storage Cells", "dynamicTypes", true, "Should the mount of bytes needed for a new type depend on the cellsize?").getBoolean(true)
 		integration.loadConfig(config)
 
+		config.save()
 
-		config.save
-
-		proxy.registerItems
-		proxy.registerBlocks
-		integration.preInit
+		proxy.registerItems()
+		proxy.registerBlocks()
+		integration.preInit()
 	}
 }
