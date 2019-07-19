@@ -39,4 +39,27 @@ public class BlockDefinition implements IBlockDefinition {
 				TileEntityWalrus.class);
 	}
 
+    @Override
+    public ITileDefinition craftingStorage256k() {
+        return new BlockItemDefinitions(BlockEnum.CRAFTINGSTORAGE.getBlock(), 0,
+                TileEntityCraftingStorage.class);
+    }
+
+    @Override
+    public ITileDefinition craftingStorage1024k() {
+        return new BlockItemDefinitions(BlockEnum.CRAFTINGSTORAGE.getBlock(), 1,
+                TileEntityCraftingStorage.class);
+    }
+
+    @Override
+    public ITileDefinition craftingStorage4096k() {
+        return new BlockItemDefinitions(BlockEnum.CRAFTINGSTORAGE.getBlock(), 2,
+                TileEntityCraftingStorage.class);
+    }
+
+    @Override
+    public ITileDefinition craftingStorage16384k() {
+        return new BlockItemDefinitions(BlockEnum.CRAFTINGSTORAGE.getBlock(), 3,
+                TileEntityCraftingStorage.class);
+    }
 }
