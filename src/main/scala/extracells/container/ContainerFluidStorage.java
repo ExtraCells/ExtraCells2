@@ -149,7 +149,7 @@ public class ContainerFluidStorage extends Container implements
 
 	public void doWork() {
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
-		if (secondSlot != null && secondSlot.stackSize > secondSlot.getMaxStackSize())
+		if (secondSlot != null && secondSlot.stackSize >= secondSlot.getMaxStackSize())
 			return;
 		ItemStack container = this.inventory.getStackInSlot(0);
 		if (!FluidUtil.isFluidContainer(container))
