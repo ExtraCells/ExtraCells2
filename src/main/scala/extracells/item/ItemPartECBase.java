@@ -69,15 +69,6 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 	}
 
 	@Override
-	public EnumRarity getRarity(ItemStack itemStack) {
-		if (itemStack != null
-				&& itemStack.getItemDamage() == PartEnum.OREDICTEXPORTBUS
-						.ordinal())
-			return super.getRarity(itemStack);
-		return EnumRarity.rare;
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public int getSpriteNumber() {
 		return 0;

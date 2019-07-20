@@ -68,14 +68,6 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 	}
 
 	@Override
-	public ItemStack getItemStack(PartItemStack type) {
-		ItemStack stack = super.getItemStack(type);
-		if (type.equals(PartItemStack.Wrench))
-			stack.getTagCompound().removeTag("inventory");
-		return stack;
-	}
-
-	@Override
 	public int getLightLevel() {
 		return this.isPowered() ? 9 : 0;
 	}

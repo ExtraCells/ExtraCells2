@@ -384,16 +384,6 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 	}
 
 	@Override
-	public ItemStack getItemStack(PartItemStack type) {
-		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1,
-				PartEnum.getPartID(this));
-		if (type != PartItemStack.Break) {
-			is.setTagCompound(writeFilter(new NBTTagCompound()));
-		}
-		return is;
-	}
-
-	@Override
 	public IStorageMonitorable getMonitorable(ForgeDirection side,
 			BaseActionSource src) {
 		return this;

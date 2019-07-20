@@ -64,6 +64,11 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 	private boolean isActive;
 	private boolean isPowerd = false;
 	private EntityPlayer owner;
+	private ItemStack is;
+
+	public PartECBase() {
+        this.is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1, PartEnum.getPartID(this));
+    }
 
 	@Override
 	public void addToWorld() {
@@ -187,16 +192,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 
 	@Override
 	public ItemStack getItemStack(PartItemStack type) {
-		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1,
-				PartEnum.getPartID(this));
-		if (type != PartItemStack.Break) {
-			NBTTagCompound itemNbt = new NBTTagCompound();
-			writeToNBT(itemNbt);
-			if (itemNbt.hasKey("node"))
-				itemNbt.removeTag("node");
-			is.setTagCompound(itemNbt);
-		}
-		return is;
+		return this.is;
 	}
 
 	@Override
