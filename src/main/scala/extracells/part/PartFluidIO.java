@@ -14,6 +14,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidIO;
 import extracells.gui.GuiBusFluidIO;
+import extracells.item.ItemPartECBase;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketBusFluidIO;
@@ -62,21 +63,18 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 
 	@Override
 	public void getDrops( List<ItemStack> drops, boolean wrenched) {
+	    for (ItemStack stack : drops) {
+	        if (stack.getItem().getClass() == ItemPartECBase.class) {
+	            stack.stackTagCompound = null;
+            }
+        }
+
 		for (ItemStack stack : upgradeInventory.slots) {
 			if (stack == null)
 				continue;
 			drops.add(stack);
 		}
 	}
-
-	@Override
-	public ItemStack getItemStack(PartItemStack type) {
-		ItemStack stack = super.getItemStack(type);
-		if (type.equals(PartItemStack.Wrench))
-			stack.getTagCompound().removeTag("upgradeInventory");
-		return stack;
-	}
-
 
 	@Override
 	public int cableConnectionRenderTo() {

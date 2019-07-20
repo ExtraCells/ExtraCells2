@@ -13,7 +13,6 @@ import extracells.registries.PartEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -66,15 +65,6 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 			return ECApi.instance().blocks().blockInterface().maybeItem().get().getItemStackDisplayName(
 							ECApi.instance().blocks().blockInterface().maybeStack(1).get());
 		return super.getItemStackDisplayName(stack);
-	}
-
-	@Override
-	public EnumRarity getRarity(ItemStack itemStack) {
-		if (itemStack != null
-				&& itemStack.getItemDamage() == PartEnum.OREDICTEXPORTBUS
-						.ordinal())
-			return super.getRarity(itemStack);
-		return EnumRarity.rare;
 	}
 
 	@Override

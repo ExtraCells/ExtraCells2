@@ -14,7 +14,6 @@ import extracells.part.PartGasImport;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -23,17 +22,15 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class GuiBusFluidIO extends GuiContainer implements
+public class GuiBusFluidIO extends ECGuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
 	private PartFluidIO part;
 	private EntityPlayer player;
 	private byte filterSize;
-	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 	private boolean redstoneControlled;
 	private boolean hasNetworkTool;
 
@@ -99,6 +96,7 @@ public class GuiBusFluidIO extends GuiContainer implements
 			if (button instanceof WidgetRedstoneModes)
 				((WidgetRedstoneModes) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
 		}
+		showTooltipList(mouseX, mouseY);
 	}
 
 	@Override

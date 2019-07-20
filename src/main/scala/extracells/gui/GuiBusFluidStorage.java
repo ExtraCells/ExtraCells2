@@ -14,7 +14,6 @@ import extracells.util.FluidUtil;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -23,16 +22,14 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class GuiBusFluidStorage extends GuiContainer implements
+public class GuiBusFluidStorage extends ECGuiContainer implements
 		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
 
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/storagebusfluid.png");
 	private EntityPlayer player;
 	private byte filterSize;
-	private List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
 	private boolean hasNetworkTool;
 	private final PartFluidStorage part;
 
@@ -109,6 +106,7 @@ public class GuiBusFluidStorage extends GuiContainer implements
 			if (button instanceof WidgetStorageDirection)
 				((WidgetStorageDirection) button).drawTooltip(mouseX, mouseY, (this.width - this.xSize) / 2, (this.height - this.ySize) / 2);
 		}
+		showTooltipList(mouseX, mouseY);
 	}
 
 	@Override

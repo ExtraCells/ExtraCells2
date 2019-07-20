@@ -9,7 +9,6 @@ import extracells.network.packet.part.PacketFluidPlaneFormation;
 import extracells.part.PartFluidPlaneFormation;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -20,14 +19,13 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class GuiFluidPlaneFormation extends GuiContainer implements
+public class GuiFluidPlaneFormation extends ECGuiContainer implements
 		IFluidSlotGui {
 
 	private static final ResourceLocation guiTexture = new ResourceLocation(
 			"extracells", "textures/gui/paneformation.png");
 	private PartFluidPlaneFormation part;
 	private EntityPlayer player;
-	private WidgetFluidSlot fluidSlot;
 	private boolean hasNetworkTool;
 
 	public GuiFluidPlaneFormation(PartFluidPlaneFormation _part,
@@ -70,6 +68,7 @@ public class GuiFluidPlaneFormation extends GuiContainer implements
 						this.guiTop, (this.width - this.xSize) / 2,
 						(this.height - this.ySize) / 2);
 		}
+		showTooltip(mouseX, mouseY);
 	}
 
 	protected Slot getSlotAtPosition(int p_146975_1_, int p_146975_2_) {

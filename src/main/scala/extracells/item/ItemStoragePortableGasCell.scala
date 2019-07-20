@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.texture.IIconRegister
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
-import net.minecraft.item.{EnumRarity, Item, ItemStack}
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.{IIcon, StatCollector}
 import net.minecraft.world.World
@@ -91,9 +91,6 @@ object ItemStoragePortableGasCell extends ItemECBase with IPortableGasStorageCel
 
 
   override def getPowerFlow(itemStack: ItemStack): AccessRestriction = AccessRestriction.READ_WRITE
-
-
-  override def getRarity(itemStack: ItemStack): EnumRarity = EnumRarity.rare
 
 
   override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[_]) {

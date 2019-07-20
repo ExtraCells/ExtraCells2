@@ -199,18 +199,6 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	}
 
 	@Override
-	public ItemStack getItemStack(PartItemStack type) {
-		ItemStack is = new ItemStack(ItemEnum.PARTITEM.getItem(), 1,
-				PartEnum.getPartID(this));
-		if (type != PartItemStack.Break) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("filter", this.filter);
-			is.setTagCompound(tag);
-		}
-		return is;
-	}
-
-	@Override
 	public double getPowerUsage() {
 		return 10.0D;
 	}

@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -113,11 +112,6 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
 	@Override
 	public int getMaxTypes(ItemStack unused) {
 		return 5;
-	}
-
-	@Override
-	public EnumRarity getRarity(ItemStack itemStack) {
-		return EnumRarity.rare;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

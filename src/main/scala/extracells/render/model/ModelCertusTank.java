@@ -52,7 +52,8 @@ public class ModelCertusTank extends ModelBase {
 					fluidIcon = FluidRegistry.LAVA.getIcon();
 				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92,
 						scale * 0.999F, 0.92F);
-				tessellator.setNormal(0.0F, -1F, 0.0F);
+				tessellator.setColorRGBA_F((storedFluid.getColor() >> 16 & 0xFF) / 255.0F, (storedFluid.getColor() >> 8 & 0xFF) / 255.0F, (storedFluid.getColor() & 0xFF) / 255.0F, 1.0F);
+				tessellator.setNormal(0.0F, -1F, 0.0F);				
 				renderer.renderFaceYNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(0.0F, 1.0F, 0.0F);
 				renderer.renderFaceYPos(id, x, y, z, fluidIcon);
