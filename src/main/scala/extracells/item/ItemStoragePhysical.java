@@ -23,7 +23,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -226,11 +225,6 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 			return null;
 		return itemStack.getItemDamage() == 4 ? AccessRestriction.READ_WRITE
 				: AccessRestriction.NO_ACCESS;
-	}
-
-	@Override
-	public EnumRarity getRarity(ItemStack itemStack) {
-		return EnumRarity.epic;
 	}
 
 	@Override

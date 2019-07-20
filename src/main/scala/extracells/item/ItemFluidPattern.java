@@ -4,7 +4,6 @@ import extracells.registries.ItemEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -61,11 +60,6 @@ public class ItemFluidPattern extends ItemECBase {
 			return StatCollector.translateToLocal(getUnlocalizedName(itemStack));
 		return StatCollector.translateToLocal(getUnlocalizedName(itemStack))
 				+ ": " + fluid.getLocalizedName(new FluidStack(fluid, 1));
-	}
-
-	@Override
-	public EnumRarity getRarity(ItemStack itemStack) {
-		return EnumRarity.uncommon;
 	}
 
 	@Override

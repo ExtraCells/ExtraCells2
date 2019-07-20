@@ -4,7 +4,6 @@ import appeng.api.implementations.items.IStorageComponent;
 import extracells.integration.Integration;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -33,13 +32,6 @@ public class ItemStorageComponent extends ItemECBase implements IStorageComponen
 	public IIcon getIconFromDamage(int dmg) {
 		int j = MathHelper.clamp_int(dmg, 0, this.suffixes.length);
 		return this.icons[j];
-	}
-
-	@Override
-	public EnumRarity getRarity(ItemStack itemStack) {
-		if (itemStack.getItemDamage() >= 4)
-			return EnumRarity.rare;
-		return EnumRarity.epic;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
