@@ -73,42 +73,42 @@ minecraft {
 repositories {
     maven {
         name 'Mobius Repo'
-        url "http://mobiusstrip.eu/maven"
+        url "https://mobiusstrip.eu/maven"
     }
 	
 	maven {
 		name 'Open Computers'
-		url "http://maven.cil.li/"
+		url "https://maven.cil.li/"
 	}
 	
 	maven {
 		name 'prog'
-		url "http://dvs1.progwml6.com/files/maven"
+		url "https://dvs1.progwml6.com/files/maven"
 	}
 	
 	maven {
         name 'amadornes'
-        url "http://maven.amadornes.com/"
+        url "https://maven.amadornes.com/"
     }
 
     ivy {
         name "BuildCraft"
-        artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]"
+        artifactPattern "https://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]"
     }
 	
 	maven {
 		name = "tehnut"
-		url = "http://tehnut.info/maven"
+		url = "https://tehnut.info/maven"
 	}
 	
 	maven {
 		name = "CoFH Maven"
-		url = "http://maven.covers1624.net"
+		url = "https://maven.covers1624.net"
 	}
 	
 	maven {
         name = 'IGW'
-        url = "http://maven.k-4u.nl/"
+        url = "https://maven.k-4u.nl/"
     }
 
     maven {
