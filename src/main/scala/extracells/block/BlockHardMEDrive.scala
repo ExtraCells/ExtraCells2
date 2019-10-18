@@ -225,6 +225,6 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     topIcon = register.registerIcon("extracells:machine.top");
   }
 
-  override def getRenderType : Int = RendererHardMEDrive.getRenderId
+//  override def getRenderType : Int = RendererHardMEDrive.getRenderId
 
 }
