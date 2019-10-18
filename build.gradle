@@ -19,24 +19,13 @@ apply plugin: 'com.matthewprenger.cursegradle'
 
 ext.buildProps = file "build.properties"
 
-version = "NIGHTLY"
-if (System.getenv("BUILD_NUMBER") != null) {
-	version = "${System.getenv("BUILD_NUMBER")}"
-}
-if (System.getenv("DRONE_BUILD_NUMBER") != null) {
-	version = "${System.getenv("DRONE_BUILD_NUMBER")}"
-}
-if (System.getenv("APPVEYOR_BUILD_NUMBER") != null) {
-	version = "${System.getenv("APPVEYOR_BUILD_NUMBER")}"
-}
-
 buildProps.withReader {
     def prop = new Properties()
     prop.load(it)
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}a" + getBuildNumber()
+version = "${config.version.minecraft}-${config.version.mod.major}.${config.version.mod.minor}.${config.version.mod.revis}." + getBuildNumber()
 group = "extracells"
 archivesBaseName = "ExtraCells"
 def actualVersion = version
