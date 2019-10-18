@@ -15,6 +15,7 @@ import appeng.api.parts.IPartModel;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import appeng.util.item.AEItemStack;
@@ -43,13 +44,24 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
     private String filter = "";
-    private ItemStack[] filteredItems = new ItemStack[0];
+    /**
+     * Used when there are ModID(@) and path (~) matchers. Tick-time matching.
+     */
+    private Predicate<ItemStack> filterPredicate = null;
+    /**
+     * White list of itemstacks to extract. OreDict only mode.
+     */
+    private ItemStack[] oreDictFilteredItems;
 
     @Override
     public float getCableConnectionLength(AECableType aeCableType) {
@@ -62,27 +74,127 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
     public void setFilter(String filter) {
         this.filter = filter;
-        updateFilteredItems();
+        updateFilter();
         saveData();
     }
 
-    private void updateFilteredItems() {
+    /**
+     * Call when the filter string has changed to parse and recompile the filter.
+     */
+    private void updateFilter() {
         if (!this.filter.trim().isEmpty()) {
-            String filterRegexFragment = this.filter.replace("*", ".*").replace("+", ".+");
-            String regexPattern = "^" + filterRegexFragment + "$";
-            Pattern pattern = Pattern.compile(regexPattern, Pattern.CASE_INSENSITIVE & Pattern.CANON_EQ);
             ArrayList<String> matchingNames = new ArrayList<>();
-            for (String oreName : OreDictionary.getOreNames()) {
-                if (pattern.matcher(oreName).matches())
-                    matchingNames.add(oreName);
+            Predicate<ItemStack> matcher = null;
+
+            String[] filters = this.filter.split("[&|]");
+            String lastFilter = null;
+
+            for (String filter : filters) {
+                filter = filter.trim();
+                boolean negated = filter.startsWith("!");
+                if (negated)
+                    filter = filter.substring(1);
+
+                Predicate<ItemStack> test = filterToItemStackPredicate(filter);
+
+                if (negated)
+                    test = test.negate();
+
+                if (matcher == null) {
+                    matcher = test;
+                    lastFilter = filter;
+                } else {
+                    int endLast = this.filter.indexOf(lastFilter) + lastFilter.length();
+                    int startThis = this.filter.indexOf(filter);
+                    boolean or = this.filter.substring(endLast, startThis).contains("|");
+
+                    if (or) {
+                        matcher = matcher.or(test);
+                    } else {
+                        matcher = matcher.and(test);
+                    }
+                }
             }
 
-            this.filteredItems = matchingNames.stream()
-                    .map(OreDictionary::getOres)
-                    .flatMap(List::stream)
-                    .toArray(ItemStack[]::new);
+            if (matcher == null) {
+                filterPredicate = null;
+                oreDictFilteredItems = new ItemStack[0];
+                return;
+            }
+
+            //Mod name and path evaluation can only be done during tick, can't precompile whitelist for this.
+            if (!this.filter.contains("@") && !this.filter.contains("~")) {
+                //Precompiled whitelist of oredict itemstacks.
+                this.oreDictFilteredItems = Arrays.stream(OreDictionary.getOreNames())
+                        .flatMap(name -> OreDictionary.getOres(name).stream())
+                        .filter(matcher)
+                        .toArray(ItemStack[]::new);
+                this.filterPredicate = null;
+            } else {
+                //Runtime evaluation of filter.
+                filterPredicate = matcher;
+                this.oreDictFilteredItems = new ItemStack[0];
+            }
         } else {
-            this.filteredItems = new ItemStack[0];
+            this.filterPredicate = null;
+            this.oreDictFilteredItems = new ItemStack[0];
+        }
+    }
+
+    /**
+     * Given a filter string, returns a predicate that matches a given ItemStack
+     * @param filter Filter string.
+     * @return Predicate for filter string.
+     */
+    private Predicate<ItemStack> filterToItemStackPredicate(String filter) {
+        if (filter.startsWith("@")) {
+            final Predicate<String> test = filterToPredicate(filter.substring(1));
+            return (is) ->
+                    Optional.ofNullable(is.getItem().getRegistryName())
+                        .map(ResourceLocation::getNamespace)
+                        .map(test::test)
+                        .orElse(false);
+        } else if (filter.startsWith("~")) {
+            final Predicate<String> test = filterToPredicate(filter.substring(1));
+            return (is) ->
+                    Optional.ofNullable(is.getItem().getRegistryName())
+                            .map(ResourceLocation::getPath)
+                            .map(test::test)
+                            .orElse(false);
+        } else {
+            final Predicate<String> test = filterToPredicate(filter);
+            return (is) ->
+                    IntStream.of(OreDictionary.getOreIDs(is))
+                            .mapToObj(OreDictionary::getOreName)
+                            .anyMatch(test);
+        }
+    }
+
+    /**
+     * Given a filter string, returns a Predicate that matches a string.
+     * @param filter Filter string
+     * @return Predicate for filter string.
+     */
+    private Predicate<String> filterToPredicate(String filter) {
+        int numStars = StringUtils.countMatches(filter, '*');
+        if (numStars == filter.length()) {
+            return (str) -> true;
+        } else if (filter.length() > 2 && filter.startsWith("*") && filter.endsWith("*") && numStars == 2) {
+            final String pattern = filter.substring(1, filter.length() - 1);
+            return (str) -> str.contains(pattern);
+        } else if (filter.length() >= 2 && filter.startsWith("*") && numStars == 1) {
+            final String pattern = filter.substring(1);
+            return (str) -> str.endsWith(pattern);
+        } else if (filter.length() >= 2 && filter.endsWith("*") && numStars == 1) {
+            final String pattern = filter.substring(0, filter.length() - 1);
+            return (str) -> str.startsWith(pattern);
+        } else if (numStars == 0) {
+            return (str) -> str.equals(filter);
+        } else {
+            String filterRegexFragment = filter.replace("*", ".*");
+            String regexPattern = "^" + filterRegexFragment + "$";
+            final Pattern pattern = Pattern.compile(regexPattern);
+            return pattern.asPredicate();
         }
     }
 
@@ -187,22 +299,42 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
         IMEMonitor<IAEItemStack> inv = storage.getInventory(StorageChannels.ITEM());
         MachineSource src = new MachineSource(this);
 
-        boolean exportedStuff = false;
+        if (this.filterPredicate != null) {
+            //Tick-time filter evaluation.
+            IItemList<IAEItemStack> items = inv.getStorageList();
+            for (IAEItemStack stack : items) {
+                if (this.filterPredicate.test(stack.createItemStack())) {
+                    IAEItemStack toExtract = stack.copy();
+                    toExtract.setStackSize(amount);
 
-        for (ItemStack is : this.filteredItems) {
-            ItemStack toExtract = is.copy();
-            toExtract.setCount(amount);
-
-            IAEItemStack extracted = inv.extractItems(AEItemStack.fromItemStack(toExtract), Actionable.SIMULATE, src);
-            if (extracted != null) {
-                IAEItemStack exported = exportStack(extracted.copy());
-                if (exported != null) {
-                    inv.extractItems(exported, Actionable.MODULATE, src);
-                    return true;
+                    IAEItemStack extracted = inv.extractItems(toExtract, Actionable.SIMULATE, src);
+                    if (extracted != null) {
+                        IAEItemStack exported = exportStack(extracted.copy());
+                        if (exported != null) {
+                            inv.extractItems(exported, Actionable.MODULATE, src);
+                            return true;
+                        }
+                    }
                 }
             }
+            return false;
+        } else {
+            //Precompiled oredict whitelist
+            for (ItemStack is : this.oreDictFilteredItems) {
+                ItemStack toExtract = is.copy();
+                toExtract.setCount(amount);
+
+                IAEItemStack extracted = inv.extractItems(AEItemStack.fromItemStack(toExtract), Actionable.SIMULATE, src);
+                if (extracted != null) {
+                    IAEItemStack exported = exportStack(extracted.copy());
+                    if (exported != null) {
+                        inv.extractItems(exported, Actionable.MODULATE, src);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
-        return false;
     }
 
     public IAEItemStack exportStack(IAEItemStack stack0) {
@@ -387,7 +519,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
         super.readFromNBT(data);
         if (data.hasKey("filter")) {
             this.filter = data.getString("filter");
-            updateFilteredItems();
+            updateFilter();
         }
     }
 
