@@ -70,7 +70,7 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer() {
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
@@ -86,12 +86,12 @@ public class BlockCertusTank extends BlockEC implements IStateMapperRegister {
 
 	@Override
 	public String getLocalizedName() {
-		return I18n.translateToLocal(getUnlocalizedName() + ".name");
+		return I18n.translateToLocal(getTranslationKey() + ".name");
 	}
 
 	@Override
-	public String getUnlocalizedName() {
-		return super.getUnlocalizedName().replace("tile.", "");
+	public String getTranslationKey() {
+		return super.getTranslationKey().replace("tile.", "");
 	}
 
 	@Override

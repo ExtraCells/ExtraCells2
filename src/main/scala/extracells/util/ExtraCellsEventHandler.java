@@ -66,7 +66,7 @@ public class ExtraCellsEventHandler {
         ItemStack stack = event.getItemStack();
         Item item = stack.getItem();
         List<String> tooltip = event.getToolTip();
-        String name = stack.getUnlocalizedName();
+        String name = stack.getTranslationKey();
 
         TextComponentTranslation text1 = new TextComponentTranslation("extracells.tooltip.deprecated1");
         TextComponentTranslation text2;
@@ -76,25 +76,25 @@ public class ExtraCellsEventHandler {
 
         String ae2Name = "";
         boolean isDeprecated = false;
-        if (BlockEnum.ECBASEBLOCK.getItem().getUnlocalizedName().equalsIgnoreCase(name)) {
+        if (BlockEnum.ECBASEBLOCK.getItem().getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().blocks().fluidIface().maybeBlock().get().getLocalizedName();
             isDeprecated = true;
-        } else if (PartEnum.INTERFACE.getUnlocalizedName().equalsIgnoreCase(name)) {
+        } else if (PartEnum.INTERFACE.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidIface().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
-        } else if (PartEnum.FLUIDIMPORT.getUnlocalizedName().equalsIgnoreCase(name)) {
+        } else if (PartEnum.FLUIDIMPORT.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidImportBus().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
-        } else if (PartEnum.FLUIDEXPORT.getUnlocalizedName().equalsIgnoreCase(name)) {
+        } else if (PartEnum.FLUIDEXPORT.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidExportBus().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
-        } else if (PartEnum.FLUIDTERMINAL.getUnlocalizedName().equalsIgnoreCase(name)) {
+        } else if (PartEnum.FLUIDTERMINAL.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidTerminal().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
-        } else if (PartEnum.FLUIDSTORAGE.getUnlocalizedName().equalsIgnoreCase(name)) {
+        } else if (PartEnum.FLUIDSTORAGE.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidStorageBus().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
-        } else if (ItemEnum.FLUIDSTORAGE.getItem().getUnlocalizedName().equalsIgnoreCase(item.getUnlocalizedName())) {
+        } else if (ItemEnum.FLUIDSTORAGE.getItem().getTranslationKey().equalsIgnoreCase(item.getTranslationKey())) {
             //ae2Name = Api.INSTANCE.definitions().parts().fluidStorageBus().maybeStack(1).get().getDisplayName();
             if (stack.getItemDamage() >= 0 && stack.getItemDamage() < 4) {
                 isDeprecated = true;
@@ -114,7 +114,7 @@ public class ExtraCellsEventHandler {
                         break;
                 }
             }
-        } else if (ItemEnum.STORAGECOMPONET.getItem().getUnlocalizedName().equalsIgnoreCase(item.getUnlocalizedName())) {
+        } else if (ItemEnum.STORAGECOMPONET.getItem().getTranslationKey().equalsIgnoreCase(item.getTranslationKey())) {
             if (stack.getItemDamage() >= 4 && stack.getItemDamage() < 8) {
                 isDeprecated = true;
                 switch (stack.getItemDamage()) {
@@ -132,13 +132,13 @@ public class ExtraCellsEventHandler {
                         break;
                 }
             }
-        } else if (PartEnum.FLUIDLEVELEMITTER.getUnlocalizedName().equalsIgnoreCase(name)) {
+        } else if (PartEnum.FLUIDLEVELEMITTER.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidLevelEmitter().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
-        } else if (PartEnum.FLUIDPANEANNIHILATION.getUnlocalizedName().equalsIgnoreCase(name)) {
+        } else if (PartEnum.FLUIDPANEANNIHILATION.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidAnnihilationPlane().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
-        } else if (PartEnum.FLUIDPANEFORMATION.getUnlocalizedName().equalsIgnoreCase(name)) {
+        } else if (PartEnum.FLUIDPANEFORMATION.getTranslationKey().equalsIgnoreCase(name)) {
             ae2Name = Api.INSTANCE.definitions().parts().fluidFormationnPlane().maybeStack(1).get().getDisplayName();
             isDeprecated = true;
         }

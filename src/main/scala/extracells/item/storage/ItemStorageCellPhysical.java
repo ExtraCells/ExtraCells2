@@ -232,7 +232,7 @@ public class ItemStorageCellPhysical extends ItemStorageCell<IAEItemStack> imple
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
+	public String getTranslationKey(ItemStack itemStack) {
 		return "extracells.item.storage.physical." + suffixes[itemStack.getItemDamage()];
 	}
 

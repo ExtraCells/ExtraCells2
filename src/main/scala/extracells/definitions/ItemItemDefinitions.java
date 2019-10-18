@@ -46,6 +46,6 @@ public class ItemItemDefinitions implements IItemDefinition {
 	@Nonnull
 	@Override
 	public String identifier() {
-		return item.getRegistryName().getResourcePath();
+		return item.getRegistryName().getPath();
 	}
 }

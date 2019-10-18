@@ -86,7 +86,7 @@ public class ModelManager {
 	public ModelResourceLocation getModelLocation(Item item) {
 		ResourceLocation resourceLocation = item.getRegistryName();
 		Preconditions.checkNotNull(resourceLocation);
-		String itemName = resourceLocation.getResourcePath();
+		String itemName = resourceLocation.getPath();
 		return getModelLocation(itemName);
 	}
 

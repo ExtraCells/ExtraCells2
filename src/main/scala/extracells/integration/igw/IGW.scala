@@ -21,7 +21,7 @@ object IGW {
     for(item <- ItemEnum.values()){
       if(item != ItemEnum.CRAFTINGPATTERN && item != ItemEnum.FLUIDITEM && item != ItemEnum.GASITEM && item != ItemEnum.OCUPGRADE) {
         if(item == ItemEnum.FLUIDPATTERN){
-          WikiRegistry.registerBlockAndItemPageEntry(item.getSizedStack(1), item.getSizedStack(1).getUnlocalizedName.replace(".", "/"))
+          WikiRegistry.registerBlockAndItemPageEntry(item.getSizedStack(1), item.getSizedStack(1).getTranslationKey.replace(".", "/"))
         }else if (item == ItemEnum.STORAGECOMPONET || item == ItemEnum.STORAGECASING){
           val list = NonNullList.create[ItemStack]
           item.getItem.getSubItems(CreativeTabEC.INSTANCE, list)
@@ -34,7 +34,7 @@ object IGW {
           item.getItem.getSubItems(CreativeTabEC.INSTANCE, list)
           for (sub <- list) {
             val stack = sub.asInstanceOf[ItemStack]
-            WikiRegistry.registerBlockAndItemPageEntry(stack, stack.getUnlocalizedName.replace(".", "/"))
+            WikiRegistry.registerBlockAndItemPageEntry(stack, stack.getTranslationKey.replace(".", "/"))
           }
         }
       }
@@ -42,7 +42,7 @@ object IGW {
 
     if(Integration.Mods.OPENCOMPUTERS.isEnabled){
       val stack = ItemEnum.OCUPGRADE.getSizedStack(1)
-      WikiRegistry.registerBlockAndItemPageEntry(stack.getItem, stack.getUnlocalizedName.replace(".", "/"))
+      WikiRegistry.registerBlockAndItemPageEntry(stack.getItem, stack.getTranslationKey.replace(".", "/"))
     }
 
     for(block <- BlockEnum.values()){
@@ -51,7 +51,7 @@ object IGW {
       Item.getItemFromBlock(block.getBlock).getSubItems( CreativeTabEC.INSTANCE, list)
       for(sub <- list){
         val stack = sub.asInstanceOf[ItemStack]
-        WikiRegistry.registerBlockAndItemPageEntry(stack, stack.getUnlocalizedName.replace(".", "/").replace("tile/", ""))
+        WikiRegistry.registerBlockAndItemPageEntry(stack, stack.getTranslationKey.replace(".", "/").replace("tile/", ""))
       }
     }
   }

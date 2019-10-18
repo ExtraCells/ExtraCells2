@@ -90,7 +90,7 @@ public abstract class ItemStorageCell<T extends IAEStack<T>> extends ItemECBase 
 
     @Override
     @Nonnull
-    public String getUnlocalizedName(ItemStack itemStack) {
+    public String getTranslationKey(ItemStack itemStack) {
         StorageType type = definition.cells.fromMeta(itemStack.getItemDamage());
         return "extracells.item.storage." + type.getIdentifier();
     }

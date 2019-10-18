@@ -8,6 +8,7 @@ import p455w0rd.wct.api.WCTApi
 
 object WirelessCrafting {
   def openCraftingTerminal(player: EntityPlayer, slot: Int) = WCTApi.instance.openWCTGui(player, false, slot)
+  def openCraftingTerminal(player: EntityPlayer, isBauble: Boolean, slot: Int) = WCTApi.instance.openWCTGui(player, isBauble, slot)
 
   def getBoosterItem = new ItemStack(Item.getByNameOrId("wct:infinity_booster_card"))
 

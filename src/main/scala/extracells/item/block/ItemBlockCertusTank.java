@@ -52,9 +52,9 @@ public class ItemBlockCertusTank extends ItemBlock {
 			FluidStack fluidStack = FluidUtil.getFluidContained(itemStack);
 
 			if (fluidStack != null && fluidStack.getFluid() != null) {
-				return I18n.translateToLocal(getUnlocalizedName(itemStack)) + " - " + fluidStack.getFluid().getLocalizedName(fluidStack);
+				return I18n.translateToLocal(getTranslationKey(itemStack)) + " - " + fluidStack.getFluid().getLocalizedName(fluidStack);
 			}
-			return I18n.translateToLocal(getUnlocalizedName(itemStack));
+			return I18n.translateToLocal(getTranslationKey(itemStack));
 		}
 		return "";
 	}

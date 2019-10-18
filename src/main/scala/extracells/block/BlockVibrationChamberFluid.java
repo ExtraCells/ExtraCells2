@@ -138,7 +138,7 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
 			enumfacing = EnumFacing.NORTH;
@@ -180,7 +180,7 @@ public class BlockVibrationChamberFluid extends BlockEC implements TGuiBlock {
 
 
 	@Override
-	public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
+	public void onPlayerDestroy(World world, BlockPos pos, IBlockState state) {
 		if (world.isRemote) {
 			return;
 		}

@@ -36,8 +36,8 @@ public class ModelUtil {
 	}
 
 	private static Reader getReaderForResource(ResourceLocation location) throws IOException {
-		ResourceLocation file = new ResourceLocation(location.getResourceDomain(),
-			location.getResourcePath() + ".json");
+		ResourceLocation file = new ResourceLocation(location.getNamespace(),
+			location.getPath() + ".json");
 		IResource iresource = Minecraft.getMinecraft().getResourceManager().getResource(file);
 		return new BufferedReader(new InputStreamReader(iresource.getInputStream(), Charsets.UTF_8));
 	}

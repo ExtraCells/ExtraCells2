@@ -64,9 +64,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
   }
 
   //Only needed because BlockEnum is in java. not in scala
-  val instance = this
-
-  setUnlocalizedName("block.hardmedrive");
+  val instance: BlockHardMEDrive.type = this
 
   override def createNewTileEntity(world: World, meta: Int): TileEntity = new TileEntityHardMeDrive()
 
@@ -209,7 +207,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
     super.breakBlock(world, pos, state)
   }
 
-  override def getBlockLayer: BlockRenderLayer = BlockRenderLayer.CUTOUT
+  override def getRenderLayer: BlockRenderLayer = BlockRenderLayer.CUTOUT
 
   override protected def createBlockState =
     new ExtendedBlockState(this, Array[IProperty[_ <: Comparable[_]]](FACING), Array[IUnlistedProperty[_]](PropertyDrive.INSTANCE))
@@ -222,7 +220,7 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.RO
   }
 
   override def getStateFromMeta(meta: Int): IBlockState = {
-    var enumfacing = EnumFacing.getFront(meta)
+    var enumfacing = EnumFacing.byIndex(meta)
     if (enumfacing.getAxis eq EnumFacing.Axis.Y) enumfacing = EnumFacing.NORTH
     this.getDefaultState.withProperty(FACING, enumfacing)
   }

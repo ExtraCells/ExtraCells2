@@ -147,7 +147,7 @@ public enum PartEnum {
 		return I18n.translateToLocal(this.unlocalizedName + ".name");
 	}
 
-	public String getUnlocalizedName() {
+	public String getTranslationKey() {
 		return this.unlocalizedName;
 	}
 

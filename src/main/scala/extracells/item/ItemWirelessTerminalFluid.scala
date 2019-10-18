@@ -15,7 +15,7 @@ object ItemWirelessTerminalFluid extends ItemECBase with IWirelessFluidTermHandl
   ECApi.instance.registerWirelessTermHandler(this)
 
 
-  override def getUnlocalizedName(itemStack: ItemStack): String = super.getUnlocalizedName(itemStack).replace("item.extracells", "extracells.item")
+  override def getTranslationKey(itemStack: ItemStack): String = super.getTranslationKey(itemStack).replace("item.extracells", "extracells.item")
 
 
   def isItemNormalWirelessTermToo(is: ItemStack): Boolean = false

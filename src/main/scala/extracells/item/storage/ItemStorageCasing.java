@@ -35,7 +35,7 @@ public class ItemStorageCasing extends ItemECBase {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
+	public String getTranslationKey(ItemStack itemStack) {
 		CellDefinition definition = CellDefinition.get(itemStack.getItemDamage());
 		return "extracells.item.storage.casing." + definition;
 	}

@@ -32,8 +32,8 @@ public class BlockWalrus extends BlockEC {
 	}
 
 	@Override
-	public String getUnlocalizedName() {
-		return super.getUnlocalizedName().replace("tile.", "");
+	public String getTranslationKey() {
+		return super.getTranslationKey().replace("tile.", "");
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class BlockWalrus extends BlockEC {
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer() {
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.SOLID;
 	}
 
@@ -97,7 +97,7 @@ public class BlockWalrus extends BlockEC {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
 			enumfacing = EnumFacing.NORTH;

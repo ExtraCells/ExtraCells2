@@ -49,7 +49,7 @@ public class ItemStorageComponent extends ItemECBase implements IStorageComponen
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
+	public String getTranslationKey(ItemStack itemStack) {
 		StorageType type = CellDefinition.components.fromMeta(itemStack.getItemDamage());
 		return "extracells.item.storage.component." + type.getIdentifier();
 	}

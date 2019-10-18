@@ -359,7 +359,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 			facingTank = null;
 			facingGasTank = null;
 		}
-		this.redstonePowered = world.isBlockIndirectlyGettingPowered(pos) > 0 || world.isBlockIndirectlyGettingPowered(pos.up()) > 0;
+		this.redstonePowered = world.getRedstonePowerFromNeighbors(pos) > 0 || world.getRedstonePowerFromNeighbors(pos.up()) > 0;
 	}
 
 	@Optional.Method(modid = "MekanismAPI|gas")

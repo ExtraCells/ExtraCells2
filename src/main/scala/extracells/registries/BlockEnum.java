@@ -48,7 +48,7 @@ public enum BlockEnum {
 	BlockEnum(String internalName, Block block, Function<Block, ItemBlock> factory, Integration.Mods mod) {
 		this.internalName = internalName;
 		this.block = block;
-		this.block.setUnlocalizedName("extracells.block." + this.internalName);
+		this.block.setTranslationKey("extracells.block." + this.internalName);
 		this.block.setRegistryName(internalName);
 		this.item = factory.apply(block);
 		this.item.setRegistryName(block.getRegistryName());
@@ -71,7 +71,7 @@ public enum BlockEnum {
 	}
 
 	public String getStatName() {
-		return I18n.translateToLocal(this.block.getUnlocalizedName() + ".name");
+		return I18n.translateToLocal(this.block.getTranslationKey() + ".name");
 	}
 
 	public Integration.Mods getMod() {

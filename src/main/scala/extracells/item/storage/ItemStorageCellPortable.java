@@ -45,7 +45,7 @@ public abstract class ItemStorageCellPortable<T extends IAEStack<T>> extends Ite
 
     @Nonnull
     @Override
-    public abstract String getUnlocalizedName(ItemStack itemStack);
+    public abstract String getTranslationKey(ItemStack itemStack);
 
     @Override
     public abstract void registerModel(Item item, ModelManager manager);

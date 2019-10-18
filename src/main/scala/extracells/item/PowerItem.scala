@@ -26,7 +26,6 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem 
 
   @Optional.Method(modid = "redstoneflux")
   override def getEnergyStored(arg0: ItemStack): Int = {
-    PowerUnits.RF
     return PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(arg0)).toInt
   }
 

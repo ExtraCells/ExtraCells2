@@ -161,9 +161,9 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 	public void randomDisplayTick(World world, BlockPos blockPos, Random random) {
 		if (isLevelEmitterOn()) {
 			EnumFacing facing = getFacing();
-			double d0 = facing.getFrontOffsetX() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
-			double d1 = facing.getFrontOffsetY() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
-			double d2 = facing.getFrontOffsetZ() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
+			double d0 = facing.getXOffset() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
+			double d1 = facing.getYOffset() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
+			double d2 = facing.getZOffset() * 0.45F + (random.nextFloat() - 0.5F) * 0.2D;
 			world.spawnParticle(EnumParticleTypes.REDSTONE, 0.5 + blockPos.getX() + d0, 0.5 + blockPos.getY() + d1, 0.5 + blockPos.getZ() + d2, 0.0D, 0.0D, 0.0D);
 		}
 	}

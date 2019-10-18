@@ -22,16 +22,16 @@ public class ECModelLoader implements ICustomModelLoader {
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation) {
-		if (!modelLocation.getResourceDomain().equals(Constants.MOD_ID)) {
+		if (!modelLocation.getNamespace().equals(Constants.MOD_ID)) {
 			return false;
 		}
 
-		return builtInModels.containsKey(modelLocation.getResourcePath());
+		return builtInModels.containsKey(modelLocation.getPath());
 	}
 
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception {
-		return builtInModels.get(modelLocation.getResourcePath());
+		return builtInModels.get(modelLocation.getPath());
 	}
 
 	@Override

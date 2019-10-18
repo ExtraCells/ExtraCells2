@@ -49,7 +49,7 @@ public enum ItemEnum {
 	ItemEnum(String internalName, Item item, Integration.Mods mod, CreativeTabs creativeTab) {
 		this.internalName = internalName;
 		this.item = item;
-		this.item.setUnlocalizedName("extracells." + this.internalName);
+		this.item.setTranslationKey("extracells." + this.internalName);
 		this.item.setRegistryName(this.internalName);
 		this.mod = mod;
 		if ((creativeTab != null) && (mod == null || mod.isEnabled())) {
@@ -74,7 +74,7 @@ public enum ItemEnum {
 	}
 
 	public String getStatName() {
-		return I18n.translateToLocal(this.item.getUnlocalizedName());
+		return I18n.translateToLocal(this.item.getTranslationKey());
 	}
 
 	public Integration.Mods getMod() {

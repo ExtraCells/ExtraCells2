@@ -445,7 +445,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
 	}
 
 	private static void moveToFace(EnumFacing face) {
-		GlStateManager.translate(face.getFrontOffsetX() * 0.77, face.getFrontOffsetY() * 0.77, face.getFrontOffsetZ() * 0.77);
+		GlStateManager.translate(face.getXOffset() * 0.77, face.getYOffset() * 0.77, face.getZOffset() * 0.77);
 	}
 
 	private static void rotateToFace(EnumFacing face, byte spin) {

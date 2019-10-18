@@ -38,7 +38,7 @@ public class ItemStorageCellPortableFluid extends ItemStorageCellPortable<IAEFlu
 
     @Nonnull
     @Override
-    public String getUnlocalizedName(ItemStack itemStack) {
+    public String getTranslationKey(ItemStack itemStack) {
         return "extracells.item.storage.fluid.portable";
     }
 

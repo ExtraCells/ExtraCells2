@@ -36,13 +36,13 @@ public class FluidItemModel implements IModel {
 	public static class ModelLoader implements ICustomModelLoader {
 		@Override
 		public boolean accepts(ResourceLocation modelLocation) {
-			return modelLocation.getResourceDomain().equals(Constants.MOD_ID)
-				&& modelLocation.getResourcePath().contains("models/item/fluid/");
+			return modelLocation.getNamespace().equals(Constants.MOD_ID)
+				&& modelLocation.getPath().contains("models/item/fluid/");
 		}
 
 		@Override
 		public IModel loadModel(ResourceLocation modelLocation) throws Exception {
-			String fluidName = modelLocation.getResourcePath().replace("models/item/fluid/", "");
+			String fluidName = modelLocation.getPath().replace("models/item/fluid/", "");
 			Fluid fluid = FluidRegistry.getFluid(fluidName);
 			if (fluid == null) {
 				fluid = FluidRegistry.WATER;

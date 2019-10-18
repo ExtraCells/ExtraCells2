@@ -94,13 +94,13 @@ public class PartWailaDataProvider implements IWailaDataProvider {
 	private RayTraceResult retraceBlock(World world, EntityPlayerMP player, BlockPos pos) {
 		IBlockState blockState = world.getBlockState(pos);
 
-		Vec3d head = new Vec3d(player.posX, player.posY, player.posZ).addVector(0, player.getEyeHeight(), 0);
+		Vec3d head = new Vec3d(player.posX, player.posY, player.posZ).add(0, player.getEyeHeight(), 0);
 		if (player.isSneaking()) {
-			head = head.addVector(0, -0.08, 0);
+			head = head.add(0, -0.08, 0);
 		}
 		Vec3d look = player.getLook(1.0F);
 		double reach = player.interactionManager.getBlockReachDistance();
-		Vec3d endVec = head.addVector(look.x * reach, look.y * reach,
+		Vec3d endVec = head.add(look.x * reach, look.y * reach,
 			look.z * reach);
 		return blockState.collisionRayTrace(world, pos, head, endVec);
 	}

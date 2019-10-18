@@ -8,6 +8,7 @@ import appeng.api.config.Actionable
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
 import baubles.api.BaubleType
+import extracells.Constants
 import extracells.api.{ECApi, IWirelessFluidTermHandler, IWirelessGasTermHandler}
 import extracells.integration.Integration
 import extracells.integration.wct.WirelessCrafting
@@ -21,7 +22,7 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.text.translation.I18n
-import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand, NonNullList}
+import net.minecraft.util.{ActionResult, EnumActionResult, EnumHand, NonNullList, ResourceLocation}
 import net.minecraft.world.World
 import net.minecraftforge.fml.common.Optional
 import net.minecraftforge.fml.relauncher.{Side, SideOnly}
@@ -30,11 +31,13 @@ import p455w0rd.wct.api.IWirelessCraftingTerminalItem
 
 @Optional.Interface(iface = "p455w0rd.wct.api.IWirelessCraftingTerminalItem", modid = "wct", striprefs = true)
 object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with IWirelessCraftingTerminalItem {
-  val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
-  val isMekEnabled = Integration.Mods.MEKANISMGAS.isEnabled
-  val isWcEnabled = Integration.Mods.WIRELESSCRAFTING.isEnabled
+  val isTeEnabled: Boolean = Integration.Mods.THAUMATICENERGISTICS.isEnabled
+  val isMekEnabled: Boolean = Integration.Mods.MEKANISMGAS.isEnabled
+  val isWcEnabled: Boolean = Integration.Mods.WIRELESSCRAFTING.isEnabled
 
-  def THIS = this
+  private var holder: EntityPlayer = _
+
+  def THIS: ItemWirelessTerminalUniversal.type = this
 
   if (isWcEnabled) {
     ECApi.instance.registerWirelessTermHandler(this)
@@ -60,8 +63,8 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
     itemStack.getTagCompound
   }
 
-  override def getUnlocalizedName(itemStack: ItemStack): String =
-    super.getUnlocalizedName(itemStack).replace("item.extracells", "extracells.item")
+  override def getTranslationKey(itemStack: ItemStack): String =
+    super.getTranslationKey(itemStack).replace("item.extracells", "extracells.item")
 
   override def getItemStackDisplayName(stack: ItemStack): String = {
     val tag = ensureTagCompound(stack)
@@ -100,7 +103,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
   def changeMode(itemStack: ItemStack, player: EntityPlayer, tag: NBTTagCompound): ItemStack = {
     val installed = getInstalledModules(itemStack)
-    val matchted = tag.getByte("type") match {
+    tag.getByte("type") match {
       case 0 =>
         if (installed.contains(WirelessTerminalType.FLUID))
           tag.setByte("type", 1)
@@ -155,7 +158,7 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
   }
 
   @SideOnly(Side.CLIENT)
-  override def registerModel(item: Item, manager: ModelManager) =
+  override def registerModel(item: Item, manager: ModelManager): Unit =
     manager.registerItemModel(item, 0, "terminals/universal_wireless")
 
 
@@ -247,5 +250,16 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
   }
 
-  override def getModelResource: ModelResourceLocation = null
+  override def getModelResource(item: Item): ModelResourceLocation = null
+
+  override def openGui(player: EntityPlayer, isBauble: Boolean, playerSlot: Int): Unit =
+    WirelessCrafting.openCraftingTerminal(player, isBauble, playerSlot)
+
+  override def getPlayer: EntityPlayer = this.holder
+
+  override def setPlayer(entityPlayer: EntityPlayer): Unit = this.holder = entityPlayer
+
+  override def getColor: Int = 0xFF8F15D4
+
+  override def getMenuIcon: ResourceLocation = new ResourceLocation(Constants.MOD_ID, "textures/items/terminal.universal.wireless.png")
 }

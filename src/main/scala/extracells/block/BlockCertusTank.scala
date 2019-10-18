@@ -39,8 +39,8 @@ package extracells.block
       list
     }
 
-  override def getLocalizedName: String = I18n.translateToLocal(getUnlocalizedName + ".name")
+  override def getLocalizedName: String = I18n.translateToLocal(getTranslationKey + ".name")
 
-  override def getUnlocalizedName: String = super.getUnlocalizedName.replace("tile.", "")
+  override def getTranslationKey: String = super.getTranslationKey.replace("tile.", "")
 
 }*/

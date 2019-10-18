@@ -112,10 +112,10 @@ public class ItemPartECBase extends ItemECBase implements IPartItem, IItemGroup,
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
+	public String getTranslationKey(ItemStack itemStack) {
 		return PartEnum.values()[MathHelper.clamp(
 			itemStack.getItemDamage(), 0, PartEnum.values().length - 1)]
-			.getUnlocalizedName();
+			.getTranslationKey();
 	}
 
 	@Override

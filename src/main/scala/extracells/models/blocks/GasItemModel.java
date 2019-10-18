@@ -33,13 +33,13 @@ public class GasItemModel implements IModel {
 	public static class ModelLoader implements ICustomModelLoader {
 		@Override
 		public boolean accepts(ResourceLocation modelLocation) {
-			return modelLocation.getResourceDomain().equals(Constants.MOD_ID)
-				&& modelLocation.getResourcePath().contains("models/item/gas/");
+			return modelLocation.getNamespace().equals(Constants.MOD_ID)
+				&& modelLocation.getPath().contains("models/item/gas/");
 		}
 
 		@Override
 		public IModel loadModel(ResourceLocation modelLocation) throws Exception {
-			String gasName = modelLocation.getResourcePath().replace("models/item/gas/", "");
+			String gasName = modelLocation.getPath().replace("models/item/gas/", "");
 			Gas gas = GasRegistry.getGas(gasName);
 			if (gas == null) {
 				gas = GasRegistry.getRegisteredGasses().iterator().next();

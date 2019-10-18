@@ -40,7 +40,7 @@ public class ItemStorageCellPortableGas extends ItemStorageCellPortable<IAEGasSt
 
     @Nonnull
     @Override
-    public String getUnlocalizedName(ItemStack itemStack) {
+    public String getTranslationKey(ItemStack itemStack) {
         return "extracells.item.storage.gas.portable";
     }
 

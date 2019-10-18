@@ -37,7 +37,7 @@ public class BasicCellDataFixer implements IFixableData {
         String id = oldItem.getString("id");
         if (!id.equalsIgnoreCase("extracells:storage.fluid") && !id.equalsIgnoreCase("extracells:storage.gas"))
             return oldItem;
-        if (!oldItem.hasKey("tag") || oldItem.getCompoundTag("tag").hasNoTags())
+        if (!oldItem.hasKey("tag") || oldItem.getCompoundTag("tag").isEmpty())
             return oldItem;
 
         boolean isFluid = id.contains("fluid");

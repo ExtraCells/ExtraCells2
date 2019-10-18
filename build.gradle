@@ -73,7 +73,7 @@ minecraft {
 repositories {
     maven {
         name 'Mobius Repo'
-        url "https://mobiusstrip.eu/maven"
+        url "https://www.mobiusstrip.eu/maven"
     }
 	
 	maven {
@@ -91,10 +91,10 @@ repositories {
         url "https://maven.amadornes.com/"
     }
 
-    ivy {
-        name "BuildCraft"
-        artifactPattern "https://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision](-[classifier]).[ext]"
-    }
+	maven  {
+		name "BuildCraft Maven"
+		url "https://mod-buildcraft.com/maven"
+	}
 	
 	maven {
 		name = "tehnut"
@@ -137,9 +137,9 @@ dependencies {
 
 	deobfProvided "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"
 	runtime "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}"
-	
-	deobfProvided name: "buildcraft-api", version: "${config.version.bc}", ext: 'jar'
-	runtime name: "buildcraft", version: "${config.version.bc}", ext: 'jar'
+
+	deobfProvided "com.mod-buildcraft:buildcraft-api:${config.version.bc}"
+	runtime "com.mod-buildcraft:buildcraft:${config.version.bc}"
 	
 	deobfCompile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:universal"
 
@@ -153,6 +153,7 @@ dependencies {
 	}
 	
 	deobfCompile "MCMultiPart2:MCMultiPart:${config.version.mcmp}"
+	deobfCompile "baubles:Baubles:1.12:${config.version.baubles}"
 }
 
 processResources {

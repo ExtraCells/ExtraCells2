@@ -18,7 +18,7 @@ public class PortableCellDataFixer extends BasicCellDataFixer {
         String id = oldItem.getString("id");
         if (!id.equalsIgnoreCase("extracells:storage.fluid.portable") && !id.equalsIgnoreCase("extracells:storage.gas.portable"))
             return oldItem;
-        if (!oldItem.hasKey("tag") || oldItem.getCompoundTag("tag").hasNoTags())
+        if (!oldItem.hasKey("tag") || oldItem.getCompoundTag("tag").isEmpty())
             return oldItem;
 
         boolean isFluid = id.contains("fluid");
