@@ -37,22 +37,22 @@ public class ItemFluid extends Item implements IItemModelRegister {
 	public ItemFluid() {
 	}
 
-	@Nullable
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-		return new ICapabilityProvider() {
-			@Override
-			public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-				return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
-			}
-
-			@Nullable
-			@Override
-			public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-				return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.cast(new FluidHandler(stack));
-			}
-		};
-	}
+//	@Nullable
+//	@Override
+//	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
+//		return new ICapabilityProvider() {
+//			@Override
+//			public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+//				return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
+//			}
+//
+//			@Nullable
+//			@Override
+//			public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+//				return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.cast(new FluidHandler(stack));
+//			}
+//		};
+//	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -98,40 +98,40 @@ public class ItemFluid extends Item implements IItemModelRegister {
 		return tagCompound.getString("fluid");
 	}
 
-	private static class FluidHandler implements IFluidHandlerItem {
-
-		private ItemStack container;
-
-		public FluidHandler(ItemStack container) {
-			this.container = container;
-		}
-
-		@Nonnull
-		@Override
-		public ItemStack getContainer() {
-			return this.container;
-		}
-
-		@Override
-		public IFluidTankProperties[] getTankProperties() {
-			return new IFluidTankProperties[]{new FluidTankProperties(this.drain(1000, true), 1000, false, true)};
-		}
-
-		@Override
-		public int fill(FluidStack resource, boolean doFill) {
-			return 0;
-		}
-
-		@Nullable
-		@Override
-		public FluidStack drain(FluidStack resource, boolean doDrain) {
-			return this.drain(resource.amount, doDrain);
-		}
-
-		@Nullable
-		@Override
-		public FluidStack drain(int maxDrain, boolean doDrain) {
-			return new FluidStack(FluidRegistry.getFluid(ItemFluid.getFluidName(this.getContainer())), 1000);
-		}
-	}
+//	private static class FluidHandler implements IFluidHandlerItem {
+//
+//		private ItemStack container;
+//
+//		public FluidHandler(ItemStack container) {
+//			this.container = container;
+//		}
+//
+//		@Nonnull
+//		@Override
+//		public ItemStack getContainer() {
+//			return this.container;
+//		}
+//
+//		@Override
+//		public IFluidTankProperties[] getTankProperties() {
+//			return new IFluidTankProperties[]{new FluidTankProperties(this.drain(1000, true), 1000, false, false)};
+//		}
+//
+//		@Override
+//		public int fill(FluidStack resource, boolean doFill) {
+//			return 0;
+//		}
+//
+//		@Nullable
+//		@Override
+//		public FluidStack drain(FluidStack resource, boolean doDrain) {
+//			return null;
+//		}
+//
+//		@Nullable
+//		@Override
+//		public FluidStack drain(int maxDrain, boolean doDrain) {
+//			return null;
+//		}
+//	}
 }
