@@ -30,14 +30,12 @@ import p455w0rd.ae2wtlib.api.client.IBaubleRender
 import p455w0rd.wct.api.IWirelessCraftingTerminalItem
 
 @Optional.Interface(iface = "p455w0rd.wct.api.IWirelessCraftingTerminalItem", modid = "wct", striprefs = true)
-object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with IWirelessCraftingTerminalItem {
+class ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler /*with EssensiaTerminal*/ with IWirelessCraftingTerminalItem {
   val isTeEnabled: Boolean = Integration.Mods.THAUMATICENERGISTICS.isEnabled
   val isMekEnabled: Boolean = Integration.Mods.MEKANISMGAS.isEnabled
   val isWcEnabled: Boolean = Integration.Mods.WIRELESSCRAFTING.isEnabled
 
   private var holder: EntityPlayer = _
-
-  def THIS: ItemWirelessTerminalUniversal.type = this
 
   if (isWcEnabled) {
     ECApi.instance.registerWirelessTermHandler(this)
@@ -242,24 +240,31 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
 
   override def isInCreativeTab2(targetTab: CreativeTabs): Boolean = isInCreativeTab(targetTab)
 
+  @Optional.Method(modid = "wct")
   override def getRender: IBaubleRender = null
 
+  @Optional.Method(modid = "wct")
   override def getBaubleType(itemStack: ItemStack): BaubleType = BaubleType.TRINKET
 
-  override def initModel(): Unit = {
+  @Optional.Method(modid = "wct")
+  override def initModel(): Unit = {}
 
-  }
-
+  @Optional.Method(modid = "wct")
   override def getModelResource(item: Item): ModelResourceLocation = null
 
+  @Optional.Method(modid = "wct")
   override def openGui(player: EntityPlayer, isBauble: Boolean, playerSlot: Int): Unit =
     WirelessCrafting.openCraftingTerminal(player, isBauble, playerSlot)
 
+  @Optional.Method(modid = "wct")
   override def getPlayer: EntityPlayer = this.holder
 
+  @Optional.Method(modid = "wct")
   override def setPlayer(entityPlayer: EntityPlayer): Unit = this.holder = entityPlayer
 
+  @Optional.Method(modid = "wct")
   override def getColor: Int = 0xFF8F15D4
 
+  @Optional.Method(modid = "wct")
   override def getMenuIcon: ResourceLocation = new ResourceLocation(Constants.MOD_ID, "textures/items/terminal.universal.wireless.png")
 }

@@ -29,7 +29,7 @@ public enum ItemEnum {
 	FLUIDSTORAGEPORTABLE("storage.fluid.portable", new ItemStorageCellPortableFluid()),
 	GASSTORAGEPORTABLE("storage.gas.portable", new ItemStorageCellPortableGas(), Integration.Mods.MEKANISMGAS),
 	CRAFTINGPATTERN("pattern.crafting", new ItemInternalCraftingPattern(), null, null),// Internal EC Item
-	UNIVERSALTERMINAL("terminal.universal.wireless", ItemWirelessTerminalUniversal.THIS()),
+	UNIVERSALTERMINAL("terminal.universal.wireless", new ItemWirelessTerminalUniversal()),
 	GASWIRELESSTERMINAL("terminal.gas.wireless", ItemWirelessTerminalGas.THIS(), Integration.Mods.MEKANISMGAS),
 	OCUPGRADE("oc.upgrade", ItemOCUpgrade.THIS(), Integration.Mods.OPENCOMPUTERS),
 	GASITEM("gas.item", ItemGas.INSTANCE(), Integration.Mods.MEKANISMGAS, null); //Internal EC Item

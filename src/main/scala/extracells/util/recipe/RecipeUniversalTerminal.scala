@@ -21,7 +21,7 @@ object RecipeUniversalTerminal extends net.minecraftforge.registries.IForgeRegis
 
   val THIS = this
 
-  val itemUniversal = ItemWirelessTerminalUniversal
+  val itemUniversal = ItemEnum.UNIVERSALTERMINAL.getItem.asInstanceOf[ItemWirelessTerminalUniversal]
 
   override def matches(inventory: InventoryCrafting, world: World): Boolean = {
     var hasWireless = false
