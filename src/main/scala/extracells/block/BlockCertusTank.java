@@ -50,7 +50,7 @@ public class BlockCertusTank extends BlockEC {
 	public ItemStack getDropWithNBT(World world, int x, int y, int z) {
 		NBTTagCompound tileEntity = new NBTTagCompound();
 		TileEntity worldTE = world.getTileEntity(x, y, z);
-		if (worldTE != null && worldTE instanceof TileEntityCertusTank) {
+		if (worldTE instanceof TileEntityCertusTank) {
 			ItemStack dropStack = new ItemStack(
 					BlockEnum.CERTUSTANK.getBlock(), 1);
 
@@ -172,18 +172,16 @@ public class BlockCertusTank extends BlockEC {
 					liquid = FluidContainerRegistry.getFluidForFilledItem(filled);
 
 					if (liquid != null) {
+						tank.drain(ForgeDirection.UNKNOWN, liquid.amount, true);
 						if (!entityplayer.capabilities.isCreativeMode) {
-							if (current.stackSize > 1) {
-								if (!entityplayer.inventory.addItemStackToInventory(filled)) {
-									return false;
-								} else {
-									entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
-								}
-							} else {
+							if (current.stackSize == 1) {
 								entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = filled;
+							} else {
+								entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize--;
+								if (!entityplayer.inventory.addItemStackToInventory(filled))
+									entityplayer.entityDropItem(filled, 0);
 							}
 						}
-						tank.drain(ForgeDirection.UNKNOWN, liquid.amount, true);
 						return true;
 					}
 				}

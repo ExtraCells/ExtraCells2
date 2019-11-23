@@ -1,6 +1,7 @@
 package extracells.container;
 
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.packet.part.PacketOreDictExport;
 import extracells.part.PartOreDictExporter;
@@ -12,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public class ContainerOreDictExport extends Container {
 	public PartOreDictExporter part;
+	@SideOnly(Side.CLIENT)
 	public GuiFluidInterface gui;
 	EntityPlayer player;
 
@@ -42,7 +44,7 @@ public class ContainerOreDictExport extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		return this.part.isValid();
 	}
 
 	@Override

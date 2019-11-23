@@ -42,15 +42,12 @@ public class ItemFluidPattern extends ItemECBase {
 
 	@Override
 	public IIcon getIcon(ItemStack itemStack, int pass) {
-		switch (pass) {
-		case 0:
+		if (pass == 0) {
 			Fluid fluid = getFluid(itemStack);
-			if (fluid == null)
-				return null;
-			return fluid.getIcon();
-		default:
-			return this.icon;
+			if (fluid != null)
+				return fluid.getIcon();
 		}
+		return this.icon;
 	}
 
 	@Override

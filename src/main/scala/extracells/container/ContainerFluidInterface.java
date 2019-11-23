@@ -1,6 +1,8 @@
 package extracells.container;
 
 import appeng.api.implementations.ICraftingPatternItem;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.api.IFluidInterface;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidInterface;
@@ -19,6 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class ContainerFluidInterface extends Container implements
 		IContainerListener {
 	public IFluidInterface fluidInterface;
+	@SideOnly(Side.CLIENT)
 	public GuiFluidInterface gui;
 	EntityPlayer player;
 

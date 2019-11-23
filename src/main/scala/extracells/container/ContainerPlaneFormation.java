@@ -4,6 +4,8 @@ import appeng.api.AEApi;
 import appeng.api.implementations.guiobjects.IGuiItem;
 import appeng.api.implementations.guiobjects.INetworkTool;
 import appeng.api.util.DimensionalCoord;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiFluidPlaneFormation;
@@ -16,10 +18,14 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerPlaneFormation extends Container {
 
+	private PartFluidPlaneFormation part;
+
+	@SideOnly(Side.CLIENT)
 	private GuiFluidPlaneFormation gui;
 
 	public ContainerPlaneFormation(PartFluidPlaneFormation part,
 			EntityPlayer player) {
+		this.part = part;
 		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0,
 				187, 8));
 		bindPlayerInventory(player.inventory);
@@ -58,7 +64,7 @@ public class ContainerPlaneFormation extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		return this.part.isValid();
 	}
 
 	public void setGui(GuiFluidPlaneFormation _gui) {

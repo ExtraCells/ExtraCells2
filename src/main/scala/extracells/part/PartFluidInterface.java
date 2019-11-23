@@ -147,7 +147,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 
 		@Override
 		public boolean isUseableByPlayer(EntityPlayer player) {
-			return true;
+			return PartFluidInterface.this.isValid();
 		}
 
 		@Override
@@ -531,6 +531,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 					ICraftingPatternDetails p = ((ICraftingPatternItem) is
 							.getItem()).getPatternForItem(is, getGridNode()
 							.getWorld());
+					if (p == null)
+						continue;
 					this.patternConvert.put(p, pattern);
 					craftingTracker.addCraftingOption(this, p);
 				}
@@ -1026,8 +1028,8 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 					((IAEItemStack) s).getItemStack().writeToNBT(data);
 				} else {
 					((IAEFluidStack) s).getFluidStack().writeToNBT(data);
-				};
-				tag.setTag("add-" + i, data);
+				}
+                tag.setTag("add-" + i, data);
 				tag.setLong("add-" + i + "-amount", s.getStackSize());
 			}
 			i++;
