@@ -71,7 +71,10 @@ class PartGasConversionMonitor extends PartFluidConversionMonitor{
         else
           return true
         if (extract != null) {
-          mon.extractItems(FluidUtil.createAEFluidStack(new FluidStack(this.fluid, extract.getStackSize.toInt)), Actionable.MODULATE, new MachineSource(this))
+          extract = mon.extractItems(extract, Actionable.MODULATE, new MachineSource(this))
+          if (extract == null || extract.getStackSize <= 0) {
+            return true
+          }
           val empty1: MutablePair[Integer, ItemStack] = GasUtil.fillStack(s2, GasUtil.getGasStack(extract.getFluidStack))
           if (empty1.left == 0) {
             mon.injectItems(FluidUtil.createAEFluidStack(new FluidStack(this.fluid, extract.getStackSize.toInt)), Actionable.MODULATE, new MachineSource(this))

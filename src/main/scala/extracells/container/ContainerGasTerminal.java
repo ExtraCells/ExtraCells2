@@ -73,7 +73,7 @@ public class ContainerGasTerminal extends Container implements
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		return this.terminal != null && this.terminal.isValid();
 	}
 
 	public void forceFluidUpdate() {

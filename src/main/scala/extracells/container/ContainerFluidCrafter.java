@@ -37,7 +37,7 @@ public class ContainerFluidCrafter extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		return this.tileentity.isUseableByPlayer(entityplayer);
 	}
 
 	@Override

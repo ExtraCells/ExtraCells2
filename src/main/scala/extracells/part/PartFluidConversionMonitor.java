@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -26,9 +27,8 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 pos) {
-		boolean b = super.onActivate(player, pos);
-		if (b)
-			return b;
+		if (super.onActivate(player, pos))
+			return true;
 		if (player == null || player.worldObj == null)
 			return true;
 		if (player.worldObj.isRemote)
@@ -47,27 +47,27 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 						Actionable.SIMULATE, new MachineSource(this));
 				if (mon.canAccept(fl)
 						&& (not == null || not.getStackSize() == 0L)) {
-					mon.injectItems(fl, Actionable.MODULATE, new MachineSource(
-							this));
-
-					MutablePair<Integer, ItemStack> empty1 = FluidUtil
-							.drainStack(s2, f);
-					ItemStack empty = empty1.right;
-					if (empty != null) {
-						dropItems(getHost().getTile().getWorldObj(), getHost()
-								.getTile().xCoord + getSide().offsetX,
-								getHost().getTile().yCoord + getSide().offsetY,
-								getHost().getTile().zCoord + getSide().offsetZ,
-								empty);
-					}
-					ItemStack s3 = s.copy();
-					s3.stackSize = s3.stackSize - 1;
-					if (s3.stackSize == 0) {
-						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem, null);
-					} else {
-						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem, s3);
+					MutablePair<Integer, ItemStack> empty1 = FluidUtil.drainStack(s2, f);
+					int amount = empty1.getLeft();
+					if (amount > 0) {
+						f.amount = amount;
+						fl.setStackSize(amount);
+						not = mon.injectItems(fl.copy(), Actionable.SIMULATE, new MachineSource(this));
+						if (mon.canAccept(fl) && (not == null || not.getStackSize() == 0L)) {
+							mon.injectItems(fl, Actionable.MODULATE, new MachineSource(this));
+							ItemStack empty = empty1.right;
+							if (empty != null) {
+								TileEntity tile = this.getHost().getTile();
+								ForgeDirection side = this.getSide();
+								this.dropItems(tile.getWorldObj(), tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, empty);
+							}
+							ItemStack s3 = s.copy();
+							s3.stackSize--;
+							if (s3.stackSize <= 0)
+								player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
+							else
+								player.inventory.setInventorySlotContents(player.inventory.currentItem, s3);
+						}
 					}
 				}
 				return true;
@@ -85,17 +85,16 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 							FluidUtil.createAEFluidStack(this.fluid),
 							Actionable.SIMULATE, new MachineSource(this));
 				if (extract != null) {
-					mon.extractItems(FluidUtil
-							.createAEFluidStack(new FluidStack(this.fluid,
-									(int) extract.getStackSize())),
-							Actionable.MODULATE, new MachineSource(this));
+					if (extract.getStackSize() <= 0)
+						return true;
+					extract = mon.extractItems(extract, Actionable.MODULATE, new MachineSource(this));
+					if (extract == null || extract.getStackSize() <= 0)
+						return true;
+
 					MutablePair<Integer, ItemStack> empty1 = FluidUtil
 							.fillStack(s2, extract.getFluidStack());
 					if (empty1.left == 0) {
-						mon.injectItems(FluidUtil
-								.createAEFluidStack(new FluidStack(this.fluid,
-										(int) extract.getStackSize())),
-								Actionable.MODULATE, new MachineSource(this));
+						mon.injectItems(extract, Actionable.MODULATE, new MachineSource(this));
 						return true;
 					}
 					ItemStack empty = empty1.right;

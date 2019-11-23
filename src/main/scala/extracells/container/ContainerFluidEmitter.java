@@ -37,7 +37,7 @@ public class ContainerFluidEmitter extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return true;
+		return this.part.isValid();
 	}
 
 	@Override

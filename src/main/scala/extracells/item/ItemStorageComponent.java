@@ -25,7 +25,7 @@ public class ItemStorageComponent extends ItemECBase implements IStorageComponen
 
 	@Override
 	public int getBytes(ItemStack is) {
-		return this.size[is.getItemDamage()];
+		return this.size[MathHelper.clamp_int(is.getItemDamage(), 0, this.size.length)];
 	}
 
 	@Override
