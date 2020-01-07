@@ -61,7 +61,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
     /**
      * White list of itemstacks to extract. OreDict only mode.
      */
-    private ItemStack[] oreDictFilteredItems;
+    private ItemStack[] oreDictFilteredItems = new ItemStack[0];
 
     @Override
     public float getCableConnectionLength(AECableType aeCableType) {
@@ -143,27 +143,28 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
     /**
      * Given a filter string, returns a predicate that matches a given ItemStack
+     *
      * @param filter Filter string.
      * @return Predicate for filter string.
      */
     private Predicate<ItemStack> filterToItemStackPredicate(String filter) {
         if (filter.startsWith("@")) {
             final Predicate<String> test = filterToPredicate(filter.substring(1));
-            return (is) ->
+            return (is) -> is != null && !is.isEmpty() &&
                     Optional.ofNullable(is.getItem().getRegistryName())
-                        .map(ResourceLocation::getNamespace)
-                        .map(test::test)
-                        .orElse(false);
+                            .map(ResourceLocation::getNamespace)
+                            .map(test::test)
+                            .orElse(false);
         } else if (filter.startsWith("~")) {
             final Predicate<String> test = filterToPredicate(filter.substring(1));
-            return (is) ->
+            return (is) -> is != null && !is.isEmpty() &&
                     Optional.ofNullable(is.getItem().getRegistryName())
                             .map(ResourceLocation::getPath)
                             .map(test::test)
                             .orElse(false);
         } else {
             final Predicate<String> test = filterToPredicate(filter);
-            return (is) ->
+            return (is) -> is != null && !is.isEmpty() &&
                     IntStream.of(OreDictionary.getOreIDs(is))
                             .mapToObj(OreDictionary::getOreName)
                             .anyMatch(test);
@@ -172,6 +173,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
     /**
      * Given a filter string, returns a Predicate that matches a string.
+     *
      * @param filter Filter string
      * @return Predicate for filter string.
      */
@@ -303,17 +305,18 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
             //Tick-time filter evaluation.
             IItemList<IAEItemStack> items = inv.getStorageList();
             for (IAEItemStack stack : items) {
-                if (this.filterPredicate.test(stack.createItemStack())) {
-                    IAEItemStack toExtract = stack.copy();
-                    toExtract.setStackSize(amount);
+                if (stack == null || !this.filterPredicate.test(stack.createItemStack()))
+                    continue;
 
-                    IAEItemStack extracted = inv.extractItems(toExtract, Actionable.SIMULATE, src);
-                    if (extracted != null) {
-                        IAEItemStack exported = exportStack(extracted.copy());
-                        if (exported != null) {
-                            inv.extractItems(exported, Actionable.MODULATE, src);
-                            return true;
-                        }
+                IAEItemStack toExtract = stack.copy();
+                toExtract.setStackSize(amount);
+
+                IAEItemStack extracted = inv.extractItems(toExtract, Actionable.SIMULATE, src);
+                if (extracted != null) {
+                    IAEItemStack exported = exportStack(extracted.copy());
+                    if (exported != null) {
+                        inv.extractItems(exported, Actionable.MODULATE, src);
+                        return true;
                     }
                 }
             }
@@ -321,8 +324,14 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
         } else {
             //Precompiled oredict whitelist
             for (ItemStack is : this.oreDictFilteredItems) {
+                if (is == null)
+                    continue;
+
                 ItemStack toExtract = is.copy();
                 toExtract.setCount(amount);
+
+                if (toExtract.isEmpty())
+                    continue;
 
                 IAEItemStack extracted = inv.extractItems(AEItemStack.fromItemStack(toExtract), Actionable.SIMULATE, src);
                 if (extracted != null) {
@@ -519,8 +528,10 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
         super.readFromNBT(data);
         if (data.hasKey("filter")) {
             this.filter = data.getString("filter");
-            updateFilter();
+        } else {
+            this.filter = "";
         }
+        updateFilter();
     }
 
     @Override

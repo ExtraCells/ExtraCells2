@@ -16,7 +16,7 @@ import java.util
 import appeng.api.config.Actionable
 import net.minecraft.util.NonNullList;
 
-
+//TODO: Fix this. https://github.com/Shadows-of-Fire/XCPatch/blob/master/src/main/java/shadows/xcp/TerminalRecipe.java
 object RecipeUniversalTerminal extends net.minecraftforge.registries.IForgeRegistryEntry.Impl[IRecipe] with IRecipe {
 
   val THIS = this
