@@ -44,7 +44,10 @@ extracells.item.storage.component.gas.1024k.name=МЭ 1024Кб газовый к
 extracells.item.storage.component.gas.4096k.name=МЭ 4096Кб газовый компонент хранилища
 extracells.item.storage.casing.physical.name=Продвинутый корпус хранилища
 extracells.item.storage.casing.fluid.name=Жидкостный корпус хранилища
-extracells.item.terminal.fluid.wireless.name=Беспроводной МЭ жидкостный терминал
+extracells.item.storage.casing.gas.name=Газовый корпус хранилища
+extracells.item.terminal.fluid.wireless.name=Беспроводной жидкостный терминал
+extracells.item.terminal.gas.wireless.name=Беспроводной газовый терминал
+extracells.item.terminal.universal.wireless.name=Беспроводной универсальный терминал
 extracells.item.fluid.pattern=МЭ жидкостный шаблон
 extracells.item.oc.upgrade.name=МЭ апгрейд
 
@@ -94,6 +97,9 @@ extracells.tooltip.storage.physical.bytes=%s из %s байт предметов
 extracells.tooltip.storage.fluid.bytes=%s из %s байт жидкостей использовано.
 extracells.tooltip.storage.fluid.content=содержит %s мВ жидкости.
 extracells.tooltip.storage.physical.content=содержит %s предметов(-а).
+extracells.tooltip.storage.gas.bytes=%s из %s байт газов использовано.
+extracells.tooltip.storage.gas.content=содержит %s газа.
+extracells.tooltip.storage.gas.types=%s из %s типов газа использовано.
 extracells.tooltip.direction.0=Низ
 extracells.tooltip.direction.1=Верх
 extracells.tooltip.direction.2=Север
@@ -117,7 +123,6 @@ extracells.tooltip.deprecated1=Этот предмет устарел
 extracells.tooltip.deprecated2=Заменен %s из Applied Energistics 2
 extracells.tooltip.deprecated.part=Поместите в сетку крафта для конвертации
 extracells.tooltip.deprecated.cell=Очистите эту ячейку, используя порт ввода-вывода ME, затем разбейте ее на компоненты для преобразования
-
 
 //Buttons
 extracells.gui.craft=Создать
