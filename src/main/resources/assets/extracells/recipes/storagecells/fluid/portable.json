@@ -1,18 +1,18 @@
 {
-    "result": {
-        "item": "extracells:storage.fluid.portable"
-    },
-    "type": "forge:ore_shapeless",
-    "ingredients": [
-		{
+	"result": {
+		"item": "extracells:storage.fluid.portable",
+		"data": 0
+	},
+	"type": "forge:ore_shapeless",
+	"ingredients": [{
 			"item": "appliedenergistics2:chest"
-        },
+		},
 		{
-            "type": "appliedenergistics2:part",
-            "part": "material.fluid_cell1k_part"
-        },
+			"type": "appliedenergistics2:part",
+			"part": "material.fluid_cell1k_part"
+		},
 		{
 			"item": "appliedenergistics2:energy_Cell"
 		}
-    ]
+	]
 }
