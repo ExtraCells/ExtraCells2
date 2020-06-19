@@ -29,20 +29,20 @@ public class DriverOreDictExportBus implements SidedBlock{
 	@Override
 	public ManagedEnvironment createEnvironment(World world, int x, int y, int z, ForgeDirection side) {
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile == null || (!(tile instanceof IPartHost)))
+		if (!(tile instanceof IPartHost))
 			return null;
 		return new Environment((IPartHost) tile);
 	}
 	
 	private static PartOreDictExporter getExportBus(World world, int x, int y, int z, ForgeDirection dir){
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile == null || (!(tile instanceof IPartHost)))
+		if ((!(tile instanceof IPartHost)))
 			return null;
 		IPartHost host = (IPartHost) tile;
 		if(dir == null || dir == ForgeDirection.UNKNOWN){
 			for (ForgeDirection side: ForgeDirection.VALID_DIRECTIONS){
 				IPart part = host.getPart(side);
-				if (part != null && part instanceof PartOreDictExporter)
+				if (part instanceof PartOreDictExporter)
 					return (PartOreDictExporter) part;
 			}
 			return null;
@@ -52,7 +52,7 @@ public class DriverOreDictExportBus implements SidedBlock{
 		}
 	}
 	
-	public class Environment extends ManagedEnvironment implements NamedBlock{
+	public static class Environment extends ManagedEnvironment implements NamedBlock{
 		
 		protected final TileEntity tile;
 		protected final IPartHost host;
@@ -73,7 +73,7 @@ public class DriverOreDictExportBus implements SidedBlock{
 			PartOreDictExporter part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
 			if (part == null)
 				return new Object[]{null, "no export bus"};
-			return new Object[]{part.filter};
+			return new Object[]{part.getFilter()};
 		}
 		
 		@Callback(doc = "function(side:number[, filter:string]):boolean -- Set the configuration of the ore dict export bus pointing in the specified direction.")
@@ -84,7 +84,7 @@ public class DriverOreDictExportBus implements SidedBlock{
 			PartOreDictExporter part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
 			if (part == null)
 				return new Object[]{false, "no export bus"};
-			part.filter = args.optString(1, "");
+			part.setFilter(args.optString(1, ""));
 			context.pause(0.5);
 			return new Object[]{true};
 		}

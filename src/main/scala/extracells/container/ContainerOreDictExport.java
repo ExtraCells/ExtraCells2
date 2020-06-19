@@ -23,7 +23,7 @@ public class ContainerOreDictExport extends Container {
 		bindPlayerInventory(player.inventory);
 		TileEntity tile = this.part.getHostTile();
 		if (tile != null && tile.hasWorldObj() && !tile.getWorldObj().isRemote) {
-			new PacketOreDictExport(player, this.part.filter, Side.CLIENT)
+			new PacketOreDictExport(player, this.part.getFilter(), Side.CLIENT)
 					.sendPacketToPlayer(player);
 		}
 	}
