@@ -69,9 +69,6 @@ class ContainerHardMEDrive(inventory: InventoryPlayer, tile: TileEntityHardMeDri
     itemstack
   }
 
-  override protected def retrySlotClick(p_75133_1_ : Int, p_75133_2_ : Int, p_75133_3_ : Boolean,
-                                        p_75133_4_ : EntityPlayer) = null
-
   override def canInteractWith(p_75145_1_ : EntityPlayer): Boolean = {
     if (tile.hasWorldObj)
       tile.getWorldObj.getTileEntity(tile.xCoord, tile.yCoord, tile.zCoord) == this.tile
