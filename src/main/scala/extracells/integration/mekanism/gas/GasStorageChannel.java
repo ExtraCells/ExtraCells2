@@ -26,6 +26,12 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class GasStorageChannel implements IGasStorageChannel {
 
+    @Override
+    public int getUnitsPerByte()
+    {
+        return 8000;
+    }
+
     @Nonnull
     @Override
     public IItemList<IAEGasStack> createList() {
