@@ -111,7 +111,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
 			for (int x = 0; x < 9; x++) {
 				for (int y = 0; y < 4; y++) {
-					int widgetIndex = y * 9 + x;
+                    int widgetIndex = y * 9 + x + this.currentScroll * 9;
 					if (0 <= widgetIndex && widgetIndex < listSize) {
 						this.fluidWidgets.get(widgetIndex).drawTooltip(
 								x * 18 + 7, y * 18 - 1, mouseX, mouseY);
@@ -123,17 +123,19 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
 			int deltaWheel = Mouse.getDWheel();
 			if (deltaWheel > 0) {
-				this.currentScroll++;
-			} else if (deltaWheel < 0) {
 				this.currentScroll--;
+			} else if (deltaWheel < 0) {
+				this.currentScroll++;
 			}
 
-			if (this.currentScroll < 0)
-				this.currentScroll = 0;
-			if (listSize / 9 < 4 && this.currentScroll < listSize / 9 + 4)
-				this.currentScroll = 0;
-		}
-	}
+            if (this.currentScroll < 0)
+                this.currentScroll = 0;
+            int maxLine = listSize % 9 == 0 ? listSize / 9 : listSize / 9 + 1;
+            if (this.currentScroll > maxLine - 4) {
+                this.currentScroll = Math.max(maxLine - 4, 0);
+            }
+        }
+    }
 
 	@Override
 	public IFluidSelectorContainer getContainer() {
@@ -198,7 +200,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 		int listSize = this.fluidWidgets.size();
 		for (int x = 0; x < 9; x++) {
 			for (int y = 0; y < 4; y++) {
-				int index = y * 9 + x;
+				int index = y * 9 + x+ this.currentScroll * 9;
 				if (0 <= index && index < listSize) {
 					AbstractFluidWidget widget = this.fluidWidgets.get(index);
 					widget.mouseClicked(x * 18 + 7, y * 18 - 1, mouseX, mouseY);
