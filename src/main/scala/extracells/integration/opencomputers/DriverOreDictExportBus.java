@@ -48,7 +48,7 @@ public class DriverOreDictExportBus implements SidedBlock{
 			return null;
 		}else{
 			IPart part = host.getPart(dir);
-			return part == null ? null : (PartOreDictExporter) part;
+			return part instanceof PartOreDictExporter ? (PartOreDictExporter) part : null;
 		}
 	}
 	

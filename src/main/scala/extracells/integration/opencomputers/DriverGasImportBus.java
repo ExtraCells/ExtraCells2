@@ -56,7 +56,7 @@ public class DriverGasImportBus implements SidedBlock{
             return null;
         }else{
             IPart part = host.getPart(dir);
-            return part == null ? null : (PartGasImport) part;
+            return part instanceof PartGasImport ? (PartGasImport) part : null;
         }
     }
 
