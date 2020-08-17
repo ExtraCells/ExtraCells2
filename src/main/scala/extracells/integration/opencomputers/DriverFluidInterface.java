@@ -59,7 +59,7 @@ public class DriverFluidInterface implements SidedBlock{
 			return null;
 		}else{
 			IPart part = host.getPart(dir);
-			return part == null ? null : (PartFluidInterface) part;
+			return part instanceof PartFluidInterface ? (PartFluidInterface) part : null;
 		}
 	}
 	
