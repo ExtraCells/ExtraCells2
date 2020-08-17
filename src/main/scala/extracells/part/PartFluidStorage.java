@@ -9,7 +9,6 @@ import appeng.api.networking.events.*;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.parts.PartItemStack;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
@@ -168,7 +167,7 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
 		this.priority = data.getInteger("priority");
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 54; i++) {
 			this.filterFluids[i] = FluidRegistry.getFluid(data.getString("FilterFluid#" + i));
 		}
 		if (data.hasKey("access")) {
