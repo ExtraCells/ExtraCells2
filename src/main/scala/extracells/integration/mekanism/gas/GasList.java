@@ -19,9 +19,10 @@ public class GasList implements IItemList<IAEGasStack>{
         if (stack != null){
             stack.add(iaeGasStack);
             return;
-        }
-        IAEGasStack toAdd = iaeGasStack.copy();
-        this.putGasRecord(toAdd);
+        } else {
+			IAEGasStack toAdd = iaeGasStack.copy();
+			this.putGasRecord(toAdd);
+		}
     }
 
     @Override
@@ -35,13 +36,13 @@ public class GasList implements IItemList<IAEGasStack>{
         {
             stack.setCraftable(true);
             return;
-        }
+        } else {
+			IAEGasStack toAdd = iaeGasStack.copy();
+			toAdd.setStackSize(0);
+			toAdd.setCraftable(true);
 
-        IAEGasStack toAdd = iaeGasStack.copy();
-        toAdd.setStackSize(0);
-        toAdd.setCraftable(true);
-
-        this.putGasRecord(toAdd);
+			this.putGasRecord(toAdd);
+		}
     }
 
     @Override
@@ -55,14 +56,15 @@ public class GasList implements IItemList<IAEGasStack>{
         {
             stack.setCountRequestable(stack.getCountRequestable() + iaeGasStack.getCountRequestable());
             return;
-        }
+        } else {
 
-        IAEGasStack toAdd = iaeGasStack.copy();
-        toAdd.setStackSize(0);
-        toAdd.setCraftable(false);
-        toAdd.setCountRequestable(iaeGasStack.getCountRequestable());
+			IAEGasStack toAdd = iaeGasStack.copy();
+			toAdd.setStackSize(0);
+			toAdd.setCraftable(false);
+			toAdd.setCountRequestable(iaeGasStack.getCountRequestable());
 
-        this.putGasRecord(toAdd);
+			this.putGasRecord(toAdd);
+		}
     }
 
     @Override
@@ -96,9 +98,10 @@ public class GasList implements IItemList<IAEGasStack>{
         IAEGasStack stack = this.getGasRecord(iaeGasStack);
         if (stack != null){
             stack.add(iaeGasStack);
-        }
-        IAEGasStack toAdd = iaeGasStack.copy();
-        this.putGasRecord(toAdd);
+        } else {
+			IAEGasStack toAdd = iaeGasStack.copy();
+			this.putGasRecord(toAdd);
+		}
     }
 
     @Override
