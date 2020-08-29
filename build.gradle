@@ -87,7 +87,7 @@ repositories {
 	
 	maven {
 		name = "tehnut"
-		url = "https://tehnut.info/maven"
+		url = "https://maven.tehnut.info"
 	}
 	
 	maven {
@@ -111,7 +111,7 @@ dependencies {
     //    transitive = false
 	//}
 	
-	deobfCompile ("mcp.mobius.waila:Hwyla:${config.version.waila}") {
+	compileOnly ("mcp.mobius.waila:Hwyla:${config.version.waila}:api") {
 		transitive = false
 	}
 	
