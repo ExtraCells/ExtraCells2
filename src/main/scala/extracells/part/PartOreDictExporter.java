@@ -75,10 +75,23 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	 * Call when the filter string has changed to parse and recompile the filter.
 	 */
 	private void updateFilter() {
-		if (!this.filter.trim().isEmpty()) {
-			//ArrayList<String> matchingNames = new ArrayList<>();
-			Predicate<ItemStack> matcher = null;
-
+		Predicate<ItemStack> matcher = null;
+		if (filter.contains("\\")
+				|| filter.contains("^")
+				|| filter.contains("$")
+				|| filter.contains("+")
+				|| filter.contains("(")
+				|| filter.contains(")")
+				|| filter.contains("[")
+				|| filter.contains("]"))
+		{
+			final Predicate<String> test = Pattern.compile(filter).asPredicate();
+			matcher = (is) -> is != null &&
+					IntStream.of(OreDictionary.getOreIDs(is))
+							.mapToObj(OreDictionary::getOreName)
+							.anyMatch(test);
+		}
+		else if (!this.filter.trim().isEmpty()) {
 			String[] filters = this.filter.split("[&|]");
 			String lastFilter = null;
 
@@ -108,31 +121,21 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 					}
 				}
 			}
+		}
 
-			if (matcher == null) {
-				//filterPredicate = null;
-				oreDictFilteredItems = new ItemStack[0];
-				return;
-			}
+		// Mod name and path evaluation are disabled in this version
+		if (matcher != null && !this.filter.contains("@") && !this.filter.contains("~")) {
+			//Precompiled whitelist of oredict itemstacks.
+			ArrayList<ItemStack> filtered = new ArrayList<>();
+			for (String name : OreDictionary.getOreNames())
+				for (ItemStack s : OreDictionary.getOres(name))
+					if (matcher.test(s)) {
+						filtered.add(s);
+					}
+			oreDictFilteredItems = filtered.toArray(oreDictFilteredItems);
 
-			//Mod name and path evaluation can only be done during tick, can't precompile whitelist for this.
-			if (!this.filter.contains("@") && !this.filter.contains("~")) {
-				//Precompiled whitelist of oredict itemstacks.
-				ArrayList<ItemStack> filtered = new ArrayList<>();
-				for (String name : OreDictionary.getOreNames())
-					for (ItemStack s : OreDictionary.getOres(name))
-						if (matcher.test(s)) {
-							filtered.add(s);
-						}
-				oreDictFilteredItems = filtered.toArray(oreDictFilteredItems);
-
-			} else {
-				// mod filtering disabled
-				//filterPredicate = matcher;
-				this.oreDictFilteredItems = new ItemStack[0];
-			}
 		} else {
-			//this.filterPredicate = null;
+			// mod filtering disabled
 			this.oreDictFilteredItems = new ItemStack[0];
 		}
 	}
