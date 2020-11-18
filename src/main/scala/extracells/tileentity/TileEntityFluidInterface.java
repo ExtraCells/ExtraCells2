@@ -587,7 +587,9 @@ public class TileEntityFluidInterface extends TileBase implements
 												.copy();
 										s.stackSize = max;
 										inv.setInventorySlotContents(i, s);
-										this.export.get(0).setStackSize(outStack - max + current);
+										IAEStack c = this.export.get(0).copy();
+										c.setStackSize(outStack - max + current);
+										this.export.set(0, c);
 										return;
 									}
 								}
@@ -624,7 +626,9 @@ public class TileEntityFluidInterface extends TileBase implements
 												.copy();
 										s.stackSize = max;
 										inv.setInventorySlotContents(i, s);
-										this.export.get(0).setStackSize(outStack - max + current);
+										IAEStack c = this.export.get(0).copy();
+										c.setStackSize(outStack - max + current);
+										this.export.set(0, c);
 										return;
 									}
 								}
@@ -648,7 +652,9 @@ public class TileEntityFluidInterface extends TileBase implements
 						} else {
 							FluidStack fl = fluid.getFluidStack().copy();
 							fl.amount = amount;
-							this.export.get(0).setStackSize(fluid.getStackSize() - handler.fill(dir.getOpposite(), fl, true));
+							IAEStack c = this.export.get(0).copy();
+							c.setStackSize(fluid.getStackSize() - handler.fill(dir.getOpposite(), fl, true));
+							this.export.set(0, c);
 							return;
 						}
 					}
