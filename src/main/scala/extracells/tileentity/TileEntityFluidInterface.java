@@ -587,9 +587,7 @@ public class TileEntityFluidInterface extends TileBase implements
 												.copy();
 										s.stackSize = max;
 										inv.setInventorySlotContents(i, s);
-										IAEStack c = this.export.get(0).copy();
-										c.setStackSize(outStack - max + current);
-										this.export.set(0, c);
+										this.export.get(0).setStackSize(outStack - max + current);
 										return;
 									}
 								}
@@ -626,9 +624,7 @@ public class TileEntityFluidInterface extends TileBase implements
 												.copy();
 										s.stackSize = max;
 										inv.setInventorySlotContents(i, s);
-										IAEStack c = this.export.get(0).copy();
-										c.setStackSize(outStack - max + current);
-										this.export.set(0, c);
+										this.export.get(0).setStackSize(outStack - max + current);
 										return;
 									}
 								}
@@ -652,9 +648,7 @@ public class TileEntityFluidInterface extends TileBase implements
 						} else {
 							FluidStack fl = fluid.getFluidStack().copy();
 							fl.amount = amount;
-							IAEStack c = this.export.get(0).copy();
-							c.setStackSize(fluid.getStackSize() - handler.fill(dir.getOpposite(), fl, true));
-							this.export.set(0, c);
+							this.export.get(0).setStackSize(fluid.getStackSize() - handler.fill(dir.getOpposite(), fl, true));
 							return;
 						}
 					}
@@ -714,7 +708,7 @@ public class TileEntityFluidInterface extends TileBase implements
 												new FluidStack(fluid,
 														(int) (amount + 0))),
 								Actionable.MODULATE, new MachineSource(this));
-				this.export.add(extractFluid);
+				this.export.add(extractFluid.copy());
 			}
 			for (IAEItemStack s : patter.getCondensedInputs()) {
 				if (s == null)
@@ -723,7 +717,7 @@ public class TileEntityFluidInterface extends TileBase implements
 					this.toExport = s.copy();
 					continue;
 				}
-				this.export.add(s);
+				this.export.add(s.copy());
 			}
 
 		}
