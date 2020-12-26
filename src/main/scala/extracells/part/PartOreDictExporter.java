@@ -15,6 +15,7 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.api.util.AEColor;
 import appeng.util.item.AEItemStack;
 import cpw.mods.fml.relauncher.Side;
@@ -37,9 +38,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -49,12 +48,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
 	private String filter = "";
 
-	// disabled
-	// private Predicate<ItemStack> filterPredicate = null;
-	/**
-	 * White list of itemstacks to extract. OreDict only mode.
-	 */
-	private ItemStack[] oreDictFilteredItems = new ItemStack[0];
+	private Predicate<AEItemStack> filterPredicate = null;
 
 	@Override
 	public int cableConnectionRenderTo() {
@@ -70,7 +64,16 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 		updateFilter();
 		saveData();
 	}
-
+	private static class OreListMatcher implements Predicate<AEItemStack>	{
+		HashSet<AEItemStack> ores = new HashSet<>();
+		public OreListMatcher(ArrayList<ItemStack> input){
+			for (ItemStack is: input)
+				ores.add(AEItemStack.create(is));
+		}
+		public boolean test(AEItemStack t) {
+			return ores.contains(t);
+		}
+	}
 	/**
 	 * Call when the filter string has changed to parse and recompile the filter.
 	 */
@@ -125,19 +128,15 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
 		// Mod name and path evaluation are disabled in this version
 		if (matcher != null && !this.filter.contains("@") && !this.filter.contains("~")) {
-			//Precompiled whitelist of oredict itemstacks.
 			ArrayList<ItemStack> filtered = new ArrayList<>();
 			for (String name : OreDictionary.getOreNames())
 				for (ItemStack s : OreDictionary.getOres(name))
-					if (matcher.test(s)) {
+					if (matcher.test(s))
 						filtered.add(s);
-					}
-			oreDictFilteredItems = filtered.toArray(oreDictFilteredItems);
-
-		} else {
-			// mod filtering disabled
-			this.oreDictFilteredItems = new ItemStack[0];
+			filterPredicate = new OreListMatcher(filtered);
 		}
+		else
+			filterPredicate = null;
 	}
 
 	/**
@@ -147,27 +146,11 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	 * @return Predicate for filter string.
 	 */
 	private Predicate<ItemStack> filterToItemStackPredicate(String filter) {
-		/*if (filter.startsWith("@")) {
-			final Predicate<String> test = filterToPredicate(filter.substring(1));
-			return (is) -> is != null &&
-					Optional.ofNullable(is.getItem(). getRegistryName())
-							.map(ResourceLocation::getResourceDomain)
-							.map(test::test)
-							.orElse(false);
-		} else if (filter.startsWith("~")) {
-			final Predicate<String> test = filterToPredicate(filter.substring(1));
-			return (is) -> is != null &&
-					Optional.ofNullable(is.getItem().getRegistryName())
-							.map(ResourceLocation::getPath)
-							.map(test::test)
-							.orElse(false);
-		} else {*/
-			final Predicate<String> test = filterToPredicate(filter);
-			return (is) -> is != null &&
-					IntStream.of(OreDictionary.getOreIDs(is))
-							.mapToObj(OreDictionary::getOreName)
-							.anyMatch(test);
-		//}
+		final Predicate<String> test = filterToPredicate(filter);
+		return (is) -> is != null &&
+				IntStream.of(OreDictionary.getOreIDs(is))
+						.mapToObj(OreDictionary::getOreName)
+						.anyMatch(test);
 	}
 
 	/**
@@ -206,11 +189,10 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 		IMEMonitor<IAEItemStack> inv = storage.getItemInventory();
 		MachineSource src = new MachineSource(this);
 
-/*		if (this.filterPredicate != null) {
-			//Tick-time filter evaluation.
+		if (this.filterPredicate != null) {
 			IItemList<IAEItemStack> items = inv.getStorageList();
 			for (IAEItemStack stack : items) {
-				if (stack == null || !this.filterPredicate.test(stack.createItemStack()))
+				if (stack == null || !this.filterPredicate.test((AEItemStack)stack))
 					continue;
 
 				IAEItemStack toExtract = stack.copy();
@@ -225,27 +207,8 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 					}
 				}
 			}
-			return false;
-		} else {*/
-			//Precompiled oredict whitelist
-		for (ItemStack is : this.oreDictFilteredItems) {
-			if (is == null || amount == 0)
-				continue;
-
-			ItemStack toExtract = is.copy();
-			toExtract.stackSize = amount;
-
-			IAEItemStack extracted = inv.extractItems(AEItemStack.create(toExtract), Actionable.SIMULATE, src);
-			if (extracted != null) {
-				IAEItemStack exported = exportStack(extracted.copy());
-				if (exported != null) {
-					inv.extractItems(exported, Actionable.MODULATE, src);
-					return true;
-				}
-			}
 		}
 		return false;
-		//}
 	}
 
 	public IAEItemStack exportStack(IAEItemStack stack0) {
