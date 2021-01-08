@@ -2,9 +2,7 @@ package extracells.item;
 
 import extracells.registries.ItemEnum;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
@@ -13,8 +11,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.List;
 
 public class ItemFluidPattern extends ItemECBase {
 
@@ -62,18 +58,6 @@ public class ItemFluidPattern extends ItemECBase {
 	@Override
 	public int getSpriteNumber() {
 		return 1;
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
-        super.getSubItems(item, creativeTab, itemList);
-		for (Fluid fluid : FluidRegistry.getRegisteredFluidIDsByFluid().keySet()) {
-			ItemStack itemStack = new ItemStack(this, 1);
-			itemStack.setTagCompound(new NBTTagCompound());
-			itemStack.getTagCompound().setString("fluidID", fluid.getName());
-			itemList.add(itemStack);
-		}
 	}
 
 	@Override
