@@ -82,7 +82,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
 
 	@Override
 	public Object getClientGuiElement(EntityPlayer player) {
-		return new GuiFluidEmitter(this, player);
+		return new GuiFluidEmitter(this, player, isGas);
 	}
 
 	@Override

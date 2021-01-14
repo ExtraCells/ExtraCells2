@@ -35,10 +35,12 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 	public static final int ySize = 166;
 	private DigitTextField amountField;
 	private PartFluidLevelEmitter part;
+	private Boolean isGasEmmiter;
 
-	public GuiFluidEmitter(PartFluidLevelEmitter part, EntityPlayer player) {
+	public GuiFluidEmitter(PartFluidLevelEmitter part, EntityPlayer player, Boolean isGas) {
 		super(new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png"), new ContainerFluidEmitter(part, player));
 		this.part = part;
+		isGasEmmiter = isGas;
 		widgetManager.add(new WidgetFluidSlot(widgetManager, this.part, 79, 36));
 		NetworkUtil.sendToServer(new PacketPartConfig(this.part, PacketPartConfig.FLUID_EMITTER_TOGGLE, Boolean.toString(false)));
 	}
@@ -73,7 +75,9 @@ public class GuiFluidEmitter extends GuiBase<ContainerFluidEmitter> implements I
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		this.fontRenderer.drawString(PartEnum.FLUIDLEVELEMITTER.getStatName(), 5, 5, 0x000000);
+		this.fontRenderer.drawString((isGasEmmiter ? PartEnum.GASLEVELEMITTER :
+						PartEnum.FLUIDLEVELEMITTER).getStatName(), 5, 5,
+				0x000000);
 	}
 
 	@Override

@@ -3,10 +3,15 @@ package extracells.gui.widget.fluid;
 import java.util.ArrayList;
 import java.util.List;
 
+import extracells.integration.Integration;
+import extracells.util.GasUtil;
+import mekanism.api.gas.Gas;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -83,18 +88,41 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glColor3f(1, 1, 1);
+
 		IAEFluidStack terminalFluid = ((IFluidSelectorGui) this.guiFluidTerminal)
 			.getCurrentFluid();
 		Fluid currentFluid = terminalFluid != null ? terminalFluid.getFluid()
 			: null;
 		if (this.fluid != null) {
-			TextureMap map = Minecraft.getMinecraft().getTextureMapBlocks();
-			TextureAtlasSprite sprite = map.getAtlasSprite(fluid.getStill().toString());
-			drawTexturedModalRect(posX + 1, posY + 1,
-				sprite, this.height - 2, this.width - 2);
+			TextureMap textureMap = Minecraft.getMinecraft().getTextureMapBlocks();
+			if(Integration.Mods.MEKANISMGAS.isEnabled() && GasUtil.isGas(fluid)) {
+				Gas gas = GasUtil.getGas(fluid);
+				ResourceLocation gasStill = gas.getIcon();
+				TextureAtlasSprite gasStillSprite = null;
+				if (gasStill != null) {
+					gasStillSprite = textureMap.getTextureExtry(gasStill.toString());
+				}
+				if (gasStillSprite == null) {
+					gasStillSprite = textureMap.getAtlasSprite(fluid.getStill().toString());
+				}
+				int tint = gas.getTint();
+				float r = (tint >> 16 & 0xFF) / 255.0F;
+				float g = (tint >> 8 & 0xFF) / 255.0F;
+				float b = (tint & 0xFF) / 255.0F;
+				GlStateManager.color(r, g, b);
+				drawTexturedModalRect(posX + 1, posY + 1,
+						gasStillSprite, this.height - 2, this.width - 2);
+				GlStateManager.color(1.0F, 1.0F, 1.0F);
+			}
+			else {
+				TextureAtlasSprite sprite = textureMap.getAtlasSprite(fluid.getStill().toString());
+				GlStateManager.color(1.0F, 1.0F, 1.0F);
+				drawTexturedModalRect(posX + 1, posY + 1,
+						sprite, this.height - 2, this.width - 2);
+			}
 		}
 		if (this.fluid == currentFluid) {
+			GL11.glColor3f(1, 1, 1);
 			drawHollowRectWithCorners(posX, posY, this.height, this.width,
 				this.color, this.borderThickness);
 		}
