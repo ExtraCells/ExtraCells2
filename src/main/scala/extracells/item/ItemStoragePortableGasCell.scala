@@ -140,4 +140,8 @@ object ItemStoragePortableGasCell extends ItemECBase with IPortableGasStorageCel
     extractAEPower(is, amount)
     true
   }
+
+  override def getOreFilter(itemStack: ItemStack): String = ""
+
+  override def setOreFilter(itemStack: ItemStack, s: String): Unit = Unit
 }

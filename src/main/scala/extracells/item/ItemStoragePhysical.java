@@ -11,6 +11,7 @@ import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
+import appeng.util.Platform;
 import cofh.api.energy.IEnergyContainerItem;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -601,6 +602,16 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 		if (!is.hasTagCompound())
 			is.setTagCompound(new NBTTagCompound());
 		is.getTagCompound().setInteger("fuzzyMode", fzMode.ordinal());
+	}
+
+	@Override
+	public String getOreFilter(ItemStack itemStack) {
+		return Platform.openNbtData( itemStack ).getString( "OreFilter" );
+	}
+
+	@Override
+	public void setOreFilter(ItemStack itemStack, String s) {
+		Platform.openNbtData( itemStack ).setString("OreFilter", s);
 	}
 
 	@Override
