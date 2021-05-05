@@ -180,4 +180,14 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 		is.setTagCompound(tag);
 
 	}
+
+	@Override
+	public String getOreFilter(ItemStack itemStack) {
+		return "";
+	}
+
+	@Override
+	public void setOreFilter(ItemStack itemStack, String s) {
+
+	}
 }

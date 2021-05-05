@@ -180,4 +180,14 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
 		is.setTagCompound(tag);
 
 	}
+
+	@Override
+	public String getOreFilter(ItemStack itemStack) {
+		return "";
+	}
+
+	@Override
+	public void setOreFilter(ItemStack itemStack, String s) {
+
+	}
 }

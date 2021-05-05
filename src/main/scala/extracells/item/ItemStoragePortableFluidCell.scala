@@ -150,4 +150,8 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
     extractAEPower(is, amount)
     return true
   }
+
+  override def getOreFilter(itemStack: ItemStack): String = ""
+
+  override def setOreFilter(itemStack: ItemStack, s: String): Unit = Unit
 }
