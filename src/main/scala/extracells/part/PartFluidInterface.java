@@ -174,6 +174,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 			if (stack != null && stack.stackSize > getInventoryStackLimit()) {
 				stack.stackSize = getInventoryStackLimit();
 			}
+			PartFluidInterface.this.originalPatternsCache[slot] = null;
 			PartFluidInterface.this.update = true;
 		}
 
@@ -197,6 +198,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 	private HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
 	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
 	private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
+	private final ICraftingPatternDetails[] originalPatternsCache = new ICraftingPatternDetails[9];
 	public final FluidInterfaceInventory inventory = new FluidInterfaceInventory();
 
 	private boolean update = false;
@@ -510,20 +512,22 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		if (!this.isActive()) {
 			return;
 		}
-		for (ItemStack currentPatternStack : this.inventory.inv) {
+		ItemStack[] inv = this.inventory.inv;
+		for (int i = 0, invLength = inv.length; i < invLength; i++) {
+			ItemStack currentPatternStack = inv[i];
 			if (currentPatternStack != null
 					&& currentPatternStack.getItem() != null
 					&& currentPatternStack.getItem() instanceof ICraftingPatternItem) {
 				ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack
 						.getItem();
 
-				if (currentPattern != null
-						&& currentPattern.getPatternForItem(
-								currentPatternStack, getGridNode().getWorld()) != null) {
-					IFluidCraftingPatternDetails pattern = new CraftingPattern2(
-							currentPattern.getPatternForItem(
-									currentPatternStack, getGridNode()
-											.getWorld()));
+				ICraftingPatternDetails originalPattern = originalPatternsCache[i];
+				if (originalPattern == null) {
+					originalPattern = currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld());
+					originalPatternsCache[i] = originalPattern;
+				}
+				if (originalPattern != null) {
+					IFluidCraftingPatternDetails pattern = new CraftingPattern2(originalPattern);
 					this.patternHandlers.add(pattern);
 					ItemStack is = makeCraftingPatternItem(pattern);
 					if (is == null)
