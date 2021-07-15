@@ -20,8 +20,8 @@ apply plugin: 'scala'
 apply plugin: 'forge'
 apply plugin: 'idea'
 
-sourceCompatibility = JavaVersion.VERSION_1_6
-targetCompatibility = JavaVersion.VERSION_1_6
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 ext.buildProps = file "build.properties"
 
@@ -53,6 +53,10 @@ minecraft {
 }
 
 repositories {
+    flatDir {
+        dirs 'lib'
+    }
+
     maven {
         name 'Mobius Repo'
         url "http://mobiusstrip.eu/maven"
@@ -76,22 +80,16 @@ repositories {
         name "BuildCraft"
         artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
-	
-	ivy { 
-		name 'WirelessCraftingTerminal' 
-		artifactPattern "http://addons-origin.cursecdn.com/files/${config.cf.wc}/[module]-[revision].[ext]" 
-	} 
-
 }
 
 dependencies {
-	compile ("appeng:appliedenergistics2:${config.version.ae}:api"){
+	compile (":AppliedEnergistics2:${config.version.ae}:api") {
         transitive = false
 	}
-	compile ("appeng:appliedenergistics2:${config.version.ae}:dev"){
+	compile (":AppliedEnergistics2:${config.version.ae}:dev") {
         transitive = false
 	}
-	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
+	compile ("mcp.mobius.waila:Waila:${config.version.waila}") {
         transitive = false
 	}
 	compile "li.cil.oc:OpenComputers:${config.version.oc}:dev"
