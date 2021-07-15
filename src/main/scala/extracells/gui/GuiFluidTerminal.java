@@ -12,7 +12,7 @@ import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
+import appeng.client.gui.widgets.MEGuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +30,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	private PartFluidTerminal terminal;
 	private EntityPlayer player;
 	private int currentScroll = 0;
-	private GuiTextField searchbar;
+	private MEGuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
@@ -153,21 +153,8 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
-		this.searchbar = new GuiTextField(this.fontRendererObj,
-				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
+		this.searchbar = new MEGuiTextField(this.fontRendererObj, this.guiLeft + 81, this.guiTop + 6, 88, 10);
 
-			private int xPos = 0;
-			private int yPos = 0;
-			private int width = 0;
-			private int height = 0;
-
-			@Override
-			public void mouseClicked(int x, int y, int mouseBtn) {
-				boolean flag = x >= this.xPos && x < this.xPos + this.width && y >= this.yPos && y < this.yPos + this.height;
-				if (flag && mouseBtn == 3)
-					setText("");
-			}
-		};
 		this.searchbar.setEnableBackgroundDrawing(false);
 		this.searchbar.setFocused(true);
 		this.searchbar.setMaxStringLength(15);
@@ -175,16 +162,30 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
 	@Override
 	protected void keyTyped(char key, int keyID) {
-		if (keyID == Keyboard.KEY_ESCAPE)
+		if (keyID == Keyboard.KEY_ESCAPE) {
 			this.mc.thePlayer.closeScreen();
-		this.searchbar.textboxKeyTyped(key, keyID);
-		updateFluids();
+		}
+
+		if (searchbar.isFocused()) {
+			this.searchbar.textboxKeyTyped(key, keyID);
+			updateFluids();
+			return;
+		}
+
+		super.keyTyped(key, keyID);
 	}
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
-		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		this.searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
+
+		// Clear search field on right click (Same as in AE Terminals)
+		if (mouseBtn == 1 && this.searchbar.isMouseIn(mouseX, mouseY) )
+		{
+			this.searchbar.setText("");
+			updateFluids();
+		}
+
 		int listSize = this.fluidWidgets.size();
 		for (int x = 0; x < 9; x++) {
 			for (int y = 0; y < 4; y++) {
@@ -195,13 +196,15 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 				}
 			}
 		}
+
+		super.mouseClicked(mouseX, mouseY, mouseBtn);
 	}
 
 	public void updateFluids() {
 		this.fluidWidgets = new ArrayList<AbstractFluidWidget>();
 		for (IAEFluidStack fluidStack : this.containerTerminalFluid.getFluidStackList()) {
 			if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(this.searchbar.getText().toLowerCase()) && ECApi.instance().canFluidSeeInTerminal(
-							fluidStack.getFluid())) {
+					fluidStack.getFluid())) {
 				this.fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
 			}
 		}
