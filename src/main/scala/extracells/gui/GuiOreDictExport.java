@@ -1,5 +1,6 @@
 package extracells.gui;
 
+import appeng.client.gui.widgets.MEGuiTextField;
 import cpw.mods.fml.relauncher.Side;
 import extracells.container.ContainerOreDictExport;
 import extracells.network.packet.part.PacketOreDictExport;
@@ -7,7 +8,6 @@ import extracells.part.PartOreDictExporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +34,7 @@ public class GuiOreDictExport extends GuiContainer {
 	private EntityPlayer player;
 	private static String filter = "";
 
-	private GuiTextField searchbar;
+	private MEGuiTextField searchbar;
 
 	public GuiOreDictExport(EntityPlayer player, PartOreDictExporter _part) {
 		super(new ContainerOreDictExport(player, _part));
@@ -79,22 +79,8 @@ public class GuiOreDictExport extends GuiContainer {
 		this.buttonList.add(new GuiButton(1,
 				this.guiLeft + this.xSize / 2 - 44, this.guiTop + 35, 88, 20,
 				StatCollector.translateToLocal("extracells.tooltip.save")));
-		this.searchbar = new GuiTextField(this.fontRendererObj, this.guiLeft
-				+ this.xSize / 2 - 44, this.guiTop + 20, 88, 10) {
-
-			private int xPos = 0;
-			private int yPos = 0;
-			private int width = 0;
-			private int height = 0;
-
-			@Override
-			public void mouseClicked(int x, int y, int mouseBtn) {
-				boolean flag = x >= this.xPos && x < this.xPos + this.width
-						&& y >= this.yPos && y < this.yPos + this.height;
-				if (flag && mouseBtn == 3)
-					setText("");
-			}
-		};
+		this.searchbar = new MEGuiTextField(this.fontRendererObj, this.guiLeft
+				+ this.xSize / 2 - 44, this.guiTop + 20, 92, 14);
 		this.searchbar.setEnableBackgroundDrawing(true);
 		this.searchbar.setFocused(true);
 		this.searchbar.setMaxStringLength(15);
@@ -103,15 +89,20 @@ public class GuiOreDictExport extends GuiContainer {
 
 	@Override
 	protected void keyTyped(char key, int keyID) {
-		if (keyID == Keyboard.KEY_ESCAPE)
-			this.mc.thePlayer.closeScreen();
-		this.searchbar.textboxKeyTyped(key, keyID);
-		filter = this.searchbar.getText();
+		if (this.searchbar.isFocused()) {
+			this.searchbar.textboxKeyTyped(key, keyID);
+			filter = this.searchbar.getText();
+		}
+		super.keyTyped(key, keyID);
 	}
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
-		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		this.searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
+		// Clear search field on right click (Same as in AE Terminals)
+		if (mouseBtn == 1 && this.searchbar.isMouseIn(mouseX, mouseY)) {
+			this.searchbar.setText("");
+		}
+		super.mouseClicked(mouseX, mouseY, mouseBtn);
 	}
 }
