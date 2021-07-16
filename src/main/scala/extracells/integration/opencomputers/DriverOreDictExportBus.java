@@ -73,7 +73,7 @@ public class DriverOreDictExportBus implements li.cil.oc.api.driver.Block, Envir
 			PartOreDictExporter part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
 			if (part == null)
 				return new Object[]{null, "no export bus"};
-			return new Object[]{part.filter};
+			return new Object[]{part.getFilter()};
 		}
 		
 		@Callback(doc = "function(side:number[, filter:string]):boolean -- Set the configuration of the ore dict export bus pointing in the specified direction.")
@@ -84,7 +84,7 @@ public class DriverOreDictExportBus implements li.cil.oc.api.driver.Block, Envir
 			PartOreDictExporter part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
 			if (part == null)
 				return new Object[]{false, "no export bus"};
-			part.filter = args.optString(1, "");
+			part.updateFilter(args.optString(1, ""));
 			context.pause(0.5);
 			return new Object[]{true};
 		}

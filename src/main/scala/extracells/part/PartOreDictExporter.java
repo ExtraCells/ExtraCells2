@@ -16,6 +16,7 @@ import appeng.api.parts.IPartRenderHelper;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AEColor;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerOreDictExport;
@@ -36,48 +37,168 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
-	public String filter = "";
+	private String filter = "";
+	private IFilterNode filterRoot = new FilterNodeSimple("");
 
-	@Override
-	public int cableConnectionRenderTo() {
-		return 5;
+	public void updateFilter(String newFilter) {
+		filter = newFilter;
+		filterRoot = new FilterNodeOr(filter);
+	}
+
+	public String getFilter() {
+		return filter;
+	}
+
+	// IFilterNode - base class of the filter expression tree
+	interface IFilterNode {
+		boolean check(IAEItemStack s);
+	}
+
+	// FilterNodeSimple - leaf node, support filtering by wildcards (at the beginning and/or end)
+	// use ! for negating the filter, and @ for filtering by mode or ~ for filtering by name
+	// Examples:
+	// !ore* - match everything except ores
+	// @gregtech - match greg tech mode item
+	// ~*red* - match any item with "red" in name
+	static class FilterNodeSimple implements IFilterNode {
+		String filterString;
+		boolean anyPrefix;
+		boolean anySuffix;
+		boolean negated;
+		int filterMode; // 0 - compare ore dict, 1 - compare mode, 2 - compare name
+
+		public FilterNodeSimple(String filter) {
+			filter = filter.trim();
+
+			negated = filter.startsWith("!");
+			if (negated) {
+				filter = filter.substring(1);
+			}
+
+			if (filter.startsWith("@")) {
+				filterMode = 1;
+				filter = filter.substring(1);
+			} else if (filter.startsWith("~")) {
+				filterMode = 2;
+				filter = filter.substring(1);
+			} else {
+				filterMode = 0;
+			}
+
+			anyPrefix = filter.startsWith("*");
+			anySuffix = filter.endsWith("*");
+
+			filterString = filter.replace("*", "").trim().toLowerCase(Locale.ROOT);
+		}
+
+		@Override
+		public boolean check(IAEItemStack s) {
+			GameRegistry.UniqueIdentifier identifier = GameRegistry.findUniqueIdentifierFor(s.getItem());
+
+			if (filterMode == 1) {
+				// compare against mod id
+				return checkString(identifier.modId) ^ negated;
+			} else if (filterMode == 2) {
+				// compare against item name
+				return checkString(identifier.name) ^ negated;
+			}
+
+			// compare against ore dict ids
+			int[] ids = OreDictionary.getOreIDs(s.getItemStack());
+
+			// if not negated: find any match = true
+			// if negated: find any match = false
+			for (int id : ids) {
+				if (!negated && checkString(OreDictionary.getOreName(id))) {
+					return true;
+				}
+				if (negated && checkString(OreDictionary.getOreName(id))) {
+					return false;
+				}
+			}
+
+			// if not negated: didn't find any match = false
+			// if negated: didn't find any match = true
+			return negated;
+		}
+
+		private boolean checkString(String string) {
+			string = string.toLowerCase(Locale.ROOT);
+
+			if (anyPrefix && anySuffix) {
+				return string.contains(filterString);
+			} else if (anyPrefix) {
+				return string.endsWith(filterString);
+			} else if (anySuffix) {
+				return string.startsWith(filterString);
+			} else {
+				return string.equals(filterString);
+			}
+		}
+	}
+
+	// FilterNodeAnd - computes "and" operation over set of simple filters
+	// Examples:
+	// ore* & !*redstone* - any ore except redstone
+	static class FilterNodeAnd implements IFilterNode {
+		List<FilterNodeSimple> simpleNodes = new ArrayList<FilterNodeSimple>();
+
+		public FilterNodeAnd(String filter) {
+			for (String filterPart : StringUtils.split(filter, '&')) {
+				simpleNodes.add(new FilterNodeSimple(filterPart));
+			}
+		}
+
+		@Override
+		public boolean check(IAEItemStack s) {
+			for(FilterNodeSimple simpleNode : simpleNodes) {
+				if (!simpleNode.check(s)) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+
+	// FilterNodeAnd - computes "or" operation over set of and filters
+	// Examples:
+	// ore* & !*redstone* | crushed* & !*lead | dust*
+	// (any ore except redstone) or (any crushed ore except lead) or (any dust)
+	static class FilterNodeOr implements IFilterNode {
+		List<FilterNodeAnd> andNodes = new ArrayList<FilterNodeAnd>();
+
+		public FilterNodeOr(String filter) {
+			for (String filterPart : StringUtils.split(filter, '|')) {
+				andNodes.add(new FilterNodeAnd(filterPart));
+			}
+		}
+
+		@Override
+		public boolean check(IAEItemStack s) {
+			for(FilterNodeAnd andNode : andNodes) {
+				if (andNode.check(s)) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	private boolean checkItem(IAEItemStack s) {
-		if (s == null || this.filter.equals(""))
+		if (s == null || this.filter.equals("")) {
 			return false;
-		int[] ids = OreDictionary.getOreIDs(s.getItemStack());
-		for (int id : ids) {
-			String name = OreDictionary.getOreName(id);
-			if (this.filter.startsWith("*") && this.filter.endsWith("*")) {
-				String filter2 = this.filter.replace("*", "");
-				if (filter2.equals(""))
-					return true;
-				if (name.contains(filter2))
-					return true;
-				continue;
-			} else if (this.filter.startsWith("*")) {
-				String filter2 = this.filter.replace("*", "");
-				if (name.endsWith(filter2))
-					return true;
-				continue;
-			} else if (this.filter.endsWith("*")) {
-				String filter2 = this.filter.replace("*", "");
-				if (name.startsWith(filter2))
-					return true;
-				continue;
-			} else {
-				if (name.equals(this.filter))
-					return true;
-				continue;
-			}
 		}
-		return false;
+
+		return filterRoot.check(s);
 	}
 
 	public boolean doWork(int rate, int TicksSinceLastCall) {
@@ -185,6 +306,11 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	}
 
 	@Override
+	public int cableConnectionRenderTo() {
+		return 5;
+	}
+
+	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
 		bch.addBox(6, 6, 12, 10, 10, 13);
 		bch.addBox(4, 4, 13, 12, 12, 14);
@@ -272,8 +398,9 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
-		if (data.hasKey("filter"))
-			this.filter = data.getString("filter");
+		if (data.hasKey("filter")) {
+			updateFilter(data.getString("filter"));
+		}
 	}
 
 	@SideOnly(Side.CLIENT)

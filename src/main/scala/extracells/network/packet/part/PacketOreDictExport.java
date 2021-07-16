@@ -47,7 +47,7 @@ public class PacketOreDictExport extends AbstractPacket {
 		Container con = this.player.openContainer;
 		if (con != null && con instanceof ContainerOreDictExport) {
 			ContainerOreDictExport c = (ContainerOreDictExport) con;
-			c.part.filter = this.filter;
+			c.part.updateFilter(this.filter);
 		}
 	}
 
