@@ -77,10 +77,6 @@ public class FluidUtil {
 			//Return filled container and fill amount.
 			return new MutablePair<Integer, ItemStack>(
 					filled != null ? filled.amount : 0, filledContainer);
-
-		} else if (item == ItemEnum.FLUIDPATTERN.getItem()) {
-			return new MutablePair<Integer, ItemStack>(0,
-					ItemFluidPattern.getPatternForFluid(fluid.getFluid()));
 		}
 
 		return null;
@@ -151,5 +147,20 @@ public class FluidUtil {
 		return item instanceof IFluidContainerItem
 				|| item == ItemEnum.FLUIDPATTERN.getItem()
 				|| FluidContainerRegistry.isContainer(itemStack);
+	}
+
+	public static String getAmountAsPrettyString(long amount) {
+		// Returns pretty string representation of fluid amount
+		// If amount of fluid in current units is less than 100 it will also display one digit after dot
+		String suffixes[] = new String[]{"mB", "B", "KB", "MB", "GB", "PB"};
+		int suffixIndex = 0;
+		while (amount >= 1000L && suffixIndex + 1 < suffixes.length) {
+			suffixIndex++;
+			if (amount <= 100000L) {
+				return (amount / 100) / 10.0 + suffixes[suffixIndex];
+			}
+			amount /= 1000L;
+		}
+		return amount + suffixes[suffixIndex];
 	}
 }
