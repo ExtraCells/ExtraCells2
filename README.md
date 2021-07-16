@@ -13,6 +13,8 @@ ExtraCells 2 is licensed under the MIT license.
 ![oredict](/images/oredict.png?raw=true)
 ![terminal](/images/terminal.png?raw=true)
 
+- Cherry-picked some dupe fixes from [EC2Unofficial](https://github.com/IdealIndustrial/EC2Unofficial) 
+
 - [2fa49f4](https://github.com/AndrewB330/ExtraCells2/commit/2fa49f4a244b90f70ed86e4fbf335df1170770de)
   Fixed OreDictExport gui as well. Now you can exit by pressin E (Inventory key) and now text field can lose focus if you click somewhere else.
 
