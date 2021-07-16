@@ -10,8 +10,14 @@ ExtraCells 2 is licensed under the MIT license.
 
 # ExtraCells2 fork changelog
 
+![oredict](/images/oredict.png?raw=true)
+![terminal](/images/terminal.png?raw=true)
+
+- [2fa49f4](https://github.com/AndrewB330/ExtraCells2/commit/2fa49f4a244b90f70ed86e4fbf335df1170770de)
+  Fixed OreDictExport gui as well. Now you can exit by pressin E (Inventory key) and now text field can lose focus if you click somewhere else.
+
 - [47e5915](https://github.com/AndrewB330/ExtraCells2/commit/47e5915a175dfc0975be09a99dd790a9b047903c)
-  Optimized OreDictBus filter - now filter is being processed only once! Now after any filter update we are building 
+  Optimized OreDictBus filter - now filter is being processed only once! Now after any filter update we are building
   simple expression tree and then using it.
   Added `!` `~` `@` operators, for negation, name search, mod search. Also added `|` and `&` operators.
   Example of possible query: `ore* & !*redstone* | crushed* & !*lead | dust*` (in theory, but filter length is limited :) ).
