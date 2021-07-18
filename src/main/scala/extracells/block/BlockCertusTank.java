@@ -177,7 +177,6 @@ public class BlockCertusTank extends BlockEC {
 								if (!entityplayer.inventory.addItemStackToInventory(filled)) {
 									return false;
 								} else {
-									tank.fill(ForgeDirection.UNKNOWN, new FluidStack(liquid, liquid.amount), true);
 									entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
 								}
 							} else {
@@ -197,7 +196,6 @@ public class BlockCertusTank extends BlockEC {
 	public void onNeighborBlockChange(World world, int x, int y, int z,
 			Block neighborBlock) {
 		if (!world.isRemote) {
-
 			ChannelHandler.sendPacketToAllPlayers(world.getTileEntity(x, y, z).getDescriptionPacket(), world);
 		}
 	}
