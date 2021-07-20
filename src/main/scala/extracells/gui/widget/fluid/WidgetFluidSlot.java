@@ -19,6 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import java.awt.*;
 import java.util.List;
 
 public class WidgetFluidSlot extends Gui {
@@ -160,10 +161,11 @@ public class WidgetFluidSlot extends Gui {
 		Minecraft.getMinecraft().renderEngine
 				.bindTexture(TextureMap.locationBlocksTexture);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		// TODO: fix fluid color here too
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		Color color = new Color(this.fluid.getColor());
+		GL11.glColor3f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F);
 		drawTexturedModelRectFromIcon(this.posX + 1, this.posY + 1,
 				this.fluid.getIcon(), 16, 16);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 	}

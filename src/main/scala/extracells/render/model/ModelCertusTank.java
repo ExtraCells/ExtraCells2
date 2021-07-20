@@ -14,6 +14,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
+
 public class ModelCertusTank extends ModelBase {
 
 	ModelRenderer Shape1;
@@ -52,6 +54,11 @@ public class ModelCertusTank extends ModelBase {
 					fluidIcon = FluidRegistry.LAVA.getIcon();
 				renderer.setRenderBounds(0.08F, 0.001F, 0.08F, 0.92,
 						scale * 0.999F, 0.92F);
+
+				Color color = new Color(storedFluid.getColor());
+				tessellator.setColorOpaque(color.getRed(), color.getGreen(), color.getBlue());
+				GL11.glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
+
 				tessellator.setNormal(0.0F, -1F, 0.0F);
 				renderer.renderFaceYNeg(id, x, y, z, fluidIcon);
 				tessellator.setNormal(0.0F, 1.0F, 0.0F);
