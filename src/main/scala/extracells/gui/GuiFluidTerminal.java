@@ -1,8 +1,6 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.client.gui.AEBaseGui;
-import appeng.client.gui.widgets.GuiScrollbar;
 import extracells.api.ECApi;
 import extracells.container.ContainerFluidTerminal;
 import extracells.gui.widget.FluidWidgetComparator;
@@ -15,17 +13,19 @@ import extracells.part.PartFluidTerminal;
 import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import appeng.client.gui.widgets.MEGuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiFluidTerminal extends AEBaseGui implements IFluidSelectorGui {
+public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui {
 
 	private final int COLUMNS = 9;
 	private final int ROWS = 4;
@@ -37,12 +37,12 @@ public class GuiFluidTerminal extends AEBaseGui implements IFluidSelectorGui {
 	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
 	private ContainerFluidTerminal containerTerminalFluid;
+	private GuiScrollbar scrollbar;
 
 	public GuiFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player) {
 		super(new ContainerFluidTerminal(_terminal, _player));
 
-		final GuiScrollbar scrollbar = new GuiScrollbar();
-		this.setScrollBar(scrollbar);
+		scrollbar = new GuiScrollbar();
 
 		this.containerTerminalFluid = (ContainerFluidTerminal) this.inventorySlots;
 		this.containerTerminalFluid.setGui(this);
@@ -54,14 +54,30 @@ public class GuiFluidTerminal extends AEBaseGui implements IFluidSelectorGui {
 	}
 
 	@Override
-	public void drawBG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
+	public void drawScreen(final int mouseX, final int mouseY, final float btn) {
+		super.drawScreen(mouseX, mouseY, btn);
+
+		final boolean hasClicked = Mouse.isButtonDown(0);
+		if (hasClicked && this.scrollbar != null) {
+			this.scrollbar.click(this, mouseX - this.guiLeft, mouseY - this.guiTop);
+		}
+	}
+
+	@Override
+	protected final void drawGuiContainerBackgroundLayer(final float f, final int x, final int y) {
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 		this.searchbar.drawTextBox();
 	}
 
 	@Override
-	public void drawFG(final int offsetX, final int offsetY, final int mouseX, final int mouseY) {
+	protected final void drawGuiContainerForegroundLayer(final int x, final int y) {
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+		if (this.scrollbar != null) {
+			this.scrollbar.draw(this);
+		}
+
 		String name = StatCollector
 				.translateToLocal("extracells.part.fluid.terminal.name")
 				.replace("ME ", "");
@@ -83,7 +99,7 @@ public class GuiFluidTerminal extends AEBaseGui implements IFluidSelectorGui {
 			this.fontRendererObj.drawString(fluidText, 45, 101, 0x000000);
 		}
 
-		drawWidgets(mouseX, mouseY);
+		drawWidgets(x, y);
 	}
 
 	public void drawWidgets(int mouseX, int mouseY) {
@@ -127,7 +143,7 @@ public class GuiFluidTerminal extends AEBaseGui implements IFluidSelectorGui {
 	}
 
 	int getWidgetIndexByCellCoordinate(int x, int y) {
-		return (y + this.getScrollBar().getCurrentScroll()) * COLUMNS + x;
+		return (y + this.scrollbar.getCurrentScroll()) * COLUMNS + x;
 	}
 
 	@Override
@@ -158,9 +174,9 @@ public class GuiFluidTerminal extends AEBaseGui implements IFluidSelectorGui {
 	public void initGui() {
 		super.initGui();
 
-		this.getScrollBar().setLeft(175);
-		this.getScrollBar().setHeight(70);
-		this.getScrollBar().setTop(18);
+		this.scrollbar.setLeft(175);
+		this.scrollbar.setHeight(70);
+		this.scrollbar.setTop(18);
 
 		Mouse.getDWheel();
 
@@ -186,6 +202,16 @@ public class GuiFluidTerminal extends AEBaseGui implements IFluidSelectorGui {
 		}
 
 		super.keyTyped(key, keyID);
+	}
+
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+
+		final int i = Mouse.getEventDWheel();
+		if (i != 0 && this.scrollbar != null) {
+			this.scrollbar.wheel(i);
+		}
 	}
 
 	@Override
@@ -228,7 +254,7 @@ public class GuiFluidTerminal extends AEBaseGui implements IFluidSelectorGui {
 		}
 		updateSelectedFluid();
 
-		this.getScrollBar().setRange(0, ((this.fluidWidgets.size() + COLUMNS - 1) / COLUMNS) - ROWS, 1);
+		this.scrollbar.setRange(0, ((this.fluidWidgets.size() + COLUMNS - 1) / COLUMNS) - ROWS, 1);
 	}
 
 	public void updateSelectedFluid() {
