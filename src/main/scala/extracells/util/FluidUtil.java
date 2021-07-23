@@ -77,6 +77,9 @@ public class FluidUtil {
 			//Return filled container and fill amount.
 			return new MutablePair<Integer, ItemStack>(
 					filled != null ? filled.amount : 0, filledContainer);
+		} else if (item == ItemEnum.FLUIDPATTERN.getItem()) {
+			return new MutablePair<Integer, ItemStack>(0,
+				ItemFluidPattern.getPatternForFluid(fluid.getFluid()));
 		}
 
 		return null;

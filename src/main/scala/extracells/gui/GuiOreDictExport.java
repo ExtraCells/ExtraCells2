@@ -80,10 +80,10 @@ public class GuiOreDictExport extends GuiContainer {
 				this.guiLeft + this.xSize / 2 - 44, this.guiTop + 35, 88, 20,
 				StatCollector.translateToLocal("extracells.tooltip.save")));
 		this.searchbar = new MEGuiTextField(this.fontRendererObj, this.guiLeft
-				+ this.xSize / 2 - 44, this.guiTop + 20, 92, 14);
+				+ this.xSize / 2 - 64, this.guiTop + 20, 132, 14);
 		this.searchbar.setEnableBackgroundDrawing(true);
 		this.searchbar.setFocused(true);
-		this.searchbar.setMaxStringLength(15);
+		this.searchbar.setMaxStringLength(20);
 		this.searchbar.setText(filter);
 	}
 
@@ -92,6 +92,7 @@ public class GuiOreDictExport extends GuiContainer {
 		if (this.searchbar.isFocused()) {
 			this.searchbar.textboxKeyTyped(key, keyID);
 			filter = this.searchbar.getText();
+			return;
 		}
 		super.keyTyped(key, keyID);
 	}
