@@ -137,15 +137,15 @@ processResources {
     }
 }
 
-task deobfJar(type: Jar) {
+task devJar(type: Jar) {
     from sourceSets.main.output
     from sourceSets.main.scala
     from sourceSets.main.java
-    appendix = 'deobf'
+    classifier "dev"
 }
 
 artifacts {
-    archives deobfJar
+    archives devJar
 }
 
 def static getBuildNumber() {
