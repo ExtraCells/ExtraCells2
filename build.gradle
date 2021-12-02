@@ -14,7 +14,7 @@ buildscript {
 	    }
     }
     dependencies {
-        classpath 'com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT'
+        classpath 'com.github.GTNewHorizons:ForgeGradle:1.2.4'
     }
 }
 
@@ -60,45 +60,41 @@ repositories {
         name 'Mobius Repo'
         url "http://mobiusstrip.eu/maven"
     }
-    maven {
-        name 'CB Repo'
-        url "http://chickenbones.net/maven/"
-    }
-	
 	maven {
 		name 'Open Computers'
-		url "http://maven.cil.li/"
+		url "https://maven.cil.li/"
 	}
-
     maven {
         name = "Forestry and IC2 repo"
-        url = "http://maven.ic2.player.to/"
+        url = "https://maven.ic2.player.to/"
     }
-
 	maven {
         name = 'IGW'
-        url = "http://maven.k-4u.nl/"
+        url = "https://maven.k-4u.nl/"
     }
-
     ivy {
         name "BuildCraft"
         artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
     }
-	
 	maven {
-		name 'GT6 Maven'
+		name 'GT Maven'
 		url "https://gregtech.overminddl1.com/"
 	}
 	maven {
 		name 'GTNH Maven'
 		url "http://jenkins.usrv.eu:8081/nexus/content/repositories/releases/"
 	}
-
 	ivy {
 		artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]_[revision].[ext]"
 	}
     ivy {
         artifactPattern "http://downloads.gtnewhorizons.com/Mods_for_Jenkins/[module]-[revision].[ext]"
+    }
+    maven {
+        url = "https://jitpack.io"
+    }
+    maven {
+        url "https://cursemaven.com"
     }
 }
 
@@ -110,19 +106,17 @@ configurations {
 
 dependencies {
     provided name: 'CoFHCore', version: config.cofhcore.version, ext: 'jar'
-	compile ("appeng:appliedenergistics2-${config.version.ae}:dev") {
+    implementation "com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev"
+    compile("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:master-SNAPSHOT:dev") {
+        setChanging(true)
         transitive = false
     }
-	compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
+	implementation ('com.github.GTNewHorizons:waila:master-SNAPSHOT'){
         transitive = false
 	}
 	compile "li.cil.oc:OpenComputers:${config.version.oc}:dev"
-	compile "codechicken:CodeChickenLib:${config.version.minecraft}-${config.version.ccl}:dev"
-    compile "codechicken:CodeChickenCore:${config.version.minecraft}-${config.version.ccc}:dev"
-    compile "codechicken:NotEnoughItems:${config.version.minecraft}-${config.version.nei}:dev"
 	compile "igwmod:IGW-Mod-${config.version.minecraft}:${config.version.igw}:userdev"
     compile name: "buildcraft", version: "${config.version.bc}", classifier: "dev", ext: 'jar'
-    // compile name: 'WirelessCraftingTerminal', version: config.version.wc, ext: 'jar'
 }
 
 processResources {
