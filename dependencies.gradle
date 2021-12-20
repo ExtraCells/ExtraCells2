@@ -15,10 +15,10 @@ dependencies {
     compileOnly("com.github.GTNewHorizons:waila:master-SNAPSHOT:dev") {
         transitive = false
     }
-    compileOnly("com.github.GTNewHorizons:WirelessCraftingTerminal:unified-build-script-SNAPSHOT:dev") {  // TODO: switch to master
+    compileOnly("com.github.GTNewHorizons:WirelessCraftingTerminal:master-SNAPSHOT:dev") {
         transitive = false
     }
-    compileOnly("com.github.GTNewHorizons:OpenComputers:unified-build-script-SNAPSHOT:dev") {  // TODO: switch to master
+    compileOnly("com.github.GTNewHorizons:OpenComputers:master-SNAPSHOT:dev") {
         transitive = false
     }
 
