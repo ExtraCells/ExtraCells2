@@ -1,10 +1,10 @@
 [
 {
-  "modid": "extracells",
-  "name": "Extra Cells 2",
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "Adds new ME Storage Cells and some other cool stuff to AE 2.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289077-ae-add-on-m3gas-extracells-2-1-x-2-2-x",
   "updateUrl": "",
   "authorList": ["M3gaFr3ak", "DrummerMC"],
