@@ -79,7 +79,6 @@ public class TileEntityFluidInterface extends TileBase implements
 					}
 				}
 			}
-			TileEntityFluidInterface.this.originalPatternsCache[slot] = null;
 			TileEntityFluidInterface.this.update = true;
 			return stack;
 		}
