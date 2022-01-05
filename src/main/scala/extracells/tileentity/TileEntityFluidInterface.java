@@ -79,7 +79,6 @@ public class TileEntityFluidInterface extends TileBase implements
 					}
 				}
 			}
-			TileEntityFluidInterface.this.originalPatternsCache[slot] = null;
 			TileEntityFluidInterface.this.update = true;
 			return stack;
 		}
@@ -153,6 +152,7 @@ public class TileEntityFluidInterface extends TileBase implements
 			if (stack != null && stack.stackSize > getInventoryStackLimit()) {
 				stack.stackSize = getInventoryStackLimit();
 			}
+			TileEntityFluidInterface.this.originalPatternsCache[slot] = null;
 			TileEntityFluidInterface.this.update = true;
 		}
 
