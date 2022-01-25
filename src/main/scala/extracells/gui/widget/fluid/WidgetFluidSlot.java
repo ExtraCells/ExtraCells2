@@ -3,6 +3,7 @@ package extracells.gui.widget.fluid;
 import java.util.Collections;
 import java.util.List;
 
+import mekanism.api.gas.Gas;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -28,6 +29,7 @@ import extracells.network.packet.other.PacketFluidSlotSelect;
 import extracells.part.gas.PartGasExport;
 import extracells.part.gas.PartGasImport;
 import extracells.part.gas.PartGasStorage;
+import extracells.part.gas.PartGasLevelEmitter;
 import extracells.util.FluidHelper;
 import extracells.util.GasUtil;
 import extracells.util.NetworkUtil;
@@ -106,9 +108,30 @@ public class WidgetFluidSlot extends AbstractWidget {
 
 	private void drawFluid(TextureManager textureManager) {
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		TextureAtlasSprite sprite = manager.mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
-		GlStateManager.color(1.0F, 1.0F, 1.0F);
-		manager.gui.drawTexturedModalRect(this.xPos + 1, this.yPos + 1, sprite, 16, 16);
+		TextureMap textureMap = manager.mc.getTextureMapBlocks();
+		if(Integration.Mods.MEKANISMGAS.isEnabled() && GasUtil.isGas(fluid)) {
+			Gas gas = GasUtil.getGas(fluid);
+			ResourceLocation gasStill = gas.getIcon();
+			TextureAtlasSprite gasStillSprite = null;
+			if (gasStill != null) {
+				gasStillSprite = textureMap.getTextureExtry(gasStill.toString());
+			}
+			if (gasStillSprite == null) {
+				gasStillSprite = textureMap.getAtlasSprite(fluid.getStill().toString());
+			}
+			int tint = gas.getTint();
+			float r = (tint >> 16 & 0xFF) / 255.0F;
+			float g = (tint >> 8 & 0xFF) / 255.0F;
+			float b = (tint & 0xFF) / 255.0F;
+			GlStateManager.color(r, g, b);
+			manager.gui.drawTexturedModalRect(this.xPos + 1, this.yPos + 1, gasStillSprite, 16, 16);
+			GlStateManager.color(1.0F, 1.0F, 1.0F);
+		}
+		else {
+			TextureAtlasSprite sprite = textureMap.getAtlasSprite(fluid.getStill().toString());
+			GlStateManager.color(1.0F, 1.0F, 1.0F);
+			manager.gui.drawTexturedModalRect(this.xPos + 1, this.yPos + 1, sprite, 16, 16);
+		}
 	}
 
 	public Fluid getFluid() {
@@ -126,7 +149,7 @@ public class WidgetFluidSlot extends AbstractWidget {
 		if (!isVisable()) {
 			return;
 		}
-		if ((listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage) && Integration.Mods.MEKANISMGAS.isEnabled()) {
+		if ((listener instanceof PartGasImport || listener instanceof PartGasExport || listener instanceof PartGasStorage || listener instanceof PartGasLevelEmitter) && Integration.Mods.MEKANISMGAS.isEnabled()) {
 			handleGasContainer(stack);
 		} else {
 			handleFluidContainer(stack);

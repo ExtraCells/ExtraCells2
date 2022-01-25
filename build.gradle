@@ -60,16 +60,6 @@ minecraft {
 }
 	
 repositories {
-    maven {
-        name 'Mobius Repo'
-        url "https://www.mobiusstrip.eu/maven"
-    }
-	
-	maven {
-		name 'Open Computers'
-		url "https://maven.cil.li/"
-	}
-	
 	maven {
 		name 'prog'
 		url "https://dvs1.progwml6.com/files/maven"
@@ -84,17 +74,17 @@ repositories {
 		name "BuildCraft Maven"
 		url "https://mod-buildcraft.com/maven"
 	}
-	
+
 	maven {
 		name = "tehnut"
-		url = "https://tehnut.info/maven"
+		url = "https://maven.tehnut.info"
 	}
-	
+
 	maven {
 		name = "CoFH Maven"
 		url = "https://maven.covers1624.net"
 	}
-	
+
 	maven {
         name = 'IGW'
         url = "https://maven.k-4u.nl/"
@@ -104,24 +94,24 @@ repositories {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
     }
+	
+	maven {
+		name 'Open Computers'
+		url "https://maven.cil.li/"
+	}
 }
 
 dependencies {
-	//compile ("mcp.mobius.waila:Waila:${config.version.waila}"){
-    //    transitive = false
-	//}
-	
 	deobfCompile ("mcp.mobius.waila:Hwyla:${config.version.waila}") {
 		transitive = false
 	}
-	
+
 	deobfCompile "cofh:RedstoneFlux:${config.version.rf}:universal"
 	
 	compileOnly ("cofh:CoFHCore:${config.version.cofh}:deobf") {
 		transitive = false
 	}
 	
-	//deobfProvided ("li.cil.oc:OpenComputers:${config.version.oc}:api")
 	deobfCompile ("li.cil.oc:OpenComputers:${config.version.oc}")
 
 	deobfProvided "mezz.jei:jei_${config.version.minecraft}:${config.version.jei}:api"

@@ -97,8 +97,10 @@ public class GasList implements IItemList<IAEGasStack>{
         if (stack != null){
             stack.add(iaeGasStack);
         }
-        IAEGasStack toAdd = iaeGasStack.copy();
-        this.putGasRecord(toAdd);
+        else {
+            IAEGasStack toAdd = iaeGasStack.copy();
+            this.putGasRecord(toAdd);
+        }
     }
 
     @Override
