@@ -104,7 +104,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
         FluidStack drain = this.tank.drain(
         		this.node.getSide().getOpposite(), new FluidStack(toDrain.getFluid(), toDrain.amount), mode == Actionable.MODULATE);
 
-        if (drain == null) {
+        if (drain == null || !drain.getFluid().equals(request.getFluid())) {
         	return null;
 		} else if (drain.amount == 0) {
 			return null;
