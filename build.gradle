@@ -1,4 +1,4 @@
-//version: 1644194279
+//version: 1644278435
 /*
 DO NOT CHANGE THIS FILE!
 
@@ -673,7 +673,7 @@ def deobf(String sourceURL) {
     }
 }
 
-// The method above is to be prefered. Use this method if the filename is not at the end of the URL.
+// The method above is to be preferred. Use this method if the filename is not at the end of the URL.
 def deobf(String sourceURL, String fileName) {
     String cacheDir = System.getProperty("user.home") + "/.gradle/caches/"
     String bon2Dir = cacheDir + "forge_gradle/deobf"
@@ -685,14 +685,14 @@ def deobf(String sourceURL, String fileName) {
         return files(deobfFile)
     }
 
-    download {
+    download.run {
         src 'https://github.com/GTNewHorizons/BON2/releases/download/2.5.0/BON2-2.5.0.CUSTOM-all.jar'
         dest bon2File
         quiet true
         overwrite false
     }
 
-    download {
+    download.run {
         src sourceURL
         dest obfFile
         quiet true
