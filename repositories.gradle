@@ -2,21 +2,25 @@
 
 repositories {
     maven {
-        name = "GTNH Maven"
-        url = "http://jenkins.usrv.eu:8081/nexus/content/groups/public/"
+        name 'GTNH Maven'
+        url 'http://jenkins.usrv.eu:8081/nexus/content/groups/public/'
+        allowInsecureProtocol
     }
     maven {
-        name = "mightypirates"
-        url = "https://maven.cil.li/"
+        name 'mightypirates'
+        url 'https://maven.cil.li/'
         metadataSources {
             mavenPom()
             artifact()
         }
     }
     maven {
-        url "https://cursemaven.com"
+        url 'https://cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
     }
     maven {
-        url = "https://jitpack.io"
+        url 'https://jitpack.io'
     }
 }

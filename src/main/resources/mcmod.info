@@ -1,16 +1,19 @@
-[
 {
-  "modid": "${modId}",
-  "name": "${modName}",
-  "description": "Adds new ME Storage Cells and some other cool stuff to AE 2.",
-  "version": "${modVersion}",
-  "mcversion": "${minecraftVersion}",
-  "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289077-ae-add-on-m3gas-extracells-2-1-x-2-2-x",
-  "updateUrl": "",
-  "authorList": ["M3gaFr3ak", "DrummerMC"],
-  "credits": "Textures by PaleoCrafter and Cyntain",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": ["Applied Energistics 2"]
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "Adds a giant walrus",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1289077-ae-add-on-m3gas-extracells-2-1-x-2-2-x",
+		"updateUrl": "",
+		"authorList": ["M3gaFr3ak", "DrummerMC"],
+		"credits": "Textures by PaleoCrafter and Cyntain",
+		"logoFile": "ExtraCells2.png",
+		"screenshots": [],
+		"requiredMods": ["appliedenergistics2"],
+		"dependencies": ["appliedenergistics2", "LogisticsPipes|Main", "Waila"],
+		"useDependencyInformation": true
+	}]
 }
-]
