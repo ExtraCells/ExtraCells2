@@ -33,6 +33,8 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 
 	public static final int[] spaces = { 1024, 4096, 16348, 65536, 262144, 1048576, 4194304 };
 
+	public static final double[] idle_drains = {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5};
+
 	private IIcon[] icons;
 
 	public ItemStorageFluid() {
@@ -44,7 +46,7 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player,
-			List list, boolean par4) {
+							   List list, boolean par4) {
 		IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
 		if (!(handler instanceof IHandlerFluidStorage)) {
 			return;
@@ -114,10 +116,16 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 		return 5;
 	}
 
+	@Override
+	public double idleDrain(ItemStack is) {
+		int variant = MathHelper.clamp_int(is.getItemDamage(), 0, idle_drains.length);
+		return idle_drains[variant];
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTab,
-			List listSubItems) {
+							List listSubItems) {
 		for (int i = 0; i < suffixes.length; ++i) {
 			listSubItems.add(new ItemStack(item, 1, i));
 		}
@@ -143,7 +151,7 @@ public class ItemStorageFluid extends ItemECBase implements IFluidStorageCell {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world,
-			EntityPlayer entityPlayer) {
+									  EntityPlayer entityPlayer) {
 		if (!entityPlayer.isSneaking()) {
 			return itemStack;
 		}

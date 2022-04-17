@@ -19,7 +19,11 @@ public class FluidCellHandler implements ICellHandler {
 
 	@Override
 	public double cellIdleDrain(ItemStack is, IMEInventory handler) {
-		return 0;
+		if (!(is.getItem() instanceof IFluidStorageCell)) {
+			return 0.0;
+		}
+		final IFluidStorageCell cell = (IFluidStorageCell) is.getItem();
+		return cell.idleDrain(is);
 	}
 
 	@Override

@@ -105,6 +105,7 @@ public class ECPrivateInventory implements IInventory {
 		added.stackSize = slot.stackSize + amount > stackLimit ? stackLimit
 				: amount;
 		slot.stackSize += added.stackSize;
+		markDirty();
 		return added;
 	}
 

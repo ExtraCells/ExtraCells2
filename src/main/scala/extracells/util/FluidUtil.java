@@ -47,8 +47,8 @@ public class FluidUtil {
 			int amountDrained = content != null
 					&& content.getFluid() == fluid.getFluid() ? content.amount
 					: 0;
-			return new MutablePair<Integer, ItemStack>(amountDrained, itemStack
-					.getItem().getContainerItem(itemStack));
+			return new MutablePair<Integer, ItemStack>(amountDrained,
+				FluidContainerRegistry.drainFluidContainer(itemStack));
 		}
 
 		return null;

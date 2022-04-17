@@ -21,7 +21,7 @@ import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 
 object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorageCell with PowerItem {
 
-  override val MAX_POWER: Double = 20000
+  override val MAX_POWER: Double = 100000
   private[item] var icon: IIcon = null
   def THIS = this
   setMaxStackSize(1)
@@ -87,7 +87,8 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
   }
 
   def getMaxBytes(is: ItemStack): Int = {
-    return 512
+    // 8192 buckets when using only one fluid type
+    return 32768
   }
 
 

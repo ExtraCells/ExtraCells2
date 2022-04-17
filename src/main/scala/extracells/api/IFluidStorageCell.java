@@ -20,4 +20,8 @@ public interface IFluidStorageCell extends ICellWorkbenchItem {
 
 	public int getMaxTypes(ItemStack is);
 
+	public default double idleDrain(ItemStack is) {
+		return 0.0;
+	}
+
 }
