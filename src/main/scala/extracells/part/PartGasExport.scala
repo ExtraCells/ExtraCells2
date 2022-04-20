@@ -1,9 +1,9 @@
 package extracells.part
 
 import java.util
-
 import appeng.api.AEApi
 import appeng.api.config.Actionable
+import appeng.api.networking.ticking.TickRateModulation
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.Optional
 import extracells.integration.Integration
@@ -16,18 +16,18 @@ class PartGasExport extends PartFluidExport{
   private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
 
-  override def doWork(rate: Int, tickSinceLastCall: Int): Boolean ={
+  override def doWork(rate: Int, tickSinceLastCall: Int): TickRateModulation ={
     if (isMekanismEnabled)
       work(rate, tickSinceLastCall)
     else
-      false
+      TickRateModulation.IDLE
   }
 
 
   @Optional.Method(modid = "MekanismAPI|gas")
-  protected  def work(rate: Int, ticksSinceLastCall: Int): Boolean ={
+  protected  def work(rate: Int, ticksSinceLastCall: Int): TickRateModulation ={
     val facingTank: IGasHandler = getFacingGasTank
-    if (facingTank == null || !isActive) return false
+    if (!isActive || facingTank == null) return TickRateModulation.IDLE
     val filter  = new util.ArrayList[Fluid]
     filter.add(this.filterFluids(4))
 
@@ -69,13 +69,13 @@ class PartGasExport extends PartFluidExport{
             val filled: Int = facingTank.receiveGas(getSide.getOpposite, gasStack, true)
             if (filled > 0) {
               extractGasFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
-              return true
+              return TickRateModulation.FASTER
             }
           }
         }
       }
     }
-    return false
+    return TickRateModulation.SLOWER
   }
 
 

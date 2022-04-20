@@ -26,6 +26,9 @@ import net.minecraftforge.fluids.IFluidHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handler for fluid storage buses
+ */
 public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IMEMonitorHandlerReceiver<IAEFluidStack> {
 
 	protected PartFluidStorage node;
@@ -45,7 +48,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	public boolean canAccept(IAEFluidStack input) {
 		if (!this.node.isActive())
 			return false;
-		else if (this.tank == null && this.externalSystem == null && this.externalHandler == null || !(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE) || input == null)
+		else if (this.tank == null && this.externalSystem == null && this.externalHandler == null || !this.access.hasPermission(AccessRestriction.WRITE) || input == null)
 			return false;
 		else if (this.externalSystem != null) {
 			IStorageMonitorable monitor = this.externalSystem.getMonitorable(

@@ -22,6 +22,9 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handler for fluid storage disks
+ */
 public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 
 	private NBTTagCompound stackTag;
@@ -75,7 +78,6 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			return null;
 
 		IAEFluidStack removedStack;
-		List<FluidStack> currentFluids = Lists.newArrayList(this.fluidStacks);
 		for (int i = 0; i < this.fluidStacks.size(); i++) {
 			FluidStack currentStack = this.fluidStacks.get(i);
 			if (currentStack != null && currentStack.getFluidID() == request.getFluid().getID()) {
@@ -83,12 +85,11 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 				if (endAmount >= 0) {
 					removedStack = request.copy();
 					FluidStack toWrite = new FluidStack(currentStack.getFluid(), (int) endAmount);
-					currentFluids.set(i, toWrite);
 					if (mode == Actionable.MODULATE) {
 						writeFluidToSlot(i, toWrite);
 					}
 				} else {
-					removedStack = AEApi.instance().storage().createFluidStack(currentStack.copy());
+					removedStack = AEApi.instance().storage().createFluidStack(currentStack);
 					if (mode == Actionable.MODULATE) {
 						writeFluidToSlot(i, null);
 					}
@@ -144,53 +145,47 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
 			BaseActionSource src) {
 		if (input == null || !allowedByFormat(input.getFluid()))
 			return input;
-		IAEFluidStack notAdded = input.copy();
-		List<FluidStack> currentFluids = Lists.newArrayList(this.fluidStacks);
-		for (int i = 0; i < currentFluids.size(); i++) {
-			FluidStack currentStack = currentFluids.get(i);
-			if (notAdded != null && currentStack != null
-					&& input.getFluid() == currentStack.getFluid()) {
-				if (notAdded.getStackSize() <= freeBytes()) {
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(),
-							currentStack.amount + (int) notAdded.getStackSize());
-					currentFluids.set(i, toWrite);
-					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
-					}
-					notAdded = null;
-				} else {
-					FluidStack toWrite = new FluidStack(currentStack.getFluid(), currentStack.amount + freeBytes());
-					currentFluids.set(i, toWrite);
-					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
-					}
-					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
-				}
+
+		// Find a matching slot, or empty slot to insert to
+		int targetSlot = -1;
+		int emptySlot = -1;
+		for (int i = 0; i < this.fluidStacks.size(); i++) {
+			FluidStack stack = this.fluidStacks.get(i);
+			if (stack != null && stack.getFluid().getID() == input.getFluid().getID()) {
+				targetSlot = i;
+				break;
+			}
+			if (stack == null && emptySlot < 0) {
+				emptySlot = i;
 			}
 		}
-		for (int i = 0; i < currentFluids.size(); i++) {
-			FluidStack currentStack = currentFluids.get(i);
-			if (notAdded != null && currentStack == null) {
-				if (input.getStackSize() <= freeBytes()) {
-					FluidStack toWrite = notAdded.getFluidStack();
-					currentFluids.set(i, toWrite);
-					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
-					}
-					notAdded = null;
-				} else {
-					FluidStack toWrite = new FluidStack(notAdded.getFluid(), freeBytes());
-					currentFluids.set(i, toWrite);
-					if (mode == Actionable.MODULATE) {
-						writeFluidToSlot(i, toWrite);
-					}
-					notAdded.setStackSize(notAdded.getStackSize() - freeBytes());
-				}
-			}
+		if (targetSlot < 0) {
+			targetSlot = emptySlot;
 		}
-		if (notAdded == null || !notAdded.equals(input))
+		if (targetSlot < 0) {
+			// Failed to find a good slot
+			return input;
+		}
+
+		final FluidStack originalTargetContents = this.fluidStacks.get(targetSlot);
+		final long originalTargetAmount = (originalTargetContents != null) ? originalTargetContents.amount : 0;
+		final long requestedAmount = input.getStackSize();
+		final long freeSpace = freeBytes();
+		final long drainedAmount = Long.min(requestedAmount, freeSpace);
+
+		if (mode == Actionable.MODULATE) {
+			final Fluid fluidInserted = (originalTargetContents != null) ? originalTargetContents.getFluid() : input.getFluid();
+			writeFluidToSlot(targetSlot, new FluidStack(fluidInserted, (int) (originalTargetAmount + drainedAmount)));
 			requestSave();
-		return notAdded;
+		}
+
+		if (drainedAmount == requestedAmount) {
+			return null;
+		} else {
+			IAEFluidStack notAdded = input.copy();
+			notAdded.setStackSize(requestedAmount - drainedAmount);
+			return notAdded;
+		}
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package extracells.part;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
@@ -33,11 +34,13 @@ public class PartFluidExport extends PartFluidIO {
 	}
 
 	@Override
-	public boolean doWork(int rate, int TicksSinceLastCall) {
+	public TickRateModulation doWork(int rate, int TicksSinceLastCall) {
+		if (!isActive())
+			return TickRateModulation.IDLE;
 		IFluidHandler facingTank = getFacingTank();
-		if (facingTank == null || !isActive())
-			return false;
-		List<Fluid> filter = new ArrayList<Fluid>();
+		if (facingTank == null)
+			return TickRateModulation.IDLE;
+		List<Fluid> filter = new ArrayList<>();
 		filter.add(this.filterFluids[4]);
 
 		if (this.filterSize >= 1) {
@@ -69,12 +72,12 @@ public class PartFluidExport extends PartFluidIO {
 					stack = this.extractFluid(stack, Actionable.MODULATE);
 					if (stack != null && stack.getStackSize() > 0) {
 						facingTank.fill(this.getSide().getOpposite(), stack.getFluidStack(), true);
-						return true;
+						return TickRateModulation.FASTER;
 					}
 				}
 			}
 		}
-		return false;
+		return TickRateModulation.SLOWER;
 	}
 
 	@Override

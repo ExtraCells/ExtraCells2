@@ -2,7 +2,9 @@ package extracells.gui.widget.fluid;
 
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.Extracells;
+import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -51,17 +53,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 						mouseX, mouseY))
 			return false;
 
-		String amountToText = Long.toString(this.amount) + "mB";
-		if (Extracells.shortenedBuckets()) {
-			if (this.amount > 1000000000L)
-				amountToText = Long.toString(this.amount / 1000000000L)
-						+ "MegaB";
-			else if (this.amount > 1000000L)
-				amountToText = Long.toString(this.amount / 1000000L) + "KiloB";
-			else if (this.amount > 9999L) {
-				amountToText = Long.toString(this.amount / 1000L) + "B";
-			}
-		}
+		String amountToText = FluidUtil.formatFluidAmount(this.amount, true);
 
 		List<String> description = new ArrayList<String>();
 		description.add(this.fluid.getLocalizedName(new FluidStack(this.fluid, 0)));
@@ -74,6 +66,7 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 
 	@Override
 	public void drawWidget(int posX, int posY) {
+		FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		Minecraft.getMinecraft().renderEngine
 				.bindTexture(TextureMap.locationBlocksTexture);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -90,6 +83,25 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 					this.fluid.getIcon(), this.height - 2, this.width - 2);
 		}
 		GL11.glColor3f(1F, 1F, 1F);
+
+		final float scaleFactor = 0.5f;
+		final float inverseScaleFactor = 1.0f / scaleFactor;
+		final float offset = -1.0f;
+		final String stackSize = FluidUtil.formatFluidAmount(this.amount);
+
+		GL11.glDisable( GL11.GL_BLEND );
+		GL11.glDisable( GL11.GL_DEPTH_TEST );
+		GL11.glPushMatrix();
+		GL11.glScaled( scaleFactor, scaleFactor, scaleFactor );
+
+		final int X = (int) ( ( (float) posX + offset + 16.0f - fontRenderer.getStringWidth( stackSize ) * scaleFactor ) * inverseScaleFactor );
+		final int Y = (int) ( ( (float) posY + offset + 16.0f - 7.0f * scaleFactor ) * inverseScaleFactor );
+		fontRenderer.drawStringWithShadow( stackSize, X, Y, 16777215 );
+
+		GL11.glPopMatrix();
+		GL11.glEnable( GL11.GL_BLEND );
+		GL11.glEnable( GL11.GL_DEPTH_TEST );
+
 		if (this.fluid == currentFluid)
 			drawHollowRectWithCorners(posX, posY, this.height, this.width,
 					this.color, this.borderThickness);

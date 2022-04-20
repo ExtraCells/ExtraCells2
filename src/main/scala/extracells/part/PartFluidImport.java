@@ -4,6 +4,7 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
@@ -45,9 +46,9 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 	}
 
 	@Override
-	public boolean doWork(int rate, int TicksSinceLastCall) {
-		if (getFacingTank() == null || !isActive())
-			return false;
+	public TickRateModulation doWork(int rate, int TicksSinceLastCall) {
+		if (!isActive() || getFacingTank() == null)
+			return TickRateModulation.IDLE;
 		boolean empty = true;
 
 		List<Fluid> filter = new ArrayList<Fluid>();
@@ -74,11 +75,13 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 				empty = false;
 
 				if (fillToNetwork(fluid, rate * TicksSinceLastCall)) {
-					return true;
+					return TickRateModulation.FASTER;
 				}
 			}
 		}
-		return empty && fillToNetwork(null, rate * TicksSinceLastCall);
+		return (empty && fillToNetwork(null, rate * TicksSinceLastCall))
+			? TickRateModulation.FASTER
+			: TickRateModulation.SLOWER;
 	}
 
 	@Override

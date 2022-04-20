@@ -163,7 +163,7 @@ public class ContainerFluidStorage extends Container implements
 		if (FluidUtil.isEmpty(container)) {
 			if (this.selectedFluid == null)
 				return;
-			int capacity = FluidUtil.getCapacity(container);
+			int capacity = FluidUtil.getCapacity(container, this.selectedFluid);
 			//Tries to simulate the extraction of fluid from storage.
 			IAEFluidStack result = this.monitor.extractItems(FluidUtil.createAEFluidStack(this.selectedFluid, capacity), Actionable.SIMULATE, new PlayerSource(this.player, null));
 

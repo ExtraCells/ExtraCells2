@@ -125,11 +125,15 @@ public class PartFluidLevelEmitter extends PartECBase implements
 	@Override
 	public void onStackChange(IItemList o, IAEStack fullStack,
 			IAEStack diffStack, BaseActionSource src, StorageChannel chan) {
+		long previousAmount = this.currentAmount;
 		if (chan == StorageChannel.FLUIDS && diffStack != null
 				&& ((IAEFluidStack) diffStack).getFluid() == this.fluid) {
 			this.currentAmount = fullStack != null ? fullStack.getStackSize()
 					: 0;
-
+			if (Long.compare(currentAmount, wantedAmount) == Long.compare(previousAmount, wantedAmount)) {
+				// Don't send updates when amount has changed, but not its relation to wantedAmount
+				return;
+			}
 			IGridNode node = getGridNode();
 			if (node != null) {
 				setActive(node.isActive());

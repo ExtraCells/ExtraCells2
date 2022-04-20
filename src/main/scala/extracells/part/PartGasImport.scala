@@ -1,9 +1,9 @@
 package extracells.part
 
 import java.util
-
 import appeng.api.config.Actionable
 import appeng.api.networking.security.MachineSource
+import appeng.api.networking.ticking.TickRateModulation
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.Optional
@@ -21,8 +21,8 @@ class PartGasImport extends PartFluidImport with IGasHandler{
 
   private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
-  override def doWork(rate: Int, TicksSinceLastCall: Int): Boolean = {
-    if ((!isMekanismEnabled) || getFacingGasTank == null || !isActive) return false
+  override def doWork(rate: Int, TicksSinceLastCall: Int): TickRateModulation = {
+    if (!isActive || (!isMekanismEnabled) || getFacingGasTank == null) return TickRateModulation.IDLE
     var empty: Boolean = true
     val filter: util.List[Fluid] = new util.ArrayList[Fluid]
     filter.add(this.filterFluids(4))
@@ -57,11 +57,15 @@ class PartGasImport extends PartFluidImport with IGasHandler{
       if (fluid != null) {
         empty = false
         if (fillToNetwork(fluid, rate * TicksSinceLastCall)) {
-          return true
+          return TickRateModulation.FASTER
         }
       }
     }
-    empty && fillToNetwork(null, rate * TicksSinceLastCall)
+    if (empty && fillToNetwork(null, rate * TicksSinceLastCall)) {
+      TickRateModulation.FASTER
+    } else {
+      TickRateModulation.SLOWER
+    }
   }
 
   @Optional.Method(modid = "MekanismAPI|gas")

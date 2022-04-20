@@ -211,7 +211,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 			Fluid fluid = fluidStack.getFluid();
 			if (fluid == null)
 				continue;
-			int maxCapacity = FluidUtil.getCapacity(this.containerItem);
+			int maxCapacity = FluidUtil.getCapacity(this.containerItem, fluid);
 			if (maxCapacity == 0)
 				continue;
 			MutablePair<Integer, ItemStack> filled = FluidUtil.fillStack(
@@ -246,7 +246,7 @@ public class TileEntityFluidFiller extends TileBase implements IActionHost,
 						new FluidStack(
 								fluid.getFluid(),
 								FluidUtil.getCapacity(patternDetails
-										.getCondensedInputs()[0].getItemStack())));
+										.getCondensedInputs()[0].getItemStack(), fluid.getFluid())));
 		IAEFluidStack extracted = storage.getFluidInventory()
 				.extractItems(fluidStack.copy(), Actionable.SIMULATE,
 						new MachineSource(this));

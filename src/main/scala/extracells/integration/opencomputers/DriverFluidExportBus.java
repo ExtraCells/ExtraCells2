@@ -1,5 +1,6 @@
 package extracells.integration.opencomputers;
 
+import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import extracells.part.PartFluidExport;
@@ -40,7 +41,7 @@ public class DriverFluidExportBus implements SidedBlock{
 			return null;
 		return new Environment((IPartHost) tile);
 	}
-	
+
 	private static PartFluidExport getExportBus(World world, int x, int y, int z, ForgeDirection dir){
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if (tile == null || (!(tile instanceof IPartHost)))
@@ -60,12 +61,12 @@ public class DriverFluidExportBus implements SidedBlock{
 			return null;
 		}
 	}
-	
+
 	public class Environment extends ManagedEnvironment implements NamedBlock{
-		
+
 		protected final TileEntity tile;
 		protected final IPartHost host;
-		
+
 		Environment(IPartHost host){
 			tile = (TileEntity) host;
 			this.host = host;
@@ -91,9 +92,9 @@ public class DriverFluidExportBus implements SidedBlock{
 			}catch(Throwable e){
 				return new Object[]{null, "Invalid slot"};
 			}
-			
+
 		}
-		
+
 		@Callback(doc = "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the fluid export bus pointing in the specified direction to export fluid stacks matching the specified descriptor.")
 		public Object[] setFluidExportConfiguration(Context context, Arguments args){
 			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
@@ -150,7 +151,7 @@ public class DriverFluidExportBus implements SidedBlock{
 				return new Object[]{false, "invalid slot"};
 			}
 		}
-		
+
 		@Callback(doc = "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single export operation.")
 		public Object[] exportFluid(Context context, Arguments args){
 			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
@@ -162,7 +163,7 @@ public class DriverFluidExportBus implements SidedBlock{
 			if (part.getFacingTank() == null)
 				return new Object[]{false, "no tank"};
 			int amount = Math.min(args.optInteger(1, 625), 125 + part.getSpeedState() * 125);
-			boolean didSomething = part.doWork(amount, 1);
+			boolean didSomething = part.doWork(amount, 1) == TickRateModulation.FASTER;
 			if (didSomething)
 				context.pause(0.25);
 			return new Object[]{didSomething};
@@ -177,7 +178,7 @@ public class DriverFluidExportBus implements SidedBlock{
 		public int priority() {
 			return 2;
 		}
-		
+
 	}
 	static class Provider implements EnvironmentProvider {
 		@Override

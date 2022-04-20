@@ -97,12 +97,12 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		}
 		return false;
 	}
-	
+
 	public byte getSpeedState(){
 		return this.speedState;
 	}
 
-	public abstract boolean doWork(int rate, int TicksSinceLastCall);
+	public abstract TickRateModulation doWork(int rate, int TicksSinceLastCall);
 
 	@Override
 	public abstract void getBoxes(IPartCollisionHelper bch);
@@ -253,10 +253,8 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 	@Override
 	public final TickRateModulation tickingRequest(IGridNode node,
 			int TicksSinceLastCall) {
-		if (canDoWork())
-			return doWork(125 + this.speedState * 125, TicksSinceLastCall) ? TickRateModulation.FASTER
-					: TickRateModulation.SLOWER;
-		return TickRateModulation.SLOWER;
+		return canDoWork() ? doWork(125 + this.speedState * 125, TicksSinceLastCall)
+			: TickRateModulation.IDLE;
 	}
 
 	@Override

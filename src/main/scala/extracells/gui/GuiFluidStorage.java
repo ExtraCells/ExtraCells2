@@ -10,6 +10,7 @@ import extracells.gui.widget.fluid.IFluidSelectorContainer;
 import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidStorage;
+import extracells.util.FluidUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -66,20 +67,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 		drawWidgets(mouseX, mouseY);
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
-			String amountToText = Long.toString(currentFluidAmount) + "mB";
-			if (Extracells.shortenedBuckets()) {
-				if (currentFluidAmount > 1000000000L)
-					amountToText = Long
-							.toString(currentFluidAmount / 1000000000L)
-							+ "MegaB";
-				else if (currentFluidAmount > 1000000L)
-					amountToText = Long.toString(currentFluidAmount / 1000000L)
-							+ "KiloB";
-				else if (currentFluidAmount > 9999L) {
-					amountToText = Long.toString(currentFluidAmount / 1000L)
-							+ "B";
-				}
-			}
+			String amountToText = FluidUtil.formatFluidAmount(currentFluidAmount, true);
 
 			this.fontRendererObj.drawString(
 					StatCollector.translateToLocal("extracells.tooltip.amount")
