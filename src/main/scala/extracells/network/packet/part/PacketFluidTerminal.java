@@ -141,9 +141,8 @@ public class PacketFluidTerminal extends AbstractPacket {
 		switch (this.mode) {
 		case 0:
 			for (IAEFluidStack stack : this.fluidStackList) {
-				FluidStack fluidStack = stack.getFluidStack();
-				writeFluid(fluidStack.getFluid(), out);
-				out.writeLong(fluidStack.amount);
+				writeFluid(stack.getFluid(), out);
+				out.writeLong(stack.getStackSize());
 			}
 			break;
 		case 1:
