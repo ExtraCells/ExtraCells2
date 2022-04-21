@@ -913,15 +913,17 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 			forceUpdate();
 		IGrid grid = node.getGrid();
 		if (grid == null)
-			return TickRateModulation.URGENT;
+			return TickRateModulation.IDLE;
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 		if (storage == null)
-			return TickRateModulation.URGENT;
+			return TickRateModulation.IDLE;
 		pushItems();
+		boolean didWork = false;
 		if (this.toExport != null) {
 			storage.getItemInventory().injectItems(this.toExport,
 					Actionable.MODULATE, new MachineSource(this));
 			this.toExport = null;
+			didWork = true;
 		}
 		if (this.update) {
 			this.update = false;
@@ -935,7 +937,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		if (this.tank.getFluid() != null
 				&& FluidRegistry.getFluid(this.fluidFilter) != this.tank
 						.getFluid().getFluid()) {
-			FluidStack s = this.tank.drain(125, false);
+			FluidStack s = this.tank.drain(125 * TicksSinceLastCall, false);
 			if (s != null) {
 				IAEFluidStack notAdded = storage.getFluidInventory()
 						.injectItems(
@@ -962,6 +964,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 					this.doNextUpdate = true;
 					this.needBreake = false;
 				}
+				didWork = true;
 			}
 		}
 		if ((this.tank.getFluid() == null || this.tank.getFluid().getFluid() == FluidRegistry
@@ -972,13 +975,13 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 							.storage()
 							.createFluidStack(
 									new FluidStack(FluidRegistry
-											.getFluid(this.fluidFilter), 125)),
+											.getFluid(this.fluidFilter), 125 * TicksSinceLastCall)),
 					Actionable.SIMULATE, new MachineSource(this));
 			if (extracted == null)
-				return TickRateModulation.URGENT;
+				return TickRateModulation.SLOWER;
 			int accepted = this.tank.fill(extracted.getFluidStack(), false);
 			if (accepted == 0)
-				return TickRateModulation.URGENT;
+				return TickRateModulation.SLOWER;
 			this.tank
 					.fill(storage
 							.getFluidInventory()
@@ -995,8 +998,9 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 							true);
 			this.doNextUpdate = true;
 			this.needBreake = false;
+			didWork = true;
 		}
-		return TickRateModulation.URGENT;
+		return didWork ? TickRateModulation.URGENT : TickRateModulation.SLOWER;
 	}
 
 	public NBTTagCompound writeFilter(NBTTagCompound tag) {
