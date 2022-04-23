@@ -25,10 +25,12 @@ import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -114,43 +116,77 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 		if (FluidUtil.isEmpty(container)) {
 			if (this.currentFluid == null)
 				return;
-			int capacity = FluidUtil.getCapacity(container, this.currentFluid);
-			IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, capacity), Actionable.SIMULATE, this.machineSource);
-			int proposedAmount = result == null ? 0 : (int) Math.min(capacity, result.getStackSize());
-			if(proposedAmount == 0)
+			FluidStack request = new FluidStack(this.currentFluid, Integer.MAX_VALUE);
+			MutablePair<ItemStack, FluidStack> simulation = FluidUtil.fillItemFromAe(container, request, monitor, Actionable.SIMULATE, this.machineSource);
+			if (simulation == null || simulation.getLeft() == null) {
 				return;
-			MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container, new FluidStack(this.currentFluid, proposedAmount));
-			if(filledContainer.getLeft() > proposedAmount)
-				return;
-			if (fillSecondSlot(filledContainer.getRight())) {
-				monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, filledContainer.getLeft()), Actionable.MODULATE, this.machineSource);
-				decreaseFirstSlot();
 			}
+			if (!fillSecondSlot(simulation.getLeft(), false)) {
+				return;
+			}
+			request.amount = simulation.getRight().amount;
+			MutablePair<ItemStack, FluidStack> result = FluidUtil.fillItemFromAe(container, request, monitor, Actionable.MODULATE, this.machineSource);
+			if (result == null || result.getLeft() == null) {
+				return;
+			}
+			if (!fillSecondSlot(result.getLeft(), true)) {
+				// Rare case: couldn't withdraw all requested fluid with AE, so a partially filled container can't stack with the other containers
+				TileEntity host = getHostTile();
+				if (host == null || host.getWorldObj() == null) {
+					return;
+				}
+				ForgeDirection side = getSide();
+				EntityItem overflow = new EntityItem(host.getWorldObj(),
+					host.xCoord + side.offsetX, host.yCoord + side.offsetY, host.zCoord + side.offsetZ,
+					result.getLeft());
+				host.getWorldObj().spawnEntityInWorld(overflow);
+			}
+			decreaseFirstSlot();
 		} else {
 			FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
-			IAEFluidStack notInjected = monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.SIMULATE, this.machineSource);
-			if (notInjected != null)
+
+			ItemStack simulation = FluidUtil.drainItemIntoAe(container, monitor, Actionable.SIMULATE, this.machineSource);
+			if (simulation == null) {
 				return;
-			MutablePair<Integer, ItemStack> drainedContainer = FluidUtil.drainStack(container, containerFluid);
-			ItemStack emptyContainer = drainedContainer.getRight();
-			if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
-				monitor.injectItems(FluidUtil.createAEFluidStack(containerFluid), Actionable.MODULATE, this.machineSource);
-				decreaseFirstSlot();
 			}
+			if (!fillSecondSlot(simulation, false)) {
+				return;
+			}
+			ItemStack result = FluidUtil.drainItemIntoAe(container, monitor, Actionable.MODULATE, this.machineSource);
+			if (result == null) {
+				return;
+			}
+			if (!fillSecondSlot(result, true)) {
+				// Rare case: couldn't withdraw all requested fluid with AE, so a partially filled container can't stack with the other containers
+				TileEntity host = getHostTile();
+				if (host == null || host.getWorldObj() == null) {
+					return;
+				}
+				ForgeDirection side = getSide();
+				EntityItem overflow = new EntityItem(host.getWorldObj(),
+					host.xCoord + side.offsetX, host.yCoord + side.offsetY, host.zCoord + side.offsetZ,
+					result);
+				host.getWorldObj().spawnEntityInWorld(overflow);
+			}
+			decreaseFirstSlot();
 		}
 	}
 
-	public boolean fillSecondSlot(ItemStack itemStack) {
+	public boolean fillSecondSlot(ItemStack itemStack, boolean doFill) {
 		if (itemStack == null)
 			return false;
 		ItemStack secondSlot = this.inventory.getStackInSlot(1);
 		if (secondSlot == null) {
-			this.inventory.setInventorySlotContents(1, itemStack);
+			if (doFill) {
+				this.inventory.setInventorySlotContents(1, itemStack);
+			}
 			return true;
 		} else {
 			if (!secondSlot.isItemEqual(itemStack) || !ItemStack.areItemStackTagsEqual(itemStack, secondSlot))
 				return false;
-			this.inventory.incrStackSize(1, itemStack.stackSize);
+			if (doFill) {
+				this.inventory.incrStackSize(1, itemStack.stackSize);
+			}
 			return true;
 		}
 	}
@@ -183,7 +219,7 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 
 	@Override
 	public TickingRequest getTickingRequest(IGridNode node) {
-		return new TickingRequest(1, 20, false, false);
+		return new TickingRequest(2, 20, false, false);
 	}
 
 	@Override

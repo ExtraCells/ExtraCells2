@@ -65,7 +65,7 @@ class PartGasTerminal extends PartFluidTerminal{
         this.inventory.setInventorySlotContents(0, filledContainer.getRight)
         monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
         doNextFill = true
-      }else if (fillSecondSlot(filledContainer.getRight)) {
+      }else if (fillSecondSlot(filledContainer.getRight, true)) {
         monitor.extractItems(FluidUtil.createAEFluidStack(this.currentFluid, filledContainer.getLeft.toLong), Actionable.MODULATE, this.machineSource)
         decreaseFirstSlot
         doNextFill = false
@@ -83,7 +83,7 @@ class PartGasTerminal extends PartFluidTerminal{
       if (emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null && emptyContainer.stackSize == 1) {
         monitor.injectItems(GasUtil.createAEFluidStack(gasStack), Actionable.MODULATE, this.machineSource)
         this.inventory.setInventorySlotContents(0, emptyContainer)
-      }else if (emptyContainer == null || fillSecondSlot(emptyContainer)) {
+      }else if (emptyContainer == null || fillSecondSlot(emptyContainer, true)) {
         monitor.injectItems(GasUtil.createAEFluidStack(containerGas), Actionable.MODULATE, this.machineSource)
         decreaseFirstSlot
       }

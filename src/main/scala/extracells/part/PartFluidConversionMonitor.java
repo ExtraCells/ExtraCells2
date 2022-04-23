@@ -20,7 +20,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
@@ -33,90 +32,42 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
 			return true;
 		if (player.worldObj.isRemote)
 			return true;
-		ItemStack s = player.getCurrentEquippedItem();
+		ItemStack heldItem = player.getCurrentEquippedItem();
 		IMEMonitor<IAEFluidStack> mon = getFluidStorage();
-		if (this.locked && s != null && mon != null) {
-			ItemStack s2 = s.copy();
-			s2.stackSize = 1;
-			if (FluidUtil.isFilled(s2)) {
-				FluidStack f = FluidUtil.getFluidFromContainer(s2);
-				if (f == null)
+		if (this.locked && heldItem != null && mon != null) {
+			ItemStack container = heldItem.copy();
+			container.stackSize = 1;
+			MachineSource src = new MachineSource(this);
+			ItemStack result = null;
+			if (FluidUtil.isFilled(container)) {
+				FluidStack f = FluidUtil.getFluidFromContainer(container);
+				if (f == null) {
 					return true;
-				IAEFluidStack fl = FluidUtil.createAEFluidStack(f);
-				IAEFluidStack not = mon.injectItems(fl.copy(),
-						Actionable.SIMULATE, new MachineSource(this));
-				if (mon.canAccept(fl)
-						&& (not == null || not.getStackSize() == 0L)) {
-					MutablePair<Integer, ItemStack> empty1 = FluidUtil.drainStack(s2, f);
-					int amount = empty1.getLeft();
-					if (amount > 0) {
-						f.amount = amount;
-						fl.setStackSize(amount);
-						not = mon.injectItems(fl.copy(), Actionable.SIMULATE, new MachineSource(this));
-						if (mon.canAccept(fl) && (not == null || not.getStackSize() == 0L)) {
-							mon.injectItems(fl, Actionable.MODULATE, new MachineSource(this));
-							ItemStack empty = empty1.right;
-							if (empty != null) {
-								TileEntity tile = this.getHost().getTile();
-								ForgeDirection side = this.getSide();
-								this.dropItems(tile.getWorldObj(), tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, empty);
-							}
-							ItemStack s3 = s.copy();
-							s3.stackSize--;
-							if (s3.stackSize <= 0)
-								player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-							else
-								player.inventory.setInventorySlotContents(player.inventory.currentItem, s3);
-						}
-					}
 				}
-				return true;
-			} else if (FluidUtil.isEmpty(s2)) {
+				ItemStack simulation = FluidUtil.drainItemIntoAe(container, mon, Actionable.SIMULATE, src);
+				if (simulation == null) {
+					return true;
+				}
+				result = FluidUtil.drainItemIntoAe(container, mon, Actionable.MODULATE, src);
+			} else if (FluidUtil.isEmpty(container)) {
 				if (this.fluid == null)
 					return true;
-				IAEFluidStack extract;
-				if (s2.getItem() instanceof IFluidContainerItem) {
-					extract = mon.extractItems(FluidUtil.createAEFluidStack(
-							this.fluid, ((IFluidContainerItem) s2.getItem())
-									.getCapacity(s2)), Actionable.SIMULATE,
-							new MachineSource(this));
-				} else
-					extract = mon.extractItems(
-							FluidUtil.createAEFluidStack(this.fluid),
-							Actionable.SIMULATE, new MachineSource(this));
-				if (extract != null) {
-					if (extract.getStackSize() <= 0)
-						return true;
-					extract = mon.extractItems(extract, Actionable.MODULATE, new MachineSource(this));
-					if (extract == null || extract.getStackSize() <= 0)
-						return true;
-
-					MutablePair<Integer, ItemStack> empty1 = FluidUtil
-							.fillStack(s2, extract.getFluidStack());
-					if (empty1.left == 0) {
-						mon.injectItems(extract, Actionable.MODULATE, new MachineSource(this));
-						return true;
-					}
-					ItemStack empty = empty1.right;
-					if (empty != null) {
-						dropItems(getHost().getTile().getWorldObj(), getHost()
-								.getTile().xCoord + getSide().offsetX,
-								getHost().getTile().yCoord + getSide().offsetY,
-								getHost().getTile().zCoord + getSide().offsetZ,
-								empty);
-					}
-					ItemStack s3 = s.copy();
-					s3.stackSize = s3.stackSize - 1;
-					if (s3.stackSize == 0) {
-						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem, null);
-					} else {
-						player.inventory.setInventorySlotContents(
-								player.inventory.currentItem, s3);
-					}
+				MutablePair<ItemStack, FluidStack> simulation = FluidUtil.fillItemFromAe(container, new FluidStack(this.fluid, Integer.MAX_VALUE), mon, Actionable.SIMULATE, src);
+				if (simulation == null || simulation.getLeft() == null) {
+					return true;
 				}
+				result = FluidUtil.fillItemFromAe(container, new FluidStack(this.fluid, Integer.MAX_VALUE), mon, Actionable.MODULATE, src).getLeft();
+			}
+			if (result == null) {
 				return true;
 			}
+			TileEntity tile = this.getHost().getTile();
+			ForgeDirection side = this.getSide();
+			this.dropItems(tile.getWorldObj(), tile.xCoord + side.offsetX, tile.yCoord + side.offsetY, tile.zCoord + side.offsetZ, result);
+			ItemStack newHeldItem = heldItem.copy();
+			newHeldItem.stackSize--;
+			player.inventory.setInventorySlotContents(player.inventory.currentItem, newHeldItem.stackSize <= 0 ? null : newHeldItem);
+			return true;
 		}
 		return false;
 	}

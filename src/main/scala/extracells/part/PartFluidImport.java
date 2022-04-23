@@ -10,6 +10,7 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.render.TextureManager;
@@ -118,6 +119,9 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 		} else {
 			drained = facingTank.drain(side.getOpposite(), new FluidStack(
 					fluid, toDrain), false);
+			if (drained.getFluidID() != fluid.getID()) {
+				return false;
+			}
 		}
 
 		if (drained == null || drained.amount <= 0 || drained.getFluidID() <= 0)
@@ -125,29 +129,44 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
 		IAEFluidStack toFill = AEApi.instance().storage()
 				.createFluidStack(drained);
-		IAEFluidStack notInjected = injectFluid(toFill, Actionable.MODULATE);
+		IAEFluidStack notInjected = injectFluid(toFill, Actionable.SIMULATE);
 
+		int amount = toFill.getFluidStack().amount;
 		if (notInjected != null) {
-			int amount = (int) (toFill.getStackSize() - notInjected
-					.getStackSize());
-			if (amount > 0) {
-				if (fluid == null)
-					facingTank.drain(side.getOpposite(), amount, true);
-				else
-					facingTank.drain(side.getOpposite(),
-							new FluidStack(toFill.getFluid(), amount), true);
-				return true;
+			amount -= notInjected.getFluidStack().amount;
+		}
+		if (amount > 0) {
+			FluidStack actuallyDrained;
+			if (fluid == null) {
+				actuallyDrained = facingTank.drain(side.getOpposite(), amount, true);
 			} else {
+				actuallyDrained = facingTank.drain(side.getOpposite(),
+					new FluidStack(toFill.getFluid(), amount), true);
+				if (actuallyDrained.getFluidID() != fluid.getID()) {
+					return false;
+				}
+			}
+			if (actuallyDrained == null || actuallyDrained.amount <= 0) {
 				return false;
 			}
-		} else {
-			if (fluid == null)
-				facingTank.drain(side.getOpposite(),
-						toFill.getFluidStack().amount, true);
-			else
-				facingTank.drain(side.getOpposite(), toFill.getFluidStack(),
-						true);
+			toFill.setStackSize(actuallyDrained.amount);
+			IAEFluidStack actuallyNotInjected = injectFluid(toFill, Actionable.MODULATE);
+			if (actuallyNotInjected != null && actuallyNotInjected.getStackSize() > 0) {
+				// attempt to return fluid
+				int returned = facingTank.fill(side.getOpposite(), actuallyNotInjected.getFluidStack(), true);
+				if (returned != actuallyNotInjected.getStackSize()) {
+					FMLLog.severe("[ExtraCells2] Import bus at %d:%d,%d,%d voided %d mL of %s",
+						tile.getWorldObj().provider.dimensionId,
+						tile.xCoord,
+						tile.yCoord,
+						tile.zCoord,
+						actuallyNotInjected.getStackSize() - returned,
+						fluid.getName());
+				}
+			}
 			return true;
+		} else {
+			return false;
 		}
 	}
 

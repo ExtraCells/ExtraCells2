@@ -9,6 +9,7 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.render.TextureManager;
@@ -16,6 +17,7 @@ import extracells.util.PermissionUtil;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -35,7 +37,7 @@ public class PartFluidExport extends PartFluidIO {
 
 	@Override
 	public TickRateModulation doWork(int rate, int TicksSinceLastCall) {
-		if (!isActive())
+		if (!isActive() || tile == null)
 			return TickRateModulation.IDLE;
 		IFluidHandler facingTank = getFacingTank();
 		if (facingTank == null)
@@ -71,7 +73,21 @@ public class PartFluidExport extends PartFluidIO {
 					stack.setStackSize(filled);
 					stack = this.extractFluid(stack, Actionable.MODULATE);
 					if (stack != null && stack.getStackSize() > 0) {
-						facingTank.fill(this.getSide().getOpposite(), stack.getFluidStack(), true);
+						int actuallyFilled = facingTank.fill(this.getSide().getOpposite(), stack.getFluidStack(), true);
+						if (actuallyFilled < stack.getStackSize()) {
+							// try to return to AE
+							int toReturn = (int)stack.getStackSize() - actuallyFilled;
+							IAEFluidStack returned = injectFluid(AEApi.instance().storage().createFluidStack(new FluidStack(fluid, toReturn)), Actionable.MODULATE);
+							if (returned != null) {
+								FMLLog.severe("[ExtraCells2] Export bus at %d:%d,%d,%d voided %d mL of %s",
+									tile.getWorldObj().provider.dimensionId,
+									tile.xCoord,
+									tile.yCoord,
+									tile.zCoord,
+									toReturn - returned.getStackSize(),
+									fluid.getName());
+							}
+						}
 						return TickRateModulation.FASTER;
 					}
 				}

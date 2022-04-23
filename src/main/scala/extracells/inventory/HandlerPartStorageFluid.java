@@ -79,7 +79,7 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 	@Override
 	public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src) {
 		if (!this.node.isActive()
-				|| !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE))
+				|| !this.access.hasPermission(AccessRestriction.READ))
 			return null;
 		if (this.externalSystem != null && request != null) {
 			IStorageMonitorable monitor = this.externalSystem.getMonitorable(
@@ -92,13 +92,13 @@ public class HandlerPartStorageFluid implements IMEInventoryHandler<IAEFluidStac
 				return null;
 			return fluidInventory.extractItems(request, mode, src);
 
-		}else if(externalHandler != null && request != null){
+		} else if(externalHandler != null && request != null) {
 			IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(this.tile, this.node.getSide().getOpposite(), StorageChannel.FLUIDS, new MachineSource(this.node));
 			if(inventory == null)
 				return null;
 			return inventory.extractItems(request, mode, new MachineSource(this.node));
 		}
-		if (this.tank == null || request == null || this.access == AccessRestriction.WRITE || this.access == AccessRestriction.NO_ACCESS)
+		if (this.tank == null || request == null)
 			return null;
 		FluidStack toDrain = request.getFluidStack();
 		if (!this.tank.canDrain(this.node.getSide().getOpposite(), toDrain.getFluid()))

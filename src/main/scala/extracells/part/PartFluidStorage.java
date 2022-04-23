@@ -46,7 +46,7 @@ import java.util.List;
 
 public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
 
-	private HashMap<FluidStack, Integer> fluidList = new HashMap<FluidStack, Integer>();
+	private HashMap<IAEFluidStack, Long> fluidList = new HashMap<IAEFluidStack, Long>();
 	private int priority = 0;
 	protected HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
 	private Fluid[] filterFluids = new Fluid[54];
@@ -286,22 +286,20 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 		data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
 		data.setString("access", this.access.name());
 	}
-	
+
 	private void updateNeighborFluids(){
 		fluidList.clear();
 		if(access == AccessRestriction.READ || access == AccessRestriction.READ_WRITE){
 			for(IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())){
-				FluidStack s = stack.getFluidStack().copy();
-				fluidList.put(s, s.amount);
+				fluidList.put(stack, stack.getStackSize());
 			}
 		}
 	}
-	
+
 	private boolean wasChanged(){
-		HashMap<FluidStack, Integer> fluids = new HashMap<FluidStack, Integer>();
+		HashMap<IAEFluidStack, Long> fluids = new HashMap<IAEFluidStack, Long>();
 		for(IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())){
-			FluidStack s = stack.getFluidStack();
-			fluids.put(s, s.amount);
+			fluids.put(stack, stack.getStackSize());
 		}
 		return !fluids.equals(fluidList);
 	}

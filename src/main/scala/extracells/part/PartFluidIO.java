@@ -123,7 +123,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 
 	@Override
 	public final TickingRequest getTickingRequest(IGridNode node) {
-		return new TickingRequest(1, 20, false, false);
+		return new TickingRequest(5, 60, false, false);
 	}
 
 	public ECPrivateInventory getUpgradeInventory() {

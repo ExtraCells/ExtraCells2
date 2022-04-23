@@ -1,8 +1,11 @@
 package extracells.util;
 
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
+import appeng.api.networking.security.BaseActionSource;
+import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.Extracells;
+import cpw.mods.fml.common.FMLLog;
 import extracells.item.ItemFluidPattern;
 import extracells.registries.ItemEnum;
 import net.minecraft.item.Item;
@@ -30,6 +33,12 @@ public class FluidUtil {
 				amount);
 	}
 
+	/**
+	 * Drain fluid from an item
+	 * @param itemStack Filled fluid container
+	 * @param fluid Fluid type and amount to drain
+	 * @return Amount drained and the emptied container
+	 */
 	public static MutablePair<Integer, ItemStack> drainStack(
 			ItemStack itemStack, FluidStack fluid) {
 		if (itemStack == null)
@@ -55,9 +64,15 @@ public class FluidUtil {
 		return null;
 	}
 
+	/**
+	 * Fill an ItemStack with fluid
+	 * @param itemStack Item to fill, stackSize must be 1
+	 * @param fluid The fluid amount to fill the container with
+	 * @return Pair: amount actually filled, the filled ItemStack
+	 */
 	public static MutablePair<Integer, ItemStack> fillStack(
 			ItemStack itemStack, FluidStack fluid) {
-		if (itemStack == null)
+		if (itemStack == null || itemStack.stackSize != 1)
 			return null;
 		Item item = itemStack.getItem();
 		//If its a fluid container item instance
@@ -87,20 +102,135 @@ public class FluidUtil {
 		return null;
 	}
 
+	/**
+	 * Try to fill a liquid container item from AE fluid storage. Make sure to SIMULATE first.
+	 * @param container Item to fill, stackSize must be 1
+	 * @param request Requested fluid amount, the real amount drained may be smaller
+	 * @param monitor The AE network
+	 * @param mode Whether to simulate or actually move liquids
+	 * @param src Action source for auditing
+	 * @return Null if failed, otherwise the filled container and the fluid stack it was filled with
+	 */
+	public static MutablePair<ItemStack, FluidStack> fillItemFromAe(ItemStack container, FluidStack request, IMEMonitor<IAEFluidStack> monitor, Actionable mode, BaseActionSource src) {
+		if (container == null || container.stackSize != 1) {
+			return null;
+		}
+		if (request == null || request.amount <= 0) {
+			return null;
+		}
+		if (monitor == null) {
+			return null;
+		}
+		int capacity = FluidUtil.getCapacity(container, request.getFluid());
+		int requestAmount = Integer.min(capacity, request.amount);
+		IAEFluidStack result = monitor.extractItems(FluidUtil.createAEFluidStack(request.getFluid(), requestAmount), mode, src);
+		if (result == null || result.getStackSize() <= 0) {
+			return null;
+		}
+		if (!result.getFluid().equals(request.getFluid())) {
+			FMLLog.severe("[ExtraCells2] ME network returned fluid `%s` when requesting `%s`",
+				result.getFluid().getName(), request.getUnlocalizedName());
+			return null;
+		}
+		if (result.getStackSize() > (long) requestAmount) {
+			FMLLog.severe("[ExtraCells2] ME network returned %d mB of fluid `%s` when requesting %d mB",
+				result.getStackSize(), request.getUnlocalizedName(), requestAmount);
+			return null;
+		}
+		MutablePair<Integer, ItemStack> filledContainer = FluidUtil.fillStack(container.copy(), result.getFluidStack());
+		if (filledContainer.getLeft() > (int) result.getStackSize()) {
+			FMLLog.severe("[ExtraCells2] %d mB of fluid `%s` filled container `%s` with %d mB: check fluid handler implementation",
+				result.getStackSize(), request.getUnlocalizedName(), container.getUnlocalizedName(), filledContainer.getLeft());
+			return null;
+		}
+		if (filledContainer.getLeft() < (int) result.getStackSize() && mode == Actionable.MODULATE) {
+			// Couldn't completely fill container, attempt to return to AE
+			int remaining = (int)result.getStackSize() - filledContainer.getLeft();
+			IAEFluidStack notAdded = monitor.injectItems(FluidUtil.createAEFluidStack(result.getFluid(), (long)remaining), Actionable.MODULATE, src);
+			if (notAdded != null && notAdded.getStackSize() > 0) {
+				FMLLog.severe("[ExtraCells2] %d mL of fluid `%s` voided when trying to fill container `%s`",
+					notAdded.getStackSize(), notAdded.getFluid().getName(), container.getUnlocalizedName());
+			}
+		}
+		return new MutablePair<>(filledContainer.getRight(), new FluidStack(request.getFluid(), filledContainer.getLeft()));
+	}
+
+	/**
+	 * Try to drain a liquid container item into AE fluid storage. Make sure to SIMULATE first.
+	 * @param container Item to drain, stackSize must be 1
+	 * @param monitor The AE network
+	 * @param mode Whether to simulate or actually move liquids
+	 * @param src Action source for auditing
+	 * @return Null if failed, otherwise the drained container
+	 */
+	public static ItemStack drainItemIntoAe(ItemStack container, IMEMonitor<IAEFluidStack> monitor, Actionable mode, BaseActionSource src) {
+		if (container == null || container.stackSize != 1) {
+			return null;
+		}
+		if (monitor == null) {
+			return null;
+		}
+		FluidStack fluidStack = FluidUtil.getFluidFromContainer(container);
+		MutablePair<Integer, ItemStack> drained = FluidUtil.drainStack(container.copy(), fluidStack);
+		fluidStack.amount = drained.getLeft();
+		IAEFluidStack notAdded = monitor.injectItems(FluidUtil.createAEFluidStack(fluidStack), mode, src);
+		if (notAdded == null || notAdded.getStackSize() <= 0) {
+			return drained.getRight();
+		}
+		if (!notAdded.getFluid().equals(fluidStack.getFluid())) {
+			FMLLog.severe("[ExtraCells2] ME network returned fluid `%s` when injecting `%s`",
+				notAdded.getFluid().getName(), fluidStack.getUnlocalizedName());
+			return null;
+		}
+		if (notAdded.getStackSize() > (long) fluidStack.amount) {
+			FMLLog.severe("[ExtraCells2] ME network returned %d mB of fluid `%s` when injecting %d mB",
+				notAdded.getStackSize(), fluidStack.getUnlocalizedName(), fluidStack.amount);
+			return null;
+		}
+		fluidStack.amount -= (int) notAdded.getStackSize();
+		MutablePair<Integer, ItemStack> partiallyDrained = FluidUtil.drainStack(container.copy(), fluidStack);
+		if (partiallyDrained.getLeft() > fluidStack.amount) {
+			FMLLog.severe("[ExtraCells2] Voided fluid: %d mB of fluid `%s` drained from container `%s` with %d mB: check fluid handler implementation",
+				notAdded.getStackSize(), fluidStack.getUnlocalizedName(), container.getUnlocalizedName(), partiallyDrained.getLeft());
+			// Void fluid, but at least don't void the container
+			// This generally shouldn't happen, but might for certain configurations of many storage buses pointing at the same almost-full tank
+			// when emptying items with a fixed fluid capacity that can't be partially emptied
+			return partiallyDrained.getRight();
+		}
+		if (partiallyDrained.getLeft() < fluidStack.amount) {
+			// Couldn't completely empty container, attempt to drain AE to avoid duping fluid
+			if (mode == Actionable.MODULATE) {
+				int duped = fluidStack.amount - partiallyDrained.getLeft();
+				IAEFluidStack extracted = monitor.extractItems(FluidUtil.createAEFluidStack(notAdded.getFluid(), (long) duped), Actionable.MODULATE, src);
+				if (extracted == null || extracted.getStackSize() < duped) {
+					FMLLog.severe("[ExtraCells2] %d mL of fluid `%s` duped when trying to empty container `%s`",
+						extracted == null ? duped : (duped - extracted.getStackSize()),
+						notAdded.getFluid().getName(), container.getUnlocalizedName());
+				}
+			} else {
+				return null;
+			}
+		}
+		return partiallyDrained.getRight();
+	}
+
 	public static int getCapacity(ItemStack itemStack, Fluid fluid) {
 		if (itemStack == null)
 			return 0;
 		Item item = itemStack.getItem();
 		if (item instanceof IFluidContainerItem) {
-			return ((IFluidContainerItem) item).getCapacity(itemStack);
-		} else if (FluidContainerRegistry.isEmptyContainer(itemStack)) {
-			for (FluidContainerRegistry.FluidContainerData data : FluidContainerRegistry
-					.getRegisteredFluidContainerData()) {
-				if (data != null && data.emptyContainer.isItemEqual(itemStack) && data.fluid.getFluidID() == fluid.getID()) {
-					FluidStack interior = data.fluid;
-					return interior != null ? interior.amount : 0;
+			IFluidContainerItem fluidContainerItem = (IFluidContainerItem) item;
+			int capacity = fluidContainerItem.getCapacity(itemStack);
+			FluidStack existing = fluidContainerItem.getFluid(itemStack);
+			if (existing != null) {
+				if (!existing.getFluid().equals(fluid)) {
+					return 0;
 				}
+				capacity -= existing.amount;
 			}
+			return capacity;
+		} else if (FluidContainerRegistry.isContainer(itemStack)) {
+			return FluidContainerRegistry.getContainerCapacity(new FluidStack(fluid, Integer.MAX_VALUE), itemStack);
 		}
 		return 0;
 	}

@@ -20,12 +20,12 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -38,9 +38,9 @@ import extracells.crafting.CraftingPattern2;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
-import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.EmptyMeItemMonitor;
+import extracells.util.FluidUtil;
 import extracells.util.ItemUtils;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
@@ -209,21 +209,10 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 	private IAEItemStack toExport = null;
 
 	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
-	private FluidTank tank = new FluidTank(10000) {
-		@Override
-		public FluidTank readFromNBT(NBTTagCompound nbt) {
-			if (!nbt.hasKey("Empty")) {
-				FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
-				setFluid(fluid);
-			} else {
-				setFluid(null);
-			}
-			return this;
-		}
-	};
+	private FluidTank tank = new FluidTank(10000);
 	private int fluidFilter = -1;
 	public boolean doNextUpdate = false;
-	private boolean needBreake = false;
+	private boolean needBreak = false;
 
 	private int tickCount = 0;
 
@@ -304,17 +293,9 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 		if (storage == null)
 			return 0;
-		IAEFluidStack notRemoved;
-		FluidStack copy = resource.copy();
-		if (doFill) {
-			notRemoved = storage.getFluidInventory().injectItems(
-					AEApi.instance().storage().createFluidStack(resource),
-					Actionable.MODULATE, new MachineSource(this));
-		} else {
-			notRemoved = storage.getFluidInventory().injectItems(
-					AEApi.instance().storage().createFluidStack(resource),
-					Actionable.SIMULATE, new MachineSource(this));
-		}
+		IAEFluidStack notRemoved = storage.getFluidInventory().injectItems(
+			AEApi.instance().storage().createFluidStack(resource),
+			doFill ? Actionable.MODULATE : Actionable.SIMULATE, new MachineSource(this));
 		if (notRemoved == null)
 			return resource.amount;
 		return (int) (resource.amount - notRemoved.getStackSize());
@@ -413,7 +394,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 
 	@Override
 	public TickingRequest getTickingRequest(IGridNode node) {
-		return new TickingRequest(1, 40, false, false);
+		return new TickingRequest(5, 120, false, false);
 	}
 
 	@Override
@@ -648,8 +629,10 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 					if (amount == 0)
 						return;
 					if (amount == fluid.getStackSize()) {
-						handler.fill(dir.getOpposite(), fluid.getFluidStack()
-								.copy(), true);
+						amount = handler.fill(dir.getOpposite(), fluid.getFluidStack()
+							.copy(), true);
+					}
+					if (amount == fluid.getStackSize()) {
 						this.removeFromExport.add(stack0);
 					} else {
 						IAEFluidStack f = fluid.copy();
@@ -700,7 +683,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 										.storage()
 										.createFluidStack(
 												new FluidStack(fluid,
-														(int) (amount + 0))),
+														amount.intValue())),
 								Actionable.SIMULATE, new MachineSource(this));
 				if (extractFluid == null
 						|| extractFluid.getStackSize() != amount) {
@@ -715,7 +698,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 										.storage()
 										.createFluidStack(
 												new FluidStack(fluid,
-														(int) (amount + 0))),
+														amount.intValue())),
 								Actionable.MODULATE, new MachineSource(this));
 				this.export.add(extractFluid);
 			}
@@ -932,6 +915,7 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 						.postEvent(
 								new MENetworkCraftingPatternChange(this,
 										getGridNode()));
+				getHost().markForSave();
 			}
 		}
 		if (this.tank.getFluid() != null
@@ -942,62 +926,67 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 				IAEFluidStack notAdded = storage.getFluidInventory()
 						.injectItems(
 								AEApi.instance().storage()
-										.createFluidStack(s.copy()),
+										.createFluidStack(s),
 								Actionable.SIMULATE, new MachineSource(this));
-				if (notAdded != null) {
-					int toAdd = (int) (s.amount - notAdded.getStackSize());
-					storage.getFluidInventory().injectItems(
-							AEApi.instance()
-									.storage()
-									.createFluidStack(
-											this.tank.drain(toAdd, true)),
-							Actionable.MODULATE, new MachineSource(this));
-					this.doNextUpdate = true;
-					this.needBreake = false;
-				} else {
-					storage.getFluidInventory().injectItems(
-							AEApi.instance()
-									.storage()
-									.createFluidStack(
-											this.tank.drain(s.amount, true)),
-							Actionable.MODULATE, new MachineSource(this));
-					this.doNextUpdate = true;
-					this.needBreake = false;
+				int toAdd = s.amount - (notAdded != null ? (int)notAdded.getStackSize() : 0);
+				IAEFluidStack actuallyNotInjected = storage.getFluidInventory().injectItems(
+					AEApi.instance()
+						.storage()
+						.createFluidStack(
+							this.tank.drain(toAdd, true)),
+					Actionable.MODULATE, new MachineSource(this));
+				if (actuallyNotInjected != null) {
+					int returned = this.tank.fill(actuallyNotInjected.getFluidStack(), true);
+					if (returned != actuallyNotInjected.getStackSize()) {
+						FMLLog.severe("[ExtraCells2] Interface tank import at %d:%d,%d,%d voided %d mL of %s",
+							tile.getWorldObj().provider.dimensionId,
+							tile.xCoord,
+							tile.yCoord,
+							tile.zCoord,
+							actuallyNotInjected.getStackSize() - returned,
+							actuallyNotInjected.getFluid().getName());
+					}
 				}
+				this.doNextUpdate = true;
+				this.needBreak = false;
 				didWork = true;
 			}
 		}
-		if ((this.tank.getFluid() == null || this.tank.getFluid().getFluid() == FluidRegistry
-				.getFluid(this.fluidFilter))
-				&& FluidRegistry.getFluid(this.fluidFilter) != null) {
+		if ((this.tank.getFluid() == null ||
+				(this.tank.getFluid().getFluid() == FluidRegistry
+					.getFluid(this.fluidFilter) && this.tank.getFluidAmount() < this.tank.getCapacity())
+			)
+			&& FluidRegistry.getFluid(this.fluidFilter) != null)
+		{
+			IAEFluidStack request = FluidUtil.createAEFluidStack(this.fluidFilter, 125 * TicksSinceLastCall);
 			IAEFluidStack extracted = storage.getFluidInventory().extractItems(
-					AEApi.instance()
-							.storage()
-							.createFluidStack(
-									new FluidStack(FluidRegistry
-											.getFluid(this.fluidFilter), 125 * TicksSinceLastCall)),
+					request,
 					Actionable.SIMULATE, new MachineSource(this));
 			if (extracted == null)
 				return TickRateModulation.SLOWER;
 			int accepted = this.tank.fill(extracted.getFluidStack(), false);
 			if (accepted == 0)
 				return TickRateModulation.SLOWER;
-			this.tank
-					.fill(storage
-							.getFluidInventory()
-							.extractItems(
-									AEApi.instance()
-											.storage()
-											.createFluidStack(
-													new FluidStack(
-															FluidRegistry
-																	.getFluid(this.fluidFilter),
-															accepted)),
-									Actionable.MODULATE,
-									new MachineSource(this)).getFluidStack(),
-							true);
+			request.setStackSize(Long.min(accepted, extracted.getStackSize()));
+			extracted = storage.getFluidInventory().extractItems(
+				request,
+				Actionable.MODULATE, new MachineSource(this));
+			if (extracted == null || extracted.getStackSize() <= 0) {
+				return TickRateModulation.SLOWER;
+			}
+			accepted = this.tank.fill(extracted.getFluidStack(), true);
+			if (extracted.getStackSize() != accepted) {
+				// This should never happen, but log it in case it does
+				FMLLog.severe("[ExtraCells2] Interface tank export at %d:%d,%d,%d voided %d mL of %s",
+					tile.getWorldObj().provider.dimensionId,
+					tile.xCoord,
+					tile.yCoord,
+					tile.zCoord,
+					extracted.getStackSize() - accepted,
+					request.getFluid().getName());
+			}
 			this.doNextUpdate = true;
-			this.needBreake = false;
+			this.needBreak = false;
 			didWork = true;
 		}
 		return didWork ? TickRateModulation.URGENT : TickRateModulation.SLOWER;

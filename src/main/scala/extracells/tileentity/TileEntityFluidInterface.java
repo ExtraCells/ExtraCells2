@@ -14,6 +14,7 @@ import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEFluidStack;
@@ -22,6 +23,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.DimensionalCoord;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
 import extracells.api.IECTileEntity;
 import extracells.api.IFluidInterface;
 import extracells.api.crafting.IFluidCraftingPatternDetails;
@@ -33,6 +35,7 @@ import extracells.integration.waila.IWailaTile;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
 import extracells.util.EmptyMeItemMonitor;
+import extracells.util.FluidUtil;
 import extracells.util.ItemUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -305,17 +308,9 @@ public class TileEntityFluidInterface extends TileBase implements
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 		if (storage == null)
 			return 0;
-		IAEFluidStack notRemoved;
-		FluidStack copy = resource.copy();
-		if (doFill) {
-			notRemoved = storage.getFluidInventory().injectItems(
-					AEApi.instance().storage().createFluidStack(resource),
-					Actionable.MODULATE, new MachineSource(this));
-		} else {
-			notRemoved = storage.getFluidInventory().injectItems(
-					AEApi.instance().storage().createFluidStack(resource),
-					Actionable.SIMULATE, new MachineSource(this));
-		}
+		IAEFluidStack notRemoved = storage.getFluidInventory().injectItems(
+			AEApi.instance().storage().createFluidStack(resource),
+			doFill ? Actionable.MODULATE : Actionable.SIMULATE, new MachineSource(this));
 		if (notRemoved == null)
 			return resource.amount;
 		return (int) (resource.amount - notRemoved.getStackSize());
@@ -696,7 +691,7 @@ public class TileEntityFluidInterface extends TileBase implements
 										.storage()
 										.createFluidStack(
 												new FluidStack(fluid,
-														(int) (amount + 0))),
+													amount.intValue())),
 								Actionable.SIMULATE, new MachineSource(this));
 				if (extractFluid == null
 						|| extractFluid.getStackSize() != amount) {
@@ -711,7 +706,7 @@ public class TileEntityFluidInterface extends TileBase implements
 										.storage()
 										.createFluidStack(
 												new FluidStack(fluid,
-														(int) (amount + 0))),
+														amount.intValue())),
 								Actionable.MODULATE, new MachineSource(this));
 				this.export.add(extractFluid.copy());
 			}
@@ -868,77 +863,73 @@ public class TileEntityFluidInterface extends TileBase implements
 			this.toExport = null;
 		}
 		for (int i = 0; i < this.tanks.length; i++) {
-			if (this.tanks[i].getFluid() != null
-					&& FluidRegistry.getFluid(this.fluidFilter[i]) != this.tanks[i]
-							.getFluid().getFluid()) {
-				FluidStack s = this.tanks[i].drain(125, false);
+			FluidTank tank = this.tanks[i];
+			if (tank.getFluid() != null
+				&& FluidRegistry.getFluid(this.fluidFilter[i]) != tank
+				.getFluid().getFluid()) {
+				FluidStack s = tank.drain(1000, false);
 				if (s != null) {
 					IAEFluidStack notAdded = storage.getFluidInventory()
-							.injectItems(
-									AEApi.instance().storage()
-											.createFluidStack(s.copy()),
-									Actionable.SIMULATE,
-									new MachineSource(this));
-					if (notAdded != null) {
-						int toAdd = (int) (s.amount - notAdded.getStackSize());
-						storage.getFluidInventory().injectItems(
-								AEApi.instance()
-										.storage()
-										.createFluidStack(
-												this.tanks[i]
-														.drain(toAdd, true)),
-								Actionable.MODULATE, new MachineSource(this));
-						this.doNextUpdate = true;
-						this.wasIdle = false;
-					} else {
-						storage.getFluidInventory().injectItems(
-								AEApi.instance()
-										.storage()
-										.createFluidStack(
-												this.tanks[i].drain(s.amount,
-														true)),
-								Actionable.MODULATE, new MachineSource(this));
-						this.doNextUpdate = true;
-						this.wasIdle = false;
+						.injectItems(
+							AEApi.instance().storage()
+								.createFluidStack(s),
+							Actionable.SIMULATE, new MachineSource(this));
+					int toAdd = s.amount - (notAdded != null ? (int)notAdded.getStackSize() : 0);
+					IAEFluidStack actuallyNotInjected = storage.getFluidInventory().injectItems(
+						AEApi.instance()
+							.storage()
+							.createFluidStack(
+								tank.drain(toAdd, true)),
+						Actionable.MODULATE, new MachineSource(this));
+					if (actuallyNotInjected != null) {
+						int returned = tank.fill(actuallyNotInjected.getFluidStack(), true);
+						if (returned != actuallyNotInjected.getStackSize()) {
+							FMLLog.severe("[ExtraCells2] Interface tank import at %d:%d,%d,%d voided %d mL of %s",
+								this.getWorldObj().provider.dimensionId,
+								this.xCoord,
+								this.yCoord,
+								this.zCoord,
+								actuallyNotInjected.getStackSize() - returned,
+								actuallyNotInjected.getFluid().getName());
+						}
 					}
+					this.doNextUpdate = true;
 				}
 			}
-			if ((this.tanks[i].getFluid() == null || this.tanks[i].getFluid()
-					.getFluid() == FluidRegistry.getFluid(this.fluidFilter[i]))
-					&& FluidRegistry.getFluid(this.fluidFilter[i]) != null) {
-				IAEFluidStack extracted = storage
-						.getFluidInventory()
-						.extractItems(
-								AEApi.instance()
-										.storage()
-										.createFluidStack(
-												new FluidStack(
-														FluidRegistry
-																.getFluid(this.fluidFilter[i]),
-														125)),
-								Actionable.SIMULATE, new MachineSource(this));
+			if ((tank.getFluid() == null ||
+				(tank.getFluid().getFluid() == FluidRegistry
+					.getFluid(this.fluidFilter[i]) && tank.getFluidAmount() < tank.getCapacity())
+			)
+				&& FluidRegistry.getFluid(this.fluidFilter[i]) != null)
+			{
+				IAEFluidStack request = FluidUtil.createAEFluidStack(this.fluidFilter[i], 1000);
+				IAEFluidStack extracted = storage.getFluidInventory().extractItems(
+					request,
+					Actionable.SIMULATE, new MachineSource(this));
 				if (extracted == null)
 					continue;
-				int accepted = this.tanks[i].fill(extracted.getFluidStack(),
-						false);
+				int accepted = tank.fill(extracted.getFluidStack(), false);
 				if (accepted == 0)
 					continue;
-				this.tanks[i]
-						.fill(storage
-								.getFluidInventory()
-								.extractItems(
-										AEApi.instance()
-												.storage()
-												.createFluidStack(
-														new FluidStack(
-																FluidRegistry
-																		.getFluid(this.fluidFilter[i]),
-																accepted)),
-										Actionable.MODULATE,
-										new MachineSource(this))
-								.getFluidStack(), true);
+				request.setStackSize(Long.min(accepted, extracted.getStackSize()));
+				extracted = storage.getFluidInventory().extractItems(
+					request,
+					Actionable.MODULATE, new MachineSource(this));
+				if (extracted == null || extracted.getStackSize() <= 0) {
+					continue;
+				}
+				accepted = tank.fill(extracted.getFluidStack(), true);
+				if (extracted.getStackSize() != accepted) {
+					// This should never happen, but log it in case it does
+					FMLLog.severe("[ExtraCells2] Interface tank export at %d:%d,%d,%d voided %d mL of %s",
+						this.getWorldObj().provider.dimensionId,
+						this.xCoord,
+						this.yCoord,
+						this.zCoord,
+						extracted.getStackSize() - accepted,
+						request.getFluid().getName());
+				}
 				this.doNextUpdate = true;
-				this.wasIdle = false;
 			}
 		}
 	}
