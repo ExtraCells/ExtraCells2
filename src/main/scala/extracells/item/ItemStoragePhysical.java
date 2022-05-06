@@ -35,6 +35,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
@@ -44,6 +45,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 	public static final String[] suffixes = { "256k", "1024k", "4096k", "16384k", "container" };
 
 	public static final int[] bytes_cell = { 262144, 1048576, 4194304, 16777216, 65536 };
+	public static final double[] idle_drain_cell = { 2.5, 3.0, 3.5, 4.0, 2.0 };
 	public static final int[] types_cell = { 63, 63, 63, 63, 1 };
 	private IIcon[] icons;
 	private final int MAX_POWER = 32000;
@@ -178,10 +180,15 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
 	}
 
 	@Override
+	@Deprecated
 	public double getIdleDrain() {
-		// AE2 API needs fixing to provide an ItemStack here to allow type-dependent idle drain.
-		// 2.5 corresponds to 256k based on vanilla AE2 idle drain progression
 		return 2.5;
+	}
+
+	@Override
+	public double getIdleDrain(@Nullable ItemStack cellItem) {
+		return cellItem != null ? idle_drain_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0,
+			idle_drain_cell.length - 1)] : 2.5;
 	}
 
 	@SideOnly(Side.CLIENT)
