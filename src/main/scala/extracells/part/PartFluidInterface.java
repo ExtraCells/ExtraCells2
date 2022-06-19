@@ -25,6 +25,7 @@ import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
+import appeng.util.InventoryAdaptor;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -542,82 +543,23 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 				getGridNode().getGridBlock().getLocation().y + dir.offsetY,
 				getGridNode().getGridBlock().getLocation().z + dir.offsetZ);
 		if (tile != null) {
-			IAEStack stack0 = this.export.iterator().next();
+			IAEStack stack0 = this.export.get(0);
 			IAEStack stack = stack0.copy();
 			if (stack instanceof IAEItemStack && tile instanceof IInventory) {
-				if (tile instanceof ISidedInventory) {
-					ISidedInventory inv = (ISidedInventory) tile;
-					for (int i : inv.getAccessibleSlotsFromSide(dir
-							.getOpposite().ordinal())) {
-						if (inv.canInsertItem(i, ((IAEItemStack) stack)
-								.getItemStack(), dir.getOpposite().ordinal())) {
-							if (inv.getStackInSlot(i) == null) {
-								inv.setInventorySlotContents(i,
-										((IAEItemStack) stack).getItemStack());
-								this.removeFromExport.add(stack0);
-								return;
-							} else if (ItemUtils.areItemEqualsIgnoreStackSize(
-									inv.getStackInSlot(i),
-									((IAEItemStack) stack).getItemStack())) {
-								int max = inv.getInventoryStackLimit();
-								int current = inv.getStackInSlot(i).stackSize;
-								int outStack = (int) stack.getStackSize();
-								if (max == current)
-									continue;
-								if (current + outStack <= max) {
-									ItemStack s = inv.getStackInSlot(i).copy();
-									s.stackSize = s.stackSize + outStack;
-									inv.setInventorySlotContents(i, s);
-									this.removeFromExport.add(stack0);
-									return;
-								} else {
-									ItemStack s = inv.getStackInSlot(i).copy();
-									s.stackSize = max;
-									inv.setInventorySlotContents(i, s);
-									this.removeFromExport.add(stack0);
-									stack.setStackSize(outStack - max + current);
-									this.addToExport.add(stack);
-									return;
-								}
-							}
-						}
+				InventoryAdaptor adaptor = InventoryAdaptor.getAdaptor(tile, dir.getOpposite());
+				if (adaptor != null) {
+					final ItemStack adding = ((IAEItemStack) stack).getItemStack();
+					final int originalAddingAmount = adding.stackSize;
+					final ItemStack leftover = adaptor.addItems(adding);
+					// calculate how much to remove, because getItemStack() limits stack size from a long to an int
+					final int leftoverAmount = leftover == null ? 0 : leftover.stackSize;
+					final int removedAmount = originalAddingAmount - leftoverAmount;
+					if ((long) removedAmount == stack0.getStackSize()) {
+						this.export.remove(0);
+					} else {
+						this.export.get(0).setStackSize(stack0.getStackSize() - removedAmount);
 					}
-				} else {
-					IInventory inv = (IInventory) tile;
-					for (int i = 0; i < inv.getSizeInventory(); i++) {
-						if (inv.isItemValidForSlot(i,
-								((IAEItemStack) stack).getItemStack())) {
-							if (inv.getStackInSlot(i) == null) {
-								inv.setInventorySlotContents(i,
-										((IAEItemStack) stack).getItemStack());
-								this.removeFromExport.add(stack0);
-								return;
-							} else if (ItemUtils.areItemEqualsIgnoreStackSize(
-									inv.getStackInSlot(i),
-									((IAEItemStack) stack).getItemStack())) {
-								int max = inv.getInventoryStackLimit();
-								int current = inv.getStackInSlot(i).stackSize;
-								int outStack = (int) stack.getStackSize();
-								if (max == current)
-									continue;
-								if (current + outStack <= max) {
-									ItemStack s = inv.getStackInSlot(i).copy();
-									s.stackSize = s.stackSize + outStack;
-									inv.setInventorySlotContents(i, s);
-									this.removeFromExport.add(stack0);
-									return;
-								} else {
-									ItemStack s = inv.getStackInSlot(i).copy();
-									s.stackSize = max;
-									inv.setInventorySlotContents(i, s);
-									this.removeFromExport.add(stack0);
-									stack.setStackSize(outStack - max + current);
-									this.addToExport.add(stack);
-									return;
-								}
-							}
-						}
-					}
+					return;
 				}
 			} else if (stack instanceof IAEFluidStack
 					&& tile instanceof IFluidHandler) {

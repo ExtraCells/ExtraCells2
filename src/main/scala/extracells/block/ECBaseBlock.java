@@ -110,12 +110,11 @@ public class ECBaseBlock extends BlockEC {
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int side, float p_149727_7_,
 			float p_149727_8_, float p_149727_9_) {
-		if (world.isRemote)
-			return false;
-		Random rand = new Random();
 		switch (world.getBlockMetadata(x, y, z)) {
 		case 0:
 		case 1:
+			if (world.isRemote)
+				return true;
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if (tile instanceof IECTileEntity)
 				if (!PermissionUtil.hasPermission(player,
