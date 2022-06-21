@@ -119,7 +119,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 		} else {
 			drained = facingTank.drain(side.getOpposite(), new FluidStack(
 					fluid, toDrain), false);
-			if (drained.getFluidID() != fluid.getID()) {
+			if (drained != null && drained.getFluidID() != fluid.getID()) {
 				return false;
 			}
 		}
@@ -142,7 +142,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 			} else {
 				actuallyDrained = facingTank.drain(side.getOpposite(),
 					new FluidStack(toFill.getFluid(), amount), true);
-				if (actuallyDrained.getFluidID() != fluid.getID()) {
+				if (actuallyDrained != null && actuallyDrained.getFluidID() != fluid.getID()) {
 					return false;
 				}
 			}
