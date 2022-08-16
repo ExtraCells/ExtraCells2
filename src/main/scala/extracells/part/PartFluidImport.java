@@ -161,7 +161,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 						tile.yCoord,
 						tile.zCoord,
 						actuallyNotInjected.getStackSize() - returned,
-						fluid.getName());
+						actuallyNotInjected.getFluid().getName());
 				}
 			}
 			return true;
