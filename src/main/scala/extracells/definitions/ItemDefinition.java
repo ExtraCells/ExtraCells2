@@ -144,6 +144,16 @@ public class ItemDefinition implements IItemDefinition {
 	}
 
 	@Override
+	public appeng.api.definitions.IItemDefinition physCellAdvancedSingularity() {
+		return new ItemItemDefinitions(ItemEnum.PHYSICALSTORAGESINGULARITY.getItem());
+	}
+
+	@Override
+	public appeng.api.definitions.IItemDefinition physCellAdvancedQuantum() {
+		return new ItemItemDefinitions(ItemEnum.PHYSICALSTORAGEQUANTUM.getItem());
+	}
+
+	@Override
 	public appeng.api.definitions.IItemDefinition wirelessFluidTerminal() {
 		return new ItemItemDefinitions(ItemEnum.FLUIDWIRELESSTERMINAL.getItem());
 	}
