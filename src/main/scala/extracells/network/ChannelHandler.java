@@ -6,9 +6,11 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import extracells.network.handler.other.HandlerFluidContainerSlot;
 import extracells.network.handler.other.HandlerFluidSlot;
+import extracells.network.handler.other.HandlerGuiSwitch;
 import extracells.network.handler.part.*;
 import extracells.network.packet.other.PacketFluidContainerSlot;
 import extracells.network.packet.other.PacketFluidSlot;
+import extracells.network.packet.other.PacketGuiSwitch;
 import extracells.network.packet.part.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -69,6 +71,11 @@ public class ChannelHandler {
 				PacketOreDictExport.class, 9, Side.CLIENT);
 		wrapper.registerMessage(HandlerOreDictExport.class,
 				PacketOreDictExport.class, 9, Side.SERVER);
+
+		wrapper.registerMessage(HandlerGuiSwitch.class,
+			PacketGuiSwitch.class, 10, Side.CLIENT);
+		wrapper.registerMessage(HandlerGuiSwitch.class,
+			PacketGuiSwitch.class, 10, Side.SERVER);
 
 	}
 

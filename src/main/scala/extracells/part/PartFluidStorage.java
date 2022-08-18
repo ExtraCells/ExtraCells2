@@ -15,6 +15,7 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+import appeng.helpers.IPriorityHost;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidStorage;
@@ -37,14 +38,13 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
+public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock, IPriorityHost {
 
 	private HashMap<IAEFluidStack, Long> fluidList = new HashMap<IAEFluidStack, Long>();
 	private int priority = 0;
@@ -106,6 +106,11 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	@Override
 	public int getPriority() {
 		return this.priority;
+	}
+
+	@Override
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 
 	@Override

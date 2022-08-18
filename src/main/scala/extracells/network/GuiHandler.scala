@@ -3,6 +3,8 @@ package extracells.network
 import appeng.api.parts.IPartHost
 import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
+import appeng.container.implementations.ContainerPriority
+import appeng.helpers.IPriorityHost
 import cpw.mods.fml.common.network.IGuiHandler
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import extracells.Extracells
@@ -11,7 +13,7 @@ import extracells.block.TGuiBlock
 import extracells.container._
 import extracells.gui._
 import extracells.part.PartECBase
-import extracells.registries.BlockEnum
+import extracells.registries.{BlockEnum, PartEnum}
 import extracells.tileentity.{TileEntityFluidCrafter, TileEntityFluidFiller, TileEntityFluidInterface}
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.world.World
@@ -96,7 +98,7 @@ object GuiHandler extends IGuiHandler {
 		val gui: Any = getGuiBlockElement(player, world, x, y, z)
 		if (gui != null)
 			return gui.asInstanceOf[AnyRef]
-		val side = ForgeDirection.getOrientation(ID);
+		var side = ForgeDirection.getOrientation(ID)
 		if (world.getBlock(x, y, z) == BlockEnum.FLUIDCRAFTER.getBlock()) {
 			val tileEntity = world.getTileEntity(x, y, z);
 			if (tileEntity == null || !(tileEntity.isInstanceOf[TileEntityFluidCrafter]))
@@ -114,6 +116,11 @@ object GuiHandler extends IGuiHandler {
 				return new GuiFluidFiller(player, tileEntity.asInstanceOf[TileEntityFluidFiller])
 			return null;
 		}
+		if (ID >= 100) {
+			side = ForgeDirection.getOrientation(ID % 100)
+			val part = world.getTileEntity(x, y, z).asInstanceOf[IPartHost].getPart(side).asInstanceOf[IPriorityHost]
+			return new GuiECPriority(player.inventory, part)
+		}
 		if (world != null && side != ForgeDirection.UNKNOWN)
 			return getPartGui(side, player, world, x, y, z).asInstanceOf[AnyRef]
 		getGui(ID - 6, player).asInstanceOf[AnyRef]
@@ -123,7 +130,7 @@ object GuiHandler extends IGuiHandler {
 		val con: Any = getContainerBlockElement(player, world, x, y, z)
 		if (con != null)
 			return con.asInstanceOf[AnyRef]
-		val side = ForgeDirection.getOrientation(ID)
+		var side = ForgeDirection.getOrientation(ID)
 		if (world != null && world.getBlock(x, y, z) == BlockEnum.FLUIDCRAFTER.getBlock()) {
 			val tileEntity = world.getTileEntity(x, y, z)
 			if (tileEntity == null || !(tileEntity.isInstanceOf[TileEntityFluidCrafter]))
@@ -140,6 +147,11 @@ object GuiHandler extends IGuiHandler {
 			else if (tileEntity.isInstanceOf[TileEntityFluidFiller])
 				return new ContainerFluidFiller(player.inventory, tileEntity.asInstanceOf[TileEntityFluidFiller])
 			return null
+		}
+		if (ID >= 100) {
+			side = ForgeDirection.getOrientation(ID % 100)
+			val part = world.getTileEntity(x, y, z).asInstanceOf[IPartHost].getPart(side).asInstanceOf[IPriorityHost]
+			return new ContainerPriority(player.inventory, part)
 		}
 		if (world != null && side != ForgeDirection.UNKNOWN)
 			return getPartContainer(side, player, world, x, y, z).asInstanceOf[AnyRef]

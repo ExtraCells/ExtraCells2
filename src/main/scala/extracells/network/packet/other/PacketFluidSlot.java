@@ -63,7 +63,7 @@ public class PacketFluidSlot extends AbstractPacket {
 			this.fluid = readFluid(in);
 			break;
 		case 1:
-			this.filterFluids = new ArrayList<Fluid>();
+			this.filterFluids = new ArrayList<>();
 			int size = in.readInt();
 			for (int i = 0; i < size; i++) {
 				this.filterFluids.add(readFluid(in));
@@ -88,8 +88,8 @@ public class PacketFluidSlot extends AbstractPacket {
 			break;
 		case 1:
 			out.writeInt(this.filterFluids.size());
-			for (int i = 0; i < this.filterFluids.size(); i++) {
-				writeFluid(this.filterFluids.get(i), out);
+			for (Fluid filterFluid : this.filterFluids) {
+				writeFluid(filterFluid, out);
 			}
 			break;
 		}

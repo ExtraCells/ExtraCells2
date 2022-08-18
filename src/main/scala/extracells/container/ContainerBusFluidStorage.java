@@ -45,12 +45,12 @@ public class ContainerBusFluidStorage extends Container {
 	protected void bindPlayerInventory(IInventory inventoryPlayer) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 140));
+				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 153));
 			}
 		}
 
 		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 198));
+			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 211));
 		}
 	}
 

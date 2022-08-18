@@ -1,5 +1,6 @@
 package extracells.gui.widget.fluid;
 
+import appeng.util.Platform;
 import cpw.mods.fml.common.Optional;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
@@ -38,6 +39,8 @@ public class WidgetFluidSlot extends Gui {
 	private IConfigurable configurable;
 
 	private byte configOption;
+
+	private boolean dragItem = false;
 
 	public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPartOrBlock _part,
 			int _posX, int _posY) {
@@ -185,6 +188,19 @@ public class WidgetFluidSlot extends Gui {
 	}
 
 	public void mouseClicked(ItemStack stack) {
+		if (dragItem) {
+			dragItem = false;
+			return;
+		}
+		FluidStack fluidStack = FluidUtil.getFluidFromContainer(stack);
+		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
+		new PacketFluidSlot(this.part, this.id, this.fluid, this.player).sendPacketToServer();
+	}
+
+	public void mouseNEIClicked(ItemStack stack) {
+		if (stack == null)
+			return;
+		dragItem = true;
 		FluidStack fluidStack = FluidUtil.getFluidFromContainer(stack);
 		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
 		new PacketFluidSlot(this.part, this.id, this.fluid, this.player).sendPacketToServer();
@@ -192,6 +208,16 @@ public class WidgetFluidSlot extends Gui {
 
 	@Optional.Method(modid = "MekanismAPI|gas")
 	public void mouseClickedGas(ItemStack stack) {
+		GasStack gasStack = GasUtil.getGasFromContainer(stack);
+		FluidStack fluidStack = GasUtil.getFluidStack(gasStack);
+		this.fluid = fluidStack == null ? null : fluidStack.getFluid();
+		new PacketFluidSlot(this.part, this.id, this.fluid, this.player).sendPacketToServer();
+	}
+
+	@Optional.Method(modid = "MekanismAPI|gas")
+	public void mouseNEIClickedGas(ItemStack stack) {
+		if (stack == null)
+			return;
 		GasStack gasStack = GasUtil.getGasFromContainer(stack);
 		FluidStack fluidStack = GasUtil.getFluidStack(gasStack);
 		this.fluid = fluidStack == null ? null : fluidStack.getFluid();

@@ -1,7 +1,6 @@
 package extracells.gui;
 
 import appeng.api.storage.data.IAEFluidStack;
-import extracells.Extracells;
 import extracells.api.ECApi;
 import extracells.container.ContainerFluidStorage;
 import extracells.gui.widget.FluidWidgetComparator;
