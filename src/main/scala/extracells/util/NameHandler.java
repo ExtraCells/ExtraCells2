@@ -64,6 +64,8 @@ public class NameHandler implements ISubItemResolver {
 			return new ResolverResult(ItemEnum.PHYSICALSTORAGESINGULARITY.getInternalName(), 0);
 		if (fullName.equals("physCellAdvancedQuantum"))
 			return new ResolverResult(ItemEnum.PHYSICALSTORAGEQUANTUM.getInternalName(), 0);
+		if (fullName.equals("physCellVoid"))
+			return new ResolverResult(ItemEnum.PHYSICALSTORAGEVOID.getInternalName(), 0);
 
 		// Fluid Storage Components
 		if (fullName.equals("cell1kPartFluid"))

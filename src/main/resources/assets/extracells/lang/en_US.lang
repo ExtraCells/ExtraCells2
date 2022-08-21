@@ -10,6 +10,7 @@ extracells.item.storage.physical.16384k.name=ME 16384k Storage
 extracells.item.storage.physical.container.name=ME Block Container
 extracells.item.storage.physical.advanced.singularity.name=ME Digital Singularity
 extracells.item.storage.physical.advanced.quantum.name=ME Quantum Storage
+extracells.item.storage.physical.void.name=ME Void Storage
 extracells.item.storage.fluid.1k.name=ME 1k Fluid Storage
 extracells.item.storage.fluid.4k.name=ME 4k Fluid Storage
 extracells.item.storage.fluid.16k.name=ME 16k Fluid Storage

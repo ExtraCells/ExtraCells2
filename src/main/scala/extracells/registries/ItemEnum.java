@@ -16,6 +16,7 @@ public enum ItemEnum {
 	PHYSICALSTORAGE("storage.physical", new ItemStoragePhysical()),
 	PHYSICALSTORAGESINGULARITY("storage.physical.advanced.singularity", new ItemAdvancedStorageCell(Long.MAX_VALUE / 16, 1, 4096, 15000.0, "singularity")),
 	PHYSICALSTORAGEQUANTUM("storage.physical.advanced.quantum", new ItemAdvancedStorageCell(Integer.MAX_VALUE / 16, 1, 1, 1000.0, "quantum")),
+	PHYSICALSTORAGEVOID("storage.physical.void", new ItemVoidStorageCell()),
 	GASSTORAGE("storage.gas", new ItemStorageGas(), Integration.Mods.MEKANISMGAS),
 	FLUIDPATTERN("pattern.fluid", new ItemFluidPattern()),
 	FLUIDWIRELESSTERMINAL("terminal.fluid.wireless", ItemWirelessTerminalFluid.THIS()),

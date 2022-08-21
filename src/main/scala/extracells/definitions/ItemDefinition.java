@@ -154,6 +154,11 @@ public class ItemDefinition implements IItemDefinition {
 	}
 
 	@Override
+	public appeng.api.definitions.IItemDefinition physCellVoid() {
+		return new ItemItemDefinitions(ItemEnum.PHYSICALSTORAGEVOID.getItem());
+	}
+
+	@Override
 	public appeng.api.definitions.IItemDefinition wirelessFluidTerminal() {
 		return new ItemItemDefinitions(ItemEnum.FLUIDWIRELESSTERMINAL.getItem());
 	}
