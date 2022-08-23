@@ -363,11 +363,10 @@ public class GuiBusFluidStorage extends ECGuiContainer implements
 					fluidSlot.mouseNEIClickedGas(draggedStack);
 				else
 					fluidSlot.mouseNEIClicked(draggedStack);
-				break;
+				return true;
 			}
 		}
-		draggedStack.stackSize = 0;
-		return true;
+		return false;
 	}
 
 	@Override
