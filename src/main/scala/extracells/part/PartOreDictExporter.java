@@ -38,17 +38,20 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.IntStream;
 
 public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
 	private String filter = "";
 
-	private Predicate<AEItemStack> filterPredicate = null;
+	public OreListMatcher filterPredicate = null;
 
 	@Override
 	public int cableConnectionRenderTo() {
@@ -56,45 +59,82 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	}
 
 	public String getFilter() {
-		return filter;
+		return this.filter;
 	}
 
 	public void setFilter(String filter) {
+		String temp = this.filter;
 		this.filter = filter;
-		updateFilter();
-		saveData();
+		try {
+			if (!Objects.equals(temp, this.filter)) {
+				updateFilter();
+				saveData();
+			}
+		} catch (PatternSyntaxException e) {
+			this.filter = temp;
+		}
 	}
-	private static class OreListMatcher implements Predicate<AEItemStack>	{
+
+	public void setFilter(String filter, boolean sendToServer) {
+		String temp = this.filter;
+		this.filter = filter;
+		try {
+			if (!Objects.equals(temp, this.filter)) {
+				updateFilter();
+			}
+			if (sendToServer) {
+				saveData();
+			}
+		} catch (PatternSyntaxException e) {
+			this.filter = temp;
+		}
+
+	}
+
+	private static class OreListMatcher implements Predicate<AEItemStack> {
 		HashSet<AEItemStack> ores = new HashSet<>();
-		public OreListMatcher(ArrayList<ItemStack> input){
-			for (ItemStack is: input)
+
+		public OreListMatcher(ArrayList<ItemStack> input) {
+			for (ItemStack is : input)
 				ores.add(AEItemStack.create(is));
 		}
+
 		public boolean test(AEItemStack t) {
 			return ores.contains(t);
 		}
+
+		public HashSet<AEItemStack> getOres() {
+			return this.ores;
+		}
 	}
+
+	public HashSet<AEItemStack> getOres() {
+		if (this.filterPredicate != null) {
+			return this.filterPredicate.getOres();
+		} else {
+			return new HashSet<AEItemStack>();
+		}
+	}
+
 	/**
 	 * Call when the filter string has changed to parse and recompile the filter.
 	 */
-	private void updateFilter() {
+	public void updateFilter() {
 		Predicate<ItemStack> matcher = null;
 		if (filter.contains("\\")
-				|| filter.contains("^")
-				|| filter.contains("$")
-				|| filter.contains("+")
-				|| filter.contains("(")
-				|| filter.contains(")")
-				|| filter.contains("[")
-				|| filter.contains("]"))
-		{
+			|| filter.contains("^")
+			|| filter.contains("$")
+			|| filter.contains("+")
+			|| filter.contains("(")
+			|| filter.contains(")")
+			|| filter.contains("[")
+			|| filter.contains("]")) {
 			final Predicate<String> test = Pattern.compile(filter).asPredicate();
 			matcher = (is) -> is != null &&
-					IntStream.of(OreDictionary.getOreIDs(is))
-							.mapToObj(OreDictionary::getOreName)
-							.anyMatch(test);
-		}
-		else if (!this.filter.trim().isEmpty()) {
+				IntStream.of(OreDictionary.getOreIDs(is))
+					.mapToObj(OreDictionary::getOreName)
+					.anyMatch(test);
+		} else if (!this.filter.trim().isEmpty()) {
 			String[] filters = this.filter.split("[&|]");
 			String lastFilter = null;
 
@@ -364,7 +404,8 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
 	public void readFromNBT(NBTTagCompound data) {
 		super.readFromNBT(data);
 		if (data.hasKey("filter"))
-			this.filter = data.getString("filter");
+			this.setFilter(data.getString("filter"));
+//			this.filter = ;
 		updateFilter();
 	}
 

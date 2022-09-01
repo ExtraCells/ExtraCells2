@@ -9,9 +9,9 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.parts.PartItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
 import extracells.container.ContainerBusFluidIO;
 import extracells.gui.GuiBusFluidIO;
 import extracells.item.ItemPartECBase;
@@ -44,8 +44,8 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 	protected byte speedState;
 	protected boolean redstoneControlled;
 	private boolean lastRedstone;
-	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4,
-			1, this) {
+	private final ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 4,
+		1, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
@@ -55,9 +55,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 				return true;
 			else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack))
 				return true;
-			else if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack))
-				return true;
-			return false;
+			else return AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack);
 		}
 	};
 
@@ -135,13 +133,13 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 		if (tag.hasKey("speed"))
 			oldList.add(tag.getInteger("speed") + "mB/t");
 		else
-			oldList.add("125mB/t");
+			oldList.add(String.format("%smB/t", Extracells.basePartSpeed()));
 		return oldList;
 	}
 
 	@Override
 	public NBTTagCompound getWailaTag(NBTTagCompound tag) {
-		tag.setInteger("speed", 125 + this.speedState * 125);
+		tag.setInteger("speed", Extracells.basePartSpeed() + this.speedState * Extracells.basePartSpeed());
 		return tag;
 	}
 
@@ -253,7 +251,7 @@ public abstract class PartFluidIO extends PartECBase implements IGridTickable,
 	@Override
 	public final TickRateModulation tickingRequest(IGridNode node,
 			int TicksSinceLastCall) {
-		return canDoWork() ? doWork(125 + this.speedState * 125, TicksSinceLastCall)
+		return canDoWork() ? doWork(Extracells.basePartSpeed() + this.speedState * Extracells.basePartSpeed(), TicksSinceLastCall)
 			: TickRateModulation.IDLE;
 	}
 

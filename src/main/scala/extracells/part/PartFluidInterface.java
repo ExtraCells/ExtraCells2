@@ -30,6 +30,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
 import extracells.api.IFluidInterface;
 import extracells.api.crafting.IFluidCraftingPatternDetails;
 import extracells.container.ContainerFluidInterface;
@@ -42,7 +43,6 @@ import extracells.registries.ItemEnum;
 import extracells.render.TextureManager;
 import extracells.util.EmptyMeItemMonitor;
 import extracells.util.FluidUtil;
-import extracells.util.ItemUtils;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -50,7 +50,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -70,152 +69,132 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PartFluidInterface extends PartECBase implements IFluidHandler,
-		IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable,
-		IStorageMonitorable, IGridTickable, ICraftingProvider {
+	IFluidInterface, IFluidSlotPartOrBlock, ITileStorageMonitorable,
+	IStorageMonitorable, IGridTickable, ICraftingProvider {
 
-	private class FluidInterfaceInventory implements IInventory {
-
-		private ItemStack[] inv = new ItemStack[9];
-
-		@Override
-		public void closeInventory() {}
-
-		@Override
-		public ItemStack decrStackSize(int slot, int amt) {
-			ItemStack stack = getStackInSlot(slot);
-			if (stack != null) {
-				if (stack.stackSize <= amt) {
-					setInventorySlotContents(slot, null);
-				} else {
-					stack = stack.splitStack(amt);
-					if (stack.stackSize == 0) {
-						setInventorySlotContents(slot, null);
-					}
-				}
-			}
-			PartFluidInterface.this.update = true;
-			return stack;
-		}
-
-		@Override
-		public String getInventoryName() {
-			return "inventory.fluidInterface";
-		}
-
-		@Override
-		public int getInventoryStackLimit() {
-			return 1;
-		}
-
-		@Override
-		public int getSizeInventory() {
-			return this.inv.length;
-		}
-
-		@Override
-		public ItemStack getStackInSlot(int slot) {
-			return this.inv[slot];
-		}
-
-		@Override
-		public ItemStack getStackInSlotOnClosing(int slot) {
-			return null;
-		}
-
-		@Override
-		public boolean hasCustomInventoryName() {
-			return false;
-		}
-
-		@Override
-		public boolean isItemValidForSlot(int slot, ItemStack stack) {
-			if (stack.getItem() instanceof ICraftingPatternItem) {
-				IGridNode n = getGridNode();
-				World w;
-				if (n == null) {
-					w = getClientWorld();
-				} else {
-					w = n.getWorld();
-				}
-				if (w == null)
-					return false;
-				ICraftingPatternDetails details = ((ICraftingPatternItem) stack
-						.getItem()).getPatternForItem(stack, w);
-				return details != null;
-			}
-			return false;
-		}
-
-		@Override
-		public boolean isUseableByPlayer(EntityPlayer player) {
-			return PartFluidInterface.this.isValid();
-		}
-
-		@Override
-		public void markDirty() {}
-
-		@Override
-		public void openInventory() {}
-
-		public void readFromNBT(NBTTagCompound tagCompound) {
-
-			NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
-			for (int i = 0; i < tagList.tagCount(); i++) {
-				NBTTagCompound tag = tagList.getCompoundTagAt(i);
-				byte slot = tag.getByte("Slot");
-				if (slot >= 0 && slot < this.inv.length) {
-					this.inv[slot] = ItemStack.loadItemStackFromNBT(tag);
-				}
-			}
-		}
-
-		@Override
-		public void setInventorySlotContents(int slot, ItemStack stack) {
-			this.inv[slot] = stack;
-			if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-				stack.stackSize = getInventoryStackLimit();
-			}
-			PartFluidInterface.this.originalPatternsCache[slot] = null;
-			PartFluidInterface.this.update = true;
-		}
-
-		public void writeToNBT(NBTTagCompound tagCompound) {
-			NBTTagList itemList = new NBTTagList();
-			for (int i = 0; i < this.inv.length; i++) {
-				ItemStack stack = this.inv[i];
-				if (stack != null) {
-					NBTTagCompound tag = new NBTTagCompound();
-					tag.setByte("Slot", (byte) i);
-					stack.writeToNBT(tag);
-					itemList.appendTag(tag);
-				}
-			}
-			tagCompound.setTag("Inventory", itemList);
-		}
-	}
+	private final HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
 
 	List<IContainerListener> listeners = new ArrayList<IContainerListener>();
 	private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
-	private HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
-	private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
-	private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
+	private final List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
+	private final List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
+	private final List<IAEStack> export = new ArrayList<IAEStack>();
 	private final ICraftingPatternDetails[] originalPatternsCache = new ICraftingPatternDetails[9];
 	public final FluidInterfaceInventory inventory = new FluidInterfaceInventory();
 
 	private boolean update = false;
-	private List<IAEStack> export = new ArrayList<IAEStack>();
-	private List<IAEStack> removeFromExport = new ArrayList<IAEStack>();
-
-	private List<IAEStack> addToExport = new ArrayList<IAEStack>();
+	private final List<IAEStack> removeFromExport = new ArrayList<IAEStack>();
+	private final List<IAEStack> addToExport = new ArrayList<IAEStack>();
+	private final FluidTank tank = new FluidTank(10000);
 	private IAEItemStack toExport = null;
 
 	private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
-	private FluidTank tank = new FluidTank(10000);
+	private final int tickCount = 0;
 	private int fluidFilter = -1;
 	public boolean doNextUpdate = false;
 	private boolean needBreak = false;
 
-	private int tickCount = 0;
+	@Override
+	public TickRateModulation tickingRequest(IGridNode node,
+											 int TicksSinceLastCall) {
+		if (this.doNextUpdate)
+			forceUpdate();
+		IGrid grid = node.getGrid();
+		if (grid == null)
+			return TickRateModulation.IDLE;
+		IStorageGrid storage = grid.getCache(IStorageGrid.class);
+		if (storage == null)
+			return TickRateModulation.IDLE;
+		pushItems();
+		boolean didWork = false;
+		if (this.toExport != null) {
+			storage.getItemInventory().injectItems(this.toExport,
+				Actionable.MODULATE, new MachineSource(this));
+			this.toExport = null;
+			didWork = true;
+		}
+		if (this.update) {
+			this.update = false;
+			if (getGridNode() != null && getGridNode().getGrid() != null) {
+				getGridNode().getGrid()
+					.postEvent(
+						new MENetworkCraftingPatternChange(this,
+							getGridNode()));
+				getHost().markForSave();
+			}
+		}
+		if (this.tank.getFluid() != null
+			&& FluidRegistry.getFluid(this.fluidFilter) != this.tank
+			.getFluid().getFluid()) {
+			FluidStack s = this.tank.drain(Extracells.basePartSpeed() * TicksSinceLastCall, false);
+			if (s != null) {
+				IAEFluidStack notAdded = storage.getFluidInventory()
+					.injectItems(
+						AEApi.instance().storage()
+							.createFluidStack(s),
+						Actionable.SIMULATE, new MachineSource(this));
+				int toAdd = s.amount - (notAdded != null ? (int) notAdded.getStackSize() : 0);
+				IAEFluidStack actuallyNotInjected = storage.getFluidInventory().injectItems(
+					AEApi.instance()
+						.storage()
+						.createFluidStack(
+							this.tank.drain(toAdd, true)),
+					Actionable.MODULATE, new MachineSource(this));
+				if (actuallyNotInjected != null) {
+					int returned = this.tank.fill(actuallyNotInjected.getFluidStack(), true);
+					if (returned != actuallyNotInjected.getStackSize()) {
+						FMLLog.severe("[ExtraCells2] Interface tank import at %d:%d,%d,%d voided %d mL of %s",
+							tile.getWorldObj().provider.dimensionId,
+							tile.xCoord,
+							tile.yCoord,
+							tile.zCoord,
+							actuallyNotInjected.getStackSize() - returned,
+							actuallyNotInjected.getFluid().getName());
+					}
+				}
+				this.doNextUpdate = true;
+				this.needBreak = false;
+				didWork = true;
+			}
+		}
+		if ((this.tank.getFluid() == null ||
+			(this.tank.getFluid().getFluid() == FluidRegistry
+				.getFluid(this.fluidFilter) && this.tank.getFluidAmount() < this.tank.getCapacity())
+		)
+			&& FluidRegistry.getFluid(this.fluidFilter) != null) {
+			IAEFluidStack request = FluidUtil.createAEFluidStack(this.fluidFilter, (long) Extracells.basePartSpeed() * TicksSinceLastCall);
+			IAEFluidStack extracted = storage.getFluidInventory().extractItems(
+				request,
+				Actionable.SIMULATE, new MachineSource(this));
+			if (extracted == null)
+				return TickRateModulation.SLOWER;
+			int accepted = this.tank.fill(extracted.getFluidStack(), false);
+			if (accepted == 0)
+				return TickRateModulation.SLOWER;
+			request.setStackSize(Long.min(accepted, extracted.getStackSize()));
+			extracted = storage.getFluidInventory().extractItems(
+				request,
+				Actionable.MODULATE, new MachineSource(this));
+			if (extracted == null || extracted.getStackSize() <= 0) {
+				return TickRateModulation.SLOWER;
+			}
+			accepted = this.tank.fill(extracted.getFluidStack(), true);
+			if (extracted.getStackSize() != accepted) {
+				// This should never happen, but log it in case it does
+				FMLLog.severe("[ExtraCells2] Interface tank export at %d:%d,%d,%d voided %d mL of %s",
+					tile.getWorldObj().provider.dimensionId,
+					tile.xCoord,
+					tile.yCoord,
+					tile.zCoord,
+					extracted.getStackSize() - accepted,
+					request.getFluid().getName());
+			}
+			this.doNextUpdate = true;
+			this.needBreak = false;
+			didWork = true;
+		}
+		return didWork ? TickRateModulation.URGENT : TickRateModulation.SLOWER;
+	}
 
 	@Override
 	public int cableConnectionRenderTo() {
@@ -559,7 +538,6 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 					} else {
 						this.export.get(0).setStackSize(stack0.getStackSize() - removedAmount);
 					}
-					return;
 				}
 			} else if (stack instanceof IAEFluidStack
 					&& tile instanceof IFluidHandler) {
@@ -584,7 +562,6 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 						handler.fill(dir.getOpposite(), fl, true);
 						this.removeFromExport.add(stack0);
 						this.addToExport.add(f);
-						return;
 					}
 				}
 			}
@@ -831,107 +808,128 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler,
 		this.doNextUpdate = true;
 	}
 
-	@Override
-	public TickRateModulation tickingRequest(IGridNode node,
-			int TicksSinceLastCall) {
-		if (this.doNextUpdate)
-			forceUpdate();
-		IGrid grid = node.getGrid();
-		if (grid == null)
-			return TickRateModulation.IDLE;
-		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-		if (storage == null)
-			return TickRateModulation.IDLE;
-		pushItems();
-		boolean didWork = false;
-		if (this.toExport != null) {
-			storage.getItemInventory().injectItems(this.toExport,
-					Actionable.MODULATE, new MachineSource(this));
-			this.toExport = null;
-			didWork = true;
+	private class FluidInterfaceInventory implements IInventory {
+
+		private final ItemStack[] inv = new ItemStack[9];
+
+		@Override
+		public void closeInventory() {
 		}
-		if (this.update) {
-			this.update = false;
-			if (getGridNode() != null && getGridNode().getGrid() != null) {
-				getGridNode().getGrid()
-						.postEvent(
-								new MENetworkCraftingPatternChange(this,
-										getGridNode()));
-				getHost().markForSave();
-			}
-		}
-		if (this.tank.getFluid() != null
-				&& FluidRegistry.getFluid(this.fluidFilter) != this.tank
-						.getFluid().getFluid()) {
-			FluidStack s = this.tank.drain(125 * TicksSinceLastCall, false);
-			if (s != null) {
-				IAEFluidStack notAdded = storage.getFluidInventory()
-						.injectItems(
-								AEApi.instance().storage()
-										.createFluidStack(s),
-								Actionable.SIMULATE, new MachineSource(this));
-				int toAdd = s.amount - (notAdded != null ? (int)notAdded.getStackSize() : 0);
-				IAEFluidStack actuallyNotInjected = storage.getFluidInventory().injectItems(
-					AEApi.instance()
-						.storage()
-						.createFluidStack(
-							this.tank.drain(toAdd, true)),
-					Actionable.MODULATE, new MachineSource(this));
-				if (actuallyNotInjected != null) {
-					int returned = this.tank.fill(actuallyNotInjected.getFluidStack(), true);
-					if (returned != actuallyNotInjected.getStackSize()) {
-						FMLLog.severe("[ExtraCells2] Interface tank import at %d:%d,%d,%d voided %d mL of %s",
-							tile.getWorldObj().provider.dimensionId,
-							tile.xCoord,
-							tile.yCoord,
-							tile.zCoord,
-							actuallyNotInjected.getStackSize() - returned,
-							actuallyNotInjected.getFluid().getName());
+
+		@Override
+		public ItemStack decrStackSize(int slot, int amt) {
+			ItemStack stack = getStackInSlot(slot);
+			if (stack != null) {
+				if (stack.stackSize <= amt) {
+					setInventorySlotContents(slot, null);
+				} else {
+					stack = stack.splitStack(amt);
+					if (stack.stackSize == 0) {
+						setInventorySlotContents(slot, null);
 					}
 				}
-				this.doNextUpdate = true;
-				this.needBreak = false;
-				didWork = true;
+			}
+			PartFluidInterface.this.update = true;
+			return stack;
+		}
+
+		@Override
+		public String getInventoryName() {
+			return "inventory.fluidInterface";
+		}
+
+		@Override
+		public int getInventoryStackLimit() {
+			return 1;
+		}
+
+		@Override
+		public int getSizeInventory() {
+			return this.inv.length;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			return this.inv[slot];
+		}
+
+		@Override
+		public ItemStack getStackInSlotOnClosing(int slot) {
+			return null;
+		}
+
+		@Override
+		public boolean hasCustomInventoryName() {
+			return false;
+		}
+
+		@Override
+		public boolean isItemValidForSlot(int slot, ItemStack stack) {
+			if (stack.getItem() instanceof ICraftingPatternItem) {
+				IGridNode n = getGridNode();
+				World w;
+				if (n == null) {
+					w = getClientWorld();
+				} else {
+					w = n.getWorld();
+				}
+				if (w == null)
+					return false;
+				ICraftingPatternDetails details = ((ICraftingPatternItem) stack
+					.getItem()).getPatternForItem(stack, w);
+				return details != null;
+			}
+			return false;
+		}
+
+		@Override
+		public boolean isUseableByPlayer(EntityPlayer player) {
+			return PartFluidInterface.this.isValid();
+		}
+
+		@Override
+		public void markDirty() {
+		}
+
+		@Override
+		public void openInventory() {
+		}
+
+		public void readFromNBT(NBTTagCompound tagCompound) {
+
+			NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
+			for (int i = 0; i < tagList.tagCount(); i++) {
+				NBTTagCompound tag = tagList.getCompoundTagAt(i);
+				byte slot = tag.getByte("Slot");
+				if (slot >= 0 && slot < this.inv.length) {
+					this.inv[slot] = ItemStack.loadItemStackFromNBT(tag);
+				}
 			}
 		}
-		if ((this.tank.getFluid() == null ||
-				(this.tank.getFluid().getFluid() == FluidRegistry
-					.getFluid(this.fluidFilter) && this.tank.getFluidAmount() < this.tank.getCapacity())
-			)
-			&& FluidRegistry.getFluid(this.fluidFilter) != null)
-		{
-			IAEFluidStack request = FluidUtil.createAEFluidStack(this.fluidFilter, 125 * TicksSinceLastCall);
-			IAEFluidStack extracted = storage.getFluidInventory().extractItems(
-					request,
-					Actionable.SIMULATE, new MachineSource(this));
-			if (extracted == null)
-				return TickRateModulation.SLOWER;
-			int accepted = this.tank.fill(extracted.getFluidStack(), false);
-			if (accepted == 0)
-				return TickRateModulation.SLOWER;
-			request.setStackSize(Long.min(accepted, extracted.getStackSize()));
-			extracted = storage.getFluidInventory().extractItems(
-				request,
-				Actionable.MODULATE, new MachineSource(this));
-			if (extracted == null || extracted.getStackSize() <= 0) {
-				return TickRateModulation.SLOWER;
+
+		@Override
+		public void setInventorySlotContents(int slot, ItemStack stack) {
+			this.inv[slot] = stack;
+			if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+				stack.stackSize = getInventoryStackLimit();
 			}
-			accepted = this.tank.fill(extracted.getFluidStack(), true);
-			if (extracted.getStackSize() != accepted) {
-				// This should never happen, but log it in case it does
-				FMLLog.severe("[ExtraCells2] Interface tank export at %d:%d,%d,%d voided %d mL of %s",
-					tile.getWorldObj().provider.dimensionId,
-					tile.xCoord,
-					tile.yCoord,
-					tile.zCoord,
-					extracted.getStackSize() - accepted,
-					request.getFluid().getName());
-			}
-			this.doNextUpdate = true;
-			this.needBreak = false;
-			didWork = true;
+			PartFluidInterface.this.originalPatternsCache[slot] = null;
+			PartFluidInterface.this.update = true;
 		}
-		return didWork ? TickRateModulation.URGENT : TickRateModulation.SLOWER;
+
+		public void writeToNBT(NBTTagCompound tagCompound) {
+			NBTTagList itemList = new NBTTagList();
+			for (int i = 0; i < this.inv.length; i++) {
+				ItemStack stack = this.inv[i];
+				if (stack != null) {
+					NBTTagCompound tag = new NBTTagCompound();
+					tag.setByte("Slot", (byte) i);
+					stack.writeToNBT(tag);
+					itemList.appendTag(tag);
+				}
+			}
+			tagCompound.setTag("Inventory", itemList);
+		}
 	}
 
 	public NBTTagCompound writeFilter(NBTTagCompound tag) {

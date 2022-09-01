@@ -1,6 +1,5 @@
 package extracells.part
 
-import java.util
 import appeng.api.config.Actionable
 import appeng.api.networking.security.MachineSource
 import appeng.api.networking.ticking.TickRateModulation
@@ -8,6 +7,7 @@ import appeng.api.storage.IMEMonitor
 import appeng.api.storage.data.IAEFluidStack
 import cpw.mods.fml.common.Optional
 import cpw.mods.fml.common.Optional.{Interface, Method}
+import extracells.Extracells
 import extracells.integration.Integration
 import extracells.integration.mekanism.gas.MekanismGas
 import extracells.util.{FluidUtil, GasUtil}
@@ -15,15 +15,17 @@ import mekanism.api.gas.{Gas, GasStack, IGasHandler}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.{Fluid, FluidStack}
 
+import java.util
+
 
 @Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true)
-class PartGasImport extends PartFluidImport with IGasHandler{
+class PartGasImport extends PartFluidImport with IGasHandler {
 
-  private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
+	private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
-  override def doWork(rate: Int, TicksSinceLastCall: Int): TickRateModulation = {
-    if (!isActive || (!isMekanismEnabled) || getFacingGasTank == null) return TickRateModulation.IDLE
-    var empty: Boolean = true
+	override def doWork(rate: Int, TicksSinceLastCall: Int): TickRateModulation = {
+		if (!isActive || (!isMekanismEnabled) || getFacingGasTank == null) return TickRateModulation.IDLE
+		var empty: Boolean = true
     val filter: util.List[Fluid] = new util.ArrayList[Fluid]
     filter.add(this.filterFluids(4))
     if (this.filterSize >= 1) {
@@ -114,8 +116,8 @@ class PartGasImport extends PartFluidImport with IGasHandler{
   override def receiveGas(side: ForgeDirection, stack: GasStack, doTransfer: Boolean): Int = {
     if (stack == null || stack.amount <= 0 || ! canReceiveGas(side, stack.getGas))
       return 0
-    val amount = Math.min(stack.amount, 125 + this.speedState * 125)
-    val gasStack = GasUtil.createAEFluidStack(stack.getGas, amount)
+	  val amount = Math.min(stack.amount, Extracells.basePartSpeed + this.speedState * Extracells.basePartSpeed)
+	  val gasStack = GasUtil.createAEFluidStack(stack.getGas, amount)
     val notInjected = {
       if (getGridBlock == null) {
         gasStack

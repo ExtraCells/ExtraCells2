@@ -3,6 +3,7 @@ package extracells.integration.opencomputers;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
+import extracells.Extracells;
 import extracells.part.PartGasExport;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
@@ -160,8 +161,8 @@ public class DriverGasExportBus implements SidedBlock{
                 return new Object[]{false, "no export bus"};
             if (part.getFacingGasTank() == null)
                 return new Object[]{false, "no tank"};
-            int amount = Math.min(args.optInteger(1, 625), 125 + part.getSpeedState() * 125);
-            boolean didSomething = part.doWork(amount, 1) == TickRateModulation.FASTER;
+			int amount = Math.min(args.optInteger(1, Extracells.basePartSpeed() * 5), Extracells.basePartSpeed() + part.getSpeedState() * Extracells.basePartSpeed());
+			boolean didSomething = part.doWork(amount, 1) == TickRateModulation.FASTER;
             if (didSomething)
                 context.pause(0.25);
             return new Object[]{didSomething};

@@ -35,22 +35,22 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 public class ContainerGasStorage extends Container implements
-		IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer,
-		IInventoryUpdateReceiver, IStorageContainer {
+	IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer,
+	IInventoryUpdateReceiver, IStorageContainer {
 
-	private boolean isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled();
+	private final boolean isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled();
 	private GuiGasStorage guiGasStorage;
 	private IItemList<IAEFluidStack> fluidStackList;
 	private Fluid selectedFluid;
 	private IAEFluidStack selectedFluidStack;
-	private EntityPlayer player;
-	private IMEMonitor<IAEFluidStack> monitor;
+	private final EntityPlayer player;
+	private final IMEMonitor<IAEFluidStack> monitor;
 	private HandlerItemStorageFluid storageFluid;
 	private IWirelessGasTermHandler handler = null;
 	private IPortableGasStorageCell storageCell = null;
 	public boolean hasWirelessTermHandler = false;
-	private ECPrivateInventory inventory = new ECPrivateInventory(
-			"extracells.item.fluid.storage", 2, 64, this) {
+	private final ECPrivateInventory inventory = new ECPrivateInventory(
+		"extracells.item.fluid.storage", 2, 64, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
@@ -340,7 +340,7 @@ public class ContainerGasStorage extends Container implements
 			Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
 		this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor)
 				.getStorageList();
-		new PacketFluidStorage(this.player, this.fluidStackList)
+		new PacketFluidStorage(this.player, change, this.fluidStackList)
 				.sendPacketToPlayer(this.player);
 		new PacketFluidStorage(this.player, this.hasWirelessTermHandler)
 				.sendPacketToPlayer(this.player);
@@ -417,6 +417,27 @@ public class ContainerGasStorage extends Container implements
 
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList) {
 		this.fluidStackList = _fluidStackList;
+		if (this.guiGasStorage != null)
+			this.guiGasStorage.updateFluids();
+	}
+
+	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList, boolean incremental) {
+		if (incremental) {
+			IItemList<IAEFluidStack> temp = this.getFluidStackList();
+			for (IAEFluidStack f1 : _fluidStackList) {
+				boolean change = false;
+				for (IAEFluidStack f2 : temp) {
+					if (f1.getFluid().getID() == f2.getFluid().getID()) {
+						f2.setStackSize(f2.getStackSize() + f1.getStackSize());
+						change = true;
+					}
+				}
+				if (!change) temp.add(f1);
+			}
+			this.fluidStackList = temp;
+		} else {
+			this.fluidStackList = _fluidStackList;
+		}
 		if (this.guiGasStorage != null)
 			this.guiGasStorage.updateFluids();
 	}

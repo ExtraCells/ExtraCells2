@@ -26,13 +26,13 @@ import java.util.List;
 
 public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 
-	private EntityPlayer player;
+	private final EntityPlayer player;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
-	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
+	private final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
-	private ContainerGasStorage containerGasStorage;
+	private final ContainerGasStorage containerGasStorage;
 	private final String guiName;
 
 	public GuiGasStorage(EntityPlayer _player, String _guiName) {
@@ -47,11 +47,22 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 	}
 
 	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		int deltaWheel = Mouse.getEventDWheel();
+		if (deltaWheel < 0) {
+			currentScroll++;
+		} else if (deltaWheel > 0) {
+			currentScroll--;
+		}
+	}
+
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float alpha, int sizeX, int sizeY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.guiTexture);
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,
-				this.ySize);
+			this.ySize);
 		this.searchbar.drawTextBox();
 		new PacketFluidStorage(this.player).sendPacketToServer();
 	}
@@ -62,15 +73,14 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 		drawWidgets(mouseX, mouseY);
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
-			String amountToText = Long.toString(currentFluidAmount) + "mB";
+			String amountToText = currentFluidAmount + "mB";
 			if (Extracells.shortenedBuckets()) {
 				if (currentFluidAmount > 1000000000L)
-					amountToText = Long
-							.toString(currentFluidAmount / 1000000000L)
-							+ "Mega";
+					amountToText = currentFluidAmount / 1000000000L
+						+ "Mega";
 				else if (currentFluidAmount > 1000000L)
-					amountToText = Long.toString(currentFluidAmount / 1000000L)
-							+ "Kilo";
+					amountToText = currentFluidAmount / 1000000L
+						+ "Kilo";
 				else if (currentFluidAmount > 9999L) {
 					amountToText = Long.toString(currentFluidAmount / 1000L);
 				}
@@ -115,14 +125,6 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 					}
 				}
 			}
-
-			int deltaWheel = Mouse.getDWheel();
-			if (deltaWheel > 0) {
-				this.currentScroll++;
-			} else if (deltaWheel < 0) {
-				this.currentScroll--;
-			}
-
 			if (this.currentScroll < 0)
 				this.currentScroll = 0;
 			if (listSize / 9 < 4 && this.currentScroll < listSize / 9 + 4)
@@ -153,22 +155,21 @@ public class GuiGasStorage extends GuiContainer implements IFluidSelectorGui {
 	@Override
 	public void initGui() {
 		super.initGui();
-		Mouse.getDWheel();
 
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
 		this.searchbar = new GuiTextField(this.fontRendererObj,
-				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
+			this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 
-			private int xPos = 0;
-			private int yPos = 0;
-			private int width = 0;
-			private int height = 0;
+			private final int xPos = 0;
+			private final int yPos = 0;
+			private final int width = 0;
+			private final int height = 0;
 
 			@Override
 			public void mouseClicked(int x, int y, int mouseBtn) {
 				boolean flag = x >= this.xPos && x < this.xPos + this.width
-						&& y >= this.yPos && y < this.yPos + this.height;
+					&& y >= this.yPos && y < this.yPos + this.height;
 				if (flag && mouseBtn == 3)
 					setText("");
 			}

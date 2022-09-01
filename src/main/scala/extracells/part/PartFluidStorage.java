@@ -46,12 +46,12 @@ import java.util.List;
 
 public class PartFluidStorage extends PartECBase implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock, IPriorityHost {
 
-	private HashMap<IAEFluidStack, Long> fluidList = new HashMap<IAEFluidStack, Long>();
+	private final HashMap<IAEFluidStack, Long> fluidList = new HashMap<IAEFluidStack, Long>();
 	private int priority = 0;
 	protected HandlerPartStorageFluid handler = new HandlerPartStorageFluid(this);
-	private Fluid[] filterFluids = new Fluid[54];
+	private final Fluid[] filterFluids = new Fluid[54];
 	private AccessRestriction access = AccessRestriction.READ_WRITE;
-	private ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this) {
+	private final ECPrivateInventory upgradeInventory = new ECPrivateInventory("", 1, 1, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {

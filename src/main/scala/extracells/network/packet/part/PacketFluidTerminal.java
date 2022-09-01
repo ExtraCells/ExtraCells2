@@ -24,8 +24,19 @@ public class PacketFluidTerminal extends AbstractPacket {
 	Fluid currentFluid;
 	PartFluidTerminal terminalFluid;
 
+	Iterable<IAEFluidStack> change;
+
 	@SuppressWarnings("unused")
-	public PacketFluidTerminal() {}
+	public PacketFluidTerminal() {
+	}
+
+	public PacketFluidTerminal(EntityPlayer _player, Iterable<IAEFluidStack> _change, IItemList<IAEFluidStack> _list) {
+		super(_player);
+		this.mode = 4;
+		this.change = _change;
+		this.fluidStackList = _list;
+
+	}
 
 	public PacketFluidTerminal(EntityPlayer _player, Fluid _currentFluid) {
 		super(_player);
@@ -34,7 +45,7 @@ public class PacketFluidTerminal extends AbstractPacket {
 	}
 
 	public PacketFluidTerminal(EntityPlayer _player, Fluid _currentFluid,
-			PartFluidTerminal _terminalFluid) {
+							   PartFluidTerminal _terminalFluid) {
 		super(_player);
 		this.mode = 1;
 		this.currentFluid = _currentFluid;
@@ -58,31 +69,52 @@ public class PacketFluidTerminal extends AbstractPacket {
 	@Override
 	public void execute() {
 		switch (this.mode) {
-		case 0:
-			case0();
-			break;
-		case 1:
-			this.terminalFluid.setCurrentFluid(this.currentFluid);
-			break;
-		case 2:
-			case2();
-			break;
-		case 3:
-			if (this.player != null && this.player.openContainer instanceof ContainerFluidTerminal) {
-				ContainerFluidTerminal fluidContainer = (ContainerFluidTerminal) this.player.openContainer;
-				fluidContainer.forceFluidUpdate();
-				this.terminalFluid.sendCurrentFluid(fluidContainer);
-			} else if (this.player != null && this.player.openContainer instanceof ContainerGasTerminal) {
-				ContainerGasTerminal fluidContainer = (ContainerGasTerminal) this.player.openContainer;
-				fluidContainer.forceFluidUpdate();
-				this.terminalFluid.sendCurrentFluid(fluidContainer);
-			}
-			break;
+			case 0:
+				case0();
+				break;
+			case 1:
+				this.terminalFluid.setCurrentFluid(this.currentFluid);
+				break;
+			case 2:
+				case2();
+				break;
+			case 3:
+				case3();
+				break;
+			case 4:
+				case4();
+				break;
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void case0(){
+	public void case4() {
+		if (this.player != null && this.player.isClientWorld()) {
+			Gui gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof GuiFluidTerminal) {
+				ContainerFluidTerminal container = (ContainerFluidTerminal) ((GuiFluidTerminal) gui).inventorySlots;
+				container.updateFluidList(this.fluidStackList, true);
+			} else if (gui instanceof GuiGasTerminal) {
+				ContainerGasTerminal container = (ContainerGasTerminal) ((GuiGasTerminal) gui).inventorySlots;
+				container.updateFluidList(this.fluidStackList, true);
+			}
+		}
+	}
+
+	public void case3() {
+		if (this.player != null && this.player.openContainer instanceof ContainerFluidTerminal) {
+			ContainerFluidTerminal fluidContainer = (ContainerFluidTerminal) this.player.openContainer;
+			fluidContainer.forceFluidUpdate();
+			this.terminalFluid.sendCurrentFluid(fluidContainer);
+		} else if (this.player != null && this.player.openContainer instanceof ContainerGasTerminal) {
+			ContainerGasTerminal fluidContainer = (ContainerGasTerminal) this.player.openContainer;
+			fluidContainer.forceFluidUpdate();
+			this.terminalFluid.sendCurrentFluid(fluidContainer);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void case0() {
 		if (this.player != null && this.player.isClientWorld()) {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof GuiFluidTerminal) {
@@ -109,30 +141,31 @@ public class PacketFluidTerminal extends AbstractPacket {
 	@Override
 	public void readData(ByteBuf in) {
 		switch (this.mode) {
-		case 0:
-			this.fluidStackList = AEApi.instance().storage().createFluidList();
-			while (in.readableBytes() > 0) {
-				Fluid fluid = readFluid(in);
-				long fluidAmount = in.readLong();
-				if (fluid == null || fluidAmount <= 0) {
-					continue;
-				}
-				IAEFluidStack stack = AEApi.instance().storage()
+			case 0:
+			case 4:
+				this.fluidStackList = AEApi.instance().storage().createFluidList();
+				while (in.readableBytes() > 0) {
+					Fluid fluid = readFluid(in);
+					long fluidAmount = in.readLong();
+					if (fluid == null) {
+						continue;
+					}
+					IAEFluidStack stack = AEApi.instance().storage()
 						.createFluidStack(new FluidStack(fluid, 1));
-				stack.setStackSize(fluidAmount);
-				this.fluidStackList.add(stack);
-			}
-			break;
-		case 1:
-			this.terminalFluid = (PartFluidTerminal) readPart(in);
-			this.currentFluid = readFluid(in);
-			break;
-		case 2:
-			this.currentFluid = readFluid(in);
-			break;
-		case 3:
-			this.terminalFluid = (PartFluidTerminal) readPart(in);
-			break;
+					stack.setStackSize(fluidAmount);
+					this.fluidStackList.add(stack);
+				}
+				break;
+			case 1:
+				this.terminalFluid = (PartFluidTerminal) readPart(in);
+				this.currentFluid = readFluid(in);
+				break;
+			case 2:
+				this.currentFluid = readFluid(in);
+				break;
+			case 3:
+				this.terminalFluid = (PartFluidTerminal) readPart(in);
+				break;
 		}
 	}
 
@@ -145,16 +178,22 @@ public class PacketFluidTerminal extends AbstractPacket {
 				out.writeLong(stack.getStackSize());
 			}
 			break;
-		case 1:
-			writePart(this.terminalFluid, out);
-			writeFluid(this.currentFluid, out);
-			break;
-		case 2:
-			writeFluid(this.currentFluid, out);
-			break;
-		case 3:
-			writePart(this.terminalFluid, out);
-			break;
+			case 1:
+				writePart(this.terminalFluid, out);
+				writeFluid(this.currentFluid, out);
+				break;
+			case 2:
+				writeFluid(this.currentFluid, out);
+				break;
+			case 3:
+				writePart(this.terminalFluid, out);
+				break;
+			case 4:
+				for (IAEFluidStack stack : this.change) {
+					writeFluid(stack.getFluid(), out);
+					out.writeLong(stack.getStackSize());
+				}
+				break;
 		}
 	}
 }

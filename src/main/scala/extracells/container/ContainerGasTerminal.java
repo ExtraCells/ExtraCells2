@@ -29,12 +29,12 @@ import net.minecraftforge.fluids.Fluid;
 public class ContainerGasTerminal extends Container implements
 		IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
 
-	private PartGasTerminal terminal;
+	private final PartGasTerminal terminal;
 	private IMEMonitor<IAEFluidStack> monitor;
 	private IItemList<IAEFluidStack> fluidStackList = AEApi.instance()
 			.storage().createFluidList();
 	private Fluid selectedFluid;
-	private EntityPlayer player;
+	private final EntityPlayer player;
 	private GuiGasTerminal guiGasTerminal;
 
 	public ContainerGasTerminal(PartGasTerminal _terminal, EntityPlayer _player) {
@@ -202,6 +202,27 @@ public class ContainerGasTerminal extends Container implements
 
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList) {
 		this.fluidStackList = _fluidStackList;
+		if (this.guiGasTerminal != null)
+			this.guiGasTerminal.updateFluids();
+	}
+
+	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList, boolean incremental) {
+		if (incremental) {
+			IItemList<IAEFluidStack> temp = this.getFluidStackList();
+			for (IAEFluidStack f1 : _fluidStackList) {
+				boolean change = false;
+				for (IAEFluidStack f2 : temp) {
+					if (f1.getFluid().getID() == f2.getFluid().getID()) {
+						f2.setStackSize(f2.getStackSize() + f1.getStackSize());
+						change = true;
+					}
+				}
+				if (!change) temp.add(f1);
+			}
+			this.fluidStackList = temp;
+		} else {
+			this.fluidStackList = _fluidStackList;
+		}
 		if (this.guiGasTerminal != null)
 			this.guiGasTerminal.updateFluids();
 	}

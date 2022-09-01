@@ -7,7 +7,10 @@ import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
-import appeng.api.parts.*;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
@@ -45,9 +48,9 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable,
 		IInventoryUpdateReceiver {
 
 	protected Fluid currentFluid;
-	private List<Object> containers = new ArrayList<Object>();
+	private final List<Object> containers = new ArrayList<Object>();
 	protected ECPrivateInventory inventory = new ECPrivateInventory(
-			"extracells.part.fluid.terminal", 2, 64, this) {
+		"extracells.part.fluid.terminal", 2, 64, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {

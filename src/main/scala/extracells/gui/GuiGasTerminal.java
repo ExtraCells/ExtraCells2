@@ -28,14 +28,14 @@ import java.util.List;
 
 public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 
-	private PartFluidTerminal terminal;
-	private EntityPlayer player;
+	private final PartFluidTerminal terminal;
+	private final EntityPlayer player;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
-	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
+	private final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
-	private ContainerGasTerminal containerTerminalFluid;
+	private final ContainerGasTerminal containerTerminalFluid;
 
 	public GuiGasTerminal(PartGasTerminal _terminal, EntityPlayer _player) {
 		super(new ContainerGasTerminal(_terminal, _player));
@@ -62,28 +62,40 @@ public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 		drawWidgets(mouseX, mouseY);
 		if (this.currentFluid != null) {
 			long currentFluidAmount = this.currentFluid.getStackSize();
-			String amountToText = Long.toString(currentFluidAmount) + "mB";
+			String amountToText = currentFluidAmount + "mB";
 			if (Extracells.shortenedBuckets()) {
 				if (currentFluidAmount > 1000000000L)
-					amountToText = Long.toString(currentFluidAmount / 1000000000L) + "MegaB";
+					amountToText = currentFluidAmount / 1000000000L + "MegaB";
 				else if (currentFluidAmount > 1000000L)
-					amountToText = Long.toString(currentFluidAmount / 1000000L) + "KiloB";
+					amountToText = currentFluidAmount / 1000000L + "KiloB";
 				else if (currentFluidAmount > 9999L) {
-					amountToText = Long.toString(currentFluidAmount / 1000L) + "B";
+					amountToText = currentFluidAmount / 1000L + "B";
 				}
 			}
 
 			this.fontRendererObj.drawString(
-					StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
+				StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
 			this.fontRendererObj.drawString(
-					StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
+				StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
+		}
+	}
+
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		int deltaWheel = Mouse.getEventDWheel();
+		if (deltaWheel < 0) {
+			currentScroll++;
+		} else if (deltaWheel > 0) {
+			currentScroll--;
 		}
 	}
 
 	public void drawWidgets(int mouseX, int mouseY) {
 		int listSize = this.fluidWidgets.size();
 		if (!this.containerTerminalFluid.getFluidStackList().isEmpty()) {
-			outerLoop: for (int y = 0; y < 4; y++) {
+			outerLoop:
+			for (int y = 0; y < 4; y++) {
 				for (int x = 0; x < 9; x++) {
 					int widgetIndex = y * 9 + x + this.currentScroll * 9;
 					if (0 <= widgetIndex && widgetIndex < listSize) {
@@ -106,14 +118,6 @@ public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 					}
 				}
 			}
-
-			int deltaWheel = Mouse.getDWheel();
-			if (deltaWheel > 0) {
-				this.currentScroll++;
-			} else if (deltaWheel < 0) {
-				this.currentScroll--;
-			}
-
 			if (this.currentScroll < 0)
 				this.currentScroll = 0;
 			if (listSize / 9 < 4 && this.currentScroll < listSize / 9 + 4)
@@ -148,17 +152,16 @@ public class GuiGasTerminal extends GuiContainer implements IFluidSelectorGui {
 	@Override
 	public void initGui() {
 		super.initGui();
-		Mouse.getDWheel();
 
 		updateFluids();
 		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
 		this.searchbar = new GuiTextField(this.fontRendererObj,
-				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
+			this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 
-			private int xPos = 0;
-			private int yPos = 0;
-			private int width = 0;
-			private int height = 0;
+			private final int xPos = 0;
+			private final int yPos = 0;
+			private final int width = 0;
+			private final int height = 0;
 
 			@Override
 			public void mouseClicked(int x, int y, int mouseBtn) {

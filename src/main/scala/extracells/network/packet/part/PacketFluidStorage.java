@@ -22,10 +22,20 @@ public class PacketFluidStorage extends AbstractPacket {
 
 	private IItemList<IAEFluidStack> fluidStackList;
 	private Fluid currentFluid;
+	Iterable<IAEFluidStack> change;
 	private boolean hasTermHandler;
 
 	@SuppressWarnings("unused")
-	public PacketFluidStorage() {}
+	public PacketFluidStorage() {
+	}
+
+	public PacketFluidStorage(EntityPlayer _player, Iterable<IAEFluidStack> _change, IItemList<IAEFluidStack> _list) {
+		super(_player);
+		this.mode = 4;
+		this.change = _change;
+		this.fluidStackList = _list;
+
+	}
 
 	public PacketFluidStorage(EntityPlayer _player) {
 		super(_player);
@@ -53,37 +63,54 @@ public class PacketFluidStorage extends AbstractPacket {
 	@Override
 	public void execute() {
 		switch (this.mode) {
-		case 0:
-			case0();
-			break;
-		case 1:
-			if (this.player != null && this.player.openContainer instanceof ContainerFluidStorage) {
-				((ContainerFluidStorage) this.player.openContainer).receiveSelectedFluid(this.currentFluid);
-			}else if (this.player != null && Integration.Mods.MEKANISMGAS.isEnabled() && this.player.openContainer instanceof ContainerGasStorage) {
-				((ContainerGasStorage) this.player.openContainer).receiveSelectedFluid(this.currentFluid);
-			}
-			break;
-		case 2:
-			if (this.player != null) {
-				if (!this.player.worldObj.isRemote) {
-					if (this.player.openContainer instanceof ContainerFluidStorage) {
-						((ContainerFluidStorage) this.player.openContainer).forceFluidUpdate();
-						((ContainerFluidStorage) this.player.openContainer).doWork();
-					}else if (this.player.openContainer instanceof ContainerGasStorage && Integration.Mods.MEKANISMGAS.isEnabled()) {
-						((ContainerGasStorage) this.player.openContainer).forceFluidUpdate();
-						((ContainerGasStorage) this.player.openContainer).doWork();
+			case 0:
+				case0();
+				break;
+			case 1:
+				if (this.player != null && this.player.openContainer instanceof ContainerFluidStorage) {
+					((ContainerFluidStorage) this.player.openContainer).receiveSelectedFluid(this.currentFluid);
+				}else if (this.player != null && Integration.Mods.MEKANISMGAS.isEnabled() && this.player.openContainer instanceof ContainerGasStorage) {
+					((ContainerGasStorage) this.player.openContainer).receiveSelectedFluid(this.currentFluid);
+				}
+				break;
+			case 2:
+				if (this.player != null) {
+					if (!this.player.worldObj.isRemote) {
+						if (this.player.openContainer instanceof ContainerFluidStorage) {
+							((ContainerFluidStorage) this.player.openContainer).forceFluidUpdate();
+							((ContainerFluidStorage) this.player.openContainer).doWork();
+						} else if (this.player.openContainer instanceof ContainerGasStorage && Integration.Mods.MEKANISMGAS.isEnabled()) {
+							((ContainerGasStorage) this.player.openContainer).forceFluidUpdate();
+							((ContainerGasStorage) this.player.openContainer).doWork();
+						}
 					}
 				}
-			}
-			break;
-		case 3:
-			case3();
-			break;
+				break;
+			case 3:
+				case3();
+				break;
+			case 4:
+				case4();
+				break;
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void case0(){
+	public void case4() {
+		if (this.player != null && this.player.isClientWorld()) {
+			Gui gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof GuiFluidStorage) {
+				ContainerFluidStorage container = (ContainerFluidStorage) ((GuiFluidStorage) gui).inventorySlots;
+				container.updateFluidList(this.fluidStackList, true);
+			} else if (gui instanceof GuiGasStorage) {
+				ContainerGasStorage container = (ContainerGasStorage) ((GuiGasStorage) gui).inventorySlots;
+				container.updateFluidList(this.fluidStackList, true);
+			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void case0() {
 		if (this.player != null && this.player.isClientWorld()) {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof GuiFluidStorage) {
@@ -113,7 +140,8 @@ public class PacketFluidStorage extends AbstractPacket {
 	@Override
 	public void readData(ByteBuf in) {
 		switch (this.mode) {
-		case 0:
+			case 0:
+			case 4:
 			this.fluidStackList = AEApi.instance().storage().createFluidList();
 			while (in.readableBytes() > 0) {
 				Fluid fluid = readFluid(in);
@@ -146,14 +174,20 @@ public class PacketFluidStorage extends AbstractPacket {
 				out.writeLong(fluidStack.amount);
 			}
 			break;
-		case 1:
-			writeFluid(this.currentFluid, out);
-			break;
-		case 2:
-			break;
-		case 3:
-			out.writeBoolean(this.hasTermHandler);
-			break;
+			case 1:
+				writeFluid(this.currentFluid, out);
+				break;
+			case 2:
+				break;
+			case 3:
+				out.writeBoolean(this.hasTermHandler);
+				break;
+			case 4:
+				for (IAEFluidStack stack : this.change) {
+					writeFluid(stack.getFluid(), out);
+					out.writeLong(stack.getStackSize());
+				}
+				break;
 		}
 	}
 }

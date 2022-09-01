@@ -28,14 +28,16 @@ import java.util.List;
 
 public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui {
 
-	private PartFluidTerminal terminal;
-	private EntityPlayer player;
+	private final PartFluidTerminal terminal;
+	private final EntityPlayer player;
 	private int currentScroll = 0;
 	private GuiTextField searchbar;
 	private List<AbstractFluidWidget> fluidWidgets = new ArrayList<AbstractFluidWidget>();
-	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
+	private final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/terminalfluid.png");
 	public IAEFluidStack currentFluid;
-	private ContainerFluidTerminal containerTerminalFluid;
+	private final ContainerFluidTerminal containerTerminalFluid;
+	private List<AbstractFluidWidget> cache = new ArrayList<AbstractFluidWidget>();
+	private int tick = Extracells.terminalUpdateInterval();
 
 	public GuiFluidTerminal(PartFluidTerminal _terminal, EntityPlayer _player) {
 		super(new ContainerFluidTerminal(_terminal, _player));
@@ -66,20 +68,35 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 			String amountToText = FluidUtil.formatFluidAmount(currentFluidAmount, true);
 
 			this.fontRendererObj.drawString(
-					StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
+				StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amountToText, 45, 91, 0x000000);
 			this.fontRendererObj.drawString(
-					StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
+				StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()), 45, 101, 0x000000);
 		}
 	}
 
+	private List<AbstractFluidWidget> getCache() {
+		return this.cache;
+	}
+
+	private void setCache(List<AbstractFluidWidget> _list) {
+		this.cache = _list;
+	}
+
 	public void drawWidgets(int mouseX, int mouseY) {
-		int listSize = this.fluidWidgets.size();
+		if (tick < Extracells.terminalUpdateInterval() && this.getCache().size() > 0) {
+			tick++;
+		} else {
+			tick = 0;
+			this.setCache(this.fluidWidgets);
+		}
+		int listSize = this.getCache().size();
 		if (!this.containerTerminalFluid.getFluidStackList().isEmpty()) {
-			outerLoop: for (int y = 0; y < 4; y++) {
+			outerLoop:
+			for (int y = 0; y < 4; y++) {
 				for (int x = 0; x < 9; x++) {
 					int widgetIndex = y * 9 + x + this.currentScroll * 9;
 					if (0 <= widgetIndex && widgetIndex < listSize) {
-						AbstractFluidWidget widget = this.fluidWidgets.get(widgetIndex);
+						AbstractFluidWidget widget = this.getCache().get(widgetIndex);
 						widget.drawWidget(x * 18 + 7, y * 18 + 17);
 					} else {
 						break outerLoop;
@@ -91,19 +108,12 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 				for (int y = 0; y < 4; y++) {
 					int widgetIndex = y * 9 + x + this.currentScroll * 9;
 					if (0 <= widgetIndex && widgetIndex < listSize) {
-						if (this.fluidWidgets.get(widgetIndex).drawTooltip(x * 18 + 7, y * 18 - 1, mouseX, mouseY))
+						if (this.getCache().get(widgetIndex).drawTooltip(x * 18 + 7, y * 18 - 1, mouseX, mouseY))
 							break;
 					} else {
 						break;
 					}
 				}
-			}
-
-			int deltaWheel = Mouse.getDWheel();
-			if (deltaWheel > 0) {
-				this.currentScroll--;
-			} else if (deltaWheel < 0) {
-				this.currentScroll++;
 			}
 
 			if (this.currentScroll < 0)
@@ -140,19 +150,28 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	}
 
 	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		int deltaWheel = Mouse.getEventDWheel();
+		if (deltaWheel < 0) {
+			currentScroll++;
+		} else if (deltaWheel > 0) {
+			currentScroll--;
+		}
+	}
+	@Override
 	public void initGui() {
 		super.initGui();
-		Mouse.getDWheel();
 
 		updateFluids();
-		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
+		Collections.sort(this.getCache(), new FluidWidgetComparator());
 		this.searchbar = new GuiTextField(this.fontRendererObj,
-				this.guiLeft + 81, this.guiTop + 6, 88, 10) {
+			this.guiLeft + 81, this.guiTop + 6, 88, 10) {
 
-			private int xPos = 0;
-			private int yPos = 0;
-			private int width = 0;
-			private int height = 0;
+			private final int xPos = 0;
+			private final int yPos = 0;
+			private final int width = 0;
+			private final int height = 0;
 
 			@Override
 			public void mouseClicked(int x, int y, int mouseBtn) {
@@ -164,6 +183,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 		this.searchbar.setEnableBackgroundDrawing(false);
 		this.searchbar.setFocused(true);
 		this.searchbar.setMaxStringLength(15);
+		this.searchbar.setText("");
 	}
 
 	@Override
@@ -178,12 +198,12 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
 		super.mouseClicked(mouseX, mouseY, mouseBtn);
 		this.searchbar.mouseClicked(mouseX, mouseY, mouseBtn);
-		int listSize = this.fluidWidgets.size();
+		int listSize = this.getCache().size();
 		for (int x = 0; x < 9; x++) {
 			for (int y = 0; y < 4; y++) {
 				int index = y * 9 + x + this.currentScroll * 9;
 				if (0 <= index && index < listSize) {
-					AbstractFluidWidget widget = this.fluidWidgets.get(index);
+					AbstractFluidWidget widget = this.getCache().get(index);
 					widget.mouseClicked(x * 18 + 7, y * 18 - 1, mouseX, mouseY);
 				}
 			}
@@ -191,13 +211,20 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 	}
 
 	public void updateFluids() {
+		if (this.searchbar != null && !this.searchbar.getText().isEmpty()) {
+			this.containerTerminalFluid.forceFluidUpdate(this.searchbar.getText());
+		} else {
+			this.containerTerminalFluid.forceFluidUpdate();
+		}
 		this.fluidWidgets = new ArrayList<AbstractFluidWidget>();
 		for (IAEFluidStack fluidStack : this.containerTerminalFluid.getFluidStackList()) {
 			if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(this.searchbar.getText().toLowerCase()) && ECApi.instance().canFluidSeeInTerminal(
-							fluidStack.getFluid())) {
+				fluidStack.getFluid())) {
 				this.fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
 			}
 		}
+		Collections.sort(this.fluidWidgets, new FluidWidgetComparator());
+
 		updateSelectedFluid();
 	}
 

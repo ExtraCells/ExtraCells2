@@ -33,7 +33,7 @@ public class DriverOreDictExportBus implements SidedBlock{
 			return null;
 		return new Environment((IPartHost) tile);
 	}
-	
+
 	private static PartOreDictExporter getExportBus(World world, int x, int y, int z, ForgeDirection dir){
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if ((!(tile instanceof IPartHost)))
@@ -51,12 +51,12 @@ public class DriverOreDictExportBus implements SidedBlock{
 			return part instanceof PartOreDictExporter ? (PartOreDictExporter) part : null;
 		}
 	}
-	
+
 	public static class Environment extends ManagedEnvironment implements NamedBlock{
-		
+
 		protected final TileEntity tile;
 		protected final IPartHost host;
-		
+
 		Environment(IPartHost host){
 			tile = (TileEntity) host;
 			this.host = host;
@@ -75,7 +75,7 @@ public class DriverOreDictExportBus implements SidedBlock{
 				return new Object[]{null, "no export bus"};
 			return new Object[]{part.getFilter()};
 		}
-		
+
 		@Callback(doc = "function(side:number[, filter:string]):boolean -- Set the configuration of the ore dict export bus pointing in the specified direction.")
 		public Object[] setOreConfiguration(Context context, Arguments args){
 			ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
@@ -85,10 +85,11 @@ public class DriverOreDictExportBus implements SidedBlock{
 			if (part == null)
 				return new Object[]{false, "no export bus"};
 			part.setFilter(args.optString(1, ""));
+
 			context.pause(0.5);
 			return new Object[]{true};
 		}
-		
+
 
 		@Override
 		public String preferredName() {
@@ -98,8 +99,8 @@ public class DriverOreDictExportBus implements SidedBlock{
 		@Override
 		public int priority() {
 			return 0;
-		}	
-		
+		}
+
 	}
 
 	static class Provider implements EnvironmentProvider {

@@ -13,6 +13,7 @@ import appeng.api.util.AEColor;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.Extracells;
 import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -101,7 +102,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 		boolean redstonePowered = isRedstonePowered();
 		if (resource == null || redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL)
 			return 0;
-		int drainAmount = Math.min(125 + this.speedState * 125, resource.amount);
+		int drainAmount = Math.min(Extracells.basePartSpeed() + this.speedState * Extracells.basePartSpeed(), resource.amount);
 		FluidStack toFill = new FluidStack(resource.getFluid(), drainAmount);
 		Actionable action = doFill ? Actionable.MODULATE : Actionable.SIMULATE;
 		IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), action);
@@ -161,7 +162,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 						tile.yCoord,
 						tile.zCoord,
 						actuallyNotInjected.getStackSize() - returned,
-						actuallyNotInjected.getFluid().getName());
+						fluid.getName());
 				}
 			}
 			return true;

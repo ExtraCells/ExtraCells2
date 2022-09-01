@@ -33,8 +33,10 @@ public class ExtraCellsEventHandler {
 				Container con = event.player.openContainer;
 				if (con instanceof ContainerFluidStorage) {
 					((ContainerFluidStorage) con).removeEnergyTick();
+					((ContainerFluidStorage) con).doWork();
 				}else if (con instanceof ContainerGasStorage) {
 					((ContainerGasStorage) con).removeEnergyTick();
+					((ContainerGasStorage) con).doWork();
 				}
 			}
 		}
