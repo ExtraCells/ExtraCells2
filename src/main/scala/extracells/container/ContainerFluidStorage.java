@@ -31,6 +31,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import static extracells.util.FluidUtil.filterEmptyFluid;
+
 public class ContainerFluidStorage extends Container implements
 	IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer,
 	IInventoryUpdateReceiver, IStorageContainer {
@@ -420,8 +422,6 @@ public class ContainerFluidStorage extends Container implements
 		if (this.guiFluidStorage != null)
 			this.guiFluidStorage.updateFluids();
 	}
-
-
 	public void updateFluidList(IItemList<IAEFluidStack> _fluidStackList, boolean incremental) {
 		if (incremental) {
 			IItemList<IAEFluidStack> temp = this.getFluidStackList();
@@ -435,7 +435,7 @@ public class ContainerFluidStorage extends Container implements
 				}
 				if (!change) temp.add(f1);
 			}
-			this.fluidStackList = temp;
+			this.fluidStackList = filterEmptyFluid(temp);
 		} else {
 			this.fluidStackList = _fluidStackList;
 		}

@@ -26,6 +26,8 @@ import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
+import static extracells.util.FluidUtil.filterEmptyFluid;
+
 public class ContainerGasTerminal extends Container implements
 		IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
 
@@ -219,7 +221,7 @@ public class ContainerGasTerminal extends Container implements
 				}
 				if (!change) temp.add(f1);
 			}
-			this.fluidStackList = temp;
+			this.fluidStackList = filterEmptyFluid(temp);
 		} else {
 			this.fluidStackList = _fluidStackList;
 		}

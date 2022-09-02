@@ -5,6 +5,7 @@ import appeng.api.config.Actionable;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IItemList;
 import cpw.mods.fml.common.FMLLog;
 import extracells.item.ItemFluidPattern;
 import extracells.registries.ItemEnum;
@@ -146,7 +147,7 @@ public class FluidUtil {
 		if (filledContainer.getLeft() < (int) result.getStackSize() && mode == Actionable.MODULATE) {
 			// Couldn't completely fill container, attempt to return to AE
 			int remaining = (int)result.getStackSize() - filledContainer.getLeft();
-			IAEFluidStack notAdded = monitor.injectItems(FluidUtil.createAEFluidStack(result.getFluid(), (long)remaining), Actionable.MODULATE, src);
+			IAEFluidStack notAdded = monitor.injectItems(FluidUtil.createAEFluidStack(result.getFluid(), remaining), Actionable.MODULATE, src);
 			if (notAdded != null && notAdded.getStackSize() > 0) {
 				FMLLog.severe("[ExtraCells2] %d mL of fluid `%s` voided when trying to fill container `%s`",
 					notAdded.getStackSize(), notAdded.getFluid().getName(), container.getUnlocalizedName());
@@ -201,7 +202,7 @@ public class FluidUtil {
 			// Couldn't completely empty container, attempt to drain AE to avoid duping fluid
 			if (mode == Actionable.MODULATE) {
 				int duped = fluidStack.amount - partiallyDrained.getLeft();
-				IAEFluidStack extracted = monitor.extractItems(FluidUtil.createAEFluidStack(notAdded.getFluid(), (long) duped), Actionable.MODULATE, src);
+				IAEFluidStack extracted = monitor.extractItems(FluidUtil.createAEFluidStack(notAdded.getFluid(), duped), Actionable.MODULATE, src);
 				if (extracted == null || extracted.getStackSize() < duped) {
 					FMLLog.severe("[ExtraCells2] %d mL of fluid `%s` duped when trying to empty container `%s`",
 						extracted == null ? duped : (duped - extracted.getStackSize()),
@@ -297,6 +298,15 @@ public class FluidUtil {
 			}
 		}
 		return String.format("%,d%s", millibuckets, forceLongForm ? " mB" : "m");
+	}
+
+	public static IItemList<IAEFluidStack> filterEmptyFluid(IItemList<IAEFluidStack> _fluidStackList){
+		IItemList<IAEFluidStack> temp = AEApi.instance().storage().createFluidList();
+		for(IAEFluidStack fluid: _fluidStackList){
+			if(fluid.getStackSize() > 0)
+				temp.add(fluid);
+		}
+		return temp;
 	}
 
 	public static String formatFluidAmount(long millibuckets) {
