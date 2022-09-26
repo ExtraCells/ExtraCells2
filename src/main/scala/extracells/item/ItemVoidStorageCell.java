@@ -66,7 +66,7 @@ public final class ItemVoidStorageCell extends AEBaseItem implements IStorageCel
 		this.perType = 8;
 		this.idleDrain = 0.0;
 		this.suffix = "void";
-	
+
 	}
 
     @SideOnly(Side.CLIENT)
@@ -87,25 +87,7 @@ public final class ItemVoidStorageCell extends AEBaseItem implements IStorageCel
 
 				lines.add( cellInventory.getUsedBytes() + " " + GuiText.Of.getLocal() + " \u00A7k9999\u00A77 " + GuiText.BytesUsed.getLocal() );
 
-				lines.add( cellInventory.getStoredItemTypes() + " " + GuiText.Of.getLocal() + ' ' + cellInventory.getTotalItemTypes() + ' ' + GuiText.Types.getLocal() );
-
-				if( handler.isPreformatted() )
-				{
-					String filter = cellInventory.getOreFilter();
-
-					if (filter.isEmpty()) {
-						final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST ? GuiText.Included : GuiText.Excluded).getLocal();
-
-						if (handler.isFuzzy()) {
-							lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Fuzzy.getLocal());
-						} else {
-							lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Precise.getLocal());
-						}
-					}
-					else {
-						lines.add(GuiText.PartitionedOre.getLocal() + " : " + filter);
-					}
-				}
+				ItemAdvancedStorageCell.format(lines, handler, cellInventory);
 			}
 		}
 	}

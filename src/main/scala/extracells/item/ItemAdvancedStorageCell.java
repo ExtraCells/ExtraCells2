@@ -45,6 +45,8 @@ import java.util.Set;
 import java.util.Random;
 import java.util.HashMap;
 
+import static appeng.util.Utility.formatNumbers;
+
 public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorageCellAdvanced, IItemGroup
 {
 	private final long totalBytes;
@@ -65,7 +67,7 @@ public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorag
 		this.perType = bytesPerType;
 		this.idleDrain = drain;
 		this.suffix = suffix;
-	
+
 	}
 
     @SideOnly(Side.CLIENT)
@@ -73,7 +75,7 @@ public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorag
 	public void addCheckedInformation( final ItemStack stack, final EntityPlayer player, final List<String> lines, final boolean displayMoreInfo )
 	{
 		final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell().getCellInventory( stack, null, StorageChannel.ITEMS );
-	
+
 		if( inventory instanceof AdvancedCellInventoryHandler )
 		{
 			final ICellInventoryHandler handler = (ICellInventoryHandler) inventory;
@@ -82,27 +84,31 @@ public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorag
 
 			if( cellInventory != null )
 			{
-				lines.add( cellInventory.getUsedBytes() + " " + GuiText.Of.getLocal() + ' ' + cellInventory.getTotalBytes() + ' ' + GuiText.BytesUsed.getLocal() );
+				lines.add( formatNumbers(cellInventory.getUsedBytes()) + " " + GuiText.Of.getLocal() + ' ' + formatNumbers(cellInventory.getTotalBytes()) + ' ' + GuiText.BytesUsed.getLocal() );
 
-				lines.add( cellInventory.getStoredItemTypes() + " " + GuiText.Of.getLocal() + ' ' + cellInventory.getTotalItemTypes() + ' ' + GuiText.Types.getLocal() );
+				format(lines, handler, cellInventory);
+			}
+		}
+	}
 
-				if( handler.isPreformatted() )
-				{
-					String filter = cellInventory.getOreFilter();
+	static void format(List<String> lines, ICellInventoryHandler handler, ICellInventory cellInventory) {
+		lines.add( formatNumbers(cellInventory.getStoredItemTypes()) + " " + GuiText.Of.getLocal() + ' ' + formatNumbers(cellInventory.getTotalItemTypes()) + ' ' + GuiText.Types.getLocal() );
 
-					if (filter.isEmpty()) {
-						final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST ? GuiText.Included : GuiText.Excluded).getLocal();
+		if( handler.isPreformatted() )
+		{
+			String filter = cellInventory.getOreFilter();
 
-						if (handler.isFuzzy()) {
-							lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Fuzzy.getLocal());
-						} else {
-							lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Precise.getLocal());
-						}
-					}
-					else {
-						lines.add(GuiText.PartitionedOre.getLocal() + " : " + filter);
-					}
+			if (filter.isEmpty()) {
+				final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST ? GuiText.Included : GuiText.Excluded).getLocal();
+
+				if (handler.isFuzzy()) {
+					lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Fuzzy.getLocal());
+				} else {
+					lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Precise.getLocal());
 				}
+			}
+			else {
+				lines.add(GuiText.PartitionedOre.getLocal() + " : " + filter);
 			}
 		}
 	}
