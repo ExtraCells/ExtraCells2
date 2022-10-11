@@ -8,6 +8,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.*;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
@@ -15,7 +16,9 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
+import appeng.client.texture.CableBusTextures;
 import appeng.helpers.IPriorityHost;
+import appeng.items.parts.ItemMultiPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidStorage;
@@ -190,48 +193,57 @@ public class PartFluidStorage extends PartECBase implements ICellContainer, IInv
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
+		final IIcon sideTexture = CableBusTextures.PartStorageSides.getIcon();
+		final IIcon backTexture = CableBusTextures.PartStorageBack.getIcon();
+		final IIcon frontTexture = TextureManager.STORAGE_FRONT.getTexture();
+		final IIcon noTexture = ItemMultiPart.instance.getIconFromDamage(220);
 
-		IIcon side = TextureManager.STORAGE_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.STORAGE_FRONT.getTextures()[0], side, side);
-		rh.setBounds(2, 2, 15, 14, 14, 16);
+		rh.setTexture(sideTexture, sideTexture, noTexture, frontTexture, sideTexture, sideTexture);
+		rh.setBounds(3, 3, 15, 13, 13, 16);
 		rh.renderInventoryBox(renderer);
 
-		rh.setBounds(4, 4, 14, 12, 12, 15);
+		rh.setTexture(sideTexture, sideTexture, backTexture, noTexture, sideTexture, sideTexture);
+		rh.setBounds(2, 2, 14, 14, 14, 15);
 		rh.renderInventoryBox(renderer);
+
+		rh.setBounds(5, 5, 12, 11, 11, 14);
+		rh.renderInventoryBox(renderer);
+
 		rh.setBounds(2, 2, 15, 14, 14, 16);
 		rh.setInvColor(AEColor.Cyan.blackVariant);
-		ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderInventoryFace(TextureManager.STORAGE_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderInventoryBusLights(rh, renderer);
+		Tessellator.instance.setBrightness(15 << 20 | 15 << 4);
+		rh.renderInventoryFace(TextureManager.STORAGE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
+	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
+		final IPartHost host = getHost();
+		final IIcon sideTexture = CableBusTextures.PartStorageSides.getIcon();
+		final IIcon backTexture = CableBusTextures.PartStorageBack.getIcon();
+		final IIcon frontTexture = TextureManager.STORAGE_FRONT.getTexture();
+		final IIcon noTexture = ItemMultiPart.instance.getIconFromDamage(220);
 
-		IIcon side = TextureManager.STORAGE_SIDE.getTexture();
-		rh.setTexture(side, side, side,
-				TextureManager.STORAGE_FRONT.getTexture(), side, side);
-		rh.setBounds(2, 2, 15, 14, 14, 16);
+		rh.setTexture(sideTexture, sideTexture, noTexture, frontTexture, sideTexture, sideTexture);
+		rh.setBounds(3, 3, 15, 13, 13, 16);
 		rh.renderBlock(x, y, z, renderer);
 
-		ts.setColorOpaque_I(getHost().getColor().blackVariant);
+		Tessellator.instance.setColorOpaque_I(host.getColor().blackVariant);
 		if (isActive())
-			ts.setBrightness(15 << 20 | 15 << 4);
-		rh.renderFace(x, y, z, TextureManager.STORAGE_FRONT.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		rh.setBounds(4, 4, 14, 12, 12, 15);
+			Tessellator.instance.setBrightness(14 << 20 | 14 << 4);
+		rh.renderFace(x, y, z, TextureManager.STORAGE_FRONT.getTextures()[1], ForgeDirection.SOUTH, renderer);
+
+		rh.setTexture(sideTexture, sideTexture, backTexture, noTexture, sideTexture, sideTexture);
+		rh.setBounds(2, 2, 14, 14, 14, 15);
+		rh.renderBlock(x, y, z, renderer);
+
+		rh.setBounds(5, 5, 12, 11, 11, 13);
 		rh.renderBlock(x, y, z, renderer);
 
 		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderStaticBusLights(x, y, z, rh, renderer);
+		rh.renderBlock(x, y, z, renderer);
+
+		renderPowerStatus(x, y, z, rh, renderer);
 	}
 
 	@Override

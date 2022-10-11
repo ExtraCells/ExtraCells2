@@ -17,6 +17,8 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
+import appeng.client.texture.CableBusTextures;
+import appeng.items.parts.ItemMultiPart;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
@@ -403,6 +405,47 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost,
 		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.EAST, renderer);
 		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.SOUTH, renderer);
 		rh.renderInventoryFace(TextureManager.BUS_COLOR.getTextures()[1], ForgeDirection.WEST, renderer);
+	}
+
+	protected void renderBackPanel(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
+		final IIcon backTexture = CableBusTextures.PartMonitorBack.getIcon();
+		final IIcon sideStatusTexture = CableBusTextures.PartMonitorSidesStatus.getIcon();
+		final IIcon noTexture = ItemMultiPart.instance.getIconFromDamage(380);
+
+		rh.setTexture(sideStatusTexture, sideStatusTexture, backTexture, noTexture, sideStatusTexture, sideStatusTexture);
+		rh.setBounds(4, 4, 13, 12, 12, 14);
+		rh.renderBlock(x, y, z, renderer);
+	}
+
+	protected void renderPowerStatus(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
+		if (isActive()) {
+			final int l = 14;
+			Tessellator.instance.setBrightness(l << 20 | l << 4);
+			Tessellator.instance.setColorOpaque_I(host.getColor().blackVariant);
+		} else if (isPowered()) {
+			final int l = 9;
+			Tessellator.instance.setBrightness(l << 20 | l << 4);
+			Tessellator.instance.setColorOpaque_I(host.getColor().whiteVariant);
+		} else {
+			Tessellator.instance.setBrightness(0);
+			Tessellator.instance.setColorOpaque_I(0x000000);
+		}
+
+		final IIcon sideStatusLightTexture = CableBusTextures.PartMonitorSidesStatusLights.getIcon();
+		rh.renderFace(x, y, z, sideStatusLightTexture, ForgeDirection.EAST, renderer);
+		rh.renderFace(x, y, z, sideStatusLightTexture, ForgeDirection.WEST, renderer);
+		rh.renderFace(x, y, z, sideStatusLightTexture, ForgeDirection.UP, renderer);
+		rh.renderFace(x, y, z, sideStatusLightTexture, ForgeDirection.DOWN, renderer);
+	}
+
+	protected void renderFrontPanel(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
+		final IIcon sideTexture = CableBusTextures.PartMonitorSides.getIcon();
+		final IIcon backTexture = CableBusTextures.PartMonitorBack.getIcon();
+		final IIcon noTexture = ItemMultiPart.instance.getIconFromDamage(380);
+
+		rh.setTexture(sideTexture, sideTexture, backTexture, noTexture, sideTexture, sideTexture);
+		rh.setBounds(2, 2, 14, 14, 14, 16);
+		rh.renderBlock(x, y, z, renderer);
 	}
 
 	@Override

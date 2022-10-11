@@ -220,18 +220,18 @@ public class PartDrive extends PartECBase implements ICellContainer,
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh,
-			RenderBlocks renderer) {
-		Tessellator ts = Tessellator.instance;
+	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
+		// Render Front Screen
 		IIcon side = TextureManager.DRIVE_SIDE.getTexture();
 		IIcon[] front = TextureManager.DRIVE_FRONT.getTextures();
 		rh.setBounds(2, 2, 14, 14, 14, 15.999F);
 		rh.renderFace(x, y, z, front[3], ForgeDirection.SOUTH, renderer);
-		rh.setBounds(2, 2, 14, 14, 14, 16);
-		rh.setTexture(side, side, side, front[0], side, side);
-		rh.renderBlock(x, y, z, renderer);
 
-		ts.setColorOpaque_I(0xFFFFFF);
+		rh.setBounds(3, 3, 16, 13, 13, 16);
+		rh.setTexture(side, side, side, front[0], side, side);
+		rh.renderFace(x, y, z, front[0], ForgeDirection.SOUTH, renderer);
+
+		Tessellator.instance.setColorOpaque_I(0xFFFFFF);
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 3; j++) {
 				if (this.cellStatuses[j + i * 3] > 0) {
@@ -254,14 +254,15 @@ public class PartDrive extends PartECBase implements ICellContainer,
 					rh.setBounds(8, 12 - j * 3, 14, 13, 10 - j * 3, 16);
 				else
 					rh.setBounds(3, 12 - j * 3, 14, 8, 10 - j * 3, 16);
-				ts.setColorOpaque_I(getColorByStatus(this.cellStatuses[j + i
-						* 3]));
-				ts.setBrightness(13 << 20 | 13 << 4);
+				Tessellator.instance.setColorOpaque_I(getColorByStatus(this.cellStatuses[j + i * 3]));
+				Tessellator.instance.setBrightness(13 << 20 | 13 << 4);
 				rh.renderFace(x, y, z, front[2], ForgeDirection.SOUTH, renderer);
 			}
 		}
-		rh.setBounds(5, 5, 13, 11, 11, 14);
-		renderStaticBusLights(x, y, z, rh, renderer);
+
+		renderFrontPanel(x, y, z, rh, renderer);
+		renderBackPanel(x, y, z, rh, renderer);
+		renderPowerStatus(x, y, z, rh, renderer);
 	}
 
 	@Override
