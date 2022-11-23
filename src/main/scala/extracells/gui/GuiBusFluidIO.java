@@ -2,6 +2,10 @@ package extracells.gui;
 
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
+import codechicken.nei.VisiblityData;
+import codechicken.nei.api.INEIGuiHandler;
+import codechicken.nei.api.TaggedInventoryArea;
+import cpw.mods.fml.common.Optional;
 import extracells.container.ContainerBusFluidIO;
 import extracells.gui.widget.WidgetRedstoneModes;
 import extracells.gui.widget.fluid.WidgetFluidSlot;
@@ -12,8 +16,10 @@ import extracells.part.PartFluidIO;
 import extracells.part.PartGasExport;
 import extracells.part.PartGasImport;
 import extracells.util.FluidUtil;
+import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -22,17 +28,18 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Collections;
 import java.util.List;
-
+@Optional.Interface(modid = "NotEnoughItems", iface = "codechicken.nei.api.INEIGuiHandler")
 public class GuiBusFluidIO extends ECGuiContainer implements
-		WidgetFluidSlot.IConfigurable, IFluidSlotGui {
+		WidgetFluidSlot.IConfigurable, IFluidSlotGui, INEIGuiHandler {
 
 	private static final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/busiofluid.png");
-	private PartFluidIO part;
-	private EntityPlayer player;
+	private final PartFluidIO part;
+	private final EntityPlayer player;
 	private byte filterSize;
 	private boolean redstoneControlled;
-	private boolean hasNetworkTool;
+	private final boolean hasNetworkTool;
 
 	public GuiBusFluidIO(PartFluidIO _terminal, EntityPlayer _player) {
 		super(new ContainerBusFluidIO(_terminal, _player));
@@ -205,5 +212,33 @@ public class GuiBusFluidIO extends ECGuiContainer implements
 	public void updateRedstoneMode(RedstoneMode mode) {
 		if (this.redstoneControlled && this.buttonList.size() > 0)
 			((WidgetRedstoneModes) this.buttonList.get(0)).setRedstoneMode(mode);
+	}
+	@Override
+	public boolean handleDragNDrop(GuiContainer gui, int mouseX, int mouseY, ItemStack draggedStack, int button) {
+		for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
+			if (GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
+				fluidSlot.mouseNEIClicked(draggedStack);
+				return true;
+			}
+		}
+		return false;
+	}
+	@Override
+	public boolean hideItemPanelSlot(GuiContainer gui, int x, int y, int w, int h) {
+		return false;
+	}
+	@Override
+	public VisiblityData modifyVisiblity(GuiContainer gui, VisiblityData currentVisibility) {
+		return currentVisibility;
+	}
+
+	@Override
+	public Iterable<Integer> getItemSpawnSlots(GuiContainer gui, ItemStack item) {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public List<TaggedInventoryArea> getInventoryAreas(GuiContainer gui) {
+		return null;
 	}
 }

@@ -1,6 +1,10 @@
 package extracells.gui;
 
 import appeng.api.config.RedstoneMode;
+import codechicken.nei.VisiblityData;
+import codechicken.nei.api.INEIGuiHandler;
+import codechicken.nei.api.TaggedInventoryArea;
+import cpw.mods.fml.common.Optional;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.widget.DigitTextField;
 import extracells.gui.widget.WidgetRedstoneModes;
@@ -14,22 +18,26 @@ import extracells.registries.PartEnum;
 import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Collections;
 import java.util.List;
 
-public class GuiFluidEmitter extends ECGuiContainer implements IFluidSlotGui {
+@Optional.Interface(modid = "NotEnoughItems", iface = "codechicken.nei.api.INEIGuiHandler")
+public class GuiFluidEmitter extends ECGuiContainer implements IFluidSlotGui,INEIGuiHandler{
 
 	public static final int xSize = 176;
 	public static final int ySize = 166;
 	private DigitTextField amountField;
-	private PartFluidLevelEmitter part;
-	private EntityPlayer player;
-	private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png");
+	private final PartFluidLevelEmitter part;
+	private final EntityPlayer player;
+	private final ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png");
 
 	public GuiFluidEmitter(PartFluidLevelEmitter _part, EntityPlayer _player) {
 		super(new ContainerFluidEmitter(_part, _player));
@@ -174,4 +182,32 @@ public class GuiFluidEmitter extends ECGuiContainer implements IFluidSlotGui {
 		}
 		this.fluidSlot.setFluid(_fluids.get(0));
 	}
+	@Override
+	public boolean handleDragNDrop(GuiContainer gui, int mouseX, int mouseY, ItemStack draggedStack, int button) {
+		if(GuiUtil.isPointInRegion(this.guiLeft, this.guiTop, this.fluidSlot.getPosX(), this.fluidSlot.getPosY(), 18, 18, mouseX, mouseY)){
+			this.fluidSlot.mouseNEIClicked(draggedStack);
+			return true;
+		}
+		return false;
+	}
+	@Override
+	public boolean hideItemPanelSlot(GuiContainer gui, int x, int y, int w, int h) {
+		return false;
+	}
+	@Override
+	public VisiblityData modifyVisiblity(GuiContainer gui, VisiblityData currentVisibility) {
+		return currentVisibility;
+	}
+
+	@Override
+	public Iterable<Integer> getItemSpawnSlots(GuiContainer gui, ItemStack item) {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public List<TaggedInventoryArea> getInventoryAreas(GuiContainer gui) {
+		return null;
+	}
+
+
 }

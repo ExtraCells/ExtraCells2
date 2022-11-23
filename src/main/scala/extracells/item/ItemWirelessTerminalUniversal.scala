@@ -1,8 +1,6 @@
 package extracells.item
 
 
-import java.util
-
 import appeng.api.AEApi
 import appeng.api.features.IWirelessTermHandler
 import appeng.api.util.IConfigManager
@@ -18,8 +16,10 @@ import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.util.{IIcon, StatCollector}
+import net.minecraft.util.{ChatComponentText, IIcon, StatCollector}
 import net.minecraft.world.World
+
+import java.util
 
 object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase with IWirelessFluidTermHandler with IWirelessGasTermHandler with IWirelessTermHandler with EssensiaTerminal with CraftingTerminal{
   val isTeEnabled = Integration.Mods.THAUMATICENERGISTICS.isEnabled
@@ -137,6 +137,9 @@ object ItemWirelessTerminalUniversal extends ItemECBase with WirelessTermBase wi
         else
           tag.setByte("type", 0)
     }
+	  player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal(
+		  "extracells.tooltip.mode") + ": " + StatCollector.translateToLocal("extracells.tooltip." + TerminalType.values().apply(tag.getByte("type")).toString.toLowerCase
+	  )))
     itemStack
   }
 
