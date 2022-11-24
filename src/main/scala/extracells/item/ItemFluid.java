@@ -8,12 +8,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class ItemFluid extends ItemECBase {
 
-	@Override
-	public String getItemStackDisplayName(ItemStack stack) {
-		Fluid fluid = FluidRegistry.getFluid(stack.getItemDamage());
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        Fluid fluid = FluidRegistry.getFluid(stack.getItemDamage());
 
-		if (fluid != null)
-			return fluid.getLocalizedName(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME));
-		return "null";
-	}
+        if (fluid != null) return fluid.getLocalizedName(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME));
+        return "null";
+    }
 }

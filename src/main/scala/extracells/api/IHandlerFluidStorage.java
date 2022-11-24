@@ -2,14 +2,13 @@ package extracells.api;
 
 public interface IHandlerFluidStorage {
 
-	boolean isFormatted();
+    boolean isFormatted();
 
-	int totalBytes();
+    int totalBytes();
 
-	int totalTypes();
+    int totalTypes();
 
-	int usedBytes();
+    int usedBytes();
 
-	int usedTypes();
-
+    int usedTypes();
 }

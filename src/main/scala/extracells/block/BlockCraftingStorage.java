@@ -8,23 +8,23 @@ import net.minecraft.util.IIcon;
 
 public class BlockCraftingStorage extends appeng.block.crafting.BlockCraftingStorage {
 
-	private static IIcon[] icons = new IIcon[8];
+    private static IIcon[] icons = new IIcon[8];
 
-	public BlockCraftingStorage() {
-		this.setTileEntity(TileEntityCraftingStorage.class);
+    public BlockCraftingStorage() {
+        this.setTileEntity(TileEntityCraftingStorage.class);
         this.setCreativeTab(Extracells.ModTab());
-		this.hasSubtypes = true;
-		this.setBlockName("blockCraftingStorage");
-	}
+        this.hasSubtypes = true;
+        this.setBlockName("blockCraftingStorage");
+    }
 
-	@Override
-	public String getUnlocalizedName( ItemStack is ){
-		return this.getItemUnlocalizedName( is );
-	}
+    @Override
+    public String getUnlocalizedName(ItemStack is) {
+        return this.getItemUnlocalizedName(is);
+    }
 
-	protected String getItemUnlocalizedName( ItemStack is ){
-		return super.getUnlocalizedName( is );
-	}
+    protected String getItemUnlocalizedName(ItemStack is) {
+        return super.getUnlocalizedName(is);
+    }
 
     public void registerBlockIcons(IIconRegister ir) {
         icons[0] = ir.registerIcon("extracells:crafting.storage.256k");
@@ -40,18 +40,27 @@ public class BlockCraftingStorage extends appeng.block.crafting.BlockCraftingSto
         icons[7] = ir.registerIcon("extracells:crafting.storage.16384k.fit");
     }
 
-	@Override
-	public IIcon getIcon(int side, int meta) {
-		switch(meta & (~4)){
-			case 0: return icons[0];
-			case 1: return icons[2];
-			case 2: return icons[4];
-			case 3: return icons[6];
-			case 8: return icons[1];
-			case 1|8: return icons[3];
-			case 2|8: return icons[5];
-			case 3|8: return icons[7];
-			default: return null;
-		}
-	}
+    @Override
+    public IIcon getIcon(int side, int meta) {
+        switch (meta & (~4)) {
+            case 0:
+                return icons[0];
+            case 1:
+                return icons[2];
+            case 2:
+                return icons[4];
+            case 3:
+                return icons[6];
+            case 8:
+                return icons[1];
+            case 1 | 8:
+                return icons[3];
+            case 2 | 8:
+                return icons[5];
+            case 3 | 8:
+                return icons[7];
+            default:
+                return null;
+        }
+    }
 }

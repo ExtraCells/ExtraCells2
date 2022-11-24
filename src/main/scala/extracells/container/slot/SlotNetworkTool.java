@@ -9,21 +9,19 @@ import net.minecraft.item.ItemStack;
 
 public class SlotNetworkTool extends Slot {
 
-	IInventory inventory;
+    IInventory inventory;
 
-	public SlotNetworkTool(INetworkTool inventory, int index, int x, int y) {
-		super(inventory, index, x, y);
-		this.inventory = inventory;
-	}
+    public SlotNetworkTool(INetworkTool inventory, int index, int x, int y) {
+        super(inventory, index, x, y);
+        this.inventory = inventory;
+    }
 
-	@Override
-	public boolean isItemValid(ItemStack itemStack) {
-		if (itemStack == null)
-			return false;
-		Item item = itemStack.getItem();
-		if (!(item instanceof IUpgradeModule))
-			return false;
-		IUpgradeModule upgradeModule = (IUpgradeModule) item;
-		return upgradeModule.getType(itemStack) != null;
-	}
+    @Override
+    public boolean isItemValid(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        Item item = itemStack.getItem();
+        if (!(item instanceof IUpgradeModule)) return false;
+        IUpgradeModule upgradeModule = (IUpgradeModule) item;
+        return upgradeModule.getType(itemStack) != null;
+    }
 }

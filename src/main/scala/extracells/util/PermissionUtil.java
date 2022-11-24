@@ -11,44 +11,34 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class PermissionUtil {
 
-	public static boolean hasPermission(EntityPlayer player,
-			SecurityPermissions permission, IGrid grid) {
-		if (grid != null)
-			return hasPermission(player, permission,
-					(ISecurityGrid) grid.getCache(ISecurityGrid.class));
-		return true;
-	}
+    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, IGrid grid) {
+        if (grid != null) return hasPermission(player, permission, (ISecurityGrid) grid.getCache(ISecurityGrid.class));
+        return true;
+    }
 
-	public static boolean hasPermission(EntityPlayer player,
-			SecurityPermissions permission, IGridHost host) {
-		return hasPermission(player, permission, host, ForgeDirection.UNKNOWN);
-	}
+    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, IGridHost host) {
+        return hasPermission(player, permission, host, ForgeDirection.UNKNOWN);
+    }
 
-	public static boolean hasPermission(EntityPlayer player,
-			SecurityPermissions permission, IGridHost host, ForgeDirection side) {
-		if (host != null)
-			return hasPermission(player, permission, host.getGridNode(side));
-		return true;
-	}
+    public static boolean hasPermission(
+            EntityPlayer player, SecurityPermissions permission, IGridHost host, ForgeDirection side) {
+        if (host != null) return hasPermission(player, permission, host.getGridNode(side));
+        return true;
+    }
 
-	public static boolean hasPermission(EntityPlayer player,
-			SecurityPermissions permission, IGridNode host) {
-		if (host != null)
-			return hasPermission(player, permission, host.getGrid());
-		return true;
-	}
+    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, IGridNode host) {
+        if (host != null) return hasPermission(player, permission, host.getGrid());
+        return true;
+    }
 
-	public static boolean hasPermission(EntityPlayer player,
-			SecurityPermissions permission, IPart part) {
-		if (part != null)
-			return hasPermission(player, permission, part.getGridNode());
-		return true;
-	}
+    public static boolean hasPermission(EntityPlayer player, SecurityPermissions permission, IPart part) {
+        if (part != null) return hasPermission(player, permission, part.getGridNode());
+        return true;
+    }
 
-	public static boolean hasPermission(EntityPlayer player,
-			SecurityPermissions permission, ISecurityGrid securityGrid) {
-		if (player == null || permission == null || securityGrid == null)
-			return true;
-		return securityGrid.hasPermission(player, permission);
-	}
+    public static boolean hasPermission(
+            EntityPlayer player, SecurityPermissions permission, ISecurityGrid securityGrid) {
+        if (player == null || permission == null || securityGrid == null) return true;
+        return securityGrid.hasPermission(player, permission);
+    }
 }

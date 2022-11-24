@@ -16,80 +16,82 @@ import net.minecraft.item.ItemStack;
 
 public class ContainerBusFluidStorage extends Container {
 
-	private GuiBusFluidStorage guiBusFluidStorage;
+    private GuiBusFluidStorage guiBusFluidStorage;
 
-	public PartFluidStorage part;
+    public PartFluidStorage part;
 
-	public ContainerBusFluidStorage(PartFluidStorage part, EntityPlayer player) {
+    public ContainerBusFluidStorage(PartFluidStorage part, EntityPlayer player) {
 
-		addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
-		this.part = part;
-		bindPlayerInventory(player.inventory);
+        addSlotToContainer(new SlotRespective(part.getUpgradeInventory(), 0, 187, 8));
+        this.part = part;
+        bindPlayerInventory(player.inventory);
 
-		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-			ItemStack stack = player.inventory.getStackInSlot(i);
-			if (stack != null && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
-				DimensionalCoord coord = part.getHost().getLocation();
-				IGuiItem guiItem = (IGuiItem) stack.getItem();
-				INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.x, coord.y, coord.z);
-				for (int j = 0; j < 3; j++) {
-					for (int k = 0; k < 3; k++) {
-						addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
-					}
-				}
-				return;
-			}
-		}
-	}
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+            ItemStack stack = player.inventory.getStackInSlot(i);
+            if (stack != null
+                    && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
+                DimensionalCoord coord = part.getHost().getLocation();
+                IGuiItem guiItem = (IGuiItem) stack.getItem();
+                INetworkTool networkTool =
+                        (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.x, coord.y, coord.z);
+                for (int j = 0; j < 3; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
+                    }
+                }
+                return;
+            }
+        }
+    }
 
-	protected void bindPlayerInventory(IInventory inventoryPlayer) {
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 153));
-			}
-		}
+    protected void bindPlayerInventory(IInventory inventoryPlayer) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 153));
+            }
+        }
 
-		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 211));
-		}
-	}
+        for (int i = 0; i < 9; i++) {
+            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 211));
+        }
+    }
 
-	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return part.isValid();
-	}
+    @Override
+    public boolean canInteractWith(EntityPlayer entityplayer) {
+        return part.isValid();
+    }
 
-	public void setGui(GuiBusFluidStorage _guiBusFluidStorage) {
-		this.guiBusFluidStorage = _guiBusFluidStorage;
-	}
+    public void setGui(GuiBusFluidStorage _guiBusFluidStorage) {
+        this.guiBusFluidStorage = _guiBusFluidStorage;
+    }
 
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		if (this.guiBusFluidStorage != null)
-			this.guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
+        if (this.guiBusFluidStorage != null)
+            this.guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
 
-		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(slotnumber);
+        ItemStack itemstack = null;
+        Slot slot = (Slot) this.inventorySlots.get(slotnumber);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
 
-			if (slotnumber < 36) {
-				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(), true)) {
-					return null;
-				}
-			} else if (!mergeItemStack(itemstack1, 0, 36, false)) {
-				return null;
-			}
+            if (slotnumber < 36) {
+                if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(), true)) {
+                    return null;
+                }
+            } else if (!mergeItemStack(itemstack1, 0, 36, false)) {
+                return null;
+            }
 
-			if (itemstack1.stackSize == 0) {
-				slot.putStack(null);
-			} else {
-				slot.onSlotChanged();
-			}
-		}
+            if (itemstack1.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
 
-		return itemstack;
-	}
+        return itemstack;
+    }
 }

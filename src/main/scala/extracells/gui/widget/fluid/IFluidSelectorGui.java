@@ -4,7 +4,7 @@ import appeng.api.storage.data.IAEFluidStack;
 
 public interface IFluidSelectorGui extends IFluidWidgetGui {
 
-	public IFluidSelectorContainer getContainer();
+    public IFluidSelectorContainer getContainer();
 
-	public IAEFluidStack getCurrentFluid();
+    public IAEFluidStack getCurrentFluid();
 }

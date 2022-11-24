@@ -10,8 +10,7 @@ public class ContainerVibrationChamberFluid extends Container {
 
     public TileEntityVibrationChamberFluid tileentity;
 
-    public ContainerVibrationChamberFluid(InventoryPlayer player,
-                                TileEntityVibrationChamberFluid tileentity) {
+    public ContainerVibrationChamberFluid(InventoryPlayer player, TileEntityVibrationChamberFluid tileentity) {
         this.tileentity = tileentity;
 
         bindPlayerInventory(player);
@@ -20,8 +19,7 @@ public class ContainerVibrationChamberFluid extends Container {
     protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-                        8 + j * 18, i * 18 + 84));
+                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 84));
             }
         }
 
@@ -32,14 +30,14 @@ public class ContainerVibrationChamberFluid extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer entityplayer) {
-        return tileentity.hasWorldObj() ?
-                tileentity.getWorldObj().getTileEntity(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord) == this.tileentity :
-                false;
+        return tileentity.hasWorldObj()
+                ? tileentity.getWorldObj().getTileEntity(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord)
+                        == this.tileentity
+                : false;
     }
 
     @Override
-    protected void retrySlotClick(int par1, int par2, boolean par3,
-                                  EntityPlayer par4EntityPlayer) {
+    protected void retrySlotClick(int par1, int par2, boolean par3, EntityPlayer par4EntityPlayer) {
         // DON'T DO ANYTHING, YOU SHITTY METHOD!
     }
 }

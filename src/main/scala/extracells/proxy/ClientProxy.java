@@ -21,41 +21,40 @@ import net.minecraftforge.common.MinecraftForge;
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
 
-	public ClientProxy() {
-		super();
-		MinecraftForge.EVENT_BUS.register(this);
-	}
+    public ClientProxy() {
+        super();
+        MinecraftForge.EVENT_BUS.register(this);
+    }
 
-	@Override
-	public void registerRenderers() {
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()),
-				new ItemRendererCertusTank());
-		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDPATTERN.getItem(),
-				new ItemRendererFluidPattern());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockEnum.WALRUS.getBlock()),
-				new ItemRendererWalrus());
-		MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDITEM.getItem(), new ItemRendererFluid());
+    @Override
+    public void registerRenderers() {
+        MinecraftForgeClient.registerItemRenderer(
+                Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()), new ItemRendererCertusTank());
+        MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDPATTERN.getItem(), new ItemRendererFluidPattern());
+        MinecraftForgeClient.registerItemRenderer(
+                Item.getItemFromBlock(BlockEnum.WALRUS.getBlock()), new ItemRendererWalrus());
+        MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDITEM.getItem(), new ItemRendererFluid());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRendererWalrus());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRendererWalrus());
 
-		RendererHardMEDrive.registerRenderer();
-	}
+        RendererHardMEDrive.registerRenderer();
+    }
 
-	@SubscribeEvent
-	public void registerTextures(TextureStitchEvent.Pre textureStitchEvent) {
-		TextureMap map = textureStitchEvent.map;
-		for (TextureManager currentTexture : TextureManager.values()) {
-			currentTexture.registerTexture(map);
-		}
-	}
+    @SubscribeEvent
+    public void registerTextures(TextureStitchEvent.Pre textureStitchEvent) {
+        TextureMap map = textureStitchEvent.map;
+        for (TextureManager currentTexture : TextureManager.values()) {
+            currentTexture.registerTexture(map);
+        }
+    }
 
-	@Override
-	public boolean isClient(){
-		return true;
-	}
+    @Override
+    public boolean isClient() {
+        return true;
+    }
 
-	@Override
-	public boolean isServer(){
-		return false;
-	}
+    @Override
+    public boolean isServer() {
+        return false;
+    }
 }

@@ -9,61 +9,59 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerDrive extends Container {
-	PartDrive part;
-	public ContainerDrive(PartDrive part, EntityPlayer player) {
-		this.part = part;
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 3; j++) {
-				addSlotToContainer(new SlotRespective(part.getInventory(), j
-						+ i * 3, 18 + 71 - i * 18, j * 18 - 4));
-			}
-		}
-		bindPlayerInventory(player.inventory);
-	}
+    PartDrive part;
 
-	protected void bindPlayerInventory(IInventory inventoryPlayer) {
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 9; j++) {
-				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						8 + j * 18, i * 18 + 63));
-			}
-		}
+    public ContainerDrive(PartDrive part, EntityPlayer player) {
+        this.part = part;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                addSlotToContainer(new SlotRespective(part.getInventory(), j + i * 3, 18 + 71 - i * 18, j * 18 - 4));
+            }
+        }
+        bindPlayerInventory(player.inventory);
+    }
 
-		for (int i = 0; i < 9; i++) {
-			addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 121));
-		}
-	}
+    protected void bindPlayerInventory(IInventory inventoryPlayer) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, i * 18 + 63));
+            }
+        }
 
-	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer) {
-		return part.isValid();
-	}
+        for (int i = 0; i < 9; i++) {
+            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 121));
+        }
+    }
 
-	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-		ItemStack itemstack = null;
-		Slot slot = (Slot) this.inventorySlots.get(slotnumber);
+    @Override
+    public boolean canInteractWith(EntityPlayer entityplayer) {
+        return part.isValid();
+    }
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
-			itemstack = itemstack1.copy();
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
+        ItemStack itemstack = null;
+        Slot slot = (Slot) this.inventorySlots.get(slotnumber);
 
-			if (slotnumber < 36) {
-				if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(),
-						true)) {
-					return null;
-				}
-			} else if (!mergeItemStack(itemstack1, 0, 36, false)) {
-				return null;
-			}
+        if (slot != null && slot.getHasStack()) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
 
-			if (itemstack1.stackSize == 0) {
-				slot.putStack(null);
-			} else {
-				slot.onSlotChanged();
-			}
-		}
+            if (slotnumber < 36) {
+                if (!mergeItemStack(itemstack1, 36, this.inventorySlots.size(), true)) {
+                    return null;
+                }
+            } else if (!mergeItemStack(itemstack1, 0, 36, false)) {
+                return null;
+            }
 
-		return itemstack;
-	}
+            if (itemstack1.stackSize == 0) {
+                slot.putStack(null);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
+
+        return itemstack;
+    }
 }

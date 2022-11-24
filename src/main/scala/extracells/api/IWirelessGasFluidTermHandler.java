@@ -1,6 +1,5 @@
 package extracells.api;
 
-
 import appeng.api.features.INetworkEncodable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

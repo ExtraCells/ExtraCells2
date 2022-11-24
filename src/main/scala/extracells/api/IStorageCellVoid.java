@@ -1,29 +1,26 @@
 package extracells.api;
 
-
 import appeng.api.storage.ICellWorkbenchItem;
 import appeng.api.storage.data.IAEItemStack;
+import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
+// Copy of IStorageCell
+public interface IStorageCellVoid extends ICellWorkbenchItem {
 
-//Copy of IStorageCell
-public interface IStorageCellVoid extends ICellWorkbenchItem
-{
+    int getBytes(ItemStack cellItem);
 
-	int getBytes( ItemStack cellItem );
+    int getBytesPerType(ItemStack cellItem);
 
-	int getBytesPerType( ItemStack cellItem );
+    int getTotalTypes(ItemStack cellItem);
 
-	int getTotalTypes( ItemStack cellItem );
+    boolean isBlackListed(ItemStack cellItem, IAEItemStack requestedAddition);
 
-	boolean isBlackListed( ItemStack cellItem, IAEItemStack requestedAddition );
+    boolean storableInStorageCell();
 
-	boolean storableInStorageCell();
+    boolean isStorageCell(ItemStack i);
 
-	boolean isStorageCell( ItemStack i );
-
-	default double getIdleDrain( @Nullable ItemStack i ) {
+    default double getIdleDrain(@Nullable ItemStack i) {
         // provided for API backwards compatibility
         return getIdleDrain();
     }

@@ -4,17 +4,17 @@ import appeng.api.definitions.ITileDefinition;
 
 public interface IBlockDefinition {
 
-	ITileDefinition blockInterface();
+    ITileDefinition blockInterface();
 
-	ITileDefinition certusTank();
+    ITileDefinition certusTank();
 
-	ITileDefinition fluidCrafter();
+    ITileDefinition fluidCrafter();
 
-	ITileDefinition fluidFiller();
+    ITileDefinition fluidFiller();
 
-	ITileDefinition walrus();
+    ITileDefinition walrus();
 
-	ITileDefinition craftingStorage256k();
+    ITileDefinition craftingStorage256k();
 
     ITileDefinition craftingStorage1024k();
 

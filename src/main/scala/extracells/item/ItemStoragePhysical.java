@@ -19,6 +19,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.registries.ItemEnum;
 import extracells.util.inventory.ECCellInventory;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,605 +37,672 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
-public class ItemStoragePhysical extends ItemECBase implements IStorageCell,
-		IAEItemPowerStorage, IEnergyContainerItem {
+public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAEItemPowerStorage, IEnergyContainerItem {
 
-	public static final String[] suffixes = { "256k", "1024k", "4096k", "16384k", "container" };
+    public static final String[] suffixes = {"256k", "1024k", "4096k", "16384k", "container"};
 
-	public static final int[] bytes_cell = { 262144, 1048576, 4194304, 16777216, 65536 };
-	public static final double[] idle_drain_cell = { 2.5, 3.0, 3.5, 4.0, 2.0 };
-	public static final int[] types_cell = { 63, 63, 63, 63, 1 };
-	private IIcon[] icons;
-	private final int MAX_POWER = 32000;
+    public static final int[] bytes_cell = {262144, 1048576, 4194304, 16777216, 65536};
+    public static final double[] idle_drain_cell = {2.5, 3.0, 3.5, 4.0, 2.0};
+    public static final int[] types_cell = {63, 63, 63, 63, 1};
+    private IIcon[] icons;
+    private final int MAX_POWER = 32000;
 
-	public ItemStoragePhysical() {
-		setMaxStackSize(1);
-		setMaxDamage(0);
-		setHasSubtypes(true);
-	}
+    public ItemStoragePhysical() {
+        setMaxStackSize(1);
+        setMaxDamage(0);
+        setHasSubtypes(true);
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player,
-			List list, boolean par4) {
-		ICellRegistry cellRegistry = AEApi.instance().registries().cell();
-		IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry
-				.getCellInventory(itemStack, null, StorageChannel.ITEMS);
-		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
-		ICellInventory cellInv = inventoryHandler.getCellInv();
-		long usedBytes = cellInv.getUsedBytes();
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+        ICellRegistry cellRegistry = AEApi.instance().registries().cell();
+        IMEInventoryHandler<IAEItemStack> invHandler =
+                cellRegistry.getCellInventory(itemStack, null, StorageChannel.ITEMS);
+        ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
+        ICellInventory cellInv = inventoryHandler.getCellInv();
+        long usedBytes = cellInv.getUsedBytes();
 
-		list.add(String.format(StatCollector
-				.translateToLocal("extracells.tooltip.storage.physical.bytes"),
-				usedBytes, cellInv.getTotalBytes()));
-		list.add(String.format(StatCollector
-				.translateToLocal("extracells.tooltip.storage.physical.types"),
-				cellInv.getStoredItemTypes(), cellInv.getTotalItemTypes()));
-		if (usedBytes > 0)
-			list.add(String.format(
-					StatCollector
-							.translateToLocal("extracells.tooltip.storage.physical.content"),
-					cellInv.getStoredItemCount()));
-	}
+        list.add(String.format(
+                StatCollector.translateToLocal("extracells.tooltip.storage.physical.bytes"),
+                usedBytes,
+                cellInv.getTotalBytes()));
+        list.add(String.format(
+                StatCollector.translateToLocal("extracells.tooltip.storage.physical.types"),
+                cellInv.getStoredItemTypes(),
+                cellInv.getTotalItemTypes()));
+        if (usedBytes > 0)
+            list.add(String.format(
+                    StatCollector.translateToLocal("extracells.tooltip.storage.physical.content"),
+                    cellInv.getStoredItemCount()));
+    }
 
-	@Override
-	public int getBytesPerType(ItemStack cellItem) {
-		return Extracells.dynamicTypes() ? bytes_cell[MathHelper.clamp_int(
-				cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128 : 8;
-	}
+    @Override
+    public int getBytesPerType(ItemStack cellItem) {
+        return Extracells.dynamicTypes()
+                ? bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)] / 128
+                : 8;
+    }
 
-	@Override
-	@Deprecated
-	public int BytePerType(ItemStack cellItem) {
-		return getBytesPerType(cellItem);
-	}
+    @Override
+    @Deprecated
+    public int BytePerType(ItemStack cellItem) {
+        return getBytesPerType(cellItem);
+    }
 
-	private NBTTagCompound ensureTagCompound(ItemStack itemStack) {
-		if (!itemStack.hasTagCompound())
-			itemStack.setTagCompound(new NBTTagCompound());
-		return itemStack.getTagCompound();
-	}
+    private NBTTagCompound ensureTagCompound(ItemStack itemStack) {
+        if (!itemStack.hasTagCompound()) itemStack.setTagCompound(new NBTTagCompound());
+        return itemStack.getTagCompound();
+    }
 
-	@Override
-	public double extractAEPower(ItemStack itemStack, double amt) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
-			return 0.0D;
-		NBTTagCompound tagCompound = ensureTagCompound(itemStack);
-		double currentPower = tagCompound.getDouble("power");
-		double toExtract = Math.min(amt, currentPower);
-		tagCompound.setDouble("power", currentPower - toExtract);
-		return toExtract;
-	}
+    @Override
+    public double extractAEPower(ItemStack itemStack, double amt) {
+        if (itemStack == null || itemStack.getItemDamage() != 4) return 0.0D;
+        NBTTagCompound tagCompound = ensureTagCompound(itemStack);
+        double currentPower = tagCompound.getDouble("power");
+        double toExtract = Math.min(amt, currentPower);
+        tagCompound.setDouble("power", currentPower - toExtract);
+        return toExtract;
+    }
 
-	@Override
-	@Optional.Method(modid = "CoFHAPI|energy")
-	public int extractEnergy(ItemStack container, int maxExtract,
-			boolean simulate) {
-		if (container == null || container.getItemDamage() != 4)
-			return 0;
-		if (simulate) {
-			return getEnergyStored(container) >= maxExtract ? maxExtract
-					: getEnergyStored(container);
-		} else {
-			return (int) PowerUnits.AE
-					.convertTo(
-							PowerUnits.RF,
-							extractAEPower(container, PowerUnits.RF.convertTo(
-									PowerUnits.AE, maxExtract)));
-		}
-	}
+    @Override
+    @Optional.Method(modid = "CoFHAPI|energy")
+    public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
+        if (container == null || container.getItemDamage() != 4) return 0;
+        if (simulate) {
+            return getEnergyStored(container) >= maxExtract ? maxExtract : getEnergyStored(container);
+        } else {
+            return (int) PowerUnits.AE.convertTo(
+                    PowerUnits.RF, extractAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract)));
+        }
+    }
 
-	@Override
-	public double getAECurrentPower(ItemStack itemStack) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
-			return 0.0D;
-		NBTTagCompound tagCompound = ensureTagCompound(itemStack);
-		return tagCompound.getDouble("power");
-	}
+    @Override
+    public double getAECurrentPower(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getItemDamage() != 4) return 0.0D;
+        NBTTagCompound tagCompound = ensureTagCompound(itemStack);
+        return tagCompound.getDouble("power");
+    }
 
-	@Override
-	public double getAEMaxPower(ItemStack itemStack) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
-			return 0.0D;
-		return this.MAX_POWER;
-	}
+    @Override
+    public double getAEMaxPower(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getItemDamage() != 4) return 0.0D;
+        return this.MAX_POWER;
+    }
 
-	@Override
-	public int getBytes(ItemStack cellItem) {
-		return bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0,
-				suffixes.length - 1)];
-	}
+    @Override
+    public int getBytes(ItemStack cellItem) {
+        return bytes_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)];
+    }
 
-	@Override
-	public IInventory getConfigInventory(ItemStack is) {
-		return new ECCellInventory(is, "config", 63, 1);
-	}
+    @Override
+    public IInventory getConfigInventory(ItemStack is) {
+        return new ECCellInventory(is, "config", 63, 1);
+    }
 
-	@Override
-	public double getDurabilityForDisplay(ItemStack itemStack) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
-			return super.getDurabilityForDisplay(itemStack);
-		return 1 - getAECurrentPower(itemStack) / this.MAX_POWER;
-	}
+    @Override
+    public double getDurabilityForDisplay(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getItemDamage() != 4) return super.getDurabilityForDisplay(itemStack);
+        return 1 - getAECurrentPower(itemStack) / this.MAX_POWER;
+    }
 
-	@Override
-	@Optional.Method(modid = "CoFHAPI|energy")
-	public int getEnergyStored(ItemStack arg0) {
-		return (int) PowerUnits.AE.convertTo(PowerUnits.RF,
-				getAECurrentPower(arg0));
-	}
+    @Override
+    @Optional.Method(modid = "CoFHAPI|energy")
+    public int getEnergyStored(ItemStack arg0) {
+        return (int) PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(arg0));
+    }
 
-	@Override
-	public FuzzyMode getFuzzyMode(ItemStack is) {
-		if (!is.hasTagCompound())
-			is.setTagCompound(new NBTTagCompound());
-		return FuzzyMode.values()[is.getTagCompound().getInteger("fuzzyMode")];
-	}
+    @Override
+    public FuzzyMode getFuzzyMode(ItemStack is) {
+        if (!is.hasTagCompound()) is.setTagCompound(new NBTTagCompound());
+        return FuzzyMode.values()[is.getTagCompound().getInteger("fuzzyMode")];
+    }
 
-	@Override
-	public IIcon getIconFromDamage(int dmg) {
-		return this.icons[MathHelper.clamp_int(dmg, 0, suffixes.length - 1)];
-	}
+    @Override
+    public IIcon getIconFromDamage(int dmg) {
+        return this.icons[MathHelper.clamp_int(dmg, 0, suffixes.length - 1)];
+    }
 
-	@Override
-	@Deprecated
-	public double getIdleDrain() {
-		return 2.5;
-	}
+    @Override
+    @Deprecated
+    public double getIdleDrain() {
+        return 2.5;
+    }
 
-	@Override
-	public double getIdleDrain(@Nullable ItemStack cellItem) {
-		return cellItem != null ? idle_drain_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0,
-			idle_drain_cell.length - 1)] : 2.5;
-	}
+    @Override
+    public double getIdleDrain(@Nullable ItemStack cellItem) {
+        return cellItem != null
+                ? idle_drain_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, idle_drain_cell.length - 1)]
+                : 2.5;
+    }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public String getItemStackDisplayName(ItemStack stack) {
-		if (stack == null)
-			return super.getItemStackDisplayName(stack);
-		if (stack.getItemDamage() == 4) {
-			try {
-				IItemList list = AEApi
-						.instance()
-						.registries()
-						.cell()
-						.getCellInventory(stack, null, StorageChannel.ITEMS)
-						.getAvailableItems(
-								AEApi.instance().storage().createItemList());
-				if (list.isEmpty())
-					return super.getItemStackDisplayName(stack)
-							+ " - "
-							+ StatCollector
-									.translateToLocal("extracells.tooltip.empty1");
-				IAEItemStack s = (IAEItemStack) list.getFirstItem();
-				return super.getItemStackDisplayName(stack) + " - "
-						+ s.getItemStack().getDisplayName();
-			} catch (Throwable e) {}
-			return super.getItemStackDisplayName(stack)
-					+ " - "
-					+ StatCollector
-							.translateToLocal("extracells.tooltip.empty1");
-		}
-		return super.getItemStackDisplayName(stack);
-	}
+    @SideOnly(Side.CLIENT)
+    @Override
+    public String getItemStackDisplayName(ItemStack stack) {
+        if (stack == null) return super.getItemStackDisplayName(stack);
+        if (stack.getItemDamage() == 4) {
+            try {
+                IItemList list = AEApi.instance()
+                        .registries()
+                        .cell()
+                        .getCellInventory(stack, null, StorageChannel.ITEMS)
+                        .getAvailableItems(AEApi.instance().storage().createItemList());
+                if (list.isEmpty())
+                    return super.getItemStackDisplayName(stack)
+                            + " - "
+                            + StatCollector.translateToLocal("extracells.tooltip.empty1");
+                IAEItemStack s = (IAEItemStack) list.getFirstItem();
+                return super.getItemStackDisplayName(stack) + " - "
+                        + s.getItemStack().getDisplayName();
+            } catch (Throwable e) {
+            }
+            return super.getItemStackDisplayName(stack)
+                    + " - "
+                    + StatCollector.translateToLocal("extracells.tooltip.empty1");
+        }
+        return super.getItemStackDisplayName(stack);
+    }
 
-	@Override
-	@Optional.Method(modid = "CoFHAPI|energy")
-	public int getMaxEnergyStored(ItemStack arg0) {
-		return (int) PowerUnits.AE
-				.convertTo(PowerUnits.RF, getAEMaxPower(arg0));
-	}
+    @Override
+    @Optional.Method(modid = "CoFHAPI|energy")
+    public int getMaxEnergyStored(ItemStack arg0) {
+        return (int) PowerUnits.AE.convertTo(PowerUnits.RF, getAEMaxPower(arg0));
+    }
 
-	@Override
-	public AccessRestriction getPowerFlow(ItemStack itemStack) {
-		if (itemStack == null)
-			return null;
-		return itemStack.getItemDamage() == 4 ? AccessRestriction.READ_WRITE
-				: AccessRestriction.NO_ACCESS;
-	}
+    @Override
+    public AccessRestriction getPowerFlow(ItemStack itemStack) {
+        if (itemStack == null) return null;
+        return itemStack.getItemDamage() == 4 ? AccessRestriction.READ_WRITE : AccessRestriction.NO_ACCESS;
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
-		for (int i = 0; i < suffixes.length; i++) {
-			itemList.add(new ItemStack(item, 1, i));
-			if (i == 4) {
-				ItemStack s = new ItemStack(item, 1, i);
-				s.setTagCompound(new NBTTagCompound());
-				s.getTagCompound().setDouble("power", this.MAX_POWER);
-				itemList.add(s);
-			}
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
+        for (int i = 0; i < suffixes.length; i++) {
+            itemList.add(new ItemStack(item, 1, i));
+            if (i == 4) {
+                ItemStack s = new ItemStack(item, 1, i);
+                s.setTagCompound(new NBTTagCompound());
+                s.getTagCompound().setDouble("power", this.MAX_POWER);
+                itemList.add(s);
+            }
+        }
+    }
 
-	@Override
-	public int getTotalTypes(ItemStack cellItem) {
-		return types_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0,
-				suffixes.length - 1)];
-	}
+    @Override
+    public int getTotalTypes(ItemStack cellItem) {
+        return types_cell[MathHelper.clamp_int(cellItem.getItemDamage(), 0, suffixes.length - 1)];
+    }
 
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
-		return "extracells.item.storage.physical."
-				+ suffixes[itemStack.getItemDamage()];
-	}
+    @Override
+    public String getUnlocalizedName(ItemStack itemStack) {
+        return "extracells.item.storage.physical." + suffixes[itemStack.getItemDamage()];
+    }
 
-	@Override
-	public IInventory getUpgradesInventory(ItemStack is) {
-		return new ECCellInventory(is, "upgrades", 2, 1);
-	}
+    @Override
+    public IInventory getUpgradesInventory(ItemStack is) {
+        return new ECCellInventory(is, "upgrades", 2, 1);
+    }
 
-	@Override
-	public double injectAEPower(ItemStack itemStack, double amt) {
-		if (itemStack == null || itemStack.getItemDamage() != 4)
-			return 0.0D;
-		NBTTagCompound tagCompound = ensureTagCompound(itemStack);
-		double currentPower = tagCompound.getDouble("power");
-		double toInject = Math.min(amt, this.MAX_POWER - currentPower);
-		tagCompound.setDouble("power", currentPower + toInject);
-		return toInject;
-	}
+    @Override
+    public double injectAEPower(ItemStack itemStack, double amt) {
+        if (itemStack == null || itemStack.getItemDamage() != 4) return 0.0D;
+        NBTTagCompound tagCompound = ensureTagCompound(itemStack);
+        double currentPower = tagCompound.getDouble("power");
+        double toInject = Math.min(amt, this.MAX_POWER - currentPower);
+        tagCompound.setDouble("power", currentPower + toInject);
+        return toInject;
+    }
 
-	@Override
-	public boolean isBlackListed(ItemStack cellItem,
-			IAEItemStack requestedAddition) {
-		return false;
-	}
+    @Override
+    public boolean isBlackListed(ItemStack cellItem, IAEItemStack requestedAddition) {
+        return false;
+    }
 
-	@Override
-	public boolean isEditable(ItemStack is) {
-		return true;
-	}
+    @Override
+    public boolean isEditable(ItemStack is) {
+        return true;
+    }
 
-	@Override
-	public boolean isStorageCell(ItemStack i) {
-		return true;
-	}
+    @Override
+    public boolean isStorageCell(ItemStack i) {
+        return true;
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world,
-			EntityPlayer entityPlayer) {
-		if (itemStack == null)
-			return itemStack;
-		if (itemStack.getItemDamage() == 4 && entityPlayer.isSneaking()) {
-			if (!world.isRemote) {
-				switch (itemStack.getTagCompound().getInteger("mode")) {
-					case 0:
-						itemStack.getTagCompound().setInteger("mode", 1);
-						entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.1"));
-						break;
-					case 1:
-						itemStack.getTagCompound().setInteger("mode", 2);
-						entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.2"));
-						break;
-					case 2:
-						itemStack.getTagCompound().setInteger("mode", 0);
-						entityPlayer.addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.0"));
-						break;
-				}
-			}
-			return itemStack;
-		}
-		if (!entityPlayer.isSneaking())
-			return itemStack;
-		IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
-		ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
-		ICellInventory cellInv = inventoryHandler.getCellInv();
-		if (cellInv.getUsedBytes() == 0 && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
-			return ItemEnum.STORAGECOMPONENT.getDamagedStack(itemStack.getItemDamage());
-		return itemStack;
-	}
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+        if (itemStack == null) return itemStack;
+        if (itemStack.getItemDamage() == 4 && entityPlayer.isSneaking()) {
+            if (!world.isRemote) {
+                switch (itemStack.getTagCompound().getInteger("mode")) {
+                    case 0:
+                        itemStack.getTagCompound().setInteger("mode", 1);
+                        entityPlayer.addChatMessage(
+                                new ChatComponentTranslation("extracells.tooltip.storage.container.1"));
+                        break;
+                    case 1:
+                        itemStack.getTagCompound().setInteger("mode", 2);
+                        entityPlayer.addChatMessage(
+                                new ChatComponentTranslation("extracells.tooltip.storage.container.2"));
+                        break;
+                    case 2:
+                        itemStack.getTagCompound().setInteger("mode", 0);
+                        entityPlayer.addChatMessage(
+                                new ChatComponentTranslation("extracells.tooltip.storage.container.0"));
+                        break;
+                }
+            }
+            return itemStack;
+        }
+        if (!entityPlayer.isSneaking()) return itemStack;
+        IMEInventoryHandler<IAEItemStack> invHandler =
+                AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
+        ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
+        ICellInventory cellInv = inventoryHandler.getCellInv();
+        if (cellInv.getUsedBytes() == 0
+                && entityPlayer.inventory.addItemStackToInventory(ItemEnum.STORAGECASING.getDamagedStack(0)))
+            return ItemEnum.STORAGECOMPONENT.getDamagedStack(itemStack.getItemDamage());
+        return itemStack;
+    }
 
-	@Override
-	public boolean onItemUse(ItemStack itemstack, EntityPlayer player,
-			World world, int x, int y, int z, int side, float xOffset,
-			float yOffset, float zOffset) {
-		if (itemstack == null || player == null)
-			return false;
-		if (itemstack.getItemDamage() == 4 && !player.isSneaking()) {
-			double power = getAECurrentPower(itemstack);
-			ForgeDirection face = ForgeDirection.getOrientation(side);
-			IItemList list = AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).getAvailableItems(
-							AEApi.instance().storage().createItemList());
-			if (list.isEmpty())
-				return false;
-			IAEItemStack storageStack = (IAEItemStack) list.getFirstItem();
-			if (world.getBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ) == Blocks.air && storageStack.getStackSize() != 0 && power >= 20.0D) {
-				if (!world.isRemote) {
-					IAEItemStack request = storageStack.copy();
-					request.setStackSize(1);
-					ItemStack block = request.getItemStack();
-					if (block.getItem() instanceof ItemBlock) {
-						ItemBlock itemblock = (ItemBlock) request.getItem();
-						if (world.getBlock(x, y, z) != Blocks.bedrock && world.getBlock(x, y, z).getBlockHardness(world, x, y, z) >= 0.0F) {
-							switch (itemstack.getTagCompound().getInteger("mode")) {
-							case 0:
-								request.setStackSize(1);
-								itemblock.onItemUseFirst(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
-								itemblock.onItemUse(request.getItemStack(), player, world, x, y, z, side, xOffset, yOffset, zOffset);
-								AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));extractAEPower(player.getCurrentEquippedItem(), 20.0D);
-								break;
-							case 1:
-								request.setStackSize(1);
-								world.func_147480_a(x, y, z, true);
-								placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
-								AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
-								break;
-							case 2:
+    @Override
+    public boolean onItemUse(
+            ItemStack itemstack,
+            EntityPlayer player,
+            World world,
+            int x,
+            int y,
+            int z,
+            int side,
+            float xOffset,
+            float yOffset,
+            float zOffset) {
+        if (itemstack == null || player == null) return false;
+        if (itemstack.getItemDamage() == 4 && !player.isSneaking()) {
+            double power = getAECurrentPower(itemstack);
+            ForgeDirection face = ForgeDirection.getOrientation(side);
+            IItemList list = AEApi.instance()
+                    .registries()
+                    .cell()
+                    .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                    .getAvailableItems(AEApi.instance().storage().createItemList());
+            if (list.isEmpty()) return false;
+            IAEItemStack storageStack = (IAEItemStack) list.getFirstItem();
+            if (world.getBlock(x + face.offsetX, y + face.offsetY, z + face.offsetZ) == Blocks.air
+                    && storageStack.getStackSize() != 0
+                    && power >= 20.0D) {
+                if (!world.isRemote) {
+                    IAEItemStack request = storageStack.copy();
+                    request.setStackSize(1);
+                    ItemStack block = request.getItemStack();
+                    if (block.getItem() instanceof ItemBlock) {
+                        ItemBlock itemblock = (ItemBlock) request.getItem();
+                        if (world.getBlock(x, y, z) != Blocks.bedrock
+                                && world.getBlock(x, y, z).getBlockHardness(world, x, y, z) >= 0.0F) {
+                            switch (itemstack.getTagCompound().getInteger("mode")) {
+                                case 0:
+                                    request.setStackSize(1);
+                                    itemblock.onItemUseFirst(
+                                            request.getItemStack(),
+                                            player,
+                                            world,
+                                            x,
+                                            y,
+                                            z,
+                                            side,
+                                            xOffset,
+                                            yOffset,
+                                            zOffset);
+                                    itemblock.onItemUse(
+                                            request.getItemStack(),
+                                            player,
+                                            world,
+                                            x,
+                                            y,
+                                            z,
+                                            side,
+                                            xOffset,
+                                            yOffset,
+                                            zOffset);
+                                    AEApi.instance()
+                                            .registries()
+                                            .cell()
+                                            .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                                            .extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
+                                    extractAEPower(player.getCurrentEquippedItem(), 20.0D);
+                                    break;
+                                case 1:
+                                    request.setStackSize(1);
+                                    world.func_147480_a(x, y, z, true);
+                                    placeBlock(
+                                            request.getItemStack(),
+                                            world,
+                                            player,
+                                            x,
+                                            y,
+                                            z,
+                                            side,
+                                            xOffset,
+                                            yOffset,
+                                            zOffset);
+                                    AEApi.instance()
+                                            .registries()
+                                            .cell()
+                                            .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                                            .extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
+                                    break;
+                                case 2:
+                                    request.setStackSize(9);
+                                    if (storageStack.getStackSize() > 9 && power >= 180.0D) {
+                                        switch (ForgeDirection.getOrientation(side)) {
+                                            case DOWN:
+                                                for (int posX = x - 1; posX < x + 2; posX++) {
+                                                    for (int posZ = z - 1; posZ < z + 2; posZ++) {
+                                                        if (world.getBlock(posX, y, posZ) != Blocks.bedrock
+                                                                && world.getBlock(posX, y, posZ)
+                                                                                .getBlockHardness(world, posX, y, posZ)
+                                                                        >= 0.0F) {
+                                                            world.func_147480_a(posX, y, posZ, true);
+                                                            placeBlock(
+                                                                    request.getItemStack(),
+                                                                    world,
+                                                                    player,
+                                                                    x,
+                                                                    y,
+                                                                    z,
+                                                                    side,
+                                                                    xOffset,
+                                                                    yOffset,
+                                                                    zOffset);
+                                                        }
+                                                    }
+                                                }
+                                                AEApi.instance()
+                                                        .registries()
+                                                        .cell()
+                                                        .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                                                        .extractItems(
+                                                                request,
+                                                                Actionable.MODULATE,
+                                                                new PlayerSource(player, null));
+                                                break;
+                                            case EAST:
+                                                for (int posZ = z - 1; posZ < z + 2; posZ++) {
+                                                    for (int posY = y - 1; posY < y + 2; posY++) {
+                                                        if (world.getBlock(x, posY, posZ) != Blocks.bedrock
+                                                                && world.getBlock(x, posY, posZ)
+                                                                                .getBlockHardness(world, x, posY, posZ)
+                                                                        >= 0.0F) {
+                                                            world.func_147480_a(x, posY, posZ, true);
+                                                            placeBlock(
+                                                                    request.getItemStack(),
+                                                                    world,
+                                                                    player,
+                                                                    x,
+                                                                    posY,
+                                                                    posZ,
+                                                                    side,
+                                                                    xOffset,
+                                                                    yOffset,
+                                                                    zOffset);
+                                                        }
+                                                    }
+                                                }
+                                                AEApi.instance()
+                                                        .registries()
+                                                        .cell()
+                                                        .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                                                        .extractItems(
+                                                                request,
+                                                                Actionable.MODULATE,
+                                                                new PlayerSource(player, null));
+                                                break;
+                                            case NORTH:
+                                                for (int posX = x - 1; posX < x + 2; posX++) {
+                                                    for (int posY = y - 1; posY < y + 2; posY++) {
+                                                        if (world.getBlock(posX, posY, z) != Blocks.bedrock
+                                                                && world.getBlock(posX, posY, z)
+                                                                                .getBlockHardness(world, posX, posY, z)
+                                                                        >= 0.0F) {
+                                                            world.func_147480_a(posX, posY, z, true);
+                                                            placeBlock(
+                                                                    request.getItemStack(),
+                                                                    world,
+                                                                    player,
+                                                                    posX,
+                                                                    posY,
+                                                                    z,
+                                                                    side,
+                                                                    xOffset,
+                                                                    yOffset,
+                                                                    zOffset);
+                                                        }
+                                                    }
+                                                }
+                                                AEApi.instance()
+                                                        .registries()
+                                                        .cell()
+                                                        .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                                                        .extractItems(
+                                                                request,
+                                                                Actionable.MODULATE,
+                                                                new PlayerSource(player, null));
+                                                break;
+                                            case SOUTH:
+                                                for (int posX = x - 1; posX < x + 2; posX++) {
+                                                    for (int posY = y - 1; posY < y + 2; posY++) {
+                                                        if (world.getBlock(posX, posY, z) != Blocks.bedrock
+                                                                && world.getBlock(posX, posY, z)
+                                                                                .getBlockHardness(world, posX, posY, z)
+                                                                        >= 0.0F) {
+                                                            world.func_147480_a(posX, posY, z, true);
+                                                            placeBlock(
+                                                                    request.getItemStack(),
+                                                                    world,
+                                                                    player,
+                                                                    posX,
+                                                                    posY,
+                                                                    z,
+                                                                    side,
+                                                                    xOffset,
+                                                                    yOffset,
+                                                                    zOffset);
+                                                        }
+                                                    }
+                                                }
+                                                AEApi.instance()
+                                                        .registries()
+                                                        .cell()
+                                                        .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                                                        .extractItems(
+                                                                request,
+                                                                Actionable.MODULATE,
+                                                                new PlayerSource(player, null));
+                                                break;
+                                            case UNKNOWN:
+                                                break;
+                                            case UP:
+                                                for (int posX = x - 1; posX < x + 2; posX++) {
+                                                    for (int posZ = z - 1; posZ < z + 2; posZ++) {
+                                                        if (world.getBlock(posX, y, posZ) != Blocks.bedrock
+                                                                && world.getBlock(posX, y, posZ)
+                                                                                .getBlockHardness(world, posX, y, posZ)
+                                                                        >= 0.0F) {
+                                                            world.func_147480_a(posX, y, posZ, true);
+                                                            placeBlock(
+                                                                    request.getItemStack(),
+                                                                    world,
+                                                                    player,
+                                                                    posX,
+                                                                    y,
+                                                                    posZ,
+                                                                    side,
+                                                                    xOffset,
+                                                                    yOffset,
+                                                                    zOffset);
+                                                        }
+                                                    }
+                                                }
+                                                AEApi.instance()
+                                                        .registries()
+                                                        .cell()
+                                                        .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                                                        .extractItems(
+                                                                request,
+                                                                Actionable.MODULATE,
+                                                                new PlayerSource(player, null));
+                                                break;
+                                            case WEST:
+                                                for (int posZ = z - 1; posZ < z + 2; posZ++) {
+                                                    for (int posY = y - 1; posY < y + 2; posY++) {
+                                                        if (world.getBlock(x, posY, posZ) != Blocks.bedrock
+                                                                && world.getBlock(x, posY, posZ)
+                                                                                .getBlockHardness(world, x, posY, posZ)
+                                                                        >= 0.0F) {
+                                                            world.func_147480_a(x, posY, posZ, true);
+                                                            placeBlock(
+                                                                    request.getItemStack(),
+                                                                    world,
+                                                                    player,
+                                                                    x,
+                                                                    posY,
+                                                                    posZ,
+                                                                    side,
+                                                                    xOffset,
+                                                                    yOffset,
+                                                                    zOffset);
+                                                        }
+                                                    }
+                                                }
+                                                AEApi.instance()
+                                                        .registries()
+                                                        .cell()
+                                                        .getCellInventory(itemstack, null, StorageChannel.ITEMS)
+                                                        .extractItems(
+                                                                request,
+                                                                Actionable.MODULATE,
+                                                                new PlayerSource(player, null));
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
+                            }
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        player.addChatMessage(new ChatComponentTranslation("extracells.tooltip.onlyblocks"));
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
-								request.setStackSize(9);
-								if (storageStack.getStackSize() > 9
-										&& power >= 180.0D) {
-									switch (ForgeDirection.getOrientation(side)) {
-									case DOWN:
-										for (int posX = x - 1; posX < x + 2; posX++) {
-											for (int posZ = z - 1; posZ < z + 2; posZ++) {
-												if (world.getBlock(posX, y, posZ) != Blocks.bedrock && world.getBlock(posX, y, posZ).getBlockHardness(world, posX, y, posZ) >= 0.0F) {
-													world.func_147480_a(posX, y, posZ, true);
-													placeBlock(request.getItemStack(), world, player, x, y, z, side, xOffset, yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
-										break;
-									case EAST:
-										for (int posZ = z - 1; posZ < z + 2; posZ++) {
-											for (int posY = y - 1; posY < y + 2; posY++) {
-												if (world.getBlock(x, posY, posZ) != Blocks.bedrock && world.getBlock(x, posY, posZ).getBlockHardness(world, x, posY, posZ) >= 0.0F) {
-													world.func_147480_a(x, posY, posZ, true);
-													placeBlock(request.getItemStack(), world, player, x, posY, posZ, side, xOffset, yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance().registries().cell().getCellInventory(itemstack, null, StorageChannel.ITEMS).extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
-										break;
-									case NORTH:
-										for (int posX = x - 1; posX < x + 2; posX++) {
-											for (int posY = y - 1; posY < y + 2; posY++) {
-												if (world.getBlock(posX, posY, z) != Blocks.bedrock && world.getBlock(posX, posY, z).getBlockHardness(world, posX, posY, z) >= 0.0F) {
-													world.func_147480_a(posX, posY,
-															z, true);
-													placeBlock(
-															request.getItemStack(),
-															world, player, posX,
-															posY, z, side, xOffset,
-															yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
-										break;
-									case SOUTH:
-										for (int posX = x - 1; posX < x + 2; posX++) {
-											for (int posY = y - 1; posY < y + 2; posY++) {
-												if (world.getBlock(posX, posY, z) != Blocks.bedrock && world.getBlock(posX, posY, z).getBlockHardness(world, posX, posY, z) >= 0.0F) {
-													world.func_147480_a(posX, posY,
-															z, true);
-													placeBlock(
-															request.getItemStack(),
-															world, player, posX,
-															posY, z, side, xOffset,
-															yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
-										break;
-									case UNKNOWN:
-										break;
-									case UP:
-										for (int posX = x - 1; posX < x + 2; posX++) {
-											for (int posZ = z - 1; posZ < z + 2; posZ++) {
-												if (world.getBlock(posX, y, posZ) != Blocks.bedrock && world.getBlock(posX, y, posZ).getBlockHardness(world, posX, y, posZ) >= 0.0F) {
-													world.func_147480_a(posX, y,
-															posZ, true);
-													placeBlock(
-															request.getItemStack(),
-															world, player, posX, y,
-															posZ, side, xOffset,
-															yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
-										break;
-									case WEST:
-										for (int posZ = z - 1; posZ < z + 2; posZ++) {
-											for (int posY = y - 1; posY < y + 2; posY++) {
-												if (world.getBlock(x, posY, posZ) != Blocks.bedrock && world.getBlock(x, posY, posZ).getBlockHardness(world, x, posY, posZ) >= 0.0F) {
-													world.func_147480_a(x, posY,
-															posZ, true);
-													placeBlock(
-															request.getItemStack(),
-															world, player, x, posY,
-															posZ, side, xOffset,
-															yOffset, zOffset);
-												}
-											}
-										}
-										AEApi.instance()
-												.registries()
-												.cell()
-												.getCellInventory(itemstack,
-														null,
-														StorageChannel.ITEMS)
-												.extractItems(
-														request,
-														Actionable.MODULATE,
-														new PlayerSource(
-																player, null));
-										break;
-									default:
-										break;
-									}
-								}
-							}
-							return true;
-						} else {
-							return false;
-						}
-					} else {
-						player.addChatMessage(new ChatComponentTranslation(
-								"extracells.tooltip.onlyblocks"));
-						return false;
-					}
-				} else {
-					return false;
-				}
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
+    public void placeBlock(
+            ItemStack itemstack,
+            World world,
+            EntityPlayer player,
+            int x,
+            int y,
+            int z,
+            int side,
+            float xOffset,
+            float yOffset,
+            float zOffset) {
+        extractAEPower(player.getCurrentEquippedItem(), 20.0D);
+        ItemBlock itemblock = (ItemBlock) itemstack.getItem();
+        switch (ForgeDirection.getOrientation(side)) {
+            case DOWN:
+                itemblock.onItemUseFirst(itemstack, player, world, x, y++, z, side, xOffset, yOffset, zOffset);
+                itemblock.onItemUse(itemstack, player, world, x, y++, z, side, xOffset, yOffset, zOffset);
+                break;
+            case EAST:
+                itemblock.onItemUseFirst(itemstack, player, world, x--, y, z, side, xOffset, yOffset, zOffset);
+                itemblock.onItemUse(itemstack, player, world, x--, y, z, side, xOffset, yOffset, zOffset);
+                break;
+            case NORTH:
+                itemblock.onItemUseFirst(itemstack, player, world, x, y, z++, side, xOffset, yOffset, zOffset);
+                itemblock.onItemUse(itemstack, player, world, x, y, z++, side, xOffset, yOffset, zOffset);
+                break;
+            case SOUTH:
+                itemblock.onItemUseFirst(itemstack, player, world, x, y, z--, side, xOffset, yOffset, zOffset);
+                itemblock.onItemUse(itemstack, player, world, x, y, z--, side, xOffset, yOffset, zOffset);
+                break;
+            case UNKNOWN:
+                break;
+            case UP:
+                itemblock.onItemUseFirst(itemstack, player, world, x, y--, z, side, xOffset, yOffset, zOffset);
+                itemblock.onItemUse(itemstack, player, world, x, y--, z, side, xOffset, yOffset, zOffset);
+                break;
+            case WEST:
+                itemblock.onItemUseFirst(itemstack, player, world, x++, y, z, side, xOffset, yOffset, zOffset);
+                itemblock.onItemUse(itemstack, player, world, x++, y, z, side, xOffset, yOffset, zOffset);
+                break;
+            default:
+                break;
+        }
+    }
 
-	public void placeBlock(ItemStack itemstack, World world,
-			EntityPlayer player, int x, int y, int z, int side, float xOffset,
-			float yOffset, float zOffset) {
-		extractAEPower(player.getCurrentEquippedItem(), 20.0D);
-		ItemBlock itemblock = (ItemBlock) itemstack.getItem();
-		switch (ForgeDirection.getOrientation(side)) {
-		case DOWN:
-			itemblock.onItemUseFirst(itemstack, player, world, x, y++, z, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x, y++, z, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case EAST:
-			itemblock.onItemUseFirst(itemstack, player, world, x--, y, z, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x--, y, z, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case NORTH:
-			itemblock.onItemUseFirst(itemstack, player, world, x, y, z++, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x, y, z++, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case SOUTH:
-			itemblock.onItemUseFirst(itemstack, player, world, x, y, z--, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x, y, z--, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case UNKNOWN:
-			break;
-		case UP:
-			itemblock.onItemUseFirst(itemstack, player, world, x, y--, z, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x, y--, z, side,
-					xOffset, yOffset, zOffset);
-			break;
-		case WEST:
-			itemblock.onItemUseFirst(itemstack, player, world, x++, y, z, side,
-					xOffset, yOffset, zOffset);
-			itemblock.onItemUse(itemstack, player, world, x++, y, z, side,
-					xOffset, yOffset, zOffset);
-			break;
-		default:
-			break;
-		}
-	}
+    @Override
+    @Optional.Method(modid = "CoFHAPI|energy")
+    public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
+        if (container == null || container.getItemDamage() != 4) return 0;
+        if (simulate) {
+            double current = PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(container));
+            double max = PowerUnits.AE.convertTo(PowerUnits.RF, getAEMaxPower(container));
+            if (max - current >= maxReceive) return maxReceive;
+            else return (int) (max - current);
+        } else {
+            int notStored = (int) PowerUnits.AE.convertTo(
+                    PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)));
+            return maxReceive - notStored;
+        }
+    }
 
-	@Override
-	@Optional.Method(modid = "CoFHAPI|energy")
-	public int receiveEnergy(ItemStack container, int maxReceive,
-			boolean simulate) {
-		if (container == null || container.getItemDamage() != 4)
-			return 0;
-		if (simulate) {
-			double current = PowerUnits.AE.convertTo(PowerUnits.RF,
-					getAECurrentPower(container));
-			double max = PowerUnits.AE.convertTo(PowerUnits.RF,
-					getAEMaxPower(container));
-			if (max - current >= maxReceive)
-				return maxReceive;
-			else
-				return (int) (max - current);
-		} else {
-			int notStored = (int) PowerUnits.AE
-					.convertTo(
-							PowerUnits.RF,
-							injectAEPower(container, PowerUnits.RF.convertTo(
-									PowerUnits.AE, maxReceive)));
-			return maxReceive - notStored;
-		}
-	}
+    @Override
+    public void registerIcons(IIconRegister iconRegister) {
+        this.icons = new IIcon[suffixes.length];
 
-	@Override
-	public void registerIcons(IIconRegister iconRegister) {
-		this.icons = new IIcon[suffixes.length];
+        for (int i = 0; i < suffixes.length; ++i) {
+            this.icons[i] = iconRegister.registerIcon("extracells:" + "storage.physical." + suffixes[i]);
+        }
+    }
 
-		for (int i = 0; i < suffixes.length; ++i) {
-			this.icons[i] = iconRegister.registerIcon("extracells:"
-					+ "storage.physical." + suffixes[i]);
-		}
-	}
+    @Override
+    public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
+        if (!is.hasTagCompound()) is.setTagCompound(new NBTTagCompound());
+        is.getTagCompound().setInteger("fuzzyMode", fzMode.ordinal());
+    }
 
-	@Override
-	public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
-		if (!is.hasTagCompound())
-			is.setTagCompound(new NBTTagCompound());
-		is.getTagCompound().setInteger("fuzzyMode", fzMode.ordinal());
-	}
+    @Override
+    public String getOreFilter(ItemStack itemStack) {
+        return Platform.openNbtData(itemStack).getString("OreFilter");
+    }
 
-	@Override
-	public String getOreFilter(ItemStack itemStack) {
-		return Platform.openNbtData( itemStack ).getString( "OreFilter" );
-	}
+    @Override
+    public void setOreFilter(ItemStack itemStack, String s) {
+        Platform.openNbtData(itemStack).setString("OreFilter", s);
+    }
 
-	@Override
-	public void setOreFilter(ItemStack itemStack, String s) {
-		Platform.openNbtData( itemStack ).setString("OreFilter", s);
-	}
+    @Override
+    public boolean showDurabilityBar(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        return itemStack.getItemDamage() == 4 ? true : false;
+    }
 
-	@Override
-	public boolean showDurabilityBar(ItemStack itemStack) {
-		if (itemStack == null)
-			return false;
-		return itemStack.getItemDamage() == 4 ? true : false;
-	}
-
-	@Override
-	public boolean storableInStorageCell() {
-		return false;
-	}
+    @Override
+    public boolean storableInStorageCell() {
+        return false;
+    }
 }

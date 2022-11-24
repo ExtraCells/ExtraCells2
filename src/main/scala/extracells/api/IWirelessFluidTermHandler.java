@@ -1,7 +1,3 @@
 package extracells.api;
 
-public interface IWirelessFluidTermHandler extends IWirelessGasFluidTermHandler {
-
-
-
-}
+public interface IWirelessFluidTermHandler extends IWirelessGasFluidTermHandler {}

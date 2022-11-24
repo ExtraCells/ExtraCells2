@@ -12,71 +12,65 @@ import appeng.api.storage.data.IItemList;
 
 public class EmptyMeItemMonitor implements IMEMonitor<IAEItemStack> {
 
-	@Override
-	public void addListener(IMEMonitorHandlerReceiver<IAEItemStack> l,
-			Object verificationToken) {
+    @Override
+    public void addListener(IMEMonitorHandlerReceiver<IAEItemStack> l, Object verificationToken) {}
 
-	}
+    @Override
+    public boolean canAccept(IAEItemStack input) {
+        return false;
+    }
 
-	@Override
-	public boolean canAccept(IAEItemStack input) {
-		return false;
-	}
+    @Override
+    public IAEItemStack extractItems(IAEItemStack request, Actionable mode, BaseActionSource src) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public IAEItemStack extractItems(IAEItemStack request, Actionable mode,
-			BaseActionSource src) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public AccessRestriction getAccess() {
+        return AccessRestriction.NO_ACCESS;
+    }
 
-	@Override
-	public AccessRestriction getAccess() {
-		return AccessRestriction.NO_ACCESS;
-	}
+    @Override
+    public IItemList<IAEItemStack> getAvailableItems(IItemList out) {
+        return out;
+    }
 
-	@Override
-	public IItemList<IAEItemStack> getAvailableItems(IItemList out) {
-		return out;
-	}
+    @Override
+    public StorageChannel getChannel() {
+        return StorageChannel.ITEMS;
+    }
 
-	@Override
-	public StorageChannel getChannel() {
-		return StorageChannel.ITEMS;
-	}
+    @Override
+    public int getPriority() {
+        return 0;
+    }
 
-	@Override
-	public int getPriority() {
-		return 0;
-	}
+    @Override
+    public int getSlot() {
+        return 0;
+    }
 
-	@Override
-	public int getSlot() {
-		return 0;
-	}
+    @Override
+    public IItemList<IAEItemStack> getStorageList() {
+        return AEApi.instance().storage().createItemList();
+    }
 
-	@Override
-	public IItemList<IAEItemStack> getStorageList() {
-		return AEApi.instance().storage().createItemList();
-	}
+    @Override
+    public IAEItemStack injectItems(IAEItemStack input, Actionable type, BaseActionSource src) {
+        return input;
+    }
 
-	@Override
-	public IAEItemStack injectItems(IAEItemStack input, Actionable type,
-			BaseActionSource src) {
-		return input;
-	}
+    @Override
+    public boolean isPrioritized(IAEItemStack input) {
+        return false;
+    }
 
-	@Override
-	public boolean isPrioritized(IAEItemStack input) {
-		return false;
-	}
+    @Override
+    public void removeListener(IMEMonitorHandlerReceiver<IAEItemStack> l) {}
 
-	@Override
-	public void removeListener(IMEMonitorHandlerReceiver<IAEItemStack> l) {}
-
-	@Override
-	public boolean validForPass(int i) {
-		return true;
-	}
-
+    @Override
+    public boolean validForPass(int i) {
+        return true;
+    }
 }

@@ -4,5 +4,5 @@ import net.minecraftforge.fluids.Fluid;
 
 public interface IFluidSelectorContainer {
 
-	public void setSelectedFluid(Fluid _fluid);
+    public void setSelectedFluid(Fluid _fluid);
 }

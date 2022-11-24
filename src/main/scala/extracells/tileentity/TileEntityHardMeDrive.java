@@ -1,6 +1,5 @@
 package extracells.tileentity;
 
-
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -13,6 +12,8 @@ import extracells.api.IECTileEntity;
 import extracells.gridblock.ECGridBlockHardMEDrive;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,20 +21,17 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.ArrayList;
-import java.util.List;
+public class TileEntityHardMeDrive extends TileBase
+        implements IActionHost, IECTileEntity, ICellContainer, IInventoryUpdateReceiver {
 
-public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECTileEntity, ICellContainer, IInventoryUpdateReceiver{
-
-    private  int priority = 0;
+    private int priority = 0;
     boolean isFirstGridNode = true;
     byte[] cellStatuses = new byte[3];
     List<IMEInventoryHandler> fluidHandlers = new ArrayList<IMEInventoryHandler>();
     List<IMEInventoryHandler> itemHandlers = new ArrayList<IMEInventoryHandler>();
     private final ECGridBlockHardMEDrive gridBlock = new ECGridBlockHardMEDrive(this);
 
-    private ECPrivateInventory inventory = new ECPrivateInventory(
-            "extracells.part.drive", 3, 1, this) {
+    private ECPrivateInventory inventory = new ECPrivateInventory("extracells.part.drive", 3, 1, this) {
 
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
 
@@ -43,17 +41,14 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
         }
     };
 
-    public IInventory getInventory(){
+    public IInventory getInventory() {
         return inventory;
     }
 
     IGridNode node = null;
 
-
     @Override
-    public void blinkCell(int i) {
-
-    }
+    public void blinkCell(int i) {}
 
     @Override
     public IGridNode getActionableNode() {
@@ -62,10 +57,8 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
     @Override
     public List<IMEInventoryHandler> getCellArray(StorageChannel channel) {
-        if (!isActive())
-            return new ArrayList<IMEInventoryHandler>();
-        return channel == StorageChannel.ITEMS ? this.itemHandlers
-                : this.fluidHandlers;
+        if (!isActive()) return new ArrayList<IMEInventoryHandler>();
+        return channel == StorageChannel.ITEMS ? this.itemHandlers : this.fluidHandlers;
     }
 
     @Override
@@ -85,12 +78,12 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
 
     @Override
     public IGridNode getGridNode(ForgeDirection forgeDirection) {
-        if (isFirstGridNode && hasWorldObj() && !getWorldObj().isRemote){
+        if (isFirstGridNode && hasWorldObj() && !getWorldObj().isRemote) {
             isFirstGridNode = false;
-            try{
+            try {
                 node = AEApi.instance().createGridNode(gridBlock);
                 node.updateState();
-            }catch (Exception e){
+            } catch (Exception e) {
                 isFirstGridNode = true;
             }
         }
@@ -104,18 +97,14 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
     }
 
     @Override
-    public void securityBreak() {
-
-    }
+    public void securityBreak() {}
 
     @Override
-    public void saveChanges(IMEInventory imeInventory) {
+    public void saveChanges(IMEInventory imeInventory) {}
 
-    }
-
-    //TODO
-    boolean isActive(){
-        return  true;
+    // TODO
+    boolean isActive() {
+        return true;
     }
 
     public int getColorByStatus(int status) {
@@ -137,24 +126,17 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
         this.fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
         for (int i = 0; i < this.cellStatuses.length; i++) {
             ItemStack stackInSlot = this.inventory.getStackInSlot(i);
-            IMEInventoryHandler inventoryHandler = AEApi.instance()
-                    .registries().cell()
-                    .getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
+            IMEInventoryHandler inventoryHandler =
+                    AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
             if (inventoryHandler == null)
-                inventoryHandler = AEApi
-                        .instance()
-                        .registries()
-                        .cell()
-                        .getCellInventory(stackInSlot, null,
-                                StorageChannel.FLUIDS);
+                inventoryHandler =
+                        AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.FLUIDS);
 
-            ICellHandler cellHandler = AEApi.instance().registries().cell()
-                    .getHandler(stackInSlot);
+            ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stackInSlot);
             if (cellHandler == null || inventoryHandler == null) {
                 this.cellStatuses[i] = 0;
             } else {
-                this.cellStatuses[i] = (byte) cellHandler.getStatusForCell(
-                        stackInSlot, inventoryHandler);
+                this.cellStatuses[i] = (byte) cellHandler.getStatusForCell(stackInSlot, inventoryHandler);
             }
         }
         IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
@@ -173,24 +155,22 @@ public class TileEntityHardMeDrive extends TileBase implements IActionHost, IECT
         for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
             ItemStack cell = this.inventory.getStackInSlot(i);
             if (cellRegistry.isCellHandled(cell)) {
-                IMEInventoryHandler cellInventory = cellRegistry
-                        .getCellInventory(cell, null, channel);
-                if (cellInventory != null)
-                    handlers.add(cellInventory);
+                IMEInventoryHandler cellInventory = cellRegistry.getCellInventory(cell, null, channel);
+                if (cellInventory != null) handlers.add(cellInventory);
             }
         }
         return handlers;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag){
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         inventory.readFromNBT(tag.getTagList("inventory", 10));
         onInventoryChanged();
     }
 
     @Override
-    public  void writeToNBT(NBTTagCompound tag){
+    public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setTag("inventory", inventory.writeToNBT());
     }

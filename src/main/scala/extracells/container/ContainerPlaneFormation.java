@@ -32,13 +32,16 @@ public class ContainerPlaneFormation extends Container {
 
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack stack = player.inventory.getStackInSlot(i);
-            if (stack != null && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
+            if (stack != null
+                    && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
                 DimensionalCoord coord = part.getHost().getLocation();
                 IGuiItem guiItem = (IGuiItem) stack.getItem();
-                INetworkTool networkTool = (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.x, coord.y, coord.z);
+                INetworkTool networkTool =
+                        (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.x, coord.y, coord.z);
                 for (int j = 0; j < 3; j++) {
                     for (int k = 0; k < 3; k++) {
-                        this.addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
+                        this.addSlotToContainer(
+                                new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
                     }
                 }
                 return;

@@ -18,121 +18,105 @@ import appeng.util.prioitylist.PrecisePriorityList;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
-import extracells.inventory.MEAdvancedInventoryHandler;
-import extracells.inventory.MEPassThrough;
+public class AdvancedCellInventoryHandler extends MEAdvancedInventoryHandler<IAEItemStack>
+        implements ICellInventoryHandler {
 
-public class AdvancedCellInventoryHandler extends MEAdvancedInventoryHandler<IAEItemStack> implements ICellInventoryHandler
-{
+    AdvancedCellInventoryHandler(final IMEInventory<IAEItemStack> c) {
+        super(c, StorageChannel.ITEMS);
 
-	AdvancedCellInventoryHandler( final IMEInventory<IAEItemStack> c )
-	{
-		super( c, StorageChannel.ITEMS );
+        final ICellInventory ci = this.getCellInv();
 
-		final ICellInventory ci = this.getCellInv();
+        if (ci != null) {
+            final IInventory upgrades = ci.getUpgradesInventory();
+            final IInventory config = ci.getConfigInventory();
+            final FuzzyMode fzMode = ci.getFuzzyMode();
+            final String filter = ci.getOreFilter();
+            // final String filter = "";
+            boolean hasInverter = false;
+            boolean hasFuzzy = false;
+            boolean hasOreFilter = false;
 
-		if( ci != null )
-		{
-			final IInventory upgrades = ci.getUpgradesInventory();
-			final IInventory config = ci.getConfigInventory();
-			final FuzzyMode fzMode = ci.getFuzzyMode();
-			final String filter = ci.getOreFilter();
-			//final String filter = "";
-			boolean hasInverter = false;
-			boolean hasFuzzy = false;
-			boolean hasOreFilter = false;
+            for (int x = 0; x < upgrades.getSizeInventory(); x++) {
+                final ItemStack is = upgrades.getStackInSlot(x);
+                if (is != null && is.getItem() instanceof IUpgradeModule) {
+                    final Upgrades u = ((IUpgradeModule) is.getItem()).getType(is);
+                    if (u != null) {
+                        switch (u) {
+                            case FUZZY:
+                                hasFuzzy = true;
+                                break;
+                            case INVERTER:
+                                hasInverter = true;
+                                break;
+                            case ORE_FILTER:
+                                hasOreFilter = true;
+                                break;
+                            default:
+                        }
+                    }
+                }
+            }
+            this.setWhitelist(hasInverter ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST);
+            if (hasOreFilter && !filter.isEmpty()) {
+                this.setPartitionList(new OreFilteredList(filter));
+            } else {
+                final IItemList<IAEItemStack> priorityList =
+                        AEApi.instance().storage().createItemList();
+                for (int x = 0; x < config.getSizeInventory(); x++) {
+                    final ItemStack is = config.getStackInSlot(x);
+                    if (is != null) {
+                        priorityList.add(AEItemStack.create(is));
+                    }
+                }
 
-			for( int x = 0; x < upgrades.getSizeInventory(); x++ )
-			{
-				final ItemStack is = upgrades.getStackInSlot( x );
-				if( is != null && is.getItem() instanceof IUpgradeModule )
-				{
-					final Upgrades u = ( (IUpgradeModule) is.getItem() ).getType( is );
-					if( u != null )
-					{
-						switch( u )
-						{
-							case FUZZY:
-								hasFuzzy = true;
-								break;
-							case INVERTER:
-								hasInverter = true;
-								break;
-							case ORE_FILTER:
-								hasOreFilter = true;
-								break;
-							default:
-						}
-					}
-				}
-			}
-			this.setWhitelist(hasInverter ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST);
-			if (hasOreFilter && !filter.isEmpty()) {
-				this.setPartitionList(new OreFilteredList(filter));
-			}
-			else {
-				final IItemList<IAEItemStack> priorityList = AEApi.instance().storage().createItemList();
-				for (int x = 0; x < config.getSizeInventory(); x++) {
-					final ItemStack is = config.getStackInSlot(x);
-					if (is != null) {
-						priorityList.add(AEItemStack.create(is));
-					}
-				}
+                if (!priorityList.isEmpty()) {
+                    if (hasFuzzy) {
+                        this.setPartitionList(new FuzzyPriorityList<IAEItemStack>(priorityList, fzMode));
+                    } else {
+                        this.setPartitionList(new PrecisePriorityList<IAEItemStack>(priorityList));
+                    }
+                }
+            }
+        }
+    }
 
-				if (!priorityList.isEmpty()) {
-					if (hasFuzzy) {
-						this.setPartitionList(new FuzzyPriorityList<IAEItemStack>(priorityList, fzMode));
-					} else {
-						this.setPartitionList(new PrecisePriorityList<IAEItemStack>(priorityList));
-					}
-				}
-			}
-		}
-	}
+    @Override
+    public ICellInventory getCellInv() {
+        Object o = this.getInternal();
 
-	@Override
-	public ICellInventory getCellInv()
-	{
-		Object o = this.getInternal();
+        if (o instanceof MEPassThrough) {
+            o = ((MEPassThrough) o).getInternal();
+        }
 
-		if( o instanceof MEPassThrough )
-		{
-			o = ( (MEPassThrough) o ).getInternal();
-		}
+        return (AdvancedCellInventory) (o instanceof AdvancedCellInventory ? o : null);
+    }
 
-		return (AdvancedCellInventory) ( o instanceof AdvancedCellInventory ? o : null );
-	}
+    @Override
+    public boolean isPreformatted() {
+        return !this.getPartitionList().isEmpty();
+    }
 
-	@Override
-	public boolean isPreformatted()
-	{
-		return !this.getPartitionList().isEmpty();
-	}
+    @Override
+    public boolean isFuzzy() {
+        return this.getPartitionList() instanceof FuzzyPriorityList;
+    }
 
-	@Override
-	public boolean isFuzzy()
-	{
-		return this.getPartitionList() instanceof FuzzyPriorityList;
-	}
+    @Override
+    public IncludeExclude getIncludeExcludeMode() {
+        return this.getWhitelist();
+    }
 
-	@Override
-	public IncludeExclude getIncludeExcludeMode()
-	{
-		return this.getWhitelist();
-	}
+    public int getStatusForCell() {
+        ICellInventory c = this.getCellInv();
+        int val = 0;
+        if (c != null) {
+            val = this.getCellInv().getStatusForCell();
+        }
 
-	public int getStatusForCell()
-	{
-		ICellInventory c = this.getCellInv();
-		int val = 0;
-		if (c != null) {
-			val = this.getCellInv().getStatusForCell();
-		}
+        if (val == 1 && this.isPreformatted()) {
+            val = 2;
+        }
 
-		if( val == 1 && this.isPreformatted() )
-		{
-			val = 2;
-		}
-
-		return val;
-	}
+        return val;
+    }
 }

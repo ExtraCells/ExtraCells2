@@ -6,15 +6,15 @@ import net.minecraft.item.ItemStack;
 
 public class SlotRespective extends Slot {
 
-	IInventory inventory;
+    IInventory inventory;
 
-	public SlotRespective(IInventory inventory, int index, int x, int y) {
-		super(inventory, index, x, y);
-		this.inventory = inventory;
-	}
+    public SlotRespective(IInventory inventory, int index, int x, int y) {
+        super(inventory, index, x, y);
+        this.inventory = inventory;
+    }
 
-	@Override
-	public boolean isItemValid(ItemStack itemstack) {
-		return this.inventory.isItemValidForSlot(this.slotNumber, itemstack);
-	}
+    @Override
+    public boolean isItemValid(ItemStack itemstack) {
+        return this.inventory.isItemValidForSlot(this.slotNumber, itemstack);
+    }
 }
