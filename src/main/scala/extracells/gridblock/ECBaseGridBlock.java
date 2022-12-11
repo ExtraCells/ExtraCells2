@@ -30,7 +30,7 @@ public class ECBaseGridBlock implements IGridBlock {
 
     @Override
     public EnumSet<GridFlags> getFlags() {
-        return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+        return Constants.BASE_GRID_FLAGS;
     }
 
     public IMEMonitor<IAEFluidStack> getFluidMonitor() {
