@@ -270,12 +270,13 @@ public class GuiBusFluidStorage extends ECGuiContainer
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
+        super.mouseClicked(mouseX, mouseY, mouseBtn);
         Slot slot = getSlotAtPosition(mouseX, mouseY);
 
         if (slot != null
                 && slot.getStack() != null
                 && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack())) return;
-        super.mouseClicked(mouseX, mouseY, mouseBtn);
+
         for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
             if (GuiUtil.isPointInRegion(
                     this.guiLeft, this.guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
@@ -352,11 +353,11 @@ public class GuiBusFluidStorage extends ECGuiContainer
                 if (part instanceof PartGasStorage && Integration.Mods.MEKANISMGAS.isEnabled())
                     fluidSlot.mouseNEIClickedGas(draggedStack);
                 else fluidSlot.mouseNEIClicked(draggedStack);
-                break;
+                draggedStack.stackSize = 0;
+                return true;
             }
         }
-        draggedStack.stackSize = 0;
-        return true;
+        return false;
     }
 
     @Override
