@@ -35,7 +35,8 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
 
     @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
-        if (container.stackTagCompound == null
+        if (container.stackSize != 1
+                || container.stackTagCompound == null
                 || !container.stackTagCompound.hasKey("tileEntity")
                 || container.stackTagCompound.getCompoundTag("tileEntity").hasKey("Empty")) {
             return null;
@@ -67,7 +68,7 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
 
     @Override
     public int fill(ItemStack container, FluidStack resource, boolean doFill) {
-        if (resource == null) {
+        if (resource == null || container.stackSize != 1) {
             return 0;
         }
 
