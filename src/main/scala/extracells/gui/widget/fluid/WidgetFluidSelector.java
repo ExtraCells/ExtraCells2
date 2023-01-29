@@ -1,15 +1,18 @@
 package extracells.gui.widget.fluid;
 
-import appeng.api.storage.data.IAEFluidStack;
-import extracells.util.FluidUtil;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
+
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.util.FluidUtil;
 
 public class WidgetFluidSelector extends AbstractFluidWidget {
 
@@ -38,9 +41,9 @@ public class WidgetFluidSelector extends AbstractFluidWidget {
 
     @Override
     public boolean drawTooltip(int posX, int posY, int mouseX, int mouseY) {
-        if (this.fluid == null
-                || this.amount <= 0
-                || !isPointInRegion(posX, posY, this.height, this.width, mouseX, mouseY)) return false;
+        if (this.fluid == null || this.amount <= 0
+                || !isPointInRegion(posX, posY, this.height, this.width, mouseX, mouseY))
+            return false;
 
         String amountToText = FluidUtil.formatFluidAmount(this.amount, true);
 

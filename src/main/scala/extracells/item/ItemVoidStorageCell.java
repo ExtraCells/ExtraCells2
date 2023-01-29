@@ -1,5 +1,15 @@
 package extracells.item;
 
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.exceptions.MissingDefinition;
@@ -20,16 +30,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.api.IStorageCellVoid;
 import extracells.inventory.VoidCellInventoryHandler;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 public final class ItemVoidStorageCell extends AEBaseItem implements IStorageCellVoid, IItemGroup {
+
     private final int totalBytes;
     private final int totalTypes;
     private final int perType;
@@ -50,10 +53,10 @@ public final class ItemVoidStorageCell extends AEBaseItem implements IStorageCel
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addCheckedInformation(
-            final ItemStack stack, final EntityPlayer player, final List<String> lines, final boolean displayMoreInfo) {
-        final IMEInventoryHandler<?> inventory =
-                AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.ITEMS);
+    public void addCheckedInformation(final ItemStack stack, final EntityPlayer player, final List<String> lines,
+            final boolean displayMoreInfo) {
+        final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell()
+                .getCellInventory(stack, null, StorageChannel.ITEMS);
 
         if (inventory instanceof VoidCellInventoryHandler) {
             final ICellInventoryHandler handler = (ICellInventoryHandler) inventory;
@@ -63,8 +66,11 @@ public final class ItemVoidStorageCell extends AEBaseItem implements IStorageCel
             if (cellInventory != null) {
                 lines.add("Deletes \u00A74everything\u00A77 stored on it ");
 
-                lines.add(cellInventory.getUsedBytes() + " " + GuiText.Of.getLocal() + " \u00A7k9999\u00A77 "
-                        + GuiText.BytesUsed.getLocal());
+                lines.add(
+                        cellInventory.getUsedBytes() + " "
+                                + GuiText.Of.getLocal()
+                                + " \u00A7k9999\u00A77 "
+                                + GuiText.BytesUsed.getLocal());
 
                 ItemAdvancedStorageCell.format(lines, handler, cellInventory);
             }
@@ -168,11 +174,7 @@ public final class ItemVoidStorageCell extends AEBaseItem implements IStorageCel
 
     @Override
     public ItemStack getContainerItem(final ItemStack itemStack) {
-        for (final ItemStack stack : AEApi.instance()
-                .definitions()
-                .materials()
-                .emptyStorageCell()
-                .maybeStack(1)
+        for (final ItemStack stack : AEApi.instance().definitions().materials().emptyStorageCell().maybeStack(1)
                 .asSet()) {
             return stack;
         }

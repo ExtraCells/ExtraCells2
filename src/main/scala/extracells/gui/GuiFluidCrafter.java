@@ -1,16 +1,19 @@
 package extracells.gui;
 
-import extracells.container.ContainerFluidCrafter;
-import extracells.registries.BlockEnum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
+import extracells.container.ContainerFluidCrafter;
+import extracells.registries.BlockEnum;
+
 public class GuiFluidCrafter extends GuiContainer {
+
     public static final int xSize = 176;
     public static final int ySize = 166;
     private ResourceLocation guiTexture = new ResourceLocation("extracells", "textures/gui/fluidcrafter.png");
@@ -46,11 +49,15 @@ public class GuiFluidCrafter extends GuiContainer {
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-            this.mc
-                    .getTextureManager()
+            this.mc.getTextureManager()
                     .bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
             this.drawTexturedModalRect(
-                    this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 128, 16, 16);
+                    this.guiLeft + slot.xDisplayPosition,
+                    this.guiTop + slot.yDisplayPosition,
+                    240,
+                    128,
+                    16,
+                    16);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
         }

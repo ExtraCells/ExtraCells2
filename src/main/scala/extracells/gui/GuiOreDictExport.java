@@ -1,11 +1,7 @@
 package extracells.gui;
 
-import appeng.util.item.AEItemStack;
-import cpw.mods.fml.relauncher.Side;
-import extracells.container.ContainerOreDictExport;
-import extracells.network.packet.part.PacketOreDictExport;
-import extracells.part.PartOreDictExporter;
 import java.util.Iterator;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -15,9 +11,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import appeng.util.item.AEItemStack;
+import cpw.mods.fml.relauncher.Side;
+import extracells.container.ContainerOreDictExport;
+import extracells.network.packet.part.PacketOreDictExport;
+import extracells.part.PartOreDictExporter;
 
 public class GuiOreDictExport extends GuiContainer {
 
@@ -73,6 +76,7 @@ public class GuiOreDictExport extends GuiContainer {
     }
 
     public class RenderToolTip {
+
         private ItemStack item;
         private int x;
         private int y;
@@ -99,17 +103,15 @@ public class GuiOreDictExport extends GuiContainer {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         this.fontRendererObj.drawString(
-                StatCollector.translateToLocal("extracells.part.oredict.export.name")
-                        .replace("ME ", ""),
+                StatCollector.translateToLocal("extracells.part.oredict.export.name").replace("ME ", ""),
                 8,
                 5,
                 0x000000);
-        this.fontRendererObj.drawString(
-                StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 94, 0x000000);
+        this.fontRendererObj
+                .drawString(StatCollector.translateToLocal("container.inventory"), 8, this.ySize - 94, 0x000000);
         if (!filter.isEmpty() && !filter.startsWith("*") && !filter.startsWith("^") && !filter.startsWith("$")) {
             this._containerOreDictExport.part.setFilter(filter, false);
-            Iterator<AEItemStack> items =
-                    this._containerOreDictExport.part.getOres().iterator();
+            Iterator<AEItemStack> items = this._containerOreDictExport.part.getOres().iterator();
             int size = this._containerOreDictExport.part.getOres().size();
             if (this.currentScroll < 0) this.currentScroll = 0;
             int maxPage = size / (4 * 10);
@@ -124,8 +126,7 @@ public class GuiOreDictExport extends GuiContainer {
                 }
             }
             RenderToolTip toolTip = new RenderToolTip();
-            outerLoop:
-            for (int y = 0; y < 10; y++) {
+            outerLoop: for (int y = 0; y < 10; y++) {
                 for (int x = 0; x < 4; x++) {
                     if (items.hasNext()) {
                         AEItemStack item = items.next();
@@ -138,8 +139,7 @@ public class GuiOreDictExport extends GuiContainer {
                                 item.getItemStack(),
                                 posX,
                                 posY);
-                        if (mouseX - this.guiLeft > posX
-                                && mouseX - this.guiLeft < posX + 16
+                        if (mouseX - this.guiLeft > posX && mouseX - this.guiLeft < posX + 16
                                 && mouseY - this.guiTop > posY
                                 && mouseY - this.guiTop < posY + 16) {
                             toolTip.setValue(item.getItemStack(), posX, posY);
@@ -158,30 +158,34 @@ public class GuiOreDictExport extends GuiContainer {
         super.initGui();
         this.guiLeft = (this.width - this.xSize) / 2;
         this.guiTop = (this.height - this.ySize) / 2;
-        this.buttonList.add(new GuiButton(
-                1,
-                this.guiLeft + this.xSize / 2 - 44,
-                this.guiTop + 35,
-                88,
-                20,
-                StatCollector.translateToLocal("extracells.tooltip.save")));
-        this.searchbar =
-                new GuiTextField(this.fontRendererObj, this.guiLeft + this.xSize / 2 - 75, this.guiTop + 20, 150, 10) {
+        this.buttonList.add(
+                new GuiButton(
+                        1,
+                        this.guiLeft + this.xSize / 2 - 44,
+                        this.guiTop + 35,
+                        88,
+                        20,
+                        StatCollector.translateToLocal("extracells.tooltip.save")));
+        this.searchbar = new GuiTextField(
+                this.fontRendererObj,
+                this.guiLeft + this.xSize / 2 - 75,
+                this.guiTop + 20,
+                150,
+                10) {
 
-                    private final int xPos = 0;
-                    private final int yPos = 0;
-                    private final int width = 0;
-                    private final int height = 0;
+            private final int xPos = 0;
+            private final int yPos = 0;
+            private final int width = 0;
+            private final int height = 0;
 
-                    @Override
-                    public void mouseClicked(int x, int y, int mouseBtn) {
-                        boolean flag = x >= this.xPos
-                                && x < this.xPos + this.width
-                                && y >= this.yPos
-                                && y < this.yPos + this.height;
-                        if (flag && mouseBtn == 3) setText("");
-                    }
-                };
+            @Override
+            public void mouseClicked(int x, int y, int mouseBtn) {
+                boolean flag = x >= this.xPos && x < this.xPos + this.width
+                        && y >= this.yPos
+                        && y < this.yPos + this.height;
+                if (flag && mouseBtn == 3) setText("");
+            }
+        };
         this.searchbar.setEnableBackgroundDrawing(true);
         this.searchbar.setFocused(true);
         this.searchbar.setMaxStringLength(128);

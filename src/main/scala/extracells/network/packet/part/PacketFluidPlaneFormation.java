@@ -1,9 +1,10 @@
 package extracells.network.packet.part;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidPlaneFormation;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class PacketFluidPlaneFormation extends AbstractPacket {
 

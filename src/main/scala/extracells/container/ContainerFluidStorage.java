@@ -2,6 +2,17 @@ package extracells.container;
 
 import static extracells.util.FluidUtil.filterEmptyFluid;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.BaseActionSource;
@@ -23,21 +34,9 @@ import extracells.network.packet.part.PacketFluidStorage;
 import extracells.util.FluidUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.MutablePair;
 
-public class ContainerFluidStorage extends Container
-        implements IMEMonitorHandlerReceiver<IAEFluidStack>,
-                IFluidSelectorContainer,
-                IInventoryUpdateReceiver,
-                IStorageContainer {
+public class ContainerFluidStorage extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>,
+        IFluidSelectorContainer, IInventoryUpdateReceiver, IStorageContainer {
 
     private GuiFluidStorage guiFluidStorage;
     private IItemList<IAEFluidStack> fluidStackList;
@@ -80,8 +79,8 @@ public class ContainerFluidStorage extends Container
         bindPlayerInventory(this.player.inventory);
     }
 
-    public ContainerFluidStorage(
-            IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player, IPortableFluidStorageCell _storageCell) {
+    public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player,
+            IPortableFluidStorageCell _storageCell) {
         this.hasWirelessTermHandler = _storageCell != null;
         this.storageCell = _storageCell;
         this.monitor = _monitor;
@@ -101,8 +100,8 @@ public class ContainerFluidStorage extends Container
         bindPlayerInventory(this.player.inventory);
     }
 
-    public ContainerFluidStorage(
-            IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player, IWirelessFluidTermHandler _handler) {
+    public ContainerFluidStorage(IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player,
+            IWirelessFluidTermHandler _handler) {
         this.hasWirelessTermHandler = _handler != null;
         this.handler = _handler;
         this.monitor = _monitor;
@@ -172,8 +171,8 @@ public class ContainerFluidStorage extends Container
             if (proposedAmount == 0) return;
 
             // Tries to fill the container with fluid.
-            MutablePair<Integer, ItemStack> filledContainer =
-                    FluidUtil.fillStack(container, new FluidStack(this.selectedFluid, proposedAmount));
+            MutablePair<Integer, ItemStack> filledContainer = FluidUtil
+                    .fillStack(container, new FluidStack(this.selectedFluid, proposedAmount));
 
             // Moves it to second slot and commits extraction to grid.
             if (fillSecondSlot(filledContainer.getRight())) {
@@ -262,12 +261,8 @@ public class ContainerFluidStorage extends Container
         if (this.monitor != null) {
             IItemList<IAEFluidStack> fluidStackList = AEApi.instance().storage().createFluidList();
             for (IAEFluidStack fluidStack : this.monitor.getStorageList()) {
-                if (fluidStack
-                                .getFluid()
-                                .getLocalizedName(fluidStack.getFluidStack())
-                                .toLowerCase()
-                                .contains(searchText.toLowerCase())
-                        && ECApi.instance().canFluidSeeInTerminal(fluidStack.getFluid())) {
+                if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(
+                        searchText.toLowerCase()) && ECApi.instance().canFluidSeeInTerminal(fluidStack.getFluid())) {
                     fluidStackList.add(fluidStack);
                 }
             }
@@ -318,8 +313,8 @@ public class ContainerFluidStorage extends Container
     public void onListUpdate() {}
 
     @Override
-    public void postChange(
-            IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
+            BaseActionSource actionSource) {
         this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
         new PacketFluidStorage(this.player, change, this.fluidStackList).sendPacketToPlayer(this.player);
         new PacketFluidStorage(this.player, this.hasWirelessTermHandler).sendPacketToPlayer(this.player);

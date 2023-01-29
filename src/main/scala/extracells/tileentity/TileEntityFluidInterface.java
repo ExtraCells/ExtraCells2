@@ -1,5 +1,24 @@
 package extracells.tileentity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.*;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.implementations.ICraftingPatternItem;
@@ -36,34 +55,10 @@ import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
 import extracells.util.EmptyMeItemMonitor;
 import extracells.util.FluidUtil;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
 
 public class TileEntityFluidInterface extends TileBase
-        implements IActionHost,
-                IFluidHandler,
-                IECTileEntity,
-                IFluidInterface,
-                IFluidSlotPartOrBlock,
-                ITileStorageMonitorable,
-                IStorageMonitorable,
-                ICraftingProvider,
-                IWailaTile {
+        implements IActionHost, IFluidHandler, IECTileEntity, IFluidInterface, IFluidSlotPartOrBlock,
+        ITileStorageMonitorable, IStorageMonitorable, ICraftingProvider, IWailaTile {
 
     private class FluidInterfaceInventory implements IInventory {
 
@@ -122,8 +117,8 @@ public class TileEntityFluidInterface extends TileBase
         @Override
         public boolean isItemValidForSlot(int slot, ItemStack stack) {
             if (stack.getItem() instanceof ICraftingPatternItem) {
-                ICraftingPatternDetails details =
-                        ((ICraftingPatternItem) stack.getItem()).getPatternForItem(stack, getWorldObj());
+                ICraftingPatternDetails details = ((ICraftingPatternItem) stack.getItem())
+                        .getPatternForItem(stack, getWorldObj());
                 return details != null;
             }
             return false;
@@ -188,16 +183,14 @@ public class TileEntityFluidInterface extends TileBase
     private int tickCount = 0;
     private boolean update = false;
     private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
-    private HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert =
-            new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
+    private HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
     private final ICraftingPatternDetails[] originalPatternsCache = new ICraftingPatternDetails[9];
     private List<IAEItemStack> requestedItems = new ArrayList<IAEItemStack>();
     private List<IAEItemStack> removeList = new ArrayList<IAEItemStack>();
     public final FluidInterfaceInventory inventory;
     private IAEItemStack toExport = null;
 
-    private final Item encodedPattern =
-            AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
+    private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
     private List<IAEStack> export = new ArrayList<IAEStack>();
 
     private List<IAEStack> addToExport = new ArrayList<IAEStack>();
@@ -212,6 +205,7 @@ public class TileEntityFluidInterface extends TileBase
         this.gridBlock = new ECFluidGridBlock(this);
         for (int i = 0; i < this.tanks.length; i++) {
             this.tanks[i] = new FluidTank(10000) {
+
                 @Override
                 public FluidTank readFromNBT(NBTTagCompound nbt) {
                     if (!nbt.hasKey("Empty")) {
@@ -261,7 +255,7 @@ public class TileEntityFluidInterface extends TileBase
         if (from == ForgeDirection.UNKNOWN || resource == null) return 0;
 
         if ((this.tanks[from.ordinal()].getFluid() == null
-                        || this.tanks[from.ordinal()].getFluid().getFluid() == resource.getFluid())
+                || this.tanks[from.ordinal()].getFluid().getFluid() == resource.getFluid())
                 && resource.getFluid() == FluidRegistry.getFluid(this.fluidFilter[from.ordinal()])) {
             int added = this.tanks[from.ordinal()].fill(resource.copy(), doFill);
             if (added == resource.amount) {
@@ -276,9 +270,8 @@ public class TileEntityFluidInterface extends TileBase
         int filled = 0;
         filled += fillToNetwork(resource, doFill);
 
-        if (filled < resource.amount)
-            filled += this.tanks[from.ordinal()].fill(
-                    new FluidStack(resource.getFluid(), resource.amount - filled), doFill);
+        if (filled < resource.amount) filled += this.tanks[from.ordinal()]
+                .fill(new FluidStack(resource.getFluid(), resource.amount - filled), doFill);
         if (filled > 0)
             if (getWorldObj() != null) getWorldObj().markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         this.doNextUpdate = true;
@@ -292,11 +285,10 @@ public class TileEntityFluidInterface extends TileBase
         if (grid == null) return 0;
         IStorageGrid storage = grid.getCache(IStorageGrid.class);
         if (storage == null) return 0;
-        IAEFluidStack notRemoved = storage.getFluidInventory()
-                .injectItems(
-                        AEApi.instance().storage().createFluidStack(resource),
-                        doFill ? Actionable.MODULATE : Actionable.SIMULATE,
-                        new MachineSource(this));
+        IAEFluidStack notRemoved = storage.getFluidInventory().injectItems(
+                AEApi.instance().storage().createFluidStack(resource),
+                doFill ? Actionable.MODULATE : Actionable.SIMULATE,
+                new MachineSource(this));
         if (notRemoved == null) return resource.amount;
         return (int) (resource.amount - notRemoved.getStackSize());
     }
@@ -386,7 +378,7 @@ public class TileEntityFluidInterface extends TileBase
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
         if (from == ForgeDirection.UNKNOWN) return null;
-        return new FluidTankInfo[] {this.tanks[from.ordinal()].getInfo()};
+        return new FluidTankInfo[] { this.tanks[from.ordinal()].getInfo() };
     }
 
     @Override
@@ -396,6 +388,7 @@ public class TileEntityFluidInterface extends TileBase
         FluidTank[] tanks = new FluidTank[6];
         for (int i = 0; i < tanks.length; i++) {
             tanks[i] = new FluidTank(10000) {
+
                 @Override
                 public FluidTank readFromNBT(NBTTagCompound nbt) {
                     if (!nbt.hasKey("Empty")) {
@@ -414,16 +407,18 @@ public class TileEntityFluidInterface extends TileBase
         }
         FluidTank tank = tanks[side.ordinal()];
         if (tank == null || tank.getFluid() == null || tank.getFluid().getFluid() == null) {
-            list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
-                    + ": "
-                    + StatCollector.translateToLocal("extracells.tooltip.empty1"));
+            list.add(
+                    StatCollector.translateToLocal("extracells.tooltip.fluid") + ": "
+                            + StatCollector.translateToLocal("extracells.tooltip.empty1"));
             list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB / 10000mB");
         } else {
-            list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": "
-                    + tank.getFluid().getLocalizedName());
-            list.add(StatCollector.translateToLocal("extracells.tooltip.amount")
-                    + ": "
-                    + tank.getFluidAmount() + "mB / 10000mB");
+            list.add(
+                    StatCollector.translateToLocal("extracells.tooltip.fluid") + ": "
+                            + tank.getFluid().getLocalizedName());
+            list.add(
+                    StatCollector.translateToLocal("extracells.tooltip.amount") + ": "
+                            + tank.getFluidAmount()
+                            + "mB / 10000mB");
         }
         return list;
     }
@@ -475,8 +470,7 @@ public class TileEntityFluidInterface extends TileBase
         ItemStack[] inv = this.inventory.inv;
         for (int i = 0, invLength = inv.length; i < invLength; i++) {
             ItemStack currentPatternStack = inv[i];
-            if (currentPatternStack != null
-                    && currentPatternStack.getItem() != null
+            if (currentPatternStack != null && currentPatternStack.getItem() != null
                     && currentPatternStack.getItem() instanceof ICraftingPatternItem) {
                 ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack.getItem();
 
@@ -490,8 +484,8 @@ public class TileEntityFluidInterface extends TileBase
                     this.patternHandlers.add(pattern);
                     ItemStack is = makeCraftingPatternItem(pattern);
                     if (is == null) continue;
-                    ICraftingPatternDetails p =
-                            ((ICraftingPatternItem) is.getItem()).getPatternForItem(is, getWorldObj());
+                    ICraftingPatternDetails p = ((ICraftingPatternItem) is.getItem())
+                            .getPatternForItem(is, getWorldObj());
                     this.patternConvert.put(p, pattern);
                     craftingTracker.addCraftingOption(this, p);
                 }
@@ -530,18 +524,15 @@ public class TileEntityFluidInterface extends TileBase
                     IFluidHandler handler = (IFluidHandler) tile;
                     IAEFluidStack fluid = (IAEFluidStack) stack;
                     if (handler.canFill(dir.getOpposite(), fluid.copy().getFluid())) {
-                        int amount = handler.fill(
-                                dir.getOpposite(), fluid.getFluidStack().copy(), false);
+                        int amount = handler.fill(dir.getOpposite(), fluid.getFluidStack().copy(), false);
                         if (amount == 0) continue;
                         if (amount == fluid.getStackSize()) {
-                            handler.fill(
-                                    dir.getOpposite(), fluid.getFluidStack().copy(), true);
+                            handler.fill(dir.getOpposite(), fluid.getFluidStack().copy(), true);
                             this.export.remove(0);
                         } else {
                             FluidStack fl = fluid.getFluidStack().copy();
                             fl.amount = amount;
-                            this.export
-                                    .get(0)
+                            this.export.get(0)
                                     .setStackSize(fluid.getStackSize() - handler.fill(dir.getOpposite(), fl, true));
                             return;
                         }
@@ -573,22 +564,20 @@ public class TileEntityFluidInterface extends TileBase
             if (storage == null) return false;
             for (Fluid fluid : fluids.keySet()) {
                 Long amount = fluids.get(fluid);
-                IAEFluidStack extractFluid = storage.getFluidInventory()
-                        .extractItems(
-                                AEApi.instance().storage().createFluidStack(new FluidStack(fluid, amount.intValue())),
-                                Actionable.SIMULATE,
-                                new MachineSource(this));
+                IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(
+                        AEApi.instance().storage().createFluidStack(new FluidStack(fluid, amount.intValue())),
+                        Actionable.SIMULATE,
+                        new MachineSource(this));
                 if (extractFluid == null || extractFluid.getStackSize() != amount) {
                     return false;
                 }
             }
             for (Fluid fluid : fluids.keySet()) {
                 Long amount = fluids.get(fluid);
-                IAEFluidStack extractFluid = storage.getFluidInventory()
-                        .extractItems(
-                                AEApi.instance().storage().createFluidStack(new FluidStack(fluid, amount.intValue())),
-                                Actionable.MODULATE,
-                                new MachineSource(this));
+                IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(
+                        AEApi.instance().storage().createFluidStack(new FluidStack(fluid, amount.intValue())),
+                        Actionable.MODULATE,
+                        new MachineSource(this));
                 this.export.add(extractFluid.copy());
             }
             for (IAEItemStack s : patter.getCondensedInputs()) {
@@ -633,14 +622,12 @@ public class TileEntityFluidInterface extends TileBase
         int i = tag.getInteger("add");
         for (int j = 0; j < i; j++) {
             if (tag.getBoolean("add-" + j + "-isItem")) {
-                IAEItemStack s = AEApi.instance()
-                        .storage()
+                IAEItemStack s = AEApi.instance().storage()
                         .createItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("add-" + j)));
                 s.setStackSize(tag.getLong("add-" + j + "-amount"));
                 this.addToExport.add(s);
             } else {
-                IAEFluidStack s = AEApi.instance()
-                        .storage()
+                IAEFluidStack s = AEApi.instance().storage()
                         .createFluidStack(FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("add-" + j)));
                 s.setStackSize(tag.getLong("add-" + j + "-amount"));
                 this.addToExport.add(s);
@@ -649,14 +636,12 @@ public class TileEntityFluidInterface extends TileBase
         i = tag.getInteger("export");
         for (int j = 0; j < i; j++) {
             if (tag.getBoolean("export-" + j + "-isItem")) {
-                IAEItemStack s = AEApi.instance()
-                        .storage()
+                IAEItemStack s = AEApi.instance().storage()
                         .createItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("export-" + j)));
                 s.setStackSize(tag.getLong("export-" + j + "-amount"));
                 this.export.add(s);
             } else {
-                IAEFluidStack s = AEApi.instance()
-                        .storage()
+                IAEFluidStack s = AEApi.instance().storage()
                         .createFluidStack(FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("export-" + j)));
                 s.setStackSize(tag.getLong("export-" + j + "-amount"));
                 this.export.add(s);
@@ -718,22 +703,18 @@ public class TileEntityFluidInterface extends TileBase
         }
         for (int i = 0; i < this.tanks.length; i++) {
             FluidTank tank = this.tanks[i];
-            if (tank.getFluid() != null
-                    && FluidRegistry.getFluid(this.fluidFilter[i])
-                            != tank.getFluid().getFluid()) {
+            if (tank.getFluid() != null && FluidRegistry.getFluid(this.fluidFilter[i]) != tank.getFluid().getFluid()) {
                 FluidStack s = tank.drain(1000, false);
                 if (s != null) {
-                    IAEFluidStack notAdded = storage.getFluidInventory()
-                            .injectItems(
-                                    AEApi.instance().storage().createFluidStack(s),
-                                    Actionable.SIMULATE,
-                                    new MachineSource(this));
+                    IAEFluidStack notAdded = storage.getFluidInventory().injectItems(
+                            AEApi.instance().storage().createFluidStack(s),
+                            Actionable.SIMULATE,
+                            new MachineSource(this));
                     int toAdd = s.amount - (notAdded != null ? (int) notAdded.getStackSize() : 0);
-                    IAEFluidStack actuallyNotInjected = storage.getFluidInventory()
-                            .injectItems(
-                                    AEApi.instance().storage().createFluidStack(tank.drain(toAdd, true)),
-                                    Actionable.MODULATE,
-                                    new MachineSource(this));
+                    IAEFluidStack actuallyNotInjected = storage.getFluidInventory().injectItems(
+                            AEApi.instance().storage().createFluidStack(tank.drain(toAdd, true)),
+                            Actionable.MODULATE,
+                            new MachineSource(this));
                     if (actuallyNotInjected != null) {
                         int returned = tank.fill(actuallyNotInjected.getFluidStack(), true);
                         if (returned != actuallyNotInjected.getStackSize()) {
@@ -750,19 +731,18 @@ public class TileEntityFluidInterface extends TileBase
                     this.doNextUpdate = true;
                 }
             }
-            if ((tank.getFluid() == null
-                            || (tank.getFluid().getFluid() == FluidRegistry.getFluid(this.fluidFilter[i])
-                                    && tank.getFluidAmount() < tank.getCapacity()))
+            if ((tank.getFluid() == null || (tank.getFluid().getFluid() == FluidRegistry.getFluid(this.fluidFilter[i])
+                    && tank.getFluidAmount() < tank.getCapacity()))
                     && FluidRegistry.getFluid(this.fluidFilter[i]) != null) {
                 IAEFluidStack request = FluidUtil.createAEFluidStack(this.fluidFilter[i], 1000);
-                IAEFluidStack extracted =
-                        storage.getFluidInventory().extractItems(request, Actionable.SIMULATE, new MachineSource(this));
+                IAEFluidStack extracted = storage.getFluidInventory()
+                        .extractItems(request, Actionable.SIMULATE, new MachineSource(this));
                 if (extracted == null) continue;
                 int accepted = tank.fill(extracted.getFluidStack(), false);
                 if (accepted == 0) continue;
                 request.setStackSize(Long.min(accepted, extracted.getStackSize()));
-                extracted =
-                        storage.getFluidInventory().extractItems(request, Actionable.MODULATE, new MachineSource(this));
+                extracted = storage.getFluidInventory()
+                        .extractItems(request, Actionable.MODULATE, new MachineSource(this));
                 if (extracted == null || extracted.getStackSize() <= 0) {
                     continue;
                 }
@@ -788,10 +768,8 @@ public class TileEntityFluidInterface extends TileBase
         if (getWorldObj() == null || getWorldObj().provider == null || getWorldObj().isRemote) return;
         if (this.update) {
             this.update = false;
-            if (getGridNode(ForgeDirection.UNKNOWN) != null
-                    && getGridNode(ForgeDirection.UNKNOWN).getGrid() != null) {
-                getGridNode(ForgeDirection.UNKNOWN)
-                        .getGrid()
+            if (getGridNode(ForgeDirection.UNKNOWN) != null && getGridNode(ForgeDirection.UNKNOWN).getGrid() != null) {
+                getGridNode(ForgeDirection.UNKNOWN).getGrid()
                         .postEvent(new MENetworkCraftingPatternChange(this, getGridNode(ForgeDirection.UNKNOWN)));
             }
         }
@@ -818,8 +796,7 @@ public class TileEntityFluidInterface extends TileBase
                     ((IAEItemStack) s).getItemStack().writeToNBT(data);
                 } else {
                     ((IAEFluidStack) s).getFluidStack().writeToNBT(data);
-                }
-                ;
+                } ;
                 tag.setTag("add-" + i, data);
                 tag.setLong("add-" + i + "-amount", s.getStackSize());
             }

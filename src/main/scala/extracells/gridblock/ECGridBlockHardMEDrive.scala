@@ -8,16 +8,22 @@ import extracells.tileentity.TileEntityHardMeDrive
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
 
-
-class ECGridBlockHardMEDrive(host: TileEntityHardMeDrive) extends IGridBlock{
+class ECGridBlockHardMEDrive(host: TileEntityHardMeDrive) extends IGridBlock {
   protected var grid: IGrid = null
   protected var usedChannels: Int = 0
 
   override def getConnectableSides: EnumSet[ForgeDirection] =
-    EnumSet.of(ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH,
-      ForgeDirection.WEST)
+    EnumSet.of(
+      ForgeDirection.DOWN,
+      ForgeDirection.UP,
+      ForgeDirection.NORTH,
+      ForgeDirection.EAST,
+      ForgeDirection.SOUTH,
+      ForgeDirection.WEST
+    )
 
-  override def getFlags: EnumSet[GridFlags] = EnumSet.of(GridFlags.REQUIRE_CHANNEL, GridFlags.DENSE_CAPACITY)
+  override def getFlags: EnumSet[GridFlags] =
+    EnumSet.of(GridFlags.REQUIRE_CHANNEL, GridFlags.DENSE_CAPACITY)
 
   override def getGridColor = AEColor.Transparent
 
@@ -30,7 +36,11 @@ class ECGridBlockHardMEDrive(host: TileEntityHardMeDrive) extends IGridBlock{
   override def getMachineRepresentation: ItemStack = {
     val loc: DimensionalCoord = getLocation
     if (loc == null) return null
-    new ItemStack(loc.getWorld.getBlock(loc.x, loc.y, loc.z), 1, loc.getWorld.getBlockMetadata(loc.x, loc.y, loc.z))
+    new ItemStack(
+      loc.getWorld.getBlock(loc.x, loc.y, loc.z),
+      1,
+      loc.getWorld.getBlockMetadata(loc.x, loc.y, loc.z)
+    )
   }
 
   override def gridChanged {}

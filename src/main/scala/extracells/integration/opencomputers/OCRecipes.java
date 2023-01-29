@@ -1,10 +1,12 @@
 package extracells.integration.opencomputers;
 
-import appeng.api.AEApi;
-import cpw.mods.fml.common.registry.GameRegistry;
 import li.cil.oc.api.API;
+
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+
+import appeng.api.AEApi;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OCRecipes {
 
@@ -15,12 +17,7 @@ public class OCRecipes {
                 "MBM",
                 "DCD",
                 'A',
-                AEApi.instance()
-                        .definitions()
-                        .materials()
-                        .wireless()
-                        .maybeStack(1)
-                        .get(),
+                AEApi.instance().definitions().materials().wireless().maybeStack(1).get(),
                 'C',
                 API.items.get("printedCircuitBoard").createItemStack(1),
                 'B',
@@ -35,12 +32,7 @@ public class OCRecipes {
                 "MBM",
                 "DCD",
                 'A',
-                AEApi.instance()
-                        .definitions()
-                        .materials()
-                        .wireless()
-                        .maybeStack(1)
-                        .get(),
+                AEApi.instance().definitions().materials().wireless().maybeStack(1).get(),
                 'C',
                 API.items.get("printedCircuitBoard").createItemStack(1),
                 'B',
@@ -55,12 +47,7 @@ public class OCRecipes {
                 "MBM",
                 "DCD",
                 'A',
-                AEApi.instance()
-                        .definitions()
-                        .materials()
-                        .wireless()
-                        .maybeStack(1)
-                        .get(),
+                AEApi.instance().definitions().materials().wireless().maybeStack(1).get(),
                 'C',
                 API.items.get("printedCircuitBoard").createItemStack(1),
                 'B',

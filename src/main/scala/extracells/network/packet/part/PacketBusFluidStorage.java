@@ -1,5 +1,10 @@
 package extracells.network.packet.part;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+
 import appeng.api.config.AccessRestriction;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -8,10 +13,6 @@ import extracells.gui.GuiBusFluidStorage;
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidStorage;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 
 public class PacketBusFluidStorage extends AbstractPacket {
 
@@ -43,8 +44,7 @@ public class PacketBusFluidStorage extends AbstractPacket {
             case 1:
                 try {
                     handleClient();
-                } catch (Throwable e) {
-                }
+                } catch (Throwable e) {}
                 break;
             case 2:
                 Container con = this.player.openContainer;

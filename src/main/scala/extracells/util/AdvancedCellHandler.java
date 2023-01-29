@@ -1,5 +1,10 @@
 package extracells.util;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.storage.*;
 import appeng.client.texture.ExtraBlockTextures;
@@ -7,10 +12,6 @@ import appeng.core.sync.GuiBridge;
 import appeng.util.Platform;
 import extracells.inventory.AdvancedCellInventory;
 import extracells.inventory.AdvancedCellInventoryHandler;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 
 public class AdvancedCellHandler implements ICellHandler {
 
@@ -20,8 +21,8 @@ public class AdvancedCellHandler implements ICellHandler {
     }
 
     @Override
-    public IMEInventoryHandler getCellInventory(
-            final ItemStack is, final ISaveProvider container, final StorageChannel channel) {
+    public IMEInventoryHandler getCellInventory(final ItemStack is, final ISaveProvider container,
+            final StorageChannel channel) {
         if (channel == StorageChannel.ITEMS) {
             return AdvancedCellInventory.getCell(is, container);
         }
@@ -44,13 +45,8 @@ public class AdvancedCellHandler implements ICellHandler {
     }
 
     @Override
-    public void openChestGui(
-            final EntityPlayer player,
-            final IChestOrDrive chest,
-            final ICellHandler cellHandler,
-            final IMEInventoryHandler inv,
-            final ItemStack is,
-            final StorageChannel chan) {
+    public void openChestGui(final EntityPlayer player, final IChestOrDrive chest, final ICellHandler cellHandler,
+            final IMEInventoryHandler inv, final ItemStack is, final StorageChannel chan) {
         Platform.openGUI(player, (TileEntity) chest, chest.getUp(), GuiBridge.GUI_ME);
     }
 

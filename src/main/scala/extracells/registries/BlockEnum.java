@@ -1,16 +1,18 @@
 package extracells.registries;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.StatCollector;
+
 import extracells.Extracells;
 import extracells.block.*;
 import extracells.integration.Integration;
 import extracells.item.ItemBlockCertusTank;
 import extracells.item.ItemBlockECBase;
 import extracells.item.ItemCraftingStorage;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.util.StatCollector;
 
 public enum BlockEnum {
+
     CERTUSTANK("certustank", new BlockCertusTank(), ItemBlockCertusTank.class),
     WALRUS("walrus", new BlockWalrus()),
     FLUIDCRAFTER("fluidcrafter", new BlockFluidCrafter()),

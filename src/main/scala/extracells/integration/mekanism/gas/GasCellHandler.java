@@ -1,5 +1,10 @@
 package extracells.integration.mekanism.gas;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.implementations.tiles.IChestOrDrive;
 import appeng.api.implementations.tiles.IMEChest;
 import appeng.api.networking.security.PlayerSource;
@@ -9,10 +14,6 @@ import extracells.inventory.HandlerItemPlayerStorageGas;
 import extracells.inventory.HandlerItemStorageGas;
 import extracells.network.GuiHandler;
 import extracells.render.TextureManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class GasCellHandler implements ICellHandler {
 
@@ -22,18 +23,23 @@ public class GasCellHandler implements ICellHandler {
     }
 
     @Override
-    public IMEInventoryHandler getCellInventory(
-            ItemStack itemStack, ISaveProvider saveProvider, StorageChannel channel) {
+    public IMEInventoryHandler getCellInventory(ItemStack itemStack, ISaveProvider saveProvider,
+            StorageChannel channel) {
         if (channel == StorageChannel.ITEMS || !(itemStack.getItem() instanceof IGasStorageCell)) {
             return null;
         }
         return new HandlerItemStorageGas(
-                itemStack, saveProvider, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack));
+                itemStack,
+                saveProvider,
+                ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack));
     }
 
     public IMEInventoryHandler getCellInventoryPlayer(ItemStack itemStack, EntityPlayer player) {
         return new HandlerItemPlayerStorageGas(
-                itemStack, null, ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack), player);
+                itemStack,
+                null,
+                ((IGasStorageCell) itemStack.getItem()).getFilter(itemStack),
+                player);
     }
 
     @Override
@@ -74,13 +80,8 @@ public class GasCellHandler implements ICellHandler {
     }
 
     @Override
-    public void openChestGui(
-            EntityPlayer player,
-            IChestOrDrive chest,
-            ICellHandler cellHandler,
-            IMEInventoryHandler inv,
-            ItemStack is,
-            StorageChannel chan) {
+    public void openChestGui(EntityPlayer player, IChestOrDrive chest, ICellHandler cellHandler,
+            IMEInventoryHandler inv, ItemStack is, StorageChannel chan) {
         if (chan != StorageChannel.FLUIDS) {
             return;
         }
@@ -89,7 +90,7 @@ public class GasCellHandler implements ICellHandler {
             monitorable = ((IMEChest) chest).getMonitorable(ForgeDirection.UNKNOWN, new PlayerSource(player, chest));
         }
         if (monitorable != null) {
-            GuiHandler.launchGui(GuiHandler.getGuiId(4), player, new Object[] {monitorable.getFluidInventory()});
+            GuiHandler.launchGui(GuiHandler.getGuiId(4), player, new Object[] { monitorable.getFluidInventory() });
         }
     }
 }

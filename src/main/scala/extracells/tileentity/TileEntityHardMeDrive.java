@@ -1,5 +1,15 @@
 package extracells.tileentity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -12,14 +22,6 @@ import extracells.api.IECTileEntity;
 import extracells.gridblock.ECGridBlockHardMEDrive;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityHardMeDrive extends TileBase
         implements IActionHost, IECTileEntity, ICellContainer, IInventoryUpdateReceiver {
@@ -126,11 +128,10 @@ public class TileEntityHardMeDrive extends TileBase
         this.fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
         for (int i = 0; i < this.cellStatuses.length; i++) {
             ItemStack stackInSlot = this.inventory.getStackInSlot(i);
-            IMEInventoryHandler inventoryHandler =
-                    AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
-            if (inventoryHandler == null)
-                inventoryHandler =
-                        AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.FLUIDS);
+            IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell()
+                    .getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
+            if (inventoryHandler == null) inventoryHandler = AEApi.instance().registries().cell()
+                    .getCellInventory(stackInSlot, null, StorageChannel.FLUIDS);
 
             ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stackInSlot);
             if (cellHandler == null || inventoryHandler == null) {

@@ -1,11 +1,5 @@
 package extracells.crafting;
 
-import appeng.api.AEApi;
-import appeng.api.networking.crafting.ICraftingPatternDetails;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
-import extracells.api.crafting.IFluidCraftingPatternDetails;
-import extracells.registries.ItemEnum;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +7,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import appeng.api.AEApi;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
+import extracells.api.crafting.IFluidCraftingPatternDetails;
+import extracells.registries.ItemEnum;
 
 public class CraftingPattern implements IFluidCraftingPatternDetails, Comparable<CraftingPattern> {
 
@@ -89,13 +90,11 @@ public class CraftingPattern implements IFluidCraftingPatternDetails, Comparable
             if (stack != null && FluidContainerRegistry.isFilledContainer(stack.getItemStack())) {
                 try {
                     craftingInv.setInventorySlotContents(i, input[i].getItemStack());
-                } catch (Throwable e) {
-                }
+                } catch (Throwable e) {}
             } else if (stack != null && stack.getItem() instanceof IFluidContainerItem) {
                 try {
                     craftingInv.setInventorySlotContents(i, input[i].getItemStack());
-                } catch (Throwable e) {
-                }
+                } catch (Throwable e) {}
             }
         }
         ItemStack returnStack = this.pattern.getOutput(craftingInv, world);
@@ -164,8 +163,8 @@ public class CraftingPattern implements IFluidCraftingPatternDetails, Comparable
                     returnStack[i] = currentRequirement;
                 } else {
                     removed++;
-                    fluidStacks[i] = AEApi.instance().storage().createFluidStack(new FluidStack(fluid.getFluid(), (int)
-                            (fluid.amount * currentRequirement.getStackSize())));
+                    fluidStacks[i] = AEApi.instance().storage().createFluidStack(
+                            new FluidStack(fluid.getFluid(), (int) (fluid.amount * currentRequirement.getStackSize())));
                 }
             }
             i++;

@@ -85,10 +85,8 @@ public class ECPrivateInventory implements IInventory {
     /**
      * Increases the stack size of a slot.
      *
-     * @param slotId
-     *        ID of the slot
-     * @param amount
-     *        amount to be drained
+     * @param slotId ID of the slot
+     * @param amount amount to be drained
      *
      * @return the added Stack
      */

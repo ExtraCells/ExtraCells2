@@ -1,5 +1,13 @@
 package extracells.inventory;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -9,17 +17,13 @@ import appeng.api.storage.ISaveProvider;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
+
 import com.google.common.collect.Lists;
+
 import extracells.api.ECApi;
 import extracells.api.IGasStorageCell;
 import extracells.api.IHandlerFluidStorage;
 import extracells.container.ContainerFluidStorage;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>, IHandlerFluidStorage {
 
@@ -71,8 +75,7 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
         List<FluidStack> currentFluids = Lists.newArrayList(this.fluidStacks);
         for (int i = 0; i < this.fluidStacks.size(); i++) {
             FluidStack currentStack = this.fluidStacks.get(i);
-            if (currentStack != null
-                    && currentStack.getFluidID() == request.getFluid().getID()) {
+            if (currentStack != null && currentStack.getFluidID() == request.getFluid().getID()) {
                 long endAmount = currentStack.amount - request.getStackSize();
                 if (endAmount >= 0) {
                     removedStack = request.copy();
@@ -138,7 +141,8 @@ public class HandlerItemStorageGas implements IMEInventoryHandler<IAEFluidStack>
             if (notAdded != null && currentStack != null && input.getFluid() == currentStack.getFluid()) {
                 if (notAdded.getStackSize() <= freeBytes()) {
                     FluidStack toWrite = new FluidStack(
-                            currentStack.getFluid(), currentStack.amount + (int) notAdded.getStackSize());
+                            currentStack.getFluid(),
+                            currentStack.amount + (int) notAdded.getStackSize());
                     currentFluids.set(i, toWrite);
                     if (mode == Actionable.MODULATE) {
                         writeFluidToSlot(i, toWrite);

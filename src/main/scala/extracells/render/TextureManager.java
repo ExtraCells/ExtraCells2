@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 
 public enum TextureManager {
+
     BUS_SIDE(TextureType.PART, "bus_side"),
     BUS_BORDER(TextureType.PART, "bus_border"),
     BUS_COLOR(TextureType.PART, "bus_color_border", "bus_color_point"),
@@ -55,8 +56,9 @@ public enum TextureManager {
     public void registerTexture(TextureMap textureMap) {
 
         if (!(textureMap.getTextureType() == 0
-                        && (this.textureType == TextureType.BLOCK || this.textureType == TextureType.PART))
-                && !(textureMap.getTextureType() == 1 && this.textureType == TextureType.ITEM)) return;
+                && (this.textureType == TextureType.BLOCK || this.textureType == TextureType.PART))
+                && !(textureMap.getTextureType() == 1 && this.textureType == TextureType.ITEM))
+            return;
 
         for (int i = 0; i < this.textureNames.length; i++) {
             if (this.textureType == TextureType.PART)

@@ -2,9 +2,10 @@ package extracells.tileentity;
 
 import static extracells.registries.BlockEnum.CRAFTINGSTORAGE;
 
+import net.minecraft.item.ItemStack;
+
 import appeng.tile.crafting.TileCraftingStorageTile;
 import appeng.tile.crafting.TileCraftingTile;
-import net.minecraft.item.ItemStack;
 
 public class TileEntityCraftingStorage extends TileCraftingStorageTile {
 

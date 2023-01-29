@@ -1,5 +1,13 @@
 package extracells.inventory;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -13,12 +21,6 @@ import extracells.api.ECApi;
 import extracells.api.IFluidStorageCell;
 import extracells.api.IHandlerFluidStorage;
 import extracells.container.ContainerFluidStorage;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 /**
  * Handler for fluid storage disks
@@ -72,8 +74,7 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
         IAEFluidStack removedStack;
         for (int i = 0; i < this.fluidStacks.size(); i++) {
             FluidStack currentStack = this.fluidStacks.get(i);
-            if (currentStack != null
-                    && currentStack.getFluidID() == request.getFluid().getID()) {
+            if (currentStack != null && currentStack.getFluidID() == request.getFluid().getID()) {
                 long endAmount = currentStack.amount - request.getStackSize();
                 if (endAmount >= 0) {
                     removedStack = request.copy();
@@ -160,8 +161,8 @@ public class HandlerItemStorageFluid implements IMEInventoryHandler<IAEFluidStac
         final long drainedAmount = Long.min(requestedAmount, freeSpace);
 
         if (mode == Actionable.MODULATE) {
-            final Fluid fluidInserted =
-                    (originalTargetContents != null) ? originalTargetContents.getFluid() : input.getFluid();
+            final Fluid fluidInserted = (originalTargetContents != null) ? originalTargetContents.getFluid()
+                    : input.getFluid();
             writeFluidToSlot(targetSlot, new FluidStack(fluidInserted, (int) (originalTargetAmount + drainedAmount)));
             requestSave();
         }

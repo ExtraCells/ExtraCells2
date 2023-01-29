@@ -3,6 +3,7 @@ package extracells.gui.widget;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -14,6 +15,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -40,8 +42,7 @@ public class WidgetFluidTank extends Gui {
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
 
-        Minecraft.getMinecraft()
-                .renderEngine
+        Minecraft.getMinecraft().renderEngine
                 .bindTexture(new ResourceLocation("extracells", "textures/gui/fluidtank.png"));
         drawTexturedModalRect(this.posX, this.posY, 0, 0, 18, 73);
 
@@ -61,11 +62,14 @@ public class WidgetFluidTank extends Gui {
             }
             for (int i = 0; i < (73 - 6) / 16; i++) {
                 drawTexturedModelRectFromIcon(
-                        this.posX + 1, this.posY + 2 + i * 16 + iconHeightRemainder, fluidIcon, 16, 16);
+                        this.posX + 1,
+                        this.posY + 2 + i * 16 + iconHeightRemainder,
+                        fluidIcon,
+                        16,
+                        16);
             }
             GL11.glColor3f(1.0F, 1.0F, 1.0F);
-            Minecraft.getMinecraft()
-                    .renderEngine
+            Minecraft.getMinecraft().renderEngine
                     .bindTexture(new ResourceLocation("extracells", "textures/gui/fluidtank.png"));
             drawTexturedModalRect(
                     this.posX + 2,
@@ -76,8 +80,7 @@ public class WidgetFluidTank extends Gui {
                     72 - (int) (73 * ((float) fluid.amount / this.tank.getCapacity())));
         }
 
-        Minecraft.getMinecraft()
-                .renderEngine
+        Minecraft.getMinecraft().renderEngine
                 .bindTexture(new ResourceLocation("extracells", "textures/gui/fluidtank.png"));
         drawTexturedModalRect(this.posX + 1, this.posY + 1, 19, 1, 16, 73);
 

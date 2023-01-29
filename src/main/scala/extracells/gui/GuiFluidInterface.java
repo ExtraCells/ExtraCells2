@@ -1,13 +1,5 @@
 package extracells.gui;
 
-import appeng.api.implementations.ICraftingPatternItem;
-import extracells.api.IFluidInterface;
-import extracells.container.ContainerFluidInterface;
-import extracells.gui.widget.WidgetFluidTank;
-import extracells.gui.widget.fluid.WidgetFluidSlot;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.registries.BlockEnum;
-import extracells.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -18,9 +10,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import org.lwjgl.opengl.GL11;
 
+import appeng.api.implementations.ICraftingPatternItem;
+import extracells.api.IFluidInterface;
+import extracells.container.ContainerFluidInterface;
+import extracells.gui.widget.WidgetFluidTank;
+import extracells.gui.widget.fluid.WidgetFluidSlot;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
+import extracells.registries.BlockEnum;
+import extracells.util.GuiUtil;
+
 public class GuiFluidInterface extends ECGuiContainer {
+
     IFluidInterface fluidInterface;
     public WidgetFluidTank[] tanks = new WidgetFluidTank[6];
     public WidgetFluidSlot[] filter = new WidgetFluidSlot[6];
@@ -70,10 +73,9 @@ public class GuiFluidInterface extends ECGuiContainer {
             if (slot != null) slot.drawWidget();
         }
         for (WidgetFluidTank tank : this.tanks) {
-            if (tank != null)
-                if (func_146978_c(tank.posX, tank.posY, 18, 73, mouseX, mouseY)) {
-                    tank.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop);
-                }
+            if (tank != null) if (func_146978_c(tank.posX, tank.posY, 18, 73, mouseX, mouseY)) {
+                tank.drawTooltip(mouseX - this.guiLeft, mouseY - this.guiTop);
+            }
         }
         for (WidgetFluidSlot fluidSlot : this.filter) {
             if (fluidSlot != null) {
@@ -110,7 +112,11 @@ public class GuiFluidInterface extends ECGuiContainer {
                     ForgeDirection.getOrientation(i));
             if (this.fluidInterface instanceof IFluidSlotPartOrBlock) {
                 this.filter[i] = new WidgetFluidSlot(
-                        this.player, (IFluidSlotPartOrBlock) this.fluidInterface, i, i * 20 + 30, 93);
+                        this.player,
+                        (IFluidSlotPartOrBlock) this.fluidInterface,
+                        i,
+                        i * 20 + 30,
+                        93);
             }
         }
     }
@@ -119,12 +125,18 @@ public class GuiFluidInterface extends ECGuiContainer {
     protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
         super.mouseClicked(mouseX, mouseY, mouseBtn);
         for (WidgetFluidSlot fluidSlot : this.filter) {
-            if (fluidSlot != null)
-                if (GuiUtil.isPointInRegion(
-                        this.guiLeft, this.guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
-                    fluidSlot.mouseClicked(this.player.inventory.getItemStack());
-                    break;
-                }
+            if (fluidSlot != null) if (GuiUtil.isPointInRegion(
+                    this.guiLeft,
+                    this.guiTop,
+                    fluidSlot.getPosX(),
+                    fluidSlot.getPosY(),
+                    18,
+                    18,
+                    mouseX,
+                    mouseY)) {
+                        fluidSlot.mouseClicked(this.player.inventory.getItemStack());
+                        break;
+                    }
         }
     }
 
@@ -133,11 +145,15 @@ public class GuiFluidInterface extends ECGuiContainer {
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-            this.mc
-                    .getTextureManager()
+            this.mc.getTextureManager()
                     .bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
             this.drawTexturedModalRect(
-                    this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 128, 16, 16);
+                    this.guiLeft + slot.xDisplayPosition,
+                    this.guiTop + slot.yDisplayPosition,
+                    240,
+                    128,
+                    16,
+                    16);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
         }
@@ -149,9 +165,7 @@ public class GuiFluidInterface extends ECGuiContainer {
             if (stack.getItem() instanceof ICraftingPatternItem) {
                 ICraftingPatternItem pattern = (ICraftingPatternItem) stack.getItem();
                 ItemStack output = pattern.getPatternForItem(stack, Minecraft.getMinecraft().theWorld)
-                        .getCondensedOutputs()[0]
-                        .getItemStack()
-                        .copy();
+                        .getCondensedOutputs()[0].getItemStack().copy();
 
                 this.zLevel = 160.0F;
                 GL11.glDisable(GL11.GL_LIGHTING);

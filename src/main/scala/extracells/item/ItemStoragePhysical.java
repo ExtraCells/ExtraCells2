@@ -1,5 +1,25 @@
 package extracells.item;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -19,32 +39,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.registries.ItemEnum;
 import extracells.util.inventory.ECCellInventory;
-import java.util.List;
-import javax.annotation.Nullable;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
 public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAEItemPowerStorage, IEnergyContainerItem {
 
-    public static final String[] suffixes = {"256k", "1024k", "4096k", "16384k", "container"};
+    public static final String[] suffixes = { "256k", "1024k", "4096k", "16384k", "container" };
 
-    public static final int[] bytes_cell = {262144, 1048576, 4194304, 16777216, 65536};
-    public static final double[] idle_drain_cell = {2.5, 3.0, 3.5, 4.0, 2.0};
-    public static final int[] types_cell = {63, 63, 63, 63, 1};
+    public static final int[] bytes_cell = { 262144, 1048576, 4194304, 16777216, 65536 };
+    public static final double[] idle_drain_cell = { 2.5, 3.0, 3.5, 4.0, 2.0 };
+    public static final int[] types_cell = { 63, 63, 63, 63, 1 };
     private IIcon[] icons;
     private final int MAX_POWER = 32000;
 
@@ -54,28 +57,30 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
         setHasSubtypes(true);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
-        IMEInventoryHandler<IAEItemStack> invHandler =
-                cellRegistry.getCellInventory(itemStack, null, StorageChannel.ITEMS);
+        IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry
+                .getCellInventory(itemStack, null, StorageChannel.ITEMS);
         ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
         ICellInventory cellInv = inventoryHandler.getCellInv();
         long usedBytes = cellInv.getUsedBytes();
 
-        list.add(String.format(
-                StatCollector.translateToLocal("extracells.tooltip.storage.physical.bytes"),
-                usedBytes,
-                cellInv.getTotalBytes()));
-        list.add(String.format(
-                StatCollector.translateToLocal("extracells.tooltip.storage.physical.types"),
-                cellInv.getStoredItemTypes(),
-                cellInv.getTotalItemTypes()));
-        if (usedBytes > 0)
-            list.add(String.format(
-                    StatCollector.translateToLocal("extracells.tooltip.storage.physical.content"),
-                    cellInv.getStoredItemCount()));
+        list.add(
+                String.format(
+                        StatCollector.translateToLocal("extracells.tooltip.storage.physical.bytes"),
+                        usedBytes,
+                        cellInv.getTotalBytes()));
+        list.add(
+                String.format(
+                        StatCollector.translateToLocal("extracells.tooltip.storage.physical.types"),
+                        cellInv.getStoredItemTypes(),
+                        cellInv.getTotalItemTypes()));
+        if (usedBytes > 0) list.add(
+                String.format(
+                        StatCollector.translateToLocal("extracells.tooltip.storage.physical.content"),
+                        cellInv.getStoredItemCount()));
     }
 
     @Override
@@ -114,7 +119,8 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
             return getEnergyStored(container) >= maxExtract ? maxExtract : getEnergyStored(container);
         } else {
             return (int) PowerUnits.AE.convertTo(
-                    PowerUnits.RF, extractAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract)));
+                    PowerUnits.RF,
+                    extractAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract)));
         }
     }
 
@@ -183,22 +189,15 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
         if (stack == null) return super.getItemStackDisplayName(stack);
         if (stack.getItemDamage() == 4) {
             try {
-                IItemList list = AEApi.instance()
-                        .registries()
-                        .cell()
+                IItemList list = AEApi.instance().registries().cell()
                         .getCellInventory(stack, null, StorageChannel.ITEMS)
                         .getAvailableItems(AEApi.instance().storage().createItemList());
-                if (list.isEmpty())
-                    return super.getItemStackDisplayName(stack)
-                            + " - "
-                            + StatCollector.translateToLocal("extracells.tooltip.empty1");
+                if (list.isEmpty()) return super.getItemStackDisplayName(stack) + " - "
+                        + StatCollector.translateToLocal("extracells.tooltip.empty1");
                 IAEItemStack s = (IAEItemStack) list.getFirstItem();
-                return super.getItemStackDisplayName(stack) + " - "
-                        + s.getItemStack().getDisplayName();
-            } catch (Throwable e) {
-            }
-            return super.getItemStackDisplayName(stack)
-                    + " - "
+                return super.getItemStackDisplayName(stack) + " - " + s.getItemStack().getDisplayName();
+            } catch (Throwable e) {}
+            return super.getItemStackDisplayName(stack) + " - "
                     + StatCollector.translateToLocal("extracells.tooltip.empty1");
         }
         return super.getItemStackDisplayName(stack);
@@ -270,7 +269,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
         return true;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         if (itemStack == null) return itemStack;
@@ -279,26 +278,26 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                 switch (itemStack.getTagCompound().getInteger("mode")) {
                     case 0:
                         itemStack.getTagCompound().setInteger("mode", 1);
-                        entityPlayer.addChatMessage(
-                                new ChatComponentTranslation("extracells.tooltip.storage.container.1"));
+                        entityPlayer
+                                .addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.1"));
                         break;
                     case 1:
                         itemStack.getTagCompound().setInteger("mode", 2);
-                        entityPlayer.addChatMessage(
-                                new ChatComponentTranslation("extracells.tooltip.storage.container.2"));
+                        entityPlayer
+                                .addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.2"));
                         break;
                     case 2:
                         itemStack.getTagCompound().setInteger("mode", 0);
-                        entityPlayer.addChatMessage(
-                                new ChatComponentTranslation("extracells.tooltip.storage.container.0"));
+                        entityPlayer
+                                .addChatMessage(new ChatComponentTranslation("extracells.tooltip.storage.container.0"));
                         break;
                 }
             }
             return itemStack;
         }
         if (!entityPlayer.isSneaking()) return itemStack;
-        IMEInventoryHandler<IAEItemStack> invHandler =
-                AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.ITEMS);
+        IMEInventoryHandler<IAEItemStack> invHandler = AEApi.instance().registries().cell()
+                .getCellInventory(itemStack, null, StorageChannel.ITEMS);
         ICellInventoryHandler inventoryHandler = (ICellInventoryHandler) invHandler;
         ICellInventory cellInv = inventoryHandler.getCellInv();
         if (cellInv.getUsedBytes() == 0
@@ -308,24 +307,13 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
     }
 
     @Override
-    public boolean onItemUse(
-            ItemStack itemstack,
-            EntityPlayer player,
-            World world,
-            int x,
-            int y,
-            int z,
-            int side,
-            float xOffset,
-            float yOffset,
-            float zOffset) {
+    public boolean onItemUse(ItemStack itemstack, EntityPlayer player, World world, int x, int y, int z, int side,
+            float xOffset, float yOffset, float zOffset) {
         if (itemstack == null || player == null) return false;
         if (itemstack.getItemDamage() == 4 && !player.isSneaking()) {
             double power = getAECurrentPower(itemstack);
             ForgeDirection face = ForgeDirection.getOrientation(side);
-            IItemList list = AEApi.instance()
-                    .registries()
-                    .cell()
+            IItemList list = AEApi.instance().registries().cell()
                     .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                     .getAvailableItems(AEApi.instance().storage().createItemList());
             if (list.isEmpty()) return false;
@@ -366,9 +354,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                             xOffset,
                                             yOffset,
                                             zOffset);
-                                    AEApi.instance()
-                                            .registries()
-                                            .cell()
+                                    AEApi.instance().registries().cell()
                                             .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                                             .extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
                                     extractAEPower(player.getCurrentEquippedItem(), 20.0D);
@@ -387,9 +373,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                             xOffset,
                                             yOffset,
                                             zOffset);
-                                    AEApi.instance()
-                                            .registries()
-                                            .cell()
+                                    AEApi.instance().registries().cell()
                                             .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                                             .extractItems(request, Actionable.MODULATE, new PlayerSource(player, null));
                                     break;
@@ -402,7 +386,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                     for (int posZ = z - 1; posZ < z + 2; posZ++) {
                                                         if (world.getBlock(posX, y, posZ) != Blocks.bedrock
                                                                 && world.getBlock(posX, y, posZ)
-                                                                                .getBlockHardness(world, posX, y, posZ)
+                                                                        .getBlockHardness(world, posX, y, posZ)
                                                                         >= 0.0F) {
                                                             world.func_147480_a(posX, y, posZ, true);
                                                             placeBlock(
@@ -419,9 +403,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                         }
                                                     }
                                                 }
-                                                AEApi.instance()
-                                                        .registries()
-                                                        .cell()
+                                                AEApi.instance().registries().cell()
                                                         .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                                                         .extractItems(
                                                                 request,
@@ -433,7 +415,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                     for (int posY = y - 1; posY < y + 2; posY++) {
                                                         if (world.getBlock(x, posY, posZ) != Blocks.bedrock
                                                                 && world.getBlock(x, posY, posZ)
-                                                                                .getBlockHardness(world, x, posY, posZ)
+                                                                        .getBlockHardness(world, x, posY, posZ)
                                                                         >= 0.0F) {
                                                             world.func_147480_a(x, posY, posZ, true);
                                                             placeBlock(
@@ -450,9 +432,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                         }
                                                     }
                                                 }
-                                                AEApi.instance()
-                                                        .registries()
-                                                        .cell()
+                                                AEApi.instance().registries().cell()
                                                         .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                                                         .extractItems(
                                                                 request,
@@ -464,7 +444,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                     for (int posY = y - 1; posY < y + 2; posY++) {
                                                         if (world.getBlock(posX, posY, z) != Blocks.bedrock
                                                                 && world.getBlock(posX, posY, z)
-                                                                                .getBlockHardness(world, posX, posY, z)
+                                                                        .getBlockHardness(world, posX, posY, z)
                                                                         >= 0.0F) {
                                                             world.func_147480_a(posX, posY, z, true);
                                                             placeBlock(
@@ -481,9 +461,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                         }
                                                     }
                                                 }
-                                                AEApi.instance()
-                                                        .registries()
-                                                        .cell()
+                                                AEApi.instance().registries().cell()
                                                         .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                                                         .extractItems(
                                                                 request,
@@ -495,7 +473,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                     for (int posY = y - 1; posY < y + 2; posY++) {
                                                         if (world.getBlock(posX, posY, z) != Blocks.bedrock
                                                                 && world.getBlock(posX, posY, z)
-                                                                                .getBlockHardness(world, posX, posY, z)
+                                                                        .getBlockHardness(world, posX, posY, z)
                                                                         >= 0.0F) {
                                                             world.func_147480_a(posX, posY, z, true);
                                                             placeBlock(
@@ -512,9 +490,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                         }
                                                     }
                                                 }
-                                                AEApi.instance()
-                                                        .registries()
-                                                        .cell()
+                                                AEApi.instance().registries().cell()
                                                         .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                                                         .extractItems(
                                                                 request,
@@ -528,7 +504,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                     for (int posZ = z - 1; posZ < z + 2; posZ++) {
                                                         if (world.getBlock(posX, y, posZ) != Blocks.bedrock
                                                                 && world.getBlock(posX, y, posZ)
-                                                                                .getBlockHardness(world, posX, y, posZ)
+                                                                        .getBlockHardness(world, posX, y, posZ)
                                                                         >= 0.0F) {
                                                             world.func_147480_a(posX, y, posZ, true);
                                                             placeBlock(
@@ -545,9 +521,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                         }
                                                     }
                                                 }
-                                                AEApi.instance()
-                                                        .registries()
-                                                        .cell()
+                                                AEApi.instance().registries().cell()
                                                         .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                                                         .extractItems(
                                                                 request,
@@ -559,7 +533,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                     for (int posY = y - 1; posY < y + 2; posY++) {
                                                         if (world.getBlock(x, posY, posZ) != Blocks.bedrock
                                                                 && world.getBlock(x, posY, posZ)
-                                                                                .getBlockHardness(world, x, posY, posZ)
+                                                                        .getBlockHardness(world, x, posY, posZ)
                                                                         >= 0.0F) {
                                                             world.func_147480_a(x, posY, posZ, true);
                                                             placeBlock(
@@ -576,9 +550,7 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
                                                         }
                                                     }
                                                 }
-                                                AEApi.instance()
-                                                        .registries()
-                                                        .cell()
+                                                AEApi.instance().registries().cell()
                                                         .getCellInventory(itemstack, null, StorageChannel.ITEMS)
                                                         .extractItems(
                                                                 request,
@@ -609,17 +581,8 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
         }
     }
 
-    public void placeBlock(
-            ItemStack itemstack,
-            World world,
-            EntityPlayer player,
-            int x,
-            int y,
-            int z,
-            int side,
-            float xOffset,
-            float yOffset,
-            float zOffset) {
+    public void placeBlock(ItemStack itemstack, World world, EntityPlayer player, int x, int y, int z, int side,
+            float xOffset, float yOffset, float zOffset) {
         extractAEPower(player.getCurrentEquippedItem(), 20.0D);
         ItemBlock itemblock = (ItemBlock) itemstack.getItem();
         switch (ForgeDirection.getOrientation(side)) {
@@ -665,7 +628,8 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
             else return (int) (max - current);
         } else {
             int notStored = (int) PowerUnits.AE.convertTo(
-                    PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)));
+                    PowerUnits.RF,
+                    injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)));
             return maxReceive - notStored;
         }
     }

@@ -1,5 +1,11 @@
 package extracells.proxy;
 
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import extracells.registries.BlockEnum;
@@ -12,11 +18,6 @@ import extracells.render.item.ItemRendererFluidPattern;
 import extracells.render.item.ItemRendererWalrus;
 import extracells.render.tileentity.TileEntityRendererWalrus;
 import extracells.tileentity.TileEntityWalrus;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 @SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
@@ -29,10 +30,11 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerRenderers() {
         MinecraftForgeClient.registerItemRenderer(
-                Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()), new ItemRendererCertusTank());
+                Item.getItemFromBlock(BlockEnum.CERTUSTANK.getBlock()),
+                new ItemRendererCertusTank());
         MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDPATTERN.getItem(), new ItemRendererFluidPattern());
-        MinecraftForgeClient.registerItemRenderer(
-                Item.getItemFromBlock(BlockEnum.WALRUS.getBlock()), new ItemRendererWalrus());
+        MinecraftForgeClient
+                .registerItemRenderer(Item.getItemFromBlock(BlockEnum.WALRUS.getBlock()), new ItemRendererWalrus());
         MinecraftForgeClient.registerItemRenderer(ItemEnum.FLUIDITEM.getItem(), new ItemRendererFluid());
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWalrus.class, new TileEntityRendererWalrus());

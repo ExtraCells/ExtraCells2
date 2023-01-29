@@ -7,15 +7,23 @@ import mekanism.api.gas.GasTank
 import net.minecraft.client.renderer.RenderBlocks
 import net.minecraftforge.common.util.ForgeDirection
 
-
-class PartGasInterface extends PartECBase with GasInterfaceBase{
+class PartGasInterface extends PartECBase with GasInterfaceBase {
   var fluidFilter = -1
 
   override def cableConnectionRenderTo(): Int = ???
 
-  override def renderStatic(x: Int, y: Int, z: Int, rh: IPartRenderHelper, renderer: RenderBlocks): Unit = ???
+  override def renderStatic(
+      x: Int,
+      y: Int,
+      z: Int,
+      rh: IPartRenderHelper,
+      renderer: RenderBlocks
+  ): Unit = ???
 
-  override def renderInventory(rh: IPartRenderHelper, renderer: RenderBlocks): Unit = ???
+  override def renderInventory(
+      rh: IPartRenderHelper,
+      renderer: RenderBlocks
+  ): Unit = ???
 
   override def getBoxes(bch: IPartCollisionHelper): Unit = ???
 
@@ -24,5 +32,6 @@ class PartGasInterface extends PartECBase with GasInterfaceBase{
 
   override def getFilter(side: ForgeDirection): Int = fluidFilter
 
-  override def setFilter(side: ForgeDirection, fluid: Int): Unit = fluidFilter = fluid
+  override def setFilter(side: ForgeDirection, fluid: Int): Unit = fluidFilter =
+    fluid
 }

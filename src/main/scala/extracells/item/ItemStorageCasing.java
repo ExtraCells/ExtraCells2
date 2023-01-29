@@ -1,8 +1,7 @@
 package extracells.item;
 
-import extracells.Extracells;
-import extracells.integration.Integration;
 import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -10,10 +9,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 
+import extracells.Extracells;
+import extracells.integration.Integration;
+
 public class ItemStorageCasing extends ItemECBase {
 
     private IIcon[] icons;
-    public final String[] suffixes = {"physical", "fluid", "gas"};
+    public final String[] suffixes = { "physical", "fluid", "gas" };
 
     public ItemStorageCasing() {
         setMaxDamage(0);
@@ -27,7 +29,7 @@ public class ItemStorageCasing extends ItemECBase {
         return this.icons[j];
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void getSubItems(Item item, CreativeTabs creativeTab, List itemList) {
         for (int j = 0; j < this.suffixes.length; ++j) {

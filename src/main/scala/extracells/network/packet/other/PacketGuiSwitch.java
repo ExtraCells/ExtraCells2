@@ -1,8 +1,9 @@
 package extracells.network.packet.other;
 
+import net.minecraft.tileentity.TileEntity;
+
 import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.tileentity.TileEntity;
 
 public class PacketGuiSwitch extends AbstractPacket {
 

@@ -15,7 +15,12 @@ import net.minecraft.network.{NetworkManager, Packet}
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids._
 
-class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with IFluidHandler with IActionHost with TPowerStorage {
+class TileEntityVibrationChamberFluid
+    extends TileBase
+    with IECTileEntity
+    with IFluidHandler
+    with IActionHost
+    with TPowerStorage {
   private[tileentity] var isFirstGridNode: Boolean = true
   private final val gridBlock = new ECGridBlockVibrantChamber(this)
   private[tileentity] var node: IGridNode = null
@@ -29,8 +34,7 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
       if (!nbt.hasKey("Empty")) {
         val fluid: FluidStack = FluidStack.loadFluidStackFromNBT(nbt)
         setFluid(fluid)
-      }
-      else {
+      } else {
         setFluid(null)
       }
       return this
@@ -48,7 +52,8 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
         worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
         val fluidStack: FluidStack = tank.getFluid
         var bTime: Int = 0
-        if (fluidStack != null) bTime = FuelBurnTime.getBurnTime(fluidStack.getFluid)
+        if (fluidStack != null)
+          bTime = FuelBurnTime.getBurnTime(fluidStack.getFluid)
         else bTime = 0
         if (fluidStack != null && bTime > 0) {
           if (tank.getFluid.amount >= 250) {
@@ -60,25 +65,23 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
           }
         }
         timer = 0
-      }
-      else {
+      } else {
         timer += 1
       }
-    }
-    else {
+    } else {
       burnTime += 1
       if (timerEnergy == 4) {
         if (energyLeft == 0) {
-          val energy: IEnergyGrid = getGridNode(ForgeDirection.UNKNOWN).getGrid.getCache(classOf[IEnergyGrid])
-          energyLeft = energy.injectPower(24.0D, Actionable.MODULATE)
-        }
-        else {
-          val energy: IEnergyGrid = getGridNode(ForgeDirection.UNKNOWN).getGrid.getCache(classOf[IEnergyGrid])
+          val energy: IEnergyGrid = getGridNode(ForgeDirection.UNKNOWN).getGrid
+            .getCache(classOf[IEnergyGrid])
+          energyLeft = energy.injectPower(24.0d, Actionable.MODULATE)
+        } else {
+          val energy: IEnergyGrid = getGridNode(ForgeDirection.UNKNOWN).getGrid
+            .getCache(classOf[IEnergyGrid])
           energyLeft = energy.injectPower(energyLeft, Actionable.MODULATE)
         }
         timerEnergy = 0
-      }
-      else {
+      } else {
         timerEnergy += 1
       }
     }
@@ -99,8 +102,7 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
 
   override def getLocation: DimensionalCoord = new DimensionalCoord(this)
 
-  override def getPowerUsage = 0.0D
-
+  override def getPowerUsage = 0.0d
 
   override def getGridNode(forgeDirection: ForgeDirection): IGridNode = {
     if (isFirstGridNode && hasWorldObj && !getWorldObj.isRemote) {
@@ -108,8 +110,7 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
       try {
         node = AEApi.instance.createGridNode(gridBlock)
         node.updateState
-      }
-      catch {
+      } catch {
         case e: Exception => {
           isFirstGridNode = true
         }
@@ -118,13 +119,12 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
     node
   }
 
-  def getGridNodeWithoutUpdate: IGridNode ={
+  def getGridNodeWithoutUpdate: IGridNode = {
     if (isFirstGridNode && hasWorldObj && !getWorldObj.isRemote) {
       isFirstGridNode = false
       try {
         node = AEApi.instance.createGridNode(gridBlock)
-      }
-      catch {
+      } catch {
         case e: Exception => {
           isFirstGridNode = true
         }
@@ -133,22 +133,38 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
     node
   }
 
-  override def getCableConnectionType(forgeDirection: ForgeDirection) = AECableType.SMART
+  override def getCableConnectionType(forgeDirection: ForgeDirection) =
+    AECableType.SMART
 
   override def securityBreak {}
 
-  override def fill(from: ForgeDirection, resource: FluidStack, doFill: Boolean): Int = {
-    if (resource == null || resource.getFluid == null || FuelBurnTime.getBurnTime(resource.getFluid) == 0) return 0
+  override def fill(
+      from: ForgeDirection,
+      resource: FluidStack,
+      doFill: Boolean
+  ): Int = {
+    if (
+      resource == null || resource.getFluid == null || FuelBurnTime.getBurnTime(
+        resource.getFluid
+      ) == 0
+    ) return 0
     val filled: Int = tank.fill(resource, doFill)
-    if (filled != 0 && hasWorldObj) getWorldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
+    if (filled != 0 && hasWorldObj)
+      getWorldObj.markBlockForUpdate(xCoord, yCoord, zCoord)
     filled
   }
 
-  override def drain(from: ForgeDirection, resource: FluidStack, doDrain: Boolean): FluidStack = null
+  override def drain(
+      from: ForgeDirection,
+      resource: FluidStack,
+      doDrain: Boolean
+  ): FluidStack = null
 
-
-  override def drain(from: ForgeDirection, maxDrain: Int, doDrain: Boolean): FluidStack = null
-
+  override def drain(
+      from: ForgeDirection,
+      maxDrain: Int,
+      doDrain: Boolean
+  ): FluidStack = null
 
   override def canFill(from: ForgeDirection, fluid: Fluid): Boolean = {
     if (fluid == null || FuelBurnTime.getBurnTime(fluid) == 0) return false
@@ -157,11 +173,10 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
 
   override def canDrain(from: ForgeDirection, fluid: Fluid): Boolean = false
 
-  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] = Array[FluidTankInfo](tank.getInfo)
-
+  override def getTankInfo(from: ForgeDirection): Array[FluidTankInfo] =
+    Array[FluidTankInfo](tank.getInfo)
 
   def getTank: FluidTank = tank
-
 
   override def writeToNBT(nbt: NBTTagCompound) {
     super.writeToNBT(nbt)
@@ -178,13 +193,14 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
     super.readFromNBT(nbt)
     readPowerFromNBT(nbt)
     if (nbt.hasKey("BurnTime")) this.burnTime = nbt.getInteger("BurnTime")
-    if (nbt.hasKey("BurnTimeTotal")) this.burnTimeTotal = nbt.getInteger("BurnTimeTotal")
+    if (nbt.hasKey("BurnTimeTotal"))
+      this.burnTimeTotal = nbt.getInteger("BurnTimeTotal")
     if (nbt.hasKey("timer")) this.timer = nbt.getInteger("timer")
-    if (nbt.hasKey("timerEnergy")) this.timerEnergy = nbt.getInteger("timerEnergy")
+    if (nbt.hasKey("timerEnergy"))
+      this.timerEnergy = nbt.getInteger("timerEnergy")
     if (nbt.hasKey("energyLeft")) this.energyLeft = nbt.getDouble("energyLeft")
     tank.readFromNBT(nbt)
   }
-
 
   def getBurntTimeScaled(scal: Int): Int = {
     return if (burnTime != 0) burnTime * scal / burnTimeTotal else 0
@@ -197,10 +213,19 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
   override def getDescriptionPacket: Packet = {
     val nbtTag: NBTTagCompound = new NBTTagCompound
     writeToNBT(nbtTag)
-    return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, this.getBlockMetadata, nbtTag)
+    return new S35PacketUpdateTileEntity(
+      this.xCoord,
+      this.yCoord,
+      this.zCoord,
+      this.getBlockMetadata,
+      nbtTag
+    )
   }
 
-  override def onDataPacket(net: NetworkManager, pkt: S35PacketUpdateTileEntity) {
+  override def onDataPacket(
+      net: NetworkManager,
+      pkt: S35PacketUpdateTileEntity
+  ) {
     readFromNBT(pkt.func_148857_g)
   }
 
@@ -212,4 +237,3 @@ class TileEntityVibrationChamberFluid extends TileBase with IECTileEntity with I
     return burnTimeTotal
   }
 }
-

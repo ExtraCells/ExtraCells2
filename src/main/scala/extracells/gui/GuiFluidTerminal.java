@@ -1,5 +1,20 @@
 package extracells.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.Extracells;
 import extracells.api.ECApi;
@@ -12,18 +27,6 @@ import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 import extracells.util.FluidUtil;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui {
 
@@ -60,8 +63,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         this.fontRendererObj.drawString(
-                StatCollector.translateToLocal("extracells.part.fluid.terminal.name")
-                        .replace("ME ", ""),
+                StatCollector.translateToLocal("extracells.part.fluid.terminal.name").replace("ME ", ""),
                 9,
                 6,
                 0x000000);
@@ -101,8 +103,7 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         }
         int listSize = this.getCache().size();
         if (!this.containerTerminalFluid.getFluidStackList().isEmpty()) {
-            outerLoop:
-            for (int y = 0; y < 4; y++) {
+            outerLoop: for (int y = 0; y < 4; y++) {
                 for (int x = 0; x < 9; x++) {
                     int widgetIndex = y * 9 + x + this.currentScroll * 9;
                     if (0 <= widgetIndex && widgetIndex < listSize) {
@@ -183,8 +184,9 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
 
             @Override
             public void mouseClicked(int x, int y, int mouseBtn) {
-                boolean flag =
-                        x >= this.xPos && x < this.xPos + this.width && y >= this.yPos && y < this.yPos + this.height;
+                boolean flag = x >= this.xPos && x < this.xPos + this.width
+                        && y >= this.yPos
+                        && y < this.yPos + this.height;
                 if (flag && mouseBtn == 3) setText("");
             }
         };
@@ -225,11 +227,8 @@ public class GuiFluidTerminal extends GuiContainer implements IFluidSelectorGui 
         }
         this.fluidWidgets = new ArrayList<AbstractFluidWidget>();
         for (IAEFluidStack fluidStack : this.containerTerminalFluid.getFluidStackList()) {
-            if (fluidStack
-                            .getFluid()
-                            .getLocalizedName(fluidStack.getFluidStack())
-                            .toLowerCase()
-                            .contains(this.searchbar.getText().toLowerCase())
+            if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase()
+                    .contains(this.searchbar.getText().toLowerCase())
                     && ECApi.instance().canFluidSeeInTerminal(fluidStack.getFluid())) {
                 this.fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
             }

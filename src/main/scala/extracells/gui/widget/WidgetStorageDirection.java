@@ -1,10 +1,9 @@
 package extracells.gui.widget;
 
-import appeng.api.config.AccessRestriction;
-import com.google.common.base.Splitter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -12,8 +11,13 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import appeng.api.config.AccessRestriction;
+
+import com.google.common.base.Splitter;
 
 public class WidgetStorageDirection extends GuiButton {
 
@@ -29,8 +33,7 @@ public class WidgetStorageDirection extends GuiButton {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mouseDragged(minecraftInstance, x, y);
 
-        minecraftInstance
-                .getTextureManager()
+        minecraftInstance.getTextureManager()
                 .bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
         drawTexturedModalRect(this.xPosition, this.yPosition, 240, 240, 16, 16);
 
@@ -139,8 +142,7 @@ public class WidgetStorageDirection extends GuiButton {
 
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (mouseX >= this.xPosition
-                && mouseX <= this.xPosition + this.width
+        if (mouseX >= this.xPosition && mouseX <= this.xPosition + this.width
                 && mouseY >= this.yPosition
                 && mouseY <= this.yPosition + this.height) {
             drawHoveringText(description, mouseX - guiXPos, mouseY - guiYPos, mc.fontRenderer);

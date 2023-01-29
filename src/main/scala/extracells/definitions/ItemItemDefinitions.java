@@ -1,10 +1,12 @@
 package extracells.definitions;
 
-import appeng.api.definitions.IItemDefinition;
-import com.google.common.base.Optional;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
+
+import appeng.api.definitions.IItemDefinition;
+
+import com.google.common.base.Optional;
 
 public class ItemItemDefinitions implements IItemDefinition {
 
@@ -37,8 +39,7 @@ public class ItemItemDefinitions implements IItemDefinition {
 
     @Override
     public boolean isSameAs(ItemStack comparableStack) {
-        return comparableStack != null
-                && comparableStack.isItemEqual(maybeStack(1).get());
+        return comparableStack != null && comparableStack.isItemEqual(maybeStack(1).get());
     }
 
     @Override

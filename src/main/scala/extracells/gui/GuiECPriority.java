@@ -1,5 +1,12 @@
 package extracells.gui;
 
+import java.io.IOException;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiNumberBox;
 import appeng.client.gui.widgets.GuiTabButton;
@@ -15,11 +22,6 @@ import extracells.network.packet.other.PacketGuiSwitch;
 import extracells.part.PartFluidStorage;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
-import java.io.IOException;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 
 public class GuiECPriority extends AEBaseGui {
 
@@ -74,7 +76,11 @@ public class GuiECPriority extends AEBaseGui {
         if (this.OriginalGui != -1 && myIcon != null) {
             this.buttonList.add(
                     this.originalGuiBtn = new GuiTabButton(
-                            this.guiLeft + 154, this.guiTop, myIcon, myIcon.getDisplayName(), itemRender));
+                            this.guiLeft + 154,
+                            this.guiTop,
+                            myIcon,
+                            myIcon.getDisplayName(),
+                            itemRender));
         }
 
         this.priority = new GuiNumberBox(
@@ -114,8 +120,9 @@ public class GuiECPriority extends AEBaseGui {
         }
 
         final boolean isPlus = btn == this.plus1 || btn == this.plus10 || btn == this.plus100 || btn == this.plus1000;
-        final boolean isMinus =
-                btn == this.minus1 || btn == this.minus10 || btn == this.minus100 || btn == this.minus1000;
+        final boolean isMinus = btn == this.minus1 || btn == this.minus10
+                || btn == this.minus100
+                || btn == this.minus1000;
 
         if (isPlus || isMinus) {
             this.addQty(this.getQty(btn));
@@ -157,13 +164,11 @@ public class GuiECPriority extends AEBaseGui {
     @Override
     protected void keyTyped(final char character, final int key) {
         if (!this.checkHotbarKeys(key)) {
-            if ((key == 211
-                            || key == 205
-                            || key == 203
-                            || key == 14
-                            || character == '-'
-                            || Character.isDigit(character))
-                    && this.priority.textboxKeyTyped(character, key)) {
+            if ((key == 211 || key == 205
+                    || key == 203
+                    || key == 14
+                    || character == '-'
+                    || Character.isDigit(character)) && this.priority.textboxKeyTyped(character, key)) {
                 try {
                     String out = this.priority.getText();
 

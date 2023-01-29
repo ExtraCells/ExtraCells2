@@ -1,9 +1,7 @@
 package extracells.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.tileentity.TileEntityCertusTank;
 import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -14,6 +12,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.tileentity.TileEntityCertusTank;
+
 public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerItem {
 
     private final int capacity = 32000;
@@ -22,21 +24,20 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
         super(block);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
         if (stack != null && stack.hasTagCompound()) {
-            if (FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tileEntity")) != null)
-                list.add(FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tileEntity")).amount
-                        + "mB");
+            if (FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tileEntity")) != null) list.add(
+                    FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tileEntity")).amount
+                            + "mB");
         }
     }
 
     @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
-        if (container.stackSize != 1
-                || container.stackTagCompound == null
+        if (container.stackSize != 1 || container.stackTagCompound == null
                 || !container.stackTagCompound.hasKey("tileEntity")
                 || container.stackTagCompound.getCompoundTag("tileEntity").hasKey("Empty")) {
             return null;
@@ -77,8 +78,8 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
                 return Math.min(this.capacity, resource.amount);
             }
 
-            FluidStack stack =
-                    FluidStack.loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("tileEntity"));
+            FluidStack stack = FluidStack
+                    .loadFluidStackFromNBT(container.stackTagCompound.getCompoundTag("tileEntity"));
 
             if (stack == null) {
                 return Math.min(this.capacity, resource.amount);
@@ -146,16 +147,14 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
         if (itemstack != null) {
             if (itemstack.hasTagCompound()) {
                 try {
-                    FluidStack fluidInTank = FluidStack.loadFluidStackFromNBT(
-                            itemstack.getTagCompound().getCompoundTag("tileEntity"));
+                    FluidStack fluidInTank = FluidStack
+                            .loadFluidStackFromNBT(itemstack.getTagCompound().getCompoundTag("tileEntity"));
 
                     if (fluidInTank != null && fluidInTank.getFluid() != null) {
-                        return StatCollector.translateToLocal(getUnlocalizedName(itemstack))
-                                + " - "
+                        return StatCollector.translateToLocal(getUnlocalizedName(itemstack)) + " - "
                                 + fluidInTank.getFluid().getLocalizedName(fluidInTank);
                     }
-                } catch (Throwable ignored) {
-                }
+                } catch (Throwable ignored) {}
             }
             return StatCollector.translateToLocal(getUnlocalizedName(itemstack));
         }
@@ -163,18 +162,8 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
     }
 
     @Override
-    public boolean placeBlockAt(
-            ItemStack stack,
-            EntityPlayer player,
-            World world,
-            int x,
-            int y,
-            int z,
-            int side,
-            float hitX,
-            float hitY,
-            float hitZ,
-            int metadata) {
+    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+            float hitX, float hitY, float hitZ, int metadata) {
         if (!world.setBlock(x, y, z, this.field_150939_a, metadata, 3)) {
             return false;
         }

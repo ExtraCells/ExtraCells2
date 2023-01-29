@@ -11,11 +11,26 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraftforge.common.util.ForgeDirection
 import net.minecraftforge.fluids.Fluid
 
-@InterfaceList(Array(
-  new Interface(iface = "mekanism.api.gas.IGasHandler", modid = "MekanismAPI|gas", striprefs = true),
-  new Interface(iface = "mekanism.api.gas.ITubeConnection", modid = "MekanismAPI|gas", striprefs = true)
-))
-trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChannelState with IActionHost with IFluidSlotPartOrBlock{
+@InterfaceList(
+  Array(
+    new Interface(
+      iface = "mekanism.api.gas.IGasHandler",
+      modid = "MekanismAPI|gas",
+      striprefs = true
+    ),
+    new Interface(
+      iface = "mekanism.api.gas.ITubeConnection",
+      modid = "MekanismAPI|gas",
+      striprefs = true
+    )
+  )
+)
+trait GasInterfaceBase
+    extends IGasHandler
+    with ITubeConnection
+    with IPowerChannelState
+    with IActionHost
+    with IFluidSlotPartOrBlock {
 
   val isMekanismLoaded = MEKANISM.isEnabled
 
@@ -23,30 +38,42 @@ trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChann
   def getGasTank(side: ForgeDirection): GasTank
 
   @Method(modid = "MekanismAPI|gas")
-  override def receiveGas(side: ForgeDirection, stack: GasStack, doTransfer: Boolean): Int = getGasTank(side).receive(stack, doTransfer)
+  override def receiveGas(
+      side: ForgeDirection,
+      stack: GasStack,
+      doTransfer: Boolean
+  ): Int = getGasTank(side).receive(stack, doTransfer)
 
   @Method(modid = "MekanismAPI|gas")
-  override def drawGas(side: ForgeDirection, amount: Int, doTransfer: Boolean): GasStack = getGasTank(side).draw(amount, doTransfer)
+  override def drawGas(
+      side: ForgeDirection,
+      amount: Int,
+      doTransfer: Boolean
+  ): GasStack = getGasTank(side).draw(amount, doTransfer)
 
   @Method(modid = "MekanismAPI|gas")
-  override def drawGas(side: ForgeDirection, amount: Int): GasStack = drawGas(side, amount, true)
+  override def drawGas(side: ForgeDirection, amount: Int): GasStack =
+    drawGas(side, amount, true)
 
   @Method(modid = "MekanismAPI|gas")
-  override def canDrawGas(side: ForgeDirection, gas: Gas): Boolean = getGasTank(side).canDraw(gas)
+  override def canDrawGas(side: ForgeDirection, gas: Gas): Boolean =
+    getGasTank(side).canDraw(gas)
 
   @Method(modid = "MekanismAPI|gas")
-  override def receiveGas(side: ForgeDirection, stack: GasStack): Int = receiveGas(side, stack, true)
+  override def receiveGas(side: ForgeDirection, stack: GasStack): Int =
+    receiveGas(side, stack, true)
 
   @Method(modid = "MekanismAPI|gas")
-  override def canReceiveGas(side: ForgeDirection, gas: Gas): Boolean = (!hasFilter(side)) && getGasTank(side).canReceive(gas)
+  override def canReceiveGas(side: ForgeDirection, gas: Gas): Boolean =
+    (!hasFilter(side)) && getGasTank(side).canReceive(gas)
 
   @Method(modid = "MekanismAPI|gas")
   override def canTubeConnect(side: ForgeDirection): Boolean = isMekanismLoaded
 
   def getFilter(side: ForgeDirection): Int
 
-  def setFilter(side: ForgeDirection, fluid: Fluid): Unit ={
-    if(fluid == null)
+  def setFilter(side: ForgeDirection, fluid: Fluid): Unit = {
+    if (fluid == null)
       setFilter(side, -1)
     else
       setFilter(side, fluid.getID)
@@ -57,21 +84,25 @@ trait GasInterfaceBase extends IGasHandler with ITubeConnection with IPowerChann
   def hasFilter(side: ForgeDirection) = getFilter(side) != -1
 
   @Method(modid = "MekanismAPI|gas")
-  def exportGas(side: ForgeDirection, gas: GasStack, pos: DimensionalCoord): Int = {
+  def exportGas(
+      side: ForgeDirection,
+      gas: GasStack,
+      pos: DimensionalCoord
+  ): Int = {
     val tank = getGasTank(side)
     val x = pos.x + side.offsetX
     val y = pos.y + side.offsetY
     val z = pos.z + side.offsetZ
     val world = pos.getWorld
-    if(world == null)
+    if (world == null)
       return 0
     val tile = world.getTileEntity(x, y, z)
-    if(tile == null)
+    if (tile == null)
       return 0
-    if(!tile.isInstanceOf[IGasHandler])
+    if (!tile.isInstanceOf[IGasHandler])
       return 0
     val gasHandler = tile.asInstanceOf[IGasHandler]
-    if(gasHandler.canReceiveGas(side.getOpposite, gas.getGas))
+    if (gasHandler.canReceiveGas(side.getOpposite, gas.getGas))
       gasHandler.receiveGas(side.getOpposite, gas, true)
     else
       0

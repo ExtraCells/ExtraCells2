@@ -1,5 +1,12 @@
 package extracells.network;
 
+import java.util.EnumMap;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.Packet;
+import net.minecraft.world.World;
+
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -12,11 +19,6 @@ import extracells.network.packet.other.PacketFluidContainerSlot;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.other.PacketGuiSwitch;
 import extracells.network.packet.part.*;
-import java.util.EnumMap;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.Packet;
-import net.minecraft.world.World;
 
 public class ChannelHandler {
 

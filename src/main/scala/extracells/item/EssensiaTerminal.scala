@@ -5,11 +5,16 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import thaumicenergistics.api.IThEWirelessEssentiaTerminal
 
-@Optional.Interface(iface = "thaumicenergistics.api.IThEWirelessEssentiaTerminal", modid = "thaumicenergistics", striprefs = true)
-trait EssensiaTerminal extends Item with IThEWirelessEssentiaTerminal{
+@Optional.Interface(
+  iface = "thaumicenergistics.api.IThEWirelessEssentiaTerminal",
+  modid = "thaumicenergistics",
+  striprefs = true
+)
+trait EssensiaTerminal extends Item with IThEWirelessEssentiaTerminal {
 
-
-  override def getWETerminalTag(terminalItemstack: ItemStack): NBTTagCompound = {
+  override def getWETerminalTag(
+      terminalItemstack: ItemStack
+  ): NBTTagCompound = {
     val tag = ensureTagCompound(terminalItemstack)
     if (!tag.hasKey("essentia"))
       tag.setTag("essentia", new NBTTagCompound)

@@ -1,5 +1,12 @@
 package extracells.network.packet.part;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -7,12 +14,6 @@ import extracells.container.ContainerFluidInterface;
 import extracells.gui.GuiFluidInterface;
 import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PacketFluidInterface extends AbstractPacket {
 
@@ -47,7 +48,8 @@ public class PacketFluidInterface extends AbstractPacket {
                 if (this.player.openContainer != null && this.player.openContainer instanceof ContainerFluidInterface) {
                     ContainerFluidInterface container = (ContainerFluidInterface) this.player.openContainer;
                     container.fluidInterface.setFilter(
-                            ForgeDirection.getOrientation(this.filterSlot), FluidRegistry.getFluid(this.fluidID));
+                            ForgeDirection.getOrientation(this.filterSlot),
+                            FluidRegistry.getFluid(this.fluidID));
                 }
                 break;
             default:

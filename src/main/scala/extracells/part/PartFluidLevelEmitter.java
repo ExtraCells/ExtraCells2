@@ -1,5 +1,20 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.Random;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
@@ -18,7 +33,9 @@ import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+
 import com.google.common.collect.Lists;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidEmitter;
@@ -29,19 +46,6 @@ import extracells.network.packet.part.PacketFluidEmitter;
 import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.Random;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPartOrBlock {
 
@@ -105,12 +109,11 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     private void notifyTargetBlock(TileEntity _tile, ForgeDirection _side) {
         // note - params are always the same
         _tile.getWorldObj().notifyBlocksOfNeighborChange(_tile.xCoord, _tile.yCoord, _tile.zCoord, Blocks.air);
-        _tile.getWorldObj()
-                .notifyBlocksOfNeighborChange(
-                        _tile.xCoord + _side.offsetX,
-                        _tile.yCoord + _side.offsetY,
-                        _tile.zCoord + _side.offsetZ,
-                        Blocks.air);
+        _tile.getWorldObj().notifyBlocksOfNeighborChange(
+                _tile.xCoord + _side.offsetX,
+                _tile.yCoord + _side.offsetY,
+                _tile.zCoord + _side.offsetZ,
+                Blocks.air);
     }
 
     @Override
@@ -122,11 +125,10 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     }
 
     @Override
-    public void onStackChange(
-            IItemList o, IAEStack fullStack, IAEStack diffStack, BaseActionSource src, StorageChannel chan) {
+    public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, BaseActionSource src,
+            StorageChannel chan) {
         long previousAmount = this.currentAmount;
-        if (chan == StorageChannel.FLUIDS
-                && diffStack != null
+        if (chan == StorageChannel.FLUIDS && diffStack != null
                 && ((IAEFluidStack) diffStack).getFluid() == this.fluid) {
             this.currentAmount = fullStack != null ? fullStack.getStackSize() : 0;
             if (Long.compare(currentAmount, wantedAmount) == Long.compare(previousAmount, wantedAmount)) {
@@ -189,8 +191,7 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
         rh.setBounds(7, 7, 11, 9, 9, 14);
         rh.renderBlock(x, y, z, renderer);
         rh.setTexture(
-                this.clientRedstoneOutput
-                        ? TextureManager.LEVEL_FRONT.getTextures()[2]
+                this.clientRedstoneOutput ? TextureManager.LEVEL_FRONT.getTextures()[2]
                         : TextureManager.LEVEL_FRONT.getTextures()[1]);
         rh.setBounds(7, 7, 14, 9, 9, 16);
         rh.renderBlock(x, y, z, renderer);

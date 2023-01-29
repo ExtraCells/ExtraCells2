@@ -1,5 +1,19 @@
 package extracells.gui;
 
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.config.RedstoneMode;
 import codechicken.nei.VisiblityData;
 import codechicken.nei.api.INEIGuiHandler;
@@ -16,17 +30,6 @@ import extracells.part.PartFluidLevelEmitter;
 import extracells.part.PartGasLevelEmitter;
 import extracells.registries.PartEnum;
 import extracells.util.GuiUtil;
-import java.util.Collections;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 @Optional.Interface(modid = "NotEnoughItems", iface = "codechicken.nei.api.INEIGuiHandler")
 public class GuiFluidEmitter extends ECGuiContainer implements IFluidSlotGui, INEIGuiHandler {
@@ -36,8 +39,9 @@ public class GuiFluidEmitter extends ECGuiContainer implements IFluidSlotGui, IN
     private DigitTextField amountField;
     private final PartFluidLevelEmitter part;
     private final EntityPlayer player;
-    private final ResourceLocation guiTexture =
-            new ResourceLocation("extracells", "textures/gui/levelemitterfluid.png");
+    private final ResourceLocation guiTexture = new ResourceLocation(
+            "extracells",
+            "textures/gui/levelemitterfluid.png");
 
     public GuiFluidEmitter(PartFluidLevelEmitter _part, EntityPlayer _player) {
         super(new ContainerFluidEmitter(_part, _player));
@@ -96,8 +100,8 @@ public class GuiFluidEmitter extends ECGuiContainer implements IFluidSlotGui, IN
     @Override
     public void drawScreen(int x, int y, float f) {
 
-        String[] buttonNames = {"-1", "-10", "-100", "+1", "+10", "+100"};
-        String[] shiftNames = {"-100", "-1000", "-10000", "+100", "+1000", "+10000"};
+        String[] buttonNames = { "-1", "-10", "-100", "+1", "+10", "+100" };
+        String[] shiftNames = { "-100", "-1000", "-10000", "+100", "+1000", "+10000" };
 
         for (int i = 0; i < this.buttonList.size(); i++) {
             if (i == 6) break;

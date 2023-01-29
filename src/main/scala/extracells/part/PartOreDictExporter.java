@@ -1,5 +1,29 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import java.util.stream.IntStream;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
+
+import org.apache.commons.lang3.StringUtils;
+
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -24,27 +48,6 @@ import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
 import extracells.render.TextureManager;
 import extracells.util.ItemUtils;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-import java.util.stream.IntStream;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.StringUtils;
 
 public class PartOreDictExporter extends PartECBase implements IGridTickable {
 
@@ -90,6 +93,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
     }
 
     private static class OreListMatcher implements Predicate<AEItemStack> {
+
         HashSet<AEItemStack> ores = new HashSet<>();
 
         public OreListMatcher(ArrayList<ItemStack> input) {
@@ -118,8 +122,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
      */
     public void updateFilter() {
         Predicate<ItemStack> matcher = null;
-        if (filter.contains("\\")
-                || filter.contains("^")
+        if (filter.contains("\\") || filter.contains("^")
                 || filter.contains("$")
                 || filter.contains("+")
                 || filter.contains("(")
@@ -128,9 +131,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
                 || filter.contains("]")) {
             final Predicate<String> test = Pattern.compile(filter).asPredicate();
             matcher = (is) -> is != null
-                    && IntStream.of(OreDictionary.getOreIDs(is))
-                            .mapToObj(OreDictionary::getOreName)
-                            .anyMatch(test);
+                    && IntStream.of(OreDictionary.getOreIDs(is)).mapToObj(OreDictionary::getOreName).anyMatch(test);
         } else if (!this.filter.trim().isEmpty()) {
             String[] filters = this.filter.split("[&|]");
             String lastFilter = null;
@@ -179,9 +180,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
     private Predicate<ItemStack> filterToItemStackPredicate(String filter) {
         final Predicate<String> test = filterToPredicate(filter);
         return (is) -> is != null
-                && IntStream.of(OreDictionary.getOreIDs(is))
-                        .mapToObj(OreDictionary::getOreName)
-                        .anyMatch(test);
+                && IntStream.of(OreDictionary.getOreIDs(is)).mapToObj(OreDictionary::getOreName).anyMatch(test);
     }
 
     /**
@@ -244,39 +243,38 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
     public IAEItemStack exportStack(IAEItemStack stack0) {
         if (this.tile == null || !this.tile.hasWorldObj() || stack0 == null) return null;
         ForgeDirection dir = getSide();
-        TileEntity tile = this.tile
-                .getWorldObj()
-                .getTileEntity(
-                        this.tile.xCoord + dir.offsetX, this.tile.yCoord + dir.offsetY, this.tile.zCoord + dir.offsetZ);
+        TileEntity tile = this.tile.getWorldObj().getTileEntity(
+                this.tile.xCoord + dir.offsetX,
+                this.tile.yCoord + dir.offsetY,
+                this.tile.zCoord + dir.offsetZ);
         if (tile == null) return null;
         IAEItemStack stack = stack0.copy();
         if (tile instanceof IInventory) {
             if (tile instanceof ISidedInventory) {
                 ISidedInventory inv = (ISidedInventory) tile;
                 for (int i : inv.getAccessibleSlotsFromSide(dir.getOpposite().ordinal())) {
-                    if (inv.canInsertItem(
-                            i, stack.getItemStack(), dir.getOpposite().ordinal())) {
+                    if (inv.canInsertItem(i, stack.getItemStack(), dir.getOpposite().ordinal())) {
                         if (inv.getStackInSlot(i) == null) {
                             inv.setInventorySlotContents(i, stack.getItemStack());
                             return stack0;
-                        } else if (ItemUtils.areItemEqualsIgnoreStackSize(
-                                inv.getStackInSlot(i), stack.getItemStack())) {
-                            int max = inv.getInventoryStackLimit();
-                            int current = inv.getStackInSlot(i).stackSize;
-                            int outStack = (int) stack.getStackSize();
-                            if (max == current) continue;
-                            ItemStack s = inv.getStackInSlot(i).copy();
-                            if (current + outStack <= max) {
-                                s.stackSize = s.stackSize + outStack;
-                                inv.setInventorySlotContents(i, s);
-                                return stack0;
-                            } else {
-                                s.stackSize = max;
-                                inv.setInventorySlotContents(i, s);
-                                stack.setStackSize(max - current);
-                                return stack;
+                        } else
+                            if (ItemUtils.areItemEqualsIgnoreStackSize(inv.getStackInSlot(i), stack.getItemStack())) {
+                                int max = inv.getInventoryStackLimit();
+                                int current = inv.getStackInSlot(i).stackSize;
+                                int outStack = (int) stack.getStackSize();
+                                if (max == current) continue;
+                                ItemStack s = inv.getStackInSlot(i).copy();
+                                if (current + outStack <= max) {
+                                    s.stackSize = s.stackSize + outStack;
+                                    inv.setInventorySlotContents(i, s);
+                                    return stack0;
+                                } else {
+                                    s.stackSize = max;
+                                    inv.setInventorySlotContents(i, s);
+                                    stack.setStackSize(max - current);
+                                    return stack;
+                                }
                             }
-                        }
                     }
                 }
             } else {
@@ -286,24 +284,24 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
                         if (inv.getStackInSlot(i) == null) {
                             inv.setInventorySlotContents(i, stack.getItemStack());
                             return stack0;
-                        } else if (ItemUtils.areItemEqualsIgnoreStackSize(
-                                inv.getStackInSlot(i), stack.getItemStack())) {
-                            int max = inv.getInventoryStackLimit();
-                            int current = inv.getStackInSlot(i).stackSize;
-                            int outStack = (int) stack.getStackSize();
-                            if (max == current) continue;
-                            ItemStack s = inv.getStackInSlot(i).copy();
-                            if (current + outStack <= max) {
-                                s.stackSize = s.stackSize + outStack;
-                                inv.setInventorySlotContents(i, s);
-                                return stack0;
-                            } else {
-                                s.stackSize = max;
-                                inv.setInventorySlotContents(i, s);
-                                stack.setStackSize(max - current);
-                                return stack;
+                        } else
+                            if (ItemUtils.areItemEqualsIgnoreStackSize(inv.getStackInSlot(i), stack.getItemStack())) {
+                                int max = inv.getInventoryStackLimit();
+                                int current = inv.getStackInSlot(i).stackSize;
+                                int outStack = (int) stack.getStackSize();
+                                if (max == current) continue;
+                                ItemStack s = inv.getStackInSlot(i).copy();
+                                if (current + outStack <= max) {
+                                    s.stackSize = s.stackSize + outStack;
+                                    inv.setInventorySlotContents(i, s);
+                                    return stack0;
+                                } else {
+                                    s.stackSize = max;
+                                    inv.setInventorySlotContents(i, s);
+                                    stack.setStackSize(max - current);
+                                    return stack;
+                                }
                             }
-                        }
                     }
                 }
             }
@@ -381,7 +379,7 @@ public class PartOreDictExporter extends PartECBase implements IGridTickable {
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
         if (data.hasKey("filter")) this.setFilter(data.getString("filter"));
-        //			this.filter = ;
+        // this.filter = ;
         updateFilter();
     }
 

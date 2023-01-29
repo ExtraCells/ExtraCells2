@@ -2,9 +2,10 @@ package extracells.item;
 
 import static extracells.item.ItemStoragePhysical.suffixes;
 
-import appeng.block.AEBaseItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+
+import appeng.block.AEBaseItemBlock;
 
 public class ItemCraftingStorage extends AEBaseItemBlock {
 

@@ -1,5 +1,11 @@
 package extracells.network.packet.part;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
@@ -12,11 +18,6 @@ import extracells.gui.GuiGasStorage;
 import extracells.integration.Integration;
 import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PacketFluidStorage extends AbstractPacket {
 
@@ -67,11 +68,10 @@ public class PacketFluidStorage extends AbstractPacket {
             case 1:
                 if (this.player != null && this.player.openContainer instanceof ContainerFluidStorage) {
                     ((ContainerFluidStorage) this.player.openContainer).receiveSelectedFluid(this.currentFluid);
-                } else if (this.player != null
-                        && Integration.Mods.MEKANISMGAS.isEnabled()
+                } else if (this.player != null && Integration.Mods.MEKANISMGAS.isEnabled()
                         && this.player.openContainer instanceof ContainerGasStorage) {
-                    ((ContainerGasStorage) this.player.openContainer).receiveSelectedFluid(this.currentFluid);
-                }
+                            ((ContainerGasStorage) this.player.openContainer).receiveSelectedFluid(this.currentFluid);
+                        }
                 break;
             case 2:
                 if (this.player != null) {
@@ -81,9 +81,9 @@ public class PacketFluidStorage extends AbstractPacket {
                             ((ContainerFluidStorage) this.player.openContainer).doWork();
                         } else if (this.player.openContainer instanceof ContainerGasStorage
                                 && Integration.Mods.MEKANISMGAS.isEnabled()) {
-                            ((ContainerGasStorage) this.player.openContainer).forceFluidUpdate();
-                            ((ContainerGasStorage) this.player.openContainer).doWork();
-                        }
+                                    ((ContainerGasStorage) this.player.openContainer).forceFluidUpdate();
+                                    ((ContainerGasStorage) this.player.openContainer).doWork();
+                                }
                     }
                 }
                 break;

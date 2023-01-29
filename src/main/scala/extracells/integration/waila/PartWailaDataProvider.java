@@ -1,13 +1,11 @@
 package extracells.integration.waila;
 
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.SelectedPart;
-import extracells.part.PartECBase;
 import java.util.List;
+
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -17,11 +15,16 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.SelectedPart;
+import extracells.part.PartECBase;
+
 public class PartWailaDataProvider implements IWailaDataProvider {
 
     @Override
-    public NBTTagCompound getNBTData(
-            EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+    public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x,
+            int y, int z) {
         final MovingObjectPosition mop = retraceBlock(world, player, x, y, z);
 
         if (mop != null) {
@@ -47,8 +50,8 @@ public class PartWailaDataProvider implements IWailaDataProvider {
     }
 
     @Override
-    public List<String> getWailaBody(
-            ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+            IWailaConfigHandler config) {
         TileEntity tile = accessor.getTileEntity();
 
         IPart part = getPart(tile, accessor.getPosition());
@@ -64,8 +67,8 @@ public class PartWailaDataProvider implements IWailaDataProvider {
     }
 
     @Override
-    public List<String> getWailaHead(
-            ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+            IWailaConfigHandler config) {
         return currenttip;
     }
 
@@ -75,8 +78,8 @@ public class PartWailaDataProvider implements IWailaDataProvider {
     }
 
     @Override
-    public List<String> getWailaTail(
-            ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+            IWailaConfigHandler config) {
         return currenttip;
     }
 

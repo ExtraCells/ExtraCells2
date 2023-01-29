@@ -1,15 +1,17 @@
 package extracells.network.packet.part;
 
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fluids.Fluid;
+
 import appeng.api.config.RedstoneMode;
 import extracells.gui.GuiBusFluidIO;
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidIO;
 import io.netty.buffer.ByteBuf;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fluids.Fluid;
 
 public class PacketBusFluidIO extends AbstractPacket {
 

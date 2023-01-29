@@ -1,5 +1,15 @@
 package extracells.inventory;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.OreDictionary;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
@@ -11,14 +21,6 @@ import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import extracells.api.IStorageCellAdvanced;
-import java.util.HashSet;
-import java.util.Set;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class AdvancedCellInventory implements ICellInventory {
 
@@ -128,14 +130,12 @@ public class AdvancedCellInventory implements ICellInventory {
             return true;
         }
 
-        return BLACK_LIST.contains(
-                (input.getItemDamage() << Platform.DEF_OFFSET) | Item.getIdFromItem(input.getItem()));
+        return BLACK_LIST
+                .contains((input.getItemDamage() << Platform.DEF_OFFSET) | Item.getIdFromItem(input.getItem()));
     }
 
     private boolean isEmpty(final IMEInventory<IAEItemStack> meInventory) {
-        return meInventory
-                .getAvailableItems(AEApi.instance().storage().createItemList())
-                .isEmpty();
+        return meInventory.getAvailableItems(AEApi.instance().storage().createItemList()).isEmpty();
     }
 
     @Override
@@ -199,8 +199,7 @@ public class AdvancedCellInventory implements ICellInventory {
             if (remainingItemCount > 0) {
                 if (input.getStackSize() > remainingItemCount) {
                     final AEItemStack toReturn = AEItemStack.create(sharedItemStack);
-                    toReturn.setStackSize(sharedItemStack.stackSize - remainingItemCount);
-                    ;
+                    toReturn.setStackSize(sharedItemStack.stackSize - remainingItemCount);;
 
                     if (mode == Actionable.MODULATE) {
                         final AEItemStack toWrite = AEItemStack.create(sharedItemStack);
@@ -299,8 +298,8 @@ public class AdvancedCellInventory implements ICellInventory {
             }
 
             /*
-             * NBTBase tagSlotCount = tagCompound.getTag( itemSlotCount[x] ); if ( tagSlotCount instanceof
-             * NBTTagInt ) ((NBTTagInt) tagSlotCount).data = (int) v.getStackSize(); else
+             * NBTBase tagSlotCount = tagCompound.getTag( itemSlotCount[x] ); if ( tagSlotCount instanceof NBTTagInt )
+             * ((NBTTagInt) tagSlotCount).data = (int) v.getStackSize(); else
              */
             this.tagCompound.setLong(itemSlotCount[x], (int) v.getStackSize());
 
@@ -419,7 +418,7 @@ public class AdvancedCellInventory implements ICellInventory {
         final long bytesFree = this.getFreeBytes();
 
         return (bytesFree > this.getBytesPerType()
-                        || (bytesFree == this.getBytesPerType() && this.getUnusedItemCount() > 0))
+                || (bytesFree == this.getBytesPerType() && this.getUnusedItemCount() > 0))
                 && this.getRemainingItemTypes() > 0;
     }
 

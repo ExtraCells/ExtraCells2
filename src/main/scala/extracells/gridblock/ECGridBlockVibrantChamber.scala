@@ -8,14 +8,20 @@ import extracells.tileentity.TileEntityVibrationChamberFluid
 import net.minecraft.item.ItemStack
 import net.minecraftforge.common.util.ForgeDirection
 
-
-class ECGridBlockVibrantChamber(host: TileEntityVibrationChamberFluid) extends IGridBlock{
+class ECGridBlockVibrantChamber(host: TileEntityVibrationChamberFluid)
+    extends IGridBlock {
   protected var grid: IGrid = null
   protected var usedChannels: Int = 0
 
   override def getConnectableSides: EnumSet[ForgeDirection] =
-    EnumSet.of(ForgeDirection.DOWN, ForgeDirection.UP, ForgeDirection.NORTH, ForgeDirection.EAST, ForgeDirection.SOUTH,
-      ForgeDirection.WEST)
+    EnumSet.of(
+      ForgeDirection.DOWN,
+      ForgeDirection.UP,
+      ForgeDirection.NORTH,
+      ForgeDirection.EAST,
+      ForgeDirection.SOUTH,
+      ForgeDirection.WEST
+    )
 
   override def getFlags: EnumSet[GridFlags] = EnumSet.noneOf(classOf[GridFlags])
 
@@ -30,7 +36,11 @@ class ECGridBlockVibrantChamber(host: TileEntityVibrationChamberFluid) extends I
   override def getMachineRepresentation: ItemStack = {
     val loc: DimensionalCoord = getLocation
     if (loc == null) return null
-    new ItemStack(loc.getWorld.getBlock(loc.x, loc.y, loc.z), 1, loc.getWorld.getBlockMetadata(loc.x, loc.y, loc.z))
+    new ItemStack(
+      loc.getWorld.getBlock(loc.x, loc.y, loc.z),
+      1,
+      loc.getWorld.getBlockMetadata(loc.x, loc.y, loc.z)
+    )
   }
 
   override def gridChanged {}

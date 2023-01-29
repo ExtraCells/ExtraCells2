@@ -1,11 +1,5 @@
 package extracells.block;
 
-import appeng.api.implementations.items.IAEWrench;
-import buildcraft.api.tools.IToolWrench;
-import extracells.network.ChannelHandler;
-import extracells.registries.BlockEnum;
-import extracells.render.RenderHandler;
-import extracells.tileentity.TileEntityCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -20,6 +14,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.api.implementations.items.IAEWrench;
+import buildcraft.api.tools.IToolWrench;
+import extracells.network.ChannelHandler;
+import extracells.registries.BlockEnum;
+import extracells.render.RenderHandler;
+import extracells.tileentity.TileEntityCertusTank;
 
 public class BlockCertusTank extends BlockEC {
 
@@ -109,16 +110,8 @@ public class BlockCertusTank extends BlockEC {
     }
 
     @Override
-    public boolean onBlockActivated(
-            World worldObj,
-            int x,
-            int y,
-            int z,
-            EntityPlayer entityplayer,
-            int blockID,
-            float offsetX,
-            float offsetY,
-            float offsetZ) {
+    public boolean onBlockActivated(World worldObj, int x, int y, int z, EntityPlayer entityplayer, int blockID,
+            float offsetX, float offsetY, float offsetZ) {
         ItemStack current = entityplayer.inventory.getCurrentItem();
 
         if (entityplayer.isSneaking() && current != null) {
@@ -150,11 +143,10 @@ public class BlockCertusTank extends BlockEC {
                 if (amountFilled != 0 && !entityplayer.capabilities.isCreativeMode) {
                     if (current.stackSize > 1) {
                         entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem].stackSize -= 1;
-                        entityplayer.inventory.addItemStackToInventory(
-                                current.getItem().getContainerItem(current));
+                        entityplayer.inventory.addItemStackToInventory(current.getItem().getContainerItem(current));
                     } else {
-                        entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] =
-                                current.getItem().getContainerItem(current);
+                        entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = current.getItem()
+                                .getContainerItem(current);
                     }
                 }
 

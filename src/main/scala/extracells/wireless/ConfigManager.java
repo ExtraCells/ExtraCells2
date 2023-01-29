@@ -1,14 +1,16 @@
 package extracells.wireless;
 
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
+import net.minecraft.nbt.NBTTagCompound;
+
 import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
 import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
 import appeng.api.util.IConfigManager;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Set;
-import net.minecraft.nbt.NBTTagCompound;
 
 public class ConfigManager implements IConfigManager {
 
@@ -62,8 +64,7 @@ public class ConfigManager implements IConfigManager {
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
         for (final Map.Entry<Settings, Enum<?>> entry : this.settings.entrySet()) {
-            tagCompound.setString(
-                    entry.getKey().name(), this.settings.get(entry.getKey()).toString());
+            tagCompound.setString(entry.getKey().name(), this.settings.get(entry.getKey()).toString());
         }
     }
 
@@ -80,8 +81,7 @@ public class ConfigManager implements IConfigManager {
 
                     this.putSetting(entry.getKey(), newValue);
                 }
-            } catch (final IllegalArgumentException e) {
-            }
+            } catch (final IllegalArgumentException e) {}
         }
     }
 }

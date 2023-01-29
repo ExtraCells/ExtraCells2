@@ -1,9 +1,11 @@
 package extracells.api;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.item.ItemStack;
+
 import appeng.api.storage.ICellWorkbenchItem;
 import appeng.api.storage.data.IAEItemStack;
-import javax.annotation.Nullable;
-import net.minecraft.item.ItemStack;
 
 // Copy of IStorageCell
 public interface IStorageCellVoid extends ICellWorkbenchItem {

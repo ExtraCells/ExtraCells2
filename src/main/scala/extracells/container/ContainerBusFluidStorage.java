@@ -1,5 +1,11 @@
 package extracells.container;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.AEApi;
 import appeng.api.implementations.guiobjects.IGuiItem;
 import appeng.api.implementations.guiobjects.INetworkTool;
@@ -8,11 +14,6 @@ import extracells.container.slot.SlotNetworkTool;
 import extracells.container.slot.SlotRespective;
 import extracells.gui.GuiBusFluidStorage;
 import extracells.part.PartFluidStorage;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 
 public class ContainerBusFluidStorage extends Container {
 
@@ -28,12 +29,11 @@ public class ContainerBusFluidStorage extends Container {
 
         for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack stack = player.inventory.getStackInSlot(i);
-            if (stack != null
-                    && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
+            if (stack != null && AEApi.instance().definitions().items().networkTool().isSameAs(stack)) {
                 DimensionalCoord coord = part.getHost().getLocation();
                 IGuiItem guiItem = (IGuiItem) stack.getItem();
-                INetworkTool networkTool =
-                        (INetworkTool) guiItem.getGuiObject(stack, coord.getWorld(), coord.x, coord.y, coord.z);
+                INetworkTool networkTool = (INetworkTool) guiItem
+                        .getGuiObject(stack, coord.getWorld(), coord.x, coord.y, coord.z);
                 for (int j = 0; j < 3; j++) {
                     for (int k = 0; k < 3; k++) {
                         addSlotToContainer(new SlotNetworkTool(networkTool, j + k * 3, 187 + k * 18, j * 18 + 102));
@@ -67,8 +67,7 @@ public class ContainerBusFluidStorage extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotnumber) {
-        if (this.guiBusFluidStorage != null)
-            this.guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
+        if (this.guiBusFluidStorage != null) this.guiBusFluidStorage.shiftClick(getSlot(slotnumber).getStack());
 
         ItemStack itemstack = null;
         Slot slot = (Slot) this.inventorySlots.get(slotnumber);

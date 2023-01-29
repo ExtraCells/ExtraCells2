@@ -10,8 +10,7 @@ import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.StatCollector
 
-
-trait WirelessTermBase extends PowerItem{
+trait WirelessTermBase extends PowerItem {
 
   setMaxStackSize(1)
   override val MAX_POWER: Double = 1600000
@@ -19,7 +18,6 @@ trait WirelessTermBase extends PowerItem{
   def getPowerFlow(itemStack: ItemStack): AccessRestriction = {
     return AccessRestriction.READ_WRITE
   }
-
 
   override def getDurabilityForDisplay(itemStack: ItemStack): Double = {
     return 1 - getAECurrentPower(itemStack) / MAX_POWER
@@ -51,7 +49,11 @@ trait WirelessTermBase extends PowerItem{
   }
 
   @SuppressWarnings(Array("unchecked", "rawtypes"))
-  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[_]) {
+  override def getSubItems(
+      item: Item,
+      creativeTab: CreativeTabs,
+      itemList: util.List[_]
+  ) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     itemList2.add(new ItemStack(item))
     val itemStack: ItemStack = new ItemStack(item)
@@ -65,12 +67,29 @@ trait WirelessTermBase extends PowerItem{
 
   @SuppressWarnings(Array("rawtypes", "unchecked"))
   @SideOnly(Side.CLIENT)
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
+  override def addInformation(
+      itemStack: ItemStack,
+      player: EntityPlayer,
+      list: util.List[_],
+      par4: Boolean
+  ) {
     val list2 = list.asInstanceOf[util.List[String]];
     if (!itemStack.hasTagCompound) itemStack.setTagCompound(new NBTTagCompound)
     val encryptionKey: String = itemStack.getTagCompound.getString("key")
     val aeCurrentPower: Double = getAECurrentPower(itemStack)
-    list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / this.MAX_POWER * 1e4) / 1e2 + "%")
-    list2.add(StatCollector.translateToLocal(if (encryptionKey != null && !encryptionKey.isEmpty) "gui.appliedenergistics2.Linked" else "gui.appliedenergistics2.Unlinked"))
+    list2.add(
+      StatCollector.translateToLocal(
+        "gui.appliedenergistics2.StoredEnergy"
+      ) + ": " + aeCurrentPower + " AE - " + Math.floor(
+        aeCurrentPower / this.MAX_POWER * 1e4
+      ) / 1e2 + "%"
+    )
+    list2.add(
+      StatCollector.translateToLocal(
+        if (encryptionKey != null && !encryptionKey.isEmpty)
+          "gui.appliedenergistics2.Linked"
+        else "gui.appliedenergistics2.Unlinked"
+      )
+    )
   }
 }

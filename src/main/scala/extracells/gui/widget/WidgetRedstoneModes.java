@@ -1,10 +1,9 @@
 package extracells.gui.widget;
 
-import appeng.api.config.RedstoneMode;
-import com.google.common.base.Splitter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -12,8 +11,13 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import appeng.api.config.RedstoneMode;
+
+import com.google.common.base.Splitter;
 
 public class WidgetRedstoneModes extends GuiButton {
 
@@ -37,8 +41,7 @@ public class WidgetRedstoneModes extends GuiButton {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mouseDragged(minecraftInstance, x, y);
 
-        minecraftInstance
-                .getTextureManager()
+        minecraftInstance.getTextureManager()
                 .bindTexture(new ResourceLocation("extracells", "textures/gui/redstonemodes.png"));
         drawTexturedModalRect(this.xPosition, this.yPosition, 0, 16, 16, 16);
 
@@ -127,14 +130,12 @@ public class WidgetRedstoneModes extends GuiButton {
         switch (this.redstoneMode) {
             case HIGH_SIGNAL:
                 explanation = StatCollector.translateToLocal(
-                        this.emitter
-                                ? "gui.tooltips.appliedenergistics2.EmitLevelAbove"
+                        this.emitter ? "gui.tooltips.appliedenergistics2.EmitLevelAbove"
                                 : "gui.tooltips.appliedenergistics2.ActiveWithSignal");
                 break;
             case LOW_SIGNAL:
                 explanation = StatCollector.translateToLocal(
-                        this.emitter
-                                ? "gui.tooltips.appliedenergistics2.EmitLevelsBelow"
+                        this.emitter ? "gui.tooltips.appliedenergistics2.EmitLevelsBelow"
                                 : "gui.tooltips.appliedenergistics2.ActiveWithoutSignal");
                 break;
             case SIGNAL_PULSE:
@@ -153,8 +154,7 @@ public class WidgetRedstoneModes extends GuiButton {
 
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (mouseX >= this.xPosition
-                && mouseX <= this.xPosition + this.width
+        if (mouseX >= this.xPosition && mouseX <= this.xPosition + this.width
                 && mouseY >= this.yPosition
                 && mouseY <= this.yPosition + this.height) {
             drawHoveringText(description, mouseX - guiXPos, mouseY - guiYPos, mc.fontRenderer);

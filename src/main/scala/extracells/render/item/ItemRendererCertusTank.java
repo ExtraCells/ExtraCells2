@@ -1,6 +1,5 @@
 package extracells.render.item;
 
-import extracells.render.model.ModelCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -12,7 +11,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
+
+import extracells.render.model.ModelCertusTank;
 
 public class ItemRendererCertusTank implements IItemRenderer {
 
@@ -25,8 +27,7 @@ public class ItemRendererCertusTank implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-        Minecraft.getMinecraft()
-                .renderEngine
+        Minecraft.getMinecraft().renderEngine
                 .bindTexture(new ResourceLocation("extracells", "textures/blocks/texmap_tank.png"));
         GL11.glPushMatrix();
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -42,8 +43,8 @@ public class ItemRendererCertusTank implements IItemRenderer {
         this.model.render(0.0625f);
 
         if (item != null && item.hasTagCompound()) {
-            FluidStack storedFluid =
-                    FluidStack.loadFluidStackFromNBT(item.getTagCompound().getCompoundTag("tileEntity"));
+            FluidStack storedFluid = FluidStack
+                    .loadFluidStackFromNBT(item.getTagCompound().getCompoundTag("tileEntity"));
             int tankCapacity = 32000;
 
             if (storedFluid != null && storedFluid.getFluid() != null) {
@@ -54,7 +55,12 @@ public class ItemRendererCertusTank implements IItemRenderer {
 
                 GL11.glScalef(1, 1, -1);
                 renderer.setRenderBounds(
-                        0.08F, 0.001F, 0.08F, 0.92, (float) storedFluid.amount / (float) tankCapacity * 0.999F, 0.92F);
+                        0.08F,
+                        0.001F,
+                        0.08F,
+                        0.92,
+                        (float) storedFluid.amount / (float) tankCapacity * 0.999F,
+                        0.92F);
                 Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
                 GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
                 Block waterBlock = FluidRegistry.WATER.getBlock();

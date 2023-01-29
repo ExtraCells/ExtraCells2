@@ -1,17 +1,20 @@
 package extracells.util;
 
-import appeng.api.AEApi;
-import appeng.api.storage.data.IAEFluidStack;
-import extracells.integration.mekanism.gas.MekanismGas;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.IGasItem;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.apache.commons.lang3.tuple.MutablePair;
+
+import appeng.api.AEApi;
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.integration.mekanism.gas.MekanismGas;
 
 public class GasUtil {
 
@@ -21,8 +24,7 @@ public class GasUtil {
     }
 
     public static IAEFluidStack createAEFluidStack(GasStack gasStack) {
-        return gasStack == null
-                ? null
+        return gasStack == null ? null
                 : createAEFluidStack(
                         new FluidStack(MekanismGas.getFluidGasMap().get(gasStack.getGas()), gasStack.amount));
     }
@@ -32,8 +34,7 @@ public class GasUtil {
     }
 
     public static IAEFluidStack createAEFluidStack(Gas gas, long amount) {
-        return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas), 1))
-                .setStackSize(amount);
+        return createAEFluidStack(new FluidStack(MekanismGas.getFluidGasMap().get(gas), 1)).setStackSize(amount);
     }
 
     public static MutablePair<Integer, ItemStack> drainStack(ItemStack itemStack, GasStack gas) {

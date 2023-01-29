@@ -1,5 +1,9 @@
 package extracells.proxy;
 
+import java.io.*;
+
+import net.minecraftforge.fluids.FluidRegistry;
+
 import appeng.api.AEApi;
 import appeng.api.IAppEngApi;
 import appeng.api.recipes.IRecipeHandler;
@@ -10,8 +14,6 @@ import extracells.registries.ItemEnum;
 import extracells.tileentity.*;
 import extracells.util.FuelBurnTime;
 import extracells.util.recipe.RecipeUniversalTerminal;
-import java.io.*;
-import net.minecraftforge.fluids.FluidRegistry;
 
 public class CommonProxy {
 

@@ -1,12 +1,13 @@
 package extracells.util.inventory;
 
-import extracells.registries.ItemEnum;
-import extracells.util.FluidUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
+import extracells.registries.ItemEnum;
+import extracells.util.FluidUtil;
 
 public class ECFluidFilterInventory extends ECPrivateInventory {
 
@@ -15,9 +16,8 @@ public class ECFluidFilterInventory extends ECPrivateInventory {
     public ECFluidFilterInventory(String _customName, int _size, ItemStack _cellItem) {
         super(_customName, _size, 1);
         this.cellItem = _cellItem;
-        if (this.cellItem.hasTagCompound())
-            if (this.cellItem.getTagCompound().hasKey("filter"))
-                readFromNBT(this.cellItem.getTagCompound().getTagList("filter", 10));
+        if (this.cellItem.hasTagCompound()) if (this.cellItem.getTagCompound().hasKey("filter"))
+            readFromNBT(this.cellItem.getTagCompound().getTagList("filter", 10));
     }
 
     @Override

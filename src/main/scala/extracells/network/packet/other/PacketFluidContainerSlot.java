@@ -1,11 +1,12 @@
 package extracells.network.packet.other;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import extracells.network.AbstractPacket;
 import extracells.tileentity.TileEntityFluidFiller;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 
 public class PacketFluidContainerSlot extends AbstractPacket {
 
@@ -27,11 +28,8 @@ public class PacketFluidContainerSlot extends AbstractPacket {
             case 0:
                 this.container.stackSize = 1;
                 this.fluidFiller.containerItem = this.container;
-                if (this.fluidFiller.hasWorldObj())
-                    this.fluidFiller
-                            .getWorldObj()
-                            .markBlockForUpdate(
-                                    this.fluidFiller.xCoord, this.fluidFiller.yCoord, this.fluidFiller.zCoord);
+                if (this.fluidFiller.hasWorldObj()) this.fluidFiller.getWorldObj()
+                        .markBlockForUpdate(this.fluidFiller.xCoord, this.fluidFiller.yCoord, this.fluidFiller.zCoord);
                 this.fluidFiller.postUpdateEvent();
                 break;
         }

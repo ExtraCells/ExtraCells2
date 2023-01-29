@@ -1,12 +1,13 @@
 package extracells.network.handler.other;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import extracells.network.GuiHandler;
 import extracells.network.packet.other.PacketGuiSwitch;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
 
 public class HandlerGuiSwitch implements IMessageHandler<PacketGuiSwitch, IMessage> {
 

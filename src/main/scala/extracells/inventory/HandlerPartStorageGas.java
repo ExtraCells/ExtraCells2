@@ -1,5 +1,9 @@
 package extracells.inventory;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -17,9 +21,6 @@ import appeng.api.storage.data.IItemList;
 import extracells.api.ECApi;
 import extracells.api.IExternalGasStorageHandler;
 import extracells.part.PartFluidStorage;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 
 public class HandlerPartStorageGas extends HandlerPartStorageFluid {
 
@@ -34,10 +35,11 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
         if (!this.node.isActive()) return false;
         if (this.tank == null && this.externalSystem == null && this.externalHandler == null
                 || !(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE)
-                || input == null) return false;
+                || input == null)
+            return false;
         if (externalHandler != null) {
-            IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(
-                    this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
+            IMEInventory<IAEFluidStack> inventory = externalHandler
+                    .getInventory(this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
             if (inventory == null) return false;
         } else return false;
         if (this.inverted) return !this.prioritizedFluids.isEmpty() || !isPrioritized(input);
@@ -47,10 +49,11 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
     @Override
     public IAEFluidStack extractItems(IAEFluidStack request, Actionable mode, BaseActionSource src) {
         if (!this.node.isActive()
-                || !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE)) return null;
+                || !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE))
+            return null;
         if (externalHandler != null && request != null) {
-            IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(
-                    this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
+            IMEInventory<IAEFluidStack> inventory = externalHandler
+                    .getInventory(this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
             if (inventory == null) return null;
             return inventory.extractItems(request, mode, new MachineSource(this.node));
         }
@@ -65,13 +68,13 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
     @Override
     public IItemList<IAEFluidStack> getAvailableItems(IItemList<IAEFluidStack> out) {
         if (!this.node.isActive()
-                || !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE)) return out;
+                || !(this.access == AccessRestriction.READ || this.access == AccessRestriction.READ_WRITE))
+            return out;
         if (externalHandler != null) {
-            IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(
-                    this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
+            IMEInventory<IAEFluidStack> inventory = externalHandler
+                    .getInventory(this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
             if (inventory == null) return out;
-            IItemList<IAEFluidStack> list =
-                    inventory.getAvailableItems(AEApi.instance().storage().createFluidList());
+            IItemList<IAEFluidStack> list = inventory.getAvailableItems(AEApi.instance().storage().createFluidList());
             for (IAEFluidStack stack : list) {
                 out.add(stack);
             }
@@ -98,8 +101,8 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
     public IAEFluidStack injectItems(IAEFluidStack input, Actionable mode, BaseActionSource src) {
         if (!(this.access == AccessRestriction.WRITE || this.access == AccessRestriction.READ_WRITE)) return input;
         if (externalHandler != null && input != null) {
-            IMEInventory<IAEFluidStack> inventory = externalHandler.getInventory(
-                    this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
+            IMEInventory<IAEFluidStack> inventory = externalHandler
+                    .getInventory(this.tile, this.node.getSide().getOpposite(), new MachineSource(this.node));
             if (inventory == null) return null;
             return inventory.injectItems(input, mode, new MachineSource(this.node));
         }
@@ -127,11 +130,10 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
         TileEntity hostTile = this.node.getHostTile();
         if (hostTile == null) return;
         if (hostTile.getWorldObj() == null) return;
-        TileEntity tileEntity = hostTile.getWorldObj()
-                .getTileEntity(
-                        hostTile.xCoord + orientation.offsetX,
-                        hostTile.yCoord + orientation.offsetY,
-                        hostTile.zCoord + orientation.offsetZ);
+        TileEntity tileEntity = hostTile.getWorldObj().getTileEntity(
+                hostTile.xCoord + orientation.offsetX,
+                hostTile.yCoord + orientation.offsetY,
+                hostTile.zCoord + orientation.offsetZ);
         this.tile = tileEntity;
         this.tank = null;
         this.externalSystem = null;
@@ -144,16 +146,15 @@ public class HandlerPartStorageGas extends HandlerPartStorageFluid {
     }
 
     @Override
-    public void postChange(
-            IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
+            BaseActionSource actionSource) {
         IGridNode gridNode = this.node.getGridNode();
         if (gridNode != null) {
             IGrid grid = gridNode.getGrid();
             if (grid != null) {
                 grid.postEvent(new MENetworkCellArrayUpdate());
-                gridNode.getGrid()
-                        .postEvent(new MENetworkStorageEvent(
-                                this.node.getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
+                gridNode.getGrid().postEvent(
+                        new MENetworkStorageEvent(this.node.getGridBlock().getFluidMonitor(), StorageChannel.FLUIDS));
             }
             this.node.getHost().markForUpdate();
         }

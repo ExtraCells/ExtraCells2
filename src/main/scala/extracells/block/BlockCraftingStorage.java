@@ -1,10 +1,11 @@
 package extracells.block;
 
-import extracells.Extracells;
-import extracells.tileentity.TileEntityCraftingStorage;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+
+import extracells.Extracells;
+import extracells.tileentity.TileEntityCraftingStorage;
 
 public class BlockCraftingStorage extends appeng.block.crafting.BlockCraftingStorage {
 

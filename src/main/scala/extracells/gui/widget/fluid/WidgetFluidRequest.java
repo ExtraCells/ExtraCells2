@@ -1,16 +1,19 @@
 package extracells.gui.widget.fluid;
 
-import extracells.gui.GuiFluidTerminal;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.lwjgl.opengl.GL11;
+
+import extracells.gui.GuiFluidTerminal;
 
 public class WidgetFluidRequest extends AbstractFluidWidget {
 
@@ -50,8 +53,7 @@ public class WidgetFluidRequest extends AbstractFluidWidget {
             GL11.glScalef(0.5F, 0.5F, 0.5F);
             String str = StatCollector.translateToLocal("extracells.gui.craft");
             str = WordUtils.capitalize(str.toLowerCase());
-            Minecraft.getMinecraft()
-                    .fontRenderer
+            Minecraft.getMinecraft().fontRenderer
                     .drawString(EnumChatFormatting.WHITE + str, 52 + posX - str.length(), posY + 24, 0);
         }
         GL11.glEnable(GL11.GL_LIGHTING);

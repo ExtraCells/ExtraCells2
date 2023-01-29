@@ -1,13 +1,15 @@
 package extracells.definitions;
 
-import appeng.api.definitions.ITileDefinition;
-import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+
+import appeng.api.definitions.ITileDefinition;
+
+import com.google.common.base.Optional;
 
 public class BlockItemDefinitions implements ITileDefinition {
 
@@ -45,8 +47,7 @@ public class BlockItemDefinitions implements ITileDefinition {
 
     @Override
     public boolean isSameAs(ItemStack comparableStack) {
-        return comparableStack != null
-                && ItemStack.areItemStacksEqual(maybeStack(1).orNull(), comparableStack);
+        return comparableStack != null && ItemStack.areItemStacksEqual(maybeStack(1).orNull(), comparableStack);
     }
 
     @Override

@@ -2,6 +2,15 @@ package extracells.container;
 
 import static extracells.util.FluidUtil.filterEmptyFluid;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.security.BaseActionSource;
@@ -19,14 +28,6 @@ import extracells.network.packet.part.PacketFluidTerminal;
 import extracells.part.PartFluidTerminal;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 
 public class ContainerFluidTerminal extends Container
         implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
@@ -79,12 +80,8 @@ public class ContainerFluidTerminal extends Container
         if (this.monitor != null) {
             IItemList<IAEFluidStack> fluidStackList = AEApi.instance().storage().createFluidList();
             for (IAEFluidStack fluidStack : this.monitor.getStorageList()) {
-                if (fluidStack
-                                .getFluid()
-                                .getLocalizedName(fluidStack.getFluidStack())
-                                .toLowerCase()
-                                .contains(searchText.toLowerCase())
-                        && ECApi.instance().canFluidSeeInTerminal(fluidStack.getFluid())) {
+                if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase().contains(
+                        searchText.toLowerCase()) && ECApi.instance().canFluidSeeInTerminal(fluidStack.getFluid())) {
                     fluidStackList.add(fluidStack);
                 }
             }
@@ -132,8 +129,8 @@ public class ContainerFluidTerminal extends Container
     public void onListUpdate() {}
 
     @Override
-    public void postChange(
-            IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
+            BaseActionSource actionSource) {
         this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
         new PacketFluidTerminal(this.player, change, this.fluidStackList).sendPacketToPlayer(this.player);
     }
@@ -158,18 +155,16 @@ public class ContainerFluidTerminal extends Container
         boolean hasPermission = true;
         if (slotNumber == 0 || slotNumber == 1) {
             ItemStack stack = player.inventory.getItemStack();
-            if (stack == null) {
-            } else {
-                if (FluidUtil.isEmpty(stack)
-                        && PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())) {
-                } else if (FluidUtil.isFilled(stack)
-                        && PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())) {
-                } else {
-                    ItemStack slotStack = ((Slot) this.inventorySlots.get(slotNumber)).getStack();
-                    if (slotStack == null) returnStack = null;
-                    else returnStack = slotStack.copy();
-                    hasPermission = false;
-                }
+            if (stack == null) {} else {
+                if (FluidUtil.isEmpty(stack) && PermissionUtil
+                        .hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())) {} else
+                    if (FluidUtil.isFilled(stack) && PermissionUtil
+                            .hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())) {} else {
+                                ItemStack slotStack = ((Slot) this.inventorySlots.get(slotNumber)).getStack();
+                                if (slotStack == null) returnStack = null;
+                                else returnStack = slotStack.copy();
+                                hasPermission = false;
+                            }
             }
         }
         if (hasPermission) returnStack = super.slotClick(slotNumber, p_75144_2_, p_75144_3_, player);

@@ -1,5 +1,19 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
@@ -22,18 +36,6 @@ import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class PartDrive extends PartECBase implements ICellContainer, IInventoryUpdateReceiver {
 
@@ -100,11 +102,10 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
 
     @Override
     public void getDrops(List<ItemStack> drops, boolean wrenched) {
-        if (!wrenched)
-            for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
-                ItemStack cell = this.inventory.getStackInSlot(i);
-                if (cell != null) drops.add(cell);
-            }
+        if (!wrenched) for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
+            ItemStack cell = this.inventory.getStackInSlot(i);
+            if (cell != null) drops.add(cell);
+        }
     }
 
     public ECPrivateInventory getInventory() {
@@ -135,11 +136,10 @@ public class PartDrive extends PartECBase implements ICellContainer, IInventoryU
         this.fluidHandlers = updateHandlers(StorageChannel.FLUIDS);
         for (int i = 0; i < this.cellStatuses.length; i++) {
             ItemStack stackInSlot = this.inventory.getStackInSlot(i);
-            IMEInventoryHandler inventoryHandler =
-                    AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
-            if (inventoryHandler == null)
-                inventoryHandler =
-                        AEApi.instance().registries().cell().getCellInventory(stackInSlot, null, StorageChannel.FLUIDS);
+            IMEInventoryHandler inventoryHandler = AEApi.instance().registries().cell()
+                    .getCellInventory(stackInSlot, null, StorageChannel.ITEMS);
+            if (inventoryHandler == null) inventoryHandler = AEApi.instance().registries().cell()
+                    .getCellInventory(stackInSlot, null, StorageChannel.FLUIDS);
 
             ICellHandler cellHandler = AEApi.instance().registries().cell().getHandler(stackInSlot);
             if (cellHandler == null || inventoryHandler == null) {

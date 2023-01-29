@@ -11,24 +11,22 @@ import extracells.util.GasUtil
 import mekanism.api.gas.IGasHandler
 import net.minecraftforge.fluids.{Fluid, FluidStack}
 
-class PartGasExport extends PartFluidExport{
+class PartGasExport extends PartFluidExport {
 
   private val isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled
 
-
-  override def doWork(rate: Int, tickSinceLastCall: Int): TickRateModulation ={
+  override def doWork(rate: Int, tickSinceLastCall: Int): TickRateModulation = {
     if (isMekanismEnabled)
       work(rate, tickSinceLastCall)
     else
       TickRateModulation.IDLE
   }
 
-
   @Optional.Method(modid = "MekanismAPI|gas")
-  protected  def work(rate: Int, ticksSinceLastCall: Int): TickRateModulation ={
+  protected def work(rate: Int, ticksSinceLastCall: Int): TickRateModulation = {
     val facingTank: IGasHandler = getFacingGasTank
     if (!isActive || facingTank == null) return TickRateModulation.IDLE
-    val filter  = new util.ArrayList[Fluid]
+    val filter = new util.ArrayList[Fluid]
     filter.add(this.filterFluids(4))
 
     if (this.filterSize >= 1) {
@@ -61,14 +59,28 @@ class PartGasExport extends PartFluidExport{
     import scala.collection.JavaConversions._
     for (fluid <- filter) {
       if (fluid != null) {
-        val stack: IAEFluidStack = extractGasFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, rate * ticksSinceLastCall)), Actionable.SIMULATE)
+        val stack: IAEFluidStack = extractGasFluid(
+          AEApi.instance.storage
+            .createFluidStack(new FluidStack(fluid, rate * ticksSinceLastCall)),
+          Actionable.SIMULATE
+        )
 
         if (stack != null) {
           val gasStack = GasUtil.getGasStack(stack.getFluidStack)
-          if (gasStack != null && facingTank.canReceiveGas(getSide.getOpposite, gasStack.getGas)) {
-            val filled: Int = facingTank.receiveGas(getSide.getOpposite, gasStack, true)
+          if (
+            gasStack != null && facingTank.canReceiveGas(
+              getSide.getOpposite,
+              gasStack.getGas
+            )
+          ) {
+            val filled: Int =
+              facingTank.receiveGas(getSide.getOpposite, gasStack, true)
             if (filled > 0) {
-              extractGasFluid(AEApi.instance.storage.createFluidStack(new FluidStack(fluid, filled)), Actionable.MODULATE)
+              extractGasFluid(
+                AEApi.instance.storage
+                  .createFluidStack(new FluidStack(fluid, filled)),
+                Actionable.MODULATE
+              )
               return TickRateModulation.FASTER
             }
           }
@@ -77,7 +89,5 @@ class PartGasExport extends PartFluidExport{
     }
     return TickRateModulation.SLOWER
   }
-
-
 
 }

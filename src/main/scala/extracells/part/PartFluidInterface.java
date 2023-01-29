@@ -1,5 +1,28 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.*;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
@@ -45,39 +68,11 @@ import extracells.util.EmptyMeItemMonitor;
 import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.StatCollector;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
 
-public class PartFluidInterface extends PartECBase
-        implements IFluidHandler,
-                IFluidInterface,
-                IFluidSlotPartOrBlock,
-                ITileStorageMonitorable,
-                IStorageMonitorable,
-                IGridTickable,
-                ICraftingProvider {
+public class PartFluidInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotPartOrBlock,
+        ITileStorageMonitorable, IStorageMonitorable, IGridTickable, ICraftingProvider {
 
-    private final HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert =
-            new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
+    private final HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
 
     List<IContainerListener> listeners = new ArrayList<IContainerListener>();
     private List<ICraftingPatternDetails> patternHandlers = new ArrayList<ICraftingPatternDetails>();
@@ -93,8 +88,7 @@ public class PartFluidInterface extends PartECBase
     private final FluidTank tank = new FluidTank(10000);
     private IAEItemStack toExport = null;
 
-    private final Item encodedPattern =
-            AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
+    private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
     private final int tickCount = 0;
     private int fluidFilter = -1;
     public boolean doNextUpdate = false;
@@ -122,21 +116,18 @@ public class PartFluidInterface extends PartECBase
             }
         }
         if (this.tank.getFluid() != null
-                && FluidRegistry.getFluid(this.fluidFilter)
-                        != this.tank.getFluid().getFluid()) {
+                && FluidRegistry.getFluid(this.fluidFilter) != this.tank.getFluid().getFluid()) {
             FluidStack s = this.tank.drain(Extracells.basePartSpeed() * TicksSinceLastCall, false);
             if (s != null) {
-                IAEFluidStack notAdded = storage.getFluidInventory()
-                        .injectItems(
-                                AEApi.instance().storage().createFluidStack(s),
-                                Actionable.SIMULATE,
-                                new MachineSource(this));
+                IAEFluidStack notAdded = storage.getFluidInventory().injectItems(
+                        AEApi.instance().storage().createFluidStack(s),
+                        Actionable.SIMULATE,
+                        new MachineSource(this));
                 int toAdd = s.amount - (notAdded != null ? (int) notAdded.getStackSize() : 0);
-                IAEFluidStack actuallyNotInjected = storage.getFluidInventory()
-                        .injectItems(
-                                AEApi.instance().storage().createFluidStack(this.tank.drain(toAdd, true)),
-                                Actionable.MODULATE,
-                                new MachineSource(this));
+                IAEFluidStack actuallyNotInjected = storage.getFluidInventory().injectItems(
+                        AEApi.instance().storage().createFluidStack(this.tank.drain(toAdd, true)),
+                        Actionable.MODULATE,
+                        new MachineSource(this));
                 if (actuallyNotInjected != null) {
                     int returned = this.tank.fill(actuallyNotInjected.getFluidStack(), true);
                     if (returned != actuallyNotInjected.getStackSize()) {
@@ -156,13 +147,13 @@ public class PartFluidInterface extends PartECBase
             }
         }
         if ((this.tank.getFluid() == null
-                        || (this.tank.getFluid().getFluid() == FluidRegistry.getFluid(this.fluidFilter)
-                                && this.tank.getFluidAmount() < this.tank.getCapacity()))
+                || (this.tank.getFluid().getFluid() == FluidRegistry.getFluid(this.fluidFilter)
+                        && this.tank.getFluidAmount() < this.tank.getCapacity()))
                 && FluidRegistry.getFluid(this.fluidFilter) != null) {
-            IAEFluidStack request = FluidUtil.createAEFluidStack(
-                    this.fluidFilter, (long) Extracells.basePartSpeed() * TicksSinceLastCall);
-            IAEFluidStack extracted =
-                    storage.getFluidInventory().extractItems(request, Actionable.SIMULATE, new MachineSource(this));
+            IAEFluidStack request = FluidUtil
+                    .createAEFluidStack(this.fluidFilter, (long) Extracells.basePartSpeed() * TicksSinceLastCall);
+            IAEFluidStack extracted = storage.getFluidInventory()
+                    .extractItems(request, Actionable.SIMULATE, new MachineSource(this));
             if (extracted == null) return TickRateModulation.SLOWER;
             int accepted = this.tank.fill(extracted.getFluidStack(), false);
             if (accepted == 0) return TickRateModulation.SLOWER;
@@ -254,11 +245,10 @@ public class PartFluidInterface extends PartECBase
         if (grid == null) return 0;
         IStorageGrid storage = grid.getCache(IStorageGrid.class);
         if (storage == null) return 0;
-        IAEFluidStack notRemoved = storage.getFluidInventory()
-                .injectItems(
-                        AEApi.instance().storage().createFluidStack(resource),
-                        doFill ? Actionable.MODULATE : Actionable.SIMULATE,
-                        new MachineSource(this));
+        IAEFluidStack notRemoved = storage.getFluidInventory().injectItems(
+                AEApi.instance().storage().createFluidStack(resource),
+                doFill ? Actionable.MODULATE : Actionable.SIMULATE,
+                new MachineSource(this));
         if (notRemoved == null) return resource.amount;
         return (int) (resource.amount - notRemoved.getStackSize());
     }
@@ -342,7 +332,7 @@ public class PartFluidInterface extends PartECBase
 
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-        return new FluidTankInfo[] {this.tank.getInfo()};
+        return new FluidTankInfo[] { this.tank.getInfo() };
     }
 
     @Override
@@ -361,9 +351,9 @@ public class PartFluidInterface extends PartECBase
         }
         if (id != -1) fluid = new FluidStack(id, amount);
         if (fluid == null) {
-            list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
-                    + ": "
-                    + StatCollector.translateToLocal("extracells.tooltip.empty1"));
+            list.add(
+                    StatCollector.translateToLocal("extracells.tooltip.fluid") + ": "
+                            + StatCollector.translateToLocal("extracells.tooltip.empty1"));
             list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB / 10000mB");
         } else {
             list.add(StatCollector.translateToLocal("extracells.tooltip.fluid") + ": " + fluid.getLocalizedName());
@@ -433,15 +423,13 @@ public class PartFluidInterface extends PartECBase
         ItemStack[] inv = this.inventory.inv;
         for (int i = 0, invLength = inv.length; i < invLength; i++) {
             ItemStack currentPatternStack = inv[i];
-            if (currentPatternStack != null
-                    && currentPatternStack.getItem() != null
+            if (currentPatternStack != null && currentPatternStack.getItem() != null
                     && currentPatternStack.getItem() instanceof ICraftingPatternItem) {
                 ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack.getItem();
 
                 ICraftingPatternDetails originalPattern = originalPatternsCache[i];
                 if (originalPattern == null) {
-                    originalPattern = currentPattern.getPatternForItem(
-                            currentPatternStack, getGridNode().getWorld());
+                    originalPattern = currentPattern.getPatternForItem(currentPatternStack, getGridNode().getWorld());
                     originalPatternsCache[i] = originalPattern;
                 }
                 if (originalPattern != null) {
@@ -470,12 +458,10 @@ public class PartFluidInterface extends PartECBase
         this.addToExport.clear();
         if (getGridNode().getWorld() == null || this.export.isEmpty()) return;
         ForgeDirection dir = getSide();
-        TileEntity tile = getGridNode()
-                .getWorld()
-                .getTileEntity(
-                        getGridNode().getGridBlock().getLocation().x + dir.offsetX,
-                        getGridNode().getGridBlock().getLocation().y + dir.offsetY,
-                        getGridNode().getGridBlock().getLocation().z + dir.offsetZ);
+        TileEntity tile = getGridNode().getWorld().getTileEntity(
+                getGridNode().getGridBlock().getLocation().x + dir.offsetX,
+                getGridNode().getGridBlock().getLocation().y + dir.offsetY,
+                getGridNode().getGridBlock().getLocation().z + dir.offsetZ);
         if (tile != null) {
             IAEStack stack0 = this.export.get(0);
             IAEStack stack = stack0.copy();
@@ -498,12 +484,10 @@ public class PartFluidInterface extends PartECBase
                 IFluidHandler handler = (IFluidHandler) tile;
                 IAEFluidStack fluid = (IAEFluidStack) stack;
                 if (handler.canFill(dir.getOpposite(), fluid.copy().getFluid())) {
-                    int amount = handler.fill(
-                            dir.getOpposite(), fluid.getFluidStack().copy(), false);
+                    int amount = handler.fill(dir.getOpposite(), fluid.getFluidStack().copy(), false);
                     if (amount == 0) return;
                     if (amount == fluid.getStackSize()) {
-                        amount = handler.fill(
-                                dir.getOpposite(), fluid.getFluidStack().copy(), true);
+                        amount = handler.fill(dir.getOpposite(), fluid.getFluidStack().copy(), true);
                     }
                     if (amount == fluid.getStackSize()) {
                         this.removeFromExport.add(stack0);
@@ -543,22 +527,20 @@ public class PartFluidInterface extends PartECBase
             if (storage == null) return false;
             for (Fluid fluid : fluids.keySet()) {
                 Long amount = fluids.get(fluid);
-                IAEFluidStack extractFluid = storage.getFluidInventory()
-                        .extractItems(
-                                AEApi.instance().storage().createFluidStack(new FluidStack(fluid, amount.intValue())),
-                                Actionable.SIMULATE,
-                                new MachineSource(this));
+                IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(
+                        AEApi.instance().storage().createFluidStack(new FluidStack(fluid, amount.intValue())),
+                        Actionable.SIMULATE,
+                        new MachineSource(this));
                 if (extractFluid == null || extractFluid.getStackSize() != amount) {
                     return false;
                 }
             }
             for (Fluid fluid : fluids.keySet()) {
                 Long amount = fluids.get(fluid);
-                IAEFluidStack extractFluid = storage.getFluidInventory()
-                        .extractItems(
-                                AEApi.instance().storage().createFluidStack(new FluidStack(fluid, amount.intValue())),
-                                Actionable.MODULATE,
-                                new MachineSource(this));
+                IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(
+                        AEApi.instance().storage().createFluidStack(new FluidStack(fluid, amount.intValue())),
+                        Actionable.MODULATE,
+                        new MachineSource(this));
                 this.export.add(extractFluid);
             }
             for (IAEItemStack s : patter.getCondensedInputs()) {
@@ -603,14 +585,12 @@ public class PartFluidInterface extends PartECBase
         int i = tag.getInteger("remove");
         for (int j = 0; j < i; j++) {
             if (tag.getBoolean("remove-" + j + "-isItem")) {
-                IAEItemStack s = AEApi.instance()
-                        .storage()
+                IAEItemStack s = AEApi.instance().storage()
                         .createItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("remove-" + j)));
                 s.setStackSize(tag.getLong("remove-" + j + "-amount"));
                 this.removeFromExport.add(s);
             } else {
-                IAEFluidStack s = AEApi.instance()
-                        .storage()
+                IAEFluidStack s = AEApi.instance().storage()
                         .createFluidStack(FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("remove-" + j)));
                 s.setStackSize(tag.getLong("remove-" + j + "-amount"));
                 this.removeFromExport.add(s);
@@ -619,14 +599,12 @@ public class PartFluidInterface extends PartECBase
         i = tag.getInteger("add");
         for (int j = 0; j < i; j++) {
             if (tag.getBoolean("add-" + j + "-isItem")) {
-                IAEItemStack s = AEApi.instance()
-                        .storage()
+                IAEItemStack s = AEApi.instance().storage()
                         .createItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("add-" + j)));
                 s.setStackSize(tag.getLong("add-" + j + "-amount"));
                 this.addToExport.add(s);
             } else {
-                IAEFluidStack s = AEApi.instance()
-                        .storage()
+                IAEFluidStack s = AEApi.instance().storage()
                         .createFluidStack(FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("add-" + j)));
                 s.setStackSize(tag.getLong("add-" + j + "-amount"));
                 this.addToExport.add(s);
@@ -635,14 +613,12 @@ public class PartFluidInterface extends PartECBase
         i = tag.getInteger("export");
         for (int j = 0; j < i; j++) {
             if (tag.getBoolean("export-" + j + "-isItem")) {
-                IAEItemStack s = AEApi.instance()
-                        .storage()
+                IAEItemStack s = AEApi.instance().storage()
                         .createItemStack(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("export-" + j)));
                 s.setStackSize(tag.getLong("export-" + j + "-amount"));
                 this.export.add(s);
             } else {
-                IAEFluidStack s = AEApi.instance()
-                        .storage()
+                IAEFluidStack s = AEApi.instance().storage()
                         .createFluidStack(FluidStack.loadFluidStackFromNBT(tag.getCompoundTag("export-" + j)));
                 s.setStackSize(tag.getLong("export-" + j + "-amount"));
                 this.export.add(s);

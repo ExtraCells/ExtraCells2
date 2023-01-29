@@ -1,5 +1,24 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
@@ -27,22 +46,6 @@ import extracells.util.FluidUtil;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.MutablePair;
 
 public class PartFluidTerminal extends PartECBase implements IGridTickable, IInventoryUpdateReceiver {
 
@@ -112,8 +115,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
         if (FluidUtil.isEmpty(container)) {
             if (this.currentFluid == null) return;
             FluidStack request = new FluidStack(this.currentFluid, Integer.MAX_VALUE);
-            MutablePair<ItemStack, FluidStack> simulation =
-                    FluidUtil.fillItemFromAe(container, request, monitor, Actionable.SIMULATE, this.machineSource);
+            MutablePair<ItemStack, FluidStack> simulation = FluidUtil
+                    .fillItemFromAe(container, request, monitor, Actionable.SIMULATE, this.machineSource);
             if (simulation == null || simulation.getLeft() == null) {
                 return;
             }
@@ -121,8 +124,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
                 return;
             }
             request.amount = simulation.getRight().amount;
-            MutablePair<ItemStack, FluidStack> result =
-                    FluidUtil.fillItemFromAe(container, request, monitor, Actionable.MODULATE, this.machineSource);
+            MutablePair<ItemStack, FluidStack> result = FluidUtil
+                    .fillItemFromAe(container, request, monitor, Actionable.MODULATE, this.machineSource);
             if (result == null || result.getLeft() == null) {
                 return;
             }
@@ -146,8 +149,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
         } else {
             FluidStack containerFluid = FluidUtil.getFluidFromContainer(container);
 
-            ItemStack simulation =
-                    FluidUtil.drainItemIntoAe(container, monitor, Actionable.SIMULATE, this.machineSource);
+            ItemStack simulation = FluidUtil
+                    .drainItemIntoAe(container, monitor, Actionable.SIMULATE, this.machineSource);
             if (simulation == null) {
                 return;
             }
@@ -229,9 +232,8 @@ public class PartFluidTerminal extends PartECBase implements IGridTickable, IInv
 
     @Override
     public boolean onActivate(EntityPlayer player, Vec3 pos) {
-        if (isActive()
-                && (PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) this)
-                        || PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) this)))
+        if (isActive() && (PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) this)
+                || PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) this)))
             return super.onActivate(player, pos);
         return false;
     }

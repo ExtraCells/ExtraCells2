@@ -19,7 +19,10 @@ import net.minecraft.util.{IIcon, StatCollector}
 import net.minecraft.world.World
 import net.minecraftforge.fluids.{Fluid, FluidRegistry}
 
-object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorageCell with PowerItem {
+object ItemStoragePortableFluidCell
+    extends ItemECBase
+    with IPortableFluidStorageCell
+    with PowerItem {
 
   override val MAX_POWER: Double = 100000
   private[item] var icon: IIcon = null
@@ -27,28 +30,71 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
   setMaxStackSize(1)
   setMaxDamage(0)
 
-
   @SuppressWarnings(Array("rawtypes", "unchecked"))
-  override def addInformation(itemStack: ItemStack, player: EntityPlayer, list: util.List[_], par4: Boolean) {
+  override def addInformation(
+      itemStack: ItemStack,
+      player: EntityPlayer,
+      list: util.List[_],
+      par4: Boolean
+  ) {
     val list2 = list.asInstanceOf[util.List[String]]
-    val handler: IMEInventoryHandler[IAEFluidStack] = AEApi.instance.registries.cell.getCellInventory(itemStack, null, StorageChannel.FLUIDS).asInstanceOf[IMEInventoryHandler[IAEFluidStack]]
+    val handler: IMEInventoryHandler[IAEFluidStack] =
+      AEApi.instance.registries.cell
+        .getCellInventory(itemStack, null, StorageChannel.FLUIDS)
+        .asInstanceOf[IMEInventoryHandler[IAEFluidStack]]
 
     if (!(handler.isInstanceOf[IHandlerFluidStorage])) {
       return
     }
-    val cellHandler: IHandlerFluidStorage = handler.asInstanceOf[IHandlerFluidStorage]
+    val cellHandler: IHandlerFluidStorage =
+      handler.asInstanceOf[IHandlerFluidStorage]
     val partitioned: Boolean = cellHandler.isFormatted
     val usedBytes: Long = cellHandler.usedBytes
     val aeCurrentPower: Double = getAECurrentPower(itemStack)
-    list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.bytes"), (usedBytes / 250).asInstanceOf[AnyRef], (cellHandler.totalBytes / 250).asInstanceOf[AnyRef]))
-    list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.types"), cellHandler.usedTypes.asInstanceOf[AnyRef], cellHandler.totalTypes.asInstanceOf[AnyRef]))
+    list2.add(
+      String.format(
+        StatCollector.translateToLocal(
+          "extracells.tooltip.storage.fluid.bytes"
+        ),
+        (usedBytes / 250).asInstanceOf[AnyRef],
+        (cellHandler.totalBytes / 250).asInstanceOf[AnyRef]
+      )
+    )
+    list2.add(
+      String.format(
+        StatCollector.translateToLocal(
+          "extracells.tooltip.storage.fluid.types"
+        ),
+        cellHandler.usedTypes.asInstanceOf[AnyRef],
+        cellHandler.totalTypes.asInstanceOf[AnyRef]
+      )
+    )
     if (usedBytes != 0) {
-      list2.add(String.format(StatCollector.translateToLocal("extracells.tooltip.storage.fluid.content"), usedBytes.asInstanceOf[AnyRef]))
+      list2.add(
+        String.format(
+          StatCollector.translateToLocal(
+            "extracells.tooltip.storage.fluid.content"
+          ),
+          usedBytes.asInstanceOf[AnyRef]
+        )
+      )
     }
     if (partitioned) {
-      list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - " + StatCollector.translateToLocal("gui.appliedenergistics2.Precise"))
+      list2.add(
+        StatCollector.translateToLocal(
+          "gui.appliedenergistics2.Partitioned"
+        ) + " - " + StatCollector.translateToLocal(
+          "gui.appliedenergistics2.Precise"
+        )
+      )
     }
-    list2.add(StatCollector.translateToLocal("gui.appliedenergistics2.StoredEnergy") + ": " + aeCurrentPower + " AE - " + Math.floor(aeCurrentPower / ItemStoragePortableFluidCell.MAX_POWER * 1e4) / 1e2 + "%")
+    list2.add(
+      StatCollector.translateToLocal(
+        "gui.appliedenergistics2.StoredEnergy"
+      ) + ": " + aeCurrentPower + " AE - " + Math.floor(
+        aeCurrentPower / ItemStoragePortableFluidCell.MAX_POWER * 1e4
+      ) / 1e2 + "%"
+    )
   }
 
   def getConfigInventory(is: ItemStack): IInventory = {
@@ -56,12 +102,14 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
   }
 
   override def getDurabilityForDisplay(itemStack: ItemStack): Double = {
-    return 1 - getAECurrentPower(itemStack) / ItemStoragePortableFluidCell.MAX_POWER
+    return 1 - getAECurrentPower(
+      itemStack
+    ) / ItemStoragePortableFluidCell.MAX_POWER
   }
 
-
   def getFilter(stack: ItemStack): util.ArrayList[Fluid] = {
-    val inventory: ECFluidFilterInventory = new ECFluidFilterInventory("", 63, stack)
+    val inventory: ECFluidFilterInventory =
+      new ECFluidFilterInventory("", 63, stack)
     val stacks: Array[ItemStack] = inventory.slots
     val filter: util.ArrayList[Fluid] = new util.ArrayList[Fluid]
     if (stacks.length == 0) return null
@@ -77,7 +125,8 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
   def getFuzzyMode(is: ItemStack): FuzzyMode = {
     if (is == null) return null
     if (!is.hasTagCompound) is.setTagCompound(new NBTTagCompound)
-    if (is.getTagCompound.hasKey("fuzzyMode")) return FuzzyMode.valueOf(is.getTagCompound.getString("fuzzyMode"))
+    if (is.getTagCompound.hasKey("fuzzyMode"))
+      return FuzzyMode.valueOf(is.getTagCompound.getString("fuzzyMode"))
     is.getTagCompound.setString("fuzzyMode", FuzzyMode.IGNORE_ALL.name)
     return FuzzyMode.IGNORE_ALL
   }
@@ -91,7 +140,6 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
     return 32768
   }
 
-
   def getMaxTypes(unused: ItemStack): Int = {
     return 3
   }
@@ -100,7 +148,11 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
     return AccessRestriction.READ_WRITE
   }
 
-  override def getSubItems(item: Item, creativeTab: CreativeTabs, itemList: util.List[_]) {
+  override def getSubItems(
+      item: Item,
+      creativeTab: CreativeTabs,
+      itemList: util.List[_]
+  ) {
     val itemList2 = itemList.asInstanceOf[util.List[ItemStack]]
     itemList2.add(new ItemStack(item))
     val itemStack: ItemStack = new ItemStack(item)
@@ -126,10 +178,13 @@ object ItemStoragePortableFluidCell extends ItemECBase with IPortableFluidStorag
   }
 
   @SuppressWarnings(Array("rawtypes", "unchecked"))
-  override def onItemRightClick(itemStack: ItemStack, world: World, player: EntityPlayer): ItemStack = {
+  override def onItemRightClick(
+      itemStack: ItemStack,
+      world: World,
+      player: EntityPlayer
+  ): ItemStack = {
     return ECApi.instance.openPortableFluidCellGui(player, itemStack, world)
   }
-
 
   @SideOnly(Side.CLIENT)
   override def registerIcons(iconRegister: IIconRegister) {

@@ -1,17 +1,8 @@
 package extracells.item;
 
-import appeng.api.AEApi;
-import appeng.api.config.FuzzyMode;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
-import extracells.api.IGasStorageCell;
-import extracells.api.IHandlerFluidStorage;
-import extracells.registries.ItemEnum;
-import extracells.util.inventory.ECFluidFilterInventory;
-import extracells.util.inventory.ECPrivateInventory;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,11 +17,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import appeng.api.AEApi;
+import appeng.api.config.FuzzyMode;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.StorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.api.IGasStorageCell;
+import extracells.api.IHandlerFluidStorage;
+import extracells.registries.ItemEnum;
+import extracells.util.inventory.ECFluidFilterInventory;
+import extracells.util.inventory.ECPrivateInventory;
+
 public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
 
-    public static final String[] suffixes = {"1k", "4k", "16k", "64k", "256k", "1024k", "4096k"};
+    public static final String[] suffixes = { "1k", "4k", "16k", "64k", "256k", "1024k", "4096k" };
 
-    public static final int[] spaces = {1024, 4096, 16348, 65536, 262144, 1048576, 4194304};
+    public static final int[] spaces = { 1024, 4096, 16348, 65536, 262144, 1048576, 4194304 };
 
     private IIcon[] icons;
 
@@ -40,11 +42,11 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
         setHasSubtypes(true);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        IMEInventoryHandler<IAEFluidStack> handler =
-                AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
+        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell()
+                .getCellInventory(itemStack, null, StorageChannel.FLUIDS);
         if (!(handler instanceof IHandlerFluidStorage)) {
             return;
         }
@@ -52,22 +54,25 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
         boolean partitioned = cellHandler.isFormatted();
         long usedBytes = cellHandler.usedBytes();
 
-        list.add(String.format(
-                StatCollector.translateToLocal("extracells.tooltip.storage.gas.bytes"),
-                usedBytes / 250,
-                cellHandler.totalBytes() / 250));
-        list.add(String.format(
-                StatCollector.translateToLocal("extracells.tooltip.storage.gas.types"),
-                cellHandler.usedTypes(),
-                cellHandler.totalTypes()));
+        list.add(
+                String.format(
+                        StatCollector.translateToLocal("extracells.tooltip.storage.gas.bytes"),
+                        usedBytes / 250,
+                        cellHandler.totalBytes() / 250));
+        list.add(
+                String.format(
+                        StatCollector.translateToLocal("extracells.tooltip.storage.gas.types"),
+                        cellHandler.usedTypes(),
+                        cellHandler.totalTypes()));
         if (usedBytes != 0) {
             list.add(
                     String.format(StatCollector.translateToLocal("extracells.tooltip.storage.gas.content"), usedBytes));
         }
 
         if (partitioned) {
-            list.add(StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - "
-                    + StatCollector.translateToLocal("gui.appliedenergistics2.Precise"));
+            list.add(
+                    StatCollector.translateToLocal("gui.appliedenergistics2.Partitioned") + " - "
+                            + StatCollector.translateToLocal("gui.appliedenergistics2.Precise"));
         }
     }
 
@@ -116,7 +121,7 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
         return 5;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void getSubItems(Item item, CreativeTabs creativeTab, List listSubItems) {
         for (int i = 0; i < suffixes.length; ++i) {
@@ -140,14 +145,14 @@ public class ItemStorageGas extends ItemECBase implements IGasStorageCell {
         return is.getItem() == this;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
         if (!entityPlayer.isSneaking()) {
             return itemStack;
         }
-        IMEInventoryHandler<IAEFluidStack> handler =
-                AEApi.instance().registries().cell().getCellInventory(itemStack, null, StorageChannel.FLUIDS);
+        IMEInventoryHandler<IAEFluidStack> handler = AEApi.instance().registries().cell()
+                .getCellInventory(itemStack, null, StorageChannel.FLUIDS);
         if (!(handler instanceof IHandlerFluidStorage)) {
             return itemStack;
         }

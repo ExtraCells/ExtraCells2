@@ -1,9 +1,11 @@
 package extracells.integration.waila;
 
 import java.util.List;
+
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,8 +15,8 @@ import net.minecraft.world.World;
 public class BlockWailaDataProvider implements IWailaDataProvider {
 
     @Override
-    public NBTTagCompound getNBTData(
-            EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+    public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x,
+            int y, int z) {
         if (te != null && te instanceof IWailaTile) {
             tag.setTag("WailaTile", ((IWailaTile) te).getWailaTag(new NBTTagCompound()));
         }
@@ -22,8 +24,8 @@ public class BlockWailaDataProvider implements IWailaDataProvider {
     }
 
     @Override
-    public List<String> getWailaBody(
-            ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+            IWailaConfigHandler config) {
         TileEntity tile = accessor.getTileEntity();
         NBTTagCompound tag = accessor.getNBTData();
         if (tile != null && tile instanceof IWailaTile && tag != null && tag.hasKey("WailaTile")) {
@@ -34,8 +36,8 @@ public class BlockWailaDataProvider implements IWailaDataProvider {
     }
 
     @Override
-    public List<String> getWailaHead(
-            ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+            IWailaConfigHandler config) {
         return currenttip;
     }
 
@@ -45,8 +47,8 @@ public class BlockWailaDataProvider implements IWailaDataProvider {
     }
 
     @Override
-    public List<String> getWailaTail(
-            ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+            IWailaConfigHandler config) {
         return currenttip;
     }
 }

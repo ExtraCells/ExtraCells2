@@ -2,6 +2,15 @@ package extracells.container;
 
 import static extracells.util.FluidUtil.filterEmptyFluid;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.security.BaseActionSource;
@@ -19,14 +28,6 @@ import extracells.part.PartFluidTerminal;
 import extracells.part.PartGasTerminal;
 import extracells.util.GasUtil;
 import extracells.util.PermissionUtil;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 
 public class ContainerGasTerminal extends Container
         implements IMEMonitorHandlerReceiver<IAEFluidStack>, IFluidSelectorContainer {
@@ -114,8 +115,8 @@ public class ContainerGasTerminal extends Container
     public void onListUpdate() {}
 
     @Override
-    public void postChange(
-            IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
+            BaseActionSource actionSource) {
         this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
         new PacketFluidTerminal(this.player, this.fluidStackList).sendPacketToPlayer(this.player);
     }
@@ -140,18 +141,16 @@ public class ContainerGasTerminal extends Container
         boolean hasPermission = true;
         if (slotNumber == 0 || slotNumber == 1) {
             ItemStack stack = player.inventory.getItemStack();
-            if (stack == null) {
-            } else {
-                if (GasUtil.isEmpty(stack)
-                        && PermissionUtil.hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())) {
-                } else if (GasUtil.isFilled(stack)
-                        && PermissionUtil.hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())) {
-                } else {
-                    ItemStack slotStack = ((Slot) this.inventorySlots.get(slotNumber)).getStack();
-                    if (slotStack == null) returnStack = null;
-                    else returnStack = slotStack.copy();
-                    hasPermission = false;
-                }
+            if (stack == null) {} else {
+                if (GasUtil.isEmpty(stack) && PermissionUtil
+                        .hasPermission(player, SecurityPermissions.INJECT, (IPart) getTerminal())) {} else
+                    if (GasUtil.isFilled(stack) && PermissionUtil
+                            .hasPermission(player, SecurityPermissions.EXTRACT, (IPart) getTerminal())) {} else {
+                                ItemStack slotStack = ((Slot) this.inventorySlots.get(slotNumber)).getStack();
+                                if (slotStack == null) returnStack = null;
+                                else returnStack = slotStack.copy();
+                                hasPermission = false;
+                            }
             }
         }
         if (hasPermission) returnStack = super.slotClick(slotNumber, p_75144_2_, p_75144_3_, player);

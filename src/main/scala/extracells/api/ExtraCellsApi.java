@@ -1,10 +1,5 @@
 package extracells.api;
 
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.storage.data.IAEFluidStack;
-import extracells.api.definitions.IBlockDefinition;
-import extracells.api.definitions.IItemDefinition;
-import extracells.api.definitions.IPartDefinition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -12,6 +7,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.api.networking.security.BaseActionSource;
+import appeng.api.storage.data.IAEFluidStack;
+import extracells.api.definitions.IBlockDefinition;
+import extracells.api.definitions.IItemDefinition;
+import extracells.api.definitions.IPartDefinition;
 
 public interface ExtraCellsApi {
 
@@ -61,8 +62,8 @@ public interface ExtraCellsApi {
     public ItemStack openWirelessGasTerminal(EntityPlayer player, ItemStack stack, World world);
 
     @Deprecated
-    public ItemStack openWirelessTerminal(
-            EntityPlayer player, ItemStack stack, World world, int x, int y, int z, Long key);
+    public ItemStack openWirelessTerminal(EntityPlayer player, ItemStack stack, World world, int x, int y, int z,
+            Long key);
 
     public IPartDefinition parts();
 

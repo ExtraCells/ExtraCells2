@@ -1,5 +1,30 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GLAllocation;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.*;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
@@ -22,28 +47,6 @@ import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import extracells.util.WrenchUtil;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public class PartFluidStorageMonitor extends PartECBase implements IStackWatcherHost, INetworkToolAgent {
 
@@ -114,16 +117,16 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
             if (id != -1) fluid = FluidRegistry.getFluid(id);
         }
         if (fluid != null) {
-            list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
-                    + ": "
-                    + fluid.getLocalizedName(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME)));
+            list.add(
+                    StatCollector.translateToLocal("extracells.tooltip.fluid") + ": "
+                            + fluid.getLocalizedName(new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME)));
             if (isActive())
                 list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": " + amount + "mB");
             else list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB");
         } else {
-            list.add(StatCollector.translateToLocal("extracells.tooltip.fluid")
-                    + ": "
-                    + StatCollector.translateToLocal("extracells.tooltip.empty1"));
+            list.add(
+                    StatCollector.translateToLocal("extracells.tooltip.fluid") + ": "
+                            + StatCollector.translateToLocal("extracells.tooltip.empty1"));
             list.add(StatCollector.translateToLocal("extracells.tooltip.amount") + ": 0mB");
         }
         return list;
@@ -186,8 +189,7 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
             if (g == null) return;
             IStorageGrid storage = g.getCache(IStorageGrid.class);
             if (storage == null) return;
-            IMEMonitor<IAEFluidStack> fluids = getFluidStorage();
-            ;
+            IMEMonitor<IAEFluidStack> fluids = getFluidStorage();;
             if (fluids == null) return;
             for (IAEFluidStack s : fluids.getStorageList()) {
                 if (s.getFluid() == this.fluid) {
@@ -204,8 +206,8 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
     }
 
     @Override
-    public void onStackChange(
-            IItemList arg0, IAEStack arg1, IAEStack arg2, BaseActionSource arg3, StorageChannel arg4) {
+    public void onStackChange(IItemList arg0, IAEStack arg1, IAEStack arg2, BaseActionSource arg3,
+            StorageChannel arg4) {
         updateFluidAmount();
     }
 

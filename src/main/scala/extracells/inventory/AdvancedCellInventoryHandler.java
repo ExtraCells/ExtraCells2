@@ -1,5 +1,8 @@
 package extracells.inventory;
 
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.IncludeExclude;
@@ -15,8 +18,6 @@ import appeng.util.item.AEItemStack;
 import appeng.util.prioitylist.FuzzyPriorityList;
 import appeng.util.prioitylist.OreFilteredList;
 import appeng.util.prioitylist.PrecisePriorityList;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 
 public class AdvancedCellInventoryHandler extends MEAdvancedInventoryHandler<IAEItemStack>
         implements ICellInventoryHandler {
@@ -60,8 +61,7 @@ public class AdvancedCellInventoryHandler extends MEAdvancedInventoryHandler<IAE
             if (hasOreFilter && !filter.isEmpty()) {
                 this.setPartitionList(new OreFilteredList(filter));
             } else {
-                final IItemList<IAEItemStack> priorityList =
-                        AEApi.instance().storage().createItemList();
+                final IItemList<IAEItemStack> priorityList = AEApi.instance().storage().createItemList();
                 for (int x = 0; x < config.getSizeInventory(); x++) {
                     final ItemStack is = config.getStackInSlot(x);
                     if (is != null) {

@@ -1,5 +1,15 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
+
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -17,14 +27,6 @@ import extracells.render.TextureManager;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
 
 public class PartBattery extends PartECBase implements IAEPowerStorage, IInventoryUpdateReceiver {
 
@@ -56,7 +58,8 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
     public double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
         if (this.handler == null || this.battery == null) return 0;
         return this.handler.extractAEPower(
-                mode == Actionable.MODULATE ? this.battery : this.battery.copy(), usePowerMultiplier.multiply(amt));
+                mode == Actionable.MODULATE ? this.battery : this.battery.copy(),
+                usePowerMultiplier.multiply(amt));
     }
 
     @Override
@@ -125,9 +128,8 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
         super.readFromStream(data);
         String iconName = AbstractPacket.readString(data);
         if (!iconName.equals("none")) {
-            this.batteryIcon = ((TextureMap)
-                            Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.locationBlocksTexture))
-                    .getAtlasSprite(iconName);
+            this.batteryIcon = ((TextureMap) Minecraft.getMinecraft().getTextureManager()
+                    .getTexture(TextureMap.locationBlocksTexture)).getAtlasSprite(iconName);
         } else {
             this.batteryIcon = TextureManager.BATTERY_FRONT.getTexture();
         }
@@ -168,9 +170,7 @@ public class PartBattery extends PartECBase implements IAEPowerStorage, IInvento
     public void writeToStream(ByteBuf data) throws IOException {
         super.writeToStream(data);
         AbstractPacket.writeString(
-                this.battery != null
-                        ? this.battery.getItem().getIconIndex(this.battery).getIconName()
-                        : "none",
+                this.battery != null ? this.battery.getItem().getIconIndex(this.battery).getIconName() : "none",
                 data);
     }
 }

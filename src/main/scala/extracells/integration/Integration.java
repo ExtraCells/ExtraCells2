@@ -1,5 +1,7 @@
 package extracells.integration;
 
+import net.minecraftforge.common.config.Configuration;
+
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.relauncher.Side;
@@ -10,11 +12,11 @@ import extracells.integration.mekanism.gas.MekanismGas;
 import extracells.integration.nei.Nei;
 import extracells.integration.opencomputers.OpenComputers;
 import extracells.integration.waila.Waila;
-import net.minecraftforge.common.config.Configuration;
 
 public class Integration {
 
     public enum Mods {
+
         WAILA("Waila"),
         OPENCOMPUTERS("OpenComputers"),
         BCFUEL("BuildCraftAPI|fuels", "BuildCraftFuel"),
@@ -68,8 +70,8 @@ public class Integration {
         }
 
         public void loadConfig(Configuration config) {
-            shouldLoad = config.get(
-                            "Integration", "enable" + getModName(), true, "Enable " + getModName() + " Integration.")
+            shouldLoad = config
+                    .get("Integration", "enable" + getModName(), true, "Enable " + getModName() + " Integration.")
                     .getBoolean(true);
         }
 

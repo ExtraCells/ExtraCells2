@@ -1,5 +1,20 @@
 package extracells.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.Extracells;
 import extracells.api.ECApi;
@@ -11,18 +26,6 @@ import extracells.gui.widget.fluid.IFluidSelectorGui;
 import extracells.gui.widget.fluid.WidgetFluidSelector;
 import extracells.network.packet.part.PacketFluidStorage;
 import extracells.util.FluidUtil;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
@@ -57,8 +60,8 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
     }
 
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.fontRendererObj.drawString(
-                StatCollector.translateToLocal(this.guiName).replace("ME ", ""), 5, 6, 0x000000);
+        this.fontRendererObj
+                .drawString(StatCollector.translateToLocal(this.guiName).replace("ME ", ""), 5, 6, 0x000000);
         drawWidgets(mouseX, mouseY);
         if (this.currentFluid != null) {
             long currentFluidAmount = this.currentFluid.getStackSize();
@@ -70,8 +73,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
                     91,
                     0x000000);
             this.fontRendererObj.drawString(
-                    StatCollector.translateToLocal("extracells.tooltip.fluid")
-                            + ": "
+                    StatCollector.translateToLocal("extracells.tooltip.fluid") + ": "
                             + this.currentFluid.getFluid().getLocalizedName(this.currentFluid.getFluidStack()),
                     45,
                     101,
@@ -108,8 +110,7 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
         List<AbstractFluidWidget> tmp = this.getCache();
         int listSize = tmp.size();
         if (!this.containerFluidStorage.getFluidStackList().isEmpty()) {
-            outerLoop:
-            for (int y = 0; y < 4; y++) {
+            outerLoop: for (int y = 0; y < 4; y++) {
                 for (int x = 0; x < 9; x++) {
                     int widgetIndex = y * 9 + x + this.currentScroll * 9;
                     if (0 <= widgetIndex && widgetIndex < listSize) {
@@ -174,8 +175,9 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
 
             @Override
             public void mouseClicked(int x, int y, int mouseBtn) {
-                boolean flag =
-                        x >= this.xPos && x < this.xPos + this.width && y >= this.yPos && y < this.yPos + this.height;
+                boolean flag = x >= this.xPos && x < this.xPos + this.width
+                        && y >= this.yPos
+                        && y < this.yPos + this.height;
                 if (flag && mouseBtn == 3) setText("");
             }
         };
@@ -216,11 +218,8 @@ public class GuiFluidStorage extends GuiContainer implements IFluidSelectorGui {
         }
         this.fluidWidgets = new ArrayList<AbstractFluidWidget>();
         for (IAEFluidStack fluidStack : this.containerFluidStorage.getFluidStackList()) {
-            if (fluidStack
-                            .getFluid()
-                            .getLocalizedName(fluidStack.getFluidStack())
-                            .toLowerCase()
-                            .contains(this.searchbar.getText().toLowerCase())
+            if (fluidStack.getFluid().getLocalizedName(fluidStack.getFluidStack()).toLowerCase()
+                    .contains(this.searchbar.getText().toLowerCase())
                     && ECApi.instance().canFluidSeeInTerminal(fluidStack.getFluid())) {
                 this.fluidWidgets.add(new WidgetFluidSelector(this, fluidStack));
             }

@@ -1,5 +1,23 @@
 package extracells.tileentity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.implementations.ICraftingPatternItem;
@@ -27,28 +45,9 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.api.IECTileEntity;
 import extracells.gridblock.ECFluidGridBlock;
 import extracells.util.FluidUtil;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.MutablePair;
 
-public class TileEntityFluidFiller extends TileBase
-        implements IActionHost,
-                ICraftingProvider,
-                IECTileEntity,
-                IMEMonitorHandlerReceiver<IAEFluidStack>,
-                IListenerTile {
+public class TileEntityFluidFiller extends TileBase implements IActionHost, ICraftingProvider, IECTileEntity,
+        IMEMonitorHandlerReceiver<IAEFluidStack>, IListenerTile {
 
     private ECFluidGridBlock gridBlock;
     private IGridNode node = null;
@@ -59,8 +58,7 @@ public class TileEntityFluidFiller extends TileBase
 
     private boolean isFirstGetGridNode = true;
 
-    private final Item encodedPattern =
-            AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
+    private final Item encodedPattern = AEApi.instance().definitions().items().encodedPattern().maybeItem().orNull();
 
     public TileEntityFluidFiller() {
         super();
@@ -158,8 +156,8 @@ public class TileEntityFluidFiller extends TileBase
     public void onListUpdate() {}
 
     @Override
-    public void postChange(
-            IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
+            BaseActionSource actionSource) {
         List<Fluid> oldFluids = new ArrayList<Fluid>(this.fluids);
         boolean mustUpdate = false;
         this.fluids.clear();
@@ -169,20 +167,16 @@ public class TileEntityFluidFiller extends TileBase
             this.fluids.add(fluid.getFluid());
         }
         if (!(oldFluids.isEmpty() && !mustUpdate)) {
-            if (getGridNode(ForgeDirection.UNKNOWN) != null
-                    && getGridNode(ForgeDirection.UNKNOWN).getGrid() != null) {
-                getGridNode(ForgeDirection.UNKNOWN)
-                        .getGrid()
+            if (getGridNode(ForgeDirection.UNKNOWN) != null && getGridNode(ForgeDirection.UNKNOWN).getGrid() != null) {
+                getGridNode(ForgeDirection.UNKNOWN).getGrid()
                         .postEvent(new MENetworkCraftingPatternChange(this, getGridNode(ForgeDirection.UNKNOWN)));
             }
         }
     }
 
     public void postUpdateEvent() {
-        if (getGridNode(ForgeDirection.UNKNOWN) != null
-                && getGridNode(ForgeDirection.UNKNOWN).getGrid() != null) {
-            getGridNode(ForgeDirection.UNKNOWN)
-                    .getGrid()
+        if (getGridNode(ForgeDirection.UNKNOWN) != null && getGridNode(ForgeDirection.UNKNOWN).getGrid() != null) {
+            getGridNode(ForgeDirection.UNKNOWN).getGrid()
                     .postEvent(new MENetworkCraftingPatternChange(this, getGridNode(ForgeDirection.UNKNOWN)));
         }
     }
@@ -203,8 +197,8 @@ public class TileEntityFluidFiller extends TileBase
             if (fluid == null) continue;
             int maxCapacity = FluidUtil.getCapacity(this.containerItem, fluid);
             if (maxCapacity == 0) continue;
-            MutablePair<Integer, ItemStack> filled =
-                    FluidUtil.fillStack(this.containerItem.copy(), new FluidStack(fluid, maxCapacity));
+            MutablePair<Integer, ItemStack> filled = FluidUtil
+                    .fillStack(this.containerItem.copy(), new FluidStack(fluid, maxCapacity));
             if (filled.right == null) continue;
             ItemStack pattern = getPattern(this.containerItem, filled.right);
             ICraftingPatternItem patter = (ICraftingPatternItem) pattern.getItem();
@@ -219,12 +213,11 @@ public class TileEntityFluidFiller extends TileBase
         FluidStack fluid = FluidUtil.getFluidFromContainer(filled);
         IStorageGrid storage = getStorageGrid();
         if (storage == null) return false;
-        IAEFluidStack fluidStack = AEApi.instance()
-                .storage()
-                .createFluidStack(new FluidStack(
+        IAEFluidStack fluidStack = AEApi.instance().storage().createFluidStack(
+                new FluidStack(
                         fluid.getFluid(),
-                        FluidUtil.getCapacity(
-                                patternDetails.getCondensedInputs()[0].getItemStack(), fluid.getFluid())));
+                        FluidUtil
+                                .getCapacity(patternDetails.getCondensedInputs()[0].getItemStack(), fluid.getFluid())));
         IAEFluidStack extracted = storage.getFluidInventory()
                 .extractItems(fluidStack.copy(), Actionable.SIMULATE, new MachineSource(this));
         if (extracted == null || extracted.getStackSize() != fluidStack.getStackSize()) return false;
@@ -302,8 +295,7 @@ public class TileEntityFluidFiller extends TileBase
         }
         if (newGrid != null) {
             IStorageGrid storage = newGrid.getCache(IStorageGrid.class);
-            if (storage != null) storage.getFluidInventory().addListener(this, null);
-            ;
+            if (storage != null) storage.getFluidInventory().addListener(this, null);;
         }
     }
 

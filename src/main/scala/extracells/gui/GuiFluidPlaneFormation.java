@@ -1,5 +1,17 @@
 package extracells.gui;
 
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.lwjgl.opengl.GL11;
+
 import appeng.api.AEApi;
 import extracells.container.ContainerPlaneFormation;
 import extracells.gui.widget.WidgetRedstoneModes;
@@ -8,20 +20,12 @@ import extracells.network.packet.other.IFluidSlotGui;
 import extracells.network.packet.part.PacketFluidPlaneFormation;
 import extracells.part.PartFluidPlaneFormation;
 import extracells.util.FluidUtil;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
 
 public class GuiFluidPlaneFormation extends ECGuiContainer implements IFluidSlotGui {
 
-    private static final ResourceLocation guiTexture =
-            new ResourceLocation("extracells", "textures/gui/paneformation.png");
+    private static final ResourceLocation guiTexture = new ResourceLocation(
+            "extracells",
+            "textures/gui/paneformation.png");
     private PartFluidPlaneFormation part;
     private EntityPlayer player;
     private boolean hasNetworkTool;
@@ -54,13 +58,11 @@ public class GuiFluidPlaneFormation extends ECGuiContainer implements IFluidSlot
         renderOverlay(this.fluidSlot, mouseX, mouseY);
 
         for (Object button : this.buttonList) {
-            if (button instanceof WidgetRedstoneModes)
-                ((WidgetRedstoneModes) button)
-                        .drawTooltip(
-                                this.guiLeft,
-                                this.guiTop,
-                                (this.width - this.xSize) / 2,
-                                (this.height - this.ySize) / 2);
+            if (button instanceof WidgetRedstoneModes) ((WidgetRedstoneModes) button).drawTooltip(
+                    this.guiLeft,
+                    this.guiTop,
+                    (this.width - this.xSize) / 2,
+                    (this.height - this.ySize) / 2);
         }
         showTooltip(mouseX, mouseY);
     }
@@ -79,7 +81,12 @@ public class GuiFluidPlaneFormation extends ECGuiContainer implements IFluidSlot
 
     private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
         return this.func_146978_c(
-                p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
+                p_146981_1_.xDisplayPosition,
+                p_146981_1_.yDisplayPosition,
+                16,
+                16,
+                p_146981_2_,
+                p_146981_3_);
     }
 
     protected boolean isPointInRegion(int top, int left, int height, int width, int pointX, int pointY) {
@@ -94,9 +101,9 @@ public class GuiFluidPlaneFormation extends ECGuiContainer implements IFluidSlot
     protected void mouseClicked(int mouseX, int mouseY, int mouseBtn) {
         Slot slot = getSlotAtPosition(mouseX, mouseY);
 
-        if (slot != null
-                && slot.getStack() != null
-                && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack())) return;
+        if (slot != null && slot.getStack() != null
+                && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack()))
+            return;
         super.mouseClicked(mouseX, mouseY, mouseBtn);
         if (isPointInRegion(this.fluidSlot.getPosX(), this.fluidSlot.getPosY(), 18, 18, mouseX, mouseY))
             this.fluidSlot.mouseClicked(this.player.inventory.getItemStack());

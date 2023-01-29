@@ -1,14 +1,5 @@
 package extracells.container;
 
-import appeng.api.implementations.ICraftingPatternItem;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.api.IFluidInterface;
-import extracells.container.slot.SlotRespective;
-import extracells.gui.GuiFluidInterface;
-import extracells.network.packet.part.PacketFluidInterface;
-import extracells.part.PartFluidInterface;
-import extracells.tileentity.TileEntityFluidInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -18,7 +9,18 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
+import appeng.api.implementations.ICraftingPatternItem;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.api.IFluidInterface;
+import extracells.container.slot.SlotRespective;
+import extracells.gui.GuiFluidInterface;
+import extracells.network.packet.part.PacketFluidInterface;
+import extracells.part.PartFluidInterface;
+import extracells.tileentity.TileEntityFluidInterface;
+
 public class ContainerFluidInterface extends Container implements IContainerListener {
+
     public IFluidInterface fluidInterface;
 
     @SideOnly(Side.CLIENT)
@@ -93,7 +95,10 @@ public class ContainerFluidInterface extends Container implements IContainerList
             if (itemstack.getItem() instanceof ICraftingPatternItem) {
                 if (slotnumber < 9) {
                     if (!mergeItemStack(
-                            itemstack1, this.inventorySlots.size() - 9, this.inventorySlots.size(), false)) {
+                            itemstack1,
+                            this.inventorySlots.size() - 9,
+                            this.inventorySlots.size(),
+                            false)) {
                         if (!mergeItemStack(itemstack1, 9, this.inventorySlots.size() - 9, false)) return null;
                     }
                 } else if (!mergeItemStack(itemstack1, 0, 9, false)) {
@@ -128,35 +133,16 @@ public class ContainerFluidInterface extends Container implements IContainerList
     @Override
     public void updateContainer() {
         new PacketFluidInterface(
-                        new FluidStack[] {
-                            this.fluidInterface
-                                    .getFluidTank(ForgeDirection.getOrientation(0))
-                                    .getFluid(),
-                            this.fluidInterface
-                                    .getFluidTank(ForgeDirection.getOrientation(1))
-                                    .getFluid(),
-                            this.fluidInterface
-                                    .getFluidTank(ForgeDirection.getOrientation(2))
-                                    .getFluid(),
-                            this.fluidInterface
-                                    .getFluidTank(ForgeDirection.getOrientation(3))
-                                    .getFluid(),
-                            this.fluidInterface
-                                    .getFluidTank(ForgeDirection.getOrientation(4))
-                                    .getFluid(),
-                            this.fluidInterface
-                                    .getFluidTank(ForgeDirection.getOrientation(5))
-                                    .getFluid()
-                        },
-                        new Integer[] {
-                            getFluidID(ForgeDirection.getOrientation(0)),
-                            getFluidID(ForgeDirection.getOrientation(1)),
-                            getFluidID(ForgeDirection.getOrientation(2)),
-                            getFluidID(ForgeDirection.getOrientation(3)),
-                            getFluidID(ForgeDirection.getOrientation(4)),
-                            getFluidID(ForgeDirection.getOrientation(5))
-                        },
-                        this.player)
-                .sendPacketToPlayer(this.player);
+                new FluidStack[] { this.fluidInterface.getFluidTank(ForgeDirection.getOrientation(0)).getFluid(),
+                        this.fluidInterface.getFluidTank(ForgeDirection.getOrientation(1)).getFluid(),
+                        this.fluidInterface.getFluidTank(ForgeDirection.getOrientation(2)).getFluid(),
+                        this.fluidInterface.getFluidTank(ForgeDirection.getOrientation(3)).getFluid(),
+                        this.fluidInterface.getFluidTank(ForgeDirection.getOrientation(4)).getFluid(),
+                        this.fluidInterface.getFluidTank(ForgeDirection.getOrientation(5)).getFluid() },
+                new Integer[] { getFluidID(ForgeDirection.getOrientation(0)),
+                        getFluidID(ForgeDirection.getOrientation(1)), getFluidID(ForgeDirection.getOrientation(2)),
+                        getFluidID(ForgeDirection.getOrientation(3)), getFluidID(ForgeDirection.getOrientation(4)),
+                        getFluidID(ForgeDirection.getOrientation(5)) },
+                this.player).sendPacketToPlayer(this.player);
     }
 }

@@ -1,22 +1,22 @@
 package extracells.registries;
 
-import extracells.Extracells;
-import extracells.integration.Integration;
-import extracells.item.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
+import extracells.Extracells;
+import extracells.integration.Integration;
+import extracells.item.*;
+
 public enum ItemEnum {
+
     PARTITEM("part.base", new ItemPartECBase()),
     FLUIDSTORAGE("storage.fluid", new ItemStorageFluid()),
     PHYSICALSTORAGE("storage.physical", new ItemStoragePhysical()),
-    PHYSICALSTORAGESINGULARITY(
-            "storage.physical.advanced.singularity",
+    PHYSICALSTORAGESINGULARITY("storage.physical.advanced.singularity",
             new ItemAdvancedStorageCell(Long.MAX_VALUE / 16, 1, 4096, 15000.0, "singularity")),
-    PHYSICALSTORAGEQUANTUM(
-            "storage.physical.advanced.quantum",
+    PHYSICALSTORAGEQUANTUM("storage.physical.advanced.quantum",
             new ItemAdvancedStorageCell(Integer.MAX_VALUE / 16, 1, 1, 1000.0, "quantum")),
     PHYSICALSTORAGEVOID("storage.physical.void", new ItemVoidStorageCell()),
     GASSTORAGE("storage.gas", new ItemStorageGas(), Integration.Mods.MEKANISMGAS),

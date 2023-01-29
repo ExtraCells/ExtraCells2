@@ -1,5 +1,21 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.SecurityPermissions;
@@ -31,20 +47,6 @@ import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 public class PartFluidStorage extends PartECBase
         implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock, IPriorityHost {
@@ -58,8 +60,7 @@ public class PartFluidStorage extends PartECBase
 
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-            return itemStack != null
-                    && AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack);
+            return itemStack != null && AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack);
         }
     };
 
@@ -138,11 +139,9 @@ public class PartFluidStorage extends PartECBase
 
     @Override
     public void onInventoryChanged() {
-        this.handler.setInverted(AEApi.instance()
-                .definitions()
-                .materials()
-                .cardInverter()
-                .isSameAs(this.upgradeInventory.getStackInSlot(0)));
+        this.handler.setInverted(
+                AEApi.instance().definitions().materials().cardInverter()
+                        .isSameAs(this.upgradeInventory.getStackInSlot(0)));
         saveData();
     }
 
@@ -187,8 +186,7 @@ public class PartFluidStorage extends PartECBase
         if (data.hasKey("access")) {
             try {
                 this.access = AccessRestriction.valueOf(data.getString("access"));
-            } catch (Throwable e) {
-            }
+            } catch (Throwable e) {}
         }
         this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
         onInventoryChanged();
@@ -307,8 +305,7 @@ public class PartFluidStorage extends PartECBase
     private void updateNeighborFluids() {
         fluidList.clear();
         if (access == AccessRestriction.READ || access == AccessRestriction.READ_WRITE) {
-            for (IAEFluidStack stack :
-                    handler.getAvailableItems(AEApi.instance().storage().createFluidList())) {
+            for (IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())) {
                 fluidList.put(stack, stack.getStackSize());
             }
         }
@@ -316,8 +313,7 @@ public class PartFluidStorage extends PartECBase
 
     private boolean wasChanged() {
         HashMap<IAEFluidStack, Long> fluids = new HashMap<IAEFluidStack, Long>();
-        for (IAEFluidStack stack :
-                handler.getAvailableItems(AEApi.instance().storage().createFluidList())) {
+        for (IAEFluidStack stack : handler.getAvailableItems(AEApi.instance().storage().createFluidList())) {
             fluids.put(stack, stack.getStackSize());
         }
         return !fluids.equals(fluidList);

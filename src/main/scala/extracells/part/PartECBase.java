@@ -1,5 +1,26 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+
+import mekanism.api.gas.IGasHandler;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.implementations.IPowerChannelState;
@@ -30,24 +51,6 @@ import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
-import mekanism.api.gas.IGasHandler;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.IFluidHandler;
 
 public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowerChannelState {
 
@@ -76,8 +79,7 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
         this.gridBlock = new ECBaseGridBlock(this);
         this.node = AEApi.instance().createGridNode(this.gridBlock);
         if (this.node != null) {
-            if (this.owner != null)
-                this.node.setPlayerID(AEApi.instance().registries().players().getID(this.owner));
+            if (this.owner != null) this.node.setPlayerID(AEApi.instance().registries().players().getID(this.owner));
             this.node.updateState();
         }
         setPower(null);
@@ -277,14 +279,13 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
 
     @Override
     public boolean onActivate(EntityPlayer player, Vec3 pos) {
-        if (player != null && player instanceof EntityPlayerMP)
-            GuiHandler.launchGui(
-                    GuiHandler.getGuiId(this),
-                    player,
-                    this.hostTile.getWorldObj(),
-                    this.hostTile.xCoord,
-                    this.hostTile.yCoord,
-                    this.hostTile.zCoord);
+        if (player != null && player instanceof EntityPlayerMP) GuiHandler.launchGui(
+                GuiHandler.getGuiId(this),
+                player,
+                this.hostTile.getWorldObj(),
+                this.hostTile.xCoord,
+                this.hostTile.yCoord,
+                this.hostTile.zCoord);
         return true;
     }
 
@@ -308,13 +309,13 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
         int x = this.hostTile.xCoord;
         int y = this.hostTile.yCoord;
         int z = this.hostTile.zCoord;
-        TileEntity tileEntity =
-                world.getTileEntity(x + this.side.offsetX, y + this.side.offsetY, z + this.side.offsetZ);
+        TileEntity tileEntity = world
+                .getTileEntity(x + this.side.offsetX, y + this.side.offsetY, z + this.side.offsetZ);
         this.facingTank = null;
         if (tileEntity instanceof IFluidHandler) this.facingTank = (IFluidHandler) tileEntity;
         if (Integration.Mods.MEKANISMGAS.isEnabled()) updateCheckGasTank(tileEntity);
-        this.redstonePowered =
-                world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
+        this.redstonePowered = world.isBlockIndirectlyGettingPowered(x, y, z)
+                || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
     }
 
     @Optional.Method(modid = "MekanismAPI|gas")
@@ -392,7 +393,12 @@ public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowe
         final IIcon noTexture = ItemMultiPart.instance.getIconFromDamage(380);
 
         rh.setTexture(
-                sideStatusTexture, sideStatusTexture, backTexture, noTexture, sideStatusTexture, sideStatusTexture);
+                sideStatusTexture,
+                sideStatusTexture,
+                backTexture,
+                noTexture,
+                sideStatusTexture,
+                sideStatusTexture);
         rh.setBounds(4, 4, 13, 12, 12, 14);
         rh.renderBlock(x, y, z, renderer);
     }

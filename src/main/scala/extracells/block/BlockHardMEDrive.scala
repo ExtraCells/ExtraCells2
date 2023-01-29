@@ -27,9 +27,13 @@ import net.minecraft.util.{IIcon, MathHelper}
 import net.minecraft.world.World
 import net.minecraftforge.common.util.ForgeDirection
 
-
-object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.rock, 2.0F, 1000000.0F) with TGuiBlock{
-
+object BlockHardMEDrive
+    extends BlockEC(
+      net.minecraft.block.material.Material.rock,
+      2.0f,
+      1000000.0f
+    )
+    with TGuiBlock {
 
   var frontIcon: IIcon = null
   var sideIcon: IIcon = null
@@ -37,7 +41,13 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
   var topIcon: IIcon = null
 
   @SideOnly(Side.CLIENT)
-  override def getClientGuiElement(player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any = {
+  override def getClientGuiElement(
+      player: EntityPlayer,
+      world: World,
+      x: Int,
+      y: Int,
+      z: Int
+  ): Any = {
     val tile = world.getTileEntity(x, y, z)
     if (tile == null || player == null) return null
     tile match {
@@ -48,7 +58,13 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     }
   }
 
-  override def getServerGuiElement(player: EntityPlayer, world: World, x: Int, y: Int, z: Int): Any = {
+  override def getServerGuiElement(
+      player: EntityPlayer,
+      world: World,
+      x: Int,
+      y: Int,
+      z: Int
+  ): Any = {
     val tile = world.getTileEntity(x, y, z)
     if (tile == null || player == null) return null
     tile match {
@@ -59,14 +75,22 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     }
   }
 
-  //Only needed because BlockEnum is in java. not in scala
+  // Only needed because BlockEnum is in java. not in scala
   val instance = this
 
   setBlockName("block.hardmedrive");
 
-  override def createNewTileEntity(world : World, meta : Int): TileEntity = new TileEntityHardMeDrive()
+  override def createNewTileEntity(world: World, meta: Int): TileEntity =
+    new TileEntityHardMeDrive()
 
-  override def breakBlock(world: World, x: Int, y: Int, z: Int, block: Block, par6: Int) {
+  override def breakBlock(
+      world: World,
+      x: Int,
+      y: Int,
+      z: Int,
+      block: Block,
+      par6: Int
+  ) {
     dropItems(world, x, y, z)
     super.breakBlock(world, x, y, z, block, par6)
   }
@@ -77,23 +101,27 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     if (!(tileEntity.isInstanceOf[TileEntityHardMeDrive])) {
       return
     }
-    val inventory: IInventory = (tileEntity.asInstanceOf[TileEntityHardMeDrive]).getInventory
+    val inventory: IInventory =
+      (tileEntity.asInstanceOf[TileEntityHardMeDrive]).getInventory
 
     var i: Int = 0
     while (i < inventory.getSizeInventory) {
 
       val item: ItemStack = inventory.getStackInSlot(i)
       if (item != null && item.stackSize > 0) {
-        val rx: Float = rand.nextFloat * 0.8F + 0.1F
-        val ry: Float = rand.nextFloat * 0.8F + 0.1F
-        val rz: Float = rand.nextFloat * 0.8F + 0.1F
-        val entityItem: EntityItem = new EntityItem(world, x + rx, y + ry, z + rz, item.copy)
+        val rx: Float = rand.nextFloat * 0.8f + 0.1f
+        val ry: Float = rand.nextFloat * 0.8f + 0.1f
+        val rz: Float = rand.nextFloat * 0.8f + 0.1f
+        val entityItem: EntityItem =
+          new EntityItem(world, x + rx, y + ry, z + rz, item.copy)
         if (item.hasTagCompound) {
-          entityItem.getEntityItem.setTagCompound(item.getTagCompound.copy.asInstanceOf[NBTTagCompound])
+          entityItem.getEntityItem.setTagCompound(
+            item.getTagCompound.copy.asInstanceOf[NBTTagCompound]
+          )
         }
-        val factor: Float = 0.05F
+        val factor: Float = 0.05f
         entityItem.motionX = rand.nextGaussian * factor
-        entityItem.motionY = rand.nextGaussian * factor + 0.2F
+        entityItem.motionY = rand.nextGaussian * factor + 0.2f
         entityItem.motionZ = rand.nextGaussian * factor
         world.spawnEntityInWorld(entityItem)
         item.stackSize = 0
@@ -103,25 +131,52 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     }
   }
 
-  override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer, side: Int, p_149727_7_ : Float, p_149727_8_ : Float, p_149727_9_ : Float): Boolean = {
+  override def onBlockActivated(
+      world: World,
+      x: Int,
+      y: Int,
+      z: Int,
+      player: EntityPlayer,
+      side: Int,
+      p_149727_7_ : Float,
+      p_149727_8_ : Float,
+      p_149727_9_ : Float
+  ): Boolean = {
     if (world.isRemote) return false
     val tile: TileEntity = world.getTileEntity(x, y, z)
-    if (tile.isInstanceOf[TileEntityHardMeDrive]) if (!PermissionUtil.hasPermission(player, SecurityPermissions.BUILD, (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(ForgeDirection.UNKNOWN))) return false
+    if (tile.isInstanceOf[TileEntityHardMeDrive])
+      if (
+        !PermissionUtil.hasPermission(
+          player,
+          SecurityPermissions.BUILD,
+          (tile
+            .asInstanceOf[TileEntityHardMeDrive])
+            .getGridNode(ForgeDirection.UNKNOWN)
+        )
+      ) return false
     val current: ItemStack = player.inventory.getCurrentItem
     if (player.isSneaking && current != null) {
       try {
-        if (current.getItem.isInstanceOf[IToolWrench] && (current.getItem.asInstanceOf[IToolWrench]).canWrench(player, x, y, z)) {
+        if (
+          current.getItem.isInstanceOf[IToolWrench] && (current.getItem
+            .asInstanceOf[IToolWrench])
+            .canWrench(player, x, y, z)
+        ) {
           dropBlockAsItem(world, x, y, z, new ItemStack(this))
           world.setBlockToAir(x, y, z)
-          (current.getItem.asInstanceOf[IToolWrench]).wrenchUsed(player, x, y, z)
+          (current.getItem
+            .asInstanceOf[IToolWrench])
+            .wrenchUsed(player, x, y, z)
           return true
         }
+      } catch {
+        case e: Throwable => {}
       }
-      catch {
-        case e: Throwable => {
-        }
-      }
-      if (current.getItem.isInstanceOf[IAEWrench] && (current.getItem.asInstanceOf[IAEWrench]).canWrench(current, player, x, y, z)) {
+      if (
+        current.getItem.isInstanceOf[IAEWrench] && (current.getItem
+          .asInstanceOf[IAEWrench])
+          .canWrench(current, player, x, y, z)
+      ) {
         dropBlockAsItem(world, x, y, z, new ItemStack(this))
         world.setBlockToAir(x, y, z)
         return true
@@ -131,58 +186,82 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     return true
   }
 
-  override def onBlockPlacedBy(world: World, x: Int, y: Int, z: Int, entity: EntityLivingBase, stack: ItemStack) {
+  override def onBlockPlacedBy(
+      world: World,
+      x: Int,
+      y: Int,
+      z: Int,
+      entity: EntityLivingBase,
+      stack: ItemStack
+  ) {
     super.onBlockPlacedBy(world, x, y, z, entity, stack);
-    val l = MathHelper.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+    val l =
+      MathHelper.floor_double(entity.rotationYaw * 4.0f / 360.0f + 0.5d) & 3;
 
-    if (!entity.isSneaking())
-    {
-      if (l == 0)
-      {
+    if (!entity.isSneaking()) {
+      if (l == 0) {
         world.setBlockMetadataWithNotify(x, y, z, 2, 2);
       }
 
-      if (l == 1)
-      {
+      if (l == 1) {
         world.setBlockMetadataWithNotify(x, y, z, 5, 2);
       }
 
-      if (l == 2)
-      {
+      if (l == 2) {
         world.setBlockMetadataWithNotify(x, y, z, 3, 2);
       }
 
-      if (l == 3)
-      {
+      if (l == 3) {
         world.setBlockMetadataWithNotify(x, y, z, 4, 2);
       }
-    } else
-    {
-      if (l == 0)
-      {
-        world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(2).getOpposite().ordinal(), 2);
+    } else {
+      if (l == 0) {
+        world.setBlockMetadataWithNotify(
+          x,
+          y,
+          z,
+          ForgeDirection.getOrientation(2).getOpposite().ordinal(),
+          2
+        );
       }
 
-      if (l == 1)
-      {
-        world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(5).getOpposite().ordinal(), 2);
+      if (l == 1) {
+        world.setBlockMetadataWithNotify(
+          x,
+          y,
+          z,
+          ForgeDirection.getOrientation(5).getOpposite().ordinal(),
+          2
+        );
       }
 
-      if (l == 2)
-      {
-        world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(3).getOpposite().ordinal(), 2);
+      if (l == 2) {
+        world.setBlockMetadataWithNotify(
+          x,
+          y,
+          z,
+          ForgeDirection.getOrientation(3).getOpposite().ordinal(),
+          2
+        );
       }
 
-      if (l == 3)
-      {
-        world.setBlockMetadataWithNotify(x, y, z, ForgeDirection.getOrientation(4).getOpposite().ordinal(), 2);
+      if (l == 3) {
+        world.setBlockMetadataWithNotify(
+          x,
+          y,
+          z,
+          ForgeDirection.getOrientation(4).getOpposite().ordinal(),
+          2
+        );
       }
     }
     if (world.isRemote) return
     val tile: TileEntity = world.getTileEntity(x, y, z)
     if (tile != null) {
       if (tile.isInstanceOf[TileEntityHardMeDrive]) {
-        val node: IGridNode = (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(ForgeDirection.UNKNOWN)
+        val node: IGridNode = (tile
+          .asInstanceOf[TileEntityHardMeDrive])
+          .getGridNode(ForgeDirection.UNKNOWN)
         if (entity != null && entity.isInstanceOf[EntityPlayer]) {
           val player: EntityPlayer = entity.asInstanceOf[EntityPlayer]
           node.setPlayerID(AEApi.instance.registries.players.getID(player))
@@ -192,12 +271,20 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     }
   }
 
-  override def onBlockPreDestroy(world: World, x: Int, y: Int, z: Int, meta: Int) {
+  override def onBlockPreDestroy(
+      world: World,
+      x: Int,
+      y: Int,
+      z: Int,
+      meta: Int
+  ) {
     if (world.isRemote) return
     val tile: TileEntity = world.getTileEntity(x, y, z)
     if (tile != null) {
       if (tile.isInstanceOf[TileEntityHardMeDrive]) {
-        val node: IGridNode = (tile.asInstanceOf[TileEntityHardMeDrive]).getGridNode(ForgeDirection.UNKNOWN)
+        val node: IGridNode = (tile
+          .asInstanceOf[TileEntityHardMeDrive])
+          .getGridNode(ForgeDirection.UNKNOWN)
         if (node != null) {
           node.destroy
         }
@@ -207,11 +294,11 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
 
   @SideOnly(Side.CLIENT)
   override def getIcon(side: Int, metadata: Int) = {
-    if(side == metadata)
+    if (side == metadata)
       frontIcon
-    else if(side == 0)
+    else if (side == 0)
       bottomIcon
-    else if(side == 1)
+    else if (side == 1)
       topIcon
     else
       sideIcon
@@ -225,6 +312,6 @@ object BlockHardMEDrive extends BlockEC(net.minecraft.block.material.Material.ro
     topIcon = register.registerIcon("extracells:machine.top");
   }
 
-  override def getRenderType : Int = RendererHardMEDrive.getRenderId
+  override def getRenderType: Int = RendererHardMEDrive.getRenderId
 
 }

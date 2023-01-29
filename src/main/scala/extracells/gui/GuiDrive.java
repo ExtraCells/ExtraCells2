@@ -1,14 +1,16 @@
 package extracells.gui;
 
-import extracells.container.ContainerDrive;
-import extracells.network.packet.part.PacketFluidStorage;
-import extracells.part.PartDrive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
+
+import extracells.container.ContainerDrive;
+import extracells.network.packet.part.PacketFluidStorage;
+import extracells.part.PartDrive;
 
 public class GuiDrive extends GuiContainer {
 
@@ -38,11 +40,15 @@ public class GuiDrive extends GuiContainer {
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-            this.mc
-                    .getTextureManager()
+            this.mc.getTextureManager()
                     .bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
             this.drawTexturedModalRect(
-                    this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 0, 16, 16);
+                    this.guiLeft + slot.xDisplayPosition,
+                    this.guiTop + slot.yDisplayPosition,
+                    240,
+                    0,
+                    16,
+                    16);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
         }

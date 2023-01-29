@@ -1,14 +1,7 @@
 package extracells.block;
 
-import appeng.api.AEApi;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.implementations.items.IAEWrench;
-import appeng.api.networking.IGridNode;
-import buildcraft.api.tools.IToolWrench;
-import extracells.network.GuiHandler;
-import extracells.tileentity.TileEntityFluidCrafter;
-import extracells.util.PermissionUtil;
 import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -22,6 +15,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
+import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.implementations.items.IAEWrench;
+import appeng.api.networking.IGridNode;
+import buildcraft.api.tools.IToolWrench;
+import extracells.network.GuiHandler;
+import extracells.tileentity.TileEntityFluidCrafter;
+import extracells.util.PermissionUtil;
 
 public class BlockFluidCrafter extends BlockEC {
 
@@ -62,8 +64,7 @@ public class BlockFluidCrafter extends BlockEC {
                 EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z + rz, item.copy());
 
                 if (item.hasTagCompound()) {
-                    entityItem.getEntityItem().setTagCompound((NBTTagCompound)
-                            item.getTagCompound().copy());
+                    entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
                 }
 
                 float factor = 0.05F;
@@ -92,21 +93,13 @@ public class BlockFluidCrafter extends BlockEC {
     }
 
     @Override
-    public boolean onBlockActivated(
-            World world,
-            int x,
-            int y,
-            int z,
-            EntityPlayer player,
-            int side,
-            float p_149727_7_,
-            float p_149727_8_,
-            float p_149727_9_) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_,
+            float p_149727_8_, float p_149727_9_) {
         if (world.isRemote) return false;
         TileEntity tile = world.getTileEntity(x, y, z);
-        if (tile instanceof TileEntityFluidCrafter)
-            if (!PermissionUtil.hasPermission(
-                    player, SecurityPermissions.BUILD, ((TileEntityFluidCrafter) tile).getGridNode())) return false;
+        if (tile instanceof TileEntityFluidCrafter) if (!PermissionUtil
+                .hasPermission(player, SecurityPermissions.BUILD, ((TileEntityFluidCrafter) tile).getGridNode()))
+            return false;
         ItemStack current = player.inventory.getCurrentItem();
         if (player.isSneaking() && current != null) {
             try {

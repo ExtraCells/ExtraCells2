@@ -2,6 +2,19 @@ package extracells.container;
 
 import static extracells.util.FluidUtil.filterEmptyFluid;
 
+import mekanism.api.gas.GasStack;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.BaseActionSource;
@@ -25,22 +38,9 @@ import extracells.util.FluidUtil;
 import extracells.util.GasUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
-import mekanism.api.gas.GasStack;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnace;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.MutablePair;
 
-public class ContainerGasStorage extends Container
-        implements IMEMonitorHandlerReceiver<IAEFluidStack>,
-                IFluidSelectorContainer,
-                IInventoryUpdateReceiver,
-                IStorageContainer {
+public class ContainerGasStorage extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>,
+        IFluidSelectorContainer, IInventoryUpdateReceiver, IStorageContainer {
 
     private final boolean isMekanismEnabled = Integration.Mods.MEKANISMGAS.isEnabled();
     private GuiGasStorage guiGasStorage;
@@ -85,8 +85,8 @@ public class ContainerGasStorage extends Container
         bindPlayerInventory(this.player.inventory);
     }
 
-    public ContainerGasStorage(
-            IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player, IPortableGasStorageCell _storageCell) {
+    public ContainerGasStorage(IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player,
+            IPortableGasStorageCell _storageCell) {
         this.hasWirelessTermHandler = _storageCell != null;
         this.storageCell = _storageCell;
         this.monitor = _monitor;
@@ -106,8 +106,8 @@ public class ContainerGasStorage extends Container
         bindPlayerInventory(this.player.inventory);
     }
 
-    public ContainerGasStorage(
-            IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player, IWirelessGasTermHandler _handler) {
+    public ContainerGasStorage(IMEMonitor<IAEFluidStack> _monitor, EntityPlayer _player,
+            IWirelessGasTermHandler _handler) {
         this.hasWirelessTermHandler = _handler != null;
         this.handler = _handler;
         this.monitor = _monitor;
@@ -163,10 +163,9 @@ public class ContainerGasStorage extends Container
         GasStack gasStack = GasUtil.getGasFromContainer(container);
         container = container.copy();
         container.stackSize = 1;
-        if (GasUtil.isEmpty(container)
-                || (gasStack.amount < GasUtil.getCapacity(container)
-                        && GasUtil.getFluidStack(gasStack).getFluid() == this.selectedFluid
-                        && doNextFill)) {
+        if (GasUtil.isEmpty(container) || (gasStack.amount < GasUtil.getCapacity(container)
+                && GasUtil.getFluidStack(gasStack).getFluid() == this.selectedFluid
+                && doNextFill)) {
             if (this.selectedFluid == null) return;
             int capacity = GasUtil.getCapacity(container);
             // Tries to simulate the extraction of fluid from storage.
@@ -176,15 +175,13 @@ public class ContainerGasStorage extends Container
                     new PlayerSource(this.player, null));
 
             // Calculates the amount of fluid to fill container with.
-            int proposedAmount = result == null
-                    ? 0
-                    : gasStack == null
-                            ? (int) Math.min(capacity, result.getStackSize())
+            int proposedAmount = result == null ? 0
+                    : gasStack == null ? (int) Math.min(capacity, result.getStackSize())
                             : (int) Math.min(capacity - gasStack.amount, result.getStackSize());
 
             // Tries to fill the container with fluid.
-            MutablePair<Integer, ItemStack> filledContainer = GasUtil.fillStack(
-                    container, GasUtil.getGasStack(new FluidStack(this.selectedFluid, proposedAmount)));
+            MutablePair<Integer, ItemStack> filledContainer = GasUtil
+                    .fillStack(container, GasUtil.getGasStack(new FluidStack(this.selectedFluid, proposedAmount)));
 
             GasStack gasStack2 = GasUtil.getGasFromContainer(filledContainer.getRight());
 
@@ -215,7 +212,9 @@ public class ContainerGasStorage extends Container
 
             // Tries to inject fluid to network.
             IAEFluidStack notInjected = this.monitor.injectItems(
-                    GasUtil.createAEFluidStack(gasStack1), Actionable.SIMULATE, new PlayerSource(this.player, null));
+                    GasUtil.createAEFluidStack(gasStack1),
+                    Actionable.SIMULATE,
+                    new PlayerSource(this.player, null));
             if (notInjected != null) return;
             if (this.handler != null) {
                 if (!this.handler.hasPower(this.player, 20.0D, this.player.getCurrentEquippedItem())) {
@@ -229,8 +228,7 @@ public class ContainerGasStorage extends Container
                 this.storageCell.usePower(this.player, 20.0D, this.player.getCurrentEquippedItem());
             }
             ItemStack emptyContainer = drainedContainer.getRight();
-            if (emptyContainer != null
-                    && GasUtil.getGasFromContainer(emptyContainer) != null
+            if (emptyContainer != null && GasUtil.getGasFromContainer(emptyContainer) != null
                     && emptyContainer.stackSize == 1) {
                 monitor.injectItems(
                         GasUtil.createAEFluidStack(gasStack1),
@@ -331,8 +329,8 @@ public class ContainerGasStorage extends Container
     public void onListUpdate() {}
 
     @Override
-    public void postChange(
-            IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
+            BaseActionSource actionSource) {
         this.fluidStackList = ((IMEMonitor<IAEFluidStack>) monitor).getStorageList();
         new PacketFluidStorage(this.player, change, this.fluidStackList).sendPacketToPlayer(this.player);
         new PacketFluidStorage(this.player, this.hasWirelessTermHandler).sendPacketToPlayer(this.player);

@@ -1,5 +1,8 @@
 package extracells.network.packet.part;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -7,8 +10,6 @@ import extracells.container.ContainerOreDictExport;
 import extracells.gui.GuiOreDictExport;
 import extracells.network.AbstractPacket;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 
 public class PacketOreDictExport extends AbstractPacket {
 
@@ -28,11 +29,9 @@ public class PacketOreDictExport extends AbstractPacket {
     public void execute() {
         switch (this.mode) {
             case 0:
-                if (this.side.isClient())
-                    try {
-                        handleClient();
-                    } catch (Throwable e) {
-                    }
+                if (this.side.isClient()) try {
+                    handleClient();
+                } catch (Throwable e) {}
                 else handleServer();
                 break;
         }

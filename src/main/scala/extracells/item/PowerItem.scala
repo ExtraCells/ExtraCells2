@@ -7,19 +7,38 @@ import cpw.mods.fml.common.Optional
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.nbt.NBTTagCompound
 
-@Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy", striprefs = true)
-trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem{
+@Optional.Interface(
+  iface = "cofh.api.energy.IEnergyContainerItem",
+  modid = "CoFHAPI|energy",
+  striprefs = true
+)
+trait PowerItem
+    extends Item
+    with IAEItemPowerStorage
+    with IEnergyContainerItem {
 
-  val MAX_POWER :Double
+  val MAX_POWER: Double
 
   @Optional.Method(modid = "CoFHAPI|energy")
-  override def extractEnergy(container: ItemStack, maxExtract: Int, simulate: Boolean): Int = {
+  override def extractEnergy(
+      container: ItemStack,
+      maxExtract: Int,
+      simulate: Boolean
+  ): Int = {
     if (container == null) return 0
     if (simulate) {
-      return if (getEnergyStored(container) >= maxExtract) maxExtract else getEnergyStored(container)
-    }
-    else {
-      return PowerUnits.AE.convertTo(PowerUnits.RF, extractAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract))).toInt
+      return if (getEnergyStored(container) >= maxExtract) maxExtract
+      else getEnergyStored(container)
+    } else {
+      return PowerUnits.AE
+        .convertTo(
+          PowerUnits.RF,
+          extractAEPower(
+            container,
+            PowerUnits.RF.convertTo(PowerUnits.AE, maxExtract)
+          )
+        )
+        .toInt
     }
   }
 
@@ -34,19 +53,32 @@ trait PowerItem extends Item with IAEItemPowerStorage with IEnergyContainerItem{
   }
 
   @Optional.Method(modid = "CoFHAPI|energy")
-  override def receiveEnergy(container: ItemStack, maxReceive: Int, simulate: Boolean): Int = {
+  override def receiveEnergy(
+      container: ItemStack,
+      maxReceive: Int,
+      simulate: Boolean
+  ): Int = {
     if (container == null) return 0
     if (simulate) {
-      val current: Double = PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(container))
-      val max: Double = PowerUnits.AE.convertTo(PowerUnits.RF, getAEMaxPower(container))
+      val current: Double =
+        PowerUnits.AE.convertTo(PowerUnits.RF, getAECurrentPower(container))
+      val max: Double =
+        PowerUnits.AE.convertTo(PowerUnits.RF, getAEMaxPower(container))
       if (max - current >= maxReceive) maxReceive
       else (max - current).toInt
-    }
-    else {
+    } else {
       val currentAEPower = getAECurrentPower(container)
-      if ( currentAEPower < getAEMaxPower(container)){
-        PowerUnits.AE.convertTo(PowerUnits.RF, injectAEPower(container, PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive))).toInt
-      }else
+      if (currentAEPower < getAEMaxPower(container)) {
+        PowerUnits.AE
+          .convertTo(
+            PowerUnits.RF,
+            injectAEPower(
+              container,
+              PowerUnits.RF.convertTo(PowerUnits.AE, maxReceive)
+            )
+          )
+          .toInt
+      } else
         0
     }
   }

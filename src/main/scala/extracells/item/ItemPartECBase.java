@@ -1,5 +1,19 @@
 package extracells.item;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
+
+import org.apache.logging.log4j.Level;
+
 import appeng.api.AEApi;
 import appeng.api.config.Upgrades;
 import appeng.api.implementations.items.IItemGroup;
@@ -10,17 +24,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.api.ECApi;
 import extracells.registries.PartEnum;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
 
 public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
 
@@ -58,16 +61,8 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
     public String getItemStackDisplayName(ItemStack stack) {
         if (stack == null) return super.getItemStackDisplayName(null);
         if (stack.getItemDamage() == PartEnum.INTERFACE.ordinal())
-            return ECApi.instance()
-                    .blocks()
-                    .blockInterface()
-                    .maybeItem()
-                    .get()
-                    .getItemStackDisplayName(ECApi.instance()
-                            .blocks()
-                            .blockInterface()
-                            .maybeStack(1)
-                            .get());
+            return ECApi.instance().blocks().blockInterface().maybeItem().get()
+                    .getItemStackDisplayName(ECApi.instance().blocks().blockInterface().maybeStack(1).get());
         return super.getItemStackDisplayName(stack);
     }
 
@@ -99,17 +94,8 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
     }
 
     @Override
-    public boolean onItemUse(
-            ItemStack is,
-            EntityPlayer player,
-            World world,
-            int x,
-            int y,
-            int z,
-            int side,
-            float hitX,
-            float hitY,
-            float hitZ) {
+    public boolean onItemUse(ItemStack is, EntityPlayer player, World world, int x, int y, int z, int side, float hitX,
+            float hitY, float hitZ) {
         return AEApi.instance().partHelper().placeBus(is, x, y, z, side, player, world);
     }
 

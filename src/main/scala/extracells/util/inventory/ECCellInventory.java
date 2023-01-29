@@ -21,9 +21,7 @@ public class ECCellInventory implements IInventory {
         this.size = _size;
         this.stackLimit = _stackLimit;
         if (!this.storage.hasTagCompound()) this.storage.setTagCompound(new NBTTagCompound());
-        this.storage
-                .getTagCompound()
-                .setTag(this.tagId, this.storage.getTagCompound().getCompoundTag(this.tagId));
+        this.storage.getTagCompound().setTag(this.tagId, this.storage.getTagCompound().getCompoundTag(this.tagId));
         this.tagCompound = this.storage.getTagCompound().getCompoundTag(this.tagId);
         openInventory();
     }

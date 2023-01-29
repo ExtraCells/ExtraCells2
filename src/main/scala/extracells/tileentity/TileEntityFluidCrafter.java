@@ -1,5 +1,19 @@
 package extracells.tileentity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.implementations.ICraftingPatternItem;
@@ -18,18 +32,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import extracells.api.IECTileEntity;
 import extracells.crafting.CraftingPattern;
 import extracells.gridblock.ECFluidGridBlock;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 public class TileEntityFluidCrafter extends TileBase
         implements IActionHost, ICraftingProvider, ICraftingWatcherHost, IECTileEntity {
@@ -91,8 +93,8 @@ public class TileEntityFluidCrafter extends TileBase
         @Override
         public boolean isItemValidForSlot(int slot, ItemStack stack) {
             if (stack.getItem() instanceof ICraftingPatternItem) {
-                ICraftingPatternDetails details =
-                        ((ICraftingPatternItem) stack.getItem()).getPatternForItem(stack, getWorldObj());
+                ICraftingPatternDetails details = ((ICraftingPatternItem) stack.getItem())
+                        .getPatternForItem(stack, getWorldObj());
                 return details != null && details.isCraftable();
             }
             return false;
@@ -243,8 +245,7 @@ public class TileEntityFluidCrafter extends TileBase
         for (int i = 0; this.inventory.inv.length > i; i++) {
             ItemStack currentPatternStack = this.inventory.inv[i];
             ItemStack oldItem = this.oldStack[i];
-            if (currentPatternStack != null
-                    && oldItem != null
+            if (currentPatternStack != null && oldItem != null
                     && ItemStack.areItemStacksEqual(currentPatternStack, oldItem)) {
                 ICraftingPatternDetails pa = oldHandler[i];
                 if (pa != null) {
@@ -258,18 +259,15 @@ public class TileEntityFluidCrafter extends TileBase
                     continue;
                 }
             }
-            if (currentPatternStack != null
-                    && currentPatternStack.getItem() != null
+            if (currentPatternStack != null && currentPatternStack.getItem() != null
                     && currentPatternStack.getItem() instanceof ICraftingPatternItem) {
                 ICraftingPatternItem currentPattern = (ICraftingPatternItem) currentPatternStack.getItem();
 
                 if (currentPattern != null
                         && currentPattern.getPatternForItem(currentPatternStack, getWorldObj()) != null
-                        && currentPattern
-                                .getPatternForItem(currentPatternStack, getWorldObj())
-                                .isCraftable()) {
-                    ICraftingPatternDetails pattern =
-                            new CraftingPattern(currentPattern.getPatternForItem(currentPatternStack, getWorldObj()));
+                        && currentPattern.getPatternForItem(currentPatternStack, getWorldObj()).isCraftable()) {
+                    ICraftingPatternDetails pattern = new CraftingPattern(
+                            currentPattern.getPatternForItem(currentPatternStack, getWorldObj()));
                     this.patternHandlers.add(pattern);
                     this.patternHandlerSlot[i] = pattern;
                     if (pattern.getCondensedInputs().length == 0) {
@@ -305,22 +303,20 @@ public class TileEntityFluidCrafter extends TileBase
             if (storage == null) return false;
             for (Fluid fluid : fluids.keySet()) {
                 Long amount = fluids.get(fluid);
-                IAEFluidStack extractFluid = storage.getFluidInventory()
-                        .extractItems(
-                                AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))),
-                                Actionable.SIMULATE,
-                                new MachineSource(this));
+                IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(
+                        AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))),
+                        Actionable.SIMULATE,
+                        new MachineSource(this));
                 if (extractFluid == null || extractFluid.getStackSize() != amount) {
                     return false;
                 }
             }
             for (Fluid fluid : fluids.keySet()) {
                 Long amount = fluids.get(fluid);
-                IAEFluidStack extractFluid = storage.getFluidInventory()
-                        .extractItems(
-                                AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))),
-                                Actionable.MODULATE,
-                                new MachineSource(this));
+                IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(
+                        AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int) (amount + 0))),
+                        Actionable.MODULATE,
+                        new MachineSource(this));
             }
             this.finishCraftingTime = System.currentTimeMillis() + 1000;
 
@@ -364,8 +360,7 @@ public class TileEntityFluidCrafter extends TileBase
                 getGridNode().getGrid().postEvent(new MENetworkCraftingPatternChange(this.instance, getGridNode()));
             }
         }
-        if (this.isBusy
-                && this.finishCraftingTime <= System.currentTimeMillis()
+        if (this.isBusy && this.finishCraftingTime <= System.currentTimeMillis()
                 && getWorldObj() != null
                 && !getWorldObj().isRemote) {
             if (this.node == null || this.returnStack == null) return;
@@ -373,18 +368,16 @@ public class TileEntityFluidCrafter extends TileBase
             if (grid == null) return;
             IStorageGrid storage = grid.getCache(IStorageGrid.class);
             if (storage == null) return;
-            storage.getItemInventory()
-                    .injectItems(
-                            AEApi.instance().storage().createItemStack(this.returnStack),
-                            Actionable.MODULATE,
-                            new MachineSource(this));
+            storage.getItemInventory().injectItems(
+                    AEApi.instance().storage().createItemStack(this.returnStack),
+                    Actionable.MODULATE,
+                    new MachineSource(this));
             for (ItemStack s : this.optionalReturnStack) {
                 if (s == null) continue;
-                storage.getItemInventory()
-                        .injectItems(
-                                AEApi.instance().storage().createItemStack(s),
-                                Actionable.MODULATE,
-                                new MachineSource(this));
+                storage.getItemInventory().injectItems(
+                        AEApi.instance().storage().createItemStack(s),
+                        Actionable.MODULATE,
+                        new MachineSource(this));
             }
             this.optionalReturnStack = new ItemStack[0];
             this.isBusy = false;
@@ -423,12 +416,11 @@ public class TileEntityFluidCrafter extends TileBase
                             boolean doBreak = false;
                             for (Fluid fluid : fluids.keySet()) {
                                 Long amount = fluids.get(fluid);
-                                IAEFluidStack extractFluid = storage.getFluidInventory()
-                                        .extractItems(
-                                                AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int)
-                                                        (amount + 0))),
-                                                Actionable.SIMULATE,
-                                                new MachineSource(this));
+                                IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(
+                                        AEApi.instance().storage()
+                                                .createFluidStack(new FluidStack(fluid, (int) (amount + 0))),
+                                        Actionable.SIMULATE,
+                                        new MachineSource(this));
                                 if (extractFluid == null || extractFluid.getStackSize() != amount) {
                                     doBreak = true;
                                     break;
@@ -437,12 +429,11 @@ public class TileEntityFluidCrafter extends TileBase
                             if (doBreak) break;
                             for (Fluid fluid : fluids.keySet()) {
                                 Long amount = fluids.get(fluid);
-                                IAEFluidStack extractFluid = storage.getFluidInventory()
-                                        .extractItems(
-                                                AEApi.instance().storage().createFluidStack(new FluidStack(fluid, (int)
-                                                        (amount + 0))),
-                                                Actionable.MODULATE,
-                                                new MachineSource(this));
+                                IAEFluidStack extractFluid = storage.getFluidInventory().extractItems(
+                                        AEApi.instance().storage()
+                                                .createFluidStack(new FluidStack(fluid, (int) (amount + 0))),
+                                        Actionable.MODULATE,
+                                        new MachineSource(this));
                             }
                             this.finishCraftingTime = System.currentTimeMillis() + 1000;
 

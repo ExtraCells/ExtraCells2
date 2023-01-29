@@ -1,13 +1,14 @@
 package extracells.render;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import extracells.block.BlockCertusTank;
-import extracells.render.model.ModelCertusTank;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import extracells.block.BlockCertusTank;
+import extracells.render.model.ModelCertusTank;
 
 public class RenderHandler implements ISimpleBlockRenderingHandler {
 
@@ -34,8 +35,8 @@ public class RenderHandler implements ISimpleBlockRenderingHandler {
     public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer) {}
 
     @Override
-    public boolean renderWorldBlock(
-            IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId,
+            RenderBlocks renderer) {
         if (block instanceof BlockCertusTank) {
             Tessellator tessellator = Tessellator.instance;
             tessellator.setColorOpaque_F(1, 1, 1);

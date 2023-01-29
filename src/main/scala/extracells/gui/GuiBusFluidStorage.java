@@ -1,5 +1,23 @@
 package extracells.gui;
 
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.client.gui.widgets.GuiTabButton;
@@ -20,28 +38,14 @@ import extracells.part.PartFluidStorage;
 import extracells.part.PartGasStorage;
 import extracells.util.FluidUtil;
 import extracells.util.GuiUtil;
-import java.util.Collections;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 @Optional.Interface(modid = "NotEnoughItems", iface = "codechicken.nei.api.INEIGuiHandler")
 public class GuiBusFluidStorage extends ECGuiContainer
         implements WidgetFluidSlot.IConfigurable, IFluidSlotGui, INEIGuiHandler {
 
-    private static final ResourceLocation guiTexture =
-            new ResourceLocation("extracells", "textures/gui/storagebusfluid.png");
+    private static final ResourceLocation guiTexture = new ResourceLocation(
+            "extracells",
+            "textures/gui/storagebusfluid.png");
     private final EntityPlayer player;
     private byte filterSize;
     private final boolean hasNetworkTool;
@@ -118,9 +122,8 @@ public class GuiBusFluidStorage extends ECGuiContainer
         boolean overlayRendered = false;
         for (byte i = 0; i < 54; i++) {
             this.fluidSlotList.get(i).drawWidget();
-            if (!overlayRendered && this.fluidSlotList.get(i).canRender())
-                overlayRendered = GuiUtil.renderOverlay(
-                        this.zLevel, this.guiLeft, this.guiTop, this.fluidSlotList.get(i), mouseX, mouseY);
+            if (!overlayRendered && this.fluidSlotList.get(i).canRender()) overlayRendered = GuiUtil
+                    .renderOverlay(this.zLevel, this.guiLeft, this.guiTop, this.fluidSlotList.get(i), mouseX, mouseY);
         }
         for (Object button : this.buttonList) {
             if (button instanceof WidgetStorageDirection) {
@@ -258,14 +261,23 @@ public class GuiBusFluidStorage extends ECGuiContainer
         super.initGui();
         this.buttonList.add(
                 new WidgetStorageDirection(0, this.guiLeft - 18, this.guiTop, 16, 16, AccessRestriction.READ_WRITE));
-        this.priority =
-                new GuiTabButton(this.guiLeft + 154, this.guiTop, 2 + 4 * 16, GuiText.Priority.getLocal(), itemRender);
+        this.priority = new GuiTabButton(
+                this.guiLeft + 154,
+                this.guiTop,
+                2 + 4 * 16,
+                GuiText.Priority.getLocal(),
+                itemRender);
         this.buttonList.add(priority);
     }
 
     private boolean isMouseOverSlot(Slot p_146981_1_, int p_146981_2_, int p_146981_3_) {
         return this.func_146978_c(
-                p_146981_1_.xDisplayPosition, p_146981_1_.yDisplayPosition, 16, 16, p_146981_2_, p_146981_3_);
+                p_146981_1_.xDisplayPosition,
+                p_146981_1_.yDisplayPosition,
+                16,
+                16,
+                p_146981_2_,
+                p_146981_3_);
     }
 
     @Override
@@ -273,13 +285,20 @@ public class GuiBusFluidStorage extends ECGuiContainer
         super.mouseClicked(mouseX, mouseY, mouseBtn);
         Slot slot = getSlotAtPosition(mouseX, mouseY);
 
-        if (slot != null
-                && slot.getStack() != null
-                && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack())) return;
+        if (slot != null && slot.getStack() != null
+                && AEApi.instance().definitions().items().networkTool().isSameAs(slot.getStack()))
+            return;
 
         for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
             if (GuiUtil.isPointInRegion(
-                    this.guiLeft, this.guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
+                    this.guiLeft,
+                    this.guiTop,
+                    fluidSlot.getPosX(),
+                    fluidSlot.getPosY(),
+                    18,
+                    18,
+                    mouseX,
+                    mouseY)) {
                 if (part instanceof PartGasStorage && Integration.Mods.MEKANISMGAS.isEnabled())
                     fluidSlot.mouseClickedGas(this.player.inventory.getItemStack());
                 else fluidSlot.mouseClicked(this.player.inventory.getItemStack());
@@ -293,11 +312,15 @@ public class GuiBusFluidStorage extends ECGuiContainer
             GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
-            this.mc
-                    .getTextureManager()
+            this.mc.getTextureManager()
                     .bindTexture(new ResourceLocation("appliedenergistics2", "textures/guis/states.png"));
             this.drawTexturedModalRect(
-                    this.guiLeft + slot.xDisplayPosition, this.guiTop + slot.yDisplayPosition, 240, 208, 16, 16);
+                    this.guiLeft + slot.xDisplayPosition,
+                    this.guiTop + slot.yDisplayPosition,
+                    240,
+                    208,
+                    16,
+                    16);
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_LIGHTING);
         }
@@ -349,7 +372,14 @@ public class GuiBusFluidStorage extends ECGuiContainer
         }
         for (WidgetFluidSlot fluidSlot : this.fluidSlotList) {
             if (GuiUtil.isPointInRegion(
-                    this.guiLeft, this.guiTop, fluidSlot.getPosX(), fluidSlot.getPosY(), 18, 18, mouseX, mouseY)) {
+                    this.guiLeft,
+                    this.guiTop,
+                    fluidSlot.getPosX(),
+                    fluidSlot.getPosY(),
+                    18,
+                    18,
+                    mouseX,
+                    mouseY)) {
                 if (part instanceof PartGasStorage && Integration.Mods.MEKANISMGAS.isEnabled())
                     fluidSlot.mouseNEIClickedGas(draggedStack);
                 else fluidSlot.mouseNEIClicked(draggedStack);

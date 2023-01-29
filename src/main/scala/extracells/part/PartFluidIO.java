@@ -1,5 +1,19 @@
 package extracells.part;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.IGridNode;
@@ -21,18 +35,6 @@ import extracells.network.packet.part.PacketBusFluidIO;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 
 public abstract class PartFluidIO extends PartECBase
         implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
@@ -50,8 +52,7 @@ public abstract class PartFluidIO extends PartECBase
             if (itemStack == null) return false;
             if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(itemStack)) return true;
             else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack)) return true;
-            else
-                return AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack);
+            else return AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack);
         }
     };
 
@@ -167,8 +168,7 @@ public abstract class PartFluidIO extends PartECBase
 
         try {
             if (getHost().getLocation().getWorld().isRemote) return;
-        } catch (Throwable ignored) {
-        }
+        } catch (Throwable ignored) {}
         new PacketBusFluidIO(this.filterSize).sendPacketToAllPlayers();
         new PacketBusFluidIO(this.redstoneControlled).sendPacketToAllPlayers();
         saveData();

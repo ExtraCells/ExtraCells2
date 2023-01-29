@@ -1,9 +1,10 @@
 package extracells.util;
 
-import appeng.api.implementations.items.IAEWrench;
-import buildcraft.api.tools.IToolWrench;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+
+import appeng.api.implementations.items.IAEWrench;
+import buildcraft.api.tools.IToolWrench;
 
 public class WrenchUtil {
 
@@ -12,8 +13,7 @@ public class WrenchUtil {
         try {
             IToolWrench w = (IToolWrench) wrench.getItem();
             return w.canWrench(player, x, y, z);
-        } catch (Throwable e) {
-        }
+        } catch (Throwable e) {}
         if (wrench.getItem() instanceof IAEWrench) {
             IAEWrench w = (IAEWrench) wrench.getItem();
             return w.canWrench(wrench, player, x, y, z);
@@ -26,7 +26,6 @@ public class WrenchUtil {
         try {
             IToolWrench w = (IToolWrench) wrench.getItem();
             w.wrenchUsed(player, x, y, z);
-        } catch (Throwable e) {
-        }
+        } catch (Throwable e) {}
     }
 }

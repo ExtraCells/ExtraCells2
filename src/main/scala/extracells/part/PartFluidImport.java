@@ -1,5 +1,19 @@
 package extracells.part;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
+
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.RedstoneMode;
@@ -16,18 +30,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 
 public class PartFluidImport extends PartFluidIO implements IFluidHandler {
 
@@ -79,8 +81,7 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
                 }
             }
         }
-        return (empty && fillToNetwork(null, rate * TicksSinceLastCall))
-                ? TickRateModulation.FASTER
+        return (empty && fillToNetwork(null, rate * TicksSinceLastCall)) ? TickRateModulation.FASTER
                 : TickRateModulation.SLOWER;
     }
 
@@ -97,11 +98,11 @@ public class PartFluidImport extends PartFluidIO implements IFluidHandler {
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
         boolean redstonePowered = isRedstonePowered();
-        if (resource == null
-                || redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL
-                || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL) return 0;
-        int drainAmount =
-                Math.min(Extracells.basePartSpeed() + this.speedState * Extracells.basePartSpeed(), resource.amount);
+        if (resource == null || redstonePowered && getRedstoneMode() == RedstoneMode.LOW_SIGNAL
+                || !redstonePowered && getRedstoneMode() == RedstoneMode.HIGH_SIGNAL)
+            return 0;
+        int drainAmount = Math
+                .min(Extracells.basePartSpeed() + this.speedState * Extracells.basePartSpeed(), resource.amount);
         FluidStack toFill = new FluidStack(resource.getFluid(), drainAmount);
         Actionable action = doFill ? Actionable.MODULATE : Actionable.SIMULATE;
         IAEFluidStack filled = injectFluid(AEApi.instance().storage().createFluidStack(toFill), action);

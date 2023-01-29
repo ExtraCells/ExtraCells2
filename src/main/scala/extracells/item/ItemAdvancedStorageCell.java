@@ -1,5 +1,17 @@
 package extracells.item;
 
+import java.text.NumberFormat;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.IncludeExclude;
@@ -21,18 +33,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.api.IStorageCellAdvanced;
 import extracells.inventory.AdvancedCellInventoryHandler;
-import java.text.NumberFormat;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 
 public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorageCellAdvanced, IItemGroup {
+
     private final long totalBytes;
     private final int totalTypes;
     private final int perType;
@@ -54,10 +57,10 @@ public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorag
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addCheckedInformation(
-            final ItemStack stack, final EntityPlayer player, final List<String> lines, final boolean displayMoreInfo) {
-        final IMEInventoryHandler<?> inventory =
-                AEApi.instance().registries().cell().getCellInventory(stack, null, StorageChannel.ITEMS);
+    public void addCheckedInformation(final ItemStack stack, final EntityPlayer player, final List<String> lines,
+            final boolean displayMoreInfo) {
+        final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell()
+                .getCellInventory(stack, null, StorageChannel.ITEMS);
 
         if (inventory instanceof AdvancedCellInventoryHandler) {
             final ICellInventoryHandler handler = (ICellInventoryHandler) inventory;
@@ -65,9 +68,13 @@ public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorag
             final ICellInventory cellInventory = handler.getCellInv();
 
             if (cellInventory != null) {
-                lines.add(NumberFormat.getInstance().format(cellInventory.getUsedBytes()) + " " + GuiText.Of.getLocal()
-                        + ' ' + NumberFormat.getInstance().format(cellInventory.getTotalBytes()) + ' '
-                        + GuiText.BytesUsed.getLocal());
+                lines.add(
+                        NumberFormat.getInstance().format(cellInventory.getUsedBytes()) + " "
+                                + GuiText.Of.getLocal()
+                                + ' '
+                                + NumberFormat.getInstance().format(cellInventory.getTotalBytes())
+                                + ' '
+                                + GuiText.BytesUsed.getLocal());
 
                 format(lines, handler, cellInventory);
             }
@@ -75,18 +82,20 @@ public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorag
     }
 
     static void format(List<String> lines, ICellInventoryHandler handler, ICellInventory cellInventory) {
-        lines.add(NumberFormat.getInstance().format(cellInventory.getStoredItemTypes()) + " " + GuiText.Of.getLocal()
-                + ' ' + NumberFormat.getInstance().format(cellInventory.getTotalItemTypes()) + ' '
-                + GuiText.Types.getLocal());
+        lines.add(
+                NumberFormat.getInstance().format(cellInventory.getStoredItemTypes()) + " "
+                        + GuiText.Of.getLocal()
+                        + ' '
+                        + NumberFormat.getInstance().format(cellInventory.getTotalItemTypes())
+                        + ' '
+                        + GuiText.Types.getLocal());
 
         if (handler.isPreformatted()) {
             String filter = cellInventory.getOreFilter();
 
             if (filter.isEmpty()) {
-                final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST
-                                ? GuiText.Included
-                                : GuiText.Excluded)
-                        .getLocal();
+                final String list = (handler.getIncludeExcludeMode() == IncludeExclude.WHITELIST ? GuiText.Included
+                        : GuiText.Excluded).getLocal();
 
                 if (handler.isFuzzy()) {
                     lines.add(GuiText.Partitioned.getLocal() + " - " + list + ' ' + GuiText.Fuzzy.getLocal());
@@ -196,11 +205,7 @@ public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorag
 
     @Override
     public ItemStack getContainerItem(final ItemStack itemStack) {
-        for (final ItemStack stack : AEApi.instance()
-                .definitions()
-                .materials()
-                .emptyStorageCell()
-                .maybeStack(1)
+        for (final ItemStack stack : AEApi.instance().definitions().materials().emptyStorageCell().maybeStack(1)
                 .asSet()) {
             return stack;
         }

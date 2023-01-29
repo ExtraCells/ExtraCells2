@@ -1,19 +1,7 @@
 package extracells.block;
 
-import appeng.api.AEApi;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.implementations.items.IAEWrench;
-import appeng.api.networking.IGridNode;
-import buildcraft.api.tools.IToolWrench;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import extracells.api.IECTileEntity;
-import extracells.network.GuiHandler;
-import extracells.tileentity.IListenerTile;
-import extracells.tileentity.TileEntityFluidFiller;
-import extracells.tileentity.TileEntityFluidInterface;
-import extracells.util.PermissionUtil;
 import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -27,6 +15,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.implementations.items.IAEWrench;
+import appeng.api.networking.IGridNode;
+import buildcraft.api.tools.IToolWrench;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import extracells.api.IECTileEntity;
+import extracells.network.GuiHandler;
+import extracells.tileentity.IListenerTile;
+import extracells.tileentity.TileEntityFluidFiller;
+import extracells.tileentity.TileEntityFluidInterface;
+import extracells.util.PermissionUtil;
 
 public class ECBaseBlock extends BlockEC {
 
@@ -79,8 +81,7 @@ public class ECBaseBlock extends BlockEC {
                 EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z + rz, item.copy());
 
                 if (item.hasTagCompound()) {
-                    entityItem.getEntityItem().setTagCompound((NBTTagCompound)
-                            item.getTagCompound().copy());
+                    entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
                 }
 
                 float factor = 0.05F;
@@ -103,26 +104,18 @@ public class ECBaseBlock extends BlockEC {
     }
 
     @Override
-    public boolean onBlockActivated(
-            World world,
-            int x,
-            int y,
-            int z,
-            EntityPlayer player,
-            int side,
-            float p_149727_7_,
-            float p_149727_8_,
-            float p_149727_9_) {
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float p_149727_7_,
+            float p_149727_8_, float p_149727_9_) {
         switch (world.getBlockMetadata(x, y, z)) {
             case 0:
             case 1:
                 if (world.isRemote) return true;
                 TileEntity tile = world.getTileEntity(x, y, z);
-                if (tile instanceof IECTileEntity)
-                    if (!PermissionUtil.hasPermission(
-                            player,
-                            SecurityPermissions.BUILD,
-                            ((IECTileEntity) tile).getGridNode(ForgeDirection.UNKNOWN))) return false;
+                if (tile instanceof IECTileEntity) if (!PermissionUtil.hasPermission(
+                        player,
+                        SecurityPermissions.BUILD,
+                        ((IECTileEntity) tile).getGridNode(ForgeDirection.UNKNOWN)))
+                    return false;
                 ItemStack current = player.getCurrentEquippedItem();
                 if (player.isSneaking() && current != null) {
                     try {
@@ -143,8 +136,7 @@ public class ECBaseBlock extends BlockEC {
                     }
                     if (current.getItem() instanceof IAEWrench
                             && ((IAEWrench) current.getItem()).canWrench(current, player, x, y, z)) {
-                        ItemStack block = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));
-                        ;
+                        ItemStack block = new ItemStack(this, 1, world.getBlockMetadata(x, y, z));;
                         if (tile != null && tile instanceof TileEntityFluidInterface) {
                             block.setTagCompound(((TileEntityFluidInterface) tile).writeFilter(new NBTTagCompound()));
                         }
@@ -172,8 +164,7 @@ public class ECBaseBlock extends BlockEC {
                         IGridNode node = ((IECTileEntity) tile).getGridNode(ForgeDirection.UNKNOWN);
                         if (entity != null && entity instanceof EntityPlayer) {
                             EntityPlayer player = (EntityPlayer) entity;
-                            node.setPlayerID(
-                                    AEApi.instance().registries().players().getID(player));
+                            node.setPlayerID(AEApi.instance().registries().players().getID(player));
                         }
                         node.updateState();
                     }

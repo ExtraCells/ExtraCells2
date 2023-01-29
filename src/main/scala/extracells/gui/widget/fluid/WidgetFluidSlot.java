@@ -1,13 +1,10 @@
 package extracells.gui.widget.fluid;
 
-import cpw.mods.fml.common.Optional;
-import extracells.network.packet.other.IFluidSlotPartOrBlock;
-import extracells.network.packet.other.PacketFluidSlot;
-import extracells.util.FluidUtil;
-import extracells.util.GasUtil;
 import java.util.ArrayList;
 import java.util.List;
+
 import mekanism.api.gas.GasStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -18,8 +15,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import cpw.mods.fml.common.Optional;
+import extracells.network.packet.other.IFluidSlotPartOrBlock;
+import extracells.network.packet.other.PacketFluidSlot;
+import extracells.util.FluidUtil;
+import extracells.util.GasUtil;
 
 public class WidgetFluidSlot extends Gui {
 
@@ -31,8 +35,9 @@ public class WidgetFluidSlot extends Gui {
     private int id;
     private int posX, posY;
     private Fluid fluid;
-    private static final ResourceLocation guiTexture =
-            new ResourceLocation("extracells", "textures/gui/busiofluid.png");
+    private static final ResourceLocation guiTexture = new ResourceLocation(
+            "extracells",
+            "textures/gui/busiofluid.png");
     private IFluidSlotPartOrBlock part;
     private EntityPlayer player;
     private IConfigurable configurable;
@@ -49,14 +54,8 @@ public class WidgetFluidSlot extends Gui {
         this(_player, _part, _id, _posX, _posY, null, (byte) 0);
     }
 
-    public WidgetFluidSlot(
-            EntityPlayer _player,
-            IFluidSlotPartOrBlock _part,
-            int _id,
-            int _posX,
-            int _posY,
-            IConfigurable _configurable,
-            byte _configOption) {
+    public WidgetFluidSlot(EntityPlayer _player, IFluidSlotPartOrBlock _part, int _id, int _posX, int _posY,
+            IConfigurable _configurable, byte _configOption) {
         this.player = _player;
         this.part = _part;
         this.id = _id;

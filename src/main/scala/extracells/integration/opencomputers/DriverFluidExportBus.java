@@ -1,14 +1,5 @@
 package extracells.integration.opencomputers;
 
-import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
-import extracells.Extracells;
-import extracells.part.PartFluidExport;
-import extracells.part.PartGasExport;
-import extracells.registries.ItemEnum;
-import extracells.registries.PartEnum;
-import extracells.util.FluidUtil;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.driver.EnvironmentProvider;
 import li.cil.oc.api.driver.NamedBlock;
@@ -21,12 +12,23 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.ManagedEnvironment;
 import li.cil.oc.server.network.Component;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import extracells.Extracells;
+import extracells.part.PartFluidExport;
+import extracells.part.PartGasExport;
+import extracells.registries.ItemEnum;
+import extracells.registries.PartEnum;
+import extracells.util.FluidUtil;
 
 public class DriverFluidExportBus implements SidedBlock {
 
@@ -69,37 +71,33 @@ public class DriverFluidExportBus implements SidedBlock {
         Environment(IPartHost host) {
             tile = (TileEntity) host;
             this.host = host;
-            setNode(Network.newNode(this, Visibility.Network)
-                    .withComponent("me_exportbus")
-                    .create());
+            setNode(Network.newNode(this, Visibility.Network).withComponent("me_exportbus").create());
         }
 
         @Callback(
-                doc =
-                        "function(side:number, [ slot:number]):table -- Get the configuration of the fluid export bus pointing in the specified direction.")
+                doc = "function(side:number, [ slot:number]):table -- Get the configuration of the fluid export bus pointing in the specified direction.")
         public Object[] getFluidExportConfiguration(Context context, Arguments args) {
             ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-            if (dir == null || dir == ForgeDirection.UNKNOWN) return new Object[] {null, "unknown side"};
+            if (dir == null || dir == ForgeDirection.UNKNOWN) return new Object[] { null, "unknown side" };
             PartFluidExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
-            if (part == null) return new Object[] {null, "no export bus"};
+            if (part == null) return new Object[] { null, "no export bus" };
             int slot = args.optInteger(1, 4);
             try {
                 Fluid fluid = part.filterFluids[slot];
-                if (fluid == null) return new Object[] {null};
-                return new Object[] {new FluidStack(fluid, 1000)};
+                if (fluid == null) return new Object[] { null };
+                return new Object[] { new FluidStack(fluid, 1000) };
             } catch (Throwable e) {
-                return new Object[] {null, "Invalid slot"};
+                return new Object[] { null, "Invalid slot" };
             }
         }
 
         @Callback(
-                doc =
-                        "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the fluid export bus pointing in the specified direction to export fluid stacks matching the specified descriptor.")
+                doc = "function(side:number[, slot:number][, database:address, entry:number]):boolean -- Configure the fluid export bus pointing in the specified direction to export fluid stacks matching the specified descriptor.")
         public Object[] setFluidExportConfiguration(Context context, Arguments args) {
             ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-            if (dir == null || dir == ForgeDirection.UNKNOWN) return new Object[] {null, "unknown side"};
+            if (dir == null || dir == ForgeDirection.UNKNOWN) return new Object[] { null, "unknown side" };
             PartFluidExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
-            if (part == null) return new Object[] {null, "no export bus"};
+            if (part == null) return new Object[] { null, "no export bus" };
             int slot;
             String address;
             int entry;
@@ -113,9 +111,9 @@ public class DriverFluidExportBus implements SidedBlock {
                     part.filterFluids[slot] = null;
                     part.onInventoryChanged();
                     context.pause(0.5);
-                    return new Object[] {true};
+                    return new Object[] { true };
                 } catch (Throwable e) {
-                    return new Object[] {false, "invalid slot"};
+                    return new Object[] { false, "invalid slot" };
                 }
             } else {
                 slot = args.optInteger(1, 4);
@@ -133,32 +131,32 @@ public class DriverFluidExportBus implements SidedBlock {
                 if (data == null) part.filterFluids[slot] = null;
                 else {
                     FluidStack fluid = FluidUtil.getFluidFromContainer(data);
-                    if (fluid == null || fluid.getFluid() == null) return new Object[] {false, "not a fluid container"};
+                    if (fluid == null || fluid.getFluid() == null)
+                        return new Object[] { false, "not a fluid container" };
                     part.filterFluids[slot] = fluid.getFluid();
                 }
                 part.onInventoryChanged();
                 context.pause(0.5);
-                return new Object[] {true};
+                return new Object[] { true };
             } catch (Throwable e) {
-                return new Object[] {false, "invalid slot"};
+                return new Object[] { false, "invalid slot" };
             }
         }
 
         @Callback(
-                doc =
-                        "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single export operation.")
+                doc = "function(side:number, amount:number):boolean -- Make the fluid export bus facing the specified direction perform a single export operation.")
         public Object[] exportFluid(Context context, Arguments args) {
             ForgeDirection dir = ForgeDirection.getOrientation(args.checkInteger(0));
-            if (dir == null || dir == ForgeDirection.UNKNOWN) return new Object[] {false, "unknown side"};
+            if (dir == null || dir == ForgeDirection.UNKNOWN) return new Object[] { false, "unknown side" };
             PartFluidExport part = getExportBus(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, dir);
-            if (part == null) return new Object[] {false, "no export bus"};
-            if (part.getFacingTank() == null) return new Object[] {false, "no tank"};
+            if (part == null) return new Object[] { false, "no export bus" };
+            if (part.getFacingTank() == null) return new Object[] { false, "no tank" };
             int amount = Math.min(
                     args.optInteger(1, Extracells.basePartSpeed() * 5),
                     Extracells.basePartSpeed() + part.getSpeedState() * Extracells.basePartSpeed());
             boolean didSomething = part.doWork(amount, 1) == TickRateModulation.FASTER;
             if (didSomething) context.pause(0.25);
-            return new Object[] {didSomething};
+            return new Object[] { didSomething };
         }
 
         @Override
@@ -173,11 +171,13 @@ public class DriverFluidExportBus implements SidedBlock {
     }
 
     static class Provider implements EnvironmentProvider {
+
         @Override
         public Class<? extends li.cil.oc.api.network.Environment> getEnvironment(ItemStack stack) {
             if (stack == null) return null;
             if (stack.getItem() == ItemEnum.PARTITEM.getItem()
-                    && stack.getItemDamage() == PartEnum.FLUIDEXPORT.ordinal()) return Environment.class;
+                    && stack.getItemDamage() == PartEnum.FLUIDEXPORT.ordinal())
+                return Environment.class;
             return null;
         }
     }

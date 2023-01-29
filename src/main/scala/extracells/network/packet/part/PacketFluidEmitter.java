@@ -1,13 +1,14 @@
 package extracells.network.packet.part;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.player.EntityPlayer;
+
 import appeng.api.config.RedstoneMode;
 import extracells.gui.GuiFluidEmitter;
 import extracells.network.AbstractPacket;
 import extracells.part.PartFluidLevelEmitter;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class PacketFluidEmitter extends AbstractPacket {
 

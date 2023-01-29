@@ -1,12 +1,15 @@
 package extracells.gui;
 
-import extracells.gui.widget.fluid.WidgetFluidSlot;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 
+import extracells.gui.widget.fluid.WidgetFluidSlot;
+
 abstract class ECGuiContainer extends GuiContainer {
+
     List<WidgetFluidSlot> fluidSlotList = new ArrayList<WidgetFluidSlot>();
     WidgetFluidSlot fluidSlot;
 
