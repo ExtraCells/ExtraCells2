@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -29,6 +30,14 @@ public class ItemBlockECBase extends ItemBlock {
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int damage) {
         return Block.getBlockFromItem(this).getIcon(0, damage);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List tooltip, boolean p_77624_4_) {
+        tooltip.add(EnumChatFormatting.RED + "EC2 is going to be removed in future!");
+        tooltip.add(EnumChatFormatting.RED + "Try to put it in crafting table to covert it into AE2/AE2FC device.");
     }
 
     @Override

@@ -13,10 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -60,6 +57,9 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+        super.addInformation(itemStack, player, list, par4);
+        list.add(EnumChatFormatting.RED + "Contents will be kept when coverting it in crafting table.");
+        list.add(EnumChatFormatting.RED + "You don't need to ME-IO to transfer contents.");
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
         IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry
                 .getCellInventory(itemStack, null, StorageChannel.ITEMS);

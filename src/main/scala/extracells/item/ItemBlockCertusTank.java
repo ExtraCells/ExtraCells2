@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,6 +29,9 @@ public class ItemBlockCertusTank extends ItemBlock implements IFluidContainerIte
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
+        list.add(EnumChatFormatting.RED + "EC2 is going to be removed in future!");
+        list.add(EnumChatFormatting.RED + "Try to put it in crafting table to covert it into AE2/AE2FC device.");
+        list.add(EnumChatFormatting.RED + "Contents will be kept when coverting it in crafting table.");
         if (stack != null && stack.hasTagCompound()) {
             if (FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tileEntity")) != null) list.add(
                     FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("tileEntity")).amount

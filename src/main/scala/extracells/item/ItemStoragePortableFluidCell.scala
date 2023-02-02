@@ -37,6 +37,7 @@ object ItemStoragePortableFluidCell
       list: util.List[_],
       par4: Boolean
   ) {
+    super.addInformation(itemStack, player, list, par4)
     val list2 = list.asInstanceOf[util.List[String]]
     val handler: IMEInventoryHandler[IAEFluidStack] =
       AEApi.instance.registries.cell

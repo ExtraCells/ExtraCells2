@@ -9,6 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -38,6 +39,14 @@ public class ItemPartECBase extends Item implements IPartItem, IItemGroup {
                 upgrade.registerItem(new ItemStack(this, 1, part.ordinal()), possibleUpgradesList.get(upgrade));
             }
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List tooltip, boolean p_77624_4_) {
+        tooltip.add(EnumChatFormatting.RED + "EC2 is going to be removed in future!");
+        tooltip.add(EnumChatFormatting.RED + "Try to put it in crafting table to covert it into AE2/AE2FC device.");
     }
 
     @Override
