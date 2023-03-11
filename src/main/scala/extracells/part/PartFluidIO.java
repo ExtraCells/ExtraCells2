@@ -1,5 +1,7 @@
 package extracells.part;
 
+import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +10,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -21,6 +24,7 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartDeprecated;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -28,6 +32,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.container.ContainerBusFluidIO;
 import extracells.gui.GuiBusFluidIO;
+import extracells.integration.Integration;
+import extracells.integration.ae2fc.FluidCraft;
 import extracells.item.ItemPartECBase;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
@@ -37,7 +43,7 @@ import extracells.util.inventory.IInventoryUpdateReceiver;
 import io.netty.buffer.ByteBuf;
 
 public abstract class PartFluidIO extends PartECBase
-        implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPartOrBlock {
+        implements IGridTickable, IInventoryUpdateReceiver, IFluidSlotPartOrBlock, IPartDeprecated {
 
     public Fluid[] filterFluids = new Fluid[9];
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -181,6 +187,16 @@ public abstract class PartFluidIO extends PartECBase
         this.lastRedstone = redstonePowered;
     }
 
+    /**
+     * Map for converting slots from bus EC2 -> AE2FC
+     */
+    private static int[] FILTER_MAP = null;
+    static {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            FILTER_MAP = new int[] { 5, 3, 6, 1, 0, 2, 7, 4, 8 };
+        }
+    }
+
     @Override
     public final void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
@@ -190,6 +206,57 @@ public abstract class PartFluidIO extends PartECBase
         }
         this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
         onInventoryChanged();
+    }
+
+    @Override
+    public NBTTagCompound transformNBT(NBTTagCompound extra) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            // Transform NBT in place
+            // Fluid Filter
+            NBTTagCompound fluidFilterNew = new NBTTagCompound();
+            for (int slot = 0; slot < 9; ++slot) {
+                String oldFilterName = "FilterFluid#" + slot;
+                fluidFilterNew
+                        .setTag("#" + FILTER_MAP[slot], FluidCraft.createFluidDisplay(extra.getString(oldFilterName)));
+                extra.removeTag(oldFilterName);
+            }
+            extra.setTag("config", fluidFilterNew);
+            // Upgrades
+            NBTTagList upgrades = extra.getTagList("upgradeInventory", TAG_COMPOUND);
+            NBTTagCompound upgradesNew = new NBTTagCompound();
+            for (int i = 0; i < 4; ++i) {
+                NBTTagCompound upgrade = upgrades.getCompoundTagAt(i);
+                upgrade.removeTag("Slot");
+                upgradesNew.setTag("#" + i, upgrade);
+            }
+            extra.removeTag("upgradeInventory");
+            extra.setTag("upgrades", upgradesNew);
+            // Redstone mode
+            RedstoneMode redstoneMode = RedstoneMode.values()[extra.getInteger("redstoneMode")];
+            switch (redstoneMode) {
+                case LOW_SIGNAL:
+                    extra.setString("REDSTONE_CONTROLLED", "LOW_SIGNAL");
+                    break;
+                case HIGH_SIGNAL:
+                    extra.setString("REDSTONE_CONTROLLED", "HIGH_SIGNAL");
+                    break;
+                case SIGNAL_PULSE:
+                    extra.setString("REDSTONE_CONTROLLED", "SIGNAL_PULSE");
+                    break;
+                default:
+                    extra.setString("REDSTONE_CONTROLLED", "IGNORE");
+                    break;
+            }
+            extra.removeTag("redstoneMode");
+            // Part data
+            extra.setTag("part", extra.getCompoundTag("node").getCompoundTag("node0"));
+            extra.removeTag("node");
+            // Extra tags
+            extra.setString("CRAFT_ONLY", "NO");
+            extra.setString("FUZZY_MODE", "IGNORE_ALL");
+            extra.setString("SCHEDULING_MODE", "DEFAULT");
+        }
+        return extra;
     }
 
     @Override

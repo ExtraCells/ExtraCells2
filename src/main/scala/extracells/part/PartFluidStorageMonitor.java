@@ -32,6 +32,7 @@ import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartDeprecated;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
@@ -43,12 +44,16 @@ import appeng.api.util.AEColor;
 import appeng.api.util.INetworkToolAgent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.integration.Integration;
+import extracells.integration.ae2fc.FluidCraft;
+import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 import extracells.util.WrenchUtil;
 import io.netty.buffer.ByteBuf;
 
-public class PartFluidStorageMonitor extends PartECBase implements IStackWatcherHost, INetworkToolAgent {
+public class PartFluidStorageMonitor extends PartECBase
+        implements IStackWatcherHost, INetworkToolAgent, IPartDeprecated {
 
     Fluid fluid = null;
     long amount = 0L;
@@ -441,5 +446,36 @@ public class PartFluidStorageMonitor extends PartECBase implements IStackWatcher
     @Override
     public boolean showNetworkInfo(final MovingObjectPosition where) {
         return false;
+    }
+
+    @Override
+    public NBTTagCompound transformPart(NBTTagCompound def) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            FluidCraft.replace(def, PartEnum.FLUIDMONITOR);
+        }
+        return def;
+    }
+
+    @Override
+    public NBTTagCompound transformNBT(NBTTagCompound extra) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            // Fluid
+            // long amount = extra.getLong("amount");
+            int fluid = extra.getInteger("fluid");
+            Fluid f = FluidRegistry.getFluid(fluid);
+            NBTTagCompound itemDisplay = FluidCraft.createFluidNBT(f.getName(), 0L);
+            extra.setTag("configuredItem", itemDisplay);
+            extra.removeTag("amount");
+            extra.removeTag("fluid");
+            // Locked and other props
+            extra.setBoolean("isLocked", extra.getBoolean("locked"));
+            extra.removeTag("locked");
+            extra.setByte("spin", (byte) 0);
+            extra.setFloat("opacity", 255.0f);
+            // Part
+            extra.setTag("part", extra.getCompoundTag("node").getCompoundTag("node0"));
+            extra.removeTag("node");
+        }
+        return extra;
     }
 }

@@ -1,5 +1,7 @@
 package extracells.part;
 
+import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -22,10 +25,7 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.*;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
+import appeng.api.parts.*;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
@@ -39,17 +39,20 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerBusFluidStorage;
 import extracells.gui.GuiBusFluidStorage;
+import extracells.integration.Integration;
+import extracells.integration.ae2fc.FluidCraft;
 import extracells.inventory.HandlerPartStorageFluid;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketBusFluidStorage;
+import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
 
 public class PartFluidStorage extends PartECBase
-        implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock, IPriorityHost {
+        implements ICellContainer, IInventoryUpdateReceiver, IFluidSlotPartOrBlock, IPriorityHost, IPartDeprecated {
 
     private final HashMap<IAEFluidStack, Long> fluidList = new HashMap<IAEFluidStack, Long>();
     private int priority = 0;
@@ -317,5 +320,67 @@ public class PartFluidStorage extends PartECBase
             fluids.put(stack, stack.getStackSize());
         }
         return !fluids.equals(fluidList);
+    }
+
+    @Override
+    public NBTTagCompound transformPart(NBTTagCompound def) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            FluidCraft.replace(def, PartEnum.FLUIDSTORAGE);
+        }
+        return def;
+    }
+
+    private static int[] FILTER_MAP = null;
+    static {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            // spotless:off
+            FILTER_MAP = new int[] {
+                0,  9, 18, 27, 36, 45,
+                1, 10, 19, 28, 37, 46,
+                2, 11, 20, 29, 38, 47,
+                3, 12, 21, 30, 39, 48,
+                4, 13, 22, 31, 40, 49,
+                5, 14, 23, 32, 41, 50,
+                6, 15, 24, 33, 42, 51,
+                7, 16, 25, 34, 43, 52,
+                8, 17, 26, 35, 44, 53 };
+            //spotless:on
+        }
+    }
+
+    @Override
+    public NBTTagCompound transformNBT(NBTTagCompound extra) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            // Transform in place, less messy IMO
+            // Fluid filter slots
+            NBTTagCompound fluidFilterNew = new NBTTagCompound();
+            for (int slot = 0; slot < filterFluids.length; ++slot) {
+                String oldFilterName = "FilterFluid#" + slot;
+                fluidFilterNew
+                        .setTag("#" + FILTER_MAP[slot], FluidCraft.createFluidDisplay(extra.getString(oldFilterName)));
+                extra.removeTag(oldFilterName);
+            }
+            extra.setTag("config", fluidFilterNew);
+
+            // Part data
+            extra.setTag("part", extra.getCompoundTag("node").getCompoundTag("node0"));
+            extra.removeTag("node");
+
+            // Access
+            extra.setString("ACCESS", extra.getString("access"));
+            extra.removeTag("access");
+
+            // Upgrades
+            NBTTagList upgrades = extra.getTagList("upgradeInventory", TAG_COMPOUND);
+            NBTTagCompound upgradeNew = new NBTTagCompound();
+            upgradeNew.setTag("#0", upgrades.getCompoundTagAt(0));
+            upgradeNew.setTag("#1", new NBTTagCompound());
+            upgradeNew.setTag("#2", new NBTTagCompound());
+            upgradeNew.setTag("#3", new NBTTagCompound());
+            upgradeNew.setTag("#4", new NBTTagCompound());
+            extra.setTag("upgrades", upgradeNew);
+            extra.removeTag("upgradeInventory");
+        }
+        return extra;
     }
 }

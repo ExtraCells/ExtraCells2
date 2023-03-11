@@ -24,10 +24,7 @@ import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
+import appeng.api.parts.*;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
@@ -40,14 +37,18 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.container.ContainerFluidEmitter;
 import extracells.gui.GuiFluidEmitter;
+import extracells.integration.Integration;
+import extracells.integration.ae2fc.FluidCraft;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.network.packet.part.PacketFluidEmitter;
+import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
-public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHost, IFluidSlotPartOrBlock {
+public class PartFluidLevelEmitter extends PartECBase
+        implements IStackWatcherHost, IFluidSlotPartOrBlock, IPartDeprecated {
 
     private Fluid fluid;
     private RedstoneMode mode = RedstoneMode.HIGH_SIGNAL;
@@ -284,5 +285,41 @@ public class PartFluidLevelEmitter extends PartECBase implements IStackWatcherHo
     public void writeToStream(ByteBuf data) throws IOException {
         super.writeToStream(data);
         data.writeBoolean(isPowering());
+    }
+
+    @Override
+    public NBTTagCompound transformPart(NBTTagCompound def) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            FluidCraft.replace(def, PartEnum.FLUIDLEVELEMITTER);
+        }
+        return def;
+    }
+
+    @Override
+    public NBTTagCompound transformNBT(NBTTagCompound extra) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            // Fluid
+            NBTTagCompound fluidSlots = new NBTTagCompound();
+            fluidSlots.setTag("#0", FluidCraft.createFluidDisplay(extra.getString("fluid")));
+            extra.setTag("config", fluidSlots);
+            extra.removeTag("fluid");
+            // Redstone
+            RedstoneMode redstoneMode = RedstoneMode.values()[extra.getInteger("mode")];
+            if (redstoneMode == RedstoneMode.LOW_SIGNAL) {
+                extra.setString("REDSTONE_EMITTER", "LOW_SIGNAL");
+            } else {
+                extra.setString("REDSTONE_EMITTER", "HIGH_SIGNAL");
+            }
+            extra.removeTag("mode");
+            // Level
+            long wanted = extra.getLong("wantedAmount");
+            extra.setLong("reportingValue", wanted);
+            extra.setLong("lastReportingValue", wanted);
+            extra.removeTag("wantedAmount");
+            // Part
+            extra.setTag("part", extra.getCompoundTag("node").getCompoundTag("node0"));
+            extra.removeTag("node");
+        }
+        return extra;
     }
 }

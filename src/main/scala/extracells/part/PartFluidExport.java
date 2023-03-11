@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -25,6 +26,9 @@ import appeng.api.util.AEColor;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.integration.Integration;
+import extracells.integration.ae2fc.FluidCraft;
+import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.PermissionUtil;
 
@@ -172,5 +176,13 @@ public class PartFluidExport extends PartFluidIO {
 
         rh.setBounds(6, 6, 11, 10, 10, 12);
         renderStaticBusLights(x, y, z, rh, renderer);
+    }
+
+    @Override
+    public NBTTagCompound transformPart(NBTTagCompound def) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            FluidCraft.replace(def, PartEnum.FLUIDEXPORT);
+        }
+        return def;
     }
 }

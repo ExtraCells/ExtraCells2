@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3;
@@ -21,6 +22,9 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AEColor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import extracells.integration.Integration;
+import extracells.integration.ae2fc.FluidCraft;
+import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.FluidUtil;
 
@@ -134,5 +138,13 @@ public class PartFluidConversionMonitor extends PartFluidStorageMonitor {
         renderFrontPanel(x, y, z, rh, renderer);
         renderBackPanel(x, y, z, rh, renderer);
         renderPowerStatus(x, y, z, rh, renderer);
+    }
+
+    @Override
+    public NBTTagCompound transformPart(NBTTagCompound def) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            FluidCraft.replace(def, PartEnum.FLUIDCONVERSIONMONITOR);
+        }
+        return def;
     }
 }

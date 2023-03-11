@@ -25,7 +25,8 @@ public class Integration {
         IGW("IGWMod", "IngameWikiMod", Side.CLIENT),
         THAUMATICENERGISTICS("thaumicenergistics", "Thaumatic Energistics"),
         MEKANISM("Mekanism"),
-        WIRELESSCRAFTING("ae2wct", "AE2 Wireless Crafting Terminal");
+        WIRELESSCRAFTING("ae2wct", "AE2 Wireless Crafting Terminal"),
+        FLUIDCRAFT("ae2fc", "Fluid Craft For AE2");
 
         private final String modID;
 
@@ -43,6 +44,8 @@ public class Integration {
             this.modID = modid;
             this.name = modName;
             this.side = side;
+            this.enabled = (Loader.isModLoaded(getModID()) && shouldLoad && correctSide())
+                    || (ModAPIManager.INSTANCE.hasAPI(getModID()) && shouldLoad && correctSide());
         }
 
         private Mods(String modid, String modName) {
@@ -69,6 +72,8 @@ public class Integration {
             return side != Side.CLIENT;
         }
 
+        private final boolean enabled;
+
         public void loadConfig(Configuration config) {
             shouldLoad = config
                     .get("Integration", "enable" + getModName(), true, "Enable " + getModName() + " Integration.")
@@ -76,8 +81,7 @@ public class Integration {
         }
 
         public boolean isEnabled() {
-            return (Loader.isModLoaded(getModID()) && shouldLoad && correctSide())
-                    || (ModAPIManager.INSTANCE.hasAPI(getModID()) && shouldLoad && correctSide());
+            return enabled;
         }
 
         private boolean correctSide() {

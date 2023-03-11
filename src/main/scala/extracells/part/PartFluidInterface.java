@@ -20,6 +20,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 
@@ -42,6 +43,7 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartDeprecated;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageMonitorable;
@@ -61,8 +63,11 @@ import extracells.container.IContainerListener;
 import extracells.crafting.CraftingPattern;
 import extracells.crafting.CraftingPattern2;
 import extracells.gui.GuiFluidInterface;
+import extracells.integration.Integration;
+import extracells.integration.ae2fc.FluidCraft;
 import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.registries.ItemEnum;
+import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import extracells.util.EmptyMeItemMonitor;
 import extracells.util.FluidUtil;
@@ -70,7 +75,7 @@ import extracells.util.PermissionUtil;
 import io.netty.buffer.ByteBuf;
 
 public class PartFluidInterface extends PartECBase implements IFluidHandler, IFluidInterface, IFluidSlotPartOrBlock,
-        ITileStorageMonitorable, IStorageMonitorable, IGridTickable, ICraftingProvider {
+        ITileStorageMonitorable, IStorageMonitorable, IGridTickable, ICraftingProvider, IPartDeprecated {
 
     private final HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails> patternConvert = new HashMap<ICraftingPatternDetails, IFluidCraftingPatternDetails>();
 
@@ -689,6 +694,44 @@ public class PartFluidInterface extends PartECBase implements IFluidHandler, IFl
     public void setFluidTank(ForgeDirection side, FluidStack fluid) {
         this.tank.setFluid(fluid);
         this.doNextUpdate = true;
+    }
+
+    @Override
+    public NBTTagCompound transformPart(NBTTagCompound def) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            FluidCraft.replace(def, PartEnum.INTERFACE);
+        }
+        return def;
+    }
+
+    @Override
+    public NBTTagCompound transformNBT(NBTTagCompound extra) {
+        if (Integration.Mods.FLUIDCRAFT.isEnabled()) {
+            // Internal fluids - ConfigInv and FluidInv
+            NBTTagCompound tank = extra.getCompoundTag("tank");
+            NBTTagCompound configTank = new NBTTagCompound();
+            configTank.setTag("#0", FluidCraft.createFluidDisplay(tank.getString("FluidName")));
+            extra.setTag("ConfigInv", configTank);
+            NBTTagCompound fluidTank = new NBTTagCompound();
+            NBTTagCompound fluid = FluidCraft.createFluidNBT(tank.getString("FluidName"), tank.getLong("Amount"));
+            fluidTank.setTag("#0", fluid);
+            extra.setTag("FluidInv", fluidTank);
+            extra.removeTag("tank");
+            // Patterns
+            NBTTagList patterns = extra.getCompoundTag("inventory").getTagList("Inventory", Constants.NBT.TAG_COMPOUND);
+            NBTTagCompound newPatterns = new NBTTagCompound();
+            for (int i = 0; i < patterns.tagCount(); ++i) {
+                NBTTagCompound p = patterns.getCompoundTagAt(i);
+                p.removeTag("Slot");
+                newPatterns.setTag("#" + i, p);
+            }
+            extra.removeTag("inventory");
+            extra.setTag("patterns", newPatterns);
+            // Part
+            extra.setTag("part", extra.getCompoundTag("node").getCompoundTag("node0"));
+            extra.removeTag("node");
+        }
+        return extra;
     }
 
     private class FluidInterfaceInventory implements IInventory {

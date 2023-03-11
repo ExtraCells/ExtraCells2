@@ -5,12 +5,14 @@ import cpw.mods.fml.client.registry.RenderingRegistry
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{
   FMLInitializationEvent,
+  FMLModIdMappingEvent,
   FMLPostInitializationEvent,
   FMLPreInitializationEvent
 }
 import cpw.mods.fml.common.network.NetworkRegistry
 import cpw.mods.fml.common.{FMLCommonHandler, Loader, Mod, SidedProxy}
 import extracells.integration.Integration
+import extracells.integration.ae2fc.FluidCraft
 import extracells.network.{ChannelHandler, GuiHandler}
 import extracells.proxy.CommonProxy
 import extracells.registries.ItemEnum
@@ -143,5 +145,12 @@ object Extracells {
     proxy.registerItems()
     proxy.registerBlocks()
     integration.preInit()
+  }
+
+  @EventHandler
+  def handleRemap(event: FMLModIdMappingEvent): Unit = {
+    if (Integration.Mods.FLUIDCRAFT.isEnabled) {
+      FluidCraft.onRemapEvent(event)
+    }
   }
 }
