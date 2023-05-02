@@ -1,12 +1,11 @@
 package extracells.integration.opencomputers;
 
-import li.cil.oc.api.API;
-
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import appeng.api.AEApi;
 import cpw.mods.fml.common.registry.GameRegistry;
+import li.cil.oc.api.API;
 
 public class OCRecipes {
 

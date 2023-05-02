@@ -15,9 +15,9 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import appeng.api.config.AccessRestriction;
-
 import com.google.common.base.Splitter;
+
+import appeng.api.config.AccessRestriction;
 
 public class WidgetStorageDirection extends GuiButton {
 

@@ -1,19 +1,5 @@
 package extracells.integration.opencomputers;
 
-import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentProvider;
-import li.cil.oc.api.driver.NamedBlock;
-import li.cil.oc.api.driver.SidedBlock;
-import li.cil.oc.api.internal.Database;
-import li.cil.oc.api.machine.Arguments;
-import li.cil.oc.api.machine.Callback;
-import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Node;
-import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
-import li.cil.oc.server.network.Component;
-import mekanism.api.gas.GasStack;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -29,6 +15,19 @@ import extracells.part.PartGasExport;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.util.GasUtil;
+import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.EnvironmentProvider;
+import li.cil.oc.api.driver.NamedBlock;
+import li.cil.oc.api.driver.SidedBlock;
+import li.cil.oc.api.internal.Database;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Node;
+import li.cil.oc.api.network.Visibility;
+import li.cil.oc.api.prefab.ManagedEnvironment;
+import li.cil.oc.server.network.Component;
+import mekanism.api.gas.GasStack;
 
 public class DriverGasExportBus implements SidedBlock {
 

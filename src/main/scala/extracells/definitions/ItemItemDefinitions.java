@@ -4,9 +4,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 
-import appeng.api.definitions.IItemDefinition;
-
 import com.google.common.base.Optional;
+
+import appeng.api.definitions.IItemDefinition;
 
 public class ItemItemDefinitions implements IItemDefinition {
 

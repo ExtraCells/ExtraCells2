@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 
 import appeng.api.AEApi;
@@ -31,6 +30,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.api.IStorageCellVoid;
 import extracells.inventory.VoidCellInventoryHandler;
+import extracells.util.DeprecationWarning;
 
 public final class ItemVoidStorageCell extends AEBaseItem implements IStorageCellVoid, IItemGroup {
 
@@ -56,8 +56,8 @@ public final class ItemVoidStorageCell extends AEBaseItem implements IStorageCel
     @Override
     public void addCheckedInformation(final ItemStack stack, final EntityPlayer player, final List<String> lines,
             final boolean displayMoreInfo) {
-        lines.add(EnumChatFormatting.RED + "EC2 is going to be removed in future!");
-        lines.add(EnumChatFormatting.RED + "Try to put it in crafting table to covert it into AE2/AE2FC device.");
+        DeprecationWarning.addGeneralDeprecationWarning(lines);
+
         final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell()
                 .getCellInventory(stack, null, StorageChannel.ITEMS);
 

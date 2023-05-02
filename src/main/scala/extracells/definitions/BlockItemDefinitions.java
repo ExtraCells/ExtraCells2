@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 
-import appeng.api.definitions.ITileDefinition;
-
 import com.google.common.base.Optional;
+
+import appeng.api.definitions.ITileDefinition;
 
 public class BlockItemDefinitions implements ITileDefinition {
 

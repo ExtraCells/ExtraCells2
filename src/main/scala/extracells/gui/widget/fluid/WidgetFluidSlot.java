@@ -3,8 +3,6 @@ package extracells.gui.widget.fluid;
 import java.util.ArrayList;
 import java.util.List;
 
-import mekanism.api.gas.GasStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -24,6 +22,7 @@ import extracells.network.packet.other.IFluidSlotPartOrBlock;
 import extracells.network.packet.other.PacketFluidSlot;
 import extracells.util.FluidUtil;
 import extracells.util.GasUtil;
+import mekanism.api.gas.GasStack;
 
 public class WidgetFluidSlot extends Gui {
 

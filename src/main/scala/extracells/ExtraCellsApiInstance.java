@@ -3,9 +3,6 @@ package extracells;
 import java.util.ArrayList;
 import java.util.List;
 
-import mekanism.api.gas.Gas;
-import mekanism.api.gas.GasStack;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -44,6 +41,8 @@ import extracells.util.FuelBurnTime;
 import extracells.util.GasStorageRegistry;
 import extracells.util.GasUtil;
 import extracells.wireless.WirelessTermRegistry;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
 
 public class ExtraCellsApiInstance implements ExtraCellsApi {
 

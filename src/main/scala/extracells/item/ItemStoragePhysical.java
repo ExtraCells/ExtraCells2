@@ -35,6 +35,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.Extracells;
 import extracells.registries.ItemEnum;
+import extracells.util.DeprecationWarning;
 import extracells.util.inventory.ECCellInventory;
 
 @Optional.Interface(iface = "cofh.api.energy.IEnergyContainerItem", modid = "CoFHAPI|energy")
@@ -58,8 +59,8 @@ public class ItemStoragePhysical extends ItemECBase implements IStorageCell, IAE
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
         super.addInformation(itemStack, player, list, par4);
-        list.add(EnumChatFormatting.RED + "Contents will be kept when coverting it in crafting table.");
-        list.add(EnumChatFormatting.RED + "You don't need to ME-IO to transfer contents.");
+        DeprecationWarning.addContentTransferInfo(list);
+
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
         IMEInventoryHandler<IAEItemStack> invHandler = cellRegistry
                 .getCellInventory(itemStack, null, StorageChannel.ITEMS);

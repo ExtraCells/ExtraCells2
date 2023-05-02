@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import mekanism.api.gas.IGasHandler;
-
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
@@ -51,6 +49,7 @@ import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
 import extracells.render.TextureManager;
 import io.netty.buffer.ByteBuf;
+import mekanism.api.gas.IGasHandler;
 
 public abstract class PartECBase implements IPart, IGridHost, IActionHost, IPowerChannelState {
 

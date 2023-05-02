@@ -1,13 +1,12 @@
 package extracells.integration.mekanism.gas;
 
-import mekanism.api.gas.Gas;
-import mekanism.api.gas.GasStack;
-import mekanism.api.gas.IGasHandler;
-
 import net.minecraftforge.common.util.ForgeDirection;
 
 import appeng.api.parts.IPart;
 import appeng.api.parts.LayerBase;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
+import mekanism.api.gas.IGasHandler;
 
 public class LayerGasHandler extends LayerBase implements IGasHandler {
 

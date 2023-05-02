@@ -1,9 +1,5 @@
 package extracells.util;
 
-import mekanism.api.gas.Gas;
-import mekanism.api.gas.GasStack;
-import mekanism.api.gas.IGasItem;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -15,6 +11,9 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import appeng.api.AEApi;
 import appeng.api.storage.data.IAEFluidStack;
 import extracells.integration.mekanism.gas.MekanismGas;
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasStack;
+import mekanism.api.gas.IGasItem;
 
 public class GasUtil {
 

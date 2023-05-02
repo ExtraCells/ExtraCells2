@@ -18,5 +18,5 @@ end_of_line = crlf
 [*.{dtd,json,mcmeta,md,sh,svg,xml,xsd,xsl,yaml,yml}]
 indent_size = 2
 
-[*.{java,scala}]
-indent_style = tab
+[*.lang]
+trim_trailing_whitespace = false

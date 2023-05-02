@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 
 import appeng.api.AEApi;
@@ -34,6 +33,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import extracells.api.IStorageCellAdvanced;
 import extracells.inventory.AdvancedCellInventoryHandler;
+import extracells.util.DeprecationWarning;
 
 public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorageCellAdvanced, IItemGroup {
 
@@ -60,10 +60,9 @@ public final class ItemAdvancedStorageCell extends AEBaseItem implements IStorag
     @Override
     public void addCheckedInformation(final ItemStack stack, final EntityPlayer player, final List<String> lines,
             final boolean displayMoreInfo) {
-        lines.add(EnumChatFormatting.RED + "EC2 is going to be removed in future!");
-        lines.add(EnumChatFormatting.RED + "Try to put it in crafting table to covert it into AE2/AE2FC device.");
-        lines.add(EnumChatFormatting.RED + "Contents will be kept when coverting it in crafting table.");
-        lines.add(EnumChatFormatting.RED + "You don't need to ME-IO to transfer contents.");
+        DeprecationWarning.addGeneralDeprecationWarning(lines);
+        DeprecationWarning.addContentTransferInfo(lines);
+
         final IMEInventoryHandler<?> inventory = AEApi.instance().registries().cell()
                 .getCellInventory(stack, null, StorageChannel.ITEMS);
 

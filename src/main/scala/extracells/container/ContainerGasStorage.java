@@ -2,8 +2,6 @@ package extracells.container;
 
 import static extracells.util.FluidUtil.filterEmptyFluid;
 
-import mekanism.api.gas.GasStack;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -38,6 +36,7 @@ import extracells.util.FluidUtil;
 import extracells.util.GasUtil;
 import extracells.util.inventory.ECPrivateInventory;
 import extracells.util.inventory.IInventoryUpdateReceiver;
+import mekanism.api.gas.GasStack;
 
 public class ContainerGasStorage extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>,
         IFluidSelectorContainer, IInventoryUpdateReceiver, IStorageContainer {

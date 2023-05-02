@@ -1,15 +1,5 @@
 package extracells.integration.opencomputers;
 
-import li.cil.oc.api.Network;
-import li.cil.oc.api.driver.EnvironmentProvider;
-import li.cil.oc.api.driver.NamedBlock;
-import li.cil.oc.api.driver.SidedBlock;
-import li.cil.oc.api.machine.Arguments;
-import li.cil.oc.api.machine.Callback;
-import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Visibility;
-import li.cil.oc.api.prefab.ManagedEnvironment;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -20,6 +10,15 @@ import appeng.api.parts.IPartHost;
 import extracells.part.PartOreDictExporter;
 import extracells.registries.ItemEnum;
 import extracells.registries.PartEnum;
+import li.cil.oc.api.Network;
+import li.cil.oc.api.driver.EnvironmentProvider;
+import li.cil.oc.api.driver.NamedBlock;
+import li.cil.oc.api.driver.SidedBlock;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.Visibility;
+import li.cil.oc.api.prefab.ManagedEnvironment;
 
 public class DriverOreDictExportBus implements SidedBlock {
 
